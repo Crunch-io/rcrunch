@@ -397,6 +397,7 @@ test_that("cat by cat with both column and row subtotals", {
     expect_equivalent(applyTransforms(pet_feeling_both), all)
 
     # pretty printing
+    skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
     expect_prints(
         pet_feeling_both,
         paste(
@@ -479,8 +480,8 @@ test_that("cat by cat with both column and row subtotals (margins and proportion
     expect_equivalent(prop.table(pet_feeling_both), all_prop)
 })
 
-test_that("one bad transform doesn't disable all", {
-    pet_feeling_bad_feelings <- pet_feeling_bad_animals <- pet_feeling_both
+pet_feeling_bad_feelings <- pet_feeling_bad_animals <- pet_feeling_both
+test_that("broken row transforms don't break columns", {
     only_feelings <- cubify(
         c(9, 9, 5, 14,
           12, 12, 12, 24,
@@ -502,6 +503,7 @@ test_that("one bad transform doesn't disable all", {
     )
 
     # pretty printing
+    skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
     expect_warning(expect_prints(
         pet_feeling_bad_feelings,
         paste(
@@ -515,7 +517,9 @@ test_that("one bad transform doesn't disable all", {
             sep = "\n"),
         fixed = TRUE
     ), "Transforms for dimensions 1 were malformed and have been ignored.")
+})
 
+test_that("broken column transforms don't break rows", {
     only_animals <- cubify(
         c(9, 5,
           12, 12,
@@ -539,6 +543,7 @@ test_that("one bad transform doesn't disable all", {
     )
 
     # pretty printing
+    skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
     expect_warning(expect_prints(
         pet_feeling_bad_animals,
         paste(
@@ -554,7 +559,9 @@ test_that("one bad transform doesn't disable all", {
             sep = "\n"),
         fixed = TRUE
     ), "Transforms for dimension(s) 2 were malformed and have been ignored.")
+})
 
+test_that("Two bad transforms are both ignored", {
     only_cube <- cubify(
         c(9, 5,
           12, 12,
@@ -679,6 +686,7 @@ test_that("categorical arrays with subtotals", {
 
     # pretty printing
     expect_equivalent(applyTransforms(cat_array_cube), all)
+    skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
     expect_prints(
         cat_array_cube,
         paste(
@@ -961,25 +969,28 @@ with_test_authentication({
                                  "Dogs+Cats", "Lizards", "Birds+Lizards",
                                  "Toward the end", "Cats+Birds (missing anch.)",
                                  "Rocks+Birds (incl. missing)")))
-        expect_prints(trans_pets <- showTransforms(ds$pets),
-                      paste(
-            "                             ",
-            "                           ",
-            "\033[30m\033[3m                  First one 75\033[23m\033[39m",
-            "                      Birds 30",
-            "                       Cats 45",
-            "                       Dogs 50",
-            "\033[30m\033[3m                  Dogs+Cats 95\033[23m\033[39m",
-            "                    Lizards 25",
-            "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
-            "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
-            "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
-            "\033[30m\033[3mRocks+Birds (incl. missing) NA\033[23m\033[39m",
-            sep = "\n"),
-            fixed = TRUE)
         expect_is(trans_pets, "array")
         expect_equal(dim(trans_pets), 10)
         expect_equivalent(trans_pets, cat_show_trans)
+        
+        skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
+        expect_prints(
+            trans_pets <- showTransforms(ds$pets),
+            paste(
+                "                             ",
+                "                           ",
+                "\033[30m\033[3m                  First one 75\033[23m\033[39m",
+                "                      Birds 30",
+                "                       Cats 45",
+                "                       Dogs 50",
+                "\033[30m\033[3m                  Dogs+Cats 95\033[23m\033[39m",
+                "                    Lizards 25",
+                "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
+                "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
+                "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
+                "\033[30m\033[3mRocks+Birds (incl. missing) NA\033[23m\033[39m",
+                sep = "\n"),
+            fixed = TRUE)
     })
 
     test_that("showTransforms works on a variable", {
@@ -991,25 +1002,29 @@ with_test_authentication({
                                     "Rocks+Birds (incl. missing)")))
 
         pets_cube <- crtabs(~pets, ds)
-        expect_prints(trans_cube <- showTransforms(pets_cube),
-                      paste(
-              "                             ",
-              "                           ",
-              "\033[30m\033[3m                  First one 75\033[23m\033[39m",
-              "                      Birds 30",
-              "                       Cats 45",
-              "                       Dogs 50",
-              "\033[30m\033[3m                  Dogs+Cats 95\033[23m\033[39m",
-              "                    Lizards 25",
-              "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
-              "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
-              "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
-              "\033[30m\033[3mRocks+Birds (incl. missing) 35\033[23m\033[39m",
-              sep = "\n"),
-              fixed = TRUE)
+
         expect_is(trans_cube, "array")
         expect_equal(dim(showMissing(pets_cube)), 6)
         expect_equal(dim(trans_cube), 10)
         expect_equivalent(trans_cube, cat_show_trans)
+        
+        skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
+        expect_prints(
+            trans_cube <- showTransforms(pets_cube),
+            paste(
+                "                             ",
+                "                           ",
+                "\033[30m\033[3m                  First one 75\033[23m\033[39m",
+                "                      Birds 30",
+                "                       Cats 45",
+                "                       Dogs 50",
+                "\033[30m\033[3m                  Dogs+Cats 95\033[23m\033[39m",
+                "                    Lizards 25",
+                "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
+                "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
+                "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
+                "\033[30m\033[3mRocks+Birds (incl. missing) 35\033[23m\033[39m",
+                sep = "\n"),
+            fixed = TRUE)
     })
 })
