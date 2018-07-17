@@ -1,4 +1,4 @@
-context("cube residual helpers")
+context("Cube residual helpers")
 
 test_that("broadcast broadcasts a vector", {
     expect_equal(broadcast(c(1, 2, 3), ncol = 2),
