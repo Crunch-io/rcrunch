@@ -969,6 +969,8 @@ with_test_authentication({
                                  "Dogs+Cats", "Lizards", "Birds+Lizards",
                                  "Toward the end", "Cats+Birds (missing anch.)",
                                  "Rocks+Birds (incl. missing)")))
+        
+        trans_pets <- showTransforms(ds$pets)
         expect_is(trans_pets, "array")
         expect_equal(dim(trans_pets), 10)
         expect_equivalent(trans_pets, cat_show_trans)
@@ -1003,6 +1005,7 @@ with_test_authentication({
 
         pets_cube <- crtabs(~pets, ds)
 
+        trans_cube <- applyTransforms(pets_cube)
         expect_is(trans_cube, "array")
         expect_equal(dim(showMissing(pets_cube)), 6)
         expect_equal(dim(trans_cube), 10)
