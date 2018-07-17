@@ -78,7 +78,8 @@ with_mock_crunch({
     })
 
     test_that("as.data.frame(force = TRUE) generates a POST", {
-        expect_POST(as.data.frame(ds, force = TRUE),
+
+        expect_POST(as.data.frame(ds, force = TRUE, include.hidden = FALSE),
             'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":true}}')
     })
@@ -95,10 +96,11 @@ with_mock_crunch({
         new_ds <- loadDataset("test ds")[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")]
         new_ds$birthyr@tuple[["discarded"]] <- TRUE
         new_ds_df <- as.data.frame(new_ds, include.hidden = FALSE)
-        expect_silent(
+        expect_warning(
             expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
-                c("gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
-                    "starttime"))
+                c("birthyr", "gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
+                    "starttime")),
+
         )
         # now we want the hidden vars to be included
         new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
@@ -125,12 +127,6 @@ with_mock_crunch({
         new_ds <- loadDataset("test ds")
         new_ds$gender@tuple[["discarded"]] <- TRUE
         expect_equivalent(hiddenVariables(new_ds), "gender")
-        new_ds_df <- as.data.frame(new_ds)
-        expect_equal(names(new_ds_df),
-                     aliases(variables(new_ds)))
-        expect_equal(ncol(new_ds_df), 6)
-
-        # now we want the hidden vars to be includes
         new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
         expect_equal(names(new_ds_df),
                      aliases(allVariables(new_ds)))
@@ -231,23 +227,14 @@ with_test_authentication({
     ds$hidden_var <- 1:20
     ds <- hideVariables(ds, "hidden_var")
 
-    test_that("as.data.frame(force) pulls hidden variables when include.hidden is set", {
+    test_that("as.data.frame(force) retrieves hidden variables", {
         skip_locally("Vagrant host doesn't serve files correctly")
         expect_equal(hiddenVariables(ds), "hidden_var")
 
-        df <- as.data.frame(ds, force = TRUE)
-        expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "v6"))
-
-        expect_warning(
-            df <- as.data.frame(ds, force = TRUE, include.hidden = TRUE),
-            "Variable hidden_var is hidden"
-        )
+        expect_warning(df <- as.data.frame(ds, force = TRUE),
+            "Variable hidden_var is hidden")
         expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "v6", "hidden_var"))
-    })
 
-    test_that("as.data.frame(force) includes  hidden variables when specified and include.hidden isn't set", {
-        skip_locally("Vagrant host doesn't serve files correctly")
-        expect_equal(hiddenVariables(ds), "hidden_var")
         expect_warning(
             df <- as.data.frame(ds[, c("v1", "hidden_var")], force = TRUE),
             "Variable hidden_var is hidden"

@@ -8,10 +8,10 @@
 \usage{
 \method{as.data.frame}{CrunchDataset}(x, row.names = NULL, optional = FALSE,
   force = FALSE, categorical.mode = "factor", row.order = NULL,
-  include.hidden, ...)
+  include.hidden = TRUE, ...)
 
 \method{as.data.frame}{CrunchDataFrame}(x, row.names = NULL,
-  optional = FALSE, ...)
+  optional = FALSE, include.hidden = attr(x, "include.hidden"), ...)
 }
 \arguments{
 \item{x}{a \code{CrunchDataset} or \code{CrunchDataFrame}}
