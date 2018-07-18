@@ -170,10 +170,29 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), functio
       analysis <- x[[i]]
       analysis <- value
   } else {
-      #TODO allow users to post new analyses.
       halt("Index out of bounds, you can only assign a formula to an existing analysis.")
   }
 })
+
+setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
+          function(x, i, j, value){
+              if (i > length(x) + 1) {
+                  #TODO what to do with adding an analysis that's not the next one.
+              }
+
+              display_fields <- c("decimalPlaces", "percentageDirection",
+                                  "vizType", "countsOrPercents", "uiView")
+              payload <- value@body[c("query", "display_settings", "query_environment")]
+              payload$display_settings <- payload$display_settings[display_fields]
+              payload <- wrapEntity(body = payload)
+              if (i <= length(x)) {
+                  url <- names(x@index)[i]
+                  crPATCH(url, body=toJSON(payload))
+              } else {
+                  crPOST(self(x), body = toJSON(payload))
+              }
+              invisible(refresh(x))
+          })
 
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"), function (x, i, j, value) {
   all_fmla <- vapply(value, function(x) inherits(x, "fmla"), logical(1))
