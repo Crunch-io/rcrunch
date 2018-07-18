@@ -24,21 +24,11 @@
 NULL
 
 CrunchDataFrame <- function (dataset, row.order = NULL,
-    categorical.mode = "factor",
-    include.hidden = TRUE) {
+                             categorical.mode = "factor",
+                             include.hidden = FALSE) {
     ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
-
-    # When a user asks for a hidden variable with ds[, "hidden_var_name"] we should
-    # give it to them, and so overrride the include.hidden argument
-    allvars <- allVariables(dataset)
-    dsvars <- ShojiCatalog(crGET(self(allvars), query=list(relative="on")))
-    if (length(allvars) != length(dsvars) && # check that dataset has avariable subset
-            length(hiddenVariables(dataset)) > 0  # check that user is asking for hidden variable
-    ) {
-        include.hidden <- TRUE
-    }
 
     var_names <- aliases(allVariables(dataset))
 

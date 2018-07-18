@@ -99,16 +99,17 @@ with_mock_crunch({
         expect_warning(
             expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
                 c("birthyr", "gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
-                    "starttime")),
+                    "starttime"),
+                "Variable birthyr is hidden"),
 
         )
         # now we want the hidden vars to be included
         new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
         expect_warning(
             expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
-                c("birthyr", "gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
-                    "starttime")),
-            paste0("Variable birthyr is hidden"))
+                         c("birthyr", "gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
+                           "starttime")),
+            "Variable birthyr is hidden")
     })
 
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
@@ -231,7 +232,13 @@ with_test_authentication({
         skip_locally("Vagrant host doesn't serve files correctly")
         expect_equal(hiddenVariables(ds), "hidden_var")
 
-        expect_warning(df <- as.data.frame(ds, force = TRUE),
+        expect_warning(
+            df <- as.data.frame(ds, force = TRUE),
+            "Variable hidden_var is hidden")
+        expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "v6"))
+
+        expect_warning(
+            df <- as.data.frame(ds, force = TRUE, include.hidden = TRUE),
             "Variable hidden_var is hidden")
         expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "v6", "hidden_var"))
 
@@ -239,8 +246,7 @@ with_test_authentication({
             df <- as.data.frame(ds[, c("v1", "hidden_var")], force = TRUE),
             "Variable hidden_var is hidden"
         )
-        expect_equal(names(df),
-            c("v1", "hidden_var"))
+        expect_equal(names(df), c("v1", "hidden_var"))
     })
 
     test_that("Multiple response variables in as.data.frame(force=TRUE)", {
