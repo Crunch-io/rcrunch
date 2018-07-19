@@ -2,9 +2,34 @@ library(httptest)
 
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 
-skip_locally <- function (...) {
-    if (grepl("^https?://local\\.", getOption("crunch.api"))) {
-        skip(...)
+
+
+#' Skip tests when they are being run locally
+#'
+#' @param ... message to be passed to `skip()`
+#' @param backend should the following tests be skipped if the backend is a
+#'   local vagrant backend
+#' @param test_env should the following tests be skipped if the environment the
+#'   tests are being run in is local (technically: the environment is not
+#'   Jenkins, Travis, CRAN, or AppVeyor)
+#'   
+#' @return Nothing
+skip_locally <- function (..., backend = TRUE, test_env = FALSE) {
+    jenkins <- identical(Sys.getenv("JENKINS_HOME"), "true")
+    travis <- identical(Sys.getenv("TRAVIS"), "true")
+    cran <- identical(Sys.getenv("NOT_CRAN"), "true")
+    appveyor <- identical(Sys.getenv("APPVEYOR"), "True")
+    
+    if (backend) {
+        # if we are trying to skip when the backend is local
+        if (grepl("^https?://local\\.", getOption("crunch.api"))) {
+            return(skip(...))
+        }
+    } else if (test_env) {
+        # if we are trying to skip when the tests are bieng run locally
+        if (!any(jenkins, travis, cran, appveyor)) {
+            return(skip(...))
+        }
     }
 }
 

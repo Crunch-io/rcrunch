@@ -397,7 +397,9 @@ test_that("cat by cat with both column and row subtotals", {
     expect_equivalent(applyTransforms(pet_feeling_both), all)
 
     # pretty printing
-    skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
+    skip_locally(
+        "Pretty formatting isn't exactly the same in many terminals",
+        test_env = TRUE, backend = FALSE)
     expect_prints(
         pet_feeling_both,
         paste(
@@ -503,7 +505,9 @@ test_that("broken row transforms don't break columns", {
     )
 
     # pretty printing
-    skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
+    skip_locally(
+        "Pretty formatting isn't exactly the same in many terminals",
+        test_env = TRUE, backend = FALSE)
     expect_warning(expect_prints(
         pet_feeling_bad_feelings,
         paste(
@@ -543,7 +547,9 @@ test_that("broken column transforms don't break rows", {
     )
 
     # pretty printing
-    skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
+    skip_locally(
+        "Pretty formatting isn't exactly the same in many terminals",
+        test_env = TRUE, backend = FALSE)
     expect_warning(expect_prints(
         pet_feeling_bad_animals,
         paste(
@@ -686,7 +692,9 @@ test_that("categorical arrays with subtotals", {
 
     # pretty printing
     expect_equivalent(applyTransforms(cat_array_cube), all)
-    skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
+    skip_locally(
+        "Pretty formatting isn't exactly the same in many terminals",
+        test_env = TRUE, backend = FALSE)
     expect_prints(
         cat_array_cube,
         paste(
@@ -975,7 +983,9 @@ with_test_authentication({
         expect_equal(dim(trans_pets), 10)
         expect_equivalent(trans_pets, cat_show_trans)
         
-        skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
+        skip_locally(
+            "Pretty formatting isn't exactly the same in many terminals",
+            test_env = TRUE, backend = FALSE)
         expect_prints(
             trans_pets <- showTransforms(ds$pets),
             paste(
@@ -1011,7 +1021,9 @@ with_test_authentication({
         expect_equal(dim(trans_cube), 10)
         expect_equivalent(trans_cube, cat_show_trans)
         
-        skip_when_run_locally("Pretty formatting isn't exactly the same in many terminals")
+        skip_locally(
+            "Pretty formatting isn't exactly the same in many terminals",
+            test_env = TRUE, backend = FALSE)
         expect_prints(
             trans_cube <- showTransforms(pets_cube),
             paste(

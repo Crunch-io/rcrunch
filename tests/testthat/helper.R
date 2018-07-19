@@ -9,17 +9,6 @@ skip_on_jenkins <- function (...) {
     }
 }
 
-skip_when_run_locally <- function (...) {
-    jenkins <- identical(Sys.getenv("JENKINS_HOME"), "true")
-    travis <- identical(Sys.getenv("TRAVIS"), "true")
-    cran <- identical(Sys.getenv("NOT_CRAN"), "true")
-    appveyor <- identical(Sys.getenv("APPVEYOR"), "True")
-    if (!any(jenkins, travis, cran, appveyor)) {
-        skip(...)
-    }
-}
-
-
 fromJSON <- jsonlite::fromJSON
 loadLogfile <- httpcache::loadLogfile
 cacheLogSummary <- httpcache::cacheLogSummary
