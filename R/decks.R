@@ -1,14 +1,11 @@
 
-setMethod("initialize", "DeckCatalog", init.sortCatalog)
-
 # Deck Catalog ------------------------------------------------------------
-
 
 setMethod("decks", "CrunchDataset", function (x) {
     DeckCatalog(crGET(shojiURL(x, "catalogs", "decks")))
 })
 
-# CrunchDeck --------------------------------------------------------------
+setMethod("initialize", "DeckCatalog", init.sortCatalog)
 
 setMethod("[[", "DeckCatalog",  function (x, i, ...) {
     getEntity(x, i, CrunchDeck, ...)
@@ -19,7 +16,6 @@ setMethod("[[<-", c("DeckCatalog", "character", "ANY", "CrunchDeck"),
               payload <- value@body[c("name", "description", "is_public", "team")]
               payload$name <- i
               payload <- payload[vapply(payload, function(x)is.character(x) | is.logical(x), logical(1))]
-              browser()
               new_deck <- crPOST(self(x), body = toJSON(payload))
               new_deck <- SlideCatalog(crGET(new_deck))
               invisible(refresh(x))
@@ -36,6 +32,8 @@ setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "NULL"),
               delete(x[[i]])
               invisible(NULL)
           })
+
+# CrunchDeck --------------------------------------------------------------
 
 #' @rdname delete
 #' @export
@@ -109,6 +107,16 @@ exportDeck <- function(deck, file, type = c("xlsx", "json")) {
 
 # Slide Catalog -----------------------------------------------------------
 
+setMethod("initialize", "SlideCatalog", function(.Object, ...){
+    .Object <- callNextMethod()
+    order <- crGET(.Object@orders$flat)
+    order <- unlist(order$graph)
+    .Object@index <- .Object@index[match(order, names(.Object@index))]
+    return(.Object)
+})
+
+setMethod("names", "SlideCatalog", function(x) titles(x))
+setMethod("names<-", "SlideCatalog", function(x, value) titles(x) <- value)
 
 setMethod("titles", "SlideCatalog", function (x){
     as.character(lapply(x@index, function(x) x$title))
@@ -127,6 +135,7 @@ setMethod("subtitles<-", "SlideCatalog", function (x, value){
 })
 
 updateSlideTitle <- function(x, value, type) {
+    # TODO update a single title.
     stopifnot(is.character(value))
     payload <- mapply(function (item, new_title){
         item[[type]] <- new_title
@@ -140,8 +149,53 @@ setMethod("[[", "SlideCatalog", function (x, i, ...) {
   getEntity(x, i, CrunchSlide)
 })
 
+setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
+          function(x, i, j, value) {
+              if (length(i) > 1) {
+                  #TODO, allow assignment of more than one slide
+              }
+              if (i > length(x) + 1) {
+                  #TODO what to do with missing slide entries
+                  i <- length(x) + 1
+              }
+              if (i > length(x)) {
+                  # create new slide
+                  payload <- value@body[c("title", "subtitle")]
+                  analyses <- analyses(value)
+                  payload$analyses <- analysesToQueryList(analyses(value))
+                  payload <- wrapEntity(body = payload)
+                  crPOST(self(x), body = toJSON(payload))
+              } else {
+                  slide <- x[[i]]
+                  analyses(slide) <- analyses(value)
+                  payload <- list(title = title(value), subtitle = subtitle(value))
+                  payload <- wrapEntity(body = payload)
+                  crPATCH(self(slide), body = toJSON(payload))
+              }
+              invisible(refresh(x))
+          })
 
-# Slide -------------------------------------------------------------------
+analysesToQueryList <- function(anCat) {
+    lapply(seq_along(anCat), function(i){
+        out <- anCat[[i]]
+        out <- out@body[c("query", "query_environment", "display_settings")]
+        out$display_settings <- out$display_settings[c(
+            "decimalPlaces", "percentageDirection",
+            "vizType", "countsOrPercents", "uiView")]
+        out
+    })
+}
+
+
+# CrunchSlide -------------------------------------------------------------------
+
+setMethod("title", "CrunchSlide", function (x){
+    return(x@body$title)
+})
+
+setMethod("subtitle", "CrunchSlide", function (x){
+    return(x@body$subtitle)
+})
 
 setMethod("analyses", "CrunchSlide", {
     function (x) {
@@ -149,12 +203,23 @@ setMethod("analyses", "CrunchSlide", {
     }
 })
 
-setMethod("analysis", "CrunchSlide", {
-    function (x) {
-        out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
-        out[[1]]
-    }
+setMethod("analyses<-", c("CrunchSlide", "AnalysisCatalog"), function(x, value){
+    x_analyses <- analyses(x)
+    lapply(seq_along(value), function(i){
+        x_analyses[[i]] <- value[[i]]
+    })
+    return(invisible(refresh(x)))
 })
+
+setMethod("analysis", "CrunchSlide", function (x) {
+    out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
+    return(out[[1]])
+})
+
+setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value){
+    analyses[[1]] <- value
+})
+
 
 setMethod("cubes", "CrunchSlide", function(x) cubes(analyses(x)))
 
@@ -176,6 +241,10 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), functio
 
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
           function(x, i, j, value){
+              if (length(i) > 1) {
+                  #TODO, recurse through i
+              }
+
               if (i > length(x) + 1) {
                   #TODO what to do with adding an analysis that's not the next one.
               }
@@ -207,15 +276,9 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"), function (
   }, analysis = x[[i]], fmla = value)
 })
 
+
 setMethod("cubes", "AnalysisCatalog", function(x) {
     lapply(seq_along(x@index), function(i) cube(x[[i]]))
-})
-
-setMethod("cube", "Analysis", function (x) {
-CrunchCube(crGET(cubeURL(x),
-    query=list(query=toJSON(x@body$query)),
-    filter=toJSON(x@body$query_environment$filter))
-    )
 })
 
 setMethod("analysis<-", c("Analysis", "formula"), function(x, value) {
@@ -224,3 +287,9 @@ setMethod("analysis<-", c("Analysis", "formula"), function(x, value) {
     crPATCH(self(analysis), body = toJSON(analysis@body))
 })
 
+setMethod("cube", "Analysis", function (x) {
+CrunchCube(crGET(cubeURL(x),
+    query = list(query = toJSON(x@body$query)),
+    filter = toJSON(x@body$query_environment$filter))
+    )
+})
