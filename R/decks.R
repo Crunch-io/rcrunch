@@ -5,6 +5,14 @@ setMethod("decks", "CrunchDataset", function (x) {
     DeckCatalog(crGET(shojiURL(x, "catalogs", "decks")))
 })
 
+newDeck <- function(dataset, name, ...) {
+    stopifnot(is.dataset(dataset))
+    payload <- wrapEntity(name = name, ...)
+    url <- shojiURL(dataset, "catalogs", "decks")
+    crPOST(url, body = toJSON(payload))
+    return(invisible(dataset))
+}
+
 setMethod("initialize", "DeckCatalog", init.sortCatalog)
 
 setMethod("[[", "DeckCatalog",  function (x, i, ...) {
