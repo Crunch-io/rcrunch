@@ -13,6 +13,7 @@ run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 #'   tests are being run in is local (technically: the environment is not
 #'   Jenkins, Travis, CRAN, or AppVeyor)
 #'   
+#' @keywords internal
 #' @return Nothing
 skip_locally <- function (..., backend = TRUE, test_env = FALSE) {
     jenkins <- identical(Sys.getenv("JENKINS_HOME"), "true")
