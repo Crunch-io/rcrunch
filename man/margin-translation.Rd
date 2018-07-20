@@ -20,7 +20,7 @@ real2userMargin(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE)
 explicitly supplied)}
 
 \item{dedupe}{logical, should the user dimensions in the result be
-deduplicated (for real2userMargin only)}
+deduplicated (for \code{real2userMargin} only)}
 }
 \value{
 margin or margins in the higher-dimension real cube

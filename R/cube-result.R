@@ -469,7 +469,7 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
 #' @param cube the cube to translate the margin for (optional if `dimTypes` is
 #'   explicitly supplied)
 #' @param dedupe logical, should the user dimensions in the result be
-#'   deduplicated (for real2userMargin only)
+#'   deduplicated (for `real2userMargin` only)
 #'
 #' @return margin or margins in the higher-dimension real cube
 #'
