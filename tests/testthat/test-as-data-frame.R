@@ -92,26 +92,6 @@ with_mock_crunch({
         expect_identical(csvToDataFrame(csv_df, cdf), expected)
     })
 
-    test_that("csvToDataFrame handles hidden variables", {
-        new_ds <- loadDataset("test ds")[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")]
-        new_ds$birthyr@tuple[["discarded"]] <- TRUE
-        new_ds_df <- as.data.frame(new_ds, include.hidden = FALSE)
-        expect_warning(
-            expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
-                c("birthyr", "gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
-                    "starttime"),
-                "Variable birthyr is hidden"),
-
-        )
-        # now we want the hidden vars to be included
-        new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
-        expect_warning(
-            expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
-                         c("birthyr", "gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
-                           "starttime")),
-            "Variable birthyr is hidden")
-    })
-
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
         t2 <- ds
         t2@variables@index[[2]]$alias <- "Quote 'unquote' alias"

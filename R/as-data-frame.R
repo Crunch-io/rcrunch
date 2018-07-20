@@ -45,7 +45,7 @@
 #'  Crunch Dataset order will be used.
 #' @param categorical.mode what mode should categoricals be pulled as? One of
 #' factor, numeric, id (default: factor)
-#' @param include.hidden logical: should hidden variables be included?
+#' @param include.hidden logical: should hidden variables be included? (default: `TRUE`)
 #' @param ... additional arguments passed to `as.data.frame` (default method).
 #' @return When called on a `CrunchDataset`, the method returns an object of
 #' class `CrunchDataFrame` unless `force = TRUE`, in which case the return is a
