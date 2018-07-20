@@ -9,8 +9,8 @@ newDeck <- function(dataset, name, ...) {
     stopifnot(is.dataset(dataset))
     payload <- wrapEntity(name = name, ...)
     url <- shojiURL(dataset, "catalogs", "decks")
-    crPOST(url, body = toJSON(payload))
-    return(invisible(dataset))
+    url <- crPOST(url, body = toJSON(payload))
+    return(CrunchDeck(crGET(url)))
 }
 
 setMethod("initialize", "DeckCatalog", init.sortCatalog)
@@ -25,20 +25,7 @@ setMethod("[[<-", c("DeckCatalog", "character", "ANY", "CrunchDeck"),
               payload$name <- i
               payload <- payload[vapply(payload, function(x)is.character(x) | is.logical(x), logical(1))]
               new_deck <- crPOST(self(x), body = toJSON(payload))
-              new_deck <- SlideCatalog(crGET(new_deck))
-              invisible(refresh(x))
-          })
-
-setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "NULL"),
-          function (x, i, j, value) {
-              stopifnot(length(i) == 1)
-              if (is.character(i) && !i %in% names(x)) {
-                  return()
-              } else if (is.numeric(i) && !i %in% seq_along(urls(x))) {
-                  return()
-              }
-              delete(x[[i]])
-              invisible(NULL)
+              return(invisible(refresh(x)))
           })
 
 # CrunchDeck --------------------------------------------------------------
@@ -47,7 +34,7 @@ setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "NULL"),
 #' @export
 setMethod("delete", "CrunchDeck", function (x, ...) {
     if (!askForPermission(paste0("Really delete deck ", dQuote(name(x)), "?"))) {
-        halt("Must confirm deleting multitable")
+        halt("Must confirm deleting CrunchDeck")
     }
     out <- crDELETE(self(x))
     invisible(out)
@@ -57,14 +44,22 @@ setMethod("slides", "CrunchDeck", function (x) {
     SlideCatalog(crGET(shojiURL(x, "catalogs", "slides")))
 })
 
-setMethod("name", "CrunchDeck", function(x) x@body$name)
 setMethod("name<-", "CrunchDeck", function(x, value) {
     stopifnot(is.character(value))
     stopifnot(length(value) == 1)
     setEntitySlot(x, "name", value)
+    invisible(refresh(x))
     })
 
-setMethod("is.public", "CrunchDeck", function(x) deck@body$is_public)
+setMethod("description", "CrunchDeck", function(x) x@body$description)
+setMethod("description<-", "CrunchDeck", function(x, value) {
+    stopifnot(is.character(value))
+    stopifnot(length(value) == 1)
+    setEntitySlot(x, "description", value)
+    invisible(refresh(x))
+    })
+
+setMethod("is.public", "CrunchDeck", function(x) x@body$is_public)
 setMethod("is.public<-", "CrunchDeck", function(x, value) {
     stopifnot(is.logical(value))
     stopifnot(length(value) == 1)
@@ -197,6 +192,21 @@ analysesToQueryList <- function(anCat) {
 
 # CrunchSlide -------------------------------------------------------------------
 
+newSlide <- function(deck, query, title = "", subtitle = "", ...) {
+    ds <- loadDataset(datasetReference(deck))
+    if (inherits(query, "formula")) {
+        query <- list(query)
+    }
+    payload <- list(title = title, subtitle = subtitle, ...)
+    queries <- lapply(query, function(x) {
+        return(list(query = formulaToCubeQuery(x, ds)))
+        })
+    payload[["analyses"]] <- queries
+    payload <- wrapEntity(body = payload)
+    url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
+    return(CrunchSlide(crGET(url)))
+}
+
 setMethod("title", "CrunchSlide", function (x){
     return(x@body$title)
 })
@@ -289,10 +299,17 @@ setMethod("cubes", "AnalysisCatalog", function(x) {
     lapply(seq_along(x@index), function(i) cube(x[[i]]))
 })
 
-setMethod("analysis<-", c("Analysis", "formula"), function(x, value) {
-    ds <- loadDataset(datasetReference(analysis))
-    analysis@body$query <- formulaToCubeQuery(fmla, data = ds)
-    crPATCH(self(analysis), body = toJSON(analysis@body))
+
+setMethod("query", c("Analysis"), function(x) {
+    #TODO what should this function return?
+})
+
+setMethod("query<-", c("Analysis", "formula"), function(x, value) {
+    ds <- loadDataset(datasetReference(x))
+    payload <- x@body
+    payload$query <- formulaToCubeQuery(value, data = ds)
+    crPATCH(self(x), body = toJSON(x@body))
+    invisible(refresh(x))
 })
 
 setMethod("cube", "Analysis", function (x) {
