@@ -157,7 +157,7 @@ translateCubeIndex <- function(x, subset, drop) {
     
     # This is the main work of the subset translation, just taking the user
     # supplied subset and projecting them up to real cube dimension 
-    out <- subset[real2user(seq_along(is_selected), cube = x, dedupe = FALSE)]
+    out <- subset[real2userMargin(seq_along(is_selected), cube = x, dedupe = FALSE)]
 
     # Dropping MR variables is a bit special. Whenever the user drops the MR
     # dimension the MR selection dimension is also dropped. This checks if it's

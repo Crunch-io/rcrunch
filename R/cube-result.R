@@ -338,7 +338,7 @@ check_margins <- function (margin, selecteds) {
 }
 
 mr_items_margins <- function(margin, dimTypes = getDimTypes(cube), cube, user_dims = FALSE) {
-    margin_out <- user2real(margin, dimTypes = dimTypes)
+    margin_out <- user2realMargin(margin, dimTypes = dimTypes)
     # remove the selections dimension, if it was asked for
     margin_out <- margin_out[dimTypes[margin_out] != "mr_selections"]
     
@@ -347,7 +347,7 @@ mr_items_margins <- function(margin, dimTypes = getDimTypes(cube), cube, user_di
     margin_out <- sort(unique(c(margin_out, mr_items)))
     
     if (user_dims) {
-        margin_out <- real2user(margin_out, dimTypes = dimTypes)
+        margin_out <- real2userMargin(margin_out, dimTypes = dimTypes)
     }
  
     if (length(margin_out) == 0) {
@@ -426,11 +426,11 @@ setMethod("bases", "CrunchCube", function (x, margin=NULL) {
 #' argument to work like `margin.table`, or with `margin=0` gives all cell
 #' counts.
 #'
-#' `collapse.dimensions` returns a cube that collapses the dimensions given in
+#' `dimSums` returns a cube that collapses the dimensions given in
 #' `margin`. This is useful if you want to get counts that are equivalent to a
 #' univariate cube from a multivariate cube. For example
-#' `collapse.dimensions(crtabs(~ fruit + pets, ds), 2)` will be equal to
-#' `crtabs(~ fruit, ds)` and `collapse.dimensions(crtabs(~ fruit + pets, ds),
+#' `dimSums(crtabs(~ fruit + pets, ds), 2)` will be equal to
+#' `crtabs(~ fruit, ds)` and `dimSums(crtabs(~ fruit + pets, ds),
 #' 1)` will be equal to `crtabs(~ pets, ds)`.
 #'
 #' @param x a CrunchCube
@@ -446,7 +446,7 @@ setMethod("bases", "CrunchCube", function (x, margin=NULL) {
 #'   returns a list of lists of prop.tables.
 #' @name cube-computing
 #' @aliases cube-computing margin.table prop.table bases round
-#'   collapse.dimensions
+#'   dimSums
 #' @seealso [base::margin.table()] [base::prop.table()]
 NULL
 
@@ -460,8 +460,8 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
 #'
 #' It is helpful to programmatically move from user-specified margins to real
 #' cube margins that apply to the higher-dimensional real cube (with
-#' `user2real`). Or to move from the higher-dimensional real cube to user cube
-#' (with `real2user`).
+#' `user2realMargin`). Or to move from the higher-dimensional real cube to user cube
+#' (with `real2userMargin`).
 #'
 #' @param margin the margin or margins for the user cube to be translated
 #' @param dimTypes dimension types from `getDimTypes()` (by default:
@@ -469,7 +469,7 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
 #' @param cube the cube to translate the margin for (optional if `dimTypes` is
 #'   explicitly supplied)
 #' @param dedupe logical, should the user dimensions in the result be
-#'   deduplicated (for real2user only)
+#'   deduplicated (for real2userMargin only)
 #'
 #' @return margin or margins in the higher-dimension real cube
 #'
@@ -479,7 +479,7 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
 NULL
 
 #' @rdname margin-translation
-user2real <- function(margin, dimTypes = getDimTypes(cube), cube) {
+user2realMargin <- function(margin, dimTypes = getDimTypes(cube), cube) {
     if (is.null(margin)) { 
         # If margin is null, return null
         return(NULL)
@@ -490,7 +490,7 @@ user2real <- function(margin, dimTypes = getDimTypes(cube), cube) {
 }
 
 #' @rdname margin-translation
-real2user <- function(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE) {
+real2userMargin <- function(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE) {
     if (is.null(margin)) { 
         # If margin is null, return null
         return(NULL)

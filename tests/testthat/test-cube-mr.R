@@ -200,22 +200,22 @@ test_that("prop.table(cell) for cat x MR x MR", {
 ### Internal function tests
 ##########################################
 
-test_that("user2real translates cube margins with two categoricals", {
+test_that("user2realMargin translates cube margins with two categoricals", {
     cat_cat <- loadCube(test_path("cubes/cat-x-cat.json"))
-    expect_equal(user2real(1, cube = cat_cat), 1)
-    expect_equal(user2real(2, cube = cat_cat), 2)
-    expect_equal(user2real(c(1, 2), cube = cat_cat), c(1, 2))
-    expect_null(user2real(NULL, cube = cat_cat))
+    expect_equal(user2realMargin(1, cube = cat_cat), 1)
+    expect_equal(user2realMargin(2, cube = cat_cat), 2)
+    expect_equal(user2realMargin(c(1, 2), cube = cat_cat), c(1, 2))
+    expect_null(user2realMargin(NULL, cube = cat_cat))
     
     expect_equal(mr_items_margins(1, cube = cat_cat), 1)
     expect_equal(mr_items_margins(2, cube = cat_cat), 2)
     expect_equal(mr_items_margins(c(1, 2), cube = cat_cat), c(1, 2))
     expect_null(mr_items_margins(NULL, cube = cat_cat))
 
-    expect_equal(real2user(1, cube = cat_cat), 1)
-    expect_equal(real2user(2, cube = cat_cat), 2)
-    expect_equal(real2user(c(1, 2), cube = cat_cat), c(1, 2))
-    expect_null(real2user(NULL, cube = cat_cat))
+    expect_equal(real2userMargin(1, cube = cat_cat), 1)
+    expect_equal(real2userMargin(2, cube = cat_cat), 2)
+    expect_equal(real2userMargin(c(1, 2), cube = cat_cat), c(1, 2))
+    expect_null(real2userMargin(NULL, cube = cat_cat))
         
     expect_equal(mr_items_margins(1, cube = cat_cat, user_dims = TRUE), 1)
     expect_equal(mr_items_margins(2, cube = cat_cat, user_dims = TRUE), 2)
@@ -223,12 +223,12 @@ test_that("user2real translates cube margins with two categoricals", {
     expect_null(mr_items_margins(NULL, cube = cat_cat, user_dims = TRUE))
 })
 
-test_that("user2real translates cube margins with cat by mr by mr", {
+test_that("user2realMargin translates cube margins with cat by mr by mr", {
     mr_cat <- loadCube(test_path("cubes/selected-crosstab-array-first.json"))
-    expect_equal(user2real(1, cube = mr_cat), c(1, 2))
-    expect_equal(user2real(2, cube = mr_cat), 3)
-    expect_equal(user2real(c(1, 2), cube = mr_cat), c(1, 2, 3))
-    expect_null(user2real(NULL, cube = mr_cat))
+    expect_equal(user2realMargin(1, cube = mr_cat), c(1, 2))
+    expect_equal(user2realMargin(2, cube = mr_cat), 3)
+    expect_equal(user2realMargin(c(1, 2), cube = mr_cat), c(1, 2, 3))
+    expect_null(user2realMargin(NULL, cube = mr_cat))
     
     # we can include all selections
     expect_equal(mr_items_margins(1, cube = mr_cat), 1)
@@ -236,11 +236,11 @@ test_that("user2real translates cube margins with cat by mr by mr", {
     expect_equal(mr_items_margins(c(1, 2), cube = mr_cat), c(1, 3))
     expect_equal(mr_items_margins(NULL, cube = mr_cat), 1)
 
-    expect_equal(real2user(1, cube = mr_cat), 1)
-    expect_equal(real2user(2, cube = mr_cat), 1)
-    expect_equal(real2user(3, cube = mr_cat), 2)
-    expect_equal(real2user(c(1, 2), cube = mr_cat), 1)
-    expect_null(real2user(NULL, cube = mr_cat))
+    expect_equal(real2userMargin(1, cube = mr_cat), 1)
+    expect_equal(real2userMargin(2, cube = mr_cat), 1)
+    expect_equal(real2userMargin(3, cube = mr_cat), 2)
+    expect_equal(real2userMargin(c(1, 2), cube = mr_cat), 1)
+    expect_null(real2userMargin(NULL, cube = mr_cat))
     
     expect_equal(mr_items_margins(1, cube = mr_cat, user_dims = TRUE), 1)
     expect_equal(mr_items_margins(2, cube = mr_cat, user_dims = TRUE), c(1, 2))
@@ -248,13 +248,13 @@ test_that("user2real translates cube margins with cat by mr by mr", {
     expect_equal(mr_items_margins(NULL, cube = mr_cat, user_dims = TRUE), 1)
 })
 
-test_that("user2real translates cube margins with cat by mr by mr", {
+test_that("user2realMargin translates cube margins with cat by mr by mr", {
     cat_mr_mr <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
-    expect_equal(user2real(1, cube = cat_mr_mr), 1)
-    expect_equal(user2real(2, cube = cat_mr_mr), c(2, 3))
-    expect_equal(user2real(c(1, 2), cube = cat_mr_mr), c(1, 2, 3))
-    expect_equal(user2real(3, cube = cat_mr_mr), c(4, 5))
-    expect_null(user2real(NULL, cube = cat_mr_mr))
+    expect_equal(user2realMargin(1, cube = cat_mr_mr), 1)
+    expect_equal(user2realMargin(2, cube = cat_mr_mr), c(2, 3))
+    expect_equal(user2realMargin(c(1, 2), cube = cat_mr_mr), c(1, 2, 3))
+    expect_equal(user2realMargin(3, cube = cat_mr_mr), c(4, 5))
+    expect_null(user2realMargin(NULL, cube = cat_mr_mr))
     
     # we can include all selections
     expect_equal(mr_items_margins(1, cube = cat_mr_mr), c(1, 2, 4))
@@ -263,14 +263,14 @@ test_that("user2real translates cube margins with cat by mr by mr", {
     expect_equal(mr_items_margins(3, cube = cat_mr_mr), c(2, 4))
     expect_equal(mr_items_margins(NULL, cube = cat_mr_mr), c(2, 4))
  
-    expect_equal(real2user(1, cube = cat_mr_mr), 1)
-    expect_equal(real2user(2, cube = cat_mr_mr), 2)
-    expect_equal(real2user(3, cube = cat_mr_mr), 2)
-    expect_equal(real2user(4, cube = cat_mr_mr), 3)
-    expect_equal(real2user(5, cube = cat_mr_mr), 3)
-    expect_equal(real2user(c(1, 2), cube = cat_mr_mr), c(1, 2))
-    expect_equal(real2user(c(3, 4), cube = cat_mr_mr), c(2, 3))
-    expect_null(real2user(NULL, cube = cat_mr_mr))
+    expect_equal(real2userMargin(1, cube = cat_mr_mr), 1)
+    expect_equal(real2userMargin(2, cube = cat_mr_mr), 2)
+    expect_equal(real2userMargin(3, cube = cat_mr_mr), 2)
+    expect_equal(real2userMargin(4, cube = cat_mr_mr), 3)
+    expect_equal(real2userMargin(5, cube = cat_mr_mr), 3)
+    expect_equal(real2userMargin(c(1, 2), cube = cat_mr_mr), c(1, 2))
+    expect_equal(real2userMargin(c(3, 4), cube = cat_mr_mr), c(2, 3))
+    expect_null(real2userMargin(NULL, cube = cat_mr_mr))
     
     expect_equal(mr_items_margins(1, cube = cat_mr_mr, user_dims = TRUE), c(1, 2, 3))
     expect_equal(mr_items_margins(2, cube = cat_mr_mr, user_dims = TRUE), c(2, 3))
@@ -279,14 +279,14 @@ test_that("user2real translates cube margins with cat by mr by mr", {
     expect_equal(mr_items_margins(NULL, cube = cat_mr_mr, user_dims = TRUE), c(2, 3))
 })
 
-test_that("user2real translates cube margins with mr by cat by mr", {
+test_that("user2realMargin translates cube margins with mr by cat by mr", {
     mrcatmr_types <- c("mr_items", "mr_selections", "categorical", "mr_items", "mr_selections")
-    expect_equal(user2real(1, mrcatmr_types), c(1,2))
-    expect_equal(user2real(2, mrcatmr_types), 3)
-    expect_equal(user2real(c(1, 2), mrcatmr_types), c(1, 2, 3))
-    expect_equal(user2real(3, mrcatmr_types), c(4, 5))
-    expect_equal(user2real(c(2, 3), mrcatmr_types), c(3, 4, 5))
-    expect_null(user2real(NULL, mrcatmr_types))
+    expect_equal(user2realMargin(1, mrcatmr_types), c(1,2))
+    expect_equal(user2realMargin(2, mrcatmr_types), 3)
+    expect_equal(user2realMargin(c(1, 2), mrcatmr_types), c(1, 2, 3))
+    expect_equal(user2realMargin(3, mrcatmr_types), c(4, 5))
+    expect_equal(user2realMargin(c(2, 3), mrcatmr_types), c(3, 4, 5))
+    expect_null(user2realMargin(NULL, mrcatmr_types))
     
     # we can include all selections
     expect_equal(mr_items_margins(1, mrcatmr_types), c(1, 4))
@@ -296,22 +296,22 @@ test_that("user2real translates cube margins with mr by cat by mr", {
     expect_equal(mr_items_margins(c(2, 3), mrcatmr_types), c(1, 3, 4))
     expect_equal(mr_items_margins(NULL, mrcatmr_types), c(1, 4))
 
-    expect_equal(real2user(1, mrcatmr_types), 1)
-    expect_equal(real2user(2, mrcatmr_types), 1)
-    expect_equal(real2user(3, mrcatmr_types), 2)
-    expect_equal(real2user(4, mrcatmr_types), 3)
-    expect_equal(real2user(5, mrcatmr_types), 3)
-    expect_equal(real2user(c(1, 2), mrcatmr_types), 1)
-    expect_equal(real2user(c(4, 5), mrcatmr_types), 3)
-    expect_equal(real2user(c(2, 3, 4), mrcatmr_types), c(1, 2, 3))
-    expect_null(real2user(NULL, mrcatmr_types))
+    expect_equal(real2userMargin(1, mrcatmr_types), 1)
+    expect_equal(real2userMargin(2, mrcatmr_types), 1)
+    expect_equal(real2userMargin(3, mrcatmr_types), 2)
+    expect_equal(real2userMargin(4, mrcatmr_types), 3)
+    expect_equal(real2userMargin(5, mrcatmr_types), 3)
+    expect_equal(real2userMargin(c(1, 2), mrcatmr_types), 1)
+    expect_equal(real2userMargin(c(4, 5), mrcatmr_types), 3)
+    expect_equal(real2userMargin(c(2, 3, 4), mrcatmr_types), c(1, 2, 3))
+    expect_null(real2userMargin(NULL, mrcatmr_types))
    
     # if we request non-deduplication with MRs, we get the right values
-    expect_equal(real2user(c(1, 2), mrcatmr_types, dedupe = FALSE), c(1, 1))
-    expect_equal(real2user(c(4, 5), mrcatmr_types, dedupe = FALSE), c(3, 3))
-    expect_equal(real2user(c(2, 3, 4), mrcatmr_types, dedupe = FALSE), c(1, 2, 3))
-    expect_equal(real2user(c(1, 2, 3, 4, 5), mrcatmr_types, dedupe = FALSE), c(1, 1, 2, 3, 3))
-    expect_null(real2user(NULL, mrcatmr_types, dedupe = FALSE))
+    expect_equal(real2userMargin(c(1, 2), mrcatmr_types, dedupe = FALSE), c(1, 1))
+    expect_equal(real2userMargin(c(4, 5), mrcatmr_types, dedupe = FALSE), c(3, 3))
+    expect_equal(real2userMargin(c(2, 3, 4), mrcatmr_types, dedupe = FALSE), c(1, 2, 3))
+    expect_equal(real2userMargin(c(1, 2, 3, 4, 5), mrcatmr_types, dedupe = FALSE), c(1, 1, 2, 3, 3))
+    expect_null(real2userMargin(NULL, mrcatmr_types, dedupe = FALSE))
          
     expect_equal(mr_items_margins(1, mrcatmr_types, user_dims = TRUE), c(1, 3))
     expect_equal(mr_items_margins(2, mrcatmr_types, user_dims = TRUE), c(1, 2, 3))
@@ -321,14 +321,14 @@ test_that("user2real translates cube margins with mr by cat by mr", {
     expect_equal(mr_items_margins(NULL, mrcatmr_types, user_dims = TRUE), c(1, 3))
 })
 
-test_that("user2real translates cube margins with catarray by mr", {
+test_that("user2realMargin translates cube margins with catarray by mr", {
     ca_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
-    expect_equal(user2real(1, cube = ca_mr), 1)
-    expect_equal(user2real(2, cube = ca_mr), 2)
-    expect_equal(user2real(3, cube = ca_mr), c(3, 4))
-    expect_equal(user2real(c(1, 2), cube = ca_mr), c(1, 2))
-    expect_equal(user2real(3, cube = ca_mr), c(3, 4))
-    expect_null(user2real(NULL, cube = ca_mr))   
+    expect_equal(user2realMargin(1, cube = ca_mr), 1)
+    expect_equal(user2realMargin(2, cube = ca_mr), 2)
+    expect_equal(user2realMargin(3, cube = ca_mr), c(3, 4))
+    expect_equal(user2realMargin(c(1, 2), cube = ca_mr), c(1, 2))
+    expect_equal(user2realMargin(3, cube = ca_mr), c(3, 4))
+    expect_null(user2realMargin(NULL, cube = ca_mr))   
     
     expect_equal(mr_items_margins(1, cube = ca_mr), c(1, 3))
     expect_equal(mr_items_margins(2, cube = ca_mr), c(2, 3))
@@ -337,12 +337,12 @@ test_that("user2real translates cube margins with catarray by mr", {
     expect_equal(mr_items_margins(3, cube = ca_mr), 3)
     expect_equal(mr_items_margins(NULL, cube = ca_mr), 3) 
 
-    expect_equal(real2user(1, cube = ca_mr), 1)
-    expect_equal(real2user(2, cube = ca_mr), 2)
-    expect_equal(real2user(3, cube = ca_mr), 3)
-    expect_equal(real2user(4, cube = ca_mr), 3)
-    expect_equal(real2user(c(1, 2), cube = ca_mr), c(1, 2))
-    expect_null(real2user(NULL, cube = ca_mr))   
+    expect_equal(real2userMargin(1, cube = ca_mr), 1)
+    expect_equal(real2userMargin(2, cube = ca_mr), 2)
+    expect_equal(real2userMargin(3, cube = ca_mr), 3)
+    expect_equal(real2userMargin(4, cube = ca_mr), 3)
+    expect_equal(real2userMargin(c(1, 2), cube = ca_mr), c(1, 2))
+    expect_null(real2userMargin(NULL, cube = ca_mr))   
         
     expect_equal(mr_items_margins(1, cube = ca_mr, user_dims = TRUE), c(1, 3))
     expect_equal(mr_items_margins(2, cube = ca_mr, user_dims = TRUE), c(2, 3))
@@ -352,17 +352,17 @@ test_that("user2real translates cube margins with catarray by mr", {
     expect_equal(mr_items_margins(NULL, cube = ca_mr, user_dims = TRUE), 3)
 })
 
-test_that("user2real translates cube margins with cat by mr by mr by mr", {
+test_that("user2realMargin translates cube margins with cat by mr by mr by mr", {
     catmrmrmr_types <- c(
         "categorical", "mr_items", "mr_selections",
         "mr_items", "mr_selections", "mr_items", "mr_selections")
-    expect_equal(user2real(1, catmrmrmr_types), 1)
-    expect_equal(user2real(2, catmrmrmr_types), c(2,3))
-    expect_equal(user2real(c(1, 2), catmrmrmr_types), c(1, 2, 3))
-    expect_equal(user2real(3, catmrmrmr_types), c(4, 5))
-    expect_equal(user2real(c(2, 3), catmrmrmr_types), c(2, 3, 4, 5))
-    expect_equal(user2real(4, catmrmrmr_types), c(6, 7))
-    expect_null(user2real(NULL, catmrmrmr_types))
+    expect_equal(user2realMargin(1, catmrmrmr_types), 1)
+    expect_equal(user2realMargin(2, catmrmrmr_types), c(2,3))
+    expect_equal(user2realMargin(c(1, 2), catmrmrmr_types), c(1, 2, 3))
+    expect_equal(user2realMargin(3, catmrmrmr_types), c(4, 5))
+    expect_equal(user2realMargin(c(2, 3), catmrmrmr_types), c(2, 3, 4, 5))
+    expect_equal(user2realMargin(4, catmrmrmr_types), c(6, 7))
+    expect_null(user2realMargin(NULL, catmrmrmr_types))
     
     # we can include all selections
     expect_equal(mr_items_margins(1, catmrmrmr_types), c(1, 2, 4, 6))
@@ -372,16 +372,16 @@ test_that("user2real translates cube margins with cat by mr by mr by mr", {
     expect_equal(mr_items_margins(4, catmrmrmr_types), c(2, 4, 6))
     expect_equal(mr_items_margins(NULL, catmrmrmr_types), c(2, 4, 6))
 
-    expect_equal(real2user(1, catmrmrmr_types), 1)
-    expect_equal(real2user(2, catmrmrmr_types), 2)
-    expect_equal(real2user(3, catmrmrmr_types), 2)
-    expect_equal(real2user(4, catmrmrmr_types), 3)
-    expect_equal(real2user(5, catmrmrmr_types), 3)
-    expect_equal(real2user(6, catmrmrmr_types), 4)
-    expect_equal(real2user(7, catmrmrmr_types), 4)
-    expect_equal(real2user(c(1, 2), catmrmrmr_types), c(1, 2))
-    expect_equal(real2user(c(2, 3), catmrmrmr_types), 2)
-    expect_null(real2user(NULL, catmrmrmr_types)) 
+    expect_equal(real2userMargin(1, catmrmrmr_types), 1)
+    expect_equal(real2userMargin(2, catmrmrmr_types), 2)
+    expect_equal(real2userMargin(3, catmrmrmr_types), 2)
+    expect_equal(real2userMargin(4, catmrmrmr_types), 3)
+    expect_equal(real2userMargin(5, catmrmrmr_types), 3)
+    expect_equal(real2userMargin(6, catmrmrmr_types), 4)
+    expect_equal(real2userMargin(7, catmrmrmr_types), 4)
+    expect_equal(real2userMargin(c(1, 2), catmrmrmr_types), c(1, 2))
+    expect_equal(real2userMargin(c(2, 3), catmrmrmr_types), 2)
+    expect_null(real2userMargin(NULL, catmrmrmr_types)) 
     
     expect_equal(mr_items_margins(1, catmrmrmr_types, user_dims = TRUE), c(1, 2, 3, 4))
     expect_equal(mr_items_margins(2, catmrmrmr_types, user_dims = TRUE), c(2, 3, 4))

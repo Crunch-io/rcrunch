@@ -1,13 +1,24 @@
-#' @rdname cube-computing
-#' @export
-setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
+dimSums <- function (x, margin = NULL) {
     # ensure that we have sensible margin input
     selecteds <- is.selectedDimension(x@dims)
     check_margins(margin, selecteds)
     
+    # ensure that the cube is a counts cube
+    measures_types <- names(x@arrays)
+    noncounts <- setdiff(measures_types, c("count", ".unweighted_counts"))
+    if (length(noncounts) > 0) {
+        msg <-c(
+            "Can't sum across dimensions with measures other than count. ",
+            "The cube you provided included measures: ",
+            serialPaste(noncounts)
+        )
+        halt(msg)
+    }
+
+    
     # translate from user-cube margins to real-cube margins and establish the
     # two groups of margins: those to collapse and those to keep
-    margins_to_collapse <- user2real(margin, cube = x)
+    margins_to_collapse <- user2realMargin(margin, cube = x)
     margins_to_keep <- setdiff(seq_along(x@dims), margins_to_collapse)
     
     # if there are any _items in the margin to collapse, be wary! Since there
@@ -22,7 +33,7 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
     # iterate through measures, collapsing the dimension(s) specified.
     out@arrays[] <- lapply(
         out@arrays,
-        collapse_with, 
+        collapse_dims, 
         margins_to_keep = margins_to_keep, 
         margins_to_collapse = margins_to_collapse, 
         collapsed_items = collapsed_items)
@@ -57,7 +68,7 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
     out$result$counts <-  as.list(unname(aperm(as.array(out@arrays$.unweighted_counts), ap)))
     
     return(out)
-})
+}
 
 
 #' Collapse an array from a CrunchCube with the specified function
@@ -82,7 +93,7 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
 #' @return a duly-collapsed array
 #' @keywords internal
 #'   
-collapse_with <- function(array_in,
+collapse_dims <- function(array_in,
                           margins_to_collapse,
                           margins_to_keep,
                           collapsed_items){

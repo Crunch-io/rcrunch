@@ -47,11 +47,11 @@ index.table <- function (x, margin, baseline) {
     tab <- prop.table(x, margin)
     
     # the denominators are the proportions of the uni-variate cube based on the
-    # other margin. Because collapse.dimensions collapses the dimensions given
+    # other margin. Because dimSums collapses the dimensions given
     # in margin, we get a uni(variate )cube for the opposite margin. Only do
     # this if an explicit baseline wasn't specified.
     if (missing(baseline)) {
-        unicube <- collapse.dimensions(x, margin)
+        unicube <- dimSums(x, margin)
         baseline <- prop.table(unicube)
     }
 

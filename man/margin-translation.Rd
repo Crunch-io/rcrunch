@@ -2,13 +2,13 @@
 % Please edit documentation in R/cube-result.R
 \name{margin-translation}
 \alias{margin-translation}
-\alias{user2real}
-\alias{real2user}
+\alias{user2realMargin}
+\alias{real2userMargin}
 \title{Convert from user margins to real cube margins or vice versa}
 \usage{
-user2real(margin, dimTypes = getDimTypes(cube), cube)
+user2realMargin(margin, dimTypes = getDimTypes(cube), cube)
 
-real2user(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE)
+real2userMargin(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE)
 }
 \arguments{
 \item{margin}{the margin or margins for the user cube to be translated}
@@ -20,7 +20,7 @@ real2user(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE)
 explicitly supplied)}
 
 \item{dedupe}{logical, should the user dimensions in the result be
-deduplicated (for real2user only)}
+deduplicated (for real2userMargin only)}
 }
 \value{
 margin or margins in the higher-dimension real cube
@@ -28,7 +28,7 @@ margin or margins in the higher-dimension real cube
 \description{
 It is helpful to programmatically move from user-specified margins to real
 cube margins that apply to the higher-dimensional real cube (with
-\code{user2real}). Or to move from the higher-dimensional real cube to user cube
-(with \code{real2user}).
+\code{user2realMargin}). Or to move from the higher-dimensional real cube to user cube
+(with \code{real2userMargin}).
 }
 \keyword{internal}
