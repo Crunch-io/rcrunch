@@ -49,8 +49,11 @@ test_that("dimSums(mr_x_mr)", {
     # check against a univariate cube with the same data to confirm this is 
     # actually the univariate, unconditional margin
     mr_x_self <- loadCube("cubes/natrep-cube.json")
-    expect_equal(dimSums(mr_x_mr, 2),
-                 mr_x_self)  
+    dimsum_cube <- dimSums(mr_x_mr, 2)
+    expect_equal(dimsum_cube@dims,
+                 mr_x_self@dims)
+    expect_equal(dimsum_cube@arrays,
+                 mr_x_self@arrays)
 })
 
 test_that("dimSums(mr_x_mr) proportions", {
@@ -163,29 +166,53 @@ with_test_authentication({
         bivariate_cube <- crtabs(~ allpets + q1, data=ds)
         univariate_allpets <- crtabs(~ allpets, data=ds)
         univariate_q1 <- crtabs(~ q1, data=ds)
-        expect_equal(dimSums(bivariate_cube, 1), univariate_q1)
-        expect_equal(dimSums(bivariate_cube, 2), univariate_allpets)
+        expect_equal(dimSums(bivariate_cube, 1)@dims, univariate_q1@dims)
+        expect_equal(dimSums(bivariate_cube, 1)@arrays, univariate_q1@arrays)
+        expect_equal(dimSums(bivariate_cube, 2)@dims, univariate_allpets@dims)
+        expect_equal(dimSums(bivariate_cube, 2)@arrays, univariate_allpets@arrays)
         
         
         trivariate_cube <- crtabs(~ country + allpets + q1, data=ds)
         expect_equal(
-            dimSums(trivariate_cube, 1),
-            crtabs(~ allpets + q1, data=ds))
+            dimSums(trivariate_cube, 1)@dims,
+            crtabs(~ allpets + q1, data=ds)@dims)
         expect_equal(
-            dimSums(trivariate_cube, 2),
-            crtabs(~ country + q1, data=ds))
-        expect_equal(
-            dimSums(trivariate_cube, 3),
-            crtabs(~ country + allpets, data=ds))
+            dimSums(trivariate_cube, 1)@arrays,
+            crtabs(~ allpets + q1, data=ds)@arrays)
         
         expect_equal(
-            dimSums(trivariate_cube, c(1, 2)),
-            crtabs(~ q1, data=ds))
+            dimSums(trivariate_cube, 2)@dims,
+            crtabs(~ country + q1, data=ds)@dims)
         expect_equal(
-            dimSums(trivariate_cube, c(2, 3)),
-            crtabs(~ country, data=ds))
+            dimSums(trivariate_cube, 2)@arrays,
+            crtabs(~ country + q1, data=ds)@arrays)
+        
         expect_equal(
-            dimSums(trivariate_cube, c(1, 3)),
-            crtabs(~ allpets, data=ds))
+            dimSums(trivariate_cube, 3)@dims,
+            crtabs(~ country + allpets, data=ds)@dims)
+        expect_equal(
+            dimSums(trivariate_cube, 3)@arrays,
+            crtabs(~ country + allpets, data=ds)@arrays)
+        
+        expect_equal(
+            dimSums(trivariate_cube, c(1, 2))@dims,
+            crtabs(~ q1, data=ds)@dims)
+        expect_equal(
+            dimSums(trivariate_cube, c(1, 2))@arrays,
+            crtabs(~ q1, data=ds)@arrays)
+        
+        expect_equal(
+            dimSums(trivariate_cube, c(2, 3))@dims,
+            crtabs(~ country, data=ds)@dims)
+        expect_equal(
+            dimSums(trivariate_cube, c(2, 3))@arrays,
+            crtabs(~ country, data=ds)@arrays)
+        
+        expect_equal(
+            dimSums(trivariate_cube, c(1, 3))@dims,
+            crtabs(~ allpets, data=ds)@dims)
+        expect_equal(
+            dimSums(trivariate_cube, c(1, 3))@arrays,
+            crtabs(~ allpets, data=ds)@arrays)
     })
 })
