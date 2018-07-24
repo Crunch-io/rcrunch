@@ -337,7 +337,12 @@ generateWeightEntry <- function (expr) {
         targets <- targets / 100
     }
 
-    target_list <- lapply(seq_along(targets), function (i) c(i, targets[i]))
+    # the targets must be the ids of the categories to align correctly
+    target_list <- mapply(
+        function (id, target) c(id, target),
+        id = ids(categories(var)),
+        target = targets,
+        SIMPLIFY = FALSE)
 
     return(list(
         variable = self(var),
