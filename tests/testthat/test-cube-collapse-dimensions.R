@@ -144,7 +144,7 @@ test_that("dimSums() prevents use with non-count cubes", {
     expect_error(
         dimSums(mean_cube, 1),
         paste0(
-            "Can't sum across dimensions with measures other than count. ",
+            "You can't use CrunchCubes with measures other than count. ",
             "The cube you provided included measures: mean"
         )
     )

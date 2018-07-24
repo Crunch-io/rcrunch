@@ -15,6 +15,7 @@ dimSums <- function (x, margin = NULL) {
         halt(msg)
     }
 
+    only_count_cube(x)
     
     # translate from user-cube margins to real-cube margins and establish the
     # two groups of margins: those to collapse and those to keep
@@ -45,6 +46,20 @@ dimSums <- function (x, margin = NULL) {
     return(out)
 }
 
+
+only_count_cube <- function (cube) {
+    # ensure that the cube is a counts cube
+    measures_types <- names(cube@arrays)
+    noncounts <- setdiff(measures_types, c("count", ".unweighted_counts"))
+    if (length(noncounts) > 0) {
+        msg <-c(
+            "You can't use CrunchCubes with measures other than count. ",
+            "The cube you provided included measures: ",
+            serialPaste(noncounts)
+        )
+        halt(msg)
+    }
+}
 
 #' Collapse an array from a CrunchCube with the specified function
 #'

@@ -104,6 +104,17 @@ test_that("index table on an mr x mr compared to calculation with mr cube", {
     )
 })
 
+test_that("index.table validation", {
+    mean_cube <- loadCube("cubes/mean-age-food_groups-x-pasta.json")
+    expect_error(
+        index.table(mean_cube, 1),
+        paste0(
+            "You can't use CrunchCubes with measures other than count. ",
+            "The cube you provided included measures: mean"
+        )
+    )
+})
+
 with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
     

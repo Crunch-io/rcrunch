@@ -11,14 +11,18 @@ index.table(x, margin, baseline)
 
 \item{margin}{which margin to index against (1 for rows, 2 for columns)}
 
-\item{baseline}{an arbitrary set of proportions to compare the table given in \code{x} to. Useful for comparing two separate cubes. \code{baseline} must have the same length as the extent of the dimension given in \code{margin}.}
+\item{baseline}{an arbitrary set of proportions to compare the table given in
+\code{x} to. Useful for comparing two separate cubes. \code{baseline} must have the
+same length as the extent of the dimension given in \code{margin}.}
 }
 \value{
 an array of percentages indexed to the margin provided
 }
 \description{
 Index tables are percentages of percentages. They take the percentage from
-\code{prop.table(cube, margin)} and, by default, divide that by the proportions of the other margin. The \code{baseline} argument can be used to provide baseline proportions to compare against.
+\code{prop.table(cube, margin)} and, by default, divide that by the proportions of
+the other margin. The \code{baseline} argument can be used to provide baseline
+proportions to compare against.
 }
 \details{
 \code{index.table()} is only implemented for 2 dimensional cubes. If you need to
