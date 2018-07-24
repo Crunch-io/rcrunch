@@ -294,7 +294,6 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"), function (
   }, analysis = x[[i]], fmla = value)
 })
 
-
 setMethod("cubes", "AnalysisCatalog", function(x) {
     lapply(seq_along(x@index), function(i) cube(x[[i]]))
 })
@@ -308,7 +307,8 @@ setMethod("query<-", c("Analysis", "formula"), function(x, value) {
     ds <- loadDataset(datasetReference(x))
     payload <- x@body
     payload$query <- formulaToCubeQuery(value, data = ds)
-    crPATCH(self(x), body = toJSON(x@body))
+    payload <- wrapEntity(body = payload)
+    crPATCH(self(x), body = toJSON(payload))
     invisible(refresh(x))
 })
 

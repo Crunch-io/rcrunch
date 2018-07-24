@@ -1,7 +1,5 @@
 context("Interacting with decks")
 
-
-
 with_test_authentication({
     ds <- newDataset(df)
     test_that("decks can be created", {
@@ -50,7 +48,6 @@ with_test_authentication({
         subtitles(deck) <- c("new-one-analysis", "new-two-analyses")
         expect_equal(subtitles(deck)[1], "new-one-analysis")
         titles(deck)[1] <- "slide1"
-        browser()
         expect_equal(titles(deck)[1], "slide1")
         subtitles(deck)[1] <- "one analysis"
         expect_equal(subtitles(deck)[1],  "one analysis")
@@ -65,7 +62,6 @@ with_test_authentication({
     slideCat <- slides(deck)
     test_that("slides method",{
         expect_is(slideCat, "SlideCatalog")
-        browser()
         expect_equal(length(slideCat), 2)
         expect_equal(titles(slideCat), c("slide1", "new_title2"))
     })
@@ -101,10 +97,21 @@ with_test_authentication({
         expect_equal(length(cube_list), length(anCat))
         expect_identical(cube_list[[1]], crtabs(~v2, ds))
     })
-    test_that("Formula's can be assigned to analyses", {
-        query(analysis) <- ~v3
-        browser()
-        expect_identical(cube(analyses(slide)[[1]]), crtabs(~v3, ds))
+
+    test_that("An analysis can be turned into a cube", {
+        expect_identical(cube(analysis), crtabs( ~v2, ds))
     })
 
+    test_that("cubes on an analysis catalog returns a list of cubes", {
+        ancat <- analyses(slide)
+        cube_list <- cubes(ancat)
+        expect_is(cube_list, "list")
+        expect_identical(length(cube_list), length(ancat))
+        expect_identical(cube_list[[1]], crtabs(~v3, ds))
+    })
+
+    test_that("Formula's can be assigned to analyses", {
+        query(analysis) <- ~v3
+        expect_identical(cube(analysis), crtabs(~v3, ds))
+    })
 })
