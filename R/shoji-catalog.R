@@ -289,7 +289,6 @@ as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x
 catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
     list_columns = c("subvariables", "subvariables_catalog"),
     ...) {
-
     if (length(x) == 0) {
         ## If catalog is empty, bail
         return(data.frame())
@@ -340,7 +339,11 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
         }
 
         # Reorder columns to match the order in which keys were supplied
-        out <- out[, keys, drop = FALSE]
+        # Some catalogs get to this point with no columns, subsetting caused
+        # an error in that case.
+        if (ncol(out) > 0) {
+            out <- out[, keys, drop = FALSE]
+        }
         return(out)
     }
 }
