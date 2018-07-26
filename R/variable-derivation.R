@@ -48,11 +48,11 @@ NULL
 
 #' @export
 #' @rdname derivations
-setMethod("derivation", "CrunchVariable", function (x) {
+setMethod("derivation", "CrunchVariable", function(x) {
     if (!is.derived(x)) {
         return(NULL)
     }
-    expr <- CrunchExpr(expression=entity(x)@body$derivation)
+    expr <- CrunchExpr(expression = entity(x)@body$derivation)
     # self(x) is needed and not variableCatalog because the variables are stored
     # as '../varid/' and when absoluteURL concats them, the varid from self(x)
     # is automatically removed.
@@ -62,7 +62,7 @@ setMethod("derivation", "CrunchVariable", function (x) {
 })
 
 
-absolutifyVariables <- function (expr, base.url) {
+absolutifyVariables <- function(expr, base.url) {
     if (is.list(expr)) {
         # Recurse.
         lists <- vapply(expr, is.list, logical(1))
@@ -79,17 +79,19 @@ absolutifyVariables <- function (expr, base.url) {
 
 #' @export
 #' @rdname derivations
-setMethod("derivation<-", c("CrunchVariable", "ANY"), function (x, value) {
+setMethod("derivation<-", c("CrunchVariable", "ANY"), function(x, value) {
     if (!is.derived(x)) {
         halt("The variable ", dQuote(name(x)), " must already be a derived variable.")
     }
     if (!is.CrunchExpr(value)) {
-        halt("The value ", dQuote(substitute(value)), " must be a CrunchExpr, got a ",
-             class(value), " instead.")
+        halt(
+            "The value ", dQuote(substitute(value)), " must be a CrunchExpr, got a ",
+            class(value), " instead."
+        )
     }
 
-    payload <- toJSON(list(derivation=value@expression))
-    crPATCH(self(x), body=payload)
+    payload <- toJSON(list(derivation = value@expression))
+    crPATCH(self(x), body = payload)
 
     ## Refresh and return
     dropCache(datasetReference(x))
@@ -98,10 +100,10 @@ setMethod("derivation<-", c("CrunchVariable", "ANY"), function (x, value) {
 
 # sets derived to FALSE, which integrates / instantiates the variable's values
 # silently takes and discards `value` to make method dispatch easier
-integrateDerivedVar <- function (x, value) {
+integrateDerivedVar <- function(x, value) {
     if (is.derived(x)) {
-        payload <- toJSON(list(derived=FALSE))
-        crPATCH(self(x), body=payload)
+        payload <- toJSON(list(derived = FALSE))
+        crPATCH(self(x), body = payload)
 
         ## Refresh and return
         dropCache(datasetReference(x))
@@ -117,19 +119,21 @@ setMethod("derivation<-", c("CrunchVariable", "NULL"), integrateDerivedVar)
 #' @rdname derivations
 #' @aliases is.derived
 #' @export
-setMethod("is.derived", "CrunchVariable", function (x) {
+setMethod("is.derived", "CrunchVariable", function(x) {
     isTRUE(tuple(x)$derived)
 })
 
 #' @rdname derivations
 #' @aliases is.derived<-
 #' @export
-setMethod("is.derived<-", c("CrunchVariable", "logical"), function (x, value) {
+setMethod("is.derived<-", c("CrunchVariable", "logical"), function(x, value) {
     if (!isTRUE(value)) {
-       x <- integrateDerivedVar(x, value)
+        x <- integrateDerivedVar(x, value)
     } else if (!is.derived(x)) {
-        halt("can't change a non-derived variable into a derived one with ",
-             "is.derived().")
+        halt(
+            "can't change a non-derived variable into a derived one with ",
+            "is.derived()."
+        )
     }
     return(x)
 })

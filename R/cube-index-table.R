@@ -32,8 +32,8 @@
 #' }
 #'
 #' @export
-index.table <- function (x, margin) {
-    if (length(dim(x)) != 2){
+index.table <- function(x, margin) {
+    if (length(dim(x)) != 2) {
         halt("Index tables can only be calculated for 2 dimensional cubes.")
     }
     other_margin <- 3 - margin ## Assumes 2-D
@@ -43,7 +43,7 @@ index.table <- function (x, margin) {
 
     if (identical(dim(tab), dim(marg))) {
         # if the dimensions are the same, use direct division, needed for MRs
-        return(tab/marg * 100)
+        return(tab / marg * 100)
     } else {
         return(sweep(tab, other_margin, marg, "/") * 100)
     }

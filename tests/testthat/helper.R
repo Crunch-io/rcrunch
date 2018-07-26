@@ -3,7 +3,7 @@ set.seed(666)
 
 "%>%" <- magrittr::`%>%`
 
-skip_on_jenkins <- function (...) {
+skip_on_jenkins <- function(...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
         skip(...)
     }
@@ -18,15 +18,15 @@ uncached <- httpcache::uncached
 ## .onAttach stuff, for testthat to work right
 ## See other options in inst/crunch-test.R
 options(
-    crunch.debug=FALSE,
-    digits.secs=3,
-    crunch.timeout=20, ## In case an import fails to start, don't wait forever
+    crunch.debug = FALSE,
+    digits.secs = 3,
+    crunch.timeout = 20, ## In case an import fails to start, don't wait forever
     # httpcache.log="",
-    crunch.require.confirmation=TRUE,
-    crunch.check.updates=FALSE,
-    crunch.namekey.dataset="alias",
-    crunch.namekey.array="alias",
-    crunch.already.shown.folders.msg=TRUE,
+    crunch.require.confirmation = TRUE,
+    crunch.check.updates = FALSE,
+    crunch.namekey.dataset = "alias",
+    crunch.namekey.array = "alias",
+    crunch.already.shown.folders.msg = TRUE,
     # crayon options for testing on travis
     crayon.enabled = TRUE,
     crayon.colors = 256
@@ -34,46 +34,58 @@ options(
 crunch:::.onLoad()
 
 ## Test serialize and deserialize
-cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
+cereal <- function(x) fromJSON(toJSON(x), simplifyVector = FALSE)
 
-newDatasetFromFixture <- function (filename) {
+newDatasetFromFixture <- function(filename) {
     ## Grab csv and json from "dataset-fixtures" and make a dataset
     m <- fromJSON(file.path("dataset-fixtures", paste0(filename, ".json")),
-        simplifyVector=FALSE)
-    return(suppressMessages(createWithMetadataAndFile(m,
-        file.path("dataset-fixtures", paste0(filename, ".csv")))))
+        simplifyVector = FALSE
+    )
+    return(suppressMessages(createWithMetadataAndFile(
+        m,
+        file.path("dataset-fixtures", paste0(filename, ".csv"))
+    )))
 }
 
-releaseAndReload <- function (dataset) {
+releaseAndReload <- function(dataset) {
     .releaseDataset(dataset)
     return(refresh(dataset))
 }
 
 ## Data frames to make datasets with
-df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)),
-                 v2=c(letters[1:15], rep(NA_character_, 5)),
-                 v3=8:27,
-                 v4=as.factor(LETTERS[2:3]),
-                 v5=as.Date(0:19, origin="1955-11-05"),
-                 v6=TRUE,
-                 stringsAsFactors=FALSE)
+df <- data.frame(
+    v1 = c(rep(NA_real_, 5), rnorm(15)),
+    v2 = c(letters[1:15], rep(NA_character_, 5)),
+    v3 = 8:27,
+    v4 = as.factor(LETTERS[2:3]),
+    v5 = as.Date(0:19, origin = "1955-11-05"),
+    v6 = TRUE,
+    stringsAsFactors = FALSE
+)
 
-mrdf <- data.frame(mr_1=c(1, 0, 1, NA_real_),
-                   mr_2=c(0, 0, 1, NA_real_),
-                   mr_3=c(0, 0, 1, NA_real_),
-                   v4=as.factor(LETTERS[2:3]),
-                   stringsAsFactors=FALSE)
+mrdf <- data.frame(
+    mr_1 = c(1, 0, 1, NA_real_),
+    mr_2 = c(0, 0, 1, NA_real_),
+    mr_3 = c(0, 0, 1, NA_real_),
+    v4 = as.factor(LETTERS[2:3]),
+    stringsAsFactors = FALSE
+)
 
-mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
-                        "CA", "MR"), selections=NULL) {
+mrdf.setup <- function(dataset, pattern = "mr_", name = ifelse(is.null(selections),
+                           "CA", "MR"
+                       ), selections = NULL) {
     cast.these <- grep(pattern, names(dataset))
-    dataset[cast.these] <- lapply(dataset[cast.these],
-        castVariable, "categorical")
+    dataset[cast.these] <- lapply(
+        dataset[cast.these],
+        castVariable, "categorical"
+    )
     if (is.null(selections)) {
-        dataset[[name]] <- makeArray(dataset[cast.these], name=name)
+        dataset[[name]] <- makeArray(dataset[cast.these], name = name)
     } else {
-        dataset[[name]] <- makeMR(dataset[cast.these], name=name,
-            selections=selections)
+        dataset[[name]] <- makeMR(dataset[cast.these],
+            name = name,
+            selections = selections
+        )
     }
     return(dataset)
 }

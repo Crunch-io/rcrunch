@@ -46,26 +46,30 @@
 NULL
 
 
-is.Insertion <- function (x) inherits(x, "Insertion")
+is.Insertion <- function(x) inherits(x, "Insertion")
 
 # check insertion validity only when a user creates an Insertion so that the
 # child classes like Subtotal and Heading aren't also checked
-insertionValidity <- function (object) {
+insertionValidity <- function(object) {
     val <- TRUE
 
     reqs <- c("anchor", "name")
     mems <- reqs %in% names(object)
 
     if (!all(mems)) {
-        val <- paste0("An Insertion must have at least ",
-                      serialPaste(dQuote(reqs)), ". Missing: ",
-                      serialPaste(dQuote(reqs[!mems])))
+        val <- paste0(
+            "An Insertion must have at least ",
+            serialPaste(dQuote(reqs)), ". Missing: ",
+            serialPaste(dQuote(reqs[!mems]))
+        )
     }
 
     if (!is.na(func(object)) && is.na(arguments(object))) {
         # add checking so that args is either a vectorOrList of numerics
-        val <- paste0("If an Insertion has a ", dQuote("function"),
-                      " it must also have ", dQuote("args"))
+        val <- paste0(
+            "If an Insertion has a ", dQuote("function"),
+            " it must also have ", dQuote("args")
+        )
     }
 
     if (val != TRUE) {
@@ -73,16 +77,19 @@ insertionValidity <- function (object) {
     }
 }
 
-is.Insertions <- function (x) inherits(x, "Insertions")
+is.Insertions <- function(x) inherits(x, "Insertions")
 
-setValidity("Insertions", function (object) {
+setValidity("Insertions", function(object) {
     are.inserts <- vapply(object, is.Insertion, logical(1))
     if (!all(are.inserts)) {
         badcount <- sum(!are.inserts)
-        return(paste0("Invalid insertions: ", badcount,
-                      ifelse(badcount>1,
-                             " elements are not Crunch Insertion objects.",
-                             " element is not a Crunch Insertion object.")))
+        return(paste0(
+            "Invalid insertions: ", badcount,
+            ifelse(badcount > 1,
+                " elements are not Crunch Insertion objects.",
+                " element is not a Crunch Insertion object."
+            )
+        ))
     }
     if (any(duplicated(names(object)))) {
         return("Invalid insertion names: must be unique")
@@ -90,25 +97,27 @@ setValidity("Insertions", function (object) {
     return(TRUE)
 })
 
-validateNewAnchor <- function (anchor) {
+validateNewAnchor <- function(anchor) {
     if (is.whole(anchor)) {
         return(anchor)
     }
 
-    if (is.character(anchor) && (anchor == "top" | anchor == "bottom") ) {
+    if (is.character(anchor) && (anchor == "top" | anchor == "bottom")) {
         return(anchor)
     }
 
-    halt("an anchor must be a numeric or the character ", dQuote("top"),
-        " or ", dQuote("bottom"))
+    halt(
+        "an anchor must be a numeric or the character ", dQuote("top"),
+        " or ", dQuote("bottom")
+    )
 }
 
-setAnchor <- function (x, value) {
+setAnchor <- function(x, value) {
     x[["anchor"]] <- validateNewAnchor(value)
     return(x)
 }
 
-setAfter <- function (x, value) {
+setAfter <- function(x, value) {
     # if the value is top/bottom set position instead of after
     if (value %in% c("top", "bottom")) {
         x[["position"]] <- value
@@ -121,14 +130,14 @@ setAfter <- function (x, value) {
     return(x)
 }
 
-validateNewSubtotal <- function (comb) {
+validateNewSubtotal <- function(comb) {
     if (!is.numeric(comb)) {
         halt("a subtotal must be a numeric")
     }
     return(comb)
 }
 
-setSubtotal <- function (x, value) {
+setSubtotal <- function(x, value) {
     x[["args"]] <- validateNewSubtotal(value)
     x[["function"]] <- "subtotal"
     return(x)
@@ -160,7 +169,7 @@ setMethod("subtotals<-", "Insertion", setSubtotal)
 
 #' @rdname Insertions
 #' @export
-setMethod("arguments<-", "Insertion", function (x, value) {
+setMethod("arguments<-", "Insertion", function(x, value) {
     # TODO: validate that the arguments are valid
     x[["args"]] <- value
     return(x)
@@ -168,7 +177,7 @@ setMethod("arguments<-", "Insertion", function (x, value) {
 
 #' @rdname Insertions
 #' @export
-setMethod("arguments<-", "Subtotal", function (x, value) {
+setMethod("arguments<-", "Subtotal", function(x, value) {
     # TODO: validate that the arguments are valid
     x[["categories"]] <- value
     return(x)
@@ -176,14 +185,14 @@ setMethod("arguments<-", "Subtotal", function (x, value) {
 
 #' @rdname Insertions
 #' @export
-setMethod("arguments<-", "Heading", function (x, value) {
+setMethod("arguments<-", "Heading", function(x, value) {
     halt("Cannot set arguments on Headings.")
 })
 
 
 #' @rdname Insertions
 #' @export
-setMethod("arguments<-", "SummaryStat", function (x, value) {
+setMethod("arguments<-", "SummaryStat", function(x, value) {
     # TODO: validate that the arguments are valid
     x[["categories"]] <- value
     return(x)
@@ -191,7 +200,7 @@ setMethod("arguments<-", "SummaryStat", function (x, value) {
 
 #' @rdname Insertions
 #' @export
-setMethod("arguments", "Insertion", function (x) {
+setMethod("arguments", "Insertion", function(x) {
     if (all(is.null(x[["args"]]))) {
         return(NA)
     }
@@ -199,7 +208,7 @@ setMethod("arguments", "Insertion", function (x) {
 })
 
 # method for getting an anchor from a user-friendly abstracted Subtotal or Heading
-.convertArgs <- function (x, var_categories) {
+.convertArgs <- function(x, var_categories) {
     if (!is.null(x$categories) && is.character(x$categories)) {
         # TODO: better error if var is null
         n <- ids(var_categories[x$categories])
@@ -219,7 +228,7 @@ setMethod("arguments", "Heading", function(x) NA)
 
 #' @rdname Insertions
 #' @export
-setMethod("arguments", "SummaryStat", function (x, var_categories) {
+setMethod("arguments", "SummaryStat", function(x, var_categories) {
     if (is.null(x[["categories"]])) {
         # if var_categories is not provided, return the string all this should
         # only happen when showing insertion objects and not when calculating
@@ -237,13 +246,13 @@ setMethod("arguments", "SummaryStat", function (x, var_categories) {
 
 #' @rdname Insertions
 #' @export
-setMethod("anchor", "Insertion", function (x) {
+setMethod("anchor", "Insertion", function(x) {
     n <- x[["anchor"]]
     return(ifelse(is.null(n), NA_integer_, n))
 })
 
 # method for getting an anchor from a user-friendly abstracted Subtotal or Heading
-.convertAnchor <- function (x, var_categories) {
+.convertAnchor <- function(x, var_categories) {
     if (x$position != "relative") {
         return(x$position)
     }
@@ -256,10 +265,12 @@ setMethod("anchor", "Insertion", function (x) {
             # can't determine which is the last category to use as the anchor.
             # This will be filled in when this insertion is added to a variable
             # (either on the server or in a cube)
-            message("Can't determine the anchor position without a ",
-                    "variable. However, when this is added to a Crunch ",
-                    "variable or CrunchCube it will follow the last ",
-                    "category given")
+            message(
+                "Can't determine the anchor position without a ",
+                "variable. However, when this is added to a Crunch ",
+                "variable or CrunchCube it will follow the last ",
+                "category given"
+            )
             return(NA_integer_)
         }
         if (is.numeric(x$categories)) {
@@ -271,7 +282,7 @@ setMethod("anchor", "Insertion", function (x) {
         ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
         x$after <- rev(ordered_cats)[1]
     }
-    
+
     # map chars/nums to ids
     if (is.character(x$after)) {
         # TODO: better error handling if var_categories is null
@@ -296,22 +307,22 @@ setMethod("anchor", "SummaryStat", .convertAnchor)
 
 #' @rdname Insertions
 #' @export
-setMethod("func", "Insertion", function (x) {
+setMethod("func", "Insertion", function(x) {
     f <- x[["function"]]
     return(ifelse(is.null(f), NA_character_, f))
 })
 
 #' @rdname Insertions
 #' @export
-setMethod("func", "Subtotal", function (x) return("subtotal"))
+setMethod("func", "Subtotal", function(x) return("subtotal"))
 
 #' @rdname Insertions
 #' @export
-setMethod("func", "Heading", function (x) return(NA))
+setMethod("func", "Heading", function(x) return(NA))
 
 #' @rdname Insertions
 #' @export
-setMethod("func", "SummaryStat", function (x) return(x[["stat"]]))
+setMethod("func", "SummaryStat", function(x) return(x[["stat"]]))
 
 ############################################
 ## Insertions methods
@@ -319,7 +330,7 @@ setMethod("func", "SummaryStat", function (x) return(x[["stat"]]))
 
 #' @rdname Insertions
 #' @export
-setMethod("anchors", "Insertions", function (x) {
+setMethod("anchors", "Insertions", function(x) {
     # Since anchors can be either integers or characters top/bottom we can't use
     # vapply(..., integer(1)) or vapply(..., character(1)) here
     f <- unlist(lapply(x, anchor))
@@ -328,7 +339,7 @@ setMethod("anchors", "Insertions", function (x) {
 
 #' @rdname Insertions
 #' @export
-setMethod("funcs", "Insertions", function (x) {
+setMethod("funcs", "Insertions", function(x) {
     f <- vapply(x, func, character(1))
     return(f)
 })

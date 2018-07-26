@@ -2,22 +2,25 @@ context("Appending datasets with arrays")
 
 with_test_authentication({
     whereas("Appending arrays with mismatching names and aliases", {
-        part1 <- mrdf.setup(newDataset(mrdf), selections="1.0")
+        part1 <- mrdf.setup(newDataset(mrdf), selections = "1.0")
         names(subvariables(part1$MR)) <- c("One", "Two", "Three")
         ## Aliases are c("mr_1", "mr_2", "mr_3")
-        part2 <- mrdf.setup(newDataset(mrdf), selections="1.0")
+        part2 <- mrdf.setup(newDataset(mrdf), selections = "1.0")
         names(subvariables(part2$MR)) <- c("Loneliest", "Two", "Three")
         aliases(subvariables(part2$MR))[3] <- "alt"
         ## Aliases are c("mr_1", "mr_2", "alt")
 
         test_that("compareDatasets sees the mismatch", {
-            expect_prints(summary(compareDatasets(part1, part2)),
+            expect_prints(
+                summary(compareDatasets(part1, part2)),
                 paste(
                     "Mismatched names: 2 ",
                     " name.A alias name.B",
                     "  Three  mr_3   <NA>",
                     "   <NA>   alt  Three",
-                    sep="\n"))
+                    sep = "\n"
+                )
+            )
         })
 
         out <- appendDataset(part1, part2)
@@ -25,12 +28,16 @@ with_test_authentication({
         test_that("We can append despite the duplicate name", {
             expect_true(is.dataset(out))
             expect_length(batches(out), 3)
-            expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
+            expect_identical(dim(out), c(nrow(mrdf) * 2L, 2L))
             expect_true(is.Multiple(out$MR))
             skip("We get 2 'Threes'")
-            expect_equivalent(as.array(crtabs(~ MR, data=out)),
-                array(c(4, 2, 2), dim=c(3L),
-                dimnames=list(MR=c("One", "Two", "Three"))))
+            expect_equivalent(
+                as.array(crtabs(~MR, data = out)),
+                array(c(4, 2, 2),
+                    dim = c(3L),
+                    dimnames = list(MR = c("One", "Two", "Three"))
+                )
+            )
         })
     })
 

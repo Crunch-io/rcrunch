@@ -23,7 +23,7 @@
 #' @return a VariableDefinition for the copied variable. Assign into a Dataset
 #' to make the copy happen.
 #' @export
-copyVariable <- function (x, deep=FALSE, ...) {
+copyVariable <- function(x, deep = FALSE, ...) {
     stopifnot(is.variable(x))
 
     newbody <- list(...)
@@ -47,13 +47,16 @@ copyVariable <- function (x, deep=FALSE, ...) {
 #' @export
 copy <- copyVariable
 
-copyVariableReferences <- function (x, fields=c("name", "alias",
-                                    "description", "discarded", "format", "notes",
-                                    "view", "type")) {
-
+copyVariableReferences <- function(x, fields = c(
+                                       "name", "alias",
+                                       "description", "discarded", "format", "notes",
+                                       "view", "type"
+                                   )) {
     if (inherits(x, "CrunchVariable")) {
-        return(modifyList(copyVariableReferences(tuple(x)),
-            copyVariableReferences(entity(x))))
+        return(modifyList(
+            copyVariableReferences(tuple(x)),
+            copyVariableReferences(entity(x))
+        ))
     } else {
         return(x@body[intersect(fields, names(x@body))])
     }

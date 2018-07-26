@@ -7,8 +7,10 @@ with_mock_crunch({
         expect_is(geo_data, "CrunchGeography")
         expect_equal(geo_data$feature_key, "properties.location")
         expect_equal(geo_data$match_field, "name")
-        expect_equal(geo_data$geodatum,
-                     "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
+        expect_equal(
+            geo_data$geodatum,
+            "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"
+        )
     })
 
     test_that("is.Geodata", {
@@ -20,37 +22,44 @@ with_mock_crunch({
     })
 
     test_that("can remove a geo association", {
-        expect_PATCH(geo(ds$location) <- NULL,
-                     'https://app.crunch.io/api/datasets/1/variables/location/',
-                     '{"element":"shoji:entity","body":{"view":{"geodata":[]}}}')
+        expect_PATCH(
+            geo(ds$location) <- NULL,
+            "https://app.crunch.io/api/datasets/1/variables/location/",
+            '{"element":"shoji:entity","body":{"view":{"geodata":[]}}}'
+        )
     })
 
     test_that("we can update individual fiels of the geography", {
-        expect_PATCH(geo(ds$location)$feature_key <- "properties.location2",
-                     'https://app.crunch.io/api/datasets/1/variables/location/',
-                     '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
-                     ',"feature_key":"properties.location2","match_field":"name"}]}}'
+        expect_PATCH(
+            geo(ds$location)$feature_key <- "properties.location2",
+            "https://app.crunch.io/api/datasets/1/variables/location/",
+            '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+            ',"feature_key":"properties.location2","match_field":"name"}]}}'
         )
-        expect_PATCH(geo(ds$location)$match_field <- "name2",
-                     'https://app.crunch.io/api/datasets/1/variables/location/',
-                     '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
-                     ',"feature_key":"properties.location","match_field":"name2"}]}}'
+        expect_PATCH(
+            geo(ds$location)$match_field <- "name2",
+            "https://app.crunch.io/api/datasets/1/variables/location/",
+            '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+            ',"feature_key":"properties.location","match_field":"name2"}]}}'
         )
-        expect_PATCH(geo(ds$location)$geodatum <- "https://app.crunch.io/api/geodata/newone/",
-                     'https://app.crunch.io/api/datasets/1/variables/location/',
-                     '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/newone/"',
-                     ',"feature_key":"properties.location","match_field":"name"}]}}'
+        expect_PATCH(
+            geo(ds$location)$geodatum <- "https://app.crunch.io/api/geodata/newone/",
+            "https://app.crunch.io/api/datasets/1/variables/location/",
+            '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/newone/"',
+            ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
         # geographies can also be set by assigning a CrunchGeography to a variable
-        expect_PATCH(ds$gender <- geo_data,
-                     'https://app.crunch.io/api/datasets/1/variables/gender/',
-                     '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
-                     ',"feature_key":"properties.location","match_field":"name"}]}}'
+        expect_PATCH(
+            ds$gender <- geo_data,
+            "https://app.crunch.io/api/datasets/1/variables/gender/",
+            '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+            ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
-        expect_PATCH(ds[[2]] <- geo_data,
-                     'https://app.crunch.io/api/datasets/1/variables/gender/',
-                     '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
-                     ',"feature_key":"properties.location","match_field":"name"}]}}'
+        expect_PATCH(
+            ds[[2]] <- geo_data,
+            "https://app.crunch.io/api/datasets/1/variables/gender/",
+            '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+            ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
     })
 
@@ -72,18 +81,22 @@ with_mock_crunch({
     test_that("availableFeatures", {
         expect_is(avail_features, "data.frame")
         expect_equal(dim(avail_features), c(51, 6))
-        expect_equal(as.character(avail_features$value),
-                     c(# GB Regions geodatum
-                         "UKH", "UKI", "UKL", "UKF", "UKJ", "UKC", "East",
-                         "London", "Wales", "Scotland", "Northern Ireland",
-                         "Midlands", "South", "North",
-                         # new one geodatum
-                         "test",
-                         # Duplicate properties geodatum
-                         rep(c("w", "n", "x", "b", "q", "s", "l", "v", "y", "m",
-                               "t", "e", "z", "k", "i", "h", "c"), 2),
-                         "totally", "different"))
-
+        expect_equal(
+            as.character(avail_features$value),
+            c( # GB Regions geodatum
+                "UKH", "UKI", "UKL", "UKF", "UKJ", "UKC", "East",
+                "London", "Wales", "Scotland", "Northern Ireland",
+                "Midlands", "South", "North",
+                # new one geodatum
+                "test",
+                # Duplicate properties geodatum
+                rep(c(
+                    "w", "n", "x", "b", "q", "s", "l", "v", "y", "m",
+                    "t", "e", "z", "k", "i", "h", "c"
+                ), 2),
+                "totally", "different"
+            )
+        )
     })
 
     test_that("scoreCatToFeat", {
@@ -105,58 +118,66 @@ with_mock_crunch({
         matches <- matchCatToFeat(guesses, all_features = lots_o_features)
         match_msg <- multiMatchHelper(matches, "name", "var")
         expect_length(match_msg, 11)
-        expect_equal(paste0(match_msg, collapse = ""),
-                     paste0("There is more than one possible match. You will ",
-                            "need to specify the geography manually using one of ",
-                            "the following CrunchGeographies:\n",
-                            "To add the geography: GB Regions\n",
-                            "matched to the property: name\n",
-                            "set the variable's geographic mapping with ",
-                            "following:\n",
-                            "geo(var) <- CrunchGeography(geodatum='https",
-                            "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/',",
-                            " feature_key='properties.name',\n",
-                            "                   match_field='name')\n\n",
-                            "To add the geography: GB Regions\n",
-                            "matched to the property: name_new\n",
-                            "set the variable's geographic mapping with ",
-                            "following:\n",
-                            "geo(var) <- CrunchGeography(geodatum='https",
-                            "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/_new',",
-                            " feature_key='properties.name_new',\n",
-                            "                   match_field='name')\n\n"))
+        expect_equal(
+            paste0(match_msg, collapse = ""),
+            paste0(
+                "There is more than one possible match. You will ",
+                "need to specify the geography manually using one of ",
+                "the following CrunchGeographies:\n",
+                "To add the geography: GB Regions\n",
+                "matched to the property: name\n",
+                "set the variable's geographic mapping with ",
+                "following:\n",
+                "geo(var) <- CrunchGeography(geodatum='https",
+                "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/',",
+                " feature_key='properties.name',\n",
+                "                   match_field='name')\n\n",
+                "To add the geography: GB Regions\n",
+                "matched to the property: name_new\n",
+                "set the variable's geographic mapping with ",
+                "following:\n",
+                "geo(var) <- CrunchGeography(geodatum='https",
+                "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/_new',",
+                " feature_key='properties.name_new',\n",
+                "                   match_field='name')\n\n"
+            )
+        )
         # has three features
         matches <- matchCatToFeat(guesses, all_features = lots_n_lots_o_features)
         match_msg <- multiMatchHelper(matches, "name", "var")
         expect_length(match_msg, 15)
-        expect_equal(paste0(match_msg, collapse = ""),
-                     paste0("There is more than one possible match. You will ",
-                            "need to specify the geography manually using one of ",
-                            "the following CrunchGeographies:\n",
-                            "To add the geography: GB Regions\n",
-                            "matched to the property: name\n",
-                            "set the variable's geographic mapping with ",
-                            "following:\n",
-                            "geo(var) <- CrunchGeography(geodatum='https",
-                            "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/',",
-                            " feature_key='properties.name',\n",
-                            "                   match_field='name')\n\n",
-                            "To add the geography: GB Regions\n",
-                            "matched to the property: name_new\n",
-                            "set the variable's geographic mapping with ",
-                            "following:\n",
-                            "geo(var) <- CrunchGeography(geodatum='https",
-                            "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/_new',",
-                            " feature_key='properties.name_new',\n",
-                            "                   match_field='name')\n\n",
-                            "To add the geography: GB Regions\n",
-                            "matched to the property: name_new_new\n",
-                            "set the variable's geographic mapping with ",
-                            "following:\n",
-                            "geo(var) <- CrunchGeography(geodatum='https",
-                            "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/_new_new',",
-                            " feature_key='properties.name_new_new',\n",
-                            "                   match_field='name')\n\n"))
+        expect_equal(
+            paste0(match_msg, collapse = ""),
+            paste0(
+                "There is more than one possible match. You will ",
+                "need to specify the geography manually using one of ",
+                "the following CrunchGeographies:\n",
+                "To add the geography: GB Regions\n",
+                "matched to the property: name\n",
+                "set the variable's geographic mapping with ",
+                "following:\n",
+                "geo(var) <- CrunchGeography(geodatum='https",
+                "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/',",
+                " feature_key='properties.name',\n",
+                "                   match_field='name')\n\n",
+                "To add the geography: GB Regions\n",
+                "matched to the property: name_new\n",
+                "set the variable's geographic mapping with ",
+                "following:\n",
+                "geo(var) <- CrunchGeography(geodatum='https",
+                "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/_new',",
+                " feature_key='properties.name_new',\n",
+                "                   match_field='name')\n\n",
+                "To add the geography: GB Regions\n",
+                "matched to the property: name_new_new\n",
+                "set the variable's geographic mapping with ",
+                "following:\n",
+                "geo(var) <- CrunchGeography(geodatum='https",
+                "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/_new_new',",
+                " feature_key='properties.name_new_new',\n",
+                "                   match_field='name')\n\n"
+            )
+        )
     })
 
     test_that("addGeoMetadata", {
@@ -165,53 +186,62 @@ with_mock_crunch({
         expect_is(geo_to_add, "CrunchGeography")
         expect_equal(geo_to_add$feature_key, "properties.name")
         expect_equal(geo_to_add$match_field, "name")
-        expect_equal(geo_to_add$geodatum,
-                     "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
+        expect_equal(
+            geo_to_add$geodatum,
+            "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"
+        )
     })
 
     test_that("addGeoMetadata adds the first property if more than one matches", {
         # if there is more than one property on a single geodatum that matches,
         # just use the first property.
-        expect_warning(geo_to_add <- addGeoMetadata(ds$textVar),
-                       paste0("The geodatum ", dQuote("Duplicate properties"),
-                              " has multiple properties that match the variable \\(",
-                              dQuote("first_name"), " and ", dQuote("second_name"),
-                              "\\). Using ", dQuote("first_name"), "\\."))
+        expect_warning(
+            geo_to_add <- addGeoMetadata(ds$textVar),
+            paste0(
+                "The geodatum ", dQuote("Duplicate properties"),
+                " has multiple properties that match the variable \\(",
+                dQuote("first_name"), " and ", dQuote("second_name"),
+                "\\). Using ", dQuote("first_name"), "\\."
+            )
+        )
         expect_is(geo_to_add, "CrunchGeography")
         expect_equal(geo_to_add$feature_key, "properties.first_name")
         expect_equal(geo_to_add$match_field, "name")
-        expect_equal(geo_to_add$geodatum,
-                     "https://app.crunch.io/api/geodata/duplicate_prop/")
+        expect_equal(
+            geo_to_add$geodatum,
+            "https://app.crunch.io/api/geodata/duplicate_prop/"
+        )
     })
 
     test_that("addGeoMetadata tries to help if there are multiple matches", {
         # if there is more than one property on a single geodatum that matches,
         # just use the first property.
         expect_error(geo_to_add <- addGeoMetadata(ds$location,
-                                                  all_features = lots_o_features),
-                     paste0(
-                         "There is more than one possible match. You will ",
-                         "need to specify the geography manually using one of ",
-                         "the following CrunchGeographies:\n",
-                         "To add the geography: GB Regions\n",
-                         "matched to the property: name\n",
-                         "set the variable's geographic mapping with ",
-                         "following:\n",
-                         "geo(ds$location) <- CrunchGeography(geodatum='https",
-                         "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/',",
-                         " feature_key='properties.name',\n",
-                         "                   match_field='name')\n\n",
-                         "To add the geography: GB Regions\n",
-                         "matched to the property: name_new\n",
-                         "set the variable's geographic mapping with ",
-                         "following:\n",
-                         "geo(ds$location) <- CrunchGeography(geodatum='https",
-                         "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/_new',",
-                         " feature_key='properties.name_new',\n",
-                         "                   match_field='name')\n\n"
-                     ),
-                     fixed = TRUE)
-
+            all_features = lots_o_features
+        ),
+        paste0(
+            "There is more than one possible match. You will ",
+            "need to specify the geography manually using one of ",
+            "the following CrunchGeographies:\n",
+            "To add the geography: GB Regions\n",
+            "matched to the property: name\n",
+            "set the variable's geographic mapping with ",
+            "following:\n",
+            "geo(ds$location) <- CrunchGeography(geodatum='https",
+            "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/',",
+            " feature_key='properties.name',\n",
+            "                   match_field='name')\n\n",
+            "To add the geography: GB Regions\n",
+            "matched to the property: name_new\n",
+            "set the variable's geographic mapping with ",
+            "following:\n",
+            "geo(ds$location) <- CrunchGeography(geodatum='https",
+            "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/_new',",
+            " feature_key='properties.name_new',\n",
+            "                   match_field='name')\n\n"
+        ),
+        fixed = TRUE
+        )
     })
 
 
@@ -219,24 +249,38 @@ with_mock_crunch({
     test_that("addGeoMetadata input validation", {
         # adding dQuote("ds$not_a_var") to error string inexplicably doesn't
         # match with testthat
-        expect_error(addGeoMetadata(ds$not_a_var),
-                     ".* must be a Crunch Variable.")
-        expect_error(addGeoMetadata(ds$starttime),
-                     paste0("The variable ", dQuote("ds\\$starttime"),
-                            " is neither a categorical or text variable\\."))
-        expect_error(addGeoMetadata(ds$gender),
-                     paste0("None of the geographies match at all. Either the variable is",
-                            " wrong, or Crunch doesn't yet have geodata for this variable."))
+        expect_error(
+            addGeoMetadata(ds$not_a_var),
+            ".* must be a Crunch Variable."
+        )
+        expect_error(
+            addGeoMetadata(ds$starttime),
+            paste0(
+                "The variable ", dQuote("ds\\$starttime"),
+                " is neither a categorical or text variable\\."
+            )
+        )
+        expect_error(
+            addGeoMetadata(ds$gender),
+            paste0(
+                "None of the geographies match at all. Either the variable is",
+                " wrong, or Crunch doesn't yet have geodata for this variable."
+            )
+        )
     })
 
     test_that("CrunchGeography show methods", {
-        expect_prints(geo_data,
-                      paste("CrunchGeography metadata for variable ",
-                             "geodatum name: 		GB Regions",
-                             "geodatum description: 	These are the GB regions",
-                             "geodatum url: 		https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/",
-                             "feature_key: 		properties.location",
-                             "match_field: 		name", sep="\n"))
+        expect_prints(
+            geo_data,
+            paste("CrunchGeography metadata for variable ",
+                "geodatum name: 		GB Regions",
+                "geodatum description: 	These are the GB regions",
+                "geodatum url: 		https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/",
+                "feature_key: 		properties.location",
+                "match_field: 		name",
+                sep = "\n"
+            )
+        )
     })
 
     test_that("Geodata methods", {
@@ -278,12 +322,15 @@ with_test_authentication({
         geo_ds$region <- rep(c("South", "West", "West", "South", "West"), 4)
         expect_silent(geo_ds$region <- addGeoMetadata(geo_ds$region))
         expect_prints(geo(geo_ds$region),
-                      paste0("geodatum name: 		US Census Regions\\\n",
-                             "geodatum description: 	Census regions\\\n",
-                             "geodatum url: 		.*\\\n", # the geodatum id will change, so the url will change.
-                             "feature_key: 		properties.name\\\n",
-                             "match_field: 		name"),
-                      fixed=FALSE)
+            paste0(
+                "geodatum name: 		US Census Regions\\\n",
+                "geodatum description: 	Census regions\\\n",
+                "geodatum url: 		.*\\\n", # the geodatum id will change, so the url will change.
+                "feature_key: 		properties.name\\\n",
+                "match_field: 		name"
+            ),
+            fixed = FALSE
+        )
     })
 
     test_that("Can match and set geodata on a categorical variable", {
@@ -291,27 +338,36 @@ with_test_authentication({
         geo_ds$region2 <- factor(rep(c("South", "West", "West", "South", "West"), 4))
         expect_silent(geo_ds$region2 <- addGeoMetadata(geo_ds$region2))
         expect_prints(geo(geo_ds$region2),
-                      paste0("geodatum name: 		US Census Regions\\\n",
-                             "geodatum description: 	Census regions\\\n",
-                             "geodatum url: 		.*\\\n", # the geodatum id will change, so the url will change.
-                             "feature_key: 		properties.name\\\n",
-                             "match_field: 		name"),
-                      fixed=FALSE)
+            paste0(
+                "geodatum name: 		US Census Regions\\\n",
+                "geodatum description: 	Census regions\\\n",
+                "geodatum url: 		.*\\\n", # the geodatum id will change, so the url will change.
+                "feature_key: 		properties.name\\\n",
+                "match_field: 		name"
+            ),
+            fixed = FALSE
+        )
     })
 
     geo_ds$state <- rep(c("Alabama", "Alaska", "Arizona", "Arkansas", "California"), 4)
     test_that("There is an error if more than one geography matches", {
         skip_locally("Vagrant doesn't currently have hosted geodata")
-        expect_error(geo_ds$state <- addGeoMetadata(geo_ds$state),
-                     paste0("There is more than one possible match. You will ",
-                     "need to specify the geography manually using one of .*"))
+        expect_error(
+            geo_ds$state <- addGeoMetadata(geo_ds$state),
+            paste0(
+                "There is more than one possible match. You will ",
+                "need to specify the geography manually using one of .*"
+            )
+        )
     })
     test_that("can manually set a geography after a failed match", {
         skip_locally("Vagrant doesn't currently have hosted geodata")
         avail_geo <- availableGeodata()
-        new_geo <- CrunchGeography(geodatum = urls(avail_geo["US States Topojson"]),
-                                   feature_key = "name",
-                                   match_field = "name")
+        new_geo <- CrunchGeography(
+            geodatum = urls(avail_geo["US States Topojson"]),
+            feature_key = "name",
+            match_field = "name"
+        )
         geo_ds$state <- new_geo
         expect_is(geo(geo_ds$state), "CrunchGeography")
         expect_identical(geo(geo_ds$state), new_geo)
