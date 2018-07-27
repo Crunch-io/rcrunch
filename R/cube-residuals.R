@@ -6,6 +6,7 @@
 #' \sQuote{not selected} cells for each item are are hidden.
 #'
 #' @param x A CrunchCube representing a contingency table
+#' @param model A CrunchCube representing a contingency table (for `rstandard()` only)
 #'
 #' @return an array of standardized residuals or Z-scores from the hypothesis being tested.
 #' The default method is that the joint distributions of (weighted) counts are equal to the
@@ -18,7 +19,7 @@
 #' New York: John Wiley & Sons. Page 38.
 #' @importFrom stats chisq.test
 #' @name cube-residuals
-#' @aliases rstandard,CrunchCube-method cube-residuals
+#' @aliases rstandard,CrunchCube-method cube-residuals zScores
 setGeneric("zScores", function (x) standardGeneric("zScores"))
 
 #' @rdname cube-residuals
@@ -63,6 +64,8 @@ standardizedMRResiduals <- function (cube) {
 }
 
 # for bacwards compatibility
+#' @rdname cube-residuals
+#' @export
 rstandard <- function (model) zScores(x = model)
 
 compareCols <- function (cube, ...) compareDims(cube = cube, dim = "cols", ...)

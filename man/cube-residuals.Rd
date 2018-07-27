@@ -4,13 +4,21 @@
 \name{cube-residuals}
 \alias{cube-residuals}
 \alias{rstandard,CrunchCube-method}
-\alias{rstandard,CrunchCube-method}
+\alias{zScores}
+\alias{zScores,CrunchCube-method}
+\alias{rstandard}
 \title{Calculate standardized residuals from a CrunchCube}
 \usage{
-\S4method{rstandard}{CrunchCube}(model)
+zScores(x)
+
+\S4method{zScores}{CrunchCube}(x)
+
+rstandard(model)
 }
 \arguments{
-\item{model}{A CrunchCube representing a contingency table}
+\item{x}{A CrunchCube representing a contingency table}
+
+\item{model}{A CrunchCube representing a contingency table (for \code{rstandard()} only)}
 }
 \value{
 an array of standardized residuals or Z-scores from the hypothesis being tested.
