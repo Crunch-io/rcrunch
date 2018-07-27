@@ -1,28 +1,3 @@
-# standardized residuals formed by the subvariable-wise margins
-# the internal chisq tests use rowSums and colSums, but we need
-# the more abstract 'margin' (specifically cubeMarginTable) to
-# get the right numbers for multiple response.
-standardizedMRResiduals <- function (cube) {
-    cube_array <- as.array(noTransforms(cube))
-    cube_dims <- dim(cube_array)
-
-    # get counts for table, this will end up being a table because there are MRs
-    n <- broadcast(margin.table(cube), dims = cube_dims)
-    # get row values, broadcast in case this is a non-MR dimension
-    r <- broadcast(margin.table(cube, 1), dims = cube_dims)
-    # get column values, broadcast in case this is a non-MR dimension
-    c <- broadcast(margin.table(cube, 2), dims = cube_dims)
-
-    # These formulae follow Agresti, 2007 (section 2.4.5), but use count instead
-    # of proportion space (cf the source for `chisq.test`, as of R 3.4.2)
-    # calculate expected values
-    E <- r * c / n
-    # calculate variance
-    V <- r * c * (n-r) * (n-c) / n^3
-
-    return((cube_array - E) / sqrt(V))
-}
-
 #' Calculate standardized residuals from a CrunchCube
 #'
 #' Standardized residuals, \code{(observed - expected) / sqrt(V)}, where \code{V}
@@ -30,7 +5,7 @@ standardizedMRResiduals <- function (cube) {
 #' for multiple-response variables which are in effect a series of separate tables where
 #' \sQuote{not selected} cells for each item are are hidden.
 #'
-#' @param model A CrunchCube representing a contingency table
+#' @param x A CrunchCube representing a contingency table
 #'
 #' @return an array of standardized residuals or Z-scores from the hypothesis being tested.
 #' The default method is that the joint distributions of (weighted) counts are equal to the
@@ -44,23 +19,95 @@ standardizedMRResiduals <- function (cube) {
 #' @importFrom stats chisq.test
 #' @name cube-residuals
 #' @aliases rstandard,CrunchCube-method cube-residuals
-NULL
+setGeneric("zScores", function (x) standardGeneric("zScores"))
 
 #' @rdname cube-residuals
 #' @export
-setMethod('rstandard', 'CrunchCube', function (model) {
-    if (length(dimensions(model)) > 2) {
+setMethod('zScores', 'CrunchCube', function (x) {
+    if (length(dimensions(x)) > 2) {
         halt("Cannot compute residuals with more than two dimensions. Pick a ",
              "slice to evaluate.")
     }
 
-    if (any(startsWith(getDimTypes(model), "mr_"))) {
-        return(standardizedMRResiduals(model))
+    if (any(startsWith(getDimTypes(x), "mr_"))) {
+        return(standardizedMRResiduals(x))
     } else {
-        array_to_test <- as.array(noTransforms(model))
+        array_to_test <- as.array(noTransforms(x))
         return(chisq.test(array_to_test)$stdres)
     }
 })
+
+# standardized residuals formed by the subvariable-wise margins
+# the internal chisq tests use rowSums and colSums, but we need
+# the more abstract 'margin' (specifically cubeMarginTable) to
+# get the right numbers for multiple response.
+standardizedMRResiduals <- function (cube) {
+    cube_array <- as.array(noTransforms(cube))
+    cube_dims <- dim(cube_array)
+    
+    # get counts for table, this will end up being a table because there are MRs
+    n <- broadcast(margin.table(cube), dims = cube_dims)
+    # get row values, broadcast in case this is a non-MR dimension
+    r <- broadcast(margin.table(cube, 1), dims = cube_dims)
+    # get column values, broadcast in case this is a non-MR dimension
+    c <- broadcast(margin.table(cube, 2), dims = cube_dims)
+    
+    # These formulae follow Agresti, 2007 (section 2.4.5), but use count instead
+    # of proportion space (cf the source for `chisq.test`, as of R 3.4.2)
+    # calculate expected values
+    E <- r * c / n
+    # calculate variance
+    V <- r * c * (n-r) * (n-c) / n^3
+    
+    return((cube_array - E) / sqrt(V))
+}
+
+# for bacwards compatibility
+rstandard <- function (model) zScores(x = model)
+
+compareCols <- function (cube, ...) compareDims(cube = cube, dim = "cols", ...)
+
+compareRows <- function (cube, ...) compareDims(cube = cube, dim = "rows", ...)
+
+
+compareDims <- function (cube, dim = c("cols", "rows"), baseline, x) {
+    dim <- match.arg(dim)
+    
+    # TOOD: check if over dims
+    
+    
+    if (dim == "cols") {
+        names <- colnames(cube)
+    } else if (dim == "rows") {
+        names <- rownames(cube)
+    }
+
+    # convert to numeric indices
+    if (is.character(baseline)) {
+        baseline_ind <- which(names == baseline)
+    }
+    
+    if (is.character(x)) {
+        x_ind <- which(names == x)
+    }
+    
+    if (dim == "cols") {
+        sub_cube <- cube[,c(x_ind, baseline_ind)]
+    } else if (dim == "rows") {
+        sub_cube <- cube[c(x_ind, baseline_ind),]
+    }
+    
+    # return only the x zscore
+    out <- zScores(sub_cube)
+
+    if (dim == "cols") {
+        out <- out[, x, drop = FALSE]
+    } else if (dim == "rows") {
+        out <- out[x, , drop = FALSE]
+    }   
+    
+    return(out)
+}
 
 # broadcast a vector of values to a matrix with dimensions dims. Similar to
 # but not exactly the same as numpy's `broadcast_to` method.

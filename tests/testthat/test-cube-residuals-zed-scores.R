@@ -42,11 +42,16 @@ catarray_by_mr_dims <- list("feeling_ca" = c("cat_feeling", "dog_feeling"),
 
 
 gender_x_ideology <- loadCube("cubes/econ-gender-x-ideology-weighted.json")
+gender_x_ideology_dims <- dimnames(gender_x_ideology)
+gender_x_ideology_dims <- lapply(gender_x_ideology_dims, function (x) {
+    return(x[!x %in% c("Skipped", "Not Asked", "No Data")])
+})
 
-test_that("rstandard for CrunchCube normal contingency table is chisq standardized residuals", {
+
+test_that("zScores for CrunchCube normal contingency table is chisq standardized residuals", {
     # values from crunch-cube tests
     out <- chisq.test(as.array(gender_x_ideology))$stdres
-    expect_equal(rstandard(gender_x_ideology), out)
+    expect_equal(zScores(gender_x_ideology), out)
 })
 
 ##########################################
@@ -59,12 +64,19 @@ mr_by_cat_2 <- loadCube("cubes/selected-crosstab-array-first.json")
 
 test_that("z-scores for unweighted normal crosstab", {
     out <- chisq.test(as.array(admit_by_dept_unweighted))$stdres
-    expect_equal(rstandard(admit_by_dept_unweighted), out)
+    expect_equal(zScores(admit_by_dept_unweighted), out)
 })
 
 test_that("z-scores for weighted normal crosstab", {
     out <- chisq.test(as.array(admit_by_gender_weighted))$stdres
-    expect_equal(rstandard(admit_by_gender_weighted), out)
+    expect_equal(zScores(admit_by_gender_weighted), out)
+})
+
+test_that("rstandard backwards compatibility", {
+    expect_equal(
+        zScores(admit_by_gender_weighted),
+        rstandard(admit_by_gender_weighted)
+    )
 })
 
 ## multiple response fun times!
@@ -77,7 +89,7 @@ test_that("residuals for MR by categorical unweighted", {
         15.393601979290077, -15.393601979290064,
         -1.152196479675476, 1.152196479675452),
           dims = mr_by_cat_dims)
-    expect_equal(rstandard(mr_by_cat), out)
+    expect_equal(zScores(mr_by_cat), out)
 })
 
 test_that("residuals for MR by cat from app", {
@@ -85,13 +97,13 @@ test_that("residuals for MR by cat from app", {
         0.8013419145312314, -0.8013419145312314, 0.604556055828044,
         -0.6045560558280446, -0.3088424703459705, 0.30884247034596934),
                   dims=rev(cat_by_mr_dims))
-    expect_equal(rstandard(mr_by_cat_2), out)
+    expect_equal(zScores(mr_by_cat_2), out)
 })
 test_that("residuals for categorical by MR, should be transpose of above", {
     out <- cubify(c(0.8013419145312314, 0.604556055828044, -0.3088424703459705,
                     -0.8013419145312314, -0.6045560558280446, 0.30884247034596934),
                   dims=cat_by_mr_dims)
-    expect_equal(rstandard(cat_by_mr), out)
+    expect_equal(zScores(cat_by_mr), out)
 })
 
 
@@ -102,7 +114,7 @@ test_that("residuals for MR by MR", {
         -1.219017578727962, -2.700337815839828, 13.453386657983003, 9.2929498417063,
         4.156824868149565, 5.694768173489977, 9.2929498417063, 15.379818568557937),
         dims = mr_by_mr_dims)
-    expect_equal(rstandard(mr_by_mr), out)
+    expect_equal(zScores(mr_by_mr), out)
 })
 
 test_that("residuals for MR by MR (disparate MRs)", {
@@ -111,27 +123,61 @@ test_that("residuals for MR by MR (disparate MRs)", {
           0.102711744395378,-39.1122969318395,
           -0.26443563922932,-39.6750394717687),
         dims = mr_by_mr_heterogeneous_dims)
-    expect_equal(rstandard(mr_by_mr_heterogeneous), out)
+    expect_equal(zScores(mr_by_mr_heterogeneous), out)
 })
 
 mr_by_mr_by_too_many <- loadCube("cubes/cat-x-mr-x-mr.json")
 
 test_that("residuals for MR by MR by anything errors", {
-    expect_error(rstandard(mr_by_mr_by_too_many),  paste0(
+    expect_error(zScores(mr_by_mr_by_too_many),  paste0(
                  "Cannot compute residuals with more than two dimensions. Pick ",
                  "a slice to evaluate"))
 })
 
 test_that("residuals for catarray by cat", {
-    expect_error(rstandard(catarray_by_cat), paste0(
+    expect_error(zScores(catarray_by_cat), paste0(
                  "Cannot compute residuals with more than two dimensions. Pick ",
                  "a slice to evaluate"))
     # TODO: Implement [.CrunchCube. Then check a slice
 })
 
 test_that("residuals for catarray", {
-    expect_error(rstandard(catarray_by_mr), paste0(
+    expect_error(zScores(catarray_by_mr), paste0(
                  "Cannot compute residuals with more than two dimensions. Pick ",
                  "a slice to evaluate"))
     # TODO: Implement [.CrunchCube. Then check a slice
+})
+
+test_that("compareCols()", {
+    expected_zScores <- cubify(
+        2.54925480834223,
+        -2.54925480834223,
+        dims = list(
+            Gender = c("Male", "Female"),
+            RespondentIdeology = c("Very Conservative")
+        )
+    )
+    expect_equal(
+        compareCols(
+            gender_x_ideology,
+            baseline = "Very liberal", 
+            x = "Very Conservative"),
+        expected_zScores
+    )
+    
+    expected_zScores <- cubify(
+        -2.54925480834223,
+        2.54925480834223,
+        dims = list(
+            Gender = c("Male", "Female"),
+            RespondentIdeology = c("Very liberal")
+        )
+    )
+    expect_equal(
+        compareCols(
+            gender_x_ideology,
+            baseline = "Very Conservative", 
+            x = "Very liberal"),
+        expected_zScores
+    )
 })

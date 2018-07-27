@@ -291,3 +291,21 @@ test_that("subsetting works when @useNA == 'ifany'", {
     expect_equal(as.array(cube_ifany[1, ]), as.array(cube_ifany)[1, ])
     expect_equal(as.array(cube[1, ]), as.array(cube)[1, ])
 })
+
+
+test_that("[ method with variables because `eval` needs the right frame", {
+    cube <- cube_withNA <- loadCube("cubes/cat-x-cat.json")
+
+    x <- 1
+    y <- 2
+    subset_cube <- cube[,c(x, y)] # drop the No Data row
+    expect_equal(as.array(subset_cube), as.array(cube)[, c(1,2)])
+    
+    inside_function <- function () {
+        x_new <- 1
+        y_new <- 2
+        return(cube[,c(x_new, y_new)])
+        
+    }
+    expect_equal(as.array(inside_function()), as.array(cube)[, c(1,2)])
+})
