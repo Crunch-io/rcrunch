@@ -2,33 +2,24 @@
 % Please edit documentation in R/cube-collapse-dimensions.R
 \name{collapse_dims}
 \alias{collapse_dims}
-\title{Collapse an array from a CrunchCube with the specified function}
+\title{Collapse an array from a CrunchCube by summing}
 \usage{
-collapse_dims(array_in, margins_to_collapse, margins_to_keep, collapsed_items)
+collapse_dims(array_in, margins_to_collapse, collapsed_items)
 }
 \arguments{
 \item{margins_to_collapse}{the margins that should be collapsed}
-
-\item{margins_to_keep}{the margins that should be kept}
 
 \item{collapsed_items}{vector of logicals if any of the dimensions in
 \code{margins_to_collapse} are of the \code{_items} type}
 
 \item{array}{the array from a CrunchCube to collapse}
+
+\item{margins_to_keep}{the margins that should be kept}
 }
 \value{
 a duly-collapsed array
 }
 \description{
-Typically when collapsing a crosstab you can just sum across the dimensions
-that you want to collapse across. However, because we have array-type
-questions/dimensions we have to be a little bit smarter. We cannot sum
-across any subvariable dimension (dimension types ending with "_items")
-because that would inflate the number of respondents by approximately the
-number of subvariables. Instead, we take the mean across any "_items"
-dimension. In principle, we could just take a single item or \code{unique} across
-the "_items" dimensions, however due to floating point differences + rounding
-there are minute differences that pop up, \code{mean} smooths over those tiny
-differences.
+This is an internal function that powers \code{dimSums()}
 }
 \keyword{internal}

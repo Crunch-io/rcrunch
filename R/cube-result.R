@@ -426,13 +426,6 @@ setMethod("bases", "CrunchCube", function (x, margin=NULL) {
 #' argument to work like `margin.table`, or with `margin=0` gives all cell
 #' counts.
 #'
-#' `dimSums` returns a cube that collapses the dimensions given in
-#' `margin`. This is useful if you want to get counts that are equivalent to a
-#' univariate cube from a multivariate cube. For example
-#' `dimSums(crtabs(~ fruit + pets, ds), 2)` will be equal to
-#' `crtabs(~ fruit, ds)` and `dimSums(crtabs(~ fruit + pets, ds),
-#' 1)` will be equal to `crtabs(~ pets, ds)`.
-#'
 #' @param x a CrunchCube
 #' @param margin index, or vector of indices to generate margin for. See
 #'   [base::prop.table()]. `bases()` accepts `0` as an additional valid value
@@ -446,7 +439,6 @@ setMethod("bases", "CrunchCube", function (x, margin=NULL) {
 #'   returns a list of lists of prop.tables.
 #' @name cube-computing
 #' @aliases cube-computing margin.table prop.table bases round
-#'   dimSums
 #' @seealso [base::margin.table()] [base::prop.table()]
 NULL
 

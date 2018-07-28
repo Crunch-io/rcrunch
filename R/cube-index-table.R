@@ -57,7 +57,7 @@ index.table <- function (x, margin, baseline) {
     # in margin, we get a uni(variate )cube for the opposite margin. Only do
     # this if an explicit baseline wasn't specified.
     if (missing(baseline)) {
-        unicube <- dimSums(x, margin)
+        unicube <- dimSums(x, other_margin)
         baseline <- prop.table(unicube)
     }
 

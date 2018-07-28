@@ -2,17 +2,24 @@
 #'
 #' Typically when collapsing a crosstab you can just sum across the dimensions
 #' that you want to collapse across. However, because we have array-type
-#' questions/dimensions we have to be a little bit smarter. We cannot sum
-#' across any subvariable dimension (dimension types ending with "_items")
-#' because that would inflate the number of respondents by approximately the
-#' number of subvariables. Instead, we take the mean across any "_items"
-#' dimension. In principle, we could just take a single item or `unique` across
-#' the "_items" dimensions, however due to floating point differences + rounding
-#' there are minute differences that pop up, `mean` smooths over those tiny
-#' differences.
-#'
+#' questions/dimensions we have to be a little bit smarter. We cannot sum across
+#' any subvariable dimension (dimension types ending with "_items") because that
+#' would inflate the number of respondents by approximately the number of
+#' subvariables. Instead, we take the mean across any "_items" dimension. In
+#' principle, we could just take a single item or `unique` across the "_items"
+#' dimensions, however due to floating point differences + rounding there are
+#' minute differences that pop up, `mean` smooths over those tiny differences.
+#' 
+#' `dimSums` returns a cube that retains the dimensions given in `margin` and
+#' collapses all the others. This is useful if you want to get counts that are
+#' equivalent to a univariate cube from a multivariate cube. For example
+#' `dimSums(crtabs(~ fruit + pets, ds), 1)` will be equal to `crtabs(~ fruit,
+#' ds)` and `dimSums(crtabs(~ fruit + pets, ds), 2)` will be equal to `crtabs(~
+#' pets, ds)`.
+#' 
 #' @param x the CrunchCube to collapse
-#' @param margin the margins that should be summed within (in other words: the dimension that will be retained)
+#' @param margin the margins that should be summed within (in other words: the
+#'   dimension that will be retained)
 #'
 #' @return a duly-collapsed CrunchCube
 #' @keywords internal
@@ -27,8 +34,8 @@ dimSums <- function (x, margin = NULL) {
     
     # translate from user-cube margins to real-cube margins and establish the
     # two groups of margins: those to collapse and those to keep
-    margins_to_collapse <- user2realMargin(margin, cube = x)
-    margins_to_keep <- setdiff(seq_along(x@dims), margins_to_collapse)
+    margins_to_keep <- user2realMargin(margin, cube = x)
+    margins_to_collapse <- setdiff(seq_along(x@dims), margins_to_keep)
     
     # if there are any _items in the margin to collapse, be wary! Since there
     # are (likely) multiple items in the array, each row of the dataset would
@@ -43,7 +50,6 @@ dimSums <- function (x, margin = NULL) {
     out@arrays[] <- lapply(
         out@arrays,
         collapse_dims, 
-        margins_to_keep = margins_to_keep, 
         margins_to_collapse = margins_to_collapse, 
         collapsed_items = collapsed_items)
     
@@ -90,12 +96,11 @@ only_count_cube <- function (cube) {
 #'   
 collapse_dims <- function(array_in,
                           margins_to_collapse,
-                          margins_to_keep,
                           collapsed_items){
     # off_margins here are the margins that we want to keep, however because we
     # treat items dimensions differently, we need to add them to the
     # off_margins, and deal with them after we collapse by summing
-    off_margins <- margins_to_keep
+    off_margins <- setdiff(seq_along(dim(array_in)), margins_to_collapse)
 
     # If there are any "_items" dimensions in margins_to_collapse, add them to
     # off_margins so that we can later mean across any items dimension
