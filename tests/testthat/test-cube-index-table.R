@@ -110,7 +110,7 @@ test_that("index.table validation", {
         index.table(mean_cube, 1),
         paste0(
             "You can't use CrunchCubes with measures other than count. ",
-            "The cube you provided included measures: mean"
+            "The cube you provided included measures: cube_mean"
         )
     )
 })

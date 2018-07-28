@@ -1,3 +1,22 @@
+#' Collapse an array from a CrunchCube by summing across dimensions to remove
+#'
+#' Typically when collapsing a crosstab you can just sum across the dimensions
+#' that you want to collapse across. However, because we have array-type
+#' questions/dimensions we have to be a little bit smarter. We cannot sum
+#' across any subvariable dimension (dimension types ending with "_items")
+#' because that would inflate the number of respondents by approximately the
+#' number of subvariables. Instead, we take the mean across any "_items"
+#' dimension. In principle, we could just take a single item or `unique` across
+#' the "_items" dimensions, however due to floating point differences + rounding
+#' there are minute differences that pop up, `mean` smooths over those tiny
+#' differences.
+#'
+#' @param x the CrunchCube to collapse
+#' @param margin the margins that should be summed within (in other words: the dimension that will be retained)
+#'
+#' @return a duly-collapsed CrunchCube
+#' @keywords internal
+#'
 dimSums <- function (x, margin = NULL) {
     # ensure that we have sensible margin input
     selecteds <- is.selectedDimension(x@dims)
@@ -38,8 +57,14 @@ dimSums <- function (x, margin = NULL) {
 
 only_count_cube <- function (cube) {
     # ensure that the cube is a counts cube
-    measures_types <- names(cube@arrays)
-    noncounts <- setdiff(measures_types, c("count", ".unweighted_counts"))
+    # TODO: this should be made more robust by parsing the ZCL from the
+    # expression instead of reaching inside
+    measures <- cube@.Data[[1]]$measures
+    measures_types <- lapply(measures, function (x) {
+        return(x[["function"]])
+    })
+    
+    noncounts <- setdiff(measures_types, c("cube_count"))
     if (length(noncounts) > 0) {
         msg <-c(
             "You can't use CrunchCubes with measures other than count. ",
@@ -50,18 +75,9 @@ only_count_cube <- function (cube) {
     }
 }
 
-#' Collapse an array from a CrunchCube with the specified function
+#' Collapse an array from a CrunchCube by summing
 #'
-#' Typically when collapsing a crosstab you can just sum across the dimensions
-#' that you want to collapse across. However, because we have array-type
-#' questions/dimensions we have to be a little bit smarter. We cannot sum
-#' across any subvariable dimension (dimension types ending with "_items")
-#' because that would inflate the number of respondents by approximately the
-#' number of subvariables. Instead, we take the mean across any "_items"
-#' dimension. In principle, we could just take a single item or `unique` across
-#' the "_items" dimensions, however due to floating point differences + rounding
-#' there are minute differences that pop up, `mean` smooths over those tiny
-#' differences.
+#' This is an internal function that powers `dimSums()`
 #'
 #' @param array the array from a CrunchCube to collapse
 #' @param margins_to_collapse the margins that should be collapsed

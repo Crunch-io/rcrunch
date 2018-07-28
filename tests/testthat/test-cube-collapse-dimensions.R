@@ -159,6 +159,17 @@ test_that("dimSums() errors nicely when it margin is wrong", {
     )
 })
 
+test_that("only_cube_count() prevents use with non-count cubes", {
+    mean_cube <- loadCube("cubes/mean-age-food_groups-x-pasta.json")
+    expect_error(
+        only_count_cube(mean_cube),
+        paste0(
+            "You can't use CrunchCubes with measures other than count. ",
+            "The cube you provided included measures: cube_mean"
+        )
+    )
+})
+
 with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
     
@@ -214,5 +225,16 @@ with_test_authentication({
         expect_equal(
             dimSums(trivariate_cube, c(1, 3))@arrays,
             crtabs(~ allpets, data=ds)@arrays)
+    })
+    
+    test_that("only_cube_count() prevents use with non-count cubes", {
+        multi_measures <- crtabs(list(mean(ndogs), max(ndogs))~ allpets + q1, data=ds)
+        expect_error(
+            only_count_cube(multi_measures),
+            paste0(
+                "You can't use CrunchCubes with measures other than count. ",
+                "The cube you provided included measures: cube_max and cube_mean"
+            )
+        )
     })
 })
