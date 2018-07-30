@@ -48,6 +48,9 @@ gender_x_ideology_dims <- lapply(gender_x_ideology_dims, function (x) {
 })
 
 
+cat_by_cat <- loadCube("cubes/feelings-pets.json")
+
+
 test_that("zScores for CrunchCube normal contingency table is chisq standardized residuals", {
     # values from crunch-cube tests
     out <- chisq.test(as.array(gender_x_ideology))$stdres
@@ -178,6 +181,40 @@ test_that("compareCols()", {
             gender_x_ideology,
             baseline = "Very Conservative", 
             x = "Very liberal"),
+        expected_zScores
+    )
+})
+
+test_that("compareRows()", {
+    cat_by_cat <- noTransforms(cat_by_cat)
+    
+    expected_zScores <- cubify(
+        -0.97433731917929, 0.97433731917929,
+        dims = list(
+            feelings = c("extremely unhappy"),
+            animals = c("cats", "dogs")
+        )
+    )
+    expect_equal(
+        compareRows(
+            cat_by_cat,
+            baseline = "extremely happy", 
+            x = "extremely unhappy"),
+        expected_zScores
+    )
+    
+    expected_zScores <- cubify(
+        0.97433731917929, -0.97433731917929,
+        dims = list(
+            feelings = c("extremely happy"),
+            animals = c("cats", "dogs")
+        )
+    )
+    expect_equal(
+        compareRows(
+            cat_by_cat,
+            baseline = "extremely unhappy", 
+            x = "extremely happy"),
         expected_zScores
     )
 })
