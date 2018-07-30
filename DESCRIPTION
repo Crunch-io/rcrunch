@@ -78,6 +78,7 @@ Collate:
     'crunch-data-frame.R'
     'crunch.R'
     'crunchbox.R'
+    'cube-collapse-dimensions.R'
     'cube-dims.R'
     'cube-index-table.R'
     'cube-query.R'

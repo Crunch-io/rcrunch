@@ -1,0 +1,385 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/f08e5f/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Ff08e5f%2Fvariables%2F000067%2F%22%7D%2C%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Ff08e5f%2Fvariables%2F000026%2F%22%7D%5D%2C%22measures%22%3A%7B%22mean%22%3A%7B%22function%22%3A%22cube_mean%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Ff08e5f%2Fvariables%2F0000a1%2F%22%7D%5D%7D%7D%2C%22weight%22%3A%22%2Fapi%2Fdatasets%2Ff08e5f%2Fvariables%2F0000d0%2F%22%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "mean": {
+                    "function": "cube_mean",
+                    "args": [
+                        {
+                            "variable": "/api/datasets/f08e5f/variables/0000a1/"
+                        }
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/f08e5f/variables/000067/"
+                },
+                {
+                    "variable": "/api/datasets/f08e5f/variables/000026/"
+                }
+            ],
+            "weight": "/api/datasets/f08e5f/variables/0000d0/"
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "food_groups",
+                        "notes": "A categorical variable where the missing categories are interspersed throughout the non-missing categories",
+                        "name": "Food groups",
+                        "description": "Four of the five USDA food groups"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 0,
+                                "id": 0,
+                                "name": "Vegetables",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 32766,
+                                "id": 32766,
+                                "name": "Don't know",
+                                "missing": true
+                            },
+                            {
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "Fruit",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 5,
+                                "id": 5,
+                                "name": "Grain",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            },
+                            {
+                                "numeric_value": 4,
+                                "id": 4,
+                                "name": "Meat",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 32767,
+                                "id": 32767,
+                                "name": "Not asked",
+                                "missing": true
+                            }
+                        ]
+                    }
+                },
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "pasta",
+                        "notes": "A categorical variable",
+                        "name": "Shapes of pasta",
+                        "description": "The geometry of pasta"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "id": 1,
+                                "name": "Bucatini",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "Chitarra",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 0,
+                                "id": 0,
+                                "name": "Boccoli",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 4,
+                                "id": 4,
+                                "name": "Orecchiette",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 5,
+                                "id": 5,
+                                "name": "Quadrefiore",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 6,
+                                "id": 6,
+                                "name": "Fileja",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 32766,
+                                "id": 32766,
+                                "name": "Skipped",
+                                "missing": true
+                            },
+                            {
+                                "numeric_value": 32767,
+                                "id": 32767,
+                                "name": "Not asked",
+                                "missing": true
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 10,
+            "measures": {
+                "mean": {
+                    "data": [
+                        40.831556090846036,
+                        49.35178543745593,
+                        45.235127835800796,
+                        45.00537705990744,
+                        46.37274241513933,
+                        33.37930943079317,
+                        37.34278668077562,
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        28.43796125612535,
+                        {
+                            "?": -8
+                        },
+                        69.0,
+                        30.89887979295904,
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        29.548953341114256,
+                        46.72793104017217,
+                        43.237940227158745,
+                        46.3594679178205,
+                        46.223275250097345,
+                        44.67364293454036,
+                        64.0,
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        22.762408235713483,
+                        46.99898740499765,
+                        47.58519878126362,
+                        55.87243761650266,
+                        47.14827125435469,
+                        37.28702758743265,
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        37.3800483149577,
+                        44.41344499546059,
+                        50.15488276392229,
+                        54.47068402536801,
+                        56.20537878783497,
+                        33.994509717251645,
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        }
+                    ],
+                    "n_missing": 10,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": false,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1,
+                                "NaN": -8
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                32,
+                33,
+                158,
+                66,
+                93,
+                49,
+                3,
+                0,
+                0,
+                0,
+                0,
+                3,
+                0,
+                1,
+                2,
+                0,
+                0,
+                0,
+                8,
+                45,
+                218,
+                102,
+                70,
+                51,
+                1,
+                0,
+                0,
+                3,
+                27,
+                132,
+                60,
+                47,
+                25,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                12,
+                21,
+                105,
+                82,
+                190,
+                23,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "n": 1662
+        }
+    }
+}
