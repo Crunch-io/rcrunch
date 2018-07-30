@@ -50,6 +50,8 @@ gender_x_ideology_dims <- lapply(gender_x_ideology_dims, function (x) {
 
 cat_by_cat <- loadCube("cubes/feelings-pets.json")
 
+cat_by_mr_NSS_alltypes <- loadCube("cubes/cat-mr-NSS-alltypes.json")
+
 
 test_that("zScores for CrunchCube normal contingency table is chisq standardized residuals", {
     # values from crunch-cube tests
@@ -218,3 +220,68 @@ test_that("compareRows()", {
         expected_zScores
     )
 })
+
+
+test_that("compareDims() dimension validation", {
+    cat_by_cat <- noTransforms(cat_by_cat)
+    
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = "foo", 
+            x = "extremely unhappy",
+            dim = "rows"),
+        paste0("foo is not a column or row in the cube")
+    )
+    
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = "extremely happy", 
+            x = "foo",
+            dim = "rows"),
+        paste0("foo is not a column or row in the cube")
+    )
+})
+
+test_that("compareDims() with MRs", {
+    # if the dimension you are trying to compare amongst is an MR you get an
+    # error (for now)
+    expect_error(
+        compareCols(
+            cat_by_mr_NSS_alltypes,
+            baseline = "Denmark",
+            x = "Sweden"),
+        paste0("Column or row z-scores are not implemented for multiple ",
+               "response dimensions")
+    )
+    
+    # But if the MR is not the dimension being compared amongst, we still
+    # calculate a score
+    expected_zScores <- cubify(
+        -1.34840705967846,
+        -0.319502930145056,
+        -2.44219465036739,
+        -3.14883276639645,
+        4.11744429667266,
+        dims = list(
+            food_groups = c("Vegetables"),
+            nordics = c("Denmark", "Finland", "Iceland", "Norway", "Sweden")
+        )
+    )
+    
+    expect_equal(
+        compareRows(cat_by_mr_NSS_alltypes, baseline = "Fruit", x = "Vegetables"),
+        expected_zScores
+    )
+    
+    expect_error(
+        compareRows(
+            mr_by_cat,
+            baseline = "Cupcakes are the best cakes",
+            x = "I always ride a penny-farthing"),
+        paste0("Column or row z-scores are not implemented for multiple ",
+               "response dimensions")
+    )
+})
+

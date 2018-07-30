@@ -76,33 +76,52 @@ compareRows <- function (cube, ...) compareDims(cube = cube, dim = "rows", ...)
 compareDims <- function (cube, dim = c("cols", "rows"), baseline, x) {
     dim <- match.arg(dim)
     
-    # TOOD: check if over dims
-    
-    
+    # grab the names of extents for each dimensions
+    # TODO: we shouldn't need to do this if we can just pass baseline/x into the
+    # subsetting function when we can subset by name _or_ id natively
     if (dim == "cols") {
-        names <- colnames(cube)
+        names <- colnames(as.array(cube))
     } else if (dim == "rows") {
-        names <- rownames(cube)
+        names <- rownames(as.array(cube))
+    }
+    
+    # ensure that the extents given are in the cube
+    # TODO: remove when we can defer this check to the subsetting methods
+    not_in_cube <- !(c(baseline, x) %in% names)
+    if (any(not_in_cube)) {
+        stop(c(baseline, x)[not_in_cube], " is not a column or row in the cube")
+    }
+    
+    # ensure that there are not MRs on the comparison direction
+    dim_types <- getDimTypes(cube)
+    if ((dim == "cols" & startsWith(dim_types[2], "mr_")) |
+        (dim == "rows" & startsWith(dim_types[1], "mr_"))) {
+        stop(
+            "Column or row z-scores are not implemented for multiple response ",
+            "dimensions")
     }
 
     # convert to numeric indices
+    # TODO: remove when we can accept either characters or indices and pass them
+    # to subsetting unmolested
     if (is.character(baseline)) {
         baseline_ind <- which(names == baseline)
     }
-    
     if (is.character(x)) {
         x_ind <- which(names == x)
     }
     
+    # generate the 2xm or nx2 table tfor testing
     if (dim == "cols") {
         sub_cube <- cube[,c(x_ind, baseline_ind)]
     } else if (dim == "rows") {
         sub_cube <- cube[c(x_ind, baseline_ind),]
     }
     
-    # return only the x zscore
+    # make the test
     out <- zScores(sub_cube)
 
+    # only return the scores for x
     if (dim == "cols") {
         out <- out[, x, drop = FALSE]
     } else if (dim == "rows") {
