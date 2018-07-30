@@ -221,7 +221,6 @@ test_that("compareRows()", {
     )
 })
 
-
 test_that("compareDims() dimension validation", {
     cat_by_cat <- noTransforms(cat_by_cat)
     
@@ -285,3 +284,50 @@ test_that("compareDims() with MRs", {
     )
 })
 
+
+
+test_that("compareColsPairwise()", {
+    expected_zScores <- t(cubify(
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Very liberal"),
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Liberal"),
+        0, 0,
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Conservative"),
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Very Conservative"),
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Not sure"),
+        dims = list(
+            RespondentIdeology = c(
+                "Very liberal", "Liberal", "Moderate", "Conservative", "Very Conservative", "Not sure"
+            ),
+            Gender = c("Male", "Female")
+        )
+    ))
+    expect_equal(
+        compareColsPairwise(
+            gender_x_ideology,
+            baseline = "Moderate"),
+        expected_zScores
+    )
+})
+
+test_that("compareRowsPairwise()", {
+    cat_by_cat <- noTransforms(cat_by_cat)
+    
+    expected_zScores <- cubify(
+        compareRows(cat_by_cat, baseline = "neutral", x = "extremely happy"),
+        compareRows(cat_by_cat, baseline = "neutral", x = "somewhat happy"),
+        0, 0,
+        compareRows(cat_by_cat, baseline = "neutral", x = "somewhat unhappy"),
+        compareRows(cat_by_cat, baseline = "neutral", x = "extremely unhappy"),
+        dims = list(
+            feelings = c(
+                "extremely happy", "somewhat happy", "neutral", 
+                "somewhat unhappy", "extremely unhappy"
+                ),
+            animals = c("cats", "dogs")
+        )
+    )
+    expect_equal(
+        compareRowsPairwise(cat_by_cat, baseline = "neutral"),
+        expected_zScores
+    )
+})

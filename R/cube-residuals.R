@@ -68,11 +68,33 @@ standardizedMRResiduals <- function (cube) {
 #' @export
 rstandard <- function (model) zScores(x = model)
 
+#' Column and row comparison
+#' 
+#' Comparing a column or row with a baseline column or row. This calcualtes the z-score for the cells when comparing `x` to the baseline columns
+#'
+#' @param cube a cube to calcualte the comparison on
+#' @param dim which dimension is being compared (`rows` or `cols`, only valid for `compareDims()`)
+#' @param baseline a character, the column to use as a baseline to compare `x` against
+#' @param x a character, the column to compare against the baseline
+#'
+#' @return the z-score for the column or row given in `x`
+#' @export
+#' 
+#' @name dimension-comparison
+#' 
+#' @examples
+NULL
+
+#' @rdname dimension-comparison
+#' @export
 compareCols <- function (cube, ...) compareDims(cube = cube, dim = "cols", ...)
 
+#' @rdname dimension-comparison
+#' @export
 compareRows <- function (cube, ...) compareDims(cube = cube, dim = "rows", ...)
 
-
+#' @rdname dimension-comparison
+#' @export
 compareDims <- function (cube, dim = c("cols", "rows"), baseline, x) {
     dim <- match.arg(dim)
     
@@ -128,6 +150,76 @@ compareDims <- function (cube, dim = c("cols", "rows"), baseline, x) {
         out <- out[x, , drop = FALSE]
     }   
     
+    return(out)
+}
+
+
+#' Pairwise column and row comparison
+#' 
+#' Given a single baseline column copmare each other row or column against this baseline. Internally this function uses `compareDims()` iteratively. 
+#' 
+#' *Warning* since there is more than one comparison being made against each baseline the z-scores, and especially the p-values derived from these z-scores should be interpreted with caution. Using standard p-value cutoffs will result in anti-conservative interpretations because of the multiple comparisons problem. Adjustments to p-value cut offs (e.g. Bonferonni correction) should be used when interpreting z-scores from the `compare[Rows|Cols|Dims]Pairwise()` family of functions. 
+#'
+#' @param cube a cube to calcualte the comparison on
+#' @param dim which dimension is being compared (`rows` or `cols`, only valid for `compareDims()`)
+#' @param baseline a character, the column to use as a baseline to compare against all other columns
+#'
+#' @return an array of z-score for the all the columns or rows compared to `baseline`. The `baseline` column is all 0s
+#' @export
+#' 
+#' @name dimension-comparison
+#' 
+#' @examples
+NULL
+
+#' @rdname dimension-comparison-pairwise
+#' @export
+compareColsPairwise <- function (cube, ...) {
+    compareDimsPairwise(cube = cube, dim = "cols", ...)
+}
+
+#' @rdname dimension-comparison-pairwise
+#' @export
+compareRowsPairwise <- function (cube, ...) {
+    compareDimsPairwise(cube = cube, dim = "rows", ...)
+}
+
+#' @rdname dimension-comparison-pairwise
+#' @export
+compareDimsPairwise <- function (cube, dim = c("cols", "rows"), baseline) {
+    dim <- match.arg(dim)
+    
+    # grab the names of extents for each dimensions
+    # TODO: we shouldn't need to do this if we can just pass baseline/x into the
+    # subsetting function when we can subset by name _or_ id natively
+    if (dim == "cols") {
+        len_out <- dim(as.array(cube))[1]
+        names <- colnames(as.array(cube))
+    } else if (dim == "rows") {
+        len_out <- dim(as.array(cube))[2]
+        names <- rownames(as.array(cube))
+    }
+    
+    to_compare <- names[!(names %in% baseline)]
+    
+    out <- vapply(names, function (one_extent) {
+        if (one_extent == baseline) {
+            return(rep(0, len_out)) # not the right shape
+        }
+        
+        # generate the 2xm or nx2 table tfor testing
+        return(compareDims(cube, baseline = baseline, x = one_extent, dim = dim))
+    },
+    numeric(len_out))
+    
+    out <- simplify2array(out)
+    
+    if (dim == "rows") {
+        out <- t(out)
+    }
+    
+    dimnames(out) <- dimnames(as.array(cube))
+
     return(out)
 }
 
