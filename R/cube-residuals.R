@@ -1,16 +1,18 @@
 #' Calculate standardized residuals from a CrunchCube
 #'
-#' Standardized residuals, \code{(observed - expected) / sqrt(V)}, where \code{V}
-#' is the residual cell variance (Agresti, 2007, section 2.4.5). Special care is taken
-#' for multiple-response variables which are in effect a series of separate tables where
-#' \sQuote{not selected} cells for each item are are hidden.
+#' Standardized residuals, \code{(observed - expected) / sqrt(V)}, where
+#' \code{V} is the residual cell variance (Agresti, 2007, section 2.4.5).
+#' Special care is taken for multiple-response variables which are in effect a
+#' series of separate tables where \sQuote{not selected} cells for each item are
+#' are hidden.
 #'
 #' @param x A CrunchCube representing a contingency table
-#' @param model A CrunchCube representing a contingency table (for `rstandard()` only)
+#' @param model A CrunchCube representing a contingency table (for `rstandard()`
+#'   only)
 #'
-#' @return an array of standardized residuals or Z-scores from the hypothesis being tested.
-#' The default method is that the joint distributions of (weighted) counts are equal to the
-#' marginal distributions of the table.
+#' @return an array of standardized residuals or Z-scores from the hypothesis
+#'   being tested. The default method is that the joint distributions of
+#'   (weighted) counts are equal to the marginal distributions of the table.
 #'
 #' @seealso [stats::chisq.test]
 #' @references
@@ -69,20 +71,22 @@ standardizedMRResiduals <- function (cube) {
 rstandard <- function (model) zScores(x = model)
 
 #' Column and row comparison
-#' 
-#' Comparing a column or row with a baseline column or row. This calcualtes the z-score for the cells when comparing `x` to the baseline columns
 #'
-#' @param cube a cube to calcualte the comparison on
-#' @param dim which dimension is being compared (`rows` or `cols`, only valid for `compareDims()`)
-#' @param baseline a character, the column to use as a baseline to compare `x` against
+#' Comparing a column or row with a baseline column or row. This calculates the
+#' z-score for the cells when comparing `x` to the baseline columns
+#'
+#' @param cube a cube to calculate the comparison on
+#' @param dim which dimension is being compared (`rows` or `cols`, only valid
+#'   for `compareDims()`)
+#' @param baseline a character, the column to use as a baseline to compare `x`
+#'   against
 #' @param x a character, the column to compare against the baseline
+#' @param ... arguments passed from `compareRows()` or `compareCols()` to
+#'   `compareDims()` (i.e. `baseline` and `x`)
 #'
 #' @return the z-score for the column or row given in `x`
-#' @export
 #' 
 #' @name dimension-comparison
-#' 
-#' @examples
 NULL
 
 #' @rdname dimension-comparison
@@ -155,21 +159,30 @@ compareDims <- function (cube, dim = c("cols", "rows"), baseline, x) {
 
 
 #' Pairwise column and row comparison
-#' 
-#' Given a single baseline column copmare each other row or column against this baseline. Internally this function uses `compareDims()` iteratively. 
-#' 
-#' *Warning* since there is more than one comparison being made against each baseline the z-scores, and especially the p-values derived from these z-scores should be interpreted with caution. Using standard p-value cutoffs will result in anti-conservative interpretations because of the multiple comparisons problem. Adjustments to p-value cut offs (e.g. Bonferonni correction) should be used when interpreting z-scores from the `compare[Rows|Cols|Dims]Pairwise()` family of functions. 
 #'
-#' @param cube a cube to calcualte the comparison on
-#' @param dim which dimension is being compared (`rows` or `cols`, only valid for `compareDims()`)
-#' @param baseline a character, the column to use as a baseline to compare against all other columns
+#' Given a single baseline column compare each other row or column against this
+#' baseline. Internally this function uses `compareDims()` iteratively.
 #'
-#' @return an array of z-score for the all the columns or rows compared to `baseline`. The `baseline` column is all 0s
-#' @export
+#' *Warning* since there is more than one comparison being made against each
+#' baseline the z-scores, and especially the p-values derived from these
+#' z-scores should be interpreted with caution. Using standard p-value cutoffs
+#' will result in anti-conservative interpretations because of the multiple
+#' comparisons problem. Adjustments to p-value cut offs (e.g. Bonferonni
+#' correction) should be used when interpreting z-scores from the
+#' `compare[Rows|Cols|Dims]Pairwise()` family of functions.
+#'
+#' @param cube a cube to calculate the comparison on
+#' @param dim which dimension is being compared (`rows` or `cols`, only valid
+#'   for `compareDims()`)
+#' @param baseline a character, the column to use as a baseline to compare
+#'   against all other columns
+#' @param ... arguments passed from `compareRowsPairwise()` or
+#'   `compareColsPairwise()` to `compareDimsPairwise()` (i.e. `baseline`)
+#'
+#' @return an array of z-score for the all the columns or rows compared to
+#'   `baseline`. The `baseline` column is all 0s
 #' 
-#' @name dimension-comparison
-#' 
-#' @examples
+#' @name dimension-comparison-pairwise
 NULL
 
 #' @rdname dimension-comparison-pairwise
