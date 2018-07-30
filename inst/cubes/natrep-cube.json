@@ -1,0 +1,584 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/1234/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22%2Fapi%2Fdatasets%2F1234%2Fvariables%2F010652%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F1234%2Fvariables%2F010652%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3A%22%2Fapi%2Fdatasets%2F1234%2Fvariables%2F010140%2F%22%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": []
+                }
+            },
+            "dimensions": [
+                {
+                    "each": "/api/datasets/1234/variables/010652/"
+                },
+                {
+                    "function": "as_selected",
+                    "args": [
+                        {
+                            "variable": "/api/datasets/1234/variables/010652/"
+                        }
+                    ]
+                }
+            ],
+            "weight": "/api/datasets/1234/variables/010140/"
+        },
+        "query_environment": {
+            "filter": []
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "derived": true,
+                    "references": {
+                        "uniform_basis": false,
+                        "name": "offal",
+                        "subreferences": [
+                            {
+                                "alias": "offal_1",
+                                "name": "liver"
+                            },
+                            {
+                                "alias": "offal_2",
+                                "name": "thalmus"
+                            },
+                            {
+                                "alias": "offal_3",
+                                "name": "heart"
+                            },
+                            {
+                                "alias": "offal_4",
+                                "name": "tripe"
+                            },
+                            {
+                                "alias": "offal_6",
+                                "name": "kidney"
+                            },
+                            {
+                                "alias": "offal_5",
+                                "name": "lungs"
+                            },
+                            {
+                                "alias": "offal_95",
+                                "name": "other"
+                            },
+                            {
+                                "alias": "offal_96",
+                                "name": "Don't know"
+                            },
+                            {
+                                "alias": "offal_97",
+                                "name": "None of these"
+                            }
+                        ],
+                        "description": "Which of these do you think Mike likes?",
+                        "alias": "offal"
+                    },
+                    "type": {
+                        "subtype": {
+                            "class": "variable"
+                        },
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "offal_1",
+                                        "name": "liver"
+                                    },
+                                    "id": "0001",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "offal_2",
+                                        "name": "thalmus"
+                                    },
+                                    "id": "0002",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "offal_3",
+                                        "name": "heart"
+                                    },
+                                    "id": "0003",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 4,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "offal_4",
+                                        "name": "tripe"
+                                    },
+                                    "id": "0004",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 5,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "offal_6",
+                                        "name": "kidney"
+                                    },
+                                    "id": "0005",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 6,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "offal_5",
+                                        "name": "lungs"
+                                    },
+                                    "id": "0006",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 7,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "offal_95",
+                                        "name": "other"
+                                    },
+                                    "id": "0007",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 8,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "offal_96",
+                                        "name": "Don't know"
+                                    },
+                                    "id": "0008",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 9,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "offal_97",
+                                        "name": "None of these"
+                                    },
+                                    "id": "0009",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
+                },
+                {
+                    "references": {
+                        "uniform_basis": false,
+                        "name": "offal",
+                        "subreferences": [
+                            {
+                                "alias": "offal_1",
+                                "name": "liver"
+                            },
+                            {
+                                "alias": "offal_2",
+                                "name": "thalmus"
+                            },
+                            {
+                                "alias": "offal_3",
+                                "name": "heart"
+                            },
+                            {
+                                "alias": "offal_4",
+                                "name": "tripe"
+                            },
+                            {
+                                "alias": "offal_6",
+                                "name": "kidney"
+                            },
+                            {
+                                "alias": "offal_5",
+                                "name": "lungs"
+                            },
+                            {
+                                "alias": "offal_95",
+                                "name": "other"
+                            },
+                            {
+                                "alias": "offal_96",
+                                "name": "Don't know"
+                            },
+                            {
+                                "alias": "offal_97",
+                                "name": "None of these"
+                            }
+                        ],
+                        "description": "Which of these do you think Mike likes?",
+                        "alias": "offal"
+                    },
+                    "derived": true,
+                    "type": {
+                        "ordinal": false,
+                        "subvariables": [
+                            "0001",
+                            "0002",
+                            "0003",
+                            "0004",
+                            "0005",
+                            "0006",
+                            "0007",
+                            "0008",
+                            "0009"
+                        ],
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "selected": true,
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 0,
+                                "name": "Not Selected"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 236761,
+            "measures": {
+                "count": {
+                    "data": [
+                        19935.93255500768,
+                        23073.629195275662,
+                        237255.42460755754,
+                        8815.065139168786,
+                        34194.49661111482,
+                        237255.42460755754,
+                        12015.564955437594,
+                        30993.99679484597,
+                        237255.42460755754,
+                        7967.675304127891,
+                        35041.88644615544,
+                        237255.42460755754,
+                        25379.61519570241,
+                        17629.946554580703,
+                        237255.42460755754,
+                        5130.620193045103,
+                        37878.94155723843,
+                        237255.42460755754,
+                        604.39533293168,
+                        42405.166417352375,
+                        237255.42460755754,
+                        1757.8105958739545,
+                        41251.75115441006,
+                        237255.42460755754,
+                        3140.0695709152765,
+                        39869.49217936861,
+                        237255.42460755754
+                    ],
+                    "n_missing": 236761,
+                    "metadata": {
+                        "references": {},
+                        "derived": true,
+                        "type": {
+                            "integer": false,
+                            "missing_rules": {},
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                21545,
+                21959,
+                236761,
+                9256,
+                34248,
+                236761,
+                13412,
+                30092,
+                236761,
+                8562,
+                34942,
+                236761,
+                27380,
+                16124,
+                236761,
+                5041,
+                38463,
+                236761,
+                676,
+                42828,
+                236761,
+                1281,
+                42223,
+                236761,
+                3112,
+                40392,
+                236761
+            ],
+            "n": 280265
+        }
+    }
+}
