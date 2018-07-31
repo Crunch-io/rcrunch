@@ -4,19 +4,25 @@
 \alias{index.table}
 \title{Calculate an index table for a CrunchCube}
 \usage{
-index.table(x, margin)
+index.table(x, margin, baseline)
 }
 \arguments{
 \item{x}{A CrunchCube to calculate index table for}
 
 \item{margin}{which margin to index against (1 for rows, 2 for columns)}
+
+\item{baseline}{an arbitrary set of proportions to compare the table given in
+\code{x} to. Useful for comparing two separate cubes. \code{baseline} must have the
+same length as the extent of the dimension given in \code{margin}.}
 }
 \value{
 an array of percentages indexed to the margin provided
 }
 \description{
 Index tables are percentages of percentages. They take the percentage from
-\code{prop.table()} and divide that by the proportions of the other margin.
+\code{prop.table(cube, margin)} and, by default, divide that by the proportions of
+the other margin. The \code{baseline} argument can be used to provide baseline
+proportions to compare against.
 }
 \details{
 \code{index.table()} is only implemented for 2 dimensional cubes. If you need to
@@ -32,14 +38,18 @@ calculate indexes for a higher dimension Cube, please slice the cube first.
  index.table(cube_object, 1)
  #    v7
  # v4         C         E
- #   B 1.071429 0.8571429
- #   C 0.937500 1.1250000
+ #   B 107.1429  85.71429
+ #   C  93.7500 112.50000
  index.table(cube_object, 2)
  #    v7
- # v4         C         E
- #   B 1.071429 0.8571429
- #   C 0.937500 1.1250000
- #
+ # v4    C   E
+ #   B 100  80
+ #   C 100 120
+ index.table(cube_object, 2, c(0.6, 0.4))
+ #    v7
+ # v4          C         E
+ #   B  83.33333  66.66667
+ #   C 125.00000 150.00000
 }
 
 }

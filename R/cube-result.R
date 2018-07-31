@@ -232,16 +232,7 @@ cubeMarginTable <- function(x, margin = NULL, measure = 1) {
 
     ## Check "margin" against number of (non-"selected" invisible MR) dims
     selecteds <- is.selectedDimension(dims)
-    if (!is.null(margin) && max(margin) > sum(!selecteds)) {
-        ## Validate the input and give a useful error message.
-        ## base::margin.table says:
-        ## "Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed"
-        ## which is terrible.
-        halt(
-            "Margin ", max(margin), " exceeds Cube's number of dimensions (",
-            sum(!selecteds), ")"
-        )
-    }
+    check_margins(margin, selecteds)
 
     which_selected <- which(selecteds)
     margin_map <- which(!selecteds)
@@ -254,8 +245,9 @@ cubeMarginTable <- function(x, margin = NULL, measure = 1) {
     ## translates to dim 3 in the "real" array. The `margin_map` translates
     ## user dims to "real" dims.
     mapped_margins <- margin_map[margin]
+    
     drop_na <- x@useNA == "no"
-
+    
     ## This is the core of the function, in which we select the subset of the
     ## "real" cube that we want to aggregate to generate the margin table.
     ## The result of this lapply is a dimnames-shaped list of logical vectors
@@ -306,7 +298,7 @@ cubeMarginTable <- function(x, margin = NULL, measure = 1) {
     ## each subvariable in the MR has a separate "valid" count associated.
     ## It's mind-bending, I know. But we bend our minds so our users don't have
     ## to as much.
-    mt_margins <- as_selected_margins(margin, selecteds)
+    mt_margins <- mr_items_margins(margin, cube = x)
     ## OK. Now we have an array of data and translated margins. We can call the
     ## base `margin.table` method with those.
     mt <- margin.table(data, mt_margins)
@@ -325,73 +317,48 @@ cubeMarginTable <- function(x, margin = NULL, measure = 1) {
     return(out)
 }
 
-as_selected_margins <- function(margin, selecteds, before = TRUE) {
-    ## If there are "Selection" dimensions, we always want to include their
-    ## partner (position - 1) in the margin table dimensions
-    ## margin is always the "real" full cube dimensions even if before=TRUE
-    if (!any(selecteds)) {
-        ## If there aren't any, no-op
-        return(margin)
-    }
-    which_selected <- which(selecteds)
-    if (before) {
-        ## "before" means we're returning margins of the "real" cube that
-        ## includes the selection dimensions in them.
-        margin <- which(!selecteds)[margin]
-        mr_margins <- which_selected - 1
-    } else {
-        ## "after" is after dropping the selection dimensions, so we need to
-        ## subtract more than one for each subsiquent MR encountered
-        mr_margins <- which_selected - seq_along(which_selected)
-    }
 
-    return(sort(union(margin, mr_margins)))
+#' Check validity of margins
+#'
+#' A helper function to check if margins supplied are compatible with the
+#' dimensions
+#'
+#' @param selecteds which dimensions are selected
+#' @param margin the margin(s) being specified
+#'
+#' @return None
+#'
+#' @keywords internal
+check_margins <- function (margin, selecteds) {
+    if (!is.null(margin) && max(margin) > sum(!selecteds)) {
+        ## Validate the input and give a useful error message.
+        ## base::margin.table says:
+        ## "Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed"
+        ## which is terrible.
+        halt("Margin ", max(margin), " exceeds Cube's number of dimensions (",
+             sum(!selecteds), ")")
+    }
 }
 
-#' Work with CrunchCubes, MultitableResults, and TabBookResults
-#'
-#' These functions provide an interface like [base::margin.table()]
-#' and [base::prop.table()] for the CrunchCube object. CrunchCubes contain
-#' richer metadata than standard R `array` objects, and they also conceal
-#' certain complexity in the data structures from the user. In particular,
-#' multiple-response variables are generally represented as single dimensions
-#' in result tables, but in the actual data, they may comprise two dimensions.
-#' These methods understand the subtleties in the Crunch data types and
-#' correctly compute margins and percentages off of them.
-#'
-#' These functions also generalize to MultitableResults and TabBookResults,
-#' which are returned from a [tabBook()] request. When called on one of those
-#' objects, they effectively apply over each CrunchCube contained in them.
-#'
-#' `bases` is an additional method for CrunchCubes. When making weighted
-#' requests, `bases` allows you to access the unweighted counts for every
-#' cell in the resulting table (array). The `bases` function takes a
-#' "margin" argument to work like `margin.table`, or with `margin=0`
-#' gives all cell counts.
-#'
-#' @param x a CrunchCube
-#' @param margin index, or vector of indices to generate margin for. See
-#' [base::prop.table()]. `bases()` accepts `0` as an additional valid
-#' value for `margin`, which yields the unweighted counts for the
-#' query.
-#' @param digits For `round`, the number of decimal places to round to. See
-#' [base::round()]
-#'
-#' @return When called on CrunchCubes, these functions return an `array`.
-#' Calling prop.table on
-#' a MultitableResult returns a list of prop.tables of the CrunchCubes it
-#' contains. Likewise, prop.table on a TabBookResult returns a list of lists of
-#' prop.tables.
-#' @name cube-computing
-#' @aliases cube-computing margin.table prop.table bases round
-#' @seealso [base::margin.table()] [base::prop.table()]
-NULL
-
-#' @rdname cube-computing
-#' @export
-setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
-    cubeMarginTable(x, margin)
-})
+mr_items_margins <- function(margin, dimTypes = getDimTypes(cube), cube, user_dims = FALSE) {
+    margin_out <- user2realMargin(margin, dimTypes = dimTypes)
+    # remove the selections dimension, if it was asked for
+    margin_out <- margin_out[dimTypes[margin_out] != "mr_selections"]
+    
+    # add MR items dimensions
+    mr_items <- which(dimTypes == "mr_items")
+    margin_out <- sort(unique(c(margin_out, mr_items)))
+    
+    if (user_dims) {
+        margin_out <- real2userMargin(margin_out, dimTypes = dimTypes)
+    }
+ 
+    if (length(margin_out) == 0) {
+        return(NULL)
+    }
+    
+    return(margin_out)
+}
 
 #' @export
 as.array.CrunchCube <- function(x, ...) cubeToArray(x, ...)
@@ -401,13 +368,11 @@ as.array.CrunchCube <- function(x, ...) cubeToArray(x, ...)
 setMethod("prop.table", "CrunchCube", function(x, margin = NULL) {
     out <- applyTransforms(x)
     marg <- margin.table(x, margin)
-    actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
-        before = FALSE
-    )
+    actual_margin <- mr_items_margins(margin, cube = x, user_dims = TRUE)
     # Check if there are any actual_margins and if the dims are identical, we
     # don't need to sweep, and if we are MRxMR we can't sweep.
-    if (length(actual_margin) & !identical(dim(out), dim(marg))) {
-        out <- sweep(out, actual_margin, marg, "/", check.margin = FALSE)
+    if (!is.null(actual_margin) & !identical(dim(out), dim(marg))) {
+        out <- sweep(out, actual_margin, marg, "/", check.margin=FALSE)
     } else {
         ## Don't just divide by sum(out) like the default does.
         ## cubeMarginTable handles missingness, any/none, etc.
@@ -442,3 +407,139 @@ setMethod("bases", "CrunchCube", function(x, margin = NULL) {
         return(cubeMarginTable(x, margin, measure = ".unweighted_counts"))
     }
 })
+
+
+
+#' Work with CrunchCubes, MultitableResults, and TabBookResults
+#'
+#' These functions provide an interface like [base::margin.table()] and
+#' [base::prop.table()] for the CrunchCube object. CrunchCubes contain richer
+#' metadata than standard R `array` objects, and they also conceal certain
+#' complexity in the data structures from the user. In particular,
+#' multiple-response variables are generally represented as single dimensions in
+#' result tables, but in the actual data, they may comprise two dimensions.
+#' These methods understand the subtleties in the Crunch data types and
+#' correctly compute margins and percentages off of them.
+#'
+#' These functions also generalize to MultitableResults and TabBookResults,
+#' which are returned from a [tabBook()] request. When called on one of those
+#' objects, they effectively apply over each CrunchCube contained in them.
+#'
+#' `bases` is an additional method for CrunchCubes. When making weighted
+#' requests, `bases` allows you to access the unweighted counts for every cell
+#' in the resulting table (array). The `bases` function takes a "margin"
+#' argument to work like `margin.table`, or with `margin=0` gives all cell
+#' counts.
+#'
+#' @param x a CrunchCube
+#' @param margin index, or vector of indices to generate margin for. See
+#'   [base::prop.table()]. `bases()` accepts `0` as an additional valid value
+#'   for `margin`, which yields the unweighted counts for the query.
+#' @param digits For `round`, the number of decimal places to round to. See
+#'   [base::round()]
+#'
+#' @return When called on CrunchCubes, these functions return an `array`.
+#'   Calling prop.table on a MultitableResult returns a list of prop.tables of
+#'   the CrunchCubes it contains. Likewise, prop.table on a TabBookResult
+#'   returns a list of lists of prop.tables.
+#' @name cube-computing
+#' @aliases cube-computing margin.table prop.table bases round
+#' @seealso [base::margin.table()] [base::prop.table()]
+NULL
+
+#' @rdname cube-computing
+#' @export
+setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
+    cubeMarginTable(x, margin)
+})
+
+#' Convert from user margins to real cube margins or vice versa
+#'
+#' It is helpful to programmatically move from user-specified margins to real
+#' cube margins that apply to the higher-dimensional real cube (with
+#' `user2realMargin`). Or to move from the higher-dimensional real cube to user cube
+#' (with `real2userMargin`).
+#'
+#' @param margin the margin or margins for the user cube to be translated
+#' @param dimTypes dimension types from `getDimTypes()` (by default:
+#'   `getDimTypes(cube)`)
+#' @param cube the cube to translate the margin for (optional if `dimTypes` is
+#'   explicitly supplied)
+#' @param dedupe logical, should the user dimensions in the result be
+#'   deduplicated (for `real2userMargin` only)
+#'
+#' @return margin or margins in the higher-dimension real cube
+#'
+#' @keywords internal
+#'
+#' @name margin-translation
+NULL
+
+#' @rdname margin-translation
+user2realMargin <- function(margin, dimTypes = getDimTypes(cube), cube) {
+    if (is.null(margin)) { 
+        # If margin is null, return null
+        return(NULL)
+    }
+    margin_map <- makeMarginMap(dimTypes)
+    
+    return(which(margin_map %in% margin))
+}
+
+#' @rdname margin-translation
+real2userMargin <- function(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE) {
+    if (is.null(margin)) { 
+        # If margin is null, return null
+        return(NULL)
+    }
+    
+    margin_map <- makeMarginMap(dimTypes)
+    
+    if (dedupe) {
+        margin_out <- unique(margin_map[margin])
+    } else {
+        margin_out <- margin_map[margin]
+    }
+    
+    return(margin_out)   
+}
+
+#' Make a map of margins
+#'
+#' Useful when converting to and from user and real cube dimension indexes.
+#'
+#' @param dimTypes dimension types from `getDimTypes()`
+#'
+#' @return a vector of margins, the length of which is the length of the real
+#'   cube, the values are the user cube dimensions
+#'
+#' @examples
+#' 
+#' \dontrun{
+#' makeMarginMap(getDimTypes(cat_by_cat_cube))
+#' # 1 2
+#' 
+#' makeMarginMap(getDimTypes(MR_by_cat_cube))
+#' # 1 1 2
+#' 
+#' makeMarginMap(getDimTypes(cat_by_MR_cube))
+#' # 1 2 2
+#' 
+#' makeMarginMap(getDimTypes(MR_by_MR_cube))
+#' # 1 1 2 2
+#' }
+#'
+#' @keywords internal
+makeMarginMap <- function (dimTypes) {
+    non_mr_margins <- seq_along(dimTypes[dimTypes != "mr_selections"])
+    
+    # adjust multiple response margins
+    which_selected <- which(dimTypes == "mr_selections")
+    mr_margins <- which_selected - seq_along(which_selected)
+    margin_map <- sort(c(non_mr_margins, mr_margins))
+    
+    # we don't need names on the margin map, so remove them.
+    names(margin_map) <- NULL
+    
+    return(margin_map)
+}

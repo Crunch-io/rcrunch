@@ -1,4 +1,5 @@
 # crunch 1.23.1 (under development)
+* Adjusted the calculation of `index.table()` to better reflect analysts' intentions. Now, `index.table()` calcualtes the index with respect to the marginal proportion of the `margin` given, so for `index.table(cube, 2)` the column proportions of the table are indexed to the marginal row proportions. In other words: for each column how much larger or smaller is the proportion in that column when compared to the proportions for the row variable alone.
 * fixed a bug when using the `makeWeight()` function with categorical variables that had non-sequential IDs.
 
 # crunch 1.23.0

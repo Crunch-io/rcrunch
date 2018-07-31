@@ -156,41 +156,39 @@ replaceMissingWithTRUE <- function(l) {
 #' @return a list of array extent indices (for the real-cube)
 translateCubeIndex <- function(x, subset, drop) {
     is_selected <- is.selectedDimension(x@dims)
-    # the real cube dimensions
-    prog_names <- names(is_selected)
-    # the user cube dimensions
-    user_names <- prog_names[!is_selected]
-    if (length(prog_names) == length(user_names)) {
-        # no MR variables so no need to translate the subset
+    if (length(is_selected) == length(dim(x))) {
+        #no MR variables so no need to translate the subset
         return(subset)
     }
+    
     # This is the main work of the subset translation, just taking the user
-    # supplied subset and projecting them up to real cube dimension
-    out <- as.list(rep(TRUE, length(prog_names)))
-    out[match(user_names, prog_names)] <- subset
+    # supplied subset and projecting them up to real cube dimension 
+    out <- subset[real2userMargin(seq_along(is_selected), cube = x, dedupe = FALSE)]
 
     # Dropping MR variables is a bit special. Whenever the user drops the MR
     # dimension the MR selection dimension is also dropped. This checks if it's
     # an MR dimension which is being dropped, and assigns an appropriate index
     # value.
-    if (drop) {
-        for (i in seq_along(prog_names)) {
-            if (i == 1) {
-                next
-            }
-            if (is_selected[i] && # check if MR selection dimension
-                length(out[[i - 1]]) == 1 && # MR response variable is a single number
-                !isTRUE(out[[i - 1]])) {
-                if (x@useNA == "no") {
-                    # This is used by skipMissingCategories below
-                    out[i] <- "mr_select_drop"
-                } else {
-                    # assign index value to "Selected" along the mr_selection dimension
-                    out[i] <- 1
-                }
-            }
+    out <- lapply(seq_along(out), function(i) {
+        if (!is_selected[i]) {
+            # if we aren't a selected dimension, return without modification
+            return(out[[i]])
         }
-    }
+        
+        # If we are dropping and MR response variable is a single number
+        if (drop &&  length(out[[i - 1]]) == 1 && !isTRUE(out[[i - 1]])) { 
+            if (x@useNA == "no") {
+                # This is used by skipMissingCategories below
+                return("mr_select_drop")
+            } else {
+                # assign index value to "Selected" along the mr_selection dimension
+                return(1)
+            }
+        } 
+        # return TRUE in all other circumstances
+        return(TRUE)
+        })
+    
     return(out)
 }
 
