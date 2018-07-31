@@ -104,13 +104,27 @@ compareDims <- function (cube, dim = c("cols", "rows"), baseline, x) {
     
     # grab the names of extents for each dimensions
     # TODO: we shouldn't need to do this if we can just pass baseline/x into the
-    # subsetting function when we can subset by name _or_ id natively
+    # subsetting function when we can subset by name _or_ index natively
     if (dim == "cols") {
         names <- colnames(as.array(cube))
     } else if (dim == "rows") {
         names <- rownames(as.array(cube))
     }
-    
+
+    # convert to numeric indices
+    # TODO: remove when we can accept either characters or indices and pass them
+    # to subsetting unmolested
+    if (is.character(baseline)) {
+        baseline_ind <- which(names == baseline)
+    } else {
+        stop("Currently, column comparison only accepts category names.")
+    }
+    if (is.character(x)) {
+        x_ind <- which(names == x)
+    } else {
+        stop("Currently, column comparison only accepts category names.")
+    }
+        
     # ensure that the extents given are in the cube
     # TODO: remove when we can defer this check to the subsetting methods
     not_in_cube <- !(c(baseline, x) %in% names)
@@ -125,16 +139,6 @@ compareDims <- function (cube, dim = c("cols", "rows"), baseline, x) {
         stop(
             "Column or row z-scores are not implemented for multiple response ",
             "dimensions")
-    }
-
-    # convert to numeric indices
-    # TODO: remove when we can accept either characters or indices and pass them
-    # to subsetting unmolested
-    if (is.character(baseline)) {
-        baseline_ind <- which(names == baseline)
-    }
-    if (is.character(x)) {
-        x_ind <- which(names == x)
     }
     
     # generate the 2xm or nx2 table tfor testing
@@ -227,6 +231,8 @@ compareDimsPairwise <- function (cube, dim = c("cols", "rows"), baseline) {
     
     out <- simplify2array(out)
     
+    # if the dimension is rows, the array that vapply returns needs to be 
+    # transposed
     if (dim == "rows") {
         out <- t(out)
     }

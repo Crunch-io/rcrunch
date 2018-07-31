@@ -230,7 +230,7 @@ test_that("compareDims() dimension validation", {
             baseline = "foo", 
             x = "extremely unhappy",
             dim = "rows"),
-        paste0("foo is not a column or row in the cube")
+        "foo is not a column or row in the cube"
     )
     
     expect_error(
@@ -239,7 +239,25 @@ test_that("compareDims() dimension validation", {
             baseline = "extremely happy", 
             x = "foo",
             dim = "rows"),
-        paste0("foo is not a column or row in the cube")
+        "foo is not a column or row in the cube"
+    )
+    
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = 1, 
+            x = "extremely happy",
+            dim = "rows"),
+        "Currently, column comparison only accepts category names."
+    )
+    
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = "extremely happy", 
+            x = 1,
+            dim = "rows"),
+        "Currently, column comparison only accepts category names."
     )
 })
 
