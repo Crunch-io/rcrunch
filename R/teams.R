@@ -55,8 +55,8 @@ setMethod(
             x <- refresh(x)
             ## Add members to team, if given
             if (!is.null(value[["members"]])) {
-                  members(x[[i]]) <- value[["members"]]
-              }
+                members(x[[i]]) <- value[["members"]]
+            }
             return(x)
         }
     }

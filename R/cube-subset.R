@@ -157,12 +157,12 @@ replaceMissingWithTRUE <- function(l) {
 translateCubeIndex <- function(x, subset, drop) {
     is_selected <- is.selectedDimension(x@dims)
     if (length(is_selected) == length(dim(x))) {
-        #no MR variables so no need to translate the subset
+        # no MR variables so no need to translate the subset
         return(subset)
     }
-    
+
     # This is the main work of the subset translation, just taking the user
-    # supplied subset and projecting them up to real cube dimension 
+    # supplied subset and projecting them up to real cube dimension
     out <- subset[real2userMargin(seq_along(is_selected), cube = x, dedupe = FALSE)]
 
     # Dropping MR variables is a bit special. Whenever the user drops the MR
@@ -174,9 +174,9 @@ translateCubeIndex <- function(x, subset, drop) {
             # if we aren't a selected dimension, return without modification
             return(out[[i]])
         }
-        
+
         # If we are dropping and MR response variable is a single number
-        if (drop &&  length(out[[i - 1]]) == 1 && !isTRUE(out[[i - 1]])) { 
+        if (drop && length(out[[i - 1]]) == 1 && !isTRUE(out[[i - 1]])) {
             if (x@useNA == "no") {
                 # This is used by skipMissingCategories below
                 return("mr_select_drop")
@@ -184,11 +184,11 @@ translateCubeIndex <- function(x, subset, drop) {
                 # assign index value to "Selected" along the mr_selection dimension
                 return(1)
             }
-        } 
+        }
         # return TRUE in all other circumstances
         return(TRUE)
-        })
-    
+    })
+
     return(out)
 }
 

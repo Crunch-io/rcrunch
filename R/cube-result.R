@@ -245,9 +245,9 @@ cubeMarginTable <- function(x, margin = NULL, measure = 1) {
     ## translates to dim 3 in the "real" array. The `margin_map` translates
     ## user dims to "real" dims.
     mapped_margins <- margin_map[margin]
-    
+
     drop_na <- x@useNA == "no"
-    
+
     ## This is the core of the function, in which we select the subset of the
     ## "real" cube that we want to aggregate to generate the margin table.
     ## The result of this lapply is a dimnames-shaped list of logical vectors
@@ -329,14 +329,16 @@ cubeMarginTable <- function(x, margin = NULL, measure = 1) {
 #' @return None
 #'
 #' @keywords internal
-check_margins <- function (margin, selecteds) {
+check_margins <- function(margin, selecteds) {
     if (!is.null(margin) && max(margin) > sum(!selecteds)) {
         ## Validate the input and give a useful error message.
         ## base::margin.table says:
         ## "Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed"
         ## which is terrible.
-        halt("Margin ", max(margin), " exceeds Cube's number of dimensions (",
-             sum(!selecteds), ")")
+        halt(
+            "Margin ", max(margin), " exceeds Cube's number of dimensions (",
+            sum(!selecteds), ")"
+        )
     }
 }
 
@@ -344,19 +346,19 @@ mr_items_margins <- function(margin, dimTypes = getDimTypes(cube), cube, user_di
     margin_out <- user2realMargin(margin, dimTypes = dimTypes)
     # remove the selections dimension, if it was asked for
     margin_out <- margin_out[dimTypes[margin_out] != "mr_selections"]
-    
+
     # add MR items dimensions
     mr_items <- which(dimTypes == "mr_items")
     margin_out <- sort(unique(c(margin_out, mr_items)))
-    
+
     if (user_dims) {
         margin_out <- real2userMargin(margin_out, dimTypes = dimTypes)
     }
- 
+
     if (length(margin_out) == 0) {
         return(NULL)
     }
-    
+
     return(margin_out)
 }
 
@@ -372,7 +374,7 @@ setMethod("prop.table", "CrunchCube", function(x, margin = NULL) {
     # Check if there are any actual_margins and if the dims are identical, we
     # don't need to sweep, and if we are MRxMR we can't sweep.
     if (!is.null(actual_margin) & !identical(dim(out), dim(marg))) {
-        out <- sweep(out, actual_margin, marg, "/", check.margin=FALSE)
+        out <- sweep(out, actual_margin, marg, "/", check.margin = FALSE)
     } else {
         ## Don't just divide by sum(out) like the default does.
         ## cubeMarginTable handles missingness, any/none, etc.
@@ -449,7 +451,7 @@ NULL
 
 #' @rdname cube-computing
 #' @export
-setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
+setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
     cubeMarginTable(x, margin)
 })
 
@@ -477,31 +479,31 @@ NULL
 
 #' @rdname margin-translation
 user2realMargin <- function(margin, dimTypes = getDimTypes(cube), cube) {
-    if (is.null(margin)) { 
+    if (is.null(margin)) {
         # If margin is null, return null
         return(NULL)
     }
     margin_map <- makeMarginMap(dimTypes)
-    
+
     return(which(margin_map %in% margin))
 }
 
 #' @rdname margin-translation
 real2userMargin <- function(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE) {
-    if (is.null(margin)) { 
+    if (is.null(margin)) {
         # If margin is null, return null
         return(NULL)
     }
-    
+
     margin_map <- makeMarginMap(dimTypes)
-    
+
     if (dedupe) {
         margin_out <- unique(margin_map[margin])
     } else {
         margin_out <- margin_map[margin]
     }
-    
-    return(margin_out)   
+
+    return(margin_out)
 }
 
 #' Make a map of margins
@@ -514,32 +516,32 @@ real2userMargin <- function(margin, dimTypes = getDimTypes(cube), cube, dedupe =
 #'   cube, the values are the user cube dimensions
 #'
 #' @examples
-#' 
+#'
 #' \dontrun{
 #' makeMarginMap(getDimTypes(cat_by_cat_cube))
 #' # 1 2
-#' 
+#'
 #' makeMarginMap(getDimTypes(MR_by_cat_cube))
 #' # 1 1 2
-#' 
+#'
 #' makeMarginMap(getDimTypes(cat_by_MR_cube))
 #' # 1 2 2
-#' 
+#'
 #' makeMarginMap(getDimTypes(MR_by_MR_cube))
 #' # 1 1 2 2
 #' }
 #'
 #' @keywords internal
-makeMarginMap <- function (dimTypes) {
+makeMarginMap <- function(dimTypes) {
     non_mr_margins <- seq_along(dimTypes[dimTypes != "mr_selections"])
-    
+
     # adjust multiple response margins
     which_selected <- which(dimTypes == "mr_selections")
     mr_margins <- which_selected - seq_along(which_selected)
     margin_map <- sort(c(non_mr_margins, mr_margins))
-    
+
     # we don't need names on the margin map, so remove them.
     names(margin_map) <- NULL
-    
+
     return(margin_map)
 }
