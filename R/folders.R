@@ -77,6 +77,28 @@ mkdir <- function (x, path) {
     return(invisible(x))
 }
 
+#' Change the name of the current folder
+#'
+#' If you just need to change the name of the folder you are currently in, you
+#' can use `setName()` to do so. It doesn't move variables or change anything
+#' other than the name of the current folder.
+#'
+#' @param x A `VariableFolder`
+#' @param name A character that is the new name the folder should have
+#' @return `x`, with its name duly changed
+#' @seealso [cd()] and [mv()]
+#' @examples
+#' \dontrun{
+#' ds <- ds %>% 
+#'     cd("Demographics") %>%
+#'     setName("Key Demos.")
+#' }
+#' @export
+setName <- function (x, name) {
+    name(x) <- name
+    return(invisible(x))
+}
+
 #' Change to different folder
 #'
 #' Like `cd` in a file system, this function takes you to a different folder,

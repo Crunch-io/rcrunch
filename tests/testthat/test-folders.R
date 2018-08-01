@@ -151,21 +151,20 @@ with_mock_crunch({
     })
     
     test_that("rename a folder", {
-        exp <- '{"element":"shoji:catalog","body":{"name":"Group 2 New Name"}}'
-
-        # via moving
+        # via setName
+        expect_PATCH(
+            ds %>% cd("Group 2") %>% setName("Group 2 New Name"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{\"name\":\"Group 2 New Name\"}'
+        )
+        
+        # but also trying to move only sends name changes 
         expect_POST(
             ds %>% cd("/") %>% mv("Group 2", "Group 2 New Name"),
             'https://app.crunch.io/api/datasets/1/folders/',
-            exp
+            '{"element":"shoji:catalog","body":{"name":"Group 2 New Name"}}'
         )
         
-        # or via setName
-        expect_POST(
-            ds %>% cd("Group 2") %>% setName("Group 2 New Name"),
-            'https://app.crunch.io/api/datasets/1/folders/',
-            exp
-        )
     })
     test_that("mv error handling", {
         expect_error(ds %>% cd("Group 1") %>% mv("NOT A VARIABLE", "../Group 2"),

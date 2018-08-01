@@ -14,7 +14,7 @@ setMethod("$<-", "AbstractCategory", function (x, name, value) {
 ## Abstract Category general methods
 ############################################
 
-setName <- function (x, value) {
+setAbstractCategoryName <- function (x, value) {
     x[["name"]] <- validateNewName(value)
     return(x)
 }
@@ -39,7 +39,7 @@ getName <- function (x) {
 setMethod("name", "AbstractCategory", getName)
 #' @rdname describe-category
 #' @export
-setMethod("name<-", "AbstractCategory", setName)
+setMethod("name<-", "AbstractCategory", setAbstractCategoryName)
 #' @rdname describe-category
 #' @export
 setMethod("name<-", "NULL", function (x, value) {

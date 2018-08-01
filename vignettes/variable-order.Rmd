@@ -159,7 +159,7 @@ ds %>%
     setName("Demographics")
 ```
 
-We can also set the names of the objects contained in a folder with `setNames()`.
+We can also set the names of the objects contained in a folder with `setName()`.
 
 ## Ordering within folders
 
