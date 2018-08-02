@@ -1,9 +1,9 @@
-
-# Deck Catalog ------------------------------------------------------------
-
 setMethod("decks", "CrunchDataset", function (x) {
     DeckCatalog(crGET(shojiURL(x, "catalogs", "decks")))
 })
+
+
+# Deck Catalog ------------------------------------------------------------
 
 newDeck <- function(dataset, name, ...) {
     stopifnot(is.dataset(dataset))
@@ -28,7 +28,24 @@ setMethod("[[<-", c("DeckCatalog", "character", "ANY", "CrunchDeck"),
               return(invisible(refresh(x)))
           })
 
+setMethod("show", "DeckCatalog", function(object){
+    browser()
+    out <- as.data.frame(object)
+    return(out[, c("name", "team", "is_public", "owner_name")])
+})
+
 # CrunchDeck --------------------------------------------------------------
+
+setMethod("[[", "CrunchDeck", function (x, i, ...) {
+    slideCat <- slides(x)
+    return(slideCat[[i]])
+})
+
+setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
+    slideCat <- slides(x)
+    slideCat[[i]] <- value
+    invisible(refresh(x))
+})
 
 #' @rdname delete
 #' @export
@@ -65,6 +82,9 @@ setMethod("is.public<-", "CrunchDeck", function(x, value) {
     stopifnot(length(value) == 1)
     setEntitySlot(x, "is_public", value)
 })
+
+setMethod("names", "CrunchDeck", function(x) titles(slides(x)))
+setMethod("names<-", "CrunchDeck", function(x, value) titles(slides(x)) <- value)
 
 setMethod("titles", "CrunchDeck", function (x){
     titles(slides(x))
@@ -107,6 +127,25 @@ exportDeck <- function(deck, file, type = c("xlsx", "json")) {
     }
     crDownload(dl_link, file)
 }
+
+setMethod("length", "CrunchDeck", function(x){
+    return(length(slides(x)))
+})
+
+setMethod("cubes", "CrunchDeck", function(x){
+    out <- lapply(seq_len(length(x)), function(a){
+        cubes <- cubes(x[[a]])
+        if (length(cubes) == 1) {
+            cubes <- cubes[[1]]
+        }
+    })
+    names(out) <- titles(x)
+    return(out)
+})
+
+setMethod("show", "CrunchDeck", function(object){
+    print(cubes(object))
+})
 
 # Slide Catalog -----------------------------------------------------------
 
@@ -189,6 +228,11 @@ analysesToQueryList <- function(anCat) {
     })
 }
 
+setMethod("show", "CrunchSlide", function(x){
+    out <- cubes(x)
+    names(out) <- title(x)
+    print(out)
+})
 
 # CrunchSlide -------------------------------------------------------------------
 
@@ -216,6 +260,17 @@ newSlide <- function(
     url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
     return(CrunchSlide(crGET(url)))
 }
+
+setMethod("[[", "CrunchSlide", function (x, i, ...) {
+    anCat <- analyses(x)
+    return(ancat[[i]])
+})
+
+setMethod("[[<-", "CrunchSlide", function(x, i, j, value) {
+    anCat <- analyses(x)
+    anCat[[i]] <- value
+    invisible(refresh(x))
+})
 
 setMethod("title", "CrunchSlide", function (x){
     return(x@body$title)
