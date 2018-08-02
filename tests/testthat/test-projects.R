@@ -48,7 +48,7 @@ with_mock_crunch({
     test_that("Project editing", {
         expect_PATCH(names(projects)[2] <- "New name",
             'https://app.crunch.io/api/projects/',
-            '{"https://app.crunch.io/api/projects/project2/":{"name":"New name"}}')
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/projects/project2/":{"name":"New name"}}}')
         expect_PATCH(name(projects[[2]]) <- "New name",
             'https://app.crunch.io/api/projects/',
             '{"https://app.crunch.io/api/projects/project2/":{"name":"New name"}}')

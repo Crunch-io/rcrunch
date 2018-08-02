@@ -22,19 +22,23 @@ with_mock_crunch({
     })
     test_that("subvariable name/alias setting", {
         expect_PATCH(names(subvariables(mr))[1:2] <- c("Uno", "Due"),
-            'https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/', '{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
-            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}')
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/', 
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}}')
         expect_PATCH(aliases(subvariables(mr))[1:2] <- c("uno", "due"),
-            'https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/', '{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"alias":"uno"},',
-            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"alias":"due"}}')
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/', 
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"alias":"uno"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"alias":"due"}}}')
         expect_error(aliases(subvariables(mr)[c("Second", "NOTASUBVAR")]) <- c("uno", "due"),
             "Undefined subvariables selected: NOTASUBVAR")
         expect_PATCH(names(subvariables(mr)[1:2]) <- c("Uno", "Due"),
-            'https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/', '{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
-            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}')
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/', 
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}}')
         expect_PATCH(names(subvariables(mr)[c("First", "Second")]) <- c("Uno", "Due"),
-            'https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/', '{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
-            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}')
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/', 
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}}')
     })
 
     test_that("[.Subvariables", {

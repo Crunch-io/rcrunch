@@ -37,46 +37,46 @@ with_mock_crunch({
     test_that("hideVariables with various input types makes the right request", {
         expect_PATCH(ds <- hideVariables(ds, "gender"),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}')
         ## Duplicates are handled
         expect_PATCH(ds <- hideVariables(ds, c("gender", "gender")),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}')
         expect_PATCH(ds <- hideVariables(ds, c("gender", "birthyr")),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}') ## same
         expect_PATCH(ds <- hideVariables(ds, vg),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}') ## same
         expect_PATCH(ds <- hideVariables(ds, c("gender", "starttime")),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
-            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}')
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
+            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}}')
         expect_PATCH(ds <- hideVariables(ds, 1:2),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
-            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}')
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
+            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}}')
     })
 
     test_that("hiddenVariables<- request", {
         expect_PATCH(hiddenVariables(ds) <- "gender",
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}')
         expect_PATCH(hiddenVariables(ds) <- c("gender", "birthyr"),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}') ## same
     })
 
     test_that("unhideVariables with various input types makes the right request", {
         expect_PATCH(ds <- unhideVariables(ds, "birthyr"),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}')
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}}')
         expect_PATCH(ds <- unhideVariables(ds, c("gender", "birthyr")),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}') ## same
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}}') ## same
         expect_PATCH(ds <- unhideVariables(ds, vg),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}') ## same
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}}') ## same
         expect_no_request(ds <- unhideVariables(ds, c("gender", "starttime")))
     })
 
