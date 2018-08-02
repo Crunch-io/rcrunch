@@ -28,11 +28,13 @@
 #' }
 #' @export
 #' @importFrom utils modifyList
-combine <- function (variable, combinations=list(), ...) {
+combine <- function(variable, combinations = list(), ...) {
     ## Validate inputs
     if (!(type(variable) %in% c("categorical", "categorical_array", "multiple_response"))) {
-        halt("Cannot combine ", dQuote(name(variable)), ": must be type ",
-            "categorical, categorical_array, or multiple_response")
+        halt(
+            "Cannot combine ", dQuote(name(variable)), ": must be type ",
+            "categorical, categorical_array, or multiple_response"
+        )
     }
     if (!is.list(combinations) || !all(vapply(combinations, is.list, logical(1)))) {
         halt("'combinations' must be a list of combination specifications")
@@ -47,44 +49,57 @@ combine <- function (variable, combinations=list(), ...) {
     ## Construct expr
     if (type(variable) == "multiple_response") {
         combs <- combResps(subvariables(variable), combinations)
-        newvar$derivation <- zfunc("combine_responses",
-            zcl(variable), list(value=combs))
+        newvar$derivation <- zfunc(
+            "combine_responses",
+            zcl(variable), list(value = combs)
+        )
         ## Give default name based on number of responses
         if (identical(newvar$name, name(variable))) {
             nvalidresps <- length(newvar$derivation$args[[2]]$value)
-            newvar$name <- paste0(newvar$name, " (", nvalidresps,
-                ifelse(nvalidresps == 1, " response)", " responses)"))
+            newvar$name <- paste0(
+                newvar$name, " (", nvalidresps,
+                ifelse(nvalidresps == 1, " response)", " responses)")
+            )
         }
     } else {
         combs <- combCats(categories(variable), combinations)
-        newvar$derivation <- zfunc("combine_categories",
-            zcl(variable), list(value=combs))
+        newvar$derivation <- zfunc(
+            "combine_categories",
+            zcl(variable), list(value = combs)
+        )
         ## Give default name based on number of categories
         if (identical(newvar$name, name(variable))) {
-            nvalidcats <- length(Filter(Negate(function (x) isTRUE(x$missing)),
-                newvar$derivation$args[[2]]$value))
-            newvar$name <- paste0(newvar$name, " (", nvalidcats,
-                ifelse(nvalidcats == 1, " category)", " categories)"))
+            nvalidcats <- length(Filter(
+                Negate(function(x) isTRUE(x$missing)),
+                newvar$derivation$args[[2]]$value
+            ))
+            newvar$name <- paste0(
+                newvar$name, " (", nvalidcats,
+                ifelse(nvalidcats == 1, " category)", " categories)")
+            )
         }
     }
     class(newvar) <- "VariableDefinition"
     return(newvar)
 }
 
-combCats <- function (cats, combs) {
+combCats <- function(cats, combs) {
     ## Validate combinations
-    if (!all(vapply(combs,
-        function (x) all(c("name", "categories") %in% names(x)),
-        logical(1)))) {
-
-        halt("'combinations' must be a list of combination specifications. ",
-            "See '?combine'.")
+    if (!all(vapply(
+        combs,
+        function(x) all(c("name", "categories") %in% names(x)),
+        logical(1)
+    ))) {
+        halt(
+            "'combinations' must be a list of combination specifications. ",
+            "See '?combine'."
+        )
     }
 
-    defaultCat <- list(missing=FALSE, numeric_value=NULL)
+    defaultCat <- list(missing = FALSE, numeric_value = NULL)
     ## Convert category names to ids
     ## Update each comb with default
-    combs <- lapply(combs, function (x) {
+    combs <- lapply(combs, function(x) {
         if (is.character(x$categories)) {
             x$categories <- n2i(x$categories, cats)
         }
@@ -101,38 +116,47 @@ combCats <- function (cats, combs) {
     badids <- setdiff(idsToCombine, ids(cats))
     if (length(badids)) {
         badnames <- vapply(
-            Filter(function (x) any(x$combined_ids %in% badids), combs),
+            Filter(function(x) any(x$combined_ids %in% badids), combs),
             vget("name"),
-            character(1))
-        halt(ifelse(length(badnames) == 1, "Combination ", "Combinations "),
+            character(1)
+        )
+        halt(
+            ifelse(length(badnames) == 1, "Combination ", "Combinations "),
             serialPaste(dQuote(badnames)),
             ifelse(length(badnames) == 1, " references", " reference"),
             ifelse(length(badids) == 1,
-                " category with id ", " categories with ids "),
+                " category with id ", " categories with ids "
+            ),
             serialPaste(badids),
             ifelse(length(badids) == 1,
-                ", which does not exist", ", which do not exist"))
+                ", which does not exist", ", which do not exist"
+            )
+        )
     }
 
     dupids <- duplicated(idsToCombine)
     if (any(dupids)) {
         dupnames <- i2n(idsToCombine[dupids], cats)
-        halt(ifelse(length(dupnames) == 1, "Category ", "Categories "),
+        halt(
+            ifelse(length(dupnames) == 1, "Category ", "Categories "),
             serialPaste(dQuote(dupnames)),
-            " referenced in multiple combinations")
+            " referenced in multiple combinations"
+        )
     }
 
     ## Give valid ids to new combinations
     usedIds <- setdiff(ids(cats), idsToCombine)
-    newIds <- setdiff(seq_len(length(usedIds) + length(combs)),
-        usedIds)[seq_len(length(combs))]
-    combs <- mapply(function (comb, i) {
+    newIds <- setdiff(
+        seq_len(length(usedIds) + length(combs)),
+        usedIds
+    )[seq_len(length(combs))]
+    combs <- mapply(function(comb, i) {
         comb$id <- i
         return(comb)
-    }, combs, newIds, SIMPLIFY=FALSE, USE.NAMES=FALSE)
+    }, combs, newIds, SIMPLIFY = FALSE, USE.NAMES = FALSE)
 
     ## Append unreferenced cats to end
-    oldCats <- lapply(cats@.Data[ids(cats) %in% usedIds], function (x) {
+    oldCats <- lapply(cats@.Data[ids(cats) %in% usedIds], function(x) {
         x$combined_ids <- I(id(x))
         return(x)
     })
@@ -142,27 +166,32 @@ combCats <- function (cats, combs) {
     newnames <- vapply(combs, vget("name"), character(1))
     dupnames <- duplicated(newnames)
     if (any(dupnames)) {
-        halt("Duplicate category name given: ",
-            serialPaste(dQuote(unique(newnames[dupnames]))))
+        halt(
+            "Duplicate category name given: ",
+            serialPaste(dQuote(unique(newnames[dupnames])))
+        )
     }
     return(combs)
 }
 
-combResps <- function (subvars, combs) {
+combResps <- function(subvars, combs) {
     ## Validate combinations
-    if (!all(vapply(combs,
-        function (x) all(c("name", "responses") %in% names(x)),
-        logical(1)))) {
-
-        halt("'combinations' must be a list of combination specifications. ",
-            "See '?combine'.")
+    if (!all(vapply(
+        combs,
+        function(x) all(c("name", "responses") %in% names(x)),
+        logical(1)
+    ))) {
+        halt(
+            "'combinations' must be a list of combination specifications. ",
+            "See '?combine'."
+        )
     }
 
     ## Convert response names/aliases to urls
     subnames <- names(subvars)
     subaliases <- aliases(subvars)
     suburls <- urls(subvars)
-    combs <- lapply(combs, function (x) {
+    combs <- lapply(combs, function(x) {
         if (!is.character(x$responses)) {
             halt("Combinations must reference 'responses' by name or alias")
         }
@@ -172,8 +201,10 @@ combResps <- function (subvars, combs) {
             matches <- match(x$responses, subaliases)
         }
         if (any(is.na(matches))) {
-            halt("Response ", dQuote(x$name),
-                " does not reference valid subvariables")
+            halt(
+                "Response ", dQuote(x$name),
+                " does not reference valid subvariables"
+            )
         }
         x$combined_ids <- I(suburls[matches])
         x$responses <- NULL
@@ -182,19 +213,25 @@ combResps <- function (subvars, combs) {
 
     ## Append unreferenced subvars to end
     subvarsToCombine <- unlist(lapply(combs, vget("combined_ids")))
-    oldSubvars <- lapply(setdiff(suburls, subvarsToCombine),
-        function (u) {
-            return(list(name=index(subvars)[[u]]$name,
-                combined_ids=I(u)))
-        })
+    oldSubvars <- lapply(
+        setdiff(suburls, subvarsToCombine),
+        function(u) {
+            return(list(
+                name = index(subvars)[[u]]$name,
+                combined_ids = I(u)
+            ))
+        }
+    )
     combs <- c(combs, oldSubvars)
 
     ## One more validation
     newnames <- vapply(combs, vget("name"), character(1))
     dupnames <- duplicated(newnames)
     if (any(dupnames)) {
-        halt("Duplicate response name given: ",
-            serialPaste(dQuote(unique(newnames[dupnames]))))
+        halt(
+            "Duplicate response name given: ",
+            serialPaste(dQuote(unique(newnames[dupnames])))
+        )
     }
 
     return(combs)
@@ -211,7 +248,7 @@ combResps <- function (subvars, combs) {
 #' @return the variable duly modified
 #' @export
 #' @seealso [combine()]
-collapseCategories <- function (var, from, to) {
+collapseCategories <- function(var, from, to) {
     if (!is.Categorical(var)) {
         halt("Variable must be a categorical.")
     }
@@ -219,7 +256,7 @@ collapseCategories <- function (var, from, to) {
         halt("Destination category must be a character string of length 1.")
     }
     if (!(is.character(from))) {
-        halt(dQuote('from'), " must be a character vector.")
+        halt(dQuote("from"), " must be a character vector.")
     }
     if (identical(from, to)) {
         # If the user is collapsing categories into itself, no changes are
@@ -230,24 +267,29 @@ collapseCategories <- function (var, from, to) {
     missing_origin <- !(from %in% cats)
     if (any(missing_origin)) {
         err <- ifelse(sum(missing_origin) > 1, " are ", " is ")
-        halt(serialPaste(from[missing_origin]),
-            err, "not present in variable categories.")
+        halt(
+            serialPaste(from[missing_origin]),
+            err, "not present in variable categories."
+        )
     }
     if (!(to %in% cats)) {
         if (length(from) == 1) {
-            #this case is equivalent to renaming a category
+            # this case is equivalent to renaming a category
             names <- names(categories(var))
             names[names == from] <- to
             names(categories(var)) <- names
             return(var)
         }
         cats <- c(cats, to)
-        categories(var) <- c(categories(var),
-            Category(id = max(ids(categories(var))) + 1,
-            name = to)
+        categories(var) <- c(
+            categories(var),
+            Category(
+                id = max(ids(categories(var))) + 1,
+                name = to
+            )
         )
     }
-    from <- setdiff(from, to) #in case the user tries to collapse a category into itself
+    from <- setdiff(from, to) # in case the user tries to collapse a category into itself
     var[var %in% from] <- to
     categories(var) <- categories(var)[!(cats %in% from)]
     return(var)

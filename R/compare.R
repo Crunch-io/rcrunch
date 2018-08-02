@@ -1,6 +1,6 @@
 ## Common functions used throughout the comparison methods
 
-findMismatches <- function (compdf, matched.on, alternate) {
+findMismatches <- function(compdf, matched.on, alternate) {
     ## Check for matches on "alternate" that aren't matched by "matched.on"
     alt.A <- paste0(alternate, ".A")
     alt.B <- paste0(alternate, ".B")

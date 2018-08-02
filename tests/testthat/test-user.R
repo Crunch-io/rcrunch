@@ -10,16 +10,26 @@ with_mock_crunch({
         usercat <- getAccountUserCatalog()
         expect_is(usercat, "UserCatalog")
         expect_length(usercat, 3)
-        expect_identical(urls(usercat),
-            c("https://app.crunch.io/api/users/user1/",
-              "https://app.crunch.io/api/users/user3/",
-              "https://app.crunch.io/api/users/user2/"))
-        expect_identical(names(usercat),
-            c("Fake User", "Bill User", "Roger User"))
-        expect_identical(emails(usercat),
-            c("fake.user@example.com",
-              "william.user@example.io",
-              "ruser@crunch.io"))
+        expect_identical(
+            urls(usercat),
+            c(
+                "https://app.crunch.io/api/users/user1/",
+                "https://app.crunch.io/api/users/user3/",
+                "https://app.crunch.io/api/users/user2/"
+            )
+        )
+        expect_identical(
+            names(usercat),
+            c("Fake User", "Bill User", "Roger User")
+        )
+        expect_identical(
+            emails(usercat),
+            c(
+                "fake.user@example.com",
+                "william.user@example.io",
+                "ruser@crunch.io"
+            )
+        )
         # default secondary is email
         expect_equal(usercat["ruser@crunch.io"], usercat[3])
         expect_equal(usercat[["ruser@crunch.io"]], usercat[[3]])
@@ -29,32 +39,42 @@ with_mock_crunch({
     })
 
     test_that("Reset password", {
-        expect_POST(resetPassword("me@example.com"),
+        expect_POST(
+            resetPassword("me@example.com"),
             "https://app.crunch.io/api/public/password_reset/",
             '{"email":"me@example.com",',
-            '"url_base":"https://app.crunch.io/password/change/${token}/"}')
+            '"url_base":"https://app.crunch.io/password/change/${token}/"}'
+        )
     })
 
     test_that("invite (not currently exported)", {
-        expect_POST(invite("me@example.com", name="Me"),
+        expect_POST(
+            invite("me@example.com", name = "Me"),
             "https://app.crunch.io/api/accounts/account1/users/",
             '{"element":"shoji:entity","body":{"email":"me@example.com",',
             '"send_invite":true,"id_method":"pwhash",',
             '"account_permissions":{"alter_users":false,',
             '"create_datasets":false},"first_name":"Me",',
-            '"url_base":"/password/change/${token}/"}}')
+            '"url_base":"/password/change/${token}/"}}'
+        )
     })
 
     test_that("expropriateUser", {
-        expect_error(expropriateUser("fake.user@example.com",
-                                     "william.user@example.io"), "Must confirm")
+        expect_error(expropriateUser(
+            "fake.user@example.com",
+            "william.user@example.io"
+        ), "Must confirm")
 
         expect_POST(
             with_consent({
-                expropriateUser("fake.user@example.com",
-                                "william.user@example.io")}),
+                expropriateUser(
+                    "fake.user@example.com",
+                    "william.user@example.io"
+                )
+            }),
             "https://app.crunch.io/api/users/user1/expropriate/",
-            '{"element":"shoji:entity","body":{"owner":"william.user@example.io"}}')
+            '{"element":"shoji:entity","body":{"owner":"william.user@example.io"}}'
+        )
     })
 })
 
@@ -85,15 +105,15 @@ with_test_authentication({
 
     test_that("User with permissions", {
         skip_on_jenkins("Jenkins user needs more permissions")
-        u1 <- testUser(advanced=TRUE)
+        u1 <- testUser(advanced = TRUE)
         user <- index(getAccountUserCatalog())[[self(u1)]]
         expect_true(user$account_permissions$create_datasets)
         expect_false(user$account_permissions$alter_users)
-        u2 <- testUser(admin=TRUE)
+        u2 <- testUser(admin = TRUE)
         user <- index(getAccountUserCatalog())[[self(u2)]]
         expect_false(user$account_permissions$create_datasets)
         expect_true(user$account_permissions$alter_users)
-        u3 <- testUser(admin=TRUE, advanced=TRUE)
+        u3 <- testUser(admin = TRUE, advanced = TRUE)
         user <- index(getAccountUserCatalog())[[self(u3)]]
         expect_true(user$account_permissions$create_datasets)
         expect_true(user$account_permissions$alter_users)

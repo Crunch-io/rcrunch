@@ -50,30 +50,36 @@
 #'                                        name = "Opinion of Cats")
 #' }
 #' @export
-conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
-                                  categories=NULL, formulas = NULL) {
+conditionalTransform <- function(..., data, else_condition = NA, type = NULL,
+                                 categories = NULL, formulas = NULL) {
     dots <- list(...)
-    is_formula <- function (x) inherits(x, "formula")
+    is_formula <- function(x) inherits(x, "formula")
     dot_formulas <- Filter(is_formula, dots)
 
     if (length(dot_formulas) > 0) {
         if (!is.null(formulas)) {
-            halt("Must not supply conditions in both the ", dQuote("formulas"),
-                 " argument and ", dQuote("..."))
+            halt(
+                "Must not supply conditions in both the ", dQuote("formulas"),
+                " argument and ", dQuote("...")
+            )
         }
         formulas <- dot_formulas
     }
     var_def <- Filter(Negate(is_formula), dots)
 
     if (length(formulas) == 0) {
-        halt("Conditions must be supplied: ",
-             "Have you forgotten to supply conditions as formulas in either the ",
-             dQuote("formulas"), " argument, or through ", dQuote("..."), "")
+        halt(
+            "Conditions must be supplied: ",
+            "Have you forgotten to supply conditions as formulas in either the ",
+            dQuote("formulas"), " argument, or through ", dQuote("..."), ""
+        )
     }
 
-    if (!missing(type) && !type %in% c("categorical", "text", "numeric")){
-        halt("Type must be either ", dQuote("categorical"), ", ",
-             dQuote("text"), ", or ", dQuote("numeric"))
+    if (!missing(type) && !type %in% c("categorical", "text", "numeric")) {
+        halt(
+            "Type must be either ", dQuote("categorical"), ", ",
+            dQuote("text"), ", or ", dQuote("numeric")
+        )
     }
 
     conditional_vals <- makeConditionalValues(formulas, data, else_condition)
@@ -89,9 +95,11 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
         type <- conditional_vals$type
     }
 
-    if (type != "categorical" & !is.null(categories)){
-        warning("Type is not ", dQuote("categorical"), " ignoring ",
-                dQuote("categories"))
+    if (type != "categorical" & !is.null(categories)) {
+        warning(
+            "Type is not ", dQuote("categorical"), " ignoring ",
+            dQuote("categories")
+        )
     }
     var_def$type <- type
 
@@ -112,10 +120,11 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
             uni_results <- unique(result[!is.na(result)])
             results_not_categories <- !uni_results %in% names(categories)
             if (any(results_not_categories)) {
-                halt("When specifying categories, all categories in the ",
-                     "results must be included. These categories are in the ",
-                     "results that were not specified in categories: "
-                     , serialPaste(uni_results[results_not_categories]))
+                halt(
+                    "When specifying categories, all categories in the ",
+                    "results must be included. These categories are in the ",
+                    "results that were not specified in categories: ", serialPaste(uni_results[results_not_categories])
+                )
             }
             result <- factor(result, levels = names(categories))
         }
@@ -135,21 +144,25 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
     return(var_def)
 }
 
-makeConditionalValues <- function (formulas, data, else_condition) {
+makeConditionalValues <- function(formulas, data, else_condition) {
     n <- length(formulas)
     cases <- vector("list", n)
     values <- vector("list", n)
     for (i in seq_len(n)) {
         formula <- formulas[[i]]
         if (length(formula) != 3) {
-            halt("The condition provided must be a proper formula: ",
-                 deparseAndFlatten(formula))
+            halt(
+                "The condition provided must be a proper formula: ",
+                deparseAndFlatten(formula)
+            )
         }
 
         cases[[i]] <- evalLHS(formula, data)
         if (!inherits(cases[[i]], "CrunchLogicalExpr")) {
-            halt("The left-hand side provided must be a CrunchLogicalExpr: ",
-                 dQuote(LHS_string(formula)))
+            halt(
+                "The left-hand side provided must be a CrunchLogicalExpr: ",
+                dQuote(LHS_string(formula))
+            )
         }
         values[[i]] <- evalRHS(formula, data)
     }
@@ -158,8 +171,10 @@ makeConditionalValues <- function (formulas, data, else_condition) {
     # check all datasets are the same and get the reference from the unique one
     ds_refs <- unlist(unique(lapply(cases, datasetReference)))
     if (length(ds_refs) > 1) {
-        halt("There must be only one dataset referenced. Did you accidentally ",
-             "supply more than one?")
+        halt(
+            "There must be only one dataset referenced. Did you accidentally ",
+            "supply more than one?"
+        )
     }
     n_rows <- nrow(CrunchDataset(crGET(ds_refs)))
 
@@ -168,7 +183,7 @@ makeConditionalValues <- function (formulas, data, else_condition) {
 
     # deduplicate indices, favoring the first true condition
     case_indices <- lapply(seq_along(case_indices), function(i) {
-        setdiff(case_indices[[i]], unlist(case_indices[seq_len(i-1)]))
+        setdiff(case_indices[[i]], unlist(case_indices[seq_len(i - 1)]))
     })
 
     # grab the values needed from source variables
@@ -205,8 +220,8 @@ makeConditionalValues <- function (formulas, data, else_condition) {
 
 # because factors by default coerce into their IDs, which is almost never what
 # we want, we need to do some magic to collate the values together.
-collateValues <- function (values_to_fill, case_indices, else_condition,
-                           n_rows) {
+collateValues <- function(values_to_fill, case_indices, else_condition,
+                          n_rows) {
     result <- rep(else_condition, n_rows)
 
     # fill values

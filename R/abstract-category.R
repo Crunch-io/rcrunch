@@ -1,11 +1,11 @@
-is.AbstractCategory <- function (x) inherits(x, "AbstractCategory")
+is.AbstractCategory <- function(x) inherits(x, "AbstractCategory")
 
 #' @rdname category-extract
 #' @export
-setMethod("$", "AbstractCategory", function (x, name) x[[name]])
+setMethod("$", "AbstractCategory", function(x, name) x[[name]])
 #' @rdname category-extract
 #' @export
-setMethod("$<-", "AbstractCategory", function (x, name, value) {
+setMethod("$<-", "AbstractCategory", function(x, name, value) {
     x[[name]] <- value
     return(x)
 })
@@ -14,22 +14,22 @@ setMethod("$<-", "AbstractCategory", function (x, name, value) {
 ## Abstract Category general methods
 ############################################
 
-setAbstractCategoryName <- function (x, value) {
+setAbstractCategoryName <- function(x, value) {
     x[["name"]] <- validateNewName(value)
     return(x)
 }
 
-validateNewName <- function (val) {
+validateNewName <- function(val) {
     if (!is.character(val)) {
         halt('Names must be of class "character"')
     }
     if (any(is.na(val))) {
-        halt('Names must be non-missing')
+        halt("Names must be non-missing")
     }
     invisible(val)
 }
 
-getName <- function (x) {
+getName <- function(x) {
     n <- x[["name"]]
     return(ifelse(is.null(n), NA_character_, n))
 }
@@ -42,13 +42,13 @@ setMethod("name", "AbstractCategory", getName)
 setMethod("name<-", "AbstractCategory", setAbstractCategoryName)
 #' @rdname describe-category
 #' @export
-setMethod("name<-", "NULL", function (x, value) {
-    halt('Cannot set name on NULL')
+setMethod("name<-", "NULL", function(x, value) {
+    halt("Cannot set name on NULL")
 })
 
 #' @rdname describe-category
 #' @export
-setMethod("id", "AbstractCategory", function (x) {
+setMethod("id", "AbstractCategory", function(x) {
     i <- as.integer(x[["id"]])
     return(ifelse(is.null(i), NA_integer_, i))
 })
