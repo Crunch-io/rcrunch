@@ -156,10 +156,20 @@ Folders themselves have names, which we can set with `setName()`:
 ```r
 ds %>%
     cd("Demos") %>%
-    setName("Demographics")
+    setNames(c("Birth Year", "Gender", "Political Ideo. (3 category)", 
+    "Political Ideo. (7 category)",  "Political Ideo. (7 category; other)",  
+    "Race", "Education", "Marital Status", "Phone", "Family Income", "Region", 
+    "State", "Weight", "Voter Registration (new)", "Is a voter?", 
+    "Voter Registration (old)", "Voter Registration"))
 ```
 
-We can also set the names of the objects contained in a folder with `setNames()`.
+We can also set the names of the objects contained in a folder with `setNames()`:
+
+```r
+ds %>%
+    cd("Demos") %>%
+    setName("Demographics")
+```
 
 ## Ordering within folders
 
