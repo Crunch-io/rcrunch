@@ -4,15 +4,15 @@
 \alias{setName}
 \title{Change the name of the current folder}
 \usage{
-setName(x, name)
+setName(object, nm)
 }
 \arguments{
-\item{x}{A \code{VariableFolder}}
+\item{object}{A \code{VariableFolder}}
 
-\item{name}{A character that is the new name the folder should have}
+\item{nm}{A character that is the new name the folder should have}
 }
 \value{
-\code{x}, with its name duly changed
+\code{object}, with its name duly changed
 }
 \description{
 If you just need to change the name of the folder you are currently in, you

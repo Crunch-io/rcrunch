@@ -83,9 +83,9 @@ mkdir <- function (x, path) {
 #' can use `setName()` to do so. It doesn't move variables or change anything
 #' other than the name of the current folder.
 #'
-#' @param x A `VariableFolder`
-#' @param name A character that is the new name the folder should have
-#' @return `x`, with its name duly changed
+#' @param object A `VariableFolder`
+#' @param nm A character that is the new name the folder should have
+#' @return `object`, with its name duly changed
 #' @seealso [cd()] and [mv()]
 #' @examples
 #' \dontrun{
@@ -94,10 +94,46 @@ mkdir <- function (x, path) {
 #'     setName("Key Demos.")
 #' }
 #' @export
-setName <- function (x, name) {
-    name(x) <- name
-    return(invisible(x))
+setName <- function (object, nm) {
+    # The arguments `object` for the folder object to be renamed and `nm` for
+    # the new name are to maintain consistency with `setNames()`
+    name(object) <- nm
+    return(invisible(object))
 }
+
+#' Change the name of the objects contained in the current folder
+#'
+#' If you want to rename all of the objects (variables, folders, etc.), you
+#' can use `setNames()` to do so. It doesn't move variables or change anything
+#' other than the names of the objects in the current folder.
+#'
+#' @param object A `VariableFolder`
+#' @param nm A character vector of new names of the same length as the number
+#'   of objects in the folder
+#' @return `object`, with the names of its children duly changed
+#' @seealso [cd()] and [mv()]
+#' @examples
+#' \dontrun{
+#' ds <- ds %>% 
+#'     cd("Demographics") %>%
+#'     setNames(c("Gender (4 category)", "Birth year", "Race (5 category)"))
+#' }
+#' 
+#' @name setNames
+#' @export
+setGeneric("setNames", function (object, nm) stats::setNames(object, nm))
+
+#' @rdname setNames
+#' @export
+setMethod("setNames", "VariableFolder", function (object, nm) {
+    # check lengths to provide a friendly user-facing error message.
+    if (length(object) != length(nm)) {
+        halt("names must have the same length as the number of children: ", length(object))
+    }
+
+    names(object) <- nm
+    return(invisible(object))
+})
 
 #' Change to different folder
 #'

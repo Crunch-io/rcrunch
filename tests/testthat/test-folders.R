@@ -155,7 +155,7 @@ with_mock_crunch({
         expect_PATCH(
             ds %>% cd("Group 2") %>% setName("Group 2 New Name"),
             'https://app.crunch.io/api/datasets/1/folders/2/',
-            '{\"name\":\"Group 2 New Name\"}'
+            '{"name":"Group 2 New Name"}'
         )
         
         # but also trying to move only sends name changes 
@@ -164,8 +164,32 @@ with_mock_crunch({
             'https://app.crunch.io/api/datasets/1/folders/',
             '{"element":"shoji:catalog","body":{"name":"Group 2 New Name"}}'
         )
-        
     })
+    
+    test_that("rename objects inside a folder", {
+        expect_PATCH(
+            ds %>%
+                cd("Group 1") %>%
+                setNames(c("Year of birth", "Nested folder", "FTW! textvar")),
+            'https://app.crunch.io/api/datasets/1/folders/1/',
+            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
+            '{"name":"Year of birth"},',
+            '"https://app.crunch.io/api/datasets/1/folders/3/":',
+            '{"name":"Nested folder"},',
+            '"https://app.crunch.io/api/datasets/1/variables/textVar/":',
+            '{"name":"FTW! textvar"}}'
+        )
+    })
+    
+    test_that("rename objects inside a folder (validation)", {
+        expect_error(
+            ds %>%
+                cd("Group 1") %>%
+                setNames(c("Year of birth", "Nested folder")),
+            "names must have the same length as the number of children: 3"
+        )
+    })
+    
     test_that("mv error handling", {
         expect_error(ds %>% cd("Group 1") %>% mv("NOT A VARIABLE", "../Group 2"),
             "Undefined elements selected: NOT A VARIABLE")
