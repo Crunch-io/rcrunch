@@ -155,6 +155,8 @@ setGeneric("cube", function (x) standardGeneric("cube"))
 setGeneric("cube<-", function (x) standardGeneric("cube<-"))
 setGeneric("cubes", function (x) standardGeneric("cubes"))
 setGeneric("cubes<-", function (x) standardGeneric("cubes<-"))
+setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
+setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
 
 setGeneric("multitables", function (x) standardGeneric("multitables"))
 setGeneric("multitables<-", function (x, value) standardGeneric("multitables<-"))

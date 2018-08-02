@@ -192,14 +192,24 @@ analysesToQueryList <- function(anCat) {
 
 # CrunchSlide -------------------------------------------------------------------
 
-newSlide <- function(deck, query, title = "", subtitle = "", ...) {
+newSlide <- function(
+    deck,
+    query,
+    display_settings,
+    title = "",
+    subtitle = "",
+    ...) {
     ds <- loadDataset(datasetReference(deck))
     if (inherits(query, "formula")) {
         query <- list(query)
     }
+    display_settings <- wrapDisplaySettings(display_settings)
     payload <- list(title = title, subtitle = subtitle, ...)
     queries <- lapply(query, function(x) {
-        return(list(query = formulaToCubeQuery(x, ds)))
+        return(list(
+            query = formulaToCubeQuery(x, ds),
+            display_settings = display_settings
+            ))
         })
     payload[["analyses"]] <- queries
     payload <- wrapEntity(body = payload)
@@ -238,11 +248,13 @@ setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value){
     analyses[[1]] <- value
 })
 
-
 setMethod("cubes", "CrunchSlide", function(x) cubes(analyses(x)))
+setMethod("displaySettings", "CrunchSlide", function(x) displaySettings(analyses(x)))
+setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
+    displaySettings(analyses(x)) <- value
+    })
 
-
-# Analyses ----------------------------------------------------------------
+# AnalysisCatalog --------------------------------------------------------------
 
 setMethod("[[", "AnalysisCatalog", function (x, i, ...) {
   getEntity(x, i, Analysis)
@@ -282,7 +294,7 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
           })
 
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"), function (x, i, j, value) {
-  all_fmla <- vapply(value, function(x) inherits(x, "fmla"), logical(1))
+  all_fmla <- vapply(value, function(x) inherits(x, "formula"), logical(1))
   if (any(!all_fmla)) {
       halt("Entry", which(!all_fmla), "is not a formula")
   }
@@ -298,9 +310,27 @@ setMethod("cubes", "AnalysisCatalog", function(x) {
     lapply(seq_along(x@index), function(i) cube(x[[i]]))
 })
 
+setMethod("displaySettings", "AnalysisCatalog", function(x){
+    analyses <- lapply(seq_along(length(x)), function(i) x[[i]])
+    if (length(x) > 1) {
+        warning("Slide has multiple analyses, returning display settings for the first analysis")
+    }
+    return(displaySettings(analyses[[1]]))
+})
+
+setMethod("displaySettings<-", "AnalysisCatalog", function(x, value){
+    analyses <- lapply(seq_along(length(x)), function(i) x[[i]])
+    if (length(x) > 1) {
+        warning("Slide has multiple analyses, returning display settings for the first analysis")
+    }
+    lapply(analyses, function(x) displaySettings(x) <- value)
+})
+
+
+# Analysis ----------------------------------------------------------------
 
 setMethod("query", c("Analysis"), function(x) {
-    #TODO what should this function return?
+    # This should return a formula, wait to implement QueryToFormula function
 })
 
 setMethod("query<-", c("Analysis", "formula"), function(x, value) {
@@ -318,3 +348,21 @@ CrunchCube(crGET(cubeURL(x),
     filter = toJSON(x@body$query_environment$filter))
     )
 })
+
+setMethod("displaySettings", "Analysis", function(x){
+    out <- lapply(x@body$display_settings, function(x) x$value)
+    return(out)
+})
+
+setMethod("displaySettings<-", "Analysis", function(x, value){
+    value <- wrapDisplaySettings(value)
+    payload <- x@body
+    payload$display_settings <- value
+    payload <- wrapEntity(body = payload)
+    crPATCH(self(x), body = toJSON(payload))
+    invisible(refresh(x))
+})
+
+wrapDisplaySettings <- function(settings) {
+    return(lapply(settings, function(x) list(value = x)))
+}

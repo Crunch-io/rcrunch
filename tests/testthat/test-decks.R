@@ -28,19 +28,38 @@ with_test_authentication({
         expect_true(is.public(deck))
     })
 
+    settings <- list(
+        percentageDirection = "colPct",
+        showEmpty = FALSE,
+        vizType = "histogram",
+        countsOrPercents = "percent",
+        decimalPlaces = 1L,
+        populationMagnitude = 3L,
+        showSignif = FALSE,
+        currentTab = 0L,
+        uiView = "app.datasets.analyze"
+    )
+
     test_that("slides can be added to a deck", {
-        univariate_slide <- newSlide(deck, ~v1, title = "slide1", subtitle = "one analysis")
+
+        univariate_slide <- newSlide(
+            deck,
+            query = ~v1,
+            display_settings = settings,
+            title = "slide1",
+            subtitle = "one analysis")
         expect_is(univariate_slide, "CrunchSlide")
         anCat <- analyses(univariate_slide)
         expect_is(anCat, "AnalysisCatalog")
         expect_equal(length(anCat), 1)
 
-        multiple_analyses <- newSlide(deck, list(~v1, ~v2),  title = "slide2", subtitle = "two analyses")
+        multiple_analyses <- newSlide(deck, list(~v1, ~v2), settings, title = "slide2", subtitle = "two analyses")
         expect_is(multiple_analyses, "CrunchSlide")
         expect_equal(length(analyses(multiple_analyses)), 2)
     })
 
     test_that("deck titles and subtitles", {
+        browser()
         expect_equal(titles(deck), c("slide1", "slide2"))
         expect_equal(subtitles(deck), c("one analysis", "two analyses"))
         titles(deck) <- c("new_title1", "new_title2")
@@ -91,15 +110,15 @@ with_test_authentication({
         expect_is(analysis, "Analysis")
     })
     test_that("analyses can be cubed", {
-        expect_identical(cube(analysis), crtabs(~v2, ds))
+        expect_identical(cube(analysis), crtabs(~v1, ds))
         cube_list <- cubes(anCat)
         expect_is(cube_list, "list")
         expect_equal(length(cube_list), length(anCat))
-        expect_identical(cube_list[[1]], crtabs(~v2, ds))
+        expect_identical(cube_list[[1]], crtabs(~v1, ds))
     })
 
     test_that("An analysis can be turned into a cube", {
-        expect_identical(cube(analysis), crtabs( ~v2, ds))
+        expect_identical(cube(analysis), crtabs( ~v1, ds))
     })
 
     test_that("cubes on an analysis catalog returns a list of cubes", {
@@ -107,11 +126,28 @@ with_test_authentication({
         cube_list <- cubes(ancat)
         expect_is(cube_list, "list")
         expect_identical(length(cube_list), length(ancat))
-        expect_identical(cube_list[[1]], crtabs(~v3, ds))
+        expect_identical(cube_list[[1]], crtabs(~v1, ds))
     })
 
     test_that("Formula's can be assigned to analyses", {
         query(analysis) <- ~v3
         expect_identical(cube(analysis), crtabs(~v3, ds))
+    })
+
+    test_that("display settings can be gotten and set", {
+        ancat <- analyses(slide)
+        analysis <- ancat[[1]]
+        settings <- displaySettings(analysis)
+        expect_is(settings, "list")
+        expect_equal(
+            names(settings),
+            c("percentageDirection", "showEmpty", "vizType", "countsOrPercents",
+              "decimalPlaces", "populationMagnitude", "showSignif", "currentTab",
+              "uiView"
+            )
+        )
+        expect_euqal(settings$countsOrPercents, "percent")
+        settings$countsOrPercents <- "count"
+        displaySettings(analysis) <- settings
     })
 })
