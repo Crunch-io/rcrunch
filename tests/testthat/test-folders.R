@@ -290,4 +290,9 @@ with_test_authentication({
         ds <- mv(ds, c("qsec", "drat", "vs", "wt"), "newdir")
         expect_identical(names(cd(ds, "newdir")), c("qsec", "drat", "vs", "wt"))
     })
+    
+    test_that("setNames works", {
+        ds %>% cd("newdir") %>% setNames(c("queue_sec", "drizzat", "versus", "weight"))
+        expect_identical(names(cd(ds, "newdir")), c("queue_sec", "drizzat", "versus", "weight"))
+    })
 })
