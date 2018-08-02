@@ -9,10 +9,11 @@
 #' @seealso `with-context-manager`
 #' @aliases contextManager
 #' @export
-ContextManager <- function (enter=function (){}, exit=function (){},
-                            error=NULL, as=NULL) {
-    structure(list(enter=enter, exit=exit, error=error, as=as),
-        class="contextManager")
+ContextManager <- function(enter = function() {}, exit = function() {},
+                           error = NULL, as = NULL) {
+    structure(list(enter = enter, exit = exit, error = error, as = as),
+        class = "contextManager"
+    )
 }
 
 #' Context manager's "with" method
@@ -26,20 +27,20 @@ ContextManager <- function (enter=function (){}, exit=function (){},
 #' @name with-context-manager
 #' @seealso [`ContextManager`]
 #' @export
-with.contextManager <- function (data, expr, ...) {
+with.contextManager <- function(data, expr, ...) {
     env <- parent.frame()
     on.exit(data$exit())
     setup <- data$enter()
     dots <- list(...)
     as.name <- dots$as %||% data$as
     if (!is.null(as.name)) {
-        assign(as.name, setup, envir=env)
+        assign(as.name, setup, envir = env)
         ## rm this after running? or add the rm step to the exit
     }
     if (is.function(data$error)) {
-        tryCatch(eval(substitute(expr), envir=parent.frame()), error=data$error)
+        tryCatch(eval(substitute(expr), envir = parent.frame()), error = data$error)
     } else {
-        eval(substitute(expr), envir=parent.frame())
+        eval(substitute(expr), envir = parent.frame())
     }
 }
 
@@ -49,12 +50,12 @@ with.contextManager <- function (data, expr, ...) {
 #' @return an S3 class "contextManager" object
 #' @seealso [`with-context-manager`] [`ContextManager`]
 #' @export
-temp.options <- function (...) {
+temp.options <- function(...) {
     new <- list(...)
-    old <- sapply(names(new), getOption, simplify=FALSE)
+    old <- sapply(names(new), getOption, simplify = FALSE)
     return(ContextManager(
-        function () do.call(options, new),
-        function () do.call(options, old)
+        function() do.call(options, new),
+        function() do.call(options, old)
     ))
 }
 

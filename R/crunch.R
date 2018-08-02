@@ -17,19 +17,19 @@
 NULL
 
 #' @importFrom httr config add_headers
-.onLoad <- function (lib, pkgname="crunch") {
+.onLoad <- function(lib, pkgname = "crunch") {
     setIfNotAlready(
-        crunch.api="https://app.crunch.io/api/",
-        httpcache.on=TRUE,
-        crunch.namekey.dataset="alias",
-        crunch.namekey.array="alias"
+        crunch.api = "https://app.crunch.io/api/",
+        httpcache.on = TRUE,
+        crunch.namekey.dataset = "alias",
+        crunch.namekey.array = "alias"
     )
     set_crunch_config()
     notifyIfNewVersion()
     invisible()
 }
 
-setIfNotAlready <- function (...) {
+setIfNotAlready <- function(...) {
     newopts <- list(...)
     oldopts <- options()
     oldopts <- oldopts[intersect(names(newopts), names(oldopts))]

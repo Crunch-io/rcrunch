@@ -32,12 +32,14 @@ Suggests:
     haven,
     httptest (>= 3.0.0),
     knitr,
+    lintr, 
     magrittr,
     miniUI,
     rmarkdown,
     rstudioapi,
     shiny,
     spelling,
+    styler,
     testthat (>= 2.0.0),
     withr
 VignetteBuilder: knitr
@@ -78,6 +80,7 @@ Collate:
     'crunch-data-frame.R'
     'crunch.R'
     'crunchbox.R'
+    'cube-collapse-dimensions.R'
     'cube-dims.R'
     'cube-index-table.R'
     'cube-query.R'

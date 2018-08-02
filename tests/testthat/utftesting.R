@@ -1,5 +1,5 @@
 test_that("encoding + JSON reads correctly", {
-    s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
+    s <- iconv("aided_follow_grid:ElCorteInglés", to = "UTF-8")
     expect_identical(Encoding(s), "UTF-8")
     expect_true(grepl("Inglés", s))
     sj <- toJSON(s)
@@ -19,7 +19,7 @@ with_mock_crunch({
 with_test_authentication({
     ds <- newDataset(df)
     test_that("Properly encoded UTF is sent and received", {
-        s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
+        s <- iconv("aided_follow_grid:ElCorteInglés", to = "UTF-8")
         name(ds$v1) <- s
         expect_identical(name(ds$v1), s)
         expect_identical(name(refresh(ds)$v1), s)

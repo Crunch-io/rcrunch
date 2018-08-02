@@ -26,8 +26,10 @@ with_mock_crunch({
         expect_identical(types(g1), c("numeric", "folder", "text"))
         expect_identical(aliases(g1), c("birthyr", NA, "textVar"))
         # Extracting by alias
-        expect_identical(names(g1[c("birthyr", "textVar")]),
-            c("Birth Year", "Text variable ftw"))
+        expect_identical(
+            names(g1[c("birthyr", "textVar")]),
+            c("Birth Year", "Text variable ftw")
+        )
     })
     test_that("Get folder from a folder (via $)", {
         expect_is(g1$Nested, "VariableFolder")
@@ -53,47 +55,61 @@ with_mock_crunch({
     test_that("Folder extract error handling", {
         expect_null(folders(ds)[["foo"]])
         expect_null(folders(ds)[["Group 1/foo"]])
-        expect_error(folders(ds)[["Group 1/foo/bar/baz"]],
-            '"Group 1/foo/bar/baz" is an invalid path: foo is not a folder')
-        expect_error(folders(ds)[["Group 1/Birth Year/bar/baz"]],
-            '"Group 1/Birth Year/bar/baz" is an invalid path: Birth Year is not a folder')
-        expect_error(folders(ds)[["Group 1/birthyr/bar/baz"]],
-            '"Group 1/birthyr/bar/baz" is an invalid path: birthyr is not a folder')
+        expect_error(
+            folders(ds)[["Group 1/foo/bar/baz"]],
+            '"Group 1/foo/bar/baz" is an invalid path: foo is not a folder'
+        )
+        expect_error(
+            folders(ds)[["Group 1/Birth Year/bar/baz"]],
+            '"Group 1/Birth Year/bar/baz" is an invalid path: Birth Year is not a folder'
+        )
+        expect_error(
+            folders(ds)[["Group 1/birthyr/bar/baz"]],
+            '"Group 1/birthyr/bar/baz" is an invalid path: birthyr is not a folder'
+        )
     })
 
     test_that("Set a folder's name", {
-        expect_PATCH(name(folders(ds)[[1]]) <- "First",
+        expect_PATCH(
+            name(folders(ds)[[1]]) <- "First",
             "https://app.crunch.io/api/datasets/1/folders/1/",
-            '{"name":"First"}')
+            '{"name":"First"}'
+        )
     })
     test_that("But top-level folder doesn't have a name and you can't set it", {
         skip("TODO")
     })
     test_that("Set names of objects inside a folder", {
-        expect_PATCH(names(folders(ds)[[1]]) <- c("Year of Birth", "A folder in a folder", "Plain text"),
+        expect_PATCH(
+            names(folders(ds)[[1]]) <- c("Year of Birth", "A folder in a folder", "Plain text"),
             "https://app.crunch.io/api/datasets/1/folders/1/",
             '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
             '{"name":"Year of Birth"},',
             '"https://app.crunch.io/api/datasets/1/folders/3/":',
             '{"name":"A folder in a folder"},',
             '"https://app.crunch.io/api/datasets/1/variables/textVar/":',
-            '{"name":"Plain text"}}')
+            '{"name":"Plain text"}}'
+        )
     })
     test_that("Set a variable's name inside a folder", {
         ## Note that this patches the catalog (folder) instead of the entity.
         ## Historical reasons, plus ensuring that name<- on entity and
         ## names<- on catalog do the same thing
-        expect_PATCH(name(folders(ds)[["Group 1/Birth Year"]]) <- "Year of birth",
+        expect_PATCH(
+            name(folders(ds)[["Group 1/Birth Year"]]) <- "Year of birth",
             "https://app.crunch.io/api/datasets/1/folders/1/",
             '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
-            '{"name":"Year of birth"}}')
+            '{"name":"Year of birth"}}'
+        )
     })
 
     test_that("folder() finds the parent folder", {
         expect_identical(ds %>% cd("Group 1") %>% folder(), folders(ds))
         expect_identical(folder(cd(ds, "Group 1/Nested")), cd(ds, "Group 1"))
-        expect_identical(folder(folders(ds)[["Group 1/Birth Year"]]),
-            cd(ds, "Group 1"))
+        expect_identical(
+            folder(folders(ds)[["Group 1/Birth Year"]]),
+            cd(ds, "Group 1")
+        )
         expect_null(folder(folders(ds)))
         expect_error(folder("string"), "No folder for object of class character")
     })
@@ -105,14 +121,20 @@ with_mock_crunch({
     })
 
     test_that("delete folder", {
-        expect_error(delete(folders(ds)[["Group 1/Nested"]]),
-            "Must confirm deleting folder")
+        expect_error(
+            delete(folders(ds)[["Group 1/Nested"]]),
+            "Must confirm deleting folder"
+        )
         with_consent({
-            expect_DELETE(delete(folders(ds)[["Group 1/Nested"]]),
-                "https://app.crunch.io/api/datasets/1/folders/3/")
+            expect_DELETE(
+                delete(folders(ds)[["Group 1/Nested"]]),
+                "https://app.crunch.io/api/datasets/1/folders/3/"
+            )
         })
-        expect_error(delete(folders(ds)),
-            "Cannot delete root folder")
+        expect_error(
+            delete(folders(ds)),
+            "Cannot delete root folder"
+        )
     })
 
     test_that("path()", {
@@ -122,21 +144,23 @@ with_mock_crunch({
     })
 
     test_that("print folders", {
-        with(temp.option(crayon.enabled=FALSE), {
+        with(temp.option(crayon.enabled = FALSE), {
             ## Coloring aside, the default print method should look like you
             ## printed the vector of names (plus the path printed above)
             expect_output(print(folders(ds)),
-                capture.output(print(names(folders(ds)))), fixed=TRUE)
+                capture.output(print(names(folders(ds)))),
+                fixed = TRUE
+            )
             ## These are obfuscated because of archaic restrictions on UTF-8
             skip_on_cran()
-            source("print-folders.R", local=TRUE)
+            source("print-folders.R", local = TRUE)
         })
     })
 })
 
 
 with_test_authentication({
-    ds <- createDataset(name=now())
+    ds <- createDataset(name = now())
     test_that("folders are enabled by default in the tests", {
         expect_true(settings(ds)$variable_folders)
     })

@@ -1,4 +1,4 @@
-init.Shoji <- function (.Object, ...) {
+init.Shoji <- function(.Object, ...) {
     slots <- slotNames(.Object)
     dots <- list(...)
     ## Different cases are so you can call the class constructor directly
@@ -11,7 +11,7 @@ init.Shoji <- function (.Object, ...) {
         }
     } else if (length(dots) && is.shoji(dots[[1]])) {
         ## Init straight from API response, e.g. CrunchObject(crGET(x))
-        .Object <- do.call("init.Shoji", c(.Object=.Object, dots[[1]], ...))
+        .Object <- do.call("init.Shoji", c(.Object = .Object, dots[[1]], ...))
     } else {
         ## Init from kwargs, e.g. CrunchObject(body=list, urls=list())
         ## Should this be open for all cases? I.e. init with a ShojiObject and
@@ -26,16 +26,16 @@ init.Shoji <- function (.Object, ...) {
 }
 setMethod("initialize", "ShojiObject", init.Shoji)
 
-is.shoji.like <- function (x) {
+is.shoji.like <- function(x) {
     is.list(x) && "element" %in% names(x) && startsWith(as.character(x$element), "shoji")
 }
 
 #' @rdname crunch-is
 #' @export
 #' @importFrom methods is
-is.shoji <- function (x) inherits(x, "shoji")
+is.shoji <- function(x) inherits(x, "shoji")
 
-is.shojiObject <- function (x) inherits(x, "ShojiObject")
+is.shojiObject <- function(x) inherits(x, "ShojiObject")
 
 #' Get the URL of this object
 #' @param x a Crunch object
@@ -46,27 +46,27 @@ NULL
 
 #' @rdname self
 #' @export
-setMethod("self", "ShojiObject", function (x) x@self)
+setMethod("self", "ShojiObject", function(x) x@self)
 
 #' @rdname describe
 #' @export
-setMethod("name", "ShojiObject", function (x) x@body$name)
+setMethod("name", "ShojiObject", function(x) x@body$name)
 
 #' @rdname refresh
 #' @export
-setMethod("refresh", "ShojiObject", function (x) {
+setMethod("refresh", "ShojiObject", function(x) {
     dropCache(self(x))
-    Class <- class(x)  ## in case x is a subclass of ShojiObject
+    Class <- class(x) ## in case x is a subclass of ShojiObject
     return(do.call(Class, crGET(self(x))))
 })
 
 #' @rdname delete
 #' @export
-setMethod("delete", "ShojiObject", function (x, ...) invisible(crDELETE(self(x))))
+setMethod("delete", "ShojiObject", function(x, ...) invisible(crDELETE(self(x))))
 
 #' @rdname delete
 #' @export
-setMethod("delete", "ANY", function (x, ...) halt("'delete' only valid for Crunch objects"))
+setMethod("delete", "ANY", function(x, ...) halt("'delete' only valid for Crunch objects"))
 
 #' Base setter for Crunch objects
 #' @param x a ShojiObject or subclass thereof
@@ -75,14 +75,14 @@ setMethod("delete", "ANY", function (x, ...) halt("'delete' only valid for Crunc
 #' @return x modified accordingly. If \code{x} isn't read-only, it will also
 #' post the edit to the Crunch server.
 #' @keywords internal
-setEntitySlot <- function (x, i, value) {
+setEntitySlot <- function(x, i, value) {
     ## Check if we have actual changes to send. Wrap both sides in I()
     ## in case "value" is already wrapped
     if (!identical(I(slot(x, "body")[[i]]), I(value))) {
         slot(x, "body")[[i]] <- value
-        body <- structure(list(value), .Names=i)
+        body <- structure(list(value), .Names = i)
         payload <- toJSON(body)
-        crPATCH(self(x), body=payload)
+        crPATCH(self(x), body = payload)
     }
     return(x)
 }
@@ -95,7 +95,7 @@ setEntitySlot <- function (x, i, value) {
 #' @export
 #' @keywords internal
 #' @importFrom httpcache logMessage
-shojiURL <- function (x, collection=c("catalogs", "views", "fragments", "orders"), key) {
+shojiURL <- function(x, collection = c("catalogs", "views", "fragments", "orders"), key) {
     if (is.variable(x) || inherits(x, "ShojiTuple")) {
         x <- entity(x) ## Get the *Entity (e.g. VariableEntity)
         logMessage("INFO", "GET entity in shojiURL")
@@ -112,8 +112,8 @@ shojiURL <- function (x, collection=c("catalogs", "views", "fragments", "orders"
     return(out)
 }
 
-wrapEntity <- function (..., body=list(...)) {
-    list(element="shoji:entity", body=body)
+wrapEntity <- function(..., body = list(...)) {
+    list(element = "shoji:entity", body = body)
 }
 
-wrapCatalog <- function (...) list(element="shoji:catalog", ...)
+wrapCatalog <- function(...) list(element = "shoji:catalog", ...)

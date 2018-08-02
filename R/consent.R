@@ -16,17 +16,17 @@
 #' with_consent(delete(ds))
 #' }
 #' @export
-consent <- function () {
-    temp.options(crunch.require.confirmation=FALSE)
+consent <- function() {
+    temp.options(crunch.require.confirmation = FALSE)
 }
 
 #' @rdname consent
 #' @export
-with_consent <- function (expr) {
+with_consent <- function(expr) {
     with(consent(), eval.parent(expr))
 }
 
-askForPermission <- function (prompt="") {
+askForPermission <- function(prompt = "") {
     ## If options explicitly say we don't need to ask, bail.
     ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
     must.confirm <- getOption("crunch.require.confirmation", TRUE)
@@ -42,4 +42,4 @@ askForPermission <- function (prompt="") {
     return(proceed == "y")
 }
 
-is.interactive <- function () interactive() ## Alias this so that we can mock it out
+is.interactive <- function() interactive() ## Alias this so that we can mock it out

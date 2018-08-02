@@ -37,9 +37,8 @@
 #' @return `x` extended by the columns of `y`, matched on the "by"
 #' variables.
 #' @export
-joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,
-                         by.y=by, all=FALSE, all.x=TRUE, all.y=FALSE, copy=TRUE) {
-
+joinDatasets <- function(x, y, by = intersect(names(x), names(y)), by.x = by,
+                         by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE, copy = TRUE) {
     if (copy) {
         ## Just another way to call extend/merge
         Call <- match.call()
@@ -49,7 +48,8 @@ joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,
 
     ## Else:
     warning("Virtual joins are experimental. Use with extreme caution.",
-        call.=FALSE)
+        call. = FALSE
+    )
     ## Validate inputs
     by.x <- getJoinByVariable(x, by.x, "x")
     by.y <- getJoinByVariable(y, by.y, "y")
@@ -59,16 +59,17 @@ joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,
     ## Get join catalog url
     join_url <- shojiURL(x, "catalogs", "joins")
 
-    payload <- structure(list(list(left_key=self(by.x), right_key=self(by.y))),
-        .Names=paste0(join_url, tuple(y)$id, "/"))
-    crPATCH(join_url, body=toJSON(payload))
+    payload <- structure(list(list(left_key = self(by.x), right_key = self(by.y))),
+        .Names = paste0(join_url, tuple(y)$id, "/")
+    )
+    crPATCH(join_url, body = toJSON(payload))
     invisible(refresh(x))
 }
 
 #' @rdname joinDatasets
 #' @export
-extendDataset <- function (x, y, by=intersect(names(x), names(y)), by.x=by, by.y=by,
-                           all=FALSE, all.x=TRUE, all.y=FALSE, ...) {
+extendDataset <- function(x, y, by = intersect(names(x), names(y)), by.x = by, by.y = by,
+                          all = FALSE, all.x = TRUE, all.y = FALSE, ...) {
 
     ## Validate inputs
     by.x <- getJoinByVariable(x, by.x, "x")
@@ -77,17 +78,17 @@ extendDataset <- function (x, y, by=intersect(names(x), names(y)), by.x=by, by.y
     if (!all.x) halt('Option "all.x=FALSE" not supported.')
     if (all.y) halt('Option "all.y" not supported.')
 
-    payload <- zfunc("adapt", list(dataset=self(y)), zcl(by.y), zcl(by.x))
+    payload <- zfunc("adapt", list(dataset = self(y)), zcl(by.y), zcl(by.x))
     vars <- variablesFilter(y)
     if (!is.null(vars)) {
-        payload <- modifyList(vars, list(frame=payload))
+        payload <- modifyList(vars, list(frame = payload))
     }
     payload$filter <- zcl(activeFilter(y)) ## Effectively not added if NULL
-    crPOST(shojiURL(x, "catalogs", "variables"), body=toJSON(payload))
+    crPOST(shojiURL(x, "catalogs", "variables"), body = toJSON(payload))
     invisible(refresh(x))
 }
 
-getJoinByVariable <- function (dataset, by, name) {
+getJoinByVariable <- function(dataset, by, name) {
     ## Do validations and return a proper, legal "by" variable, if possible
     if (!is.dataset(dataset)) halt(name, " must be a Crunch Dataset")
     if (is.character(by)) {
