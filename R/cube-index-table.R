@@ -41,17 +41,17 @@
 #' }
 #'
 #' @export
-index.table <- function (x, margin, baseline) {
-    if (length(dim(x)) != 2){
+index.table <- function(x, margin, baseline) {
+    if (length(dim(x)) != 2) {
         halt("Index tables can only be calculated for 2 dimensional cubes.")
     }
     only_count_cube(x)
-    
+
     other_margin <- 3 - margin ## Assumes 2-D
 
     # the numerators are the proportions by the margin axis
     tab <- prop.table(x, margin)
-    
+
     # the denominators are the proportions of the uni-variate cube based on the
     # other margin. Because dimSums collapses the dimensions given
     # in margin, we get a uni(variate )cube for the opposite margin. Only do
@@ -63,7 +63,7 @@ index.table <- function (x, margin, baseline) {
 
     if (identical(dim(tab), dim(baseline))) {
         # if the dimensions are the same, use direct division, needed for MRs
-        return(tab/baseline * 100)
+        return(tab / baseline * 100)
     } else {
         return(sweep(tab, other_margin, baseline, "/") * 100)
     }

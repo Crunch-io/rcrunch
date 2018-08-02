@@ -33,9 +33,13 @@ with_mock_crunch({
         expect_true(has.categories(ds$mymrset))
         expect_false(has.categories(ds$birthyr))
         expect_true(has.categories("categorical_array"))
-        expect_identical(has.categories(c("categorical", "numeric", "text",
-            "datetime", "categorical_array", "multiple_response")),
-            c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE))
+        expect_identical(
+            has.categories(c(
+                "categorical", "numeric", "text",
+                "datetime", "categorical_array", "multiple_response"
+            )),
+            c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE)
+        )
     })
 
     test_that("Categories for categorical", {
@@ -59,15 +63,21 @@ with_mock_crunch({
     })
 
     test_that("Variable setter requests", {
-        expect_PATCH(name(ds$gender) <- "Sex",
-                     "https://app.crunch.io/api/datasets/1/variables/",
-                     '{"https://app.crunch.io/api/datasets/1/variables/gender/":{"name":"Sex"}}')
-        expect_PATCH(notes(ds$gender) <- "extra info",
-                     "https://app.crunch.io/api/datasets/1/variables/",
-                     '{"https://app.crunch.io/api/datasets/1/variables/gender/":{"notes":"extra info"}}')
-        expect_PATCH(uniformBasis(ds$mymrset) <- TRUE,
-                     "https://app.crunch.io/api/datasets/1/variables/",
-                     '{"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"uniform_basis":true}}')
+        expect_PATCH(
+            name(ds$gender) <- "Sex",
+            "https://app.crunch.io/api/datasets/1/variables/",
+            '{"https://app.crunch.io/api/datasets/1/variables/gender/":{"name":"Sex"}}'
+        )
+        expect_PATCH(
+            notes(ds$gender) <- "extra info",
+            "https://app.crunch.io/api/datasets/1/variables/",
+            '{"https://app.crunch.io/api/datasets/1/variables/gender/":{"notes":"extra info"}}'
+        )
+        expect_PATCH(
+            uniformBasis(ds$mymrset) <- TRUE,
+            "https://app.crunch.io/api/datasets/1/variables/",
+            '{"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"uniform_basis":true}}'
+        )
     })
 
     test_that("Variable setters don't hit server if data not changed", {
@@ -75,22 +85,32 @@ with_mock_crunch({
     })
 
     test_that("Name setter requires non-missing character input", {
-        expect_error(name(ds$gender) <- 45,
-            'Names must be of class "character"')
-        expect_error(name(ds$gender) <- NA_character_,
-            "Names must be non-missing")
+        expect_error(
+            name(ds$gender) <- 45,
+            'Names must be of class "character"'
+        )
+        expect_error(
+            name(ds$gender) <- NA_character_,
+            "Names must be non-missing"
+        )
     })
 
     test_that("Cannot unset name or alias", {
-        expect_error(name(ds$gender) <- NULL,
-            'Names must be of class "character"')
-        expect_error(alias(ds$gender) <- NULL,
-            'Names must be of class "character"')
+        expect_error(
+            name(ds$gender) <- NULL,
+            'Names must be of class "character"'
+        )
+        expect_error(
+            alias(ds$gender) <- NULL,
+            'Names must be of class "character"'
+        )
     })
 
     test_that("Backstop method for if you try to set name on NULL", {
-        expect_error(name(ds$NOTAVARIABLE) <- "Not a variable",
-            "Cannot set name on NULL")
+        expect_error(
+            name(ds$NOTAVARIABLE) <- "Not a variable",
+            "Cannot set name on NULL"
+        )
     })
 
     test_that("refresh", {
@@ -99,10 +119,12 @@ with_mock_crunch({
 
     test_that("can modify digits on var object", {
         expect_identical(digits(ds$birthyr), 2L)
-        expect_PATCH(digits(ds$birthyr) <- 0,
-                     "https://app.crunch.io/api/datasets/1/variables/birthyr/",
-                     '{"element":"shoji:entity","body":{"format":{"data":',
-                     '{"digits":0}}}}')
+        expect_PATCH(
+            digits(ds$birthyr) <- 0,
+            "https://app.crunch.io/api/datasets/1/variables/birthyr/",
+            '{"element":"shoji:entity","body":{"format":{"data":',
+            '{"digits":0}}}}'
+        )
 
         expect_error(digits(ds$birthyr) <- -1, "digit specifications should be between 0 and 16")
         expect_error(digits(ds$birthyr) <- 999, "digit specifications should be between 0 and 16")
@@ -123,12 +145,12 @@ with_test_authentication({
             "   8.00   12.75   17.50   17.50   22.25   27.00 "
         ))
         expect_identical(getShowContent(ds$v4), c(
-                "v4 (categorical)",
-                "",
-                "  Count",
-                "B    10",
-                "C    10"
-            ))
+            "v4 (categorical)",
+            "",
+            "  Count",
+            "B    10",
+            "C    10"
+        ))
         ## TODO: add other types. And move to fixtures.
     })
 

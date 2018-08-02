@@ -1,36 +1,51 @@
 context("Append datasets")
 
 test_that("crunchTimeout", {
-    with(temp.option(crunch.timeout=7),
-        expect_identical(crunchTimeout(), 7))
-    with(temp.option(crunch.timeout=NULL),
-        expect_identical(crunchTimeout(), 900))
-    with(temp.option(crunch.timeout=list()),
-        expect_identical(crunchTimeout(), 900))
+    with(
+        temp.option(crunch.timeout = 7),
+        expect_identical(crunchTimeout(), 7)
+    )
+    with(
+        temp.option(crunch.timeout = NULL),
+        expect_identical(crunchTimeout(), 900)
+    )
+    with(
+        temp.option(crunch.timeout = list()),
+        expect_identical(crunchTimeout(), 900)
+    )
 })
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Cannot append dataset to itself", {
-        expect_error(appendDataset(ds, ds),
-            "Cannot append dataset to itself")
+        expect_error(
+            appendDataset(ds, ds),
+            "Cannot append dataset to itself"
+        )
     })
 
     ds1 <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
     test_that("append DELETEs the pk", {
-      expect_DELETE(appendDataset(ds2, ds1),
-                    "https://app.crunch.io/api/datasets/3/pk/")
+        expect_DELETE(
+            appendDataset(ds2, ds1),
+            "https://app.crunch.io/api/datasets/3/pk/"
+        )
     })
 
     test_that("appendDataset shows deprecation warnings", {
         expect_warning(
-            expect_POST(appendDataset(ds1, ds2, autorollback = TRUE),
-                        'https://app.crunch.io/api/datasets/1/batches/',
-                        '{"element":"shoji:entity","body":{"dataset":',
-                        '"https://app.crunch.io/api/datasets/3/"}}'),
-            paste("The", sQuote("autorollback"),
-                "argument is deprecated and has no effect"))
+            expect_POST(
+                appendDataset(ds1, ds2, autorollback = TRUE),
+                "https://app.crunch.io/api/datasets/1/batches/",
+                '{"element":"shoji:entity","body":{"dataset":',
+                '"https://app.crunch.io/api/datasets/3/"}}'
+            ),
+            paste(
+                "The", sQuote("autorollback"),
+                "argument is deprecated and has no effect"
+            )
+        )
     })
 })
 
@@ -39,7 +54,7 @@ with_test_authentication({
     part1 <- newDataset(df)
     part2 <- newDataset(df)
     cats <- categories(part1$v4)
-    
+
     ## Set a primary key to test that it gets unset
     pk(part2) <- part2$v3
     v3.1 <- as.vector(part1$v3)
@@ -60,8 +75,8 @@ with_test_authentication({
         expect_true(is.dataset(out))
         expect_identical(self(out), self(part1))
         expect_length(batches(out), 3)
-        expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
-        expect_identical(getNrow(out), nrow(df)*2L)
+        expect_identical(dim(out), c(nrow(df) * 2L, ncol(df)))
+        expect_identical(getNrow(out), nrow(df) * 2L)
         expect_identical(nrow(out), length(as.vector(out$v3)))
         expect_identical(categories(out$v4), cats)
         expect_equivalent(as.vector(out$v3), rep(df$v3, 2))

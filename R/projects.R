@@ -11,30 +11,34 @@
 #' myprojects <- projects()
 #' proj <- myprojects[["Project name"]]
 #' }
-projects <- function (x=getAPIRoot()) {
+projects <- function(x = getAPIRoot()) {
     ProjectCatalog(crGET(shojiURL(x, "catalogs", "projects")))
 }
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("ProjectCatalog", "numeric"), function (x, i, ...) {
+setMethod("[[", c("ProjectCatalog", "numeric"), function(x, i, ...) {
     getTuple(x, i, CrunchProject)
 })
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("ProjectCatalog", "character", "missing", "list"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("ProjectCatalog", "character", "missing", "list"),
+    function(x, i, j, value) {
         if (i %in% names(x)) {
             ## TODO: update team attributes
             halt("Cannot (yet) modify project attributes")
         } else {
             ## Creating a new project
-            proj <- do.call(newProject,
-                modifyList(value, list(name=i, catalog=x)))
+            proj <- do.call(
+                newProject,
+                modifyList(value, list(name = i, catalog = x))
+            )
             return(refresh(x))
         }
-    })
+    }
+)
 
 #' Create a new project
 #'
@@ -64,12 +68,14 @@ setMethod("[[<-", c("ProjectCatalog", "character", "missing", "list"),
 #' proj <- p[["Another project"]]
 #' }
 #' @export
-newProject <- function (name, members=NULL, catalog=projects(), ...) {
-    u <- crPOST(self(catalog), body=toJSON(list(name=name, ...)))
+newProject <- function(name, members = NULL, catalog = projects(), ...) {
+    u <- crPOST(self(catalog), body = toJSON(list(name = name, ...)))
     ## Fake a CrunchProject (tuple) by getting the entity
     ## TODO: make this more robust and formal (useful elsewhere too?)
-    out <- CrunchProject(index_url=self(catalog), entity_url=u,
-        body=crGET(u)$body)
+    out <- CrunchProject(
+        index_url = self(catalog), entity_url = u,
+        body = crGET(u)$body
+    )
     ## Add members to project, if given
     if (!is.null(members)) {
         members(out) <- members
@@ -79,23 +85,25 @@ newProject <- function (name, members=NULL, catalog=projects(), ...) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("ProjectCatalog", "character", "missing", "CrunchProject"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("ProjectCatalog", "character", "missing", "CrunchProject"),
+    function(x, i, j, value) {
         ## Assumes that modifications have already been persisted
         ## by other operations on the team entity (like members<-)
         index(x)[[value@entity_url]] <- value@body
         return(x)
-    })
+    }
+)
 
 #' @rdname teams
 #' @export
-setMethod("members", "CrunchProject", function (x) {
+setMethod("members", "CrunchProject", function(x) {
     MemberCatalog(crGET(shojiURL(x, "catalogs", "members")))
 })
 
 #' @rdname teams
 #' @export
-setMethod("members<-", c("CrunchProject", "MemberCatalog"), function (x, value) {
+setMethod("members<-", c("CrunchProject", "MemberCatalog"), function(x, value) {
     ## TODO: something
     ## For now, assume action already done in other methods, like NULL
     ## assignment above.
@@ -104,26 +112,28 @@ setMethod("members<-", c("CrunchProject", "MemberCatalog"), function (x, value) 
 
 #' @rdname teams
 #' @export
-setMethod("members<-", c("CrunchProject", "character"), function (x, value) {
+setMethod("members<-", c("CrunchProject", "character"), function(x, value) {
     value <- setdiff(value, emails(members(x)))
     if (length(value)) {
-        payload <- sapply(value, emptyObject, simplify=FALSE)
-        crPATCH(self(members(x)), body=toJSON(payload))
+        payload <- sapply(value, emptyObject, simplify = FALSE)
+        crPATCH(self(members(x)), body = toJSON(payload))
     }
     return(x)
 })
 
 #' @rdname tuple-methods
 #' @export
-setMethod("entity", "CrunchProject", function (x) {
+setMethod("entity", "CrunchProject", function(x) {
     return(ProjectEntity(crGET(x@entity_url)))
 })
 
 #' @rdname delete
 #' @export
-setMethod("delete", "CrunchProject", function (x, ...) {
-    prompt <- paste0("Really delete project ", dQuote(name(x)), "? ",
-        "This cannot be undone.")
+setMethod("delete", "CrunchProject", function(x, ...) {
+    prompt <- paste0(
+        "Really delete project ", dQuote(name(x)), "? ",
+        "This cannot be undone."
+    )
     if (!askForPermission(prompt)) {
         halt("Must confirm deleting project")
     }
@@ -135,7 +145,7 @@ setMethod("delete", "CrunchProject", function (x, ...) {
 
 #' @rdname datasets
 #' @export
-`datasets<-` <- function (x, value) {
+`datasets<-` <- function(x, value) {
     stopifnot(inherits(x, "CrunchProject"))
     if (is.dataset(value)) {
         ## This is how we add a dataset to a project: change its owner
@@ -159,16 +169,17 @@ setMethod("delete", "CrunchProject", function (x, ...) {
 #' project after having uploaded the specified file as the new icon.
 #' @name project-icon
 #' @export
-icon <- function (x) {
+icon <- function(x) {
     stopifnot(inherits(x, "CrunchProject"))
     return(x@body$icon)
 }
 
 #' @rdname project-icon
 #' @export
-`icon<-` <- function (x, value) {
+`icon<-` <- function(x, value) {
     crPUT(shojiURL(x, "views", "icon"),
-        body=list(icon=upload_file(value)))
+        body = list(icon = upload_file(value))
+    )
     dropOnly(absoluteURL("../", self(x))) ## Invalidate catalog
     return(refresh(x))
 }

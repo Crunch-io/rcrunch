@@ -12,33 +12,48 @@ with_test_authentication({
             expect_true("CA" %in% names(part2))
             expect_true(is.CA(part1$CA))
             expect_true(is.Numeric(part2$CA))
-            expect_prints(batches(part1),
-                get_output(data.frame(id=c(0, 1),
-                status=c("imported", "imported"))))
+            expect_prints(
+                batches(part1),
+                get_output(data.frame(
+                    id = c(0, 1),
+                    status = c("imported", "imported")
+                ))
+            )
         })
         test_that("compareDatasets catches that", {
             comp <- compareDatasets(part1, part2)
             expect_prints(summary(comp), "Type mismatch: 1")
         })
         test_that("If the append fails and reports conflict, and the batch is backed out", {
-            expect_prints(batches(part1),
-                get_output(data.frame(id=c(0, 1),
-                status=c("imported", "imported"))))
+            expect_prints(
+                batches(part1),
+                get_output(data.frame(
+                    id = c(0, 1),
+                    status = c("imported", "imported")
+                ))
+            )
 
             expect_message(
-                expect_error(part1 <- appendDataset(part1, part2),
-                    "Variable 'CA' is an array in one dataset and not the other"),
-                NA) ## No Result URL printed because autorollback=TRUE
+                expect_error(
+                    part1 <- appendDataset(part1, part2),
+                    "Variable 'CA' is an array in one dataset and not the other"
+                ),
+                NA
+            ) ## No Result URL printed because autorollback=TRUE
 
             part1 <- refresh(part1)
-            expect_prints(batches(part1),
-                get_output(data.frame(id=c(0, 1),
-                status=c("imported", "imported"))))
+            expect_prints(
+                batches(part1),
+                get_output(data.frame(
+                    id = c(0, 1),
+                    status = c("imported", "imported")
+                ))
+            )
         })
     })
 
     whereas("When attempting to append text and numeric", {
-        part1 <- newDataset(df[,2:5])
+        part1 <- newDataset(df[, 2:5])
         d2 <- df
         d2$v2 <- d2$v3 ## v2 was text, now is numeric
         part2 <- newDataset(d2)
@@ -47,8 +62,10 @@ with_test_authentication({
             expect_prints(summary(comp), "Type mismatch: 1")
         })
         test_that("Append detects text/numeric type mismatch", {
-            expect_error(appendDataset(part1, part2),
-                "Type of 'v2' does not match target and cannot be converted.")
+            expect_error(
+                appendDataset(part1, part2),
+                "Type of 'v2' does not match target and cannot be converted."
+            )
         })
     })
 })
