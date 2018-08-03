@@ -2,8 +2,8 @@
 # the internal chisq tests use rowSums and colSums, but we need
 # the more abstract 'margin' (specifically cubeMarginTable) to
 # get the right numbers for multiple response.
-standardizedMRResiduals <- function (cube) {
-    cube_array <- as.array(cube)
+standardizedMRResiduals <- function(cube) {
+    cube_array <- as.array(noTransforms(cube))
     cube_dims <- dim(cube_array)
 
     # get counts for table, this will end up being a table because there are MRs
@@ -18,7 +18,7 @@ standardizedMRResiduals <- function (cube) {
     # calculate expected values
     E <- r * c / n
     # calculate variance
-    V <- r * c * (n-r) * (n-c) / n^3
+    V <- r * c * (n - r) * (n - c) / n^3
 
     return((cube_array - E) / sqrt(V))
 }
@@ -48,16 +48,19 @@ NULL
 
 #' @rdname cube-residuals
 #' @export
-setMethod('rstandard', 'CrunchCube', function (model) {
+setMethod("rstandard", "CrunchCube", function(model) {
     if (length(dimensions(model)) > 2) {
-        halt("Cannot compute residuals with more than two dimensions. Pick a ",
-             "slice to evaluate.")
+        halt(
+            "Cannot compute residuals with more than two dimensions. Pick a ",
+            "slice to evaluate."
+        )
     }
 
     if (any(startsWith(getDimTypes(model), "mr_"))) {
         return(standardizedMRResiduals(model))
     } else {
-        return(chisq.test(as.array(model))$stdres)
+        array_to_test <- as.array(noTransforms(model))
+        return(chisq.test(array_to_test)$stdres)
     }
 })
 
@@ -92,7 +95,7 @@ setMethod('rstandard', 'CrunchCube', function (model) {
 # [,1] [,2] [,3]
 # [1,]    1    2    3
 # [2,]    1    2    3
-broadcast <- function (values, dims = c(NULL, NULL), nrow = dims[1], ncol = dims[2]) {
+broadcast <- function(values, dims = c(NULL, NULL), nrow = dims[1], ncol = dims[2]) {
     # if values is already the correct shape, then return values immediately
     if (!is.null(dim(values)) & identical(dim(values), as.integer(c(nrow, ncol)))) {
         return(values)
@@ -121,9 +124,11 @@ broadcast <- function (values, dims = c(NULL, NULL), nrow = dims[1], ncol = dims
             # all of that one value.
             byrow <- FALSE
         } else {
-            halt("Something has gone wrong broadcasting the vector ",
-                 dQuote(substitute(values)), " to the dimensions c(",nrow, ", ",
-                 ncol, ")")
+            halt(
+                "Something has gone wrong broadcasting the vector ",
+                dQuote(substitute(values)), " to the dimensions c(", nrow, ", ",
+                ncol, ")"
+            )
         }
     }
 

@@ -36,144 +36,7 @@
                 {
                     "derived": true,
                     "references": {
-                        "subreferences": [
-                            {
-                                "alias": "WantWorkLanguage_VBA",
-                                "name": "VBA"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_TypeScript",
-                                "name": "TypeScript"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Java",
-                                "name": "Java"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Scala",
-                                "name": "Scala"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_JavaScript",
-                                "name": "JavaScript"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Perl",
-                                "name": "Perl"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Lua",
-                                "name": "Lua"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Matlab",
-                                "name": "Matlab"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Erlang",
-                                "name": "Erlang"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Assembly",
-                                "name": "Assembly"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_VB_NET",
-                                "name": "VB.NET"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Python",
-                                "name": "Python"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Common Lisp",
-                                "name": "Common Lisp"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Dart",
-                                "name": "Dart"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_CoffeeScript",
-                                "name": "CoffeeScript"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Elixir",
-                                "name": "Elixir"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Ruby",
-                                "name": "Ruby"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Groovy",
-                                "name": "Groovy"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_C",
-                                "name": "C"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_F#",
-                                "name": "F#"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Hack",
-                                "name": "Hack"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_C++",
-                                "name": "C++"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Objective-C",
-                                "name": "Objective-C"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_R",
-                                "name": "R"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Clojure",
-                                "name": "Clojure"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Rust",
-                                "name": "Rust"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Swift",
-                                "name": "Swift"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Julia",
-                                "name": "Julia"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Haskell",
-                                "name": "Haskell"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Visual Basic 6",
-                                "name": "Visual Basic 6"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_SQL",
-                                "name": "SQL"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Go",
-                                "name": "Go"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_PHP",
-                                "name": "PHP"
-                            },
-                            {
-                                "alias": "WantWorkLanguage_Smalltalk",
-                                "name": "Smalltalk"
-                            }
-                        ],
+                        "subreferences": [],
                         "alias": "WantWorkLanguageMR",
                         "description": "Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?",
                         "name": "Languages Desired for Work"
@@ -191,32 +54,7 @@
                                         "alias": "WantWorkLanguage_VBA",
                                         "name": "VBA"
                                     },
-                                    "id": "VBA",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "VBA"
                                 },
                                 "missing": false
                             },
@@ -228,32 +66,7 @@
                                         "alias": "WantWorkLanguage_TypeScript",
                                         "name": "TypeScript"
                                     },
-                                    "id": "TypeScript",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "TypeScript"
                                 },
                                 "missing": false
                             },
@@ -265,32 +78,7 @@
                                         "alias": "WantWorkLanguage_Java",
                                         "name": "Java"
                                     },
-                                    "id": "Java",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Java"
                                 },
                                 "missing": false
                             },
@@ -302,32 +90,7 @@
                                         "alias": "WantWorkLanguage_Scala",
                                         "name": "Scala"
                                     },
-                                    "id": "Scala",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Scala"
                                 },
                                 "missing": false
                             },
@@ -339,32 +102,7 @@
                                         "alias": "WantWorkLanguage_JavaScript",
                                         "name": "JavaScript"
                                     },
-                                    "id": "JavaScript",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "JavaScript"
                                 },
                                 "missing": false
                             },
@@ -376,32 +114,7 @@
                                         "alias": "WantWorkLanguage_Perl",
                                         "name": "Perl"
                                     },
-                                    "id": "Perl",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Perl"
                                 },
                                 "missing": false
                             },
@@ -413,32 +126,7 @@
                                         "alias": "WantWorkLanguage_Lua",
                                         "name": "Lua"
                                     },
-                                    "id": "Lua",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Lua"
                                 },
                                 "missing": false
                             },
@@ -450,32 +138,7 @@
                                         "alias": "WantWorkLanguage_Matlab",
                                         "name": "Matlab"
                                     },
-                                    "id": "Matlab",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Matlab"
                                 },
                                 "missing": false
                             },
@@ -487,32 +150,7 @@
                                         "alias": "WantWorkLanguage_Erlang",
                                         "name": "Erlang"
                                     },
-                                    "id": "Erlang",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Erlang"
                                 },
                                 "missing": false
                             },
@@ -524,32 +162,7 @@
                                         "alias": "WantWorkLanguage_Assembly",
                                         "name": "Assembly"
                                     },
-                                    "id": "Assembly",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Assembly"
                                 },
                                 "missing": false
                             },
@@ -561,32 +174,7 @@
                                         "alias": "WantWorkLanguage_VB_NET",
                                         "name": "VB.NET"
                                     },
-                                    "id": "VB_NET",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "VB_NET"
                                 },
                                 "missing": false
                             },
@@ -598,32 +186,7 @@
                                         "alias": "WantWorkLanguage_Python",
                                         "name": "Python"
                                     },
-                                    "id": "Python",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Python"
                                 },
                                 "missing": false
                             },
@@ -635,32 +198,7 @@
                                         "alias": "WantWorkLanguage_Common Lisp",
                                         "name": "Common Lisp"
                                     },
-                                    "id": "Common Lisp",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Common Lisp"
                                 },
                                 "missing": false
                             },
@@ -672,32 +210,7 @@
                                         "alias": "WantWorkLanguage_Dart",
                                         "name": "Dart"
                                     },
-                                    "id": "Dart",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Dart"
                                 },
                                 "missing": false
                             },
@@ -709,32 +222,7 @@
                                         "alias": "WantWorkLanguage_CoffeeScript",
                                         "name": "CoffeeScript"
                                     },
-                                    "id": "CoffeeScript",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "CoffeeScript"
                                 },
                                 "missing": false
                             },
@@ -746,32 +234,7 @@
                                         "alias": "WantWorkLanguage_Elixir",
                                         "name": "Elixir"
                                     },
-                                    "id": "Elixir",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Elixir"
                                 },
                                 "missing": false
                             },
@@ -783,32 +246,7 @@
                                         "alias": "WantWorkLanguage_Ruby",
                                         "name": "Ruby"
                                     },
-                                    "id": "Ruby",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Ruby"
                                 },
                                 "missing": false
                             },
@@ -820,32 +258,7 @@
                                         "alias": "WantWorkLanguage_Groovy",
                                         "name": "Groovy"
                                     },
-                                    "id": "Groovy",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Groovy"
                                 },
                                 "missing": false
                             },
@@ -857,32 +270,7 @@
                                         "alias": "WantWorkLanguage_C",
                                         "name": "C"
                                     },
-                                    "id": "C",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "C"
                                 },
                                 "missing": false
                             },
@@ -894,32 +282,7 @@
                                         "alias": "WantWorkLanguage_F#",
                                         "name": "F#"
                                     },
-                                    "id": "F",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "F"
                                 },
                                 "missing": false
                             },
@@ -931,32 +294,7 @@
                                         "alias": "WantWorkLanguage_Hack",
                                         "name": "Hack"
                                     },
-                                    "id": "Hack",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Hack"
                                 },
                                 "missing": false
                             },
@@ -968,32 +306,7 @@
                                         "alias": "WantWorkLanguage_C++",
                                         "name": "C++"
                                     },
-                                    "id": "C++",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "C++"
                                 },
                                 "missing": false
                             },
@@ -1005,32 +318,7 @@
                                         "alias": "WantWorkLanguage_Objective-C",
                                         "name": "Objective-C"
                                     },
-                                    "id": "Objective-C",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Objective-C"
                                 },
                                 "missing": false
                             },
@@ -1042,32 +330,7 @@
                                         "alias": "WantWorkLanguage_R",
                                         "name": "R"
                                     },
-                                    "id": "R",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "R"
                                 },
                                 "missing": false
                             },
@@ -1079,32 +342,7 @@
                                         "alias": "WantWorkLanguage_Clojure",
                                         "name": "Clojure"
                                     },
-                                    "id": "Clojure",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Clojure"
                                 },
                                 "missing": false
                             },
@@ -1116,32 +354,7 @@
                                         "alias": "WantWorkLanguage_Rust",
                                         "name": "Rust"
                                     },
-                                    "id": "Rust",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Rust"
                                 },
                                 "missing": false
                             },
@@ -1153,32 +366,7 @@
                                         "alias": "WantWorkLanguage_Swift",
                                         "name": "Swift"
                                     },
-                                    "id": "Swift",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Swift"
                                 },
                                 "missing": false
                             },
@@ -1190,32 +378,7 @@
                                         "alias": "WantWorkLanguage_Julia",
                                         "name": "Julia"
                                     },
-                                    "id": "Julia",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Julia"
                                 },
                                 "missing": false
                             },
@@ -1227,32 +390,7 @@
                                         "alias": "WantWorkLanguage_Haskell",
                                         "name": "Haskell"
                                     },
-                                    "id": "Haskell",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Haskell"
                                 },
                                 "missing": false
                             },
@@ -1264,32 +402,7 @@
                                         "alias": "WantWorkLanguage_Visual Basic 6",
                                         "name": "Visual Basic 6"
                                     },
-                                    "id": "Visual Basic 6",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Visual Basic 6"
                                 },
                                 "missing": false
                             },
@@ -1301,32 +414,7 @@
                                         "alias": "WantWorkLanguage_SQL",
                                         "name": "SQL"
                                     },
-                                    "id": "SQL",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "SQL"
                                 },
                                 "missing": false
                             },
@@ -1338,32 +426,7 @@
                                         "alias": "WantWorkLanguage_Go",
                                         "name": "Go"
                                     },
-                                    "id": "Go",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Go"
                                 },
                                 "missing": false
                             },
@@ -1375,32 +438,7 @@
                                         "alias": "WantWorkLanguage_PHP",
                                         "name": "PHP"
                                     },
-                                    "id": "PHP",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "PHP"
                                 },
                                 "missing": false
                             },
@@ -1412,32 +450,7 @@
                                         "alias": "WantWorkLanguage_Smalltalk",
                                         "name": "Smalltalk"
                                     },
-                                    "id": "Smalltalk",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "Smalltalk"
                                 },
                                 "missing": false
                             }

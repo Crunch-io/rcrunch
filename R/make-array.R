@@ -21,7 +21,7 @@
 #' return an expression that "binds" variables together, removing them from
 #' independent existence.
 #' @export
-makeArray <- function (subvariables, name, ...) {
+makeArray <- function(subvariables, name, ...) {
     if (missing(name)) {
         halt("Must provide the name for the new variable")
     }
@@ -36,50 +36,84 @@ makeArray <- function (subvariables, name, ...) {
         halt("No variables supplied")
     }
 
-    out <- VariableDefinition(subvariables=I(subvariables), name=name,
-        type="categorical_array", ...)
+    out <- VariableDefinition(
+        subvariables = I(subvariables), name = name,
+        type = "categorical_array", ...
+    )
     return(out)
 }
 
 #' @rdname makeArray
 #' @export
-makeMR <- function (subvariables, name, selections, ...) {
+makeMR <- function(subvariables, name, selections, ...) {
     if (missing(selections)) {
-        halt("Must provide the names of the category or categories that ",
-            "indicate the dichotomous selection")
+        halt(
+            "Must provide the names of the category or categories that ",
+            "indicate the dichotomous selection"
+        )
     }
 
     ## Do `makeArray` to build the definition.
-    vardef <- makeArray(subvariables=subvariables, name=name,
-        selected_categories=I(selections), ...)
+    vardef <- makeArray(
+        subvariables = subvariables, name = name,
+        selected_categories = I(selections), ...
+    )
     vardef$type <- "multiple_response"
     ## We're done. But let's do some validation first.
 
     ## Get the actual variables so that we can validate
-    vars <- lapply(vardef$subvariables, function (u) VariableEntity(crGET(u)))
-    are.categorical <- vapply(vars,
-        function (x) isTRUE(x@body$type == "categorical"), ## Make a type method?
-        logical(1))
+    vars <- lapply(vardef$subvariables, function(u) VariableEntity(crGET(u)))
+    are.categorical <- vapply(
+        vars,
+        function(x) isTRUE(x@body$type == "categorical"), ## Make a type method?
+        logical(1)
+    )
     if (!all(are.categorical)) {
-        varnames <- vapply(vars[!are.categorical],
-            function (x) x@body$name, ## Make a name() method for VariableEntity
-            character(1))
-        halt(serialPaste(varnames),
+        varnames <- vapply(
+            vars[!are.categorical],
+            function(x) x@body$name, ## Make a name() method for VariableEntity
+            character(1)
+        )
+        halt(
+            serialPaste(varnames),
             " are not Categorical variables. Convert them to ",
-            "Categorical before combining to Multiple Response")
+            "Categorical before combining to Multiple Response"
+        )
     }
 
     ## Validate selections before binding
-    catnames <- unique(unlist(lapply(vars, function (y) names(categories(y)))))
+    catnames <- unique(unlist(lapply(vars, function(y) names(categories(y)))))
     if (!all(selections %in% catnames)) {
-        halt("Selection(s) not found in variable's categories. ",
-            "Category names are: ", serialPaste(catnames))
+        halt(
+            "Selection(s) not found in variable's categories. ",
+            "Category names are: ", serialPaste(catnames)
+        )
         ## Could return more useful messaging here
     }
 
     return(vardef)
 }
 
+#' Array builder
+#'
+#' Launch array builder gadget
+#'
+#' Categorical Array and Multiple Response variables can be difficult to
+#' construct without being able to investigate the available variables, and
+#' their categories. This shiny gadget lets you select subvariables from the
+#' dataset list, and ensures that those variables have consistent categories. To
+#' use the gadget you must have at least one CrunchDataset loaded into the global
+#' environment.
+#'
+#' @return a valid call to `makeArray()` or `makeMR()`
+#' @export
+makeArrayGadget <- function() {
+    if (hasFunction("makeArrayGadget", "crunchy")) {
+        get("makeArrayGadget", asNamespace("crunchy"))()
+    } else {
+        halt("Please install the latest version of crunchy to access this function.")
+    }
+}
 
 #' Create Multiple Response Variable from Delimited lists
 #'
@@ -101,40 +135,50 @@ makeMR <- function (subvariables, name, selections, ...) {
 #'
 #' @return a Multiple response variable definition
 #' @export
-makeMRFromText <- function (var,
-                         delim,
-                         name,
-                         selected = "selected",
-                         not_selected = "not_selected",
-                         unanswered = NA,
-                         ...) {
+makeMRFromText <- function(var,
+                           delim,
+                           name,
+                           selected = "selected",
+                           not_selected = "not_selected",
+                           unanswered = NA,
+                           ...) {
     if (missing(name)) {
         halt("Must supply a name for the new variable")
     }
     if (is.Text(var)) {
         uniques <- names(table(var))
     } else {
-        halt(dQuote(deparse(substitute(var))),
+        halt(
+            dQuote(deparse(substitute(var))),
             " is of class ", class(var),
-             ", it must be a Crunch TextVariable.")
+            ", it must be a Crunch TextVariable."
+        )
     }
     items <- unique(unlist(strsplit(uniques, delim)))
     # make a derivation expression for each unique item
-    subvarderivs <- lapply(items, function(x) createSubvarDeriv(var, x, delim,
-        selected, not_selected, unanswered))
+    subvarderivs <- lapply(items, function(x) createSubvarDeriv(
+            var, x, delim,
+            selected, not_selected, unanswered
+        ))
     names(subvarderivs) <- gsub("\\.", "_", items) # mongo errors if there are dots in the names
 
     # generate the ZCL to make an array from the subvariable derivations, and
     # then do selection magic to make an MR
-    derivation <- zfunc("select_categories",
-                        zfunc("array",
-                              zfunc("select", list(map=subvarderivs),
-                                    list(value=I(c(1, 2, 3, 4, 5))))),
-                        list(value=I("selected")))
+    derivation <- zfunc(
+        "select_categories",
+        zfunc(
+            "array",
+            zfunc(
+                "select", list(map = subvarderivs),
+                list(value = I(c(1, 2, 3, 4, 5)))
+            )
+        ),
+        list(value = I("selected"))
+    )
 
     # hide the original variable
     var <- hide(var)
-    return(VariableDefinition(derivation=derivation, name=name, ...))
+    return(VariableDefinition(derivation = derivation, name = name, ...))
 }
 
 #' Create subvariable derivation expressions
@@ -151,8 +195,8 @@ makeMRFromText <- function (var,
 #' @keywords internal
 #'
 #' @return A VariableDefinition
-createSubvarDeriv <- function (var, str, delim, selected, not_selected,
-                               unanswered) {
+createSubvarDeriv <- function(var, str, delim, selected, not_selected,
+                              unanswered) {
     if (is.na(unanswered)) {
         unanswered <- "No Data"
     }
@@ -160,19 +204,25 @@ createSubvarDeriv <- function (var, str, delim, selected, not_selected,
         value = list(
             class = "categorical",
             categories = list(
-                list("id" = 1,
+                list(
+                    "id" = 1,
                     "name" = unanswered,
                     "numeric_value" = NA,
-                    "missing" = TRUE),
-                list("id" = 2,
+                    "missing" = TRUE
+                ),
+                list(
+                    "id" = 2,
                     "name" = selected,
                     "numeric_value" = NA,
-                    "missing" = FALSE),
-                list("id" = 3,
+                    "missing" = FALSE
+                ),
+                list(
+                    "id" = 3,
                     "name" = not_selected,
                     "numeric_value" = NA,
-                    "missing" = FALSE)
-             )
+                    "missing" = FALSE
+                )
+            )
         )
     )
     new_cat <- list(column = I(1:3), type = new_cat_type)
@@ -199,7 +249,7 @@ createSubvarDeriv <- function (var, str, delim, selected, not_selected,
 #'
 #' @return A character string
 #' @keywords internal
-buildDelimRegex <- function (str, delim){
+buildDelimRegex <- function(str, delim) {
     # the delimeter needs to be escaped in case it's a regex character
     delim <- escapeRegex(delim)
     str <- escapeRegex(str)
@@ -207,14 +257,15 @@ buildDelimRegex <- function (str, delim){
         "^", str, delim, "|",
         delim, str, delim, "|",
         delim, str, "$", "|",
-        "^", str, "$")
+        "^", str, "$"
+    )
     return(regex)
 }
 
 
 #' @rdname makeArray
 #' @export
-deriveArray <- function (subvariables, name, selections, ...) {
+deriveArray <- function(subvariables, name, selections, ...) {
     ## Get subvariable URLs
     if (is.dataset(subvariables)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
@@ -223,18 +274,21 @@ deriveArray <- function (subvariables, name, selections, ...) {
     subvariables <- urls(subvariables)
 
     subvarids <- as.character(seq_along(subvariables))
-    derivation <- zfunc("array", zfunc("select",
-        list(map=structure(lapply(subvariables, function (x) list(variable=x)),
-            .Names=subvarids)),
-        list(value=I(subvarids))))
+    derivation <- zfunc("array", zfunc(
+        "select",
+        list(map = structure(lapply(subvariables, function(x) list(variable = x)),
+            .Names = subvarids
+        )),
+        list(value = I(subvarids))
+    ))
 
     if (!missing(selections)) {
         # if there are selections, wrap the array function inside of a
         # select_categories function
-        derivation <- zfunc("select_categories", derivation, list(value=I(selections)))
+        derivation <- zfunc("select_categories", derivation, list(value = I(selections)))
     }
 
-    return(VariableDefinition(derivation=derivation, name=name, ...))
+    return(VariableDefinition(derivation = derivation, name = name, ...))
 }
 
 #' Rearrange array subvariables
@@ -259,31 +313,35 @@ deriveArray <- function (subvariables, name, selections, ...) {
 #' ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix=", rearranged"))
 #' }
 #' @export
-flipArrays <- function (variables, suffix=", flipped") {
+flipArrays <- function(variables, suffix = ", flipped") {
     ## TODO: validate that all variables are arrays
     ## TODO: validate that they have the same categories? or too rigid?
     ## Get the subvariable catalogs
     if (is.dataset(variables)) {
-       variables <- allVariables(variables)
+        variables <- allVariables(variables)
     }
     if (inherits(variables, "VariableCatalog")) {
         ## This feels wrong.
-        variables <- lapply(urls(variables),
-            function (u) CrunchVariable(variables[[u]]))
+        variables <- lapply(
+            urls(variables),
+            function(u) CrunchVariable(variables[[u]])
+        )
     }
     varnames <- vapply(variables, name, character(1))
     subs <- lapply(variables, subvariables)
     subnames <- lapply(subs, names)
     allnames <- unique(unlist(subnames))
-    with(temp.option(crunch.namekey.array="name"), {
-       ## Use this option so we can extract subvariables by name
-       newvars <- lapply(allnames, function (n) {
-           has_this_variable <- vapply(subnames, function (x) n %in% x, logical(1))
-           vars <- lapply(variables[has_this_variable], function (x) x[[n]])
-           deriveArray(subvariables=vars,
-               name=paste0(n, suffix),
-               subreferences=lapply(varnames[has_this_variable], function (x) list(name=x)))
-           })
+    with(temp.option(crunch.namekey.array = "name"), {
+        ## Use this option so we can extract subvariables by name
+        newvars <- lapply(allnames, function(n) {
+            has_this_variable <- vapply(subnames, function(x) n %in% x, logical(1))
+            vars <- lapply(variables[has_this_variable], function(x) x[[n]])
+            deriveArray(
+                subvariables = vars,
+                name = paste0(n, suffix),
+                subreferences = lapply(varnames[has_this_variable], function(x) list(name = x))
+            )
+        })
     })
 
     ## Return the list of derivations. Can then pass that to addVariables

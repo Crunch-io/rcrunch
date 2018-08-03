@@ -1,7 +1,7 @@
 ## Temporary methods to allow a folder-like interface to dataset organization
 ## via the existing projects/id/datasets/order/ API
 
-mv.project <- function (x, move_this, path) {
+mv.project <- function(x, move_this, path) {
     dscat <- datasets(x)
     ord <- ordering(dscat)
 
@@ -28,24 +28,26 @@ mv.project <- function (x, move_this, path) {
 
     ord <- .ensure.group.path(ord, path)
     entities(ord[[path]]) <- c(setdiff_entities(entities(ord[[path]]), move_this), move_this)
-    with(temp.option(crunch.already.shown.ds.order.msg=TRUE),
+    with(
+        temp.option(crunch.already.shown.ds.order.msg = TRUE),
         ordering(dscat) <- ord
     )
     return(x)
 }
 
-mkdir.project <- function (x, path) {
-    with(temp.option(crunch.already.shown.ds.order.msg=TRUE),
+mkdir.project <- function(x, path) {
+    with(
+        temp.option(crunch.already.shown.ds.order.msg = TRUE),
         ordering(x) <- .ensure.group.path(ordering(x), path)
     )
     return(x)
 }
 
-.ensure.group.path <- function (ord, path) {
+.ensure.group.path <- function(ord, path) {
     ## This ensures that "path" exists as a DatasetGroup in ord
     ## It makes no API requests to update the server
     path <- parseFolderPath(path)
-    fun <- function (x, path) {
+    fun <- function(x, path) {
         ## Recursive function for internal use
         if (!(path[1] %in% names(x))) {
             x[[path[1]]] <- list()
@@ -68,23 +70,26 @@ mkdir.project <- function (x, path) {
     # .setNestedGroupByName(ord, i=path, value=list())
 }
 
-rmdir.project <- function (x, path) {
+rmdir.project <- function(x, path) {
     to_rm <- ordering(x)[[path]]
     if (is.null(to_rm)) {
         ## Great, it already doesn't exist.
         return(x)
     } else if (length(entities(to_rm))) {
-        halt("Cannot remove '", path, "' because it is not empty. ",
-            "Move its contents somewhere else and then retry.")
+        halt(
+            "Cannot remove '", path, "' because it is not empty. ",
+            "Move its contents somewhere else and then retry."
+        )
     }
-    with(temp.option(crunch.already.shown.ds.order.msg=TRUE),
+    with(
+        temp.option(crunch.already.shown.ds.order.msg = TRUE),
         ordering(x)[[path]] <- NULL
     )
 }
 
 ## cd.project could return structure(group, path=path, order_url) and then mv/mkdir/setOrder could know what object to update. if we need setOrder
 
-datasetURLFromPath <- function (path) {
+datasetURLFromPath <- function(path) {
     ## Given a /path/to/a/dataset, return that dataset's URL
     path <- parseFolderPath(path)
     ## First, pop off the dataset name as the last segment

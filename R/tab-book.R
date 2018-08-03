@@ -35,12 +35,12 @@
 #' }
 #' @importFrom jsonlite fromJSON
 #' @export
-tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
-                    format=c("json", "xlsx"), file, ...) {
+tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
+                    format = c("json", "xlsx"), file, ...) {
     f <- match.arg(format)
     accept <- list(
-        json="application/json",
-        xlsx="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        json = "application/json",
+        xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )[[f]]
     if (missing(file)) {
         if (f == "json") {
@@ -48,7 +48,7 @@ tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
             file <- NULL
         } else {
             ## Generate a reasonable filename in the current working dir
-            file <- paste(name(multitable), f, sep=".")
+            file <- paste(name(multitable), f, sep = ".")
         }
     }
 
@@ -56,24 +56,26 @@ tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
         weight <- self(weight)
     }
     body <- list(
-        filter=zcl(activeFilter(dataset)),
-        weight=weight,
-        options=list(...)
+        filter = zcl(activeFilter(dataset)),
+        weight = weight,
+        options = list(...)
     )
     ## Add this after so that if it is NULL, the "where" key isn't present
     body$where <- variablesFilter(dataset)
 
     tabbook_url <- shojiURL(multitable, "views", "tabbook")
     ## POST the query, which (after progress polling) returns a URL to download
-    result <- crPOST(tabbook_url, config=add_headers(`Accept`=accept),
-        body=toJSON(body))
+    result <- crPOST(tabbook_url,
+        config = add_headers(`Accept` = accept),
+        body = toJSON(body)
+    )
     if (is.null(file)) {
         ## Read in the tab book content and turn it into useful objects
         out <- retry(crGET(result))
         if (is.raw(out)) {
             ## TODO: fix the content-type header from the server
             ## See https://www.pivotaltracker.com/story/show/148554039
-            out <- fromJSON(rawToChar(out), simplifyVector=FALSE)
+            out <- fromJSON(rawToChar(out), simplifyVector = FALSE)
         }
         return(TabBookResult(out))
     } else {
@@ -93,7 +95,7 @@ tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
 #' @name tabbook-methods
 NULL
 
-setMethod("initialize", "TabBookResult", function (.Object, ...) {
+setMethod("initialize", "TabBookResult", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object$sheets <- lapply(.Object$sheets, MultitableResult)
     return(.Object)
@@ -101,63 +103,65 @@ setMethod("initialize", "TabBookResult", function (.Object, ...) {
 
 #' @rdname tabbook-methods
 #' @export
-setMethod("length", "TabBookResult", function (x) length(x$sheets))
+setMethod("length", "TabBookResult", function(x) length(x$sheets))
 #' @rdname tabbook-methods
 #' @export
-setMethod("[[", c("TabBookResult", "numeric"), function (x, i, ...) {
+setMethod("[[", c("TabBookResult", "numeric"), function(x, i, ...) {
     x$sheets[[i]]
 })
 #' @rdname tabbook-methods
 #' @export
-setMethod("[[", c("TabBookResult", "character"), function (x, i, ...) {
+setMethod("[[", c("TabBookResult", "character"), function(x, i, ...) {
     x$sheets[[match(i, names(x))]]
 })
 
 #' @rdname tabbook-methods
 #' @export
-setMethod("dim", "TabBookResult", function (x) {
+setMethod("dim", "TabBookResult", function(x) {
     nrows <- length(x)
     ncols <- ifelse(nrows, length(x[[1]]), 0L)
     return(c(nrows, ncols))
 })
 #' @rdname tabbook-methods
 #' @export
-setMethod("names", "TabBookResult", function (x) {
-    unlist(lapply(x$meta$sheets, function (sheet) sheet$name))
+setMethod("names", "TabBookResult", function(x) {
+    unlist(lapply(x$meta$sheets, function(sheet) sheet$name))
 })
 #' @rdname tabbook-methods
 #' @export
-setMethod("aliases", "TabBookResult", function (x) {
-    unlist(lapply(x, function (mt) aliases(mt[[1]])[1]), use.names=FALSE)
+setMethod("aliases", "TabBookResult", function(x) {
+    unlist(lapply(x, function(mt) aliases(mt[[1]])[1]), use.names = FALSE)
 })
 #' @rdname tabbook-methods
 #' @export
-setMethod("descriptions", "TabBookResult", function (x) {
-    unlist(lapply(x, function (mt) descriptions(mt[[1]])[1]), use.names=FALSE)
+setMethod("descriptions", "TabBookResult", function(x) {
+    unlist(lapply(x, function(mt) descriptions(mt[[1]])[1]), use.names = FALSE)
 })
 
-setMethod("lapply", "TabBookResult", function (X, FUN, ...) {
+setMethod("lapply", "TabBookResult", function(X, FUN, ...) {
     lapply(X$sheets, FUN, ...)
 })
 
-setMethod("initialize", "MultitableResult", function (.Object, ...) {
+setMethod("initialize", "MultitableResult", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     ## The first cube in the results list is the "total" column. It's a 1-D
     ## cube, add a second "dimension" so that it appears to be 2-D, n x 1
-    .Object$result[[1]]$result$dimensions <- c(.Object$result[[1]]$result$dimensions,
+    .Object$result[[1]]$result$dimensions <- c(
+        .Object$result[[1]]$result$dimensions,
         list(list(
-            type=list(
-                class="enum",
-                elements=list(
-                    list(id=0, value="", missing=FALSE)
+            type = list(
+                class = "enum",
+                elements = list(
+                    list(id = 0, value = "", missing = FALSE)
                 )
             ),
-            references=list(
-                alias="total",
-                name="Total"
+            references = list(
+                alias = "total",
+                name = "Total"
             )
-        )))
-    .Object$result <- lapply(.Object$result, function (cube) {
+        ))
+    )
+    .Object$result <- lapply(.Object$result, function(cube) {
         cube <- CrunchCube(cube)
         ## TODO: refactor with CrunchCubep-native methods (eg, dimensions<-, aperm)
         if (length(dim(cube)) == 3L) {
@@ -168,19 +172,19 @@ setMethod("initialize", "MultitableResult", function (.Object, ...) {
                 ## the selected dimension is in the second half of the cube, so
                 ## the MR is in the multitable
                 cube@dims <- CubeDims(cube@dims[c(2, 3, 4, 1)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 4, 1))
+                cube@arrays <- lapply(cube@arrays, aperm, perm = c(2, 3, 4, 1))
             } else if (any(which(selecteds) %in% c(1, 2))) {
                 ## the selected dimension is in the first half of the cube, so
                 ## the array is in the multitable
                 cube@dims <- CubeDims(cube@dims[c(4, 3, 1, 2)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm=c(4, 3, 1, 2))
+                cube@arrays <- lapply(cube@arrays, aperm, perm = c(4, 3, 1, 2))
             } else {
                 ## If cubes are 3D (categorical array x multitable), aperm the
                 ## cubes so that column is multitable var (3 -> 2), row is
                 ## category of array (2 -> 1), subvar is "tab" (1 -> 3)
                 ## TODO: check if it is cat by multitable catarray?
                 cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 1))
+                cube@arrays <- lapply(cube@arrays, aperm, perm = c(2, 3, 1))
             }
         }
         return(cube)
@@ -190,63 +194,63 @@ setMethod("initialize", "MultitableResult", function (.Object, ...) {
 })
 #' @rdname tabbook-methods
 #' @export
-setMethod("length", "MultitableResult", function (x) length(x$result))
+setMethod("length", "MultitableResult", function(x) length(x$result))
 #' @rdname tabbook-methods
 #' @export
-setMethod("[[", "MultitableResult", function (x, i, ...) {
+setMethod("[[", "MultitableResult", function(x, i, ...) {
     x$result[[i]]
 })
-setMethod("lapply", "MultitableResult", function (X, FUN, ...) {
+setMethod("lapply", "MultitableResult", function(X, FUN, ...) {
     lapply(X$result, FUN, ...)
 })
 #' @rdname tabbook-methods
 #' @export
-setMethod("names", "MultitableResult", function (x) {
-    unlist(lapply(x, function (cube) names(cube)[2]), use.names=FALSE)
+setMethod("names", "MultitableResult", function(x) {
+    unlist(lapply(x, function(cube) names(cube)[2]), use.names = FALSE)
 })
 #' @rdname tabbook-methods
 #' @export
-setMethod("aliases", "MultitableResult", function (x) {
-    unlist(lapply(x, function (cube) aliases(cube)[2]), use.names=FALSE)
+setMethod("aliases", "MultitableResult", function(x) {
+    unlist(lapply(x, function(cube) aliases(cube)[2]), use.names = FALSE)
 })
 #' @rdname tabbook-methods
 #' @export
-setMethod("descriptions", "MultitableResult", function (x) {
-    unlist(lapply(x, function (cube) descriptions(cube)[2]), use.names=FALSE)
+setMethod("descriptions", "MultitableResult", function(x) {
+    unlist(lapply(x, function(cube) descriptions(cube)[2]), use.names = FALSE)
 })
 
 #' @rdname show-crunch
 #' @export
-setMethod("show", "MultitableResult", function (object) {
+setMethod("show", "MultitableResult", function(object) {
     show(do.call("cbind", lapply(object, cubeToArray)))
 })
 
 #' @export
-as.array.TabBookResult <- function (x, ...) lapply(x, as.array)
+as.array.TabBookResult <- function(x, ...) lapply(x, as.array)
 
 #' @export
-as.array.MultitableResult <- function (x, ...) lapply(x, as.array)
+as.array.MultitableResult <- function(x, ...) lapply(x, as.array)
 
 #' @rdname cube-computing
 #' @export
-setMethod("prop.table", "MultitableResult", function (x, margin=NULL) {
-    lapply(x, prop.table, margin=margin)
+setMethod("prop.table", "MultitableResult", function(x, margin = NULL) {
+    lapply(x, prop.table, margin = margin)
 })
 
 #' @rdname cube-computing
 #' @export
-setMethod("prop.table", "TabBookResult", function (x, margin=NULL) {
-    lapply(x, prop.table, margin=margin)
+setMethod("prop.table", "TabBookResult", function(x, margin = NULL) {
+    lapply(x, prop.table, margin = margin)
 })
 
 #' @rdname cube-computing
 #' @export
-setMethod("bases", "TabBookResult", function (x, margin=NULL) {
-    lapply(x, bases, margin=margin)
+setMethod("bases", "TabBookResult", function(x, margin = NULL) {
+    lapply(x, bases, margin = margin)
 })
 
 #' @rdname cube-computing
 #' @export
-setMethod("bases", "MultitableResult", function (x, margin=NULL) {
-    lapply(x, bases, margin=margin)
+setMethod("bases", "MultitableResult", function(x, margin = NULL) {
+    lapply(x, bases, margin = margin)
 })

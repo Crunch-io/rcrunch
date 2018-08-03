@@ -14,13 +14,13 @@ NULL
 
 #' @rdname filter-catalog
 #' @export
-setMethod("filters", "CrunchDataset", function (x) {
+setMethod("filters", "CrunchDataset", function(x) {
     FilterCatalog(crGET(shojiURL(x, "catalogs", "filters")))
 })
 
 #' @rdname filter-catalog
 #' @export
-setMethod("filters<-", "CrunchDataset", function (x, value) x)
+setMethod("filters<-", "CrunchDataset", function(x, value) x)
 
 #' View and modify "public" attribute
 #'
@@ -39,37 +39,40 @@ NULL
 
 #' @rdname is-public
 #' @export
-setMethod("is.public", "CrunchFilter", function (x) x@body$is_public)
+setMethod("is.public", "CrunchFilter", function(x) x@body$is_public)
 
 #' @rdname is-public
 #' @export
-setMethod("is.public<-", "CrunchFilter", function (x, value) {
+setMethod("is.public<-", "CrunchFilter", function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
     setEntitySlot(x, "is_public", value)
 })
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("FilterCatalog", "numeric"), function (x, i, ...) {
+setMethod("[[", c("FilterCatalog", "numeric"), function(x, i, ...) {
     getEntity(x, i, CrunchFilter, ...)
 })
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"),
+    function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (i %in% names(x)) {
             crPATCH(urls(x)[match(i, names(x))],
-                body=toJSON(list(expression=zcl(value))))
+                body = toJSON(list(expression = zcl(value)))
+            )
             ## Editing expression doesn't require invalidating the catalog
             return(x)
         } else {
             ## Creating a new filter
-            f <- .newFilter(i, value, catalog_url=self(x))
+            f <- .newFilter(i, value, catalog_url = self(x))
             return(refresh(x))
         }
-    })
+    }
+)
 
 #' Create a new filter
 #'
@@ -85,7 +88,7 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"
 #' @param ... Additional filter attributes to set, such as `is_public`.
 #' @return A `CrunchFilter` object.
 #' @export
-newFilter <- function (name, expression, catalog=NULL, ...) {
+newFilter <- function(name, expression, catalog = NULL, ...) {
     if (is.null(catalog)) {
         obj <- ShojiEntity(crGET(datasetReference(expression)))
         catalog_url <- shojiURL(obj, "catalogs", "filters")
@@ -94,38 +97,46 @@ newFilter <- function (name, expression, catalog=NULL, ...) {
     } else if (inherits(catalog, "FilterCatalog")) {
         catalog_url <- self(catalog)
     } else {
-        halt("Cannot create a filter entity on an object of class ",
-            class(catalog))
+        halt(
+            "Cannot create a filter entity on an object of class ",
+            class(catalog)
+        )
     }
     u <- .newFilter(name, expression, catalog_url, ...)
     invisible(CrunchFilter(crGET(u)))
 }
 
 ## Internal function to do the POSTing, both in [[ and in newFilter
-.newFilter <- function (name, expression, catalog_url, ...) {
-    crPOST(catalog_url, body=toJSON(list(name=name,
-        expression=zcl(expression), ...)))
+.newFilter <- function(name, expression, catalog_url, ...) {
+    crPOST(catalog_url, body = toJSON(list(
+        name = name,
+        expression = zcl(expression), ...
+    )))
 }
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
+    function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (i %in% seq_along(urls(x))) {
             crPATCH(urls(x)[i],
-                body=toJSON(list(expression=zcl(value))))
+                body = toJSON(list(expression = zcl(value)))
+            )
             ## Editing expression doesn't require invalidating the catalog
             return(x)
         } else {
             halt("Subscript out of bounds: ", i)
         }
-    })
+    }
+)
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
+    function(x, i, j, value) {
         if (i %in% names(x)) {
             ## Assume server update of the entity already happened in a
             ## separate request. So just refresh.
@@ -135,12 +146,14 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
             ## (only comes from extracting from catalog)
             halt("Unsupported")
         }
-    })
+    }
+)
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
+    function(x, i, j, value) {
         if (i %in% seq_len(length(x))) {
             ## See above.
             ## Assume server update of the entity already happened in a
@@ -151,21 +164,24 @@ setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
             ## (only comes from extracting from catalog)
             halt("Unsupported")
         }
-    })
+    }
+)
 
-setMethod("appliedFilters", "CrunchDataset", function (x) {
+setMethod("appliedFilters", "CrunchDataset", function(x) {
     out <- ShojiOrder(crGET(shojiURL(x, "views", "applied_filters")))
     return(out@graph)
 })
 
-setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
-    function (x, value) {
-        b <- list(graph=I(list(self(value))))
-        crPUT(shojiURL(x, "views", "applied_filters"), body=toJSON(b))
+setMethod(
+    "appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
+    function(x, value) {
+        b <- list(graph = I(list(self(value))))
+        crPUT(shojiURL(x, "views", "applied_filters"), body = toJSON(b))
         return(x)
-    })
+    }
+)
 
-.getActiveFilter <- function (x) {
+.getActiveFilter <- function(x) {
     f <- expr <- x@filter
     if (inherits(f, "CrunchLogicalExpr")) {
         ## To check for an empty filter expression, get the @expression
@@ -173,8 +189,10 @@ setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
         expr <- f@expression
     } else {
         ## Pretend that the filter of a CrunchExpr can be CrunchLogicalExpr
-        f <- CrunchLogicalExpr(expression=expr,
-            dataset_url=datasetReference(x) %||% "")
+        f <- CrunchLogicalExpr(
+            expression = expr,
+            dataset_url = datasetReference(x) %||% ""
+        )
     }
     if (!length(expr)) {
         ## No active filter. Return NULL
@@ -183,10 +201,12 @@ setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
     return(f)
 }
 
-.setActiveFilter <- function (x, value) {
+.setActiveFilter <- function(x, value) {
     if (!inherits(value, "CrunchLogicalExpr")) {
-        value <- CrunchLogicalExpr(expression=value %||% list(),
-            dataset_url=datasetReference(x) %||% "")
+        value <- CrunchLogicalExpr(
+            expression = value %||% list(),
+            dataset_url = datasetReference(x) %||% ""
+        )
     }
     x@filter <- value
     return(x)
@@ -202,7 +222,7 @@ setMethod("activeFilter", "Subvariables", .getActiveFilter)
 setMethod("activeFilter<-", "Subvariables", .setActiveFilter)
 
 setMethod("activeFilter", "CrunchExpr", .getActiveFilter)
-setMethod("activeFilter<-", "CrunchExpr", function (x, value) {
+setMethod("activeFilter<-", "CrunchExpr", function(x, value) {
     ## CrunchExpr @filter can't be CrunchLogicalExpr bc of cyclical deps
     ## so it's the @expression of that (list)
     if (is.null(value)) {
@@ -214,7 +234,7 @@ setMethod("activeFilter<-", "CrunchExpr", function (x, value) {
     return(x)
 })
 
-setMethod("activeFilter", "list", function (x) NULL)
+setMethod("activeFilter", "list", function(x) NULL)
 
 
 ## See dataset-extract.R for .updateActiveFilter
@@ -238,7 +258,7 @@ setMethod("activeFilter", "list", function (x) NULL)
 #' @return \code{exclusion} returns a \code{CrunchFilter} if there is one,
 #' else \code{NULL}. The setter returns \code{x} with the filter set.
 #' @export
-exclusion <- function (x) {
+exclusion <- function(x) {
     stopifnot(is.dataset(x))
     ef <- crGET(shojiURL(x, "fragment", "exclusion"))
     e <- ef$body$expression
@@ -247,21 +267,23 @@ exclusion <- function (x) {
         ## Server is returning variable IDs. Make them into URLs
         ## TODO: remove this
         e <- idsToURLs(e, variableCatalogURL(x))
-        return(CrunchLogicalExpr(expression=e, dataset_url=self(x)))
+        return(CrunchLogicalExpr(expression = e, dataset_url = self(x)))
     } else {
         return(NULL)
     }
 }
 
-idsToURLs <- function (expr, base_url) {
+idsToURLs <- function(expr, base_url) {
     ## Recurse, looking for every variable: id and make it variable: url
     if (is.list(expr)) {
         if (length(expr) == 1 &&
             identical(names(expr), "variable") &&
             !endsWith(expr[["variable"]], "/")) {
             ## This is a variable ref that is an id. Absolutize.
-            expr[["variable"]] <- absoluteURL(paste0("./", expr, "/"),
-                base_url)
+            expr[["variable"]] <- absoluteURL(
+                paste0("./", expr, "/"),
+                base_url
+            )
             return(expr)
         } else {
             ## Recurse.
@@ -274,30 +296,37 @@ idsToURLs <- function (expr, base_url) {
 
 #' @rdname exclusion
 #' @export
-`exclusion<-` <- function (x, value) {
+`exclusion<-` <- function(x, value) {
     stopifnot(is.dataset(x))
     if (inherits(value, "CrunchLogicalExpr")) {
         payload <- zcl(value)
     } else if (is.null(value)) {
         payload <- emptyObject()
     } else {
-        halt(dQuote("value"), " must be a CrunchLogicalExpr or NULL, not ",
-            dQuote(class(value)))
+        halt(
+            dQuote("value"), " must be a CrunchLogicalExpr or NULL, not ",
+            dQuote(class(value))
+        )
     }
     crPATCH(shojiURL(x, "fragment", "exclusion"),
-        body=toJSON(list(expression=payload)))
+        body = toJSON(list(expression = payload))
+    )
     dropCache(self(x))
     return(x)
 }
 
-setMethod("expr", "CrunchFilter",
-    function (x) {
+setMethod(
+    "expr", "CrunchFilter",
+    function(x) {
         ## TODO: remove this when server sends URLs instead of ids
-        e <- idsToURLs(x@body$expression,
-            absoluteURL("../../variables/", self(x)))
+        e <- idsToURLs(
+            x@body$expression,
+            absoluteURL("../../variables/", self(x))
+        )
         if (length(e)) {
-            return(CrunchLogicalExpr(expression=e))
+            return(CrunchLogicalExpr(expression = e))
         } else {
             return(NULL)
         }
-    })
+    }
+)

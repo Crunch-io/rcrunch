@@ -9,8 +9,10 @@ with_mock_crunch({
             paste(
                 "[+] Group 1",
                 "    ECON.sav",
-                sep="\n"),
-            fixed=TRUE)
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
 
     test_that("mkdir with dataset order", {
@@ -98,7 +100,8 @@ with_mock_crunch({
         expect_error(
             proj %>%
                 mv("NOT A GROUP", "Group 2"),
-            "Undefined groups selected: NOT A GROUP")
+            "Undefined groups selected: NOT A GROUP"
+        )
     })
 
     test_that("rmdir if the dir is empty", {
@@ -124,9 +127,9 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds1 <- createDataset(name="One")
-    ds2 <- createDataset(name="Two")
-    proj <- newProject(name=now())
+    ds1 <- createDataset(name = "One")
+    ds2 <- createDataset(name = "Two")
+    proj <- newProject(name = now())
 
     proj %>%
         mv(ds1, "/")
@@ -141,14 +144,15 @@ with_test_authentication({
     test_that("Can move datasets into a project in a folder", {
         expect_true(setequal(urls(datasets(proj)), c(self(ds1), self(ds2))))
         expect_true(setequal(urls(ordering(proj)), c(self(ds1), self(ds2))))
-        expect_prints(ordering(proj),
+        expect_prints(
+            ordering(proj),
             paste(
                 "One",
                 "[+] A group",
                 "    [+] Within another",
                 "        (Empty group)",
                 "    Two",
-                sep="\n"
+                sep = "\n"
             )
         )
     })

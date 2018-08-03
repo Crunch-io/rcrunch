@@ -3,12 +3,16 @@ context("Retrieving dataset list and single datasets")
 with_mock_crunch({
     cr <- session()
     test_that("listDatasets lists", {
-        expect_identical(listDatasets(), c("ECON.sav", "streaming no messages",
-                                           "streaming test ds", "test ds"))
+        expect_identical(listDatasets(), c(
+            "ECON.sav", "streaming no messages",
+            "streaming test ds", "test ds"
+        ))
         expect_identical(listDatasets("archived"), "an archived dataset")
-        expect_identical(listDatasets("all"), c("ECON.sav", "an archived dataset",
-                                                "streaming no messages",
-                                                "streaming test ds",  "test ds"))
+        expect_identical(listDatasets("all"), c(
+            "ECON.sav", "an archived dataset",
+            "streaming no messages",
+            "streaming test ds", "test ds"
+        ))
     })
 
     test_that("loadDataset loads", {
@@ -20,8 +24,10 @@ with_mock_crunch({
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
         expect_error(loadDataset(666), "subscript out of bounds")
-        expect_error(loadDataset("not a dataset"),
-            paste(dQuote("not a dataset"), "not found"))
+        expect_error(
+            loadDataset("not a dataset"),
+            paste(dQuote("not a dataset"), "not found")
+        )
     })
 
     test_that("loadDataset loads with DatasetTuple", {
@@ -41,8 +47,10 @@ with_mock_crunch({
     test_that("loadDataset by URL when not in main catalog", {
         ds2 <- loadDataset("https://app.crunch.io/api/datasets/four/")
         expect_is(ds2, "CrunchDataset")
-        expect_identical(self(ds2),
-            "https://app.crunch.io/api/datasets/four/")
+        expect_identical(
+            self(ds2),
+            "https://app.crunch.io/api/datasets/four/"
+        )
         expect_identical(name(ds2), "mtcars from R")
     })
 
@@ -75,10 +83,14 @@ with_mock_crunch({
     })
 
     test_that("deleteDataset error handling", {
-        expect_error(deleteDataset("this is totally not a dataset",
-            paste(dQuote("this is totally not a dataset"), "not found")))
-        expect_error(deleteDataset(9999),
-            "subscript out of bounds")
+        expect_error(deleteDataset(
+            "this is totally not a dataset",
+            paste(dQuote("this is totally not a dataset"), "not found")
+        ))
+        expect_error(
+            deleteDataset(9999),
+            "subscript out of bounds"
+        )
         expect_error(deleteDataset(ds), "Must confirm")
     })
 })
@@ -97,7 +109,7 @@ with_test_authentication({
         dsname <- name(ds)
         test_that("Dataset list can be retrieved if authenticated", {
             expect_true(is.character(listDatasets()))
-            expect_true(length(listDatasets())>0)
+            expect_true(length(listDatasets()) > 0)
             expect_true(is.character(dsname))
             expect_true(nchar(dsname) > 0)
             expect_true(dsname %in% listDatasets())

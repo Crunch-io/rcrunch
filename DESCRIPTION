@@ -7,12 +7,12 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.22.3
+Version: 1.23.1
 Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jon.keane@crunch.io"),
     person("Gordon", "Shotwell", role="aut", email="gordon@crunch.io"))
-URL: http://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
+URL: https://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
 Depends:
@@ -25,20 +25,21 @@ Imports:
     httpcache (>= 0.1.4),
     jsonlite (>= 0.9.15),
     methods
-Remotes:
-    nealrichardson/httptest
 Suggests:
     covr,
+    crunchy,
     devtools,
     haven,
     httptest (>= 3.0.0),
     knitr,
+    lintr, 
     magrittr,
     miniUI,
     rmarkdown,
     rstudioapi,
     shiny,
     spelling,
+    styler,
     testthat (>= 2.0.0),
     withr
 VignetteBuilder: knitr
@@ -79,6 +80,7 @@ Collate:
     'crunch-data-frame.R'
     'crunch.R'
     'crunchbox.R'
+    'cube-collapse-dimensions.R'
     'cube-dims.R'
     'cube-index-table.R'
     'cube-query.R'

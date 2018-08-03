@@ -1,8 +1,8 @@
 # Setup is executed when tests are run, but not when loadall is run
 
 # find a file that is either in the package root or inst folders while testing
-find_file <- function (file_name) {
-    pth <- system.file(file_name, package="crunch")
+find_file <- function(file_name) {
+    pth <- system.file(file_name, package = "crunch")
     if (nchar(pth)) {
         return(pth)
     }

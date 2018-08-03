@@ -180,8 +180,7 @@
                 "weight": {
                     "type": "numeric",
                     "name": "Weight",
-                    "alias": "weight",
-                    "discarded": true
+                    "alias": "weight"
                 },
                 "stringid": {
                     "name": "Person ID",
@@ -237,10 +236,10 @@
                 "caseid": {
                     "type": "numeric",
                     "name": "Case ID",
-                    "alias": "caseid",
-                    "discarded": true
+                    "alias": "caseid"
                 }
             },
+            "hidden": ["weight", "caseid"],
             "order": [
                 {
                     "group": "Key Pet Indicators",
@@ -274,7 +273,6 @@
                         "wave"
                     ]
                 },
-                "weight",
                 "stringid"
             ]
         }

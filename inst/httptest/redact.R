@@ -1,4 +1,4 @@
-function (response) {
+function(response) {
     ## Remove multipart form fields because POST sources/ sends a tmpfile path
     ## that's different every time, so the request will never match.
     response$request$fields <- NULL
@@ -9,6 +9,8 @@ function (response) {
     response %>%
         redact_auth() %>%
         gsub_response("([0-9a-f]{6})[0-9a-f]{26}", "\\1") %>% ## Prune UUIDs
-        gsub_response("https.//app.crunch.io/api/progress/.*?/",
-            "https://app.crunch.io/api/progress/")
+        gsub_response(
+            "https.//app.crunch.io/api/progress/.*?/",
+            "https://app.crunch.io/api/progress/"
+        )
 }

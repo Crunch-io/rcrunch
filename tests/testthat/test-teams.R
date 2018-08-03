@@ -65,8 +65,10 @@ with_test_authentication({
         expect_true(name.of.team2 %in% names(t2))
         expect_true(length(t2) == nteams.2 + 1L)
 
-        expect_error(delete(t2[[name.of.team2]]),
-            "Must confirm deleting team")
+        expect_error(
+            delete(t2[[name.of.team2]]),
+            "Must confirm deleting team"
+        )
         expect_true(name.of.team2 %in% names(t2))
         expect_true(length(t2) == nteams.2 + 1L)
 
@@ -82,7 +84,7 @@ with_test_authentication({
         name.of.team2 <- now()
         expect_false(name.of.team2 %in% names(t2))
         u <- testUser()
-        t2[[name.of.team2]] <- list(members=email(u))
+        t2[[name.of.team2]] <- list(members = email(u))
         expect_true(name.of.team2 %in% names(t2))
         expect_true(length(t2) == nteams.2 + 1L)
         this.team <- t2[[name.of.team2]]

@@ -1,18 +1,22 @@
 #' @importFrom crayon col_nchar has_style col_align
-prettyPrint2d <- function (array, row_styles = NULL, col_styles = NULL) {
+prettyPrint2d <- function(array, row_styles = NULL, col_styles = NULL) {
     # TODO: warn if bold is used, since it messes up alignment?
 
     # if the array is [n,1], enforce that explicitly:
     if (length(dim(array)) == 1) {
-        array <- array(array, dim = c(length(array), 1),
-                     dimnames = c(dimnames(array), NULL))
+        array <- array(array,
+            dim = c(length(array), 1),
+            dimnames = c(dimnames(array), NULL)
+        )
     }
 
     if (!is.null(row_styles) && length(row_styles) != nrow(array)) {
-        halt("The number of row styles doesn't match the number of rows")
+        row_styles <- NULL
+        warning("The number of row styles doesn't match the number of rows")
     }
     if (!is.null(col_styles) && length(col_styles) != ncol(array)) {
-        halt("The number of column styles doesn't match the number of columns")
+        col_styles <- NULL
+        warning("The number of column styles doesn't match the number of columns")
     }
 
     # calculate column widths including headers, calculate column var title
@@ -23,8 +27,9 @@ prettyPrint2d <- function (array, row_styles = NULL, col_styles = NULL) {
     col_names <- col_nchar(colnames(array) %||% "")
     col_header_width <- max(col_names, na.rm = TRUE)
     col_widths <- pmax(col_widths, col_header_width,
-                       c(col_var_name_width, rep(0, length(col_header_width)-1)),
-                         na.rm = TRUE)
+        c(col_var_name_width, rep(0, length(col_header_width) - 1)),
+        na.rm = TRUE
+    )
     col_var_name_padded <- col_align(col_var_name, col_widths[1], align = "left")
 
 
@@ -34,10 +39,13 @@ prettyPrint2d <- function (array, row_styles = NULL, col_styles = NULL) {
     row_var_name_padded <- col_align(row_var_name, row_header_width, align = "left")
 
     # format rows (before styling)
-    cell_widths <- matrix(col_widths, nrow = nrow(array),
-                          ncol = ncol(array), byrow = TRUE)
+    cell_widths <- matrix(col_widths,
+        nrow = nrow(array),
+        ncol = ncol(array), byrow = TRUE
+    )
     padded_array <- array(col_align(array, cell_widths, align = "right"),
-                        dim = dim(array), dimnames = dimnames(array))
+        dim = dim(array), dimnames = dimnames(array)
+    )
 
     ### style columns
     # make headers
@@ -45,7 +53,7 @@ prettyPrint2d <- function (array, row_styles = NULL, col_styles = NULL) {
     for (i in seq_len(ncol(padded_array))) {
         if (!is.null(col_styles[[i]])) {
             # style column
-            padded_array[,i] <- applyStyles(padded_array[,i], col_styles[[i]])
+            padded_array[, i] <- applyStyles(padded_array[, i], col_styles[[i]])
             # style header
             col_heads[i] <- applyStyles(col_heads[i], col_styles[[i]])
         }
@@ -57,27 +65,27 @@ prettyPrint2d <- function (array, row_styles = NULL, col_styles = NULL) {
     ### style rows
     # TODO: left align headers?
     row_heads <- col_align(rownames(array), row_header_width, align = "right")
-    rows <- lapply(seq_len(nrow(padded_array)), function (i) {
-            rw <- c(row_heads[i], padded_array[i,])
-            rw <- paste0(rw, collapse = " ")
-            if (!is.null(row_styles[i])) {
-                rw <- applyStyles(rw, row_styles[[i]])
-            }
-            return(rw)
-        })
+    rows <- lapply(seq_len(nrow(padded_array)), function(i) {
+        rw <- c(row_heads[i], padded_array[i, ])
+        rw <- paste0(rw, collapse = " ")
+        if (!is.null(row_styles[i])) {
+            rw <- applyStyles(rw, row_styles[[i]])
+        }
+        return(rw)
+    })
 
     return(c(col_var, col_heads, rows))
 }
 
-pad <- function (n, char = " ") strrep(char, n)
+pad <- function(n, char = " ") strrep(char, n)
 
 # available in a more efficient implementation, with type checking in R>=3.3.0
 # TODO: when it's reasonable / other requirements require R>=3.3.0 switch to R's
 # implementation
-strrep <- function (char, n) paste0(rep(char, n), collapse = "")
+strrep <- function(char, n) paste0(rep(char, n), collapse = "")
 
 # Remove NAs from crayon styled strings
-nonas <- function (string, to_remove = c("NA")) {
+nonas <- function(string, to_remove = c("NA")) {
     for (rm in to_remove) {
         # respect ANSI codes?
         string <- gsub(rm, strrep(" ", nchar(rm)), string)
@@ -107,12 +115,12 @@ applyStyles <- function(string, styles = NULL) {
 
 
 # make styles based on transforms and categories
-transformStyles <- function (trans, cats) {
+transformStyles <- function(trans, cats) {
     # collate categories and instertions
     all_labs <- collateCats(trans$insertions, cats)
 
     # make a list of styles to apply
-    styles <- lapply(all_labs, function (lab) {
+    styles <- lapply(all_labs, function(lab) {
         if (is.Subtotal(lab) | is.SummaryStat(lab)) {
             # if subtotal or a summary stat, use the subtotal style
             return(subtotalStyle)
@@ -129,7 +137,7 @@ transformStyles <- function (trans, cats) {
 headingStyle <- c(nonas, make_style("#546499"), underline) # blue with underline
 subtotalStyle <- c(italic, make_style("#005e46"))
 
-print_tree <- function (x, prefix="", depth=100, current_depth=0) {
+print_tree <- function(x, prefix = "", depth = 100, current_depth = 0) {
     ## Temporary: don't show hidden variables (which soon won't be here at all)
     ## cf active() method in variable-catalog.R
     index(x) <- Filter(Negate(.discardedTuple), index(x))
@@ -137,7 +145,7 @@ print_tree <- function (x, prefix="", depth=100, current_depth=0) {
     len <- length(x)
     what <- types(x)
     these <- colorize_folder_contents(names(x), what)
-    tree <- lapply(seq_len(len), function (i) {
+    tree <- lapply(seq_len(len), function(i) {
         ## Iterate over the indices so we can distinguish the last one, which
         ## gets different treatment
         last <- i == len
@@ -154,11 +162,12 @@ print_tree <- function (x, prefix="", depth=100, current_depth=0) {
             if (depth > current_depth) {
                 ## And if we're not at our max depth, recurse into the folder,
                 ## adding "pass" as our "prefix", and bumping our "current_depth"
-                out <- c(out,
+                out <- c(
+                    out,
                     print_tree(
                         x[[i]],
                         paste0(prefix, pass),
-                        depth=depth,
+                        depth = depth,
                         current_depth + 1
                     )
                 )
@@ -171,15 +180,15 @@ print_tree <- function (x, prefix="", depth=100, current_depth=0) {
 
 #' @rdname show-crunch
 #' @export
-setMethod("show", "ShojiFolder", function (object) {
+setMethod("show", "ShojiFolder", function(object) {
     cat(formatFolderTitle(object), "\n")
     ## Temporary: don't show hidden variables (which soon won't be here at all)
     ## cf active() method in variable-catalog.R
     index(object) <- Filter(Negate(.discardedTuple), index(object))
-    colored_print(names(object), function (x) colorize_folder_contents(x, types(object)))
+    colored_print(names(object), function(x) colorize_folder_contents(x, types(object)))
 })
 
-colored_print <- function (x, styler=force) {
+colored_print <- function(x, styler = force) {
     ## Simulate the print.default method, which doesn't handle crayon right
     len <- length(x)
     ## The header is like "[12345] ". Find its theoretical max width based on
@@ -200,23 +209,23 @@ colored_print <- function (x, styler=force) {
     for (i in seq_len(rows)) {
         start <- 1L + n * (i - 1)
         cat(col_align(paste0("[", start, "] "), header_width, "right"))
-        cat(x[start:min(n * i, len)], sep="")
+        cat(x[start:min(n * i, len)], sep = "")
         cat("\n")
     }
 }
 
 #' @export
-print.ShojiFolder <- function (x, depth=0, verbose=FALSE, pretty=!verbose & depth > 0, ...) {
+print.ShojiFolder <- function(x, depth = 0, verbose = FALSE, pretty = !verbose & depth > 0, ...) {
     if (pretty) {
-        out <- c(formatFolderTitle(x), print_tree(x, depth=depth))
-        cat(out, sep="\n")
+        out <- c(formatFolderTitle(x), print_tree(x, depth = depth))
+        cat(out, sep = "\n")
     } else {
         ## Default: like a vector of names, but with color
         show(x)
     }
 }
 
-formatFolderTitle <- function (folder) {
+formatFolderTitle <- function(folder) {
     sep <- folderDelimiter()
     p <- path(folder)
     if (identical(p, sep)) {
@@ -227,7 +236,7 @@ formatFolderTitle <- function (folder) {
 }
 
 #' @importFrom crayon bold cyan red
-colorize_folder_contents <- function (contents, types) {
+colorize_folder_contents <- function(contents, types) {
     folders <- types %in% "folder"
     contents[folders] <- bold$red(contents[folders])
     arrays <- types %in% c("multiple_response", "categorical_array")

@@ -33,32 +33,36 @@ NULL
 
 #' @rdname SummaryStat
 #' @export
-SummaryStat <- function (name,
-                         stat,
-                         categories = NULL,
-                         position = c("relative", "top", "bottom"),
-                         after = NULL,
-                         includeNA = FALSE) {
+SummaryStat <- function(name,
+                        stat,
+                        categories = NULL,
+                        position = c("relative", "top", "bottom"),
+                        after = NULL,
+                        includeNA = FALSE) {
     # match.args position
     position <- match.arg(position)
     validatePosition(position, after)
 
     if (!(stat %in% names(summaryStatInsertions))) {
-        halt(dQuote(stat), " is not a known summary statistic for insertions. ",
-             "Available stats are: ", serialPaste(names(summaryStatInsertions)))
+        halt(
+            dQuote(stat), " is not a known summary statistic for insertions. ",
+            "Available stats are: ", serialPaste(names(summaryStatInsertions))
+        )
     }
 
-    return(new("SummaryStat", list(name = name,
-                                   stat = stat,
-                                   categories = categories,
-                                   position = position,
-                                   after = after,
-                                   includeNA = includeNA)))
+    return(new("SummaryStat", list(
+        name = name,
+        stat = stat,
+        categories = categories,
+        position = position,
+        after = after,
+        includeNA = includeNA
+    )))
 }
 
 #' @importFrom stats weighted.mean
 # a list of possible summary statistics to use as an insertion
-meanInsert <- function (element, var_cats, vec, includeNA = FALSE) {
+meanInsert <- function(element, var_cats, vec, includeNA = FALSE) {
     # grab category combinations, and then sum those categories.
     combos <- unlist(arguments(element, var_cats))
     which.cats <- names(var_cats[ids(var_cats) %in% combos])
@@ -71,7 +75,7 @@ meanInsert <- function (element, var_cats, vec, includeNA = FALSE) {
     return(weighted.mean(num_values[ok], counts[ok], includeNA = includeNA))
 }
 
-medianInsert <- function (element, var_cats, vec, includeNA = FALSE) {
+medianInsert <- function(element, var_cats, vec, includeNA = FALSE) {
     # grab category combinations, and then sum those categories.
     combos <- unlist(arguments(element, var_cats))
     which.cats <- names(var_cats[ids(var_cats) %in% combos])
@@ -88,17 +92,21 @@ medianInsert <- function (element, var_cats, vec, includeNA = FALSE) {
     o <- order(num_values)
     num_values <- num_values[o]
     counts <- counts[o]
-    perc <- cumsum(counts)/sum(counts)
-
+    perc <- cumsum(counts) / sum(counts)
     # if any of the bins are 0.5, return the mean of that and the one above it.
-    if (any(perc == 0.5)) {
+    if (any(!is.na(perc) & perc == 0.5)) {
         n <- which(perc == 0.5)
-        return((num_values[n]+num_values[n+1])/2)
+        return((num_values[n] + num_values[n + 1]) / 2)
     }
 
     # otherwise return the first bin that is more than 50%
     over0.5 <- which(perc > 0.5)
-    return(num_values[min(over0.5)])
+    if (length(over0.5 > 0)) {
+        out <- num_values[min(over0.5)]
+    } else {
+        out <- NA
+    }
+    return(out)
 }
 
 summaryStatInsertions <- list(
@@ -108,13 +116,13 @@ summaryStatInsertions <- list(
 
 #' @rdname SummaryStat
 #' @export
-is.SummaryStat <- function (x) inherits(x, "SummaryStat") %||% FALSE
+is.SummaryStat <- function(x) inherits(x, "SummaryStat") %||% FALSE
 
 #' @rdname SummaryStat
 #' @export
-are.SummaryStats <- function (x) unlist(lapply(x, inherits, "SummaryStat")) %||% FALSE
+are.SummaryStats <- function(x) unlist(lapply(x, inherits, "SummaryStat")) %||% FALSE
 
-setMethod("initialize", "SummaryStat", function (.Object, ...) {
+setMethod("initialize", "SummaryStat", function(.Object, ...) {
     .Object <- callNextMethod()
     # unlist, to flatten user inputs like list(1:2)
     .Object$categories <- unlist(.Object$categories)
@@ -123,7 +131,7 @@ setMethod("initialize", "SummaryStat", function (.Object, ...) {
 
 #' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "SummaryStat", function (x, var_categories) {
+setMethod("makeInsertion", "SummaryStat", function(x, var_categories) {
     if (is.null(arguments(x))) {
         # if there are no arguments, use all category ids
         args <- ids(var_categories)
@@ -131,11 +139,13 @@ setMethod("makeInsertion", "SummaryStat", function (x, var_categories) {
         args <- arguments(x, var_categories)
     }
 
-    return(.Insertion(anchor = anchor(x, var_categories),
-                      name = name(x),
-                      `function` = x$stat,
-                      args = arguments(x, var_categories),
-                      includeNA = x$includeNA))
+    return(.Insertion(
+        anchor = anchor(x, var_categories),
+        name = name(x),
+        `function` = x$stat,
+        args = arguments(x, var_categories),
+        includeNA = x$includeNA
+    ))
 })
 
 
@@ -199,9 +209,9 @@ setMethod("makeInsertion", "SummaryStat", function (x, var_categories) {
 #' #[1] "CrunchCube"
 #' #attr(,"package")
 #' #[1] "crunch"
-#' 
-#' # Since `pet_feelings` is a CrunchCube, although it has similar properties 
-#' # and behaviors to arrays, it is not a R array: 
+#'
+#' # Since `pet_feelings` is a CrunchCube, although it has similar properties
+#' # and behaviors to arrays, it is not a R array:
 #' is.array(pet_feelings)
 #' #[1] FALSE
 #'
@@ -239,8 +249,8 @@ setMethod("makeInsertion", "SummaryStat", function (x, var_categories) {
 #' }
 #'
 #' @export
-addSummaryStat <- function (cube, stat = c("mean", "median"), var, ...) {
-    stat = match.arg(stat)
+addSummaryStat <- function(cube, stat = c("mean", "median"), var, ...) {
+    stat <- match.arg(stat)
 
     validateNamesInDims(var, cube, what = "variables")
 

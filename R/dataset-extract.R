@@ -21,14 +21,14 @@ NULL
 
 #' @rdname dataset-extract
 #' @export
-setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
+setMethod("[", c("CrunchDataset", "ANY"), function(x, i, ..., drop = FALSE) {
     x@variables <- variables(x)[i]
     return(x)
 })
 
 #' @rdname dataset-extract
 #' @export
-setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ..., drop=FALSE) {
+setMethod("[", c("CrunchDataset", "logical", "missing"), function(x, i, j, ..., drop = FALSE) {
     ## See [.data.frame: this is similar to how it distinguishes x[i] from x[i,]
     ## Ignoring the possibility of x[i, drop=TRUE]. x[i, drop=TRUE] should be x[[i]]
     if (nargs() == 2L) {
@@ -52,12 +52,16 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
                 ## Keep all rows, so no filter
                 return(x)
             }
-            i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
-                expression=.dispatchFilter(i))
-            return(x[i,])
+            i <- CrunchLogicalExpr(
+                dataset_url = datasetReference(x),
+                expression = .dispatchFilter(i)
+            )
+            return(x[i, ])
         } else {
-            halt("Logical filter vector is length ", length(i),
-                ", but dataset has ", nrow(x), " rows")
+            halt(
+                "Logical filter vector is length ", length(i),
+                ", but dataset has ", nrow(x), " rows"
+            )
         }
     } else {
         ## If you reference a variable in a dataset that doesn't exist, you
@@ -69,7 +73,7 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
 })
 #' @rdname dataset-extract
 #' @export
-setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
+setMethod("[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALSE) {
     w <- findVariablesInDataset(x, i)
     if (any(is.na(w))) {
         halt("Undefined columns selected: ", serialPaste(i[is.na(w)]))
@@ -80,7 +84,7 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
 
 #' @rdname dataset-extract
 #' @export
-setMethod("[", c("CrunchDataset", "VariableGroup"), function (x, i, ..., drop=FALSE) {
+setMethod("[", c("CrunchDataset", "VariableGroup"), function(x, i, ..., drop = FALSE) {
     ## Do allVariables because Group/Order may contain refs to hidden vars
     x@variables <- allVariables(x)[i]
     return(x)
@@ -88,7 +92,7 @@ setMethod("[", c("CrunchDataset", "VariableGroup"), function (x, i, ..., drop=FA
 
 #' @rdname dataset-extract
 #' @export
-setMethod("[", c("CrunchDataset", "VariableOrder"), function (x, i, ..., drop=FALSE) {
+setMethod("[", c("CrunchDataset", "VariableOrder"), function(x, i, ..., drop = FALSE) {
     x@variables <- allVariables(x)[i]
     return(x)
 })
@@ -96,11 +100,11 @@ setMethod("[", c("CrunchDataset", "VariableOrder"), function (x, i, ..., drop=FA
 
 #' @rdname dataset-extract
 #' @export
-setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., drop=FALSE) {
+setMethod("[", c("CrunchDataset", "missing", "ANY"), function(x, i, j, ..., drop = FALSE) {
     x[j]
 })
 
-.updateActiveFilter <- function (x, i, j, ..., drop=FALSE) {
+.updateActiveFilter <- function(x, i, j, ..., drop = FALSE) {
     ## x[i] where i is CrunchLogicalExpr and x may already have an active filter
     f <- activeFilter(x)
     if (length(zcl(f))) {
@@ -125,45 +129,45 @@ setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "missing"), .updateActive
 
 #' @rdname dataset-extract
 #' @export
-setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function (x, i, j, ..., drop=FALSE) {
+setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function(x, i, j, ..., drop = FALSE) {
     ## Do the filtering of rows, then cols
-    x <- x[i,]
+    x <- x[i, ]
     return(x[j])
 })
 
 #' @rdname dataset-extract
 #' @export
-setMethod("subset", "CrunchDataset", function (x, ...) {
-    x[..1,]
+setMethod("subset", "CrunchDataset", function(x, ...) {
+    x[..1, ]
 })
 
 #' @rdname dataset-extract
 #' @export
-setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
+setMethod("[[", c("CrunchDataset", "ANY"), function(x, i, ..., drop = FALSE) {
     out <- variables(x)[[i]]
     if (!is.null(out)) {
-        out <- CrunchVariable(out, filter=activeFilter(x))
+        out <- CrunchVariable(out, filter = activeFilter(x))
     }
     return(out)
 })
 #' @rdname dataset-extract
 #' @export
-setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
+setMethod("[[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALSE) {
     out <- allVariables(x)[[findVariablesInDataset(x, i)]]
     if (!is.null(out)) {
-        out <- CrunchVariable(out, filter=activeFilter(x))
+        out <- CrunchVariable(out, filter = activeFilter(x))
         if (tuple(out)$discarded) {
-            warning("Variable ", alias(out), " is hidden", call.=FALSE)
+            warning("Variable ", alias(out), " is hidden", call. = FALSE)
         }
     }
     return(out)
 })
 #' @rdname dataset-extract
 #' @export
-setMethod("$", "CrunchDataset", function (x, name) x[[name]])
+setMethod("$", "CrunchDataset", function(x, name) x[[name]])
 
 
-findVariablesInDataset <- function (x, i) {
+findVariablesInDataset <- function(x, i) {
     allvars <- allVariables(x)
     ## Handle "namekey", which should be deprecated
     if (getOption("crunch.namekey.dataset", "alias") == "name") {

@@ -9,20 +9,32 @@ forkDataset(dataset, name = defaultForkName(dataset), draft = FALSE, ...)
 \arguments{
 \item{dataset}{The \code{CrunchDataset} to fork}
 
-\item{name}{character name to give the fork. If omitted, one will be
-provided for you}
+\item{name}{character name to give the fork. If omitted, one will be provided
+for you}
 
-\item{draft}{logical: Should the dataset be a draft, available only to
-editors? Default is \code{FALSE}.}
+\item{draft}{logical: Should the dataset be a draft, visible only to
+those with edit permissions? Default is \code{FALSE}.}
 
-\item{...}{Additional dataset metadata}
+\item{...}{Additional dataset metadata to provide to the fork}
 }
 \value{
 The new fork, a \code{CrunchDataset}.
 }
 \description{
-As with many other version control systems, in Crunch you can fork a
-dataset's revision history, effectively making a copy on which you can work
-independently of the original dataset. You can then merge those change back
-to the original dataset or keep working independently.
+Forking a dataset makes a copy of the data that is linked by Crunch's version
+control system to the original dataset. When you make edits to a fork, users
+of the original dataset do not see the changes.
+}
+\details{
+A common strategy for revising a dataset that has been shared with others is
+to fork it,
+make changes to the fork, and then merge those changes back into the original
+dataset.
+This workflow allows you to edit a dataset and review changes before
+publishing them, so that you don't accidentally send your clients
+incorrect data. For more on this workflow, see
+\code{vignette("fork-and-merge", package = "crunch")}.
+}
+\seealso{
+\code{\link[=mergeFork]{mergeFork()}}
 }

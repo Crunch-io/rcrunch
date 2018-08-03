@@ -1,11 +1,14 @@
-setValidity("Categories", function (object) {
+setValidity("Categories", function(object) {
     are.cats <- vapply(object, is.category, logical(1))
     if (!all(are.cats)) {
         badcount <- sum(!are.cats)
-        return(paste0("Invalid categories: ", badcount,
-            ifelse(badcount>1,
+        return(paste0(
+            "Invalid categories: ", badcount,
+            ifelse(badcount > 1,
                 " elements are not Crunch category objects.",
-                " element is not a Crunch category object.")))
+                " element is not a Crunch category object."
+            )
+        ))
     }
     if (any(duplicated(names(object)))) {
         return("Invalid category names: must be unique")
@@ -16,9 +19,9 @@ setValidity("Categories", function (object) {
     return(TRUE)
 })
 
-is.categories <- function (x) inherits(x, "Categories")
+is.categories <- function(x) inherits(x, "Categories")
 
-concatenateCategories <- function (...) {
+concatenateCategories <- function(...) {
     ## c() S3 method for categories. Dispatch is on ..1
     dots <- list(...)
     iscat <- vapply(dots, is.category, logical(1))
@@ -26,9 +29,9 @@ concatenateCategories <- function (...) {
     if (!all(iscat | iscats)) {
         stop("Invalid categories")
     }
-    dots[iscat] <- lapply(dots[iscat], function (x) list(x))
-    dots[iscats] <- lapply(dots[iscats], function (x) x@.Data)
-    return(Categories(data=do.call(c, dots)))
+    dots[iscat] <- lapply(dots[iscat], function(x) list(x))
+    dots[iscats] <- lapply(dots[iscats], function(x) x@.Data)
+    return(Categories(data = do.call(c, dots)))
 }
 
 #' S3 method to concatenate Categories and Category objects
@@ -52,24 +55,25 @@ c.Category <- concatenateCategories
 
 #' @rdname Categories
 #' @export
-setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
-    x@.Data[i] <- Categories(data=value)
+setMethod("[<-", c("Categories", "ANY"), function(x, i, ..., value) {
+    x@.Data[i] <- Categories(data = value)
     return(x)
 })
 
 
 #' @rdname Categories
 #' @export
-setMethod("ids<-", "Categories", function (x, value) {
+setMethod("ids<-", "Categories", function(x, value) {
     if (!identical(ids(x), value)) {
         halt("Cannot modify category ids")
     }
     return(x)
 })
 
-.na.omit.categories <- function (object, ...) {
-    missings <- vapply(object, function (x) isTRUE(x$missing), logical(1),
-        USE.NAMES=FALSE)
+.na.omit.categories <- function(object, ...) {
+    missings <- vapply(object, function(x) isTRUE(x$missing), logical(1),
+        USE.NAMES = FALSE
+    )
     if (any(missings)) {
         object <- object[!missings]
         attr(object, "na.action") <- which(missings)
@@ -87,8 +91,8 @@ NULL
 
 #' @rdname na-omit-categories
 #' @export
-setMethod("na.omit", "Categories", function (object, ...) {
-    Categories(data=.na.omit.categories(object))
+setMethod("na.omit", "Categories", function(object, ...) {
+    Categories(data = .na.omit.categories(object))
 })
 
 #' is.na for Categories
@@ -127,14 +131,14 @@ NULL
 #' @aliases is.selected<-
 NULL
 
-setValues <- function (x, value) {
-    x[] <- mapply(setValue, x[], value=value, SIMPLIFY=FALSE)
+setValues <- function(x, value) {
+    x[] <- mapply(setValue, x[], value = value, SIMPLIFY = FALSE)
     return(x)
 }
 
 #' @rdname Categories
 #' @export
-setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
+setMethod("values", "Categories", function(x) vapply(x, value, numeric(1)))
 
 #' @rdname Categories
 #' @export
@@ -143,15 +147,15 @@ setMethod("values<-", "Categories", setValues)
 #' @rdname is-na-categories
 #' @aliases is-na-categories
 #' @export
-setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+setMethod("is.na", "Categories", function(x) structure(vapply(x, is.na, logical(1), USE.NAMES = FALSE), .Names = names(x)))
 
 #' @rdname is-selected-categories
 #' @export
-setMethod("is.selected", "Categories", function (x) structure(vapply(x, is.selected, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+setMethod("is.selected", "Categories", function(x) structure(vapply(x, is.selected, logical(1), USE.NAMES = FALSE), .Names = names(x)))
 
 #' @rdname is-selected-categories
 #' @export
-setMethod("is.selected<-", "Categories", function (x, value) {
+setMethod("is.selected<-", "Categories", function(x, value) {
     if (is.TRUEorFALSE(value)) {
         value <- rep(value, length(x))
     }
@@ -159,76 +163,79 @@ setMethod("is.selected<-", "Categories", function (x, value) {
         halt("You supplied ", length(value), " logical values for ", length(x), " Categories.")
     }
 
-    x@.Data <- mapply(function (x, value) {
+    x@.Data <- mapply(function(x, value) {
         is.selected(x) <- value
         return(x)
-    }, x=x@.Data, value=value, USE.NAMES=FALSE, SIMPLIFY=FALSE)
+    }, x = x@.Data, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
     return(x)
 })
 
 #' @rdname is-na-categories
 #' @aliases is-na-categories
 #' @export
-setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+setMethod("is.na", "Categories", function(x) structure(vapply(x, is.na, logical(1), USE.NAMES = FALSE), .Names = names(x)))
 
 #' @rdname is-na-categories
 #' @export
-setMethod("is.na<-", c("Categories", "character"), function (x, value) {
+setMethod("is.na<-", c("Categories", "character"), function(x, value) {
     ix <- match(value, names(x))
-    out <- handleMissingCategoryLookup(ix, value, strict=TRUE)
-    x[ix] <- lapply(x[ix], `is.na<-`, value=TRUE)
+    out <- handleMissingCategoryLookup(ix, value, strict = TRUE)
+    x[ix] <- lapply(x[ix], `is.na<-`, value = TRUE)
     return(x)
 })
 
 #' @rdname is-na-categories
 #' @export
-setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
+setMethod("is.na<-", c("Categories", "logical"), function(x, value) {
     stopifnot(length(x) == length(value))
-    x@.Data <- mapply(function (x, value) {
+    x@.Data <- mapply(function(x, value) {
         is.na(x) <- value
         return(x)
-    }, x=x@.Data, value=value, USE.NAMES=FALSE, SIMPLIFY=FALSE)
+    }, x = x@.Data, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
     return(x)
 })
 
-n2i <- function (x, cats, strict=TRUE) {
+n2i <- function(x, cats, strict = TRUE) {
     ## Convert x from category names to the corresponding category ids
     out <- ids(cats)[match(x, names(cats))]
     out <- handleMissingCategoryLookup(out, x, strict)
     return(out)
 }
 
-i2n <- function (x, cats, strict=TRUE) {
+i2n <- function(x, cats, strict = TRUE) {
     ## Convert x from category ids to the corresponding category names
     out <- names(cats)[match(x, ids(cats))]
     out <- handleMissingCategoryLookup(out, x, strict)
     return(out)
 }
 
-handleMissingCategoryLookup <- function (result, original, strict=TRUE) {
+handleMissingCategoryLookup <- function(result, original, strict = TRUE) {
     bad <- is.na(result)
     if (any(bad)) {
-        msg <- paste(ifelse(sum(bad) > 1, "Categories", "Category"),
-            "not found:", serialPaste(dQuote(original[bad])))
+        msg <- paste(
+            ifelse(sum(bad) > 1, "Categories", "Category"),
+            "not found:", serialPaste(dQuote(original[bad]))
+        )
         if (strict) {
             ## Break
             halt(msg)
         } else {
             ## Warn and drop
             msg <- paste0(msg, ". Dropping.")
-            warning(msg, call.=FALSE)
+            warning(msg, call. = FALSE)
             result <- na.omit(result)
         }
     }
     return(result)
 }
 
-addNoDataCategory <- function (variable) {
+addNoDataCategory <- function(variable) {
     cats <- ensureNoDataCategory(categories(variable))
     if (is.subvariable(variable)) {
         ## Have to point at parent
         crPATCH(absoluteURL("../../", self(variable)),
-            body=toJSON(list(categories=cats)))
+            body = toJSON(list(categories = cats))
+        )
         variable <- refresh(variable)
     } else {
         categories(variable) <- cats
@@ -236,40 +243,40 @@ addNoDataCategory <- function (variable) {
     return(variable)
 }
 
-ensureNoDataCategory <- function (cats) {
+ensureNoDataCategory <- function(cats) {
     if (-1 %in% ids(cats)) {
         # check "No Data"?
         return(cats)
     } else {
-        return(c(cats, Category(data=.no.data)))
+        return(c(cats, Category(data = .no.data)))
     }
 }
 
 .no.data <- list(
-    id=-1L,
-    name="No Data",
-    numeric_value=NULL,
-    missing=TRUE
+    id = -1L,
+    name = "No Data",
+    numeric_value = NULL,
+    missing = TRUE
 )
 
 .selected.cats <- list(
     list(
-        id=1L,
-        name="Selected",
-        numeric_value=1,
-        missing=FALSE,
-        selected=TRUE
+        id = 1L,
+        name = "Selected",
+        numeric_value = 1,
+        missing = FALSE,
+        selected = TRUE
     ),
     list(
-        id=0L,
-        name="Other",
-        numeric_value=0,
-        missing=FALSE
+        id = 0L,
+        name = "Other",
+        numeric_value = 0,
+        missing = FALSE
     ),
     .no.data
 )
 
-is.3vl <- function (cats) {
+is.3vl <- function(cats) {
     ## Infer whether these categories are from a Three-Valued Logic categorical
     ## This is temporarily stricter than we want so that only formerly boolean
     ## types are detected as logical, not MR subvars or other "selected" vars
@@ -278,8 +285,8 @@ is.3vl <- function (cats) {
     }
     return(
         setequal(ids(cats), c(-1, 0, 1)) &&
-        setequal(names(cats), c("Selected", "Other", "No Data")) &&
-        sum(is.selected(cats)) == 1 &&
-        sum(is.na(cats)) == 1
+            setequal(names(cats), c("Selected", "Other", "No Data")) &&
+            sum(is.selected(cats)) == 1 &&
+            sum(is.na(cats)) == 1
     )
 }

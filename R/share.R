@@ -9,24 +9,24 @@ NULL
 
 #' @rdname permissions
 #' @export
-setMethod("permissions", "CrunchDataset", function (x) {
+setMethod("permissions", "CrunchDataset", function(x) {
     perm_url <- shojiURL(x, "catalogs", "permissions")
     return(PermissionCatalog(crGET(perm_url)))
 })
 
 #' @rdname is.editor
 #' @export
-setMethod("is.editor", "PermissionCatalog", function (x) {
-    out <- vapply(index(x), function (a) {
-            isTRUE(a[["dataset_permissions"]][["edit"]])
-        }, logical(1), USE.NAMES=FALSE)
+setMethod("is.editor", "PermissionCatalog", function(x) {
+    out <- vapply(index(x), function(a) {
+        isTRUE(a[["dataset_permissions"]][["edit"]])
+    }, logical(1), USE.NAMES = FALSE)
     names(out) <- emails(x) ## Drop this
     return(out)
 })
 
 #' @rdname is.editor
 #' @export
-setMethod("is.editor", "PermissionTuple", function (x) {
+setMethod("is.editor", "PermissionTuple", function(x) {
     isTRUE(x[["dataset_permissions"]][["edit"]])
 })
 
@@ -48,7 +48,7 @@ setMethod("is.editor", "PermissionTuple", function (x) {
 #' @return Invisibly, the dataset.
 #' @seealso [`unshare`]
 #' @export
-share <- function (dataset, users, edit=FALSE, notify=TRUE, message=NULL) {
+share <- function(dataset, users, edit = FALSE, notify = TRUE, message = NULL) {
     perms <- permissions(dataset)
     if (length(edit) == 1) {
         edit <- rep(edit, length(users))
@@ -59,8 +59,10 @@ share <- function (dataset, users, edit=FALSE, notify=TRUE, message=NULL) {
     if (!is.null(message) && !notify) {
         halt("Cannot send message if not notifying")
     }
-    payload <- lapply(edit,
-        function (e) list(dataset_permissions=list(edit=e, view=TRUE)))
+    payload <- lapply(
+        edit,
+        function(e) list(dataset_permissions = list(edit = e, view = TRUE))
+    )
     names(payload) <- users
     payload$send_notification <- notify
     if (notify) {
@@ -69,11 +71,11 @@ share <- function (dataset, users, edit=FALSE, notify=TRUE, message=NULL) {
         payload$dataset_url <- APIToWebURL(dataset)
     }
     payload <- toJSON(payload)
-    crPATCH(self(perms), body=payload)
+    crPATCH(self(perms), body = payload)
     invisible(dataset)
 }
 
-passwordSetURLTemplate <- function () {
+passwordSetURLTemplate <- function() {
     absoluteURL("/password/change/${token}/", getOption("crunch.api"))
 }
 
@@ -85,10 +87,10 @@ passwordSetURLTemplate <- function () {
 #' @return Invisibly, the dataset.
 #' @seealso [`share`]
 #' @export
-unshare <- function (dataset, users) {
+unshare <- function(dataset, users) {
     stopifnot(is.character(users))
-    payload <- sapply(users, null, simplify=FALSE)
-    crPATCH(shojiURL(dataset, "catalogs", "permissions"), body=toJSON(payload))
+    payload <- sapply(users, null, simplify = FALSE)
+    crPATCH(shojiURL(dataset, "catalogs", "permissions"), body = toJSON(payload))
     invisible(dataset)
 }
 

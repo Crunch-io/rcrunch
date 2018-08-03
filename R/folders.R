@@ -42,7 +42,7 @@
 #' ds %>% mv("nps_y", folder(ds$nps_x))
 #' }
 #' @export
-mv <- function (x, variables, path) {
+mv <- function(x, variables, path) {
     ## TODO: add an "after" argument, pass to addToFolder
 
     if (inherits(x, "CrunchProject")) {
@@ -51,12 +51,12 @@ mv <- function (x, variables, path) {
     }
     ## dplyr/tidyselect-ish functions, hacked in here (inspired by how pkgdown does it)
     fns <- list(
-        starts_with=function (str, ...) grep(paste0("^", str), names(x), ...),
-        ends_with=function (str, ...) grep(paste0(str, "$"), names(x), ...),
-        matches=function (str, ...) grep(str, names(x), ...),
-        contains=function (str, ...) grep(str, names(x), ..., fixed=TRUE)
+        starts_with = function(str, ...) grep(paste0("^", str), names(x), ...),
+        ends_with = function(str, ...) grep(paste0(str, "$"), names(x), ...),
+        matches = function(str, ...) grep(str, names(x), ...),
+        contains = function(str, ...) grep(str, names(x), ..., fixed = TRUE)
     )
-    e2 <- substitute(substitute(zzz, fns), list(zzz=match.call()[["variables"]]))
+    e2 <- substitute(substitute(zzz, fns), list(zzz = match.call()[["variables"]]))
     variables <- eval.parent(eval(e2))
     if (is.language(variables)) {
         ## It's one of our fns. Eval it again
@@ -68,20 +68,20 @@ mv <- function (x, variables, path) {
         ## TODO: add a "*" special case for for ShojiFolder [ method
         variables <- x[variables]
     }
-    f <- cd(x, path, create=TRUE)
+    f <- cd(x, path, create = TRUE)
     .moveToFolder(f, variables)
     return(invisible(x))
 }
 
 #' @rdname mv
 #' @export
-mkdir <- function (x, path) {
+mkdir <- function(x, path) {
     ## TODO: add an "after" argument, move created folder there
     if (inherits(x, "CrunchProject")) {
         ## Temporary? call a different function
         return(mkdir.project(x, path))
     }
-    f <- cd(x, path, create=TRUE)
+    f <- cd(x, path, create = TRUE)
     return(invisible(x))
 }
 
@@ -114,11 +114,13 @@ mkdir <- function (x, path) {
 #'     mv("nps_x", "../Net Promoters")
 #' }
 #' @export
-cd <- function (x, path, create=FALSE) {
+cd <- function(x, path, create = FALSE) {
     if (is.character(x)) {
         ## Probably user error
-        halt(dQuote("cd()"),
-            " requires a Crunch Dataset or Folder as its first argument")
+        halt(
+            dQuote("cd()"),
+            " requires a Crunch Dataset or Folder as its first argument"
+        )
     }
     if (is.folder(path)) {
         ## Great! No lookup required
@@ -127,7 +129,7 @@ cd <- function (x, path, create=FALSE) {
     if (!is.folder(x)) {
         x <- folders(x)
     }
-    out <- x[[path, create=create]]
+    out <- x[[path, create = create]]
     if (!is.folder(out)) {
         halt(deparse(path), " is not a folder")
     }
@@ -152,7 +154,7 @@ cd <- function (x, path, create=FALSE) {
 #'     rmdir("Demographics")
 #' }
 #' @export
-rmdir <- function (x, path) {
+rmdir <- function(x, path) {
     if (inherits(x, "CrunchProject")) {
         ## Temporary? call a different function
         return(rmdir.project(x, path))
@@ -176,7 +178,7 @@ rmdir <- function (x, path) {
 #' ## [1] "Demographics"    "Economic"
 #' }
 #' @seealso [mv()] [cd()]
-folder <- function (x) {
+folder <- function(x) {
     if (is.folder(x)) {
         ## Parent folder is of the same type
         cls <- class(x)
@@ -197,7 +199,7 @@ folder <- function (x) {
 #' vector of nested folder names or a single string with nested folders
 #' separated by a delimiter ("/" default)
 #' @rdname folder
-`folder<-` <- function (x, value) {
+`folder<-` <- function(x, value) {
     if (is.character(value)) {
         ## Turn path into folder relative to folder(x)
         value <- cd(folder(x), value)
@@ -208,7 +210,7 @@ folder <- function (x) {
     return(refresh(x)) ## Actually, just need to get entity again, cache already busted
 }
 
-.moveToFolder <- function (folder, variables) {
+.moveToFolder <- function(folder, variables) {
     if (is.dataset(variables)) {
         variables <- allVariables(variables)
     }
@@ -218,9 +220,11 @@ folder <- function (x) {
     ## No need to include vars that already exist in this folder
     variables <- setdiff(variables, urls(folder))
     if (length(variables)) {
-        ind <- sapply(variables, emptyObject, simplify=FALSE)
-        crPATCH(self(folder), body=toJSON(wrapCatalog(index=ind,
-            graph=I(c(urls(folder), variables)))))
+        ind <- sapply(variables, emptyObject, simplify = FALSE)
+        crPATCH(self(folder), body = toJSON(wrapCatalog(
+            index = ind,
+            graph = I(c(urls(folder), variables))
+        )))
         ## Additional cache invalidation
         ## Drop all variable entities because their catalogs.folder refs are stale
         dropOnly(variables)

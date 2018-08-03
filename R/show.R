@@ -10,14 +10,14 @@ NULL
 
 # Boilerplate
 
-.showIt <- function (object) {
+.showIt <- function(object) {
     out <- getShowContent(object)
     if (!is.character(out)) {
         ## Catalog show content is a data.frame unless otherwise indicated.
         ## Print it, but capture the output so we can return the character output.
         out <- capture.output(print(out))
     }
-    cat(out, sep="\n")
+    cat(out, sep = "\n")
     invisible(out)
 }
 
@@ -48,107 +48,126 @@ setMethod("show", "Insertions", .showIt)
 
 # Actual show methods
 
-showAbsCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x), missing=is.na(x), stringsAsFactors = FALSE)
-showAbsCategories <- function (x) do.call("rbind", lapply(x, showAbsCategory))
+showAbsCategory <- function(x) data.frame(id = id(x), name = name(x), value = value(x), missing = is.na(x), stringsAsFactors = FALSE)
+showAbsCategories <- function(x) do.call("rbind", lapply(x, showAbsCategory))
 
-showInsertion <- function (x) {
-    return(data.frame(anchor=anchor(x), name=name(x),
-                      func=func(x), args=serialPaste(arguments(x)),
-                      stringsAsFactors = FALSE))
+showInsertion <- function(x) {
+    return(data.frame(
+        anchor = anchor(x), name = name(x),
+        func = func(x), args = serialPaste(arguments(x)),
+        stringsAsFactors = FALSE
+    ))
 }
 
-showInsertions <- function (x) do.call("rbind",
-                                       c(lapply(x, getShowContent),
-                                         stringsAsFactors = FALSE))
+showInsertions <- function(x) do.call(
+        "rbind",
+        c(lapply(x, getShowContent),
+            stringsAsFactors = FALSE
+        )
+    )
 
-showSubtotalHeading <- function (x) {
+showSubtotalHeading <- function(x) {
     # if anchor or args error because a categories object is not available to
     # translate from category names to ids, then show the names without error
     # for the show method only.
-    anchor <- tryCatch(anchor(x), error = function(e) {return(x$after)})
-    args <- tryCatch(arguments(x), error = function(e) {return(x$categories)})
-    return(data.frame(anchor=anchor, name=name(x),
-                      func=func(x), args=serialPaste(args),
-                      stringsAsFactors = FALSE))
+    anchor <- tryCatch(anchor(x), error = function(e) {
+        return(x$after)
+    })
+    args <- tryCatch(arguments(x), error = function(e) {
+        return(x$categories)
+    })
+    return(data.frame(
+        anchor = anchor, name = name(x),
+        func = func(x), args = serialPaste(args),
+        stringsAsFactors = FALSE
+    ))
 }
 
 
-showCrunchVariableTitle <- function (x) {
-    out <- paste(getNameAndType(x), collapse=" ")
+showCrunchVariableTitle <- function(x) {
+    out <- paste(getNameAndType(x), collapse = " ")
     desc <- description(x)
     if (!is.null(desc) && nchar(desc)) out <- c(out, desc)
     return(out)
 }
 
-getNameAndType <- function (x) {
+getNameAndType <- function(x) {
     varname <- name(x)
     vartype <- paste0("(", type(x), ")")
     return(c(varname, vartype))
 }
 
 #' @importFrom utils capture.output
-showCrunchVariable <- function (x) {
+showCrunchVariable <- function(x) {
     out <- showCrunchVariableTitle(x)
     if (!is.null(activeFilter(x))) {
-        out <- c(out,
-            paste("Filtered by", formatExpression(activeFilter(x))))
+        out <- c(
+            out,
+            paste("Filtered by", formatExpression(activeFilter(x)))
+        )
     }
     try(out <- c(out, "", capture.output(print(summary(x)))))
     invisible(out)
 }
 
-showCrunchDataset <- function (x) {
+showCrunchDataset <- function(x) {
     out <- paste("Dataset", dQuote(name(x)))
     d <- description(x)
     if (!is.null(d) && nchar(d)) {
         out <- c(out, d)
     }
 
-    out <- c(out,
-            "",
-            paste("Contains", nrow(x), "rows of", ncol(x), "variables:"))
+    out <- c(
+        out,
+        "",
+        paste("Contains", nrow(x), "rows of", ncol(x), "variables:")
+    )
     if (!is.null(activeFilter(x))) {
-        out <- c(out,
-            paste("Filtered by", formatExpression(activeFilter(x))))
+        out <- c(
+            out,
+            paste("Filtered by", formatExpression(activeFilter(x)))
+        )
     }
-    out <- c(out,
-            "",
-            describeDatasetVariables(x))
+    out <- c(
+        out,
+        "",
+        describeDatasetVariables(x)
+    )
     return(out)
 }
 
-describeDatasetVariables <- function (dataset) {
+describeDatasetVariables <- function(dataset) {
     nk <- namekey(dataset)
-    return(vapply(variables(dataset), function (v) {
-        paste0("$", v[[nk]], ": ", paste(getNameAndType(v), collapse=" "))
+    return(vapply(variables(dataset), function(v) {
+        paste0("$", v[[nk]], ": ", paste(getNameAndType(v), collapse = " "))
     }, character(1)))
 }
 
-showCategoricalArrayVariable <- function (x) {
+showCategoricalArrayVariable <- function(x) {
     c(showCrunchVariableTitle(x), showSubvariables(subvariables(x)))
 }
 
-showSubvariables <- function (x) {
-    out <- c("Subvariables:", vapply(index(x), function (s) {
+showSubvariables <- function(x) {
+    out <- c("Subvariables:", vapply(index(x), function(s) {
         paste0("  $`", s$name, "`")
-    }, character(1), USE.NAMES=FALSE))
+    }, character(1), USE.NAMES = FALSE))
     return(out)
 }
 
-showShojiOrder <- function (x, catalog_url=x@catalog_url, key="name") {
+showShojiOrder <- function(x, catalog_url = x@catalog_url, key = "name") {
     if (nchar(catalog_url)) {
         catalog <- index(ShojiCatalog(crGET(catalog_url)))
     } else {
         catalog <- list()
     }
-    return(unlist(lapply(x, showOrderGroup, index=catalog, key=key)))
+    return(unlist(lapply(x, showOrderGroup, index = catalog, key = key)))
 }
 
-showOrderGroup <- function (x, index, key="name") {
+showOrderGroup <- function(x, index, key = "name") {
     if (inherits(x, "OrderGroup")) {
         ents <- entities(x)
         if (length(ents)) {
-            group <- unlist(lapply(ents, showOrderGroup, index=index, key=key))
+            group <- unlist(lapply(ents, showOrderGroup, index = index, key = key))
         } else {
             group <- "(Empty group)"
         }
@@ -160,10 +179,10 @@ showOrderGroup <- function (x, index, key="name") {
     return(out)
 }
 
-formatVersionCatalog <- function (x, from=Sys.time()) {
+formatVersionCatalog <- function(x, from = Sys.time()) {
     ts <- timestamps(x)
     if (!is.null(from)) {
-        ts <- vapply(seq_along(ts), function (a) {
+        ts <- vapply(seq_along(ts), function(a) {
             ## Grab dates by sequence because POSIXt is a list internally
             ## (i.e. lapply does the wrong thing)
             this <- from - ts[a]
@@ -177,19 +196,19 @@ formatVersionCatalog <- function (x, from=Sys.time()) {
             return(out)
         }, character(1))
     }
-    return(data.frame(Name=names(x), Timestamp=ts, stringsAsFactors=FALSE))
+    return(data.frame(Name = names(x), Timestamp = ts, stringsAsFactors = FALSE))
 }
 
 .operators <- c("+", "-", "*", "/", "<", ">", ">=", "<=", "==", "!=", "&", "|", "%in%")
 .funcs.z2r <- list(
-        and="&",
-        or="|",
-        is_missing="is.na",
-        `in`="%in%",
-        duplicates="duplicated"
-    )
+    and = "&",
+    or = "|",
+    is_missing = "is.na",
+    `in` = "%in%",
+    duplicates = "duplicated"
+)
 
-formatExpression <- function (expr) {
+formatExpression <- function(expr) {
     if (is.CrunchExpr(expr)) {
         return(formatExpression(expr@expression))
     } else if ("function" %in% names(expr)) {
@@ -204,7 +223,7 @@ formatExpression <- function (expr) {
             ## R's %in% is Crunch's selected(in()) wrt missing data handling
             return(args[1])
         } else {
-            return(paste0(func, "(", paste(args, collapse=", "), ")"))
+            return(paste0(func, "(", paste(args, collapse = ", "), ")"))
         }
     } else if ("variable" %in% names(expr)) {
         ## GET URL, get alias from that
@@ -217,16 +236,16 @@ formatExpression <- function (expr) {
     }
 }
 
-expressionValue <- function (expr) {
+expressionValue <- function(expr) {
     ## Could be under either "column" or "value". R doesn't distinguish length-1
     ## from length-N values, but Crunch API does.
     unlist(expr$column %||% expr$value)
 }
 
-deparseAndFlatten <- function (x, max_length = NULL, control=NULL, ...) {
-    out <- deparse(x, control=control, ...)
+deparseAndFlatten <- function(x, max_length = NULL, control = NULL, ...) {
+    out <- deparse(x, control = control, ...)
     if (length(out) > 1) {
-        out <- paste0(out, collapse="")
+        out <- paste0(out, collapse = "")
     }
     # if max_length is null, do nothing
     # else return 1:max_length of out
@@ -236,31 +255,34 @@ deparseAndFlatten <- function (x, max_length = NULL, control=NULL, ...) {
     return(out)
 }
 
-formatExpressionArgs <- function (args) {
+formatExpressionArgs <- function(args) {
     ## This is just to pretty-print category values as "names"
     ## Look for "variables"
-    vars <- vapply(args,
-        function (x) identical(names(x), "variable"), logical(1))
+    vars <- vapply(
+        args,
+        function(x) identical(names(x), "variable"), logical(1)
+    )
     if (sum(vars) == 1) {
         ## Great, let's see if we have any values to format
-        vals <- vapply(args, function (x) {
-                any(names(x) %in% c("column", "value"))
-            }, logical(1))
+        vals <- vapply(args, function(x) {
+            any(names(x) %in% c("column", "value"))
+        }, logical(1))
         if (any(vals)) {
             ## Get the var, see if it is categorical
             var <- VariableEntity(crGET(args[[which(vars)]]$variable))
             ## Well, we'll identify "categorical" by presence of cats
             args[vals] <- lapply(args[vals], formatExpressionValue,
-                cats=categories(var))
+                cats = categories(var)
+            )
             args[!vals] <- lapply(args[!vals], formatExpression)
             return(unlist(args))
         }
     }
     ## Else:
-    return(vapply(args, formatExpression, character(1), USE.NAMES=FALSE))
+    return(vapply(args, formatExpression, character(1), USE.NAMES = FALSE))
 }
 
-formatExpressionValue <- function (val, cats=NULL) {
+formatExpressionValue <- function(val, cats = NULL) {
     val <- expressionValue(val)
     if (length(cats)) {
         val <- i2n(val, cats)
@@ -272,42 +294,46 @@ formatExpressionValue <- function (val, cats=NULL) {
 
 #' @rdname show-crunch
 #' @export
-setMethod("show", "CrunchExpr", function (object) {
+setMethod("show", "CrunchExpr", function(object) {
     cat("Crunch expression: ", formatExpression(object), "\n",
-        sep="")
+        sep = ""
+    )
     invisible(object)
 })
 
 #' @rdname show-crunch
 #' @export
-setMethod("show", "CrunchLogicalExpr", function (object) {
+setMethod("show", "CrunchLogicalExpr", function(object) {
     cat("Crunch logical expression: ", formatExpression(object), "\n",
-        sep="")
+        sep = ""
+    )
     invisible(object)
 })
 
-showMultitable <- function (x) {
+showMultitable <- function(x) {
     out <- paste("Multitable", dQuote(name(x)))
 
     # TODO: check variable types to alert users in a more friendly manner
-    out <- c(out, "Column variables:",
-             vapply(x@body$template, function (expr) {
-                 if ("each" %in% names(expr$query[[1]])) {
-                     # if the first element of the query is each, then this is
-                     # an array so take the second argument instead.
-                     exprToFormat <- expr$query[[2]]
+    out <- c(
+        out, "Column variables:",
+        vapply(x@body$template, function(expr) {
+            if ("each" %in% names(expr$query[[1]])) {
+                # if the first element of the query is each, then this is
+                # an array so take the second argument instead.
+                exprToFormat <- expr$query[[2]]
 
-                     # if the second arg is a as_selected take the variable from
-                     # that to display var only
-                     if ((exprToFormat[["function"]] %||% "")  == "as_selected" ) {
-                         exprToFormat <- exprToFormat$args[[1]]
-                     }
+                # if the second arg is a as_selected take the variable from
+                # that to display var only
+                if ((exprToFormat[["function"]] %||% "") == "as_selected") {
+                    exprToFormat <- exprToFormat$args[[1]]
+                }
 
-                     return(paste0("  ", formatExpression(exprToFormat)))
-                 }
+                return(paste0("  ", formatExpression(exprToFormat)))
+            }
 
-                 return(paste0("  ", formatExpression(expr$query[[1]])))
-             }, character(1)))
+            return(paste0("  ", formatExpression(expr$query[[1]])))
+        }, character(1))
+    )
 
     return(c(out))
 }
@@ -322,45 +348,60 @@ setMethod("getShowContent", "Subtotal", showSubtotalHeading)
 setMethod("getShowContent", "Heading", showSubtotalHeading)
 setMethod("getShowContent", "SummaryStat", showSubtotalHeading)
 setMethod("getShowContent", "CrunchVariable", showCrunchVariable)
-setMethod("getShowContent", "CategoricalArrayVariable",
-    showCategoricalArrayVariable)
+setMethod(
+    "getShowContent", "CategoricalArrayVariable",
+    showCategoricalArrayVariable
+)
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
 setMethod("getShowContent", "Multitable", showMultitable)
 setMethod("getShowContent", "ShojiOrder", showShojiOrder)
-setMethod("getShowContent", "VariableOrder",
-    function (x) showShojiOrder(x, key=namekey(x)))
-setMethod("getShowContent", "ShojiCatalog", function (x) as.data.frame(x))
+setMethod(
+    "getShowContent", "VariableOrder",
+    function(x) showShojiOrder(x, key = namekey(x))
+)
+setMethod("getShowContent", "ShojiCatalog", function(x) as.data.frame(x))
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
-setMethod("getShowContent", "MemberCatalog",
-    function (x) {
-        data.frame(name=names(x),
-                   email=emails(x),
-                   is.editor=is.editor(x),
-                   stringsAsFactors=FALSE)
-        })
-setMethod("getShowContent", "ShojiObject",
-    function (x) capture.output(print(x@body)))
-setMethod("getShowContent", "CrunchFilter",
-    function (x) {
-        return(c(paste("Crunch filter", dQuote(name(x))),
-            paste("Expression:", formatExpression(expr(x)))))
-    })
+setMethod(
+    "getShowContent", "MemberCatalog",
+    function(x) {
+        data.frame(
+            name = names(x),
+            email = emails(x),
+            is.editor = is.editor(x),
+            stringsAsFactors = FALSE
+        )
+    }
+)
+setMethod(
+    "getShowContent", "ShojiObject",
+    function(x) capture.output(print(x@body))
+)
+setMethod(
+    "getShowContent", "CrunchFilter",
+    function(x) {
+        return(c(
+            paste("Crunch filter", dQuote(name(x))),
+            paste("Expression:", formatExpression(expr(x)))
+        ))
+    }
+)
 #' @rdname show-crunch
 #' @export
-setMethod("show", "CrunchCube", function (object) showTransforms(object))
+setMethod("show", "CrunchCube", function(object) showTransforms(object))
 
 #' @rdname show-crunch
 #' @export
-setMethod("show", "OrderGroup", function (object) {
-    ind <- structure(lapply(urls(object), function (x) list(name=x)),
-        .Names=urls(object))
-    cat(showOrderGroup(object, index=ind, key="name"), sep="\n")
+setMethod("show", "OrderGroup", function(object) {
+    ind <- structure(lapply(urls(object), function(x) list(name = x)),
+        .Names = urls(object)
+    )
+    cat(showOrderGroup(object, index = ind, key = "name"), sep = "\n")
 })
 
 #' @rdname show-crunch
 #' @export
-setMethod("show", "CrunchGeography", function (object) {
+setMethod("show", "CrunchGeography", function(object) {
     geo_datum <- Geodata(crGET(object$geodatum))
     cat("CrunchGeography metadata for variable \n",
         "geodatum name: \t\t", name(geo_datum), "\n",
@@ -368,10 +409,11 @@ setMethod("show", "CrunchGeography", function (object) {
         "geodatum url: \t\t", object$geodatum, "\n",
         "feature_key: \t\t", object$feature_key, "\n",
         "match_field: \t\t", object$match_field, "\n",
-        sep="")
+        sep = ""
+    )
     invisible(object)
 })
 
-setMethod("getShowContent", "ShojiFolder", function (x) {
+setMethod("getShowContent", "ShojiFolder", function(x) {
     paste0(ifelse(types(x) == "folder", "[+] ", ""), names(x))
 })

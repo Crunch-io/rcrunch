@@ -8,6 +8,8 @@ test:
 	R CMD INSTALL --install-tests .
 	R --slave -e 'library(httptest); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
+lint:
+	R --slave -e 'styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'
 deps:
 	R --slave -e 'cran <- "http://cran.at.r-project.org"; pkgs <- c("devtools", "Rcpp", "testthat", "jsonlite", "curl", "httpcache", "codetools", "httptest", "covr", "xml2", "spelling", "roxygen2", "haven", "miniUI", "rmarkdown", "shiny"); new <- setdiff(pkgs, dir(.libPaths()[1])); if (length(new)) install.packages(new, repo=cran); update.packages(.libPaths()[1], ask=FALSE, repo=cran)'
 

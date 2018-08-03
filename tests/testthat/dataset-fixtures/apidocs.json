@@ -225,10 +225,10 @@
                 "caseid": {
                     "type": "numeric",
                     "name": "Case ID",
-                    "alias": "caseid",
-                    "discarded": true
+                    "alias": "caseid"
                 }
             },
+            "hidden": ["caseid"],
             "order": [
                 {
                     "group": "Key Pet Indicators",
