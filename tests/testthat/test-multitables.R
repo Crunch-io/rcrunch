@@ -509,7 +509,7 @@ with_test_authentication({
     })
 
     test_that("We can get an xlsx tab book", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         f <- tempfile()
         out <- tabBook(mult, data = ds, format = "xlsx", file = f)
         expect_true(file.exists(out))
@@ -517,7 +517,7 @@ with_test_authentication({
 
     test_that("We can get an json tab book", {
         skip("multitables and multiple response need more work.")
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         book <- tabBook(mult, data = ds)
         expect_is(book, "TabBookResult")
         expect_identical(dim(book), c(ncol(ds), 3L))

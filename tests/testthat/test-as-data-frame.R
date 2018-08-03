@@ -281,13 +281,13 @@ with_test_authentication({
     })
 
     test_that("as.data.frame(force) with API", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
         expect_true(is.data.frame(as.data.frame(ds, force = TRUE)))
     })
 
     test_that("Multiple response variables in as.data.frame(force=TRUE)", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         mrds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
         mrds_df <- as.data.frame(mrds, force = TRUE)
         expect_equal(ncol(mrds_df), 4)
