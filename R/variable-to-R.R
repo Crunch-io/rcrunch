@@ -63,11 +63,6 @@ parse_column <- list(
     datetime = function(col, variable, mode) {
         out <- columnParser("text")(col)
         return(from8601(out))
-    },
-    boolean = function(col, variable, mode) {
-        missings <- vapply(col, Negate(is.logical), logical(1))
-        col[missings] <- NA
-        return(as.logical(unlist(col)))
     }
 )
 columnParser <- function(vartype) {
