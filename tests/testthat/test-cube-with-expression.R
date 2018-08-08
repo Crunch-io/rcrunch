@@ -80,18 +80,6 @@ with_mock_crunch({
         )
     })
 
-    test_that("Boolean cube dims", {
-        ## TODO: delete this when boolean support is removed
-        cube <- crtabs(~birthyr > 1980, data = ds)
-        expect_identical(
-            as.array(cube),
-            array(c(14, 6),
-                dim = 2L,
-                dimnames = list(`birthyr > 1980` = c("FALSE", "TRUE"))
-            )
-        )
-    })
-
     test_that("3VL logical cube dims", {
         ## This is `crtabs(~ q1 != "Cat" & !is.na(q1), data=ds)` from below
         cube <- loadCube("cubes/3vl.json")

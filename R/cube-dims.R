@@ -7,14 +7,6 @@ cubeDims <- function(cube) {
     dimnames <- lapply(cube$result$dimensions, function(a) {
         ## Collect the variable metadata about the dimensions
         tuple <- cubeVarReferences(a)
-        if (tuple$type == "boolean") {
-            ## TODO: delete this when boolean support is removed
-            return(list(
-                name = c("FALSE", "TRUE"),
-                missing = c(FALSE, FALSE),
-                references = tuple
-            ))
-        }
         ## If enumerated, will be "elements", not "categories"
         d <- tuple$categories %||% a$type$elements
         return(list(
