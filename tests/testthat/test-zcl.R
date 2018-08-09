@@ -9,10 +9,6 @@ test_that("r2zcl cases", {
 test_that("zcl(logical)", {
     z1 <- zcl(c(TRUE, NA))
     expect_identical(z1$type$class, "categorical")
-    with(temp.option(crunch.3vl = FALSE), {
-        z2 <- zcl(c(TRUE, NA))
-        expect_identical(z2$type$class, "boolean")
-    })
 })
 
 with_mock_crunch({

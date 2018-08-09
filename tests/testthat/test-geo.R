@@ -318,7 +318,7 @@ with_test_authentication({
 
     geo_ds <- newDataset(df)
     test_that("Can match and set geodata on a text variable", {
-        skip_locally("Vagrant doesn't currently have hosted geodata")
+        skip_on_local_backend("Vagrant doesn't currently have hosted geodata")
         geo_ds$region <- rep(c("South", "West", "West", "South", "West"), 4)
         expect_silent(geo_ds$region <- addGeoMetadata(geo_ds$region))
         expect_prints(geo(geo_ds$region),
@@ -334,7 +334,7 @@ with_test_authentication({
     })
 
     test_that("Can match and set geodata on a categorical variable", {
-        skip_locally("Vagrant doesn't currently have hosted geodata")
+        skip_on_local_backend("Vagrant doesn't currently have hosted geodata")
         geo_ds$region2 <- factor(rep(c("South", "West", "West", "South", "West"), 4))
         expect_silent(geo_ds$region2 <- addGeoMetadata(geo_ds$region2))
         expect_prints(geo(geo_ds$region2),
@@ -351,7 +351,7 @@ with_test_authentication({
 
     geo_ds$state <- rep(c("Alabama", "Alaska", "Arizona", "Arkansas", "California"), 4)
     test_that("There is an error if more than one geography matches", {
-        skip_locally("Vagrant doesn't currently have hosted geodata")
+        skip_on_local_backend("Vagrant doesn't currently have hosted geodata")
         expect_error(
             geo_ds$state <- addGeoMetadata(geo_ds$state),
             paste0(
@@ -361,7 +361,7 @@ with_test_authentication({
         )
     })
     test_that("can manually set a geography after a failed match", {
-        skip_locally("Vagrant doesn't currently have hosted geodata")
+        skip_on_local_backend("Vagrant doesn't currently have hosted geodata")
         avail_geo <- availableGeodata()
         new_geo <- CrunchGeography(
             geodatum = urls(avail_geo["US States Topojson"]),
@@ -374,7 +374,7 @@ with_test_authentication({
     })
 
     test_that("can remove a geo association", {
-        skip_locally("Vagrant doesn't currently have hosted geodata")
+        skip_on_local_backend("Vagrant doesn't currently have hosted geodata")
         expect_silent(geo(geo_ds$state) <- NULL)
         expect_null(geo(geo_ds$state))
     })

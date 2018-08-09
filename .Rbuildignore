@@ -18,4 +18,4 @@
 ^pkgdown$
 ^revdep$
 ^logo\.png$
-^.lintr$
+^\.lintr$

@@ -111,7 +111,7 @@ validExport <- function(df2) {
 with_test_authentication({
     ds <- newDataset(df)
     test_that("Can download a csv of a dataset", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         filename <- tempfile()
         exportDataset(ds, file = filename)
         df2 <- read.csv(filename)
@@ -119,7 +119,7 @@ with_test_authentication({
     })
 
     test_that("write.csv alias", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         filename <- tempfile()
         write.csv(ds, file = filename)
         df2 <- read.csv(filename)
@@ -127,7 +127,7 @@ with_test_authentication({
     })
 
     test_that("Can filter rows in export", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         filename <- tempfile()
         write.csv(ds[ds$v4 == "C", ], file = filename)
         df2 <- read.csv(filename)
@@ -136,7 +136,7 @@ with_test_authentication({
     })
 
     test_that("Can filter columns in export", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         filename <- tempfile()
         write.csv(ds[, c("v2", "v4")], file = filename)
         df2 <- read.csv(filename)
@@ -145,7 +145,7 @@ with_test_authentication({
     })
 
     test_that("Can filter rows and columns in export", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         filename <- tempfile()
         write.csv(ds[ds$v4 == "C", c("v2", "v4")], file = filename)
         df2 <- read.csv(filename)
@@ -155,7 +155,7 @@ with_test_authentication({
     })
 
     test_that("Can export category ids", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         filename <- tempfile()
         write.csv(ds[, c("v2", "v4")], file = filename, categorical = "id")
         df2 <- read.csv(filename)
@@ -166,7 +166,7 @@ with_test_authentication({
     })
 
     test_that("Exclusion is applied, even if it depends on column not selected", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         filename <- tempfile()
         exclusion(ds) <- ds$v4 == "C"
         write.csv(ds[, c("v2", "v3")], file = filename)
@@ -176,7 +176,7 @@ with_test_authentication({
     })
 
     test_that("Exclusion is applied, even if it depends on column not selected", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         filename <- tempfile()
         exclusion(ds) <- NULL
         ds$v4[8] <- NA
