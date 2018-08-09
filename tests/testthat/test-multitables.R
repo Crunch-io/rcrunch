@@ -91,6 +91,7 @@ with_mock_crunch({
             '{"is_public":true}'
         )
         expect_no_request(is.public(m) <- FALSE)
+        expect_no_request(is.public(mults[[1]]) <- FALSE)
     })
 
     test_that("newMultitable", {
