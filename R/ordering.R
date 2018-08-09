@@ -82,6 +82,12 @@ setMethod("ordering", "DatasetCatalog", function(x) {
 
 #' @rdname ordering
 #' @export
+setMethod("ordering", "CrunchProject", function(x) {
+    return(ordering(datasets(x)))
+})
+
+#' @rdname ordering
+#' @export
 setMethod("ordering<-", "DatasetCatalog", function(x, value) {
     stopifnot(inherits(value, "DatasetOrder"))
 
@@ -102,8 +108,28 @@ setMethod("ordering<-", "DatasetCatalog", function(x, value) {
             value <- setdiff_entities(value, bad.entities, remove.na = TRUE)
         }
         ## Update on server
+        if (!isTRUE(getOption("crunch.already.shown.ds.order.msg", FALSE))) {
+            warning(paste(
+                "Greetings! There's a new way to organize datasets within",
+                "projects: the 'folder' methods. They're easier to use and",
+                "more reliable, just like the folder methods for organizing",
+                "variables. See `vignettes('projects', package='crunch')` for",
+                "examples of how to use them to organize datasets.",
+                "You're seeing this message because you're still using the",
+                "ordering<- method, which is fine today, but it will be going",
+                "away in the future, so check out the new methods."
+            ))
+            options(crunch.already.shown.ds.order.msg = TRUE)
+        }
         crPUT(shojiURL(x, "orders", "order"), body = toJSON(value))
     }
+    return(x)
+})
+
+#' @rdname ordering
+#' @export
+setMethod("ordering<-", "CrunchProject", function(x, value) {
+    ordering(datasets(x)) <- value
     return(x)
 })
 

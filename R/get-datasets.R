@@ -139,6 +139,15 @@ loadDataset <- function(dataset, kind = c("active", "all", "archived"), project 
         }
         return(loadDatasetFromURL(dataset))
     } else if (!inherits(dataset, "DatasetTuple")) {
+        if (missing(project) && is.character(dataset)) {
+            ## See if "dataset" is a path
+            dataset <- parseFolderPath(dataset)
+            if (length(dataset) > 1) {
+                ## Walk the path
+                ds_url <- datasetURLFromPath(dataset)
+                return(loadDatasetFromURL(ds_url))
+            } # else, proceed normally
+        }
         dscat <- selectDatasetCatalog(kind, project, refresh)
         dsname <- dataset
         dataset <- dscat[[dataset]]

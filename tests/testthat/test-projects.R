@@ -8,6 +8,14 @@ with_mock_crunch({
         expect_identical(names(projects), c("Project One", "Project Two"))
     })
 
+    test_that("ProjectCatalog print (as.data.frame) method", {
+        expect_identical(dim(as.data.frame(projects)), c(2L, 3L))
+        expect_identical(
+            names(as.data.frame(projects)),
+            c("name", "id", "description")
+        )
+    })
+
     aproject <- projects[["Project One"]]
     test_that("Getting project from catalog", {
         expect_is(projects[[1]], "CrunchProject")
@@ -199,17 +207,21 @@ with_mock_crunch({
     })
 
     test_that("Organize datasets", {
+        options(crunch.already.shown.ds.order.msg = NULL) ## To make sure the warning fires
         expect_identical(
             DatasetOrder(DatasetGroup("new group", datasets(aproject))),
             DatasetOrder(DatasetGroup("new group", "https://app.crunch.io/api/datasets/3/"))
         )
-        expect_PUT(
-            ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup(
-                "new group",
-                datasets(aproject)
-            )),
-            "https://app.crunch.io/api/projects/project1/datasets/order/",
-            '{"graph":[{"new group":["https://app.crunch.io/api/datasets/3/"]}]}'
+        expect_warning(
+            expect_PUT(
+                ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup(
+                    "new group",
+                    datasets(aproject)
+                )),
+                "https://app.crunch.io/api/projects/project1/datasets/order/",
+                '{"graph":[{"new group":["https://app.crunch.io/api/datasets/3/"]}]}'
+            ),
+            "Greetings!"
         )
         nested.ord <- DatasetOrder("https://app.crunch.io/api/datasets/3/",
             DatasetGroup(
@@ -218,11 +230,16 @@ with_mock_crunch({
             ),
             duplicates = TRUE
         )
-        expect_PUT(
-            ordering(datasets(aproject)) <- nested.ord,
-            "https://app.crunch.io/api/projects/project1/datasets/order/",
-            '{"graph":["https://app.crunch.io/api/datasets/3/",',
-            '{"new group":[{"nested":["https://app.crunch.io/api/datasets/3/"]}]}]}'
+        ## Can also set on the project directly too
+        expect_warning(
+            expect_PUT(
+                ordering(aproject) <- nested.ord,
+                "https://app.crunch.io/api/projects/project1/datasets/order/",
+                '{"graph":["https://app.crunch.io/api/datasets/3/",',
+                '{"new group":[{"nested":["https://app.crunch.io/api/datasets/3/"]}]}]}'
+            ),
+            ## This one doesn't warn because it only warns the first time!
+            NA
         )
     })
 

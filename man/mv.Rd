@@ -3,17 +3,17 @@
 \name{mv}
 \alias{mv}
 \alias{mkdir}
-\title{Functions to manipulate variables' folder structure}
+\title{Functions to manipulate variables' or project's folder structure}
 \usage{
 mv(x, variables, path)
 
 mkdir(x, path)
 }
 \arguments{
-\item{x}{A \code{CrunchDataset} or \code{VariableFolder}}
+\item{x}{A \code{CrunchDataset}, \code{VariableFolder}, or \code{CrunchProject}}
 
 \item{variables}{A Variable, selection of variables from \code{dataset}, or any
-other object that can be moved to a folder.}
+other object that can be moved to a folder (e.g. a dataset when organizing projects).}
 
 \item{path}{A character "path" to the folder: either a
 vector of nested folder names or a single string with nested folders
@@ -39,6 +39,11 @@ ancestors. For one, they work recursively, without additional arguments:
 even if all parent directories didn't already exist; and \code{mv} doesn't
 require that the directory to move to already exist---it will effectively
 call \code{mkdir} along the way.
+
+Just like variables are organized into folders within a dataset, datasets can
+be organized into folders within projects. Working with datasets inside of
+projects is experimental right now, but follows a similar philosophy as
+organizing variables within a dataset.
 }
 \examples{
 \dontrun{

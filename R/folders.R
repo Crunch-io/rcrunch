@@ -1,4 +1,4 @@
-#' Functions to manipulate variables' folder structure
+#' Functions to manipulate variables' or project's folder structure
 #'
 #' Variables in Crunch datasets are organized into folders, like in a file
 #' system. These functions allow you to create new folders and move objects into
@@ -11,8 +11,13 @@
 #' even if all parent directories didn't already exist; and `mv` doesn't
 #' require that the directory to move to already exist---it will effectively
 #' call `mkdir` along the way.
+#' 
+#' Just like variables are organized into folders within a dataset, datasets can
+#' be organized into folders within projects. Working with datasets inside of
+#' projects is experimental right now, but follows a similar philosophy as
+#' organizing variables within a dataset.
 #'
-#' @param x A `CrunchDataset` or `VariableFolder`
+#' @param x A `CrunchDataset`, `VariableFolder`, or `CrunchProject`
 #' @param path A character "path" to the folder: either a
 #' vector of nested folder names or a single string with nested folders
 #' separated by a delimiter ("/" default, configurable via
@@ -20,7 +25,7 @@
 #' relative to the location of the folder `x` (when `x` is a dataset, that
 #' means the root, top-level folder). `path` may also be a `VariableFolder` object.
 #' @param variables A Variable, selection of variables from `dataset`, or any
-#' other object that can be moved to a folder.
+#' other object that can be moved to a folder (e.g. a dataset when organizing projects).
 #' @return `x`, with the folder at `path` guaranteed to be created, and for
 #' `mv`, containing `variables` moved into it.
 #' @seealso [cd()] to select a folder by path; [rmdir()] to delete a folder; [folder()] to identify and set an object's parent folder; [base::dir.create()] if you literally want to create a directory in your local file system, which `mkdir()` does not do
@@ -45,6 +50,10 @@
 mv <- function(x, variables, path) {
     ## TODO: add an "after" argument, pass to addToFolder
 
+    if (inherits(x, "CrunchProject")) {
+        ## Temporary? call a different function
+        return(mv.project(x, variables, path))
+    }
     ## dplyr/tidyselect-ish functions, hacked in here (inspired by how pkgdown does it)
     fns <- list(
         starts_with = function(str, ...) grep(paste0("^", str), names(x), ...),
@@ -73,6 +82,10 @@ mv <- function(x, variables, path) {
 #' @export
 mkdir <- function(x, path) {
     ## TODO: add an "after" argument, move created folder there
+    if (inherits(x, "CrunchProject")) {
+        ## Temporary? call a different function
+        return(mkdir.project(x, path))
+    }
     f <- cd(x, path, create = TRUE)
     return(invisible(x))
 }
@@ -147,6 +160,10 @@ cd <- function(x, path, create = FALSE) {
 #' }
 #' @export
 rmdir <- function(x, path) {
+    if (inherits(x, "CrunchProject")) {
+        ## Temporary? call a different function
+        return(rmdir.project(x, path))
+    }
     delete(cd(x, path))
     invisible(refresh(x))
 }
