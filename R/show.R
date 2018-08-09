@@ -46,6 +46,11 @@ setMethod("show", "Insertion", .showIt)
 #' @export
 setMethod("show", "Insertions", .showIt)
 
+#' @rdname show-crunch
+#' @export
+setMethod("show", "CrunchProject", .showIt)
+
+
 # Actual show methods
 
 showAbsCategory <- function(x) data.frame(id = id(x), name = name(x), value = value(x), missing = is.na(x), stringsAsFactors = FALSE)
@@ -416,4 +421,15 @@ setMethod("show", "CrunchGeography", function(object) {
 
 setMethod("getShowContent", "ShojiFolder", function(x) {
     paste0(ifelse(types(x) == "folder", "[+] ", ""), names(x))
+})
+
+setMethod("getShowContent", "CrunchProject", function(x) {
+    # TODO: add number of datasets? folders?
+    return(
+        c(
+            paste0("Project ", dQuote(name(x))), 
+            "",
+            showShojiOrder(ordering(x))
+        )
+    )
 })
