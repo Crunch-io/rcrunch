@@ -79,23 +79,32 @@ To get started, let's look at the contents of our "Crunch.io Devs" project.
 
 ```r
 proj <- projects()[["Crunch.io Devs"]]
-proj
+ordering(proj)
 
-## TODO: print method, and print output
+# Stack Overflow Developer Survey (2016)
+# Stack Overflow Developer Survey (2017)
 ```
 
 It's flat---there are no groups here, only datasets.
 
 ## Creating folders
 
-Let's make some groups and move some datasets into them. To start, ... . We could call `mkdir()` and then `mv()`, but for convenience, `mv()` will create the group specified by your path if it doesn't already exist, so we can create the group and put
-
-<!-- Stuff below here is copypasta from variable-order.Rmd for reference. -->
+Let's make some groups and move some datasets into them. To start, we want to setup a folder for the collection of yearly Stack Overflow datasets. We could call `mkdir()` and then `mv()`, but for convenience, `mv()` will create the group specified by your path if it doesn't already exist, so we can use `mv()` alone and get 
 
 ```r
-ds %>%
-    mkdir("Demos") %>%
-    mv(21:37, "Demos")
+ds2016 <- loadDataset("Stack Overflow Developer Survey (2016)", project = proj)
+ds2017 <- loadDataset("Stack Overflow Developer Survey (2017)", project = proj)
+
+proj %>%
+    mv(ds2016, "Stack Overflow")
+proj %>%
+    mv(ds2017, "Stack Overflow")
+    
+ordering(proj)
+
+# [+] Stack Overflow
+#     Stack Overflow Developer Survey (2016)
+#     Stack Overflow Developer Survey (2017)
 ```
 
 Now when I print the top-level directory again, I see a "Demos" folder and don't see those demographic variables:
