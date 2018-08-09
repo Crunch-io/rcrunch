@@ -134,17 +134,66 @@ setGeneric("permissions", function (x) standardGeneric("permissions"))
 setGeneric("members", function (x) standardGeneric("members"))
 setGeneric("members<-", function (x, value) standardGeneric("members<-"))
 
+
+#' Get a dataset's DeckCatalog
+#'
+#' Crunch decks are stored in catalogs. This function returns those catalogs so
+#' that you can access and manipulate decks in R.
+#'
+#' @param a Crunch Dataset
+#'
+#' @return a DeckCatalog
+#' @export
 setGeneric("decks", function (x) standardGeneric("decks"))
-setGeneric("decks<-", function (x, value) standardGeneric("decks<-"))
-setGeneric("name", function(x) standardGeneric("name"))
-setGeneric("name<-", function (x, value) standardGeneric("name<-"))
+
+#' Access the slides of a CrunchDeck
+#'
+#' Return a SlideCatalog from a CrunchDeck. All slide catalog methods should be
+#' available for CrunchDecks, but this function is used internally to model the
+#' API.
+#'
+#' @param x a CrunchDeck
+#'
+#' @return
 setGeneric("slides", function (x) standardGeneric("slides"))
+
+
+#' Manipulate deck titles
+#'
+#' Crunch slides have titles an subtitles. You can change these features at
+#' either the Deck level by assigning a character vector which is
+#' the same length as the Deck to the Crunch deck, or by assigning character strings to the
+#' the slide.
+#' @param x a CrunchDeck or CrunchSlide
+#' @param value (Character) the new title or subtitle
+#' @name deck-titles
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' titles(deck)
+#' titles(deck) <- c("new_title1, new_title2)
+#' slide <- deck[[1]]
+#' title(slide) <- "new title"
+#' subtitle(slide) <- "new subtitle"
+#' subtitles(deck)
+#' }
 setGeneric("titles", function (x) standardGeneric("titles"))
-setGeneric("title", function (x) standardGeneric("title"))
+#' @rdname deck-titles
 setGeneric("titles<-", function (x, value) standardGeneric("titles<-"))
+#' @rdname deck-titles
+setGeneric("title", function (x) standardGeneric("title"))
+#' @rdname deck-titles
+setGeneric("title<-", function (x, value) standardGeneric("title<-"))
+#' @rdname deck-titles
 setGeneric("subtitles", function (x, value) standardGeneric("subtitles"))
-setGeneric("subtitle", function (x, value) standardGeneric("subtitle"))
+#' @rdname deck-titles
 setGeneric("subtitles<-", function (x, value) standardGeneric("subtitles<-"))
+#' @rdname deck-titles
+setGeneric("subtitle", function (x, value) standardGeneric("subtitle"))
+#' @rdname deck-titles
+setGeneric("subtitle<-", function (x, value) standardGeneric("subtitle<-"))
 setGeneric("analyses", function (x) standardGeneric("analyses"))
 setGeneric("analyses<-", function(x, value) standardGeneric("analyses<-"))
 setGeneric("analysis", function (x) standardGeneric("analysis"))
@@ -152,9 +201,7 @@ setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
 setGeneric("query", function (x) standardGeneric("query"))
 setGeneric("query<-", function(x, value) standardGeneric("query<-"))
 setGeneric("cube", function (x) standardGeneric("cube"))
-setGeneric("cube<-", function (x) standardGeneric("cube<-"))
 setGeneric("cubes", function (x) standardGeneric("cubes"))
-setGeneric("cubes<-", function (x) standardGeneric("cubes<-"))
 setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
 setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
 

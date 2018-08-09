@@ -5,6 +5,16 @@ setMethod("decks", "CrunchDataset", function (x) {
 
 # Deck Catalog ------------------------------------------------------------
 
+#' Create an empty Crunch Deck
+#'
+#' @param dataset A Crunch Dataset
+#' @param name The name of the Deck
+#' @param ... Further attributes of the deck such as the description, see API
+#'   docs for options.
+#' @return
+#' @export
+#'
+#' @examples
 newDeck <- function(dataset, name, ...) {
     stopifnot(is.dataset(dataset))
     payload <- wrapEntity(name = name, ...)
@@ -24,14 +34,13 @@ setMethod("[[<-", c("DeckCatalog", "character", "ANY", "CrunchDeck"),
               payload <- value@body[c("name", "description", "is_public", "team")]
               payload$name <- i
               payload <- payload[vapply(payload, function(x)is.character(x) | is.logical(x), logical(1))]
-              new_deck <- crPOST(self(x), body = toJSON(payload))
+              crPOST(self(x), body = toJSON(payload))
               return(invisible(refresh(x)))
           })
 
 setMethod("show", "DeckCatalog", function(object){
-    browser()
     out <- as.data.frame(object)
-    return(out[, c("name", "team", "is_public", "owner_name")])
+    print(out[, c("name", "team", "is_public", "owner_name")])
 })
 
 # CrunchDeck --------------------------------------------------------------
@@ -40,7 +49,6 @@ setMethod("[[", "CrunchDeck", function (x, i, ...) {
     slideCat <- slides(x)
     return(slideCat[[i]])
 })
-
 setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
     slideCat <- slides(x)
     slideCat[[i]] <- value
@@ -165,7 +173,7 @@ setMethod("titles", "SlideCatalog", function (x){
 })
 
 setMethod("titles<-", "SlideCatalog", function (x, value){
-    updateSlideTitle(x, value, "title")
+    updateSlideCatTitles(x, value, "title")
 })
 
 setMethod("subtitles", "SlideCatalog", function (x){
@@ -173,10 +181,10 @@ setMethod("subtitles", "SlideCatalog", function (x){
 })
 
 setMethod("subtitles<-", "SlideCatalog", function (x, value){
-    updateSlideTitle(x, value, "subtitle")
+    updateSlideCatTitles(x, value, "subtitle")
 })
 
-updateSlideTitle <- function(x, value, type) {
+updateSlideCatTitles <- function(x, value, type) {
     # TODO update a single title.
     stopifnot(is.character(value))
     payload <- mapply(function (item, new_title){
@@ -228,21 +236,20 @@ analysesToQueryList <- function(anCat) {
     })
 }
 
-setMethod("show", "CrunchSlide", function(x){
-    out <- cubes(x)
-    names(out) <- title(x)
+# CrunchSlide -------------------------------------------------------------------
+
+setMethod("show", "CrunchSlide", function(object){
+    out <- cubes(object)
+    names(out) <- title(object)
     print(out)
 })
 
-# CrunchSlide -------------------------------------------------------------------
-
-newSlide <- function(
-    deck,
-    query,
-    display_settings,
-    title = "",
-    subtitle = "",
-    ...) {
+newSlide <- function(deck,
+                     query,
+                     display_settings,
+                     title = "",
+                     subtitle = "",
+                     ...) {
     ds <- loadDataset(datasetReference(deck))
     if (inherits(query, "formula")) {
         query <- list(query)
@@ -276,8 +283,22 @@ setMethod("title", "CrunchSlide", function (x){
     return(x@body$title)
 })
 
+setMethod("title<-", "CrunchSlide", function(x, value){
+    payload <- x@body
+    payload$title <- value
+    crPATCH(self(x), body = toJSON(wrapEntity(body = payload)))
+    invisible(refresh(x))
+})
+
 setMethod("subtitle", "CrunchSlide", function (x){
     return(x@body$subtitle)
+})
+
+setMethod("subtitle<-", "CrunchSlide", function(x, value){
+    payload <- x@body
+    payload$subtitle <- value
+    crPATCH(self(x), body = toJSON(wrapEntity(body = payload)))
+    invisible(refresh(x))
 })
 
 setMethod("analyses", "CrunchSlide", {
@@ -303,7 +324,14 @@ setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value){
     analyses[[1]] <- value
 })
 
+setMethod("query<-", "CrunchSlide", function(x, value){
+    analysis <- analyses(x)[[1]]
+    query(analysis) <- value
+    return(invisible(x))
+})
+
 setMethod("cubes", "CrunchSlide", function(x) cubes(analyses(x)))
+setMethod("cube", "CrunchSlide", function(x) cube(analyses(x)[[1]]))
 setMethod("displaySettings", "CrunchSlide", function(x) displaySettings(analyses(x)))
 setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
     displaySettings(analyses(x)) <- value
