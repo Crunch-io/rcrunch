@@ -19,7 +19,7 @@ projects()
 
 ##                             name                               id description
 ## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            
-## 2      Stack Overflow Dev Survey 84f740d53da14a5b8001ac97c8925813            
+## 2                  Test Datasets 84f740d53da14a5b8001ac97c8925813            
 ## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de            
 ```
 
@@ -38,7 +38,7 @@ projects()
 
 ##                             name                               id description
 ## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            
-## 2      Stack Overflow Dev Survey 84f740d53da14a5b8001ac97c8925813            
+## 2                  Test Datasets 84f740d53da14a5b8001ac97c8925813            
 ## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de   
 ## 4                    A new start 23deb438a9dde2340091dec23abbbb43
 ```
@@ -79,156 +79,121 @@ To get started, let's look at the contents of our "Crunch.io Devs" project.
 
 ```r
 proj <- projects()[["Crunch.io Devs"]]
-ordering(proj)
+proj
 
+# Project “Crunch.io Devs”
+# 
+# Crunch User Monthly Tracker (February 2018)
+# Crunch User Monthly Tracker (January 2018)
+# Crunch User Quarterly Tracker (Q3 2017)
+# Crunch User Quarterly Tracker (Q4 2017)
+# Crunch User Survey
 # Stack Overflow Developer Survey (2016)
 # Stack Overflow Developer Survey (2017)
 ```
 
 It's flat---there are no groups here, only datasets.
 
-## Creating folders
+## Creating groups
 
 Let's make some groups and move some datasets into them. To start, we want to setup a folder for the collection of yearly Stack Overflow datasets. We could call `mkdir()` and then `mv()`, but for convenience, `mv()` will create the group specified by your path if it doesn't already exist, so we can use `mv()` alone and get 
 
 ```r
-ds2016 <- loadDataset("Stack Overflow Developer Survey (2016)", project = proj)
-ds2017 <- loadDataset("Stack Overflow Developer Survey (2017)", project = proj)
-
 proj %>%
-    mv(ds2016, "Stack Overflow")
+    mv(ds_so2016, "Stack Overflow")
 proj %>%
-    mv(ds2017, "Stack Overflow")
-    
-ordering(proj)
+    mv(ds_so2017, "Stack Overflow")
+```
 
+Now when we look at the top-level directory again, we see a "Stack Overflow" folder and those datasets are no longer at the root level:
+
+```r
+proj
+
+# Project “Crunch.io Devs”
+# 
+# Crunch User Quarterly Tracker (Q3 2017)
+# Crunch User Monthly Tracker (January 2018)
+# Crunch User Quarterly Tracker (Q4 2017)
+# Crunch User Monthly Tracker (February 2018)
+# Crunch User Survey
 # [+] Stack Overflow
 #     Stack Overflow Developer Survey (2016)
 #     Stack Overflow Developer Survey (2017)
 ```
 
-Now when I print the top-level directory again, I see a "Demos" folder and don't see those demographic variables:
+We can also make nested groups and move datasets into them as well:
+
+```r
+proj %>%
+    mv(ds_tracker_q32017, "Trackers/Quarterly")
+proj %>%
+    mv(ds_tracker_q42017, "Trackers/Quarterly")
+    
+proj %>%
+    mv(ds_tracker_012018, "Trackers/Monthly")
+proj %>%
+    mv(ds_tracker_022018, "Trackers/Monthly")    
+    
+proj %>%
+    mv(ds_user, "User Surveys")
+```
+
+And finally, we can see that our project has three groups, each containing a different set of datasets. Datasets can only be in one group at a time. 
 
 ```r
 proj
 
-## TODO: print output
+# Project “Crunch.io Devs”
+# 
+# [+] Stack Overflow
+#     Stack Overflow Developer Survey (2016)
+#     Stack Overflow Developer Survey (2017)
+# [+] Trackers
+#     [+] Quarterly
+#         Crunch User Quarterly Tracker (Q3 2017)
+#         Crunch User Quarterly Tracker (Q4 2017)
+#     [+] Monthly
+#         Crunch User Monthly Tracker (January 2018)
+#         Crunch User Monthly Tracker (February 2018)
+# [+] User Surveys
+#     Crunch User Survey
 ```
 
-`mv()` can reference variables or folders within a level in several ways. Numeric indices like we just did probably won't be the most common way you'll do it: names work just as well and are more transparent. Let's move the first variable, `perc_skipped`, into "Demos" as well
+## Deleting groups
+
+Just above, we created a group and put the `Crunch User Survey` dataset in it. But, it turns out, that was a one off and we won't have any more like it. So we want to get rid of that group The cleanest way to delete a group is with `rmdir()`.
 
 ```r
-ds %>%
-    mv("perc_skipped", "Demos") %>%
-    cd("Demos") ## To print the folder contents
+proj %>%
+    rmdir("User Surveys")
+# Error: Cannot remove 'User Surveys' because it is not empty. Move its contents somewhere else and then retry. 
 ```
 
-> A side note: although the last step of that chain was `cd()`, we haven't changed state in our R session. There is no "working folder" set globally. `cd()` is a function that returns a folder; if we had assigned the return from the function (pipeline) to some object, we could then pass that in to another function to "start" in that folder.
-
-Another way we can identify variables is by using the `dplyr`-like functions `starts_with`, `ends_with`, `matches`, and `contains`. Let's use `matches` to move all of the questions about Edward Snowden or Bradley (Chelsea) Manning to a folder for the topical questions in this week's survey:
+If the group isn't empty, `rmdir()` warns us and doesn't do anything, to delete it, we need to move the dataset out.
 
 ```r
-ds %>%
-    mkdir("This week") %>%
-    mv(matches("manning|snowden", ignore.case = TRUE), "This week")
+proj %>%
+    mv(ds_user, "/") %>%
+    rmdir("User Surveys")
+
+proj 
+
+# Project “Crunch.io Devs”
+# 
+# [+] Stack Overflow
+#     Stack Overflow Developer Survey (2016)
+#     Stack Overflow Developer Survey (2017)
+# [+] Trackers
+#     [+] Quarterly
+#         Crunch User Quarterly Tracker (Q3 2017)
+#         Crunch User Quarterly Tracker (Q4 2017)
+#     [+] Monthly
+#         Crunch User Monthly Tracker (January 2018)
+#         Crunch User Monthly Tracker (February 2018)
+# Crunch User Survey
 ```
 
-We can also select all variables in a folder using the `variables` function (or all folders within a folder using `folders`). Let's move all remaining variables from the top level folder to a folder called "Tracking questions". To do this, we do need to explicitly change to the top level folder.
-
-```r
-ds %>%
-    cd("/")
-    mkdir("Tracking questions") %>%
-    mv(., variables(.), "Tracking questions")
-```
-
-> (Curious about the "dot" notation? See the [magrittr docs](http://magrittr.tidyverse.org/articles/magrittr.html).)
-
-The reason we change to the top level folder here is that there is a subtle difference between passing `ds` to `mv()` versus `cd(ds, "/")`. Whatever object, dataset or folder, that is passed into `mv()` determines the scope from which the objects to move are selected. If you pass the dataset in, you can select any variables in the dataset, regardless of what folder they're in. If you pass in a folder, you're selecting just from that folder's contents. It can be convenient to find all variables that match some criteria across the whole dataset to move them, but sometimes we don't want that. In this case, we wanted only the variables sitting in the top level folder, not nested in other folders, so we wanted `variables(cd(ds, "/"))` and not `variables(ds)`.
-
-Now, our variable tree has some structure. Let's use `print(folder, depth = 1)` to see these folders and their contents one level deep:
-
-```r
-ds %>%
-    cd("/") %>%
-    print(depth = 1)
-```
-
-## Nested folders
-
-We can create folders within folders as well. In the "This week" folder, we have a set of questions about Edward Snowden. Let's nest them inside their own subfolder inside "This week":
-
-```r
-ds %>%
-    cd("This week") %>%
-    mkdir("Snowden") %>%
-    mv(matches("snowden", ignore.case = TRUE), "Snowden") %>%
-    cd("..") %>%
-    print(depth = 2)
-```
-
-Note how we used `".."` to change folders up a level, as you can in a file system . We did that just so we can print the folder structure at the top level (and to illustrate that you can specify relative paths :).
-
-You could also do this using the full path segments. `mkdir` will recursively make all path segments it needs in order to ensure that the target folder exists.
-
-```{r, eval=FALSE}
-ds %>%
-    mkdir("This week/Snowden") %>%
-    mv(matches("snowden", ignore.case = TRUE), "This week/Snowden") %>%
-    cd("/") %>%
-    print(depth = 2)
-```
-
-## Renaming folders and folder contents
-
-Folders themselves have names, which we can set with `setName()`:
-
-```r
-ds %>%
-    cd("Demos") %>%
-    setName("Demographics")
-```
-
-We can also set the names of the objects contained in a folder with `setNames()`.
-
-## Ordering within folders
-
-Unlike files in a file system, variables within folders are ordered.
-
-Let's move "Demographics" to the end. One way to do that is with the `setOrder` function. This lets you provide a specific order, but it requires you to specify all of the folder's contents. Let's use that function to put "Tracking questions" first:
-
-```r
-ds %>%
-    cd("/") %>%
-    setOrder(c("Tracking questions", "This week", "Demographics"))
-```
-
-<!--
-We can do that a couple of ways. One is using `mv()`, giving it the "after" argument
-
-```r
-ds %>%
-    cd("/") %>%
-    mv("Demographics", ".", after="Tracking questions")
-```
-
-This uses the `"."` folder "path" to indicate that you're "moving" the object to be in the current folder. Note that `"."` (the current folder) and `.` (the `magrittr` special value) aren't the same thing, though in this particular context, they would have similar implications.
-
- Note that order of things to mv is preserved, so that does set order
-
-## Finding a variable's folder
-
-folder(ds$var); can also mv to wherever that var is -->
-
-## Deleting folders
-
-The cleanest way to delete a folder is with `rmdir()`:
-
-```r
-ds %>%
-    rmdir("This week/Snowden")
-```
-
-This deletes the folder and all variables contained within it.
+As we said at the top, we are actively developing organizing datasets, so please give us any feedback you have as a [GitHub issue](https://github.com/Crunch-io/rcrunch/issues) or at [support@crunch.io](support@crunch.io).
 
 [Next: transforming and deriving](derive.html)
