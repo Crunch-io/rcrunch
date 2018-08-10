@@ -1,4 +1,4 @@
-context("cube standardized residuals")
+context("Cube standardized residuals")
 
 ##########################################
 ## fixutres from crunch cube

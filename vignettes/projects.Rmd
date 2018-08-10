@@ -1,0 +1,199 @@
+---
+title: "Organizing Datasets in Projects"
+description: '"Projects" are like folders for your datasets. They allow you to organize datasets into groups and manage access to those bundles of datasets.'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Organizing Datasets in Projects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+> The APIs for projects and organizing datasets within them are currently under development. What is documented here is what currently works, and it will continue to work. There are other methods which work today but that are being deprecated; these methods are not mentioned here. And there may be actions that logically seem like they should work but don't today; they will be supported once the new APIs are completed. Watch this vignette for updates as the APIs evolve.
+
+## Projects
+
+Projects are used to organize datasets into groups and manage access to those bundles of datasets. View your top-level projects with `projects()`:
+
+```r
+projects()
+
+##                             name                               id description
+## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            
+## 2                  Test Datasets 84f740d53da14a5b8001ac97c8925813            
+## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de            
+```
+
+To select a project, use standard R list extraction methods.
+
+```r
+proj <- projects()[["Crunch.io Devs"]]
+```
+
+`newProject()` creates a new top-level project.
+
+```r
+proj <- newProject(name="A new start")
+projects()
+
+
+##                             name                               id description
+## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            
+## 2                  Test Datasets 84f740d53da14a5b8001ac97c8925813            
+## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de   
+## 4                    A new start 23deb438a9dde2340091dec23abbbb43
+```
+
+Once you have a project in hand, you can put datasets in it and organize them into groups.
+
+## File-system like
+
+Datasets can be organized hierarchically inside of projects. You can think of this like a file system on your computer, with files (datasets) organized into directories (projects, or groups). As such, the main functions you use to manage it are reminiscent of a file system.
+
+* `mkdir()` makes a directory, i.e. creates a group in a project
+* `mv()` moves datasets and groups to a different place in the project
+* `rmdir()` removes a directory, i.e. deletes a group
+
+Like a file system, you can express the "path" to a folder as a string separated by a "/" delimiter, like this:
+
+```r
+mkdir(proj, "Tracking studies/Domestic/Automotive")
+```
+
+If your folder names should legitimately have a "/" in them, you can set a different character to be the path separator. See `?mkdir` or any of the other functions' help files for details.
+
+You can also specify paths as a vector of path segments, like
+
+```r
+mkdir(proj, c("Tracking studies", "Domestic", "Automotive"))
+```
+
+which is equivalent to the previous example. One or the other way may be more convenient, depending on what you're trying to accomplish.
+
+These functions all take a project as the first argument, and they return the same object passed to it. As such, they are designed to work with `magrittr`-style piping (`%>%`) for convenience in chaining together steps, though they don't require that you do.
+
+## Viewing the groups
+
+> During this period of API transition, we'll refer to the organization of datasets into "groups" inside a project as that more accurately reflects the current API and its limited capabilities. In the new API, "projects" will contain other "projects".
+
+To get started, let's look at the contents of our "Crunch.io Devs" project.
+
+```r
+proj <- projects()[["Crunch.io Devs"]]
+proj
+
+# Project “Crunch.io Devs”
+# 
+# Crunch User Monthly Tracker (February 2018)
+# Crunch User Monthly Tracker (January 2018)
+# Crunch User Quarterly Tracker (Q3 2017)
+# Crunch User Quarterly Tracker (Q4 2017)
+# Crunch User Survey
+# Stack Overflow Developer Survey (2016)
+# Stack Overflow Developer Survey (2017)
+```
+
+It's flat---there are no groups here, only datasets.
+
+## Creating groups
+
+Let's make some groups and move some datasets into them. To start, we want to setup a folder for the collection of yearly Stack Overflow datasets. We could call `mkdir()` and then `mv()`, but for convenience, `mv()` will create the group specified by your path if it doesn't already exist, so we can use `mv()` alone and get 
+
+```r
+proj %>%
+    mv(ds_so2016, "Stack Overflow")
+proj %>%
+    mv(ds_so2017, "Stack Overflow")
+```
+
+Now when we look at the top-level directory again, we see a "Stack Overflow" folder and those datasets are no longer at the root level:
+
+```r
+proj
+
+# Project “Crunch.io Devs”
+# 
+# Crunch User Quarterly Tracker (Q3 2017)
+# Crunch User Monthly Tracker (January 2018)
+# Crunch User Quarterly Tracker (Q4 2017)
+# Crunch User Monthly Tracker (February 2018)
+# Crunch User Survey
+# [+] Stack Overflow
+#     Stack Overflow Developer Survey (2016)
+#     Stack Overflow Developer Survey (2017)
+```
+
+We can also make nested groups and move datasets into them as well:
+
+```r
+proj %>%
+    mv(ds_tracker_q32017, "Trackers/Quarterly")
+proj %>%
+    mv(ds_tracker_q42017, "Trackers/Quarterly")
+    
+proj %>%
+    mv(ds_tracker_012018, "Trackers/Monthly")
+proj %>%
+    mv(ds_tracker_022018, "Trackers/Monthly")    
+    
+proj %>%
+    mv(ds_user, "User Surveys")
+```
+
+And finally, we can see that our project has three groups, each containing a different set of datasets. Datasets can only be in one group at a time. 
+
+```r
+proj
+
+# Project “Crunch.io Devs”
+# 
+# [+] Stack Overflow
+#     Stack Overflow Developer Survey (2016)
+#     Stack Overflow Developer Survey (2017)
+# [+] Trackers
+#     [+] Quarterly
+#         Crunch User Quarterly Tracker (Q3 2017)
+#         Crunch User Quarterly Tracker (Q4 2017)
+#     [+] Monthly
+#         Crunch User Monthly Tracker (January 2018)
+#         Crunch User Monthly Tracker (February 2018)
+# [+] User Surveys
+#     Crunch User Survey
+```
+
+## Deleting groups
+
+Just above, we created a group and put the `Crunch User Survey` dataset in it. But, it turns out, that was a one off and we won't have any more like it. So we want to get rid of that group The cleanest way to delete a group is with `rmdir()`.
+
+```r
+proj %>%
+    rmdir("User Surveys")
+# Error: Cannot remove 'User Surveys' because it is not empty. Move its contents somewhere else and then retry. 
+```
+
+If the group isn't empty, `rmdir()` warns us and doesn't do anything, to delete it, we need to move the dataset out.
+
+```r
+proj %>%
+    mv(ds_user, "/") %>%
+    rmdir("User Surveys")
+
+proj 
+
+# Project “Crunch.io Devs”
+# 
+# [+] Stack Overflow
+#     Stack Overflow Developer Survey (2016)
+#     Stack Overflow Developer Survey (2017)
+# [+] Trackers
+#     [+] Quarterly
+#         Crunch User Quarterly Tracker (Q3 2017)
+#         Crunch User Quarterly Tracker (Q4 2017)
+#     [+] Monthly
+#         Crunch User Monthly Tracker (January 2018)
+#         Crunch User Monthly Tracker (February 2018)
+# Crunch User Survey
+```
+
+As we said at the top, we are actively developing organizing datasets, so please give us any feedback you have as a [GitHub issue](https://github.com/Crunch-io/rcrunch/issues) or at [support@crunch.io](support@crunch.io).
+
+[Next: transforming and deriving](derive.html)

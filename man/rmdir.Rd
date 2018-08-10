@@ -7,7 +7,7 @@
 rmdir(x, path)
 }
 \arguments{
-\item{x}{A \code{CrunchDataset} or \code{VariableFolder}}
+\item{x}{A \code{CrunchDataset}, \code{VariableFolder}, or \code{CrunchProject}}
 
 \item{path}{A character "path" to the folder: either a
 vector of nested folder names or a single string with nested folders
