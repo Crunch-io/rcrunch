@@ -14,17 +14,17 @@ with_mock_crunch({
             fixed = TRUE
         )
     })
-    
+
     test_that("print method on a project", {
         expect_prints(proj,
-                      paste(
-                          paste0("Project ", dQuote("Project One")),
-                          "",
-                          "[+] Group 1",
-                          "    ECON.sav",
-                          sep = "\n"
-                      ),
-                      fixed = TRUE
+            paste(
+                paste0("Project ", dQuote("Project One")),
+                "",
+                "[+] Group 1",
+                "    ECON.sav",
+                sep = "\n"
+            ),
+            fixed = TRUE
         )
     })
 

@@ -427,7 +427,7 @@ setMethod("getShowContent", "CrunchProject", function(x) {
     # TODO: add number of datasets? folders?
     return(
         c(
-            paste0("Project ", dQuote(name(x))), 
+            paste0("Project ", dQuote(name(x))),
             "",
             showShojiOrder(ordering(x))
         )
