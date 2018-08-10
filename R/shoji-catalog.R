@@ -65,7 +65,7 @@ setIndexSlot <- function(x, i, value, unique = FALSE) {
             if (length(these)) p[these] <- lapply(p[these], I)
             return(p)
         })
-        crPATCH(self(x), body = toJSON(payload))
+        crPATCH(self(x), body = toJSON(wrapCatalogIndex(payload)))
     }
     return(x)
 }

@@ -1,28 +1,20 @@
 structure(list(url = "/api/sources/", status_code = 201L, headers = structure(list(
     allow = "GET, HEAD, OPTIONS, POST", `content-encoding` = "gzip", 
-    `content-type` = "application/json;charset=utf-8", date = "Thu, 10 May 2018 21:54:30 GMT", 
-    location = "/api/sources/d88174/", server = "nginx", `set-cookie` = "REDACTED", 
+    `content-type` = "application/json;charset=utf-8", date = "Thu, 02 Aug 2018 21:33:21 GMT", 
+    location = "/api/sources/b96140/", server = "nginx", `set-cookie` = "REDACTED", 
     vary = "Cookie, Accept-Encoding", `x-timing` = "", `content-length` = "86", 
-    connection = "keep-alive"), .Names = c("allow", "content-encoding", 
-"content-type", "date", "location", "server", "set-cookie", "vary", 
-"x-timing", "content-length", "connection"), class = c("insensitive", 
-"list")), all_headers = list(structure(list(status = 201L, version = "HTTP/1.1", 
+    connection = "keep-alive"), class = c("insensitive", "list"
+)), all_headers = list(list(status = 201L, version = "HTTP/1.1", 
     headers = structure(list(allow = "GET, HEAD, OPTIONS, POST", 
         `content-encoding` = "gzip", `content-type` = "application/json;charset=utf-8", 
-        date = "Thu, 10 May 2018 21:54:30 GMT", location = "/api/sources/d88174/", 
+        date = "Thu, 02 Aug 2018 21:33:21 GMT", location = "/api/sources/b96140/", 
         server = "nginx", `set-cookie` = "REDACTED", vary = "Cookie, Accept-Encoding", 
-        `x-timing` = "", `content-length` = "86", connection = "keep-alive"), .Names = c("allow", 
-    "content-encoding", "content-type", "date", "location", "server", 
-    "set-cookie", "vary", "x-timing", "content-length", "connection"
-    ), class = c("insensitive", "list"))), .Names = c("status", 
-"version", "headers"))), cookies = structure(list(domain = ".crunch.io", 
-    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1557525271, class = c("POSIXct", 
-    "POSIXt")), name = "token", value = "REDACTED"), .Names = c("domain", 
-"flag", "path", "secure", "expiration", "name", "value"), row.names = c(NA, 
+        `x-timing` = "", `content-length` = "86", connection = "keep-alive"), class = c("insensitive", 
+    "list")))), cookies = structure(list(domain = ".crunch.io", 
+    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1564781601, class = c("POSIXct", 
+    "POSIXt")), name = "token", value = "REDACTED"), row.names = c(NA, 
 -1L), class = "data.frame"), content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/sources/\"}"), 
-    date = structure(1525989270, class = c("POSIXct", "POSIXt"
-    ), tzone = "GMT"), times = structure(c(0, 3.3e-05, 3.4e-05, 
-    0.000132, 0.000142, 1.156323), .Names = c("redirect", "namelookup", 
-    "connect", "pretransfer", "starttransfer", "total"))), .Names = c("url", 
-"status_code", "headers", "all_headers", "cookies", "content", 
-"date", "times"), class = "response")
+    date = structure(1533245601, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.8e-05, 
+    connect = 3e-05, pretransfer = 0.00015, starttransfer = 0.000159, 
+    total = 0.974349)), class = "response")

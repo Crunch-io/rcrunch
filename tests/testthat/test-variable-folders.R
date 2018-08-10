@@ -83,12 +83,12 @@ with_mock_crunch({
         expect_PATCH(
             names(folders(ds)[[1]]) <- c("Year of Birth", "A folder in a folder", "Plain text"),
             "https://app.crunch.io/api/datasets/1/folders/1/",
-            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
             '{"name":"Year of Birth"},',
             '"https://app.crunch.io/api/datasets/1/folders/3/":',
             '{"name":"A folder in a folder"},',
             '"https://app.crunch.io/api/datasets/1/variables/textVar/":',
-            '{"name":"Plain text"}}'
+            '{"name":"Plain text"}}}'
         )
     })
     test_that("Set a variable's name inside a folder", {
