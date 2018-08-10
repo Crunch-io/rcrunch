@@ -2,6 +2,7 @@
 * New `mv()` functions for organizing datasets within projects.
 * Adjusted the calculation of `index.table()` to better reflect analysts' intentions. Now, `index.table()` calcualtes the index with respect to the marginal proportion of the `margin` given, so for `index.table(cube, 2)` the column proportions of the table are indexed to the marginal row proportions. In other words: for each column how much larger or smaller is the proportion in that column when compared to the proportions for the row variable alone.
 * fixed a bug when using the `makeWeight()` function with categorical variables that had non-sequential IDs.
+* Fixed a bug wherby hidden variables were not being included in the output of `write.csv` or `as.data.frame(force = TRUE)`
 
 # crunch 1.23.0
 
