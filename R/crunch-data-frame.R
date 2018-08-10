@@ -30,16 +30,13 @@ CrunchDataFrame <- function(dataset, row.order = NULL,
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
 
-    if (include.hidden) {
-        var_names <- aliases(allVariables(dataset))
-    } else {
-        var_names <- aliases(variables(dataset))
-    }
+    var_names <- aliases(allVariables(dataset))
 
     out <- new.env()
     attr(out, "crunchDataset") <- dataset
     attr(out, "col_names") <- var_names
     attr(out, "mode") <- categorical.mode
+    attr(out, "include.hidden") <- include.hidden
 
     with(out, {
         ## Note the difference from as.environment: wrapped in as.vector

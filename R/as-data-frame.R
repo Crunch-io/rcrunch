@@ -14,7 +14,7 @@
 #' the remote server, rather than pulling the entire dataset into local
 #' memory.
 #'
-#' If you call `as.data.frame` on a `CrunchDataset` with `force = TRUE`, you
+#' If you call `as.data.frame()` on a `CrunchDataset` with `force = TRUE`, you
 #' will instead get a true `data.frame`. You can also get this `data.frame` by
 #' calling `as.data.frame` on a `CrunchDataFrame` (effectively calling
 #' `as.data.frame` on the dataset twice)
@@ -45,7 +45,7 @@
 #'  Crunch Dataset order will be used.
 #' @param categorical.mode what mode should categoricals be pulled as? One of
 #' factor, numeric, id (default: factor)
-#' @param include.hidden logical: should hidden variables be included? (default: `FALSE`)
+#' @param include.hidden logical: should hidden variables be included? (default: `TRUE`)
 #' @param ... additional arguments passed to `as.data.frame` (default method).
 #' @return When called on a `CrunchDataset`, the method returns an object of
 #' class `CrunchDataFrame` unless `force = TRUE`, in which case the return is a
@@ -61,8 +61,8 @@ as.data.frame.CrunchDataset <- function(x,
                                         optional = FALSE,
                                         force = FALSE,
                                         categorical.mode = "factor",
-                                        include.hidden = FALSE,
                                         row.order = NULL,
+                                        include.hidden = TRUE,
                                         ...) {
     out <- CrunchDataFrame(x,
         row.order = row.order,
@@ -81,11 +81,12 @@ as.data.frame.CrunchDataset <- function(x,
 as.data.frame.CrunchDataFrame <- function(x,
                                           row.names = NULL,
                                           optional = FALSE,
+                                          include.hidden = attr(x, "include.hidden"),
                                           ...) {
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     on.exit(unlink(tmp))
-    write.csv(ds, tmp, categorical = "id")
+    write.csv(ds, tmp, categorical = "id", include.hidden = include.hidden)
     # TODO: use variableMetadata to provide all `colClasses`?
     # meta <- variableMetadata(ds)
     ds_out <- read.csv(tmp, stringsAsFactors = FALSE)

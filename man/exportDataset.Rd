@@ -9,7 +9,7 @@
 \usage{
 exportDataset(dataset, file, format = c("csv", "spss"),
   categorical = c("name", "id"), na = NULL, varlabel = c("name",
-  "description"), ...)
+  "description"), include.hidden = FALSE, ...)
 
 \S4method{write.csv}{CrunchDataset}(x, ...)
 }
@@ -39,6 +39,8 @@ numeric, text, and datetime variables will have the missing reason string;
 \item{varlabel}{For SPSS export, which Crunch metadata field should be used
 as variable labels? Default is "name", but "description" is another valid
 value.}
+
+\item{include.hidden}{logical: should hidden variables be included? (default: \code{FALSE})}
 
 \item{...}{additional options. See the API documentation. Currently supported
 boolean options include 'include_personal' for personal variables (default:
