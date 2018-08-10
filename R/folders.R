@@ -11,7 +11,7 @@
 #' even if all parent directories didn't already exist; and `mv` doesn't
 #' require that the directory to move to already exist---it will effectively
 #' call `mkdir` along the way.
-#' 
+#'
 #' Just like variables are organized into folders within a dataset, datasets can
 #' be organized into folders within projects. Working with datasets inside of
 #' projects is experimental right now, but follows a similar philosophy as

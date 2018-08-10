@@ -5,7 +5,8 @@ with_mock_crunch({
     ds <- loadDataset("ECON.sav")
     other_ds <- loadDataset("test ds")
     test_that("Starting datasets order", {
-        expect_prints(ordering(proj),
+        expect_prints(
+            ordering(proj),
             paste(
                 "[+] Group 1",
                 "    ECON.sav",
@@ -14,17 +15,18 @@ with_mock_crunch({
             fixed = TRUE
         )
     })
-    
+
     test_that("print method on a project", {
-        expect_prints(proj,
-                      paste(
-                          paste0("Project ", dQuote("Project One")),
-                          "",
-                          "[+] Group 1",
-                          "    ECON.sav",
-                          sep = "\n"
-                      ),
-                      fixed = TRUE
+        expect_prints(
+            proj,
+            paste(
+                paste0("Project ", dQuote("Project One")),
+                "",
+                "[+] Group 1",
+                "    ECON.sav",
+                sep = "\n"
+            ),
+            fixed = TRUE
         )
     })
 
