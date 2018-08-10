@@ -23,9 +23,9 @@
 #' @name CrunchDataFrame
 NULL
 
-CrunchDataFrame <- function (dataset, row.order = NULL,
-                             categorical.mode = "factor",
-                             include.hidden = FALSE) {
+CrunchDataFrame <- function(dataset, row.order = NULL,
+                            categorical.mode = "factor",
+                            include.hidden = FALSE) {
     ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
@@ -41,10 +41,12 @@ CrunchDataFrame <- function (dataset, row.order = NULL,
     with(out, {
         ## Note the difference from as.environment: wrapped in as.vector
         for (.a in var_names) {
-            eval(substitute(delayedAssign(v, {
-                getVarFromServer(col_name = v, crdf = ds, mode = mode)
-            }),
-                list(v=.a, ds=out, mode = attr(out, "mode"))))
+            eval(substitute(
+                delayedAssign(v, {
+                    getVarFromServer(col_name = v, crdf = ds, mode = mode)
+                }),
+                list(v = .a, ds = out, mode = attr(out, "mode"))
+            ))
         }
     })
 
@@ -61,7 +63,7 @@ setOldClass("CrunchDataFrame")
 
 #' @export
 #' @rdname CrunchDataFrame
-dim.CrunchDataFrame <- function (x) {
+dim.CrunchDataFrame <- function(x) {
     if (is.null(attr(x, "order"))) {
         # if there is no ordering, the num of rows is the same as dataset
         n_rows <- nrow(attr(x, "crunchDataset"))
@@ -74,13 +76,13 @@ dim.CrunchDataFrame <- function (x) {
 
 #' @export
 #' @rdname CrunchDataFrame
-names.CrunchDataFrame <- function (x) attr(x, "col_names")
+names.CrunchDataFrame <- function(x) attr(x, "col_names")
 
 
 
 #' @export
 #' @rdname CrunchDataFrame
-`[.CrunchDataFrame` <- function (x, i, j, drop = TRUE) {
+`[.CrunchDataFrame` <- function(x, i, j, drop = TRUE) {
     j <- grabColNames(x, j)
     row_inds <- grabRowInd(x, i)
 
@@ -88,7 +90,7 @@ names.CrunchDataFrame <- function (x) attr(x, "col_names")
     out <- lapply(j, function(col) {
         col_data <- x[[col]]
         if (is.data.frame(col_data)) {
-            return(col_data[row_inds,])
+            return(col_data[row_inds, ])
         } else {
             return(col_data[row_inds])
         }
@@ -105,7 +107,7 @@ names.CrunchDataFrame <- function (x) attr(x, "col_names")
         # single column, so return vector
         out <- out[[1]]
     } else {
-        out <- structure(out, class="data.frame", row.names=seq_along(row_inds))
+        out <- structure(out, class = "data.frame", row.names = seq_along(row_inds))
     }
 
     return(out)
@@ -113,7 +115,7 @@ names.CrunchDataFrame <- function (x) attr(x, "col_names")
 
 #' @export
 #' @rdname CrunchDataFrame
-`[<-.CrunchDataFrame` <- function (x, i, j, value) {
+`[<-.CrunchDataFrame` <- function(x, i, j, value) {
     j <- grabColNames(x, j)
     row_inds <- grabRowInd(x, i)
 
@@ -133,11 +135,13 @@ names.CrunchDataFrame <- function (x) attr(x, "col_names")
     # foo <- data.frame(foo=c(1, 2, 3, 4), bar=c(5, 6, 7, 8),
     #                   baz = c(1, 2, 3, 4), qux = c(5, 6, 7, 8))
     # foo[c(1, 2), c(3, 4)] <- c(10, 20, 30, 40)
-    values <- split(value, ceiling(seq_along(value)/length(row_inds)))
+    values <- split(value, ceiling(seq_along(value) / length(row_inds)))
     for (i in seq_along(j)) {
         col_name <- j[i]
-        x <- setCrdfVar(col_name = col_name, row_inds = row_inds,
-                         crdf = x, value = values[[i]])
+        x <- setCrdfVar(
+            col_name = col_name, row_inds = row_inds,
+            crdf = x, value = values[[i]]
+        )
     }
     return(x)
 }
@@ -154,15 +158,17 @@ names.CrunchDataFrame <- function (x) attr(x, "col_names")
 #'
 #' @return character names of the columns of the crdf to select
 #' @keywords internal
-grabColNames <- function (x, j, allow_logical = TRUE) {
+grabColNames <- function(x, j, allow_logical = TRUE) {
     if (missing(j)) {
         # if there's no j, grab all columns
         j <- names(x)
     } else if (is.numeric(j) | is.logical(j)) {
         j <- names(x)[j]
     } else if (!is.character(j)) {
-        halt("column subsetting must be done with a numeric, character, or ",
-             "logical.")
+        halt(
+            "column subsetting must be done with a numeric, character, or ",
+            "logical."
+        )
     }
     return(j)
 }
@@ -174,14 +180,14 @@ grabColNames <- function (x, j, allow_logical = TRUE) {
 #'
 #' @return integers of the rows of the crdf to select
 #' @keywords internal
-grabRowInd <- function (x, i) {
+grabRowInd <- function(x, i) {
     if (missing(i)) {
         # if there is no row specification, use all rows.
         row_inds <- seq_len(nrow(x))
     } else {
         if (is.logical(i)) {
             # recycle logicals
-            i <- rep(i, ceiling(nrow(x)/length(i)))[seq_len(nrow(x))]
+            i <- rep(i, ceiling(nrow(x) / length(i)))[seq_len(nrow(x))]
         } else if (!is.numeric(i)) {
             halt("row subsetting must be done with either numeric or a logical.")
         }
@@ -192,31 +198,35 @@ grabRowInd <- function (x, i) {
 
 #' @export
 #' @rdname CrunchDataFrame
-`[[.CrunchDataFrame` <- function (x, i) {
+`[[.CrunchDataFrame` <- function(x, i) {
     return(getCrdfVar(grabColNames(x, i, allow_logical = FALSE),
-                      x, mode = attr(x, "mode")))
+        x,
+        mode = attr(x, "mode")
+    ))
 }
 
 #' @export
 #' @rdname CrunchDataFrame
-`[[<-.CrunchDataFrame` <- function (x, i, value) {
-    return(setCrdfVar(col_name = grabColNames(x, i, allow_logical = FALSE),
-                      crdf = x, value = value))
+`[[<-.CrunchDataFrame` <- function(x, i, value) {
+    return(setCrdfVar(
+        col_name = grabColNames(x, i, allow_logical = FALSE),
+        crdf = x, value = value
+    ))
 }
 
 #' @export
 #' @rdname CrunchDataFrame
-`$.CrunchDataFrame` <- function (x, i) {
+`$.CrunchDataFrame` <- function(x, i) {
     return(getCrdfVar(i, x, mode = attr(x, "mode")))
 }
 
 #' @export
 #' @rdname CrunchDataFrame
-`$<-.CrunchDataFrame` <- function (x, i, value) {
+`$<-.CrunchDataFrame` <- function(x, i, value) {
     return(setCrdfVar(col_name = i, crdf = x, value = value))
 }
 
-getCrdfVar <- function (col_name, crdf, ...) {
+getCrdfVar <- function(col_name, crdf, ...) {
     if (!col_name %in% names(crdf)) {
         halt("The variable ", dQuote(col_name), " is not found in the CrunchDataFrame.")
     }
@@ -224,7 +234,7 @@ getCrdfVar <- function (col_name, crdf, ...) {
     return(get(col_name, crdf)) # need [ord] here?
 }
 
-getVarFromServer <- function (col_name, crdf, ...) {
+getVarFromServer <- function(col_name, crdf, ...) {
     ord <- attr(crdf, "order")
     ds <- attr(crdf, "crunchDataset")
 
@@ -238,7 +248,7 @@ getVarFromServer <- function (col_name, crdf, ...) {
     }
 }
 
-setCrdfVar <- function (col_name, row_inds, crdf, value) {
+setCrdfVar <- function(col_name, row_inds, crdf, value) {
     # remove the variable if the value is NULL
     if (is.null(value) & missing(row_inds)) {
         return(invisible(rmCrdfVar(col_name = col_name, crdf = crdf)))
@@ -262,8 +272,10 @@ setCrdfVar <- function (col_name, row_inds, crdf, value) {
         # data.frame(a=1, b=2)) would do.
         value <- unlist(value, recursive = FALSE)
     } else if (length(value) != length(row_inds)) {
-        halt("replacement has ", length(value),
-             " rows, the CrunchDataFrame has ", nrow(crdf))
+        halt(
+            "replacement has ", length(value),
+            " rows, the CrunchDataFrame has ", nrow(crdf)
+        )
     }
 
     # if we are replacing some rows, fill in with NAs, or grab old vector
@@ -286,7 +298,7 @@ setCrdfVar <- function (col_name, row_inds, crdf, value) {
     return(invisible(crdf))
 }
 
-rmCrdfVar <- function (col_name, crdf) {
+rmCrdfVar <- function(col_name, crdf) {
     # remove column
     rm(list = col_name, envir = crdf)
 
