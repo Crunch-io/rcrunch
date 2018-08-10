@@ -58,7 +58,7 @@ setMethod("cut", "NumericVariable", function(x,
                                              include.lowest = FALSE,
                                              right = TRUE,
                                              dig.lab = 3,
-                                             ordered_result = FALSE, ...){
+                                             ordered_result = FALSE, ...) {
     if (missing(name)) {
         halt("Must provide the name for the new variable")
     }
@@ -71,11 +71,12 @@ setMethod("cut", "NumericVariable", function(x,
         dx <- diff(rx)
         if (dx == 0) {
             dx <- abs(rx[1L])
-            breaks <- seq.int(rx[1L] - dx/1000, rx[2L] + dx/1000,
-                              length.out = nb)
+            breaks <- seq.int(rx[1L] - dx / 1000, rx[2L] + dx / 1000,
+                length.out = nb
+            )
         } else {
             breaks <- seq.int(rx[1L], rx[2L], length.out = nb)
-            breaks[c(1L, nb)] <- c(rx[1L] - dx/1000, rx[2L] + dx/1000)
+            breaks[c(1L, nb)] <- c(rx[1L] - dx / 1000, rx[2L] + dx / 1000)
         }
     } else {
         breaks <- sort.int(as.double(breaks))
@@ -87,18 +88,20 @@ setMethod("cut", "NumericVariable", function(x,
     if (is.null(labels)) { # Autogenerate labels if not supplied
         labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
-        halt("There are ",
+        halt(
+            "There are ",
             nb - 1,
             " resulting categories but you only supplied ",
             length(labels),
-            " labels. Change number of breaks or the number of labels.")
+            " labels. Change number of breaks or the number of labels."
+        )
     }
     if (right) {
-        `%c1%` <- function (x,y) x <= y
-        `%c2%` <- function (x,z) x > z
+        `%c1%` <- function(x, y) x <= y
+        `%c2%` <- function(x, z) x > z
     } else {
-        `%c1%` <- function (x,y) x < y
-        `%c2%` <- function (x,z) x >= z
+        `%c1%` <- function(x, y) x < y
+        `%c2%` <- function(x, z) x >= z
     }
 
     cases <- vector("list", length = length(breaks) - 1)
@@ -106,8 +109,10 @@ setMethod("cut", "NumericVariable", function(x,
     for (i in 2:length(breaks)) {
         cases[[i - 1]] <- x %c2% breaks[i - 1] & x %c1% breaks[i]
     }
-    case_list <- lapply(seq_along(cases),
-        function (x) list(expression = cases[[x]], name = labels[x]))
+    case_list <- lapply(
+        seq_along(cases),
+        function(x) list(expression = cases[[x]], name = labels[x])
+    )
     makeCaseVariable(cases = case_list, name = name, ...)
 })
 
@@ -135,19 +140,22 @@ generateCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
         if (ok) break
     }
     labels <- if (ok) {
-            paste0(ifelse(right, "(", "["),
-                   ch.br[-nb], ",", ch.br[-1L],
-                   ifelse(right, "]", ")")
-            )
-        } else {
-            paste("Range", seq_len(nb - 1L), sep = "_")
-        }
+        paste0(
+            ifelse(right, "(", "["),
+            ch.br[-nb], ",", ch.br[-1L],
+            ifelse(right, "]", ")")
+        )
+    } else {
+        paste("Range", seq_len(nb - 1L), sep = "_")
+    }
     if (ok && include.lowest) {
         if (right) {
             substr(labels[1L], 1L, 1L) <- "[" # was "("
         } else {
-            substring(labels[nb - 1L],
-                      nchar(labels[nb - 1L], "c")) <- "]" # was ")"
+            substring(
+                labels[nb - 1L],
+                nchar(labels[nb - 1L], "c")
+            ) <- "]" # was ")"
         }
     }
     return(labels)

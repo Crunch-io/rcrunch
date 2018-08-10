@@ -39,10 +39,10 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
                            include.hidden = FALSE, ...) {
 
     exporters <- crGET(shojiURL(dataset, "views", "export"))
-    format <- match.arg(format, choices=names(exporters))
+    format <- match.arg(format, choices = names(exporters))
     export_url <- exporters[[format]]
 
-    body <- list(filter=zcl(activeFilter(dataset)))
+    body <- list(filter = zcl(activeFilter(dataset)))
     ## Add this after so that if it is NULL, the "where" key isn't present
     body$where <- variablesFilter(dataset, include.hidden)
     ## Assemble options
@@ -61,7 +61,7 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
         body$options <- opts
     }
 
-    result <- crPOST(export_url, body=toJSON(body))
+    result <- crPOST(export_url, body = toJSON(body))
     file <- crDownload(result, file)
     invisible(file)
 }
@@ -82,11 +82,13 @@ variablesFilter <- function (dataset, include.hidden = FALSE) {
         dupes <- duplicated(names(v))
         if (any(dupes)) {
             dup.aliases <- unique(aliases(allvars[dupes]))
-            halt("Duplicate variable reference",
+            halt(
+                "Duplicate variable reference",
                 ifelse(length(dup.aliases) > 1, "s", ""), ": ",
-                serialPaste(dup.aliases))
+                serialPaste(dup.aliases)
+            )
         }
-        return(list(`function`="select", args=list(list(map=v))))
+        return(list(`function` = "select", args = list(list(map = v))))
     }
     ## Else, return NULL
     return(NULL)
@@ -94,4 +96,4 @@ variablesFilter <- function (dataset, include.hidden = FALSE) {
 
 #' @rdname exportDataset
 #' @export
-setMethod("write.csv", "CrunchDataset", function (x, ...) exportDataset(x, ..., format="csv"))
+setMethod("write.csv", "CrunchDataset", function(x, ...) exportDataset(x, ..., format = "csv"))

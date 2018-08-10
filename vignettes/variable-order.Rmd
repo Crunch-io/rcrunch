@@ -12,7 +12,6 @@ vignette: >
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
-load("vignettes.RData")
 options(width=120)
 ```
 

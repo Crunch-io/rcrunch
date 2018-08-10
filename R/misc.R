@@ -1,15 +1,15 @@
-is.error <- function (x) inherits(x, "try-error")
+is.error <- function(x) inherits(x, "try-error")
 
-rethrow <- function (x) halt(errorMessage(x))
+rethrow <- function(x) halt(errorMessage(x))
 
-errorMessage <- function (e) attr(e, "condition")$message
+errorMessage <- function(e) attr(e, "condition")$message
 
-vget <- function (name) {
+vget <- function(name) {
     ## Return a function you can lapply/vapply to select an attribute
     ## Usage: lapply(list.of.stuff, vget("name"))
     ## instead of: lapply(list.of.stuff, function (x) x$name)
     ## N.B.: don't use if you're doing lapply(x, FUN) (because the x's will clash)
-    return(function (x) x[[name]])
+    return(function(x) x[[name]])
 }
 
 #' Make a prose list
@@ -20,15 +20,15 @@ vget <- function (name) {
 #' @param x vector or list
 #' @param collapse default="and"
 #' @keywords internal
-serialPaste <- function (x, collapse="and") {
-	if (length(x)>1) x[length(x)] <- paste(collapse, x[length(x)])
-	join.with <- ifelse(length(x)>2, ", ", " ")
-	return(paste(x, collapse=join.with))
+serialPaste <- function(x, collapse = "and") {
+    if (length(x) > 1) x[length(x)] <- paste(collapse, x[length(x)])
+    join.with <- ifelse(length(x) > 2, ", ", " ")
+    return(paste(x, collapse = join.with))
 }
 
-now <- function () strftime(Sys.time(), usetz=TRUE)
+now <- function() strftime(Sys.time(), usetz = TRUE)
 
-absoluteURL <- function (urls, base) {
+absoluteURL <- function(urls, base) {
     ## Detect if we have relative urls, and then concatenate if so
     if (length(urls) && !any(startsWith(urls, "http"))) {
         urls <- .abs.urls(urls, base)
@@ -37,9 +37,9 @@ absoluteURL <- function (urls, base) {
 }
 
 #' @importFrom httr parse_url build_url
-.abs.urls <- function (urls, base) {
+.abs.urls <- function(urls, base) {
     base.url <- parse_url(base)
-    urls <- vapply(urls, function (x, b) {
+    urls <- vapply(urls, function(x, b) {
         b$path <- joinPath(b$path, x)
         if (is.null(b$scheme)) {
             ## If file path and not URL, as in for tests,
@@ -50,11 +50,11 @@ absoluteURL <- function (urls, base) {
         b$path <- sub("^/", "", b$path)
         b$query <- NULL ## Catalog query params aren't valid for entities
         return(build_url(b))
-    }, character(1), b=base.url, USE.NAMES=FALSE)
+    }, character(1), b = base.url, USE.NAMES = FALSE)
     return(urls)
 }
 
-joinPath <- function (base.path, relative.part) {
+joinPath <- function(base.path, relative.part) {
     if (startsWith(relative.part, "/")) {
         ## This is absolute, relative to the host
         return(relative.part)
@@ -70,7 +70,7 @@ joinPath <- function (base.path, relative.part) {
         while (i <= n) {
             if (u[i] == "..") {
                 ## Remove i and the one before it, and roll the counter back
-                u <- u[-c(i-1, i)]
+                u <- u[-c(i - 1, i)]
                 n <- n - 2
                 i <- i - 1
             } else {
@@ -78,65 +78,67 @@ joinPath <- function (base.path, relative.part) {
             }
         }
     }
-    out <- paste(u, collapse="/")
+    out <- paste(u, collapse = "/")
     if (endsWith(relative.part, "/")) {
         out <- paste0(out, "/")
     }
     return(out)
 }
 
-emptyObject <- function (...) {
+emptyObject <- function(...) {
     ## toJSON(list()) is "[]". toJSON(emptyObject()) is "{}"
     ##
     ## Make the function take ... so you can *apply over something and just
     ## call the function
-    structure(list(), .Names=character(0))
+    structure(list(), .Names = character(0))
 }
 
-I <- function (x) {
+I <- function(x) {
     ## Because of R deprecation warning:
     ## Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
     if (!is.null(x)) x <- base::I(x)
     return(x)
 }
 
-null <- function (...) NULL
+null <- function(...) NULL
 
-uniquify <- function (str) {
+uniquify <- function(str) {
     ## Append (#) to strings to make sure they are unique
     dups <- duplicated(str)
-    while(any(dups)) {
+    while (any(dups)) {
         str[dups] <- addUniqueSuffix(str[dups])
         dups <- duplicated(str)
     }
     return(str)
 }
 
-addUniqueSuffix <- function (str) {
+addUniqueSuffix <- function(str) {
     ## Add "  (1)" and increment that number if it's already been appended
     already.has <- grepl("  \\([0-9]+\\)$", str)
     suffix <- rep("  (1)", length(str))
-    suffix[already.has] <- paste0("  (",
+    suffix[already.has] <- paste0(
+        "  (",
         as.numeric(sub("^(.*)  \\(([0-9]+)\\)$", "\\2", str[already.has])) + 1,
-        ")")
+        ")"
+    )
     str[already.has] <- sub("^(.*)  \\(([0-9]+)\\)$", "\\1", str[already.has])
     return(paste0(str, suffix))
 }
 
 ## Borrowed from Hadley
-"%||%" <- function (a, b) if (!is.null(a)) a else b
+"%||%" <- function(a, b) if (!is.null(a)) a else b
 
 
 ## from future import ...
-basefuns <- ls(envir=asNamespace("base"))
-alt.startsWith <- function (x, prefix) {
+basefuns <- ls(envir = asNamespace("base"))
+alt.startsWith <- function(x, prefix) {
     substr(x, 1, nchar(prefix)) == prefix
 }
 if (!("startsWith" %in% basefuns)) {
     startsWith <- alt.startsWith
 }
 
-alt.endsWith <- function (x, suffix) {
+alt.endsWith <- function(x, suffix) {
     z <- nchar(x)
     substr(x, z - nchar(suffix) + 1, z) == suffix
 }
@@ -144,7 +146,7 @@ if (!("endsWith" %in% basefuns)) {
     endsWith <- alt.endsWith
 }
 
-vectorOrList <- function (obj, type) {
+vectorOrList <- function(obj, type) {
     if (is.vector(obj) && inherits(obj, type)) {
         return(TRUE)
     }
@@ -170,8 +172,8 @@ vectorOrList <- function (obj, type) {
 #'
 #' @keywords internal
 #' @export
-envOrOption <- function (opt, default = NULL) {
-    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
+envOrOption <- function(opt, default = NULL) {
+    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed = TRUE)))
     envvar <- Sys.getenv(envvar.name)
 
     if (nchar(envvar)) {
@@ -198,20 +200,20 @@ envOrOption <- function (opt, default = NULL) {
 #'
 #' @keywords internal
 #' @export
-setCrunchAPI <- function (subdomain, port=NULL) {
+setCrunchAPI <- function(subdomain, port = NULL) {
     if (!is.null(port)) {
         api <- paste0("http://", subdomain, ".crunch.io:", port, "/api/")
     } else {
         api <- paste0("https://", subdomain, ".crunch.io/api/")
     }
-    options(crunch.api=api)
+    options(crunch.api = api)
     return(invisible())
 }
 
 
 # halt if variable is an array variable. If callingFunc is provided, provide the function that
 # the user used to get to this point.
-haltIfArray <- function (variable, callingFunc) {
+haltIfArray <- function(variable, callingFunc) {
     # if the variable is not an array type, return quickly
     # TODO: should this also short-circuit if variable is not a variable?
     if (!is.Array(variable)) {
@@ -220,8 +222,10 @@ haltIfArray <- function (variable, callingFunc) {
 
     # Add the callingFunc in, if present
     if (!missing(callingFunc)) {
-        halt("Array-like variables can't be used with function `",
-             callingFunc, "`.")
+        halt(
+            "Array-like variables can't be used with function `",
+            callingFunc, "`."
+        )
     }
 
     # can't determine the function or haltIfArray is being called directly,
@@ -230,28 +234,32 @@ haltIfArray <- function (variable, callingFunc) {
 }
 
 # validate that rollup resolutions are what are allowed by Crunch
-validateResolution <- function (resolution) {
+validateResolution <- function(resolution) {
     valid_res <- c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")
 
     if (!is.null(resolution) && !(resolution %in% valid_res)) {
-        halt(dQuote("resolution"), " is invalid. Valid values are ",
-             serialPaste(valid_res, collapse = "or"))
+        halt(
+            dQuote("resolution"), " is invalid. Valid values are ",
+            serialPaste(valid_res, collapse = "or")
+        )
     }
 }
 
 # default formats for various resolutions
-datetimeFormater <- function (resolution) {
+datetimeFormater <- function(resolution) {
     validateResolution(resolution)
-    formats <- list("Y" = "%Y",
-                    # there is no %q in python strftime, so can't print quarters
-                    "Q" = "%Y-%m-%d",
-                    "M" = "%Y-%m",
-                    "W" = "%Y W%W",
-                    "D" = "%Y-%m-%d",
-                    "h" = "%Y-%m-%d %H:00",
-                    "m" = "%Y-%m-%d %H:%M",
-                    "s" = "%Y-%m-%d %H:%M:%S",
-                    "ms" = "%Y-%m-%d %H:%M:%S.%f")
+    formats <- list(
+        "Y" = "%Y",
+        # there is no %q in python strftime, so can't print quarters
+        "Q" = "%Y-%m-%d",
+        "M" = "%Y-%m",
+        "W" = "%Y W%W",
+        "D" = "%Y-%m-%d",
+        "h" = "%Y-%m-%d %H:00",
+        "m" = "%Y-%m-%d %H:%M",
+        "s" = "%Y-%m-%d %H:%M:%S",
+        "ms" = "%Y-%m-%d %H:%M:%S.%f"
+    )
     # return format based on rollup or default of "s"
     return(formats[[resolution %||% "s"]])
 }
@@ -263,7 +271,7 @@ datetimeFormater <- function (resolution) {
 #' @return `TRUE` if `value` is either `TRUE` or `FALSE`, `FALSE` otherwise
 #'
 #' @keywords internal
-is.TRUEorFALSE <- function (value) {
+is.TRUEorFALSE <- function(value) {
     return(is.logical(value) && !is.na(value) && length(value) == 1)
 }
 
@@ -278,9 +286,9 @@ escapeQuotes <- function(str) {
 #' @return nothing, called for side effects
 #'
 #' @keywords internal
-checkInstalledPackages <- function (pkgs) {
+checkInstalledPackages <- function(pkgs) {
     installed <- pkgs %in% rownames(installed.packages())
-    if (!all(installed)){
+    if (!all(installed)) {
         halt("Missing required packages: ", serialPaste(dQuote(pkgs[!installed])))
     }
 }
@@ -313,7 +321,7 @@ hasFunction <- function(fun, pkg) {
 #' escapeRegex("Tom&Jerry")
 #' escapeRegex(".Net")
 #' }
-escapeRegex <- function (string) {
+escapeRegex <- function(string) {
     out <- gsub("([.|()\\^{}+$*?])", "\\\\\\1", string)
     return(gsub("(\\[|\\])", "\\\\\\1", out))
 }

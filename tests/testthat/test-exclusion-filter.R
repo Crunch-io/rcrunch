@@ -9,21 +9,29 @@ with_mock_crunch({
         expect_null(exclusion(ds2))
     })
     test_that("Set exclusion", {
-        expect_PATCH(exclusion(ds) <- NULL,
+        expect_PATCH(
+            exclusion(ds) <- NULL,
             "https://app.crunch.io/api/datasets/1/exclusion/",
-            '{"expression":{}}')
-        expect_PATCH(exclusion(ds) <- ds$birthyr == 1981,
+            '{"expression":{}}'
+        )
+        expect_PATCH(
+            exclusion(ds) <- ds$birthyr == 1981,
             "https://app.crunch.io/api/datasets/1/exclusion/",
             '{"expression":{"function":"==","args":',
             '[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
-            '{"value":1981}]}}')
+            '{"value":1981}]}}'
+        )
     })
 
     test_that("Validation for setting exclusion", {
-        expect_error(exclusion(ds) <- "Not a filter",
-            paste(dQuote("value"),
-            "must be a CrunchLogicalExpr or NULL, not",
-            dQuote("character")))
+        expect_error(
+            exclusion(ds) <- "Not a filter",
+            paste(
+                dQuote("value"),
+                "must be a CrunchLogicalExpr or NULL, not",
+                dQuote("character")
+            )
+        )
     })
 })
 
@@ -33,26 +41,34 @@ with_test_authentication({
             ds <- refresh(ds)
             expect_null(activeFilter(ds))
             expect_identical(nrow(ds), 20L)
-            expect_equivalent(as.array(crtabs(~ v4, data=ds)),
-                array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+            expect_equivalent(
+                as.array(crtabs(~v4, data = ds)),
+                array(c(10, 10), dim = 2L, dimnames = list(v4 = c("B", "C")))
+            )
             expect_null(exclusion(ds))
 
             exclusion(ds) <- ds$v4 == "C"
             ## Test that the filter is set correctly. Objects not identical
             ## because JSON objects are unordered.
             expect_json_equivalent(zcl(exclusion(ds)), zcl(ds$v4 == "C"))
-            expect_prints(exclusion(ds),
-                'Crunch logical expression: v4 == "C"')
+            expect_prints(
+                exclusion(ds),
+                'Crunch logical expression: v4 == "C"'
+            )
 
             expect_identical(nrow(ds), 10L)
-            expect_equivalent(as.array(crtabs(~ v4, data=ds)),
-                array(c(10, 0), dim=2L, dimnames=list(v4=c("B", "C"))))
+            expect_equivalent(
+                as.array(crtabs(~v4, data = ds)),
+                array(c(10, 0), dim = 2L, dimnames = list(v4 = c("B", "C")))
+            )
 
             exclusion(ds) <- NULL
             expect_null(exclusion(ds))
             expect_identical(nrow(ds), 20L)
-            expect_equivalent(as.array(crtabs(~ v4, data=ds)),
-                array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+            expect_equivalent(
+                as.array(crtabs(~v4, data = ds)),
+                array(c(10, 10), dim = 2L, dimnames = list(v4 = c("B", "C")))
+            )
         })
         ds <- refresh(ds)
 
@@ -66,17 +82,23 @@ with_test_authentication({
             ds$newvar1 <- 1:10
             expect_equivalent(as.vector(ds$newvar1), 1:10)
             exclusion(ds) <- NULL
-            expect_equivalent(as.vector(ds$newvar1),
-                c(1, NA, 2, NA, 3, NA, 4, NA, 5, NA, 6, NA, 7, NA, 8, NA,
-                    9, NA, 10, NA))
+            expect_equivalent(
+                as.vector(ds$newvar1),
+                c(
+                    1, NA, 2, NA, 3, NA, 4, NA, 5, NA, 6, NA, 7, NA, 8, NA,
+                    9, NA, 10, NA
+                )
+            )
         })
 
         test_that("Change a variable's type", {
             exclusion(ds) <- ds$v4 == "C"
             expect_identical(nrow(ds), 10L)
             type(ds$v3) <- "text"
-            expect_equivalent(as.vector(ds$v3),
-                c("8.0", "10.0", "12.0", "14.0", "16.0", "18.0", "20.0", "22.0", "24.0", "26.0"))
+            expect_equivalent(
+                as.vector(ds$v3),
+                c("8.0", "10.0", "12.0", "14.0", "16.0", "18.0", "20.0", "22.0", "24.0", "26.0")
+            )
         })
 
         test_that("Remove an exclusion and then update the variable we added", {
@@ -84,9 +106,13 @@ with_test_authentication({
             exclusion(ds) <- NULL
             expect_identical(nrow(ds), 20L)
             ds$newvar1[is.na(ds$newvar1)] <- 0
-            expect_equivalent(as.vector(ds$newvar1),
-                c(1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0,
-                    9, 0, 10, 0))
+            expect_equivalent(
+                as.vector(ds$newvar1),
+                c(
+                    1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0,
+                    9, 0, 10, 0
+                )
+            )
         })
     })
     with(test.dataset(df), {
@@ -96,9 +122,13 @@ with_test_authentication({
             ds$v3 <- 10:1
             expect_equivalent(as.vector(ds$v3), 10:1)
             exclusion(ds) <- NULL
-            expect_equivalent(as.vector(ds$v3),
-                c(10, 9, 9, 11, 8, 13, 7, 15, 6, 17, 5, 19, 4, 21, 3, 23,
-                    2, 25, 1, 27))
+            expect_equivalent(
+                as.vector(ds$v3),
+                c(
+                    10, 9, 9, 11, 8, 13, 7, 15, 6, 17, 5, 19, 4, 21, 3, 23,
+                    2, 25, 1, 27
+                )
+            )
         })
 
         test_that("Update a variable by row index", {
@@ -119,8 +149,10 @@ with_test_authentication({
                 exclusion(ds) <<- ds$v4 == "C"
                 out <- appendDataset(part1, ds)
                 expect_identical(nrow(out), 30L)
-                expect_equivalent(as.vector(out$v4),
-                    as.factor(c(rep(LETTERS[2:3], 10), rep("B", 10))))
+                expect_equivalent(
+                    as.vector(out$v4),
+                    as.factor(c(rep(LETTERS[2:3], 10), rep("B", 10)))
+                )
             })
         })
     })
@@ -131,9 +163,12 @@ with_test_authentication({
                 exclusion(part1) <- part1$v4 == "C"
                 out <- appendDataset(part1, part2)
                 expect_identical(nrow(out), 20L)
-                expect_equivalent(as.array(crtabs(~ v4,
-                    data=out)),
-                    array(c(20, 0), dim=2L, dimnames=list(v4=c("B", "C"))))
+                expect_equivalent(
+                    as.array(crtabs(~v4,
+                        data = out
+                    )),
+                    array(c(20, 0), dim = 2L, dimnames = list(v4 = c("B", "C")))
+                )
             })
         })
     })
@@ -142,9 +177,13 @@ with_test_authentication({
         ## Create a variable to update with rows to exclude
         ds$keep <- TRUE
         test_that("'keep' was created correctly, i.e. all 'True'", {
-            expect_identical(as.array(crtabs(~ keep, data=ds)),
-                array(c(20, 0), dim=2L,
-                dimnames=list(keep=c("True", "False"))))
+            expect_identical(
+                as.array(crtabs(~keep, data = ds)),
+                array(c(20, 0),
+                    dim = 2L,
+                    dimnames = list(keep = c("True", "False"))
+                )
+            )
         })
         ## Set the exclusion filter
         exclusion(ds) <- ds$keep == "False"
@@ -156,10 +195,16 @@ with_test_authentication({
         ## check with new cube behavior
         ## Let's look at "allpets", a multiple response variable
         test_that("allpets", {
-            expect_identical(as.array(crtabs(~ allpets, data=ds,
-                                             useNA="ifany")),
-                             array(c(4, 5, 5), dim=3L,
-                                   dimnames=list(allpets=c("Cat", "Dog", "Bird"))))
+            expect_identical(
+                as.array(crtabs(~allpets,
+                    data = ds,
+                    useNA = "ifany"
+                )),
+                array(c(4, 5, 5),
+                    dim = 3L,
+                    dimnames = list(allpets = c("Cat", "Dog", "Bird"))
+                )
+            )
         })
 
         ## Update "keep" as "False" (i.e. excluded) where "allpets" is
@@ -169,34 +214,50 @@ with_test_authentication({
             expect_identical(nrow(ds), 17L)
             ## And we can confirm that those three rows are the ones
             ## dropped:
-            expect_identical(as.array(crtabs(~ allpets, data=ds,
-                                             useNA="always")),
-                             array(c(4, 5, 5), dim=3L,
-                                   dimnames=list(allpets=c("Cat", "Dog", "Bird"))))
+            expect_identical(
+                as.array(crtabs(~allpets,
+                    data = ds,
+                    useNA = "always"
+                )),
+                array(c(4, 5, 5),
+                    dim = 3L,
+                    dimnames = list(allpets = c("Cat", "Dog", "Bird"))
+                )
+            )
         })
 
         ## We can do the same for categorical array. petloc has two
         ## subvariables, Home and Work:
         test_that("Home x Work", {
-            expect_identical(as.array(crtabs(~ petloc$petloc_home + petloc$petloc_work,
-                data=ds, useNA="ifany")),
-                array(c(1, 0, 1, 3, 0,
-                        0, 0, 2, 0, 1,
-                        1, 2, 0, 0, 3,
-                        1, 1, 0, 0, 0,
-                        0, 0, 0, 1, 0),
-                dim=c(5L, 5L),
-                dimnames=list(
-                    petloc_home=c("Cat", "Dog", "Bird", "Skipped",
-                        "Not Asked"),
-                    petloc_work=c("Cat", "Dog", "Bird", "Skipped",
-                        "Not Asked")
-            )))
+            expect_identical(
+                as.array(crtabs(~petloc$petloc_home + petloc$petloc_work,
+                    data = ds, useNA = "ifany"
+                )),
+                array(c(
+                    1, 0, 1, 3, 0,
+                    0, 0, 2, 0, 1,
+                    1, 2, 0, 0, 3,
+                    1, 1, 0, 0, 0,
+                    0, 0, 0, 1, 0
+                ),
+                dim = c(5L, 5L),
+                dimnames = list(
+                    petloc_home = c(
+                        "Cat", "Dog", "Bird", "Skipped",
+                        "Not Asked"
+                    ),
+                    petloc_work = c(
+                        "Cat", "Dog", "Bird", "Skipped",
+                        "Not Asked"
+                    )
+                )
+                )
+            )
         })
         ## Notice there is one value that is missing for both (Skipped on
         ## one, Not Asked on the other).
         test_that("is.na on array is TRUE where all subvars are missing", {
-            expect_equivalent(as.array(crtabs(~ is.na(petloc), data=ds))["TRUE"], 1)
+            expect_equivalent(as.array(crtabs(~is.na(petloc), data = ds))["TRUE"], 1)
         })
         ## Update "keep" with that expression
         ds$keep[is.na(ds$petloc)] <- "False"
@@ -212,25 +273,38 @@ with_test_authentication({
         ## arrays as stacked columns, so the third "row" below is the
         ## column of the table that corresponds to Austria))
         test_that("ndogs by country", {
-            expect_identical(as.array(crtabs(~ ndogs + country,
-                data=ds, useNA="no")),
-                array(c(0, 1, 2, 0, 0,
-                        0, 0, 1, 0, 0,
-                        1, 0, 1, 1, 0,
-                        0, 0, 1, 1, 0,
-                        0, 0, 2, 0, 1),
-                dim=c(5L, 5L),
-                dimnames=list(
-                    ndogs=c(0, 1, 2, 3, 6),
-                    country=c("Argentina", "Australia", "Austria",
-                        "Belgium", "Brazil")
-            )))
+            expect_identical(
+                as.array(crtabs(~ndogs + country,
+                    data = ds, useNA = "no"
+                )),
+                array(c(
+                    0, 1, 2, 0, 0,
+                    0, 0, 1, 0, 0,
+                    1, 0, 1, 1, 0,
+                    0, 0, 1, 1, 0,
+                    0, 0, 2, 0, 1
+                ),
+                dim = c(5L, 5L),
+                dimnames = list(
+                    ndogs = c(0, 1, 2, 3, 6),
+                    country = c(
+                        "Argentina", "Australia", "Austria",
+                        "Belgium", "Brazil"
+                    )
+                )
+                )
+            )
             ## Or, perhaps more clear to view the frequencies of "ndogs" on
             ## the dataset filtered to just "Argentina"
-            expect_identical(as.array(crtabs(~ ndogs,
-                data=ds[ds$country == "Austria",])),
-                array(c(1, 1, 1), dim=3L,
-                    dimnames=list(ndogs=c(0, 2, 3))))
+            expect_identical(
+                as.array(crtabs(~ndogs,
+                    data = ds[ds$country == "Austria", ]
+                )),
+                array(c(1, 1, 1),
+                    dim = 3L,
+                    dimnames = list(ndogs = c(0, 2, 3))
+                )
+            )
         })
         ## So let's also drop rows corresponding to Austrians with >0 dogs:
         ds$keep[ds$country == "Austria" & ds$ndogs > 0] <- "False"

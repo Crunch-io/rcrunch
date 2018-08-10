@@ -32,12 +32,14 @@ Suggests:
     haven,
     httptest (>= 3.0.0),
     knitr,
+    lintr, 
     magrittr,
     miniUI,
     rmarkdown,
     rstudioapi,
     shiny,
     spelling,
+    styler,
     testthat (>= 2.0.0),
     withr
 VignetteBuilder: knitr
@@ -46,7 +48,7 @@ Encoding: UTF-8
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 LazyData: true
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -78,6 +80,7 @@ Collate:
     'crunch-data-frame.R'
     'crunch.R'
     'crunchbox.R'
+    'cube-collapse-dimensions.R'
     'cube-dims.R'
     'cube-index-table.R'
     'cube-query.R'
@@ -99,6 +102,7 @@ Collate:
     'export-dataset.R'
     'expressions.R'
     'filters.R'
+    'folders-projects.R'
     'folders.R'
     'fork-and-merge.R'
     'formula.R'

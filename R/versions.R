@@ -1,7 +1,8 @@
-setMethod("initialize", "VersionCatalog", function (.Object, ...) {
+setMethod("initialize", "VersionCatalog", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     ord <- order(from8601(getIndexSlot(.Object, "creation_time")),
-        decreasing=TRUE)
+        decreasing = TRUE
+    )
     .Object@index <- .Object@index[ord]
     return(.Object)
 })
@@ -16,22 +17,22 @@ setMethod("initialize", "VersionCatalog", function (.Object, ...) {
 #' catalog include "names" and "timestamps".
 #' @seealso [saveVersion] [restoreVersion]
 #' @export
-versions <- function (x) {
+versions <- function(x) {
     stopifnot(is.dataset(x))
     return(VersionCatalog(crGET(shojiURL(x, "catalogs", "savepoints"))))
 }
 
 #' @rdname describe-catalog
 #' @export
-setMethod("names", "VersionCatalog", function (x) getIndexSlot(x, "description"))
+setMethod("names", "VersionCatalog", function(x) getIndexSlot(x, "description"))
 
 #' @rdname describe-catalog
 #' @export
-setMethod("descriptions", "VersionCatalog", function (x) getIndexSlot(x, "description"))
+setMethod("descriptions", "VersionCatalog", function(x) getIndexSlot(x, "description"))
 
 #' @rdname describe-catalog
 #' @export
-setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, "creation_time")))
+setMethod("timestamps", "VersionCatalog", function(x) from8601(getIndexSlot(x, "creation_time")))
 
 #' Create a new saved version
 #'
@@ -46,17 +47,21 @@ setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, 
 #' @return invisibly, the URL of the newly created version
 #' @seealso [versions] [restoreVersion]
 #' @export
-saveVersion <- function (dataset, description=paste("Version",
-                                              length(versions(dataset)) + 1)) {
+saveVersion <- function(dataset, description = paste(
+                            "Version",
+                            length(versions(dataset)) + 1
+                        )) {
     if (!is.character(description) || length(description) != 1) {
         halt(dQuote("description"), " must be a length-1 character vector")
     }
     u <- shojiURL(dataset, "catalogs", "savepoints")
-    out <- crPOST(u, body=toJSON(list(description=description)),
-        config=config(followlocation=0), ## Don't automatically GET the 303 Location
-        status.handlers=list(`303`=function (response) {
+    out <- crPOST(u,
+        body = toJSON(list(description = description)),
+        config = config(followlocation = 0), ## Don't automatically GET the 303 Location
+        status.handlers = list(`303` = function(response) {
             message("No unsaved changes; no new version created.")
-        }))
+        })
+    )
     invisible(dataset)
 }
 
@@ -73,7 +78,7 @@ saveVersion <- function (dataset, description=paste("Version",
 #' @return `dataset`, rolled back to `version`.
 #' @seealso [versions] [saveVersion]
 #' @export
-restoreVersion <- function (dataset, version) {
+restoreVersion <- function(dataset, version) {
     vcat <- versions(dataset)
     if (is.numeric(version)) {
         ## Allow passing by index
@@ -87,6 +92,6 @@ restoreVersion <- function (dataset, version) {
         }
     }
     revert_url <- index(vcat)[[v]]$revert
-    crPOST(revert_url, body=NULL)
+    crPOST(revert_url, body = NULL)
     invisible(refresh(dataset))
 }

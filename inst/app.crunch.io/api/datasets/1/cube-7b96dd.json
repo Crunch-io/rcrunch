@@ -21,12 +21,32 @@
             "dimensions": [{
                 "derived": false,
                 "references": {"alias": "birthyr > 1980", "name": "birthyr > 1980"},
-                "type": {"class": "boolean"}
+                "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [{
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                    }, {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Other"
+                    }, {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                    }]
+                }
             }],
             "missing": 0,
             "measures": {
                 "count": {
-                    "data": [14, 6],
+                    "data": [14, 6, 0],
                     "n_missing": 0,
                     "metadata": {
                         "references": {},
@@ -41,7 +61,7 @@
                 }
             },
             "element": "crunch:cube",
-            "counts": [14, 6],
+            "counts": [14, 6, 0],
             "n": 20
         }
     }

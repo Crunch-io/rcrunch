@@ -1,6 +1,6 @@
-is.category <- function (x) inherits(x, "Category")
+is.category <- function(x) inherits(x, "Category")
 
-setValidity("Category", function (object) {
+setValidity("Category", function(object) {
     is.cat <- all(c("id", "name") %in% names(object))
     if (!all(is.cat)) {
         val <- "Not a category"
@@ -10,7 +10,7 @@ setValidity("Category", function (object) {
     return(val)
 })
 
-init.Category <- function (.Object, ...) {
+init.Category <- function(.Object, ...) {
     .Object <- callNextMethod()
     ## Make sure category elements are sorted so that identical categories are
     ## evaluated identically. Order doesn't matter for object, but R lists are
@@ -50,7 +50,7 @@ NULL
 #' @seealso [`Categories`] [`dichotomize`]
 NULL
 
-setValue <- function (x, value) {
+setValue <- function(x, value) {
     value_to_set <- suppressWarnings(as.numeric(value))
     if (is.na(value_to_set) && !is.na(value)) {
         halt("Category values must be numeric")
@@ -61,7 +61,7 @@ setValue <- function (x, value) {
 
 #' @rdname describe-category
 #' @export
-setMethod("value", "Category", function (x) {
+setMethod("value", "Category", function(x) {
     v <- as.numeric(x[["numeric_value"]])
     return(ifelse(is.null(v), NA_real_, v))
 })
@@ -72,10 +72,10 @@ setMethod("value<-", "Category", setValue)
 
 #' @rdname describe-category
 #' @export
-setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
+setMethod("is.selected", "Category", function(x) isTRUE(x$selected))
 #' @rdname is-selected-categories
 #' @export
-setMethod("is.selected<-", "Category", function (x, value) {
+setMethod("is.selected<-", "Category", function(x, value) {
     if (!is.TRUEorFALSE(value)) {
         halt("Value must be either TRUE or FALSE.")
     }
@@ -85,11 +85,11 @@ setMethod("is.selected<-", "Category", function (x, value) {
 
 #' @rdname is-na-categories
 #' @export
-setMethod("is.na", "Category", function (x) isTRUE(x$missing))
+setMethod("is.na", "Category", function(x) isTRUE(x$missing))
 
 #' @rdname is-na-categories
 #' @export
-setMethod("is.na<-", c("Category", "logical"), function (x, value) {
+setMethod("is.na<-", c("Category", "logical"), function(x, value) {
     stopifnot(length(value) == 1)
     x$missing <- isTRUE(value)
     return(x)

@@ -38,18 +38,20 @@
 #' ds <- appendDataset(ds, new_wave)
 #' }
 #' @export
-appendDataset <- function (dataset1, dataset2, autorollback) {
+appendDataset <- function(dataset1, dataset2, autorollback) {
     stopifnot(is.dataset(dataset1))
 
     if (!missing(autorollback)) {
         warning("The ", sQuote("autorollback"),
-                " argument is deprecated and has no effect", call.=FALSE)
+            " argument is deprecated and has no effect",
+            call. = FALSE
+        )
     }
 
     if (!is.dataset(dataset2)) {
         temp.ds.name <- paste("Appending to", name(dataset1), now())
         message("Creating ", dQuote(temp.ds.name), " as temporary dataset")
-        dataset2 <- newDataset(dataset2, name=temp.ds.name)
+        dataset2 <- newDataset(dataset2, name = temp.ds.name)
         ## TODO: on exit, delete dataset2
     }
 
@@ -59,7 +61,7 @@ appendDataset <- function (dataset1, dataset2, autorollback) {
     }
 
     ## Assemble the payload
-    payload <- list(dataset=self(dataset2))
+    payload <- list(dataset = self(dataset2))
     ## Include a variable map, if appropriate
     payload$where <- variablesFilter(dataset2)
     ## And filter the rows, if appropriate
@@ -70,6 +72,6 @@ appendDataset <- function (dataset1, dataset2, autorollback) {
     pk(dataset1) <- NULL
 
     ## POST the batch. This will error with a useful message if it fails
-    dataset1 <- addBatch(dataset1, body=payload)
+    dataset1 <- addBatch(dataset1, body = payload)
     invisible(dataset1)
 }
