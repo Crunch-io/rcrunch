@@ -254,7 +254,7 @@ with_test_authentication({
     ds <- hideVariables(ds, "hidden_var")
 
     test_that("as.data.frame(force) retrieves hidden variables", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         expect_equal(hiddenVariables(ds), "hidden_var")
 
         expect_warning(

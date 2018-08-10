@@ -244,7 +244,7 @@ with_test_authentication({
     })
 
     test_that("We can export hidden variables", {
-        skip_locally("Vagrant host doesn't serve files correctly")
+        skip_on_local_backend("Vagrant host doesn't serve files correctly")
         ds$hidden_var <- 1:20
         ds <- hideVariables(ds, "hidden_var")
         filename <- tempfile()
