@@ -1,5 +1,75 @@
 context("Interacting with decks")
 
+with_mock_crunch({
+    ds <- loadDataset("test ds")
+    test_that("newDeck posts correctly", {
+        expect_POST(
+            newDeck(ds, "deck1"),
+            'https://app.crunch.io/api/datasets/1/decks/',
+            '{"element":"shoji:entity","body":{"name":"deck1"}}'
+        )
+    })
+    deck_cat <- decks(ds)
+    test_that("Deck Catalog can be retrieved", {
+        expect_is(deck_cat, "DeckCatalog")
+        expect_equal(length(deck_cat), 1)
+        expect_equal(names(deck_cat), "Main Deck")
+    })
+
+    main_deck <- deck_cat[[1]]
+    slide <- deck_cat[[1]]
+
+    test_that("Deck Catalog Subsetting", {
+        browser()
+        expect_is(main_deck, "CrunchDeck")
+        expect_equal(length(main_deck), 3)
+        expect_equal(titles(main_deck), c("BIRTHYR", "MYMRSET", "MYMRSET"))
+        expect_equal(subtitles(main_deck), c("", "", "AGE"))
+    })
+
+    test_that("titles and subtitles assignment generates the correct PATCH", {
+        expect_PATCH(
+            titles(main_deck)[1] <- "birthyr",
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{',
+            '"analysis_url":"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",',
+            '"display_settings":{',
+            '"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":true},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"populationMagnitude":{"value":3},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0},',
+            '"uiView":{"value":"app.datasets.browse"}},',
+            '"subtitle":"",',
+            '"title":"birthyr"}'
+        )
+        expect_PATCH(
+            subtitles(main_deck)[1] <- "new_sub",
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{',
+            '"analysis_url":"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",',
+            '"display_settings":{',
+            '"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":true},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"populationMagnitude":{"value":3},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0},',
+            '"uiView":{"value":"app.datasets.browse"}},',
+            '"subtitle":"new_sub",',
+            '"title":"BIRTHYR"}'
+        )
+    })
+
+})
+
 with_test_authentication({
     ds <- newDataset(df)
     test_that("decks can be created", {
@@ -59,7 +129,6 @@ with_test_authentication({
     })
 
     test_that("deck titles and subtitles", {
-        browser()
         expect_equal(titles(deck), c("slide1", "slide2"))
         expect_equal(subtitles(deck), c("one analysis", "two analyses"))
         titles(deck) <- c("new_title1", "new_title2")

@@ -1,0 +1,19 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/1/decks/",
+    "orders": {
+        "order": "https://app.crunch.io/api/datasets/1/decks/order/"
+    },
+    "specification": "https://app.crunch.io/api/specifications/decks/",
+    "description": "List of decks available for this user under this dataset",
+    "index": {
+        "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/": {
+            "owner_name": "Gordon Shotwell",
+            "name": "Main Deck",
+            "creation_time": "2017-10-18T15:11:57.524000+00:00",
+            "team": null,
+            "is_public": false,
+            "owner_id": "https://app.crunch.io/api/users/7bbff9139cb443e69422e89512a22688/"
+        }
+    }
+}

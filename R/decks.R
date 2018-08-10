@@ -141,11 +141,12 @@ setMethod("length", "CrunchDeck", function(x){
 })
 
 setMethod("cubes", "CrunchDeck", function(x){
-    out <- lapply(seq_len(length(x)), function(a){
-        cubes <- cubes(x[[a]])
+    out <- lapply(seq_len(length(x)), function(i){
+        cubes <- cubes(x[[i]])
         if (length(cubes) == 1) {
             cubes <- cubes[[1]]
         }
+        return(cubes)
     })
     names(out) <- titles(x)
     return(out)

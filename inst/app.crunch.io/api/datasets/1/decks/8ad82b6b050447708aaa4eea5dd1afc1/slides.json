@@ -1,0 +1,123 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
+    "orders": {
+        "flat": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat/"
+    },
+    "specification": "https://app.crunch.io/api/specifications/slides/",
+    "description": "A catalog of the Slides in this Deck",
+    "index": {
+        "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/": {
+            "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/analyses/52fb9b5be6914477b7d7e3e5f8c35367/",
+            "display_settings": {
+                "percentageDirection": {
+                    "value": "colPct"
+                },
+                "showEmpty": {
+                    "value": false
+                },
+                "showMean": {
+                    "value": true
+                },
+                "vizType": {
+                    "value": "table"
+                },
+                "countsOrPercents": {
+                    "value": "percent"
+                },
+                "decimalPlaces": {
+                    "value": 1
+                },
+                "populationMagnitude": {
+                    "value": 3
+                },
+                "showSignif": {
+                    "value": true
+                },
+                "currentTab": {
+                    "value": 0
+                },
+                "uiView": {
+                    "value": "app.datasets.analyze"
+                }
+            },
+            "subtitle": "AGE",
+            "title": "MYMRSET"
+        },
+        "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/": {
+            "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
+            "display_settings": {
+                "percentageDirection": {
+                    "value": "colPct"
+                },
+                "showEmpty": {
+                    "value": false
+                },
+                "showMean": {
+                    "value": true
+                },
+                "vizType": {
+                    "value": "table"
+                },
+                "countsOrPercents": {
+                    "value": "percent"
+                },
+                "decimalPlaces": {
+                    "value": 1
+                },
+                "populationMagnitude": {
+                    "value": 3
+                },
+                "showSignif": {
+                    "value": true
+                },
+                "currentTab": {
+                    "value": 0
+                },
+                "uiView": {
+                    "value": "app.datasets.browse"
+                }
+            },
+            "subtitle": "",
+            "title": "BIRTHYR"
+        },
+        "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/": {
+            "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/analyses/3f2e2e6b00f748b7a966e5ba7def779f/",
+            "display_settings": {
+                "percentageDirection": {
+                    "value": "colPct"
+                },
+                "showEmpty": {
+                    "value": false
+                },
+                "showMean": {
+                    "value": true
+                },
+                "vizType": {
+                    "value": "table"
+                },
+                "countsOrPercents": {
+                    "value": "percent"
+                },
+                "decimalPlaces": {
+                    "value": 1
+                },
+                "populationMagnitude": {
+                    "value": 3
+                },
+                "showSignif": {
+                    "value": true
+                },
+                "currentTab": {
+                    "value": 0
+                },
+                "uiView": {
+                    "value": "app.datasets.browse"
+                }
+            },
+            "subtitle": "",
+            "title": "MYMRSET"
+        }
+    },
+    "template": "{\"query\": {\"measures\": \"Object with keyed measures functions\", \"dimensions\": \"Array of variable references\", \"weight\": \"Optional weight variable URL\"}, \"display_settings\": {}, \"query_environment\": {\"filter\": \"Array of filter urls\"}}"
+}

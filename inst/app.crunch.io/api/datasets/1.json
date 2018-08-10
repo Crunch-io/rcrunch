@@ -22,7 +22,8 @@
         "filters": "https://app.crunch.io/api/datasets/1/filters/",
         "boxdata": "https://app.crunch.io/api/datasets/1/boxdata/",
         "multitables": "https://app.crunch.io/api/datasets/1/multitables/",
-        "actions": "https://app.crunch.io/api/datasets/1/actions/"
+        "actions": "https://app.crunch.io/api/datasets/1/actions/",
+        "decks": "https://app.crunch.io/api/datasets/1/decks/"
     },
     "views": {
         "summary": "https://app.crunch.io/api/datasets/1/summary/",
