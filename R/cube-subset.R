@@ -1,6 +1,6 @@
 #' @rdname cube-methods
 #' @export
-setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
+setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
     # Missing arguments to a subset method means "select all the items along this
     # dimension". In order to do this we need to capture the unevaluated arguments
     # and replace all the missing elements of that list with TRUE.
@@ -12,15 +12,17 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     index <- replaceMissingWithTRUE(index)
 
     dims <- dim(x)
-    #Check if the user has supplied the right number of dimensions
+    # Check if the user has supplied the right number of dimensions
     if (length(index) != length(dims)) {
-        halt("You must supply ",
-             length(dims),
-             " dimensions to subset a ",
-             length(dims),
-             " dimensional cube; you supplied ",
-             length(index),
-             ".")
+        halt(
+            "You must supply ",
+            length(dims),
+            " dimensions to subset a ",
+            length(dims),
+            " dimensional cube; you supplied ",
+            length(index),
+            "."
+        )
     }
 
     # This block of code checks whether the user has supplied a valid index. For
@@ -34,7 +36,7 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
         }
         # Assume other indices are valid and trust that the array subsetting
         # method will fail if they are invalid.
-        return (TRUE)
+        return(TRUE)
     })
 
     isInValid <- function(idx, dim) {
@@ -46,15 +48,18 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
 
     invalid_indices <- unlist(mapply(isInValid, idx = err_indices, dim = dims, SIMPLIFY = FALSE))
     if (any(invalid_indices)) {
-        errs <- paste("- At position", which(invalid_indices),
-                      "you tried to select element",
-                      err_indices[invalid_indices],
-                      "when the dimension has",
-                      dims[invalid_indices],
-                      "elements."
+        errs <- paste(
+            "- At position", which(invalid_indices),
+            "you tried to select element",
+            err_indices[invalid_indices],
+            "when the dimension has",
+            dims[invalid_indices],
+            "elements."
         )
-        halt("Invalid subset:\n",
-             paste0(errs[1:min(sum(invalid_indices), 5)], collapse = "\n"))
+        halt(
+            "Invalid subset:\n",
+            paste0(errs[1:min(sum(invalid_indices), 5)], collapse = "\n")
+        )
     }
 
     # We then translate the index which the user supplied of the user cube to
@@ -69,7 +74,7 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     }
     # Finally we can use that translated subset on the real cube.
     out <- x
-    out@arrays[] <- lapply(out@arrays, function(arr){
+    out@arrays[] <- lapply(out@arrays, function(arr) {
         # select_dims must be FALSE here because we do not want to treat them
         # differently
         subsetCubeArray(arr, translated_index, drop, selected_dims = FALSE)
@@ -78,10 +83,11 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     # We also need to subset the @dims part of the object using the same index.
     # This is so that other cube methods, like as.array, don't get confused.
     out@dims[] <- mapply(subsetArrayDimension,
-                         dim = x@dims,
-                         dim_type = getDimTypes(x), 
-                         idx = translated_index,
-                         SIMPLIFY = FALSE)
+        dim = x@dims,
+        dim_type = getDimTypes(x),
+        idx = translated_index,
+        SIMPLIFY = FALSE
+    )
     # Some dimensions need to be dropped because they were dropped from the
     # cube@array slot.
     if (drop) {
@@ -107,10 +113,10 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
 #' @param l a list
 #' @return a list
 #' @keywords internal
-replaceMissingWithTRUE <- function(l){
-    out <- lapply(l, function(x){
+replaceMissingWithTRUE <- function(l) {
+    out <- lapply(l, function(x) {
         if (is.symbol(x)) {
-            x <- tryCatch(eval(x), error = function(c){
+            x <- tryCatch(eval(x), error = function(c) {
                 msg <- conditionMessage(c)
                 if (msg == "argument is missing, with no default") {
                     return(TRUE)
@@ -155,12 +161,12 @@ replaceMissingWithTRUE <- function(l){
 translateCubeIndex <- function(x, subset, drop) {
     is_selected <- is.selectedDimension(x@dims)
     if (length(is_selected) == length(dim(x))) {
-        #no MR variables so no need to translate the subset
+        # no MR variables so no need to translate the subset
         return(subset)
     }
-    
+
     # This is the main work of the subset translation, just taking the user
-    # supplied subset and projecting them up to real cube dimension 
+    # supplied subset and projecting them up to real cube dimension
     out <- subset[real2userMargin(seq_along(is_selected), cube = x, dedupe = FALSE)]
 
     # Dropping MR variables is a bit special. Whenever the user drops the MR
@@ -172,9 +178,9 @@ translateCubeIndex <- function(x, subset, drop) {
             # if we aren't a selected dimension, return without modification
             return(out[[i]])
         }
-        
+
         # If we are dropping and MR response variable is a single number
-        if (drop &&  length(out[[i - 1]]) == 1 && !isTRUE(out[[i - 1]])) { 
+        if (drop && length(out[[i - 1]]) == 1 && !isTRUE(out[[i - 1]])) {
             if (x@useNA == "no") {
                 # This is used by skipMissingCategories below
                 return("mr_select_drop")
@@ -182,11 +188,11 @@ translateCubeIndex <- function(x, subset, drop) {
                 # assign index value to "Selected" along the mr_selection dimension
                 return(1)
             }
-        } 
+        }
         # return TRUE in all other circumstances
         return(TRUE)
-        })
-    
+    })
+
     return(out)
 }
 
@@ -206,10 +212,10 @@ translateCubeIndex <- function(x, subset, drop) {
 #'   `translateCubeIndex()`
 #' @return A list of logical vectors
 #' @keywords internal
-skipMissingCategories <- function(cube, index){
+skipMissingCategories <- function(cube, index) {
     visible_cats <- evalUseNA(cube@arrays$count, dims = cube@dims, useNA = cube@useNA)
     mapply(
-        function (visible, sub) {
+        function(visible, sub) {
             if (identical(sub, "mr_select_drop")) {
                 # select the "Selected" element of the selection dimension.
                 ## TODO: Don't assume "selected" is position 1; consider an is.selected attr/vector
@@ -222,10 +228,12 @@ skipMissingCategories <- function(cube, index){
                 out[visible][sub] <- rep(TRUE, length(sub))
             }
             return(out)
-        }, visible = visible_cats, sub = index, SIMPLIFY = FALSE)
+        },
+        visible = visible_cats, sub = index, SIMPLIFY = FALSE
+    )
 }
 
-subsetArrayDimension <- function(dim, idx, dim_type){
+subsetArrayDimension <- function(dim, idx, dim_type) {
     dim$missing <- dim$missing[idx]
     dim$name <- dim$name[idx]
 

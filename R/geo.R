@@ -37,7 +37,7 @@ NULL
 
 #' @rdname geo
 #' @export
-setMethod("geo", "CrunchVariable", function (x) {
+setMethod("geo", "CrunchVariable", function(x) {
     var_geodata <- entity(x)@body$view$geodata[[1]]
     if (is.null(var_geodata)) {
         # if there's no geodata, return null.
@@ -53,41 +53,45 @@ setMethod("geo", "CrunchVariable", function (x) {
 })
 #' @rdname geo
 #' @export
-setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
-          function (x, value) {
-              geodata <- list(geodata = list(value))
+setMethod(
+    "geo<-", c("CrunchVariable", "CrunchGeography"),
+    function(x, value) {
+        geodata <- list(geodata = list(value))
 
-              ent <- setEntitySlot(entity(x), "view", geodata)
-              return(x)
-          })
+        ent <- setEntitySlot(entity(x), "view", geodata)
+        return(x)
+    }
+)
 #' @rdname geo
 #' @export
-setMethod("geo<-", c("CrunchVariable", "NULL"),
-          function (x, value) {
-              frmt <- wrapEntity("view" = list("geodata" = list()))
-              crPATCH(self(x), body=toJSON(frmt))
-              return(x)
-          })
+setMethod(
+    "geo<-", c("CrunchVariable", "NULL"),
+    function(x, value) {
+        frmt <- wrapEntity("view" = list("geodata" = list()))
+        crPATCH(self(x), body = toJSON(frmt))
+        return(x)
+    }
+)
 
 #' Add geodata metadata to a crunch variable
 #'
-#' If the variable matches a single geographic shapefile hosted by crunch, 
-#' `addGeoMetadata` will make the appropriate [`CrunchGeography`] to add to a 
+#' If the variable matches a single geographic shapefile hosted by crunch,
+#' `addGeoMetadata` will make the appropriate [`CrunchGeography`] to add to a
 #' variable's [`geo()`] metadata. It matches based on how well the contents of the
 #' variable match the feature properties that are in each shapefile.
-#' 
+#'
 #' If more than one property of the same geographic shapefile has the same
 #' highest matching score, the first one will be used.
-#' 
+#'
 #' If more than one geographic shapefile has the same highest matching score, an
-#' error will be printed listing the geographic shapefiles that matched. 
-#' Information from this error can be used to setup an appropriate 
+#' error will be printed listing the geographic shapefiles that matched.
+#' Information from this error can be used to setup an appropriate
 #' [`CrunchGeography`] by hand to connect a variable with the metadata needed.
 #'
 #' @param variable a Crunch variable to use for matching. This must be either
 #' a text or a categorical variable.
 #' @param ... arguments passed on to [`matchCatToFeat()`] for example a set of
-#' available geographic features as `all_features` if you want to limit the 
+#' available geographic features as `all_features` if you want to limit the
 #' number of features to be considered.
 #'
 #' @return a [`CrunchGeography`] object that can be assigned into `geo(variable)`
@@ -97,7 +101,7 @@ setMethod("geo<-", c("CrunchVariable", "NULL"),
 #' geo(ds$state) <- addGeoMetadata(ds$state)
 #' }
 #' @export
-addGeoMetadata <- function (variable, ...) {
+addGeoMetadata <- function(variable, ...) {
     match_field <- "name" ## TODO: should this be a param?
     # Validate
     if (!is.variable(variable)) {
@@ -110,71 +114,85 @@ addGeoMetadata <- function (variable, ...) {
     } else {
         # TODO: find a better way to substitute on a varaible.
         # this returns the strings out of order if using `$`
-        halt("The variable ", dQuote(deparse(substitute(variable))),
-             " is neither a categorical or text variable.")
+        halt(
+            "The variable ", dQuote(deparse(substitute(variable))),
+            " is neither a categorical or text variable."
+        )
     }
 
     match_scores <- matchCatToFeat(cats, ...)
 
     if (max(match_scores$value, na.rm = TRUE) == 0) {
-        halt("None of the geographies match at all. Either the variable is",
-             " wrong, or Crunch doesn't yet have geodata for this variable.")
+        halt(
+            "None of the geographies match at all. Either the variable is",
+            " wrong, or Crunch doesn't yet have geodata for this variable."
+        )
     }
     if (nrow(match_scores) > 1) {
-        # if there is a single geodatum where multiple properties match equally 
-        # well then grab the first property and use that since they are likely 
+        # if there is a single geodatum where multiple properties match equally
+        # well then grab the first property and use that since they are likely
         # duplications of the same feature.
         if (length(unique(match_scores$geodatum_name)) == 1 &
             length(unique(match_scores$geodatum)) == 1) {
-            warning("The geodatum ", dQuote(unique(match_scores$geodatum_name)),
-                    " has multiple properties that match the variable (",
-                    serialPaste(dQuote(match_scores$property)),
-                    "). Using ", dQuote(match_scores$property[1]), ".")
-            match_scores <- match_scores[1,]
+            warning(
+                "The geodatum ", dQuote(unique(match_scores$geodatum_name)),
+                " has multiple properties that match the variable (",
+                serialPaste(dQuote(match_scores$property)),
+                "). Using ", dQuote(match_scores$property[1]), "."
+            )
+            match_scores <- match_scores[1, ]
         } else {
             halt(multiMatchHelper(match_scores, match_field, deparse(substitute(variable))))
         }
     }
 
-    match_geo <- CrunchGeography(geodatum=match_scores$geodatum,
-                          feature_key=paste0('properties.',match_scores$property),
-                          match_field=match_field)
+    match_geo <- CrunchGeography(
+        geodatum = match_scores$geodatum,
+        feature_key = paste0("properties.", match_scores$property),
+        match_field = match_field
+    )
     return(match_geo)
 }
 
 # format the error message when there are multiple matches
-multiMatchHelper <- function (match_scores, match_field, quoted_var) {
-    msg <- c("There is more than one possible match. You will need to specify ", 
-             "the geography manually using one of the following ",
-             "CrunchGeographies:\n")
-    
+multiMatchHelper <- function(match_scores, match_field, quoted_var) {
+    msg <- c(
+        "There is more than one possible match. You will need to specify ",
+        "the geography manually using one of the following ",
+        "CrunchGeographies:\n"
+    )
+
     calls <- apply(match_scores, 1, function(match_row) {
         # TODO: add coloring to this message when crayon is available
         header <- c(
-            sprintf("To add the geography: %s\nmatched to the property: %s\n",
-                    match_row["geodatum_name"], match_row["property"]),
+            sprintf(
+                "To add the geography: %s\nmatched to the property: %s\n",
+                match_row["geodatum_name"], match_row["property"]
+            ),
             "set the variable's geographic mapping with following:\n"
         )
-        geo_call <- paste0("geo(", quoted_var, ") <- ", CrunchGeoCall(match_row["geodatum"],
-                                  match_row["property"],
-                                  match_field))
+        geo_call <- paste0("geo(", quoted_var, ") <- ", CrunchGeoCall(
+            match_row["geodatum"],
+            match_row["property"],
+            match_field
+        ))
         return(c(header, geo_call, "\n\n"))
     })
     return(c(msg, calls))
 }
 
-CrunchGeoCall <- function (geodatum, feature_key, match_field) {
+CrunchGeoCall <- function(geodatum, feature_key, match_field) {
     return(sprintf("CrunchGeography(geodatum='%s', feature_key='properties.%s',
                    match_field='%s')", geodatum, feature_key, match_field))
 }
 
 #' @rdname crunch-is
 #' @export
-is.Geodata <- function (x) inherits(x, "Geodata")
+is.Geodata <- function(x) inherits(x, "Geodata")
 
 #' @rdname geo
 #' @export
-availableGeodata <- function (x = getAPIRoot()) {
+availableGeodata <- function(x = getAPIRoot()) {
     return(GeoCatalog(crGET(shojiURL(x, "catalogs", "geodata"))))
 }
 
@@ -188,31 +206,30 @@ availableGeodata <- function (x = getAPIRoot()) {
 #' geographies for matching
 #'
 #' @export
-availableGeodataFeatures <- function (x = getAPIRoot(),
-        geodatum_fields=c("name", "description", "location")) {
-
+availableGeodataFeatures <- function(x = getAPIRoot(),
+                                     geodatum_fields = c("name", "description", "location")) {
     geo_cat <- availableGeodata(x)
 
     # grab each geodatum in order to get metadata
     # TODO: this should probably not be done through a series of GETs,
     # but the current API requires it.
-    geo_metadatas <- lapply(urls(geo_cat), function (x) Geodata(crGET(x)))
+    geo_metadatas <- lapply(urls(geo_cat), function(x) Geodata(crGET(x)))
     names(geo_metadatas) <- urls(geo_cat)
-    
-    out <- lapply(geo_metadatas, function (geography) {
+
+    out <- lapply(geo_metadatas, function(geography) {
         meta <- geography$metadata$properties
-        lapply(names(meta), function (x) {
+        lapply(names(meta), function(x) {
             # remove nulls
             values <- unlist(meta[[x]])
-            values[is.null(values)] <-  NA_character_
-            data.frame(property=x, value=values)
+            values[is.null(values)] <- NA_character_
+            data.frame(property = x, value = values)
         })
     })
 
     # remove any elements that didn't have any metadata
     out <- out[vapply(out, length, numeric(1)) > 0]
-    
-    out <- lapply(names(out), function (x) {
+
+    out <- lapply(names(out), function(x) {
         dfs <- do.call("rbind", out[[x]])
         dfs$geodatum <- x
         dfs[paste0("geodatum_", geodatum_fields)] <- geo_cat[[x]][geodatum_fields]
@@ -235,14 +252,14 @@ availableGeodataFeatures <- function (x = getAPIRoot(),
 #' feat_df and the vector of categories
 #'
 #' @export
-scoreCatToFeat <- function (features, categories) {
+scoreCatToFeat <- function(features, categories) {
     feats <- unique(features)
     cats <- unique(categories)
 
     intersection <- length(cats[cats %in% feats])
     union <- length(union(cats, feats))
 
-    return(intersection/union)
+    return(intersection / union)
 }
 
 #' Match categories with features from geodata
@@ -256,15 +273,17 @@ scoreCatToFeat <- function (features, categories) {
 #' @importFrom stats aggregate
 #'
 #' @export
-matchCatToFeat <- function (categories, all_features = availableGeodataFeatures()) {
-    scores <- aggregate(value~., data=all_features,
-                        scoreCatToFeat, categories = categories)
-    return(scores[scores$value %in% max(scores$value, na.rm = TRUE),])
+matchCatToFeat <- function(categories, all_features = availableGeodataFeatures()) {
+    scores <- aggregate(value ~ .,
+        data = all_features,
+        scoreCatToFeat, categories = categories
+    )
+    return(scores[scores$value %in% max(scores$value, na.rm = TRUE), ])
 }
 
 #' @rdname describe
 #' @export
-setMethod("description", "Geodata", function (x) x@body$description)
+setMethod("description", "Geodata", function(x) x@body$description)
 
 # TODO: make feature_key()<- match_field()<- geodatum()<- methods with more
 #       input checking

@@ -20,9 +20,9 @@ NULL
 
 #' @rdname dichotomize
 #' @export
-setMethod("is.dichotomized", "Categories", function (x) any(is.selected(x)))
+setMethod("is.dichotomized", "Categories", function(x) any(is.selected(x)))
 
-.dichotomize.categories <- function (x, i) {
+.dichotomize.categories <- function(x, i) {
     ## Internal method for dichtomizing Categories (or lists)
     is.selected(x[i]) <- TRUE
     return(x)
@@ -36,7 +36,7 @@ setMethod("dichotomize", c("Categories", "numeric"), .dichotomize.categories)
 setMethod("dichotomize", c("Categories", "logical"), .dichotomize.categories)
 #' @rdname dichotomize
 #' @export
-setMethod("dichotomize", c("Categories", "character"), function (x, i) {
+setMethod("dichotomize", c("Categories", "character"), function(x, i) {
     ind <- names(x) %in% i
     if (!any(ind)) {
         halt("Category not found") ## make nicer error message
@@ -46,12 +46,12 @@ setMethod("dichotomize", c("Categories", "character"), function (x, i) {
 
 #' @rdname dichotomize
 #' @export
-setMethod("undichotomize", "Categories", function (x) {
+setMethod("undichotomize", "Categories", function(x) {
     is.selected(x) <- FALSE
     return(x)
 })
 
-.dichotomize.var <- function (x, i) {
+.dichotomize.var <- function(x, i) {
     newcats <- dichotomize(categories(x), i)
     categories(x) <- newcats
     if (is.dichotomized(newcats)) {
@@ -60,7 +60,7 @@ setMethod("undichotomize", "Categories", function (x) {
     }
     invisible(CrunchVariable(tuple(x)))
 }
-.undichotomize.var <- function (x) {
+.undichotomize.var <- function(x) {
     categories(x) <- undichotomize(categories(x))
     ## Do this to avoid needing to refresh the variable catalog
     x@tuple@body$type <- "categorical_array"

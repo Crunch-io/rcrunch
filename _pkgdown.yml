@@ -15,6 +15,7 @@ articles:
   - variables
   - array-variables
   - variable-order
+  - projects
 - title: Exploring and analyzing
   desc: ~
   contents:
@@ -281,6 +282,8 @@ navbar:
          href: articles/filters.html
       -  text: Export Data
          href: articles/export.html
+      -  text: Projects
+         href: articles/projects.html
       -  text: Fork and Merge
          href: articles/fork-and-merge.html
       -  text: Subtotals and Headings

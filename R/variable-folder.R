@@ -1,11 +1,11 @@
-folders <- function (x) {
+folders <- function(x) {
     stopifnot(is.dataset(x))
     # folder_url <- try(shojiURL(x, "catalogs", "folders"), silent=TRUE)
     folder_url <- getRootFolderURL(x)
     return(VariableFolder(crGET(folder_url)))
 }
 
-getRootFolderURL <- function (dataset) {
+getRootFolderURL <- function(dataset) {
     ## Temporary behavior while folders are feature-flagged on the server. We
     ## want to turn on the flag whenever a user attempts to access folders, if
     ## folders aren't already enabled.
@@ -18,7 +18,7 @@ getRootFolderURL <- function (dataset) {
     ## First, check for the root folder URL. This will error if there is no
     ## such URL on `dataset`, which there won't be unless the flag was on when
     ## the dataset was loaded.
-    folder_url <- try(shojiURL(dataset, "catalogs", "folders"), silent=TRUE)
+    folder_url <- try(shojiURL(dataset, "catalogs", "folders"), silent = TRUE)
     if (is.error(folder_url)) {
         ## Next, check flag. It's possible we set the flag in a previous call
         ## to this function, but `dataset` is stale because this function can't
@@ -39,22 +39,22 @@ getRootFolderURL <- function (dataset) {
 
 #' @export
 #' @rdname describe-catalog
-setMethod("aliases", "VariableFolder", function (x) getIndexSlot(x, "alias"))
+setMethod("aliases", "VariableFolder", function(x) getIndexSlot(x, "alias"))
 
-setMethod("folderExtraction", "VariableFolder", function (x, tuple) {
+setMethod("folderExtraction", "VariableFolder", function(x, tuple) {
     ## "tuple" is a list of length 1, name is URL, contents is the actual tuple
     url <- names(tuple)
     tuple <- tuple[[1]]
     if (tuple$type == "folder") {
         return(VariableFolder(crGET(url)))
     } else {
-        tup <- VariableTuple(entity_url=url, body=tuple, index_url=self(x))
+        tup <- VariableTuple(entity_url = url, body = tuple, index_url = self(x))
         return(CrunchVariable(tup))
     }
 })
 
 ## Get variable by alias, name, or URL
-whichFolderEntry <- function (x, i) {
+whichFolderEntry <- function(x, i) {
     ## First check URLs and names()
     out <- whichNameOrURL(x, i, names(x))
     ## Now check variable aliases, if any missing
@@ -65,5 +65,7 @@ whichFolderEntry <- function (x, i) {
     return(out)
 }
 
-setMethod("whichCatalogEntry", "VariableFolder",
-    function (x, i, ...) whichFolderEntry(x, i))
+setMethod(
+    "whichCatalogEntry", "VariableFolder",
+    function(x, i, ...) whichFolderEntry(x, i)
+)

@@ -18,8 +18,8 @@
 #' @importFrom stats as.formula terms
 #' @seealso [weight()]
 #' @export
-crtabs <- function (formula, data, weight=crunch::weight(data),
-                     useNA=c("no", "ifany", "always")) {
+crtabs <- function(formula, data, weight = crunch::weight(data),
+                   useNA = c("no", "ifany", "always")) {
     ## Validate inputs
     if (missing(formula)) {
         halt("Must provide a formula")
@@ -47,6 +47,7 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
 
     ## GET it.
     resp <- crGET(cubeURL(data),
-        query=list(query=toJSON(query), filter=toJSON(f)))
-    return(CrunchCube(resp, useNA=useNA))
+        query = list(query = toJSON(query), filter = toJSON(f))
+    )
+    return(CrunchCube(resp, useNA = useNA))
 }
