@@ -117,3 +117,5 @@ wrapEntity <- function(..., body = list(...)) {
 }
 
 wrapCatalog <- function(...) list(element = "shoji:catalog", ...)
+
+wrapCatalogIndex <- function(...) wrapCatalog(index = as.list(...))

@@ -137,7 +137,7 @@ setMethod("names<-", "AbstractCategories", function(x, value) {
     if (any(is.na(value))) {
         halt("Category names must be non-missing")
     }
-    x[] <- mapply(setName, x, value = value, SIMPLIFY = FALSE)
+    x[] <- mapply(setAbstractCategoryName, x, value = value, SIMPLIFY = FALSE)
     return(x)
 })
 
