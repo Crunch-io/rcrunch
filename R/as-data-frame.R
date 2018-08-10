@@ -14,7 +14,7 @@
 #' the remote server, rather than pulling the entire dataset into local
 #' memory.
 #'
-#' If you call `as.data.frame` on a `CrunchDataset` with `force = TRUE`, you
+#' If you call `as.data.frame()` on a `CrunchDataset` with `force = TRUE`, you
 #' will instead get a true `data.frame`. You can also get this `data.frame` by
 #' calling `as.data.frame` on a `CrunchDataFrame` (effectively calling
 #' `as.data.frame` on the dataset twice)
