@@ -24,10 +24,10 @@
 #' # The assignment method lets you move a dataset to a project
 #' datasets(proj) <- ds
 #' }
-datasets <- function (x=getAPIRoot()) {
+datasets <- function(x = getAPIRoot()) {
     if (inherits(x, "SearchResults")) {
         ## This is close enough to a dataset catalog
-        out <- structure(list(index=x$datasets), class="shoji")
+        out <- structure(list(index = x$datasets), class = "shoji")
     } else {
         out <- crGET(shojiURL(x, "catalogs", "datasets"))
     }
@@ -35,6 +35,10 @@ datasets <- function (x=getAPIRoot()) {
 }
 
 #' Show the names of all Crunch datasets associated with a catalog
+#'
+#' If `shiny` is TRUE the function launches a shiny gadget which allows you to
+#' navigate your Crunch projects and datasets. This is useful if you can't
+#' remember a dataset's project and also saves typing long dataset names.
 #'
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
@@ -44,18 +48,25 @@ datasets <- function (x=getAPIRoot()) {
 #' the primary dataset catalog for the user will be used.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is FALSE.
+#' @param shiny logical: launch a shiny gadget to help select the right dataset. The
+#' gadget will return a valid `loadDataset()` call which loads the selected dataset.
 #' @return Character vector of dataset names, each of which would be a valid
 #' input for [loadDataset()]
 #' @export
-listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
-                          refresh=FALSE) {
-    dscat <- selectDatasetCatalog(kind, project, refresh)
-    return(names(dscat))
+listDatasets <- function(kind = c("active", "all", "archived"), project = NULL,
+                         refresh = FALSE, shiny = FALSE) {
+    if (shiny) {
+        checkInstalledPackages(c("rstudioapi", "shiny", "miniUI"))
+        rstudioapi::verifyAvailable("0.99.878")
+        listDatasetGadget(kind, refresh)
+    } else {
+        dscat <- selectDatasetCatalog(kind, project, refresh)
+        return(names(dscat))
+    }
 }
 
-selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
-                                  project=NULL, refresh=FALSE) {
-
+selectDatasetCatalog <- function(kind = c("active", "all", "archived"),
+                                 project = NULL, refresh = FALSE) {
     Call <- match.call()
     if (is.null(project)) {
         ## Default: we'll get the dataset catalog from the API root
@@ -66,8 +77,10 @@ selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
     }
     if (is.null(project)) {
         ## Means a project was specified (like by name) but it didn't exist
-        halt("Project ", deparseAndFlatten(eval.parent(Call$project)),
-            " is not valid")
+        halt(
+            "Project ", deparseAndFlatten(eval.parent(Call$project)),
+            " is not valid"
+        )
     }
 
     if (refresh) {
@@ -79,9 +92,10 @@ selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
 
     ## Subset as indicated
     return(switch(match.arg(kind),
-        active=active(catalog),
-        all=catalog,
-        archived=archived(catalog)))
+        active = active(catalog),
+        all = catalog,
+        archived = archived(catalog)
+    ))
 }
 
 #' Refresh the local list of Crunch datasets
@@ -91,7 +105,7 @@ selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
 #' @export
 #' @importFrom httpcache dropOnly
 #' @keywords internal
-updateDatasetList <- function () {
+updateDatasetList <- function() {
     warning("updateDatasetList is being deprecated.")
     dropOnly(sessionURL("datasets"))
 }
@@ -116,7 +130,7 @@ updateDatasetList <- function () {
 #' ds <- loadDatasets(dsName)
 #' }
 #' @export
-loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
+loadDataset <- function(dataset, kind = c("active", "all", "archived"), project = NULL, refresh = FALSE) {
     if (is.character(dataset) && startsWith(dataset, "http")) {
         ## Check to see if this is a URL, in which case, GET it
         if (!grepl("/api/", dataset)) {
@@ -125,6 +139,15 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=N
         }
         return(loadDatasetFromURL(dataset))
     } else if (!inherits(dataset, "DatasetTuple")) {
+        if (missing(project) && is.character(dataset)) {
+            ## See if "dataset" is a path
+            dataset <- parseFolderPath(dataset)
+            if (length(dataset) > 1) {
+                ## Walk the path
+                ds_url <- datasetURLFromPath(dataset)
+                return(loadDatasetFromURL(ds_url))
+            } # else, proceed normally
+        }
         dscat <- selectDatasetCatalog(kind, project, refresh)
         dsname <- dataset
         dataset <- dscat[[dataset]]
@@ -135,12 +158,19 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=N
     return(entity(dataset))
 }
 
-loadDatasetFromURL <- function (url) {
+loadDatasetFromURL <- function(url) {
     ## Load dataset without touching a dataset catalog
     dataset <- CrunchDataset(crGET(url))
-    tuple(dataset) <- DatasetTuple(entity_url=self(dataset),
-        body=dataset@body,
-        index_url=shojiURL(dataset, "catalogs", "parent"))
+    if (isTRUE(getOption("crunch.variable.folders", FALSE))) {
+        ## Call getRootFolderURL(), which will turn on folders and bust cache as needed
+        getRootFolderURL(dataset)
+        dataset <- CrunchDataset(crGET(url))
+    }
+    tuple(dataset) <- DatasetTuple(
+        entity_url = self(dataset),
+        body = dataset@body,
+        index_url = shojiURL(dataset, "catalogs", "parent")
+    )
     return(dataset)
 }
 
@@ -162,7 +192,7 @@ loadDatasetFromURL <- function (url) {
 #' @return (Invisibly) the API response from deleting the dataset
 #' @seealso [delete]
 #' @export
-deleteDataset <- function (x, ...) {
+deleteDataset <- function(x, ...) {
     if (!is.dataset(x)) {
         if (is.numeric(x)) {
             x <- listDatasets()[x]

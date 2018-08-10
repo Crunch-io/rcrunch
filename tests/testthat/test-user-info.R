@@ -16,10 +16,8 @@ with_mock_crunch({
         expect_is(user_cat, "UserCatalog")
         expect_length(user_cat, 2)
         # show method works
-        expect_output(user_cat, user_cat_output)
+        expect_prints(user_cat, user_cat_output)
     })
-
-
 
     test_that("users() works with dataset entities from catalogs", {
         user_cat <- users(ds)
@@ -27,7 +25,7 @@ with_mock_crunch({
         expect_is(user_cat, "UserCatalog")
         expect_length(user_cat, 2)
         # show method works
-        expect_output(user_cat, user_cat_output)
+        expect_prints(user_cat, user_cat_output)
     })
 
     test_that("users() works with projects", {
@@ -36,6 +34,6 @@ with_mock_crunch({
         expect_is(user_cat, "UserCatalog")
         expect_length(user_cat, 2)
         # show method works
-        expect_output(user_cat, user_cat_output)
+        expect_prints(user_cat, user_cat_output)
     })
 })

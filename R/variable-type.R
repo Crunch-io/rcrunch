@@ -1,26 +1,26 @@
 #' @rdname crunch-is
 #' @export
-is.variable <- function (x) inherits(x, "CrunchVariable")
+is.variable <- function(x) inherits(x, "CrunchVariable")
 
 #' @rdname crunch-is
 #' @export
-is.Numeric <- function (x) inherits(x, "NumericVariable")
+is.Numeric <- function(x) inherits(x, "NumericVariable")
 
 #' @rdname crunch-is
 #' @export
-is.Categorical <- function (x) inherits(x, "CategoricalVariable")
+is.Categorical <- function(x) inherits(x, "CategoricalVariable")
 
 #' @rdname crunch-is
 #' @export
-is.Text <- function (x) inherits(x, "TextVariable")
+is.Text <- function(x) inherits(x, "TextVariable")
 
 #' @rdname crunch-is
 #' @export
-is.Datetime <- function (x) inherits(x, "DatetimeVariable")
+is.Datetime <- function(x) inherits(x, "DatetimeVariable")
 
 #' @rdname crunch-is
 #' @export
-is.Multiple <- function (x) inherits(x, "MultipleResponseVariable")
+is.Multiple <- function(x) inherits(x, "MultipleResponseVariable")
 
 #' @rdname crunch-is
 #' @export
@@ -32,17 +32,17 @@ is.MultipleResponse <- is.Multiple
 
 #' @rdname crunch-is
 #' @export
-is.CA <- function (x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't return true for MultipleResponse
+is.CA <- function(x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't return true for MultipleResponse
 
 #' @rdname crunch-is
 #' @export
-is.Array <- function (x) inherits(x, "CategoricalArrayVariable")
+is.Array <- function(x) inherits(x, "CategoricalArrayVariable")
 
 #' @rdname crunch-is
 #' @export
 is.CategoricalArray <- is.CA
 
-has.categories <- function (x) {
+has.categories <- function(x) {
     if (!is.character(x)) {
         ## Let you pass in either a type name string or a variable. If variable,
         ## get its type
@@ -51,7 +51,7 @@ has.categories <- function (x) {
     return(x %in% c("categorical_array", "multiple_response", "categorical"))
 }
 
-is.subvariable <- function (x) {
+is.subvariable <- function(x) {
     ## TODO: server should support a better way of determining this
     grepl("subvariables", self(x))
 }
@@ -76,18 +76,24 @@ NULL
 
 #' @rdname type
 #' @export
-setMethod("type", "CrunchVariable", function (x) type(tuple(x)))
+setMethod("type", "CrunchVariable", function(x) type(tuple(x)))
 
-castVariable <- function (x, value) {
+#' @rdname type
+#' @export
+setMethod("type", "VariableEntity", function(x) x@body$type)
+
+castVariable <- function(x, value) {
     if (!(type(x) %in% CASTABLE_TYPES)) {
         halt("Cannot change the type of a ", class(x), " by type<-")
     }
     if (!(value %in% CASTABLE_TYPES)) {
-        halt(dQuote(value), " is not a Crunch variable type that can be assigned.",
-            " Valid types are ", serialPaste(dQuote(CASTABLE_TYPES)))
+        halt(
+            dQuote(value), " is not a Crunch variable type that can be assigned.",
+            " Valid types are ", serialPaste(dQuote(CASTABLE_TYPES))
+        )
     }
     if (type(x) != value) { ## no-op if cast type is same as current type
-        crPOST(shojiURL(x, "views", "cast"), body=toJSON(list(cast_as=value)))
+        crPOST(shojiURL(x, "views", "cast"), body = toJSON(list(cast_as = value)))
         x <- refresh(x)
     }
     invisible(x)

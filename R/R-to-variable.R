@@ -3,63 +3,114 @@ NULL
 
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "character", function (x, ...) {
-    return(structure(list(values=x, type="text", ...),
-        class="VariableDefinition"))
+setMethod("toVariable", "character", function(x, ...) {
+    return(VariableDefinition(values = x, type = "text", ...))
 })
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "numeric", function (x, ...) {
-    return(structure(list(values=x, type="numeric", ...),
-        class="VariableDefinition"))
+setMethod("toVariable", "numeric", function(x, ...) {
+    return(VariableDefinition(values = x, type = "numeric", ...))
 })
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "factor", function (x, ...) {
-    nlevels <- length(levels(x))
-    out <- structure(list(values=as.integer(x), type="categorical",
-        categories=categoriesFromLevels(levels(x)), ...),
-        class="VariableDefinition")
-    return(NAToCategory(out, useNA="always"))
+setMethod("toVariable", "factor", function(x, ...) {
+    return(VariableDefinition(
+        values = as.categorical.values(x), type = "categorical",
+        categories = categoriesFromLevels(levels(x)), ...
+    ))
 })
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "Date", function (x, ...) {
-    return(structure(list(values=as.character(x), type="datetime",
-        resolution="D", ...),
-        class="VariableDefinition"))
+setMethod("toVariable", "Date", function(x, ...) {
+    return(VariableDefinition(
+        values = as.character(x), type = "datetime",
+        resolution = "D", ...
+    ))
 })
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "POSIXt", function (x, ...) {
-    return(structure(list(values=strftime(x, "%Y-%m-%dT%H:%M:%OS3"),
-        type="datetime",
-        resolution="ms", ...),
-        class="VariableDefinition"))
+setMethod("toVariable", "POSIXt", function(x, ...) {
+    return(VariableDefinition(
+        values = strftime(x, "%Y-%m-%dT%H:%M:%OS3"),
+        type = "datetime",
+        resolution = "ms", ...
+    ))
 })
 
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "AsIs", function (x, ...) {
+setMethod("toVariable", "AsIs", function(x, ...) {
     class(x) <- class(x)[-match("AsIs", class(x))]
     return(toVariable(x, ...))
 })
 
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "VariableDefinition", function (x, ...) {
+setMethod("toVariable", "VariableDefinition", function(x, ...) {
     return(modifyList(x, list(...)))
 })
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "logical", function (x, ...) {
-    ## Make it categorical
-    out <- structure(list(values=2L-as.integer(x), type="categorical",
-        categories=categoriesFromLevels(c("True", "False")),
-        ...),
-        class="VariableDefinition")
-    return(NAToCategory(out, useNA="always"))
+setMethod("toVariable", "logical", function(x, ...) {
+    vals <- as.categorical.values(x)
+    cats <- .selected.cats
+    ## Pre-3VL category names
+    ## Note that with the extra strict definition of `is.3vl`, this won't
+    ## register as a "logical" type yet and so as.vector will continue to return
+    ## this as categorical, not logical
+    cats[[1]]$name <- "True"
+    cats[[2]]$name <- "False"
+    return(VariableDefinition(
+        values = vals, type = "categorical",
+        categories = cats, ...
+    ))
 })
+
+# haven::labelled* are S3 classes, so we have to register them
+setOldClass("labelled")
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "labelled", function(x, ...) {
+    # TODO: what if the values are numeric? Is it possible to tell these apart
+    # from the labelled object?
+    return(toVariable(as.factor(x), ...))
+})
+
+setOldClass("labelled_spss")
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "labelled_spss", function(x, ...) {
+    # TODO: what if the values are numeric? Is it possible to tell these apart
+    # from the labelled object?
+
+    # convert to factor quickly (the recommended workflow for labelled objects
+    # from haven, since there are few methods for labelled objects)
+    x_factor <- as.factor(x)
+    nlevels <- length(levels(x_factor))
+    categories <- categoriesFromLevels(levels(x_factor))
+    # grab the user missing levels
+    user_missings <- levels(droplevels(x_factor[is.na(x)]))
+    # we aren't
+    categories <- lapply(categories, function(cat) {
+        if (cat$name %in% user_missings) {
+            cat$missing <- TRUE
+        }
+        return(cat)
+    })
+
+    return(VariableDefinition(
+        values = as.categorical.values(x_factor),
+        type = "categorical",
+        categories = categories,
+        ...
+    ))
+})
+
+as.categorical.values <- function(x) {
+    vals <- as.integer(x)
+    vals[is.na(vals)] <- -1L
+    return(vals)
+}
 
 #' Convert a factor's levels into Crunch categories.
 #'
@@ -78,23 +129,16 @@ setMethod("toVariable", "logical", function (x, ...) {
 #' @examples
 #'
 #' categoriesFromLevels(levels(iris$Species))
-#' 
-categoriesFromLevels <- function (level_vect) {
+#'
+categoriesFromLevels <- function(level_vect) {
     if (anyDuplicated(level_vect)) {
-        warning("Duplicate factor levels given: disambiguating them ",
-            "in translation to Categorical type")
+        warning(
+            "Duplicate factor levels given: disambiguating them ",
+            "in translation to Categorical type"
+        )
         level_vect <- uniquify(level_vect)
     }
-    return(lapply(seq_along(level_vect), function (i) {
-        list(id=i, name=level_vect[i], numeric_value=i, missing=FALSE)
-    }))
-}
-
-NAToCategory <- function (var.metadata, useNA=c("ifany", "always")) {
-    useNA <- match.arg(useNA)
-    if (useNA == "always" || any(is.na(var.metadata$values))) {
-        var.metadata$values[is.na(var.metadata$values)] <- -1L
-        var.metadata$categories[[length(var.metadata$categories)+1]] <- .no.data
-    }
-    return(var.metadata)
+    return(c(lapply(seq_along(level_vect), function(i) {
+        list(id = i, name = level_vect[i], numeric_value = i, missing = FALSE)
+    }), list(.no.data)))
 }

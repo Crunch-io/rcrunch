@@ -25,7 +25,7 @@
 #' @export
 #' @seealso [newDatasetFromFile()]; [newDatasetByColumn()] for an alternate
 #' upload method.
-newDataset <- function (x, name=NULL, ...) {
+newDataset <- function(x, name = NULL, ...) {
     Call <- match.call()
     if (is.character(x)) {
         ## Assume we have a file/URL
@@ -35,15 +35,17 @@ newDataset <- function (x, name=NULL, ...) {
 
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
-        halt("Can only make a Crunch dataset from a two-dimensional data ",
-            "structure")
+        halt(
+            "Can only make a Crunch dataset from a two-dimensional data ",
+            "structure"
+        )
     }
 
     if (is.null(name)) {
         name <- deparseAndFlatten(substitute(x), max_length = 40)
     }
     ## TODO: something with paginating the CSV batching if lots of data
-    d <- prepareDataForCrunch(x, name=name, ...)
+    d <- prepareDataForCrunch(x, name = name, ...)
     ds <- createWithPreparedData(d)
     invisible(ds)
 }
@@ -64,12 +66,12 @@ newDataset <- function (x, name=NULL, ...) {
 #' @seealso [newDataset()]
 #' @keywords internal
 #' @export
-createDataset <- function (name, body, ...) {
+createDataset <- function(name, body, ...) {
     if (missing(body)) {
-        body <- wrapEntity(name=name, ...)
+        body <- wrapEntity(name = name, ...)
     }
-    dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(body))
-    invisible(loadDataset(dataset_url))
+    dataset_url <- crPOST(sessionURL("datasets"), body = toJSON(body))
+    return(invisible(loadDatasetFromURL(dataset_url)))
 }
 
 #' Translate a data.frame to Crunch format
@@ -87,21 +89,23 @@ createDataset <- function (name, body, ...) {
 #' the associated Crunch metadata.
 #' @seealso createWithPreparedData writePreparedData
 #' @export
-prepareDataForCrunch <- function (data, ...) {
+prepareDataForCrunch <- function(data, ...) {
     ## Get all the things
-    message("Processing the data")
-    vars <- lapply(names(data),
-        function (i) toVariable(data[[i]], name=i, alias=i))
+    progressMessage("Processing the data")
+    vars <- lapply(
+        names(data),
+        function(i) toVariable(data[[i]], name = i, alias = i)
+    )
     names(vars) <- names(data)
 
     ## Extract the data
     ## Do data.frame here because write.csv will internally if we don't, and
     ## we need check.names=FALSE so that the names don't get mangled and changed
     ## away from what the metadata has
-    cols <- data.frame(lapply(vars, vget("values")), check.names=FALSE)
+    cols <- data.frame(lapply(vars, vget("values")), check.names = FALSE)
 
     ## Drop the columns from the metadata and compose the payload
-    vars <- lapply(vars, function (v) {
+    vars <- lapply(vars, function(v) {
         v[["values"]] <- NULL
         return(v)
     })
@@ -109,7 +113,7 @@ prepareDataForCrunch <- function (data, ...) {
 
     ## Return the data frame to write to csv to upload, with the metadata to
     ## POST as an attribute on it.
-    return(structure(cols, metadata=meta))
+    return(structure(cols, metadata = meta))
 }
 
 #' Upload a prepared data.frame with metadata to Crunch
@@ -126,7 +130,7 @@ prepareDataForCrunch <- function (data, ...) {
 #' metadata has been written as JSON.
 #' @return A CrunchDataset.
 #' @export
-createWithPreparedData <- function (data, metadata=attr(data, "metadata")) {
+createWithPreparedData <- function(data, metadata = attr(data, "metadata")) {
     createWithMetadataAndFile(metadata, data)
 }
 
@@ -144,10 +148,10 @@ createWithPreparedData <- function (data, metadata=attr(data, "metadata")) {
 #' CSV and a JSON file to those locations.
 #' @keywords internal
 #' @export
-writePreparedData <- function (data, metadata=attr(data, "metadata"), file) {
-    filenames <- paste(file, c("csv.gz", "json"), sep=".")
+writePreparedData <- function(data, metadata = attr(data, "metadata"), file) {
+    filenames <- paste(file, c("csv.gz", "json"), sep = ".")
     write.csv.gz(data, filenames[1])
-    cat(toJSON(metadata), file=filenames[2])
+    cat(toJSON(metadata), file = filenames[2])
     return(filenames)
 }
 
@@ -162,10 +166,10 @@ writePreparedData <- function (data, metadata=attr(data, "metadata"), file) {
 #' @return A csv file written to dist
 #' @importFrom utils write.csv
 #' @export
-write.csv.gz <- function (x, file, na="", row.names=FALSE, ...) {
+write.csv.gz <- function(x, file, na = "", row.names = FALSE, ...) {
     gf <- gzfile(file, "w")
     on.exit(close(gf))
-    invisible(write.csv(x, file=gf, na=na, row.names=row.names, ...))
+    invisible(write.csv(x, file = gf, na = na, row.names = row.names, ...))
 }
 
 #' Make a dataset with metadata and a CSV
@@ -182,32 +186,32 @@ write.csv.gz <- function (x, file, na="", row.names=FALSE, ...) {
 #' @return On success, a new dataset.
 #' @export
 #' @keywords internal
-createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
+createWithMetadataAndFile <- function(metadata, file, strict = TRUE) {
     ds <- uploadMetadata(metadata)
-    ds <- uploadData(ds, file, strict, first_batch=TRUE)
-    message("Done!")
+    ds <- uploadData(ds, file, strict, first_batch = TRUE)
+    progressMessage("Done!")
     return(ds)
 }
 
 #' @importFrom jsonlite fromJSON
-uploadMetadata <- function (metadata) {
-    message("Uploading metadata")
+uploadMetadata <- function(metadata) {
+    progressMessage("Uploading metadata")
     if (is.character(metadata)) {
         ## File name. Read it in.
-        metadata <- fromJSON(metadata, simplifyVector=FALSE)
+        metadata <- fromJSON(metadata, simplifyVector = FALSE)
     }
-    return(createDataset(body=metadata))
+    return(createDataset(body = metadata))
 }
 
-uploadData <- function (dataset, data, strict=TRUE, first_batch=TRUE) {
-    message("Uploading data")
+uploadData <- function(dataset, data, strict = TRUE, first_batch = TRUE) {
+    progressMessage("Uploading data")
     if (!is.character(data)) {
         ## It's a data.frame. Write it out to a file.
         f <- tempfile()
         write.csv.gz(data, f)
         data <- f
     }
-    return(addBatchFile(dataset, data, strict=strict, first_batch=TRUE))
+    return(addBatchFile(dataset, data, strict = strict, first_batch = TRUE))
 }
 
 #' Wrap variable metadata inside a dataset entity
@@ -219,9 +223,9 @@ uploadData <- function (dataset, data, strict=TRUE, first_batch=TRUE) {
 #' @param return list suitable for JSONing and POSTing to create a dataset
 #' @export
 #' @keywords internal
-shojifyDatasetMetadata <- function (metadata, order=I(names(metadata)), ...) {
-    tbl <- list(element="crunch:table", metadata=metadata, order=order)
-    return(wrapEntity(..., table=tbl))
+shojifyDatasetMetadata <- function(metadata, order = I(names(metadata)), ...) {
+    tbl <- list(element = "crunch:table", metadata = metadata, order = order)
+    return(wrapEntity(..., table = tbl))
 }
 
 #' Upload a data.frame column-by-column to make a new dataset
@@ -238,10 +242,12 @@ shojifyDatasetMetadata <- function (metadata, order=I(names(metadata)), ...) {
 #' @seealso [newDataset()]
 #' @export
 #' @keywords internal
-newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_length = 40), ...) {
-    vardefs <- lapply(names(x),
-        function (v) toVariable(x[[v]], name=v, alias=v))
-    ds <- createDataset(name=name, ...)
+newDatasetByColumn <- function(x, name = deparseAndFlatten(substitute(x), max_length = 40), ...) {
+    vardefs <- lapply(
+        names(x),
+        function(v) toVariable(x[[v]], name = v, alias = v)
+    )
+    ds <- createDataset(name = name, ...)
     ds <- addVariables(ds, vardefs)
     ds <- saveVersion(ds, "initial import")
     invisible(ds)
@@ -267,8 +273,8 @@ newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_len
 #' @export
 #' @seealso [newDataset()]
 #' @keywords internal
-newDatasetFromFile <- function (x, name=basename(x), ...) {
-    ds <- createDataset(name=name, ...)
-    ds <- addBatchFile(ds, x, first_batch=TRUE)
+newDatasetFromFile <- function(x, name = basename(x), ...) {
+    ds <- createDataset(name = name, ...)
+    ds <- addBatchFile(ds, x, first_batch = TRUE)
     invisible(ds)
 }

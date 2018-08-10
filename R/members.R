@@ -1,28 +1,21 @@
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("MemberCatalog", "character"), function (x, i, ...) {
+setMethod("[[", c("MemberCatalog", "character"), function(x, i, ...) {
     ## TODO: eliminate duplication with PermissionCatalog
-    stopifnot(length(i) == 1L)
-    w <- whichNameOrURL(x, i, emails(x))
-    if (is.na(w)) {
-        halt("Subscript out of bounds: ", i)
+    w <- whichCatalogEntry(x, i, ...)
+    tup <- x[[w]]
+    if (!is.null(tup)) {
+        ## TODO: MemberTuple?
+        tup <- ShojiTuple(index_url = self(x), entity_url = urls(x)[w], body = tup)
     }
-    tup <- index(x)[[w]]
-    return(ShojiTuple(index_url=self(x), entity_url=urls(x)[w],
-        body=tup)) ## TODO: MemberTuple
+    return(tup)
 })
 
-#' @rdname catalog-extract
-#' @export
-setMethod("[", c("MemberCatalog", "character"), function (x, i, ...) {
-    w <- whichNameOrURL(x, i, emails(x))
-    if (any(is.na(w))) {
-        halt("Undefined elements selected: ", serialPaste(i[is.na(w)]))
-    }
-    return(x[w])
-})
-
-
+## Alternative lookup in emails, not names
+setMethod(
+    "whichCatalogEntry", "MemberCatalog",
+    function(x, i, ...) whichNameOrURL(x, i, emails(x))
+)
 
 #' @rdname catalog-extract
 #' @export
@@ -30,17 +23,19 @@ setMethod("[[<-", c("MemberCatalog", "ANY", "missing", "ANY"), .backstopUpdate)
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("MemberCatalog", "character", "missing", "NULL"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("MemberCatalog", "character", "missing", "NULL"),
+    function(x, i, j, value) {
         ## Remove the specified user from the catalog
-        payload <- sapply(i, null, simplify=FALSE)
-        crPATCH(self(x), body=toJSON(payload))
+        payload <- sapply(i, null, simplify = FALSE)
+        crPATCH(self(x), body = toJSON(payload))
         return(refresh(x))
-    })
+    }
+)
 
 #' @rdname teams
 #' @export
-setMethod("members<-", c("CrunchTeam", "MemberCatalog"), function (x, value) {
+setMethod("members<-", c("CrunchTeam", "MemberCatalog"), function(x, value) {
     ## TODO: something
     ## For now, assume action already done in other methods, like NULL
     ## assignment above.
@@ -49,9 +44,9 @@ setMethod("members<-", c("CrunchTeam", "MemberCatalog"), function (x, value) {
 
 #' @rdname teams
 #' @export
-setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
-    payload <- sapply(value, emptyObject, simplify=FALSE)
-    crPATCH(self(members(x)), body=toJSON(payload))
+setMethod("members<-", c("CrunchTeam", "character"), function(x, value) {
+    payload <- sapply(value, emptyObject, simplify = FALSE)
+    crPATCH(self(members(x)), body = toJSON(payload))
     return(refresh(x))
 })
 
@@ -69,23 +64,23 @@ NULL
 
 #' @rdname is.editor
 #' @export
-setMethod("is.editor", "MemberCatalog", function (x) {
+setMethod("is.editor", "MemberCatalog", function(x) {
     ## N.B.: this is for projects; teams don't work this way.
-    vapply(index(x), function (a) {
-            isTRUE(a[["permissions"]][["edit"]])
-        }, logical(1), USE.NAMES=FALSE)
+    vapply(index(x), function(a) {
+        isTRUE(a[["permissions"]][["edit"]])
+    }, logical(1), USE.NAMES = FALSE)
 })
 
 #' @rdname is.editor
 #' @export
-setMethod("is.editor<-", c("MemberCatalog", "logical"), function (x, value) {
+setMethod("is.editor<-", c("MemberCatalog", "logical"), function(x, value) {
     stopifnot(length(x) == length(value))
     changed <- is.editor(x) != value
     if (any(changed)) {
         payload <- structure(lapply(value[changed], {
-            function (v) list(permissions=list(edit=v))
-        }), .Names=urls(x)[changed])
-        crPATCH(self(x), body=toJSON(payload))
+            function(v) list(permissions = list(edit = v))
+        }), .Names = urls(x)[changed])
+        crPATCH(self(x), body = toJSON(payload))
         x <- refresh(x)
     }
     return(x)

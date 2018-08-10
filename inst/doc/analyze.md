@@ -1,5 +1,6 @@
 ---
 title: "Analyzing Crunch Data"
+description: "With Crunch, you can harness the power of R to do computations with your datasets on the server that would be difficult or impossible to accomplish in a graphical user interface."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Analyzing Crunch Data}
@@ -8,6 +9,7 @@ vignette: >
 ---
 
 [Previous: transform and derive](derive.md)
+
 
 
 # Computing with R and Crunch

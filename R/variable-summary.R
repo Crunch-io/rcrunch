@@ -1,6 +1,6 @@
-getSummary <- function (x) {
+getSummary <- function(x) {
     url <- shojiURL(x, "views", "summary")
-    out <- crGET(url, query=list(filter=toJSON(zcl(activeFilter(x)))))
+    out <- crGET(url, query = list(filter = toJSON(zcl(activeFilter(x)))))
     if (is.Datetime(x)) {
         toR <- columnParser("datetime")
         for (i in c("min", "max")) out[[i]] <- toR(out[[i]])
@@ -18,44 +18,52 @@ getSummary <- function (x) {
 #' @return a table object
 #' @seealso [`base::table`]
 #' @export
-table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.level) {
+table <- function(..., exclude, useNA = c("no", "ifany", "always"), dnn, deparse.level) {
     m <- match.call()
 
     dots <- list(...)
-    are.vars <- vapply(dots,
-        function (x) is.variable(x) || is.CrunchExpr(x),
-        logical(1))
+    are.vars <- vapply(
+        dots,
+        function(x) is.variable(x) || is.CrunchExpr(x),
+        logical(1)
+    )
     if (length(are.vars) && all(are.vars)) {
-        dims <- unlist(lapply(dots, varToDim), recursive=FALSE)
+        dims <- unlist(lapply(dots, varToDim), recursive = FALSE)
         names(dims) <- NULL
-        query <- list(dimensions=dims,
-            measures=list(count=zfunc("cube_count")))
+        query <- list(
+            dimensions = dims,
+            measures = list(count = zfunc("cube_count"))
+        )
         ## Check for filters
-        filters <- vapply(dots,
-            function (x) toJSON(zcl(activeFilter(x))),
-            character(1))
+        filters <- vapply(
+            dots,
+            function(x) toJSON(zcl(activeFilter(x))),
+            character(1)
+        )
         if (!all(filters == filters[1])) {
             halt("Filter expressions in variables must be identical")
         }
         query <- list(
-            query=toJSON(query),
-            filter=filters[1]
+            query = toJSON(query),
+            filter = filters[1]
         )
         cube_url <- cubeURL(dots[[1]])
-        cube <- CrunchCube(crGET(cube_url, query=query), useNA=match.arg(useNA))
+        cube <- CrunchCube(crGET(cube_url, query = query), useNA = match.arg(useNA))
         return(as.table(as.array(cube)))
     } else if (any(are.vars)) {
-        halt("Cannot currently tabulate Crunch variables with ",
-            "non-Crunch vectors")
+        halt(
+            "Cannot currently tabulate Crunch variables with ",
+            "non-Crunch vectors"
+        )
     } else {
         m[[1]] <- quote(base::table)
         return(eval.parent(m))
     }
 }
 
-#setGeneric("table", signature="...")
+# setGeneric("table", signature="...")
 # ## @export
-#setMethod("table", "CategoricalVariable", CategoricalVariable.table)
+# setMethod("table", "CategoricalVariable", CategoricalVariable.table)
 
 #' Summary methods for Crunch Variables
 #'
@@ -68,24 +76,24 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
 #' @name crunch-summary
 #' @keywords internal
 #' @export
-summary.CategoricalVariable <- function (object, ...) {
+summary.CategoricalVariable <- function(object, ...) {
     tab <- table(object)
-    tab <- tab[order(tab, decreasing=TRUE)]
+    tab <- tab[order(tab, decreasing = TRUE)]
     class(tab) <- c("CategoricalVariableSummary", class(tab))
     attr(tab, "varname") <- getNameAndType(object)
     return(tab)
 }
 
 #' @export
-print.CategoricalVariableSummary <- function (x, ...) {
-    print(data.frame(Count=as.numeric(x), row.names=names(x)))
+print.CategoricalVariableSummary <- function(x, ...) {
+    print(data.frame(Count = as.numeric(x), row.names = names(x)))
 }
 
 #' @rdname crunch-summary
 #' @export
-summary.NumericVariable <- function (object, ...) {
+summary.NumericVariable <- function(object, ...) {
     summ <- getSummary(object)
-    fivenum <- sapply(summ$fivenum, function (x) x[[2]])
+    fivenum <- sapply(summ$fivenum, function(x) x[[2]])
     out <- c(fivenum[1:3], summ$mean, fivenum[4:5])
     if (summ$missing_count) {
         out <- c(out, summ$missing_count)

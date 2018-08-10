@@ -5,7 +5,7 @@ with_mock_crunch({
     test_that("hiddenVariables", {
         expect_identical(hiddenVariables(ds, "name"), "Birth Year")
         expect_identical(hiddenVariables(ds), "birthyr")
-        with(temp.option(crunch.namekey.dataset="name"), {
+        with(temp.option(crunch.namekey.dataset = "name"), {
             expect_identical(hiddenVariables(ds), "Birth Year")
         })
     })
@@ -17,8 +17,10 @@ with_mock_crunch({
     })
 
     test_that("hidden variables can be accessed with $", {
-        expect_warning(z <- ds$birthyr,
-            "Variable birthyr is hidden")
+        expect_warning(
+            z <- ds$birthyr,
+            "Variable birthyr is hidden"
+        )
         expect_true(is.Numeric(z))
     })
 
@@ -26,71 +28,106 @@ with_mock_crunch({
         skip_on_jenkins("No idea why this fails to catch the warning on Jenkins but not on Travis or locally")
         with_consent({
             expect_warning(
-                expect_DELETE(delete(ds$birthyr),
-                    "https://app.crunch.io/api/datasets/3/variables/birthyr/"),
-                "Variable birthyr is hidden")
+                expect_DELETE(
+                    delete(ds$birthyr),
+                    "https://app.crunch.io/api/datasets/3/variables/birthyr/"
+                ),
+                "Variable birthyr is hidden"
+            )
         })
     })
 
-    vg <- VariableGroup("A group", entities=ds[c("gender", "birthyr")])
+    vg <- VariableGroup("A group", entities = ds[c("gender", "birthyr")])
 
     test_that("hideVariables with various input types makes the right request", {
-        expect_PATCH(ds <- hideVariables(ds, "gender"),
+        expect_PATCH(
+            ds <- hideVariables(ds, "gender"),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
-        expect_PATCH(ds <- hideVariables(ds, c("gender", "birthyr")),
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}'
+        )
+        ## Duplicates are handled
+        expect_PATCH(
+            ds <- hideVariables(ds, c("gender", "gender")),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same
-        expect_PATCH(ds <- hideVariables(ds, vg),
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}'
+        )
+        expect_PATCH(
+            ds <- hideVariables(ds, c("gender", "birthyr")),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same
-        expect_PATCH(ds <- hideVariables(ds, c("gender", "starttime")),
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}'
+        ) ## same
+        expect_PATCH(
+            ds <- hideVariables(ds, vg),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
-            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}')
-        expect_PATCH(ds <- hideVariables(ds, 1:2),
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}'
+        ) ## same
+        expect_PATCH(
+            ds <- hideVariables(ds, c("gender", "starttime")),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
-            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}')
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
+            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}}'
+        )
+        expect_PATCH(
+            ds <- hideVariables(ds, 1:2),
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
+            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}}'
+        )
     })
 
     test_that("hiddenVariables<- request", {
-        expect_PATCH(hiddenVariables(ds) <- "gender",
+        expect_PATCH(
+            hiddenVariables(ds) <- "gender",
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
-        expect_PATCH(hiddenVariables(ds) <- c("gender", "birthyr"),
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}'
+        )
+        expect_PATCH(
+            hiddenVariables(ds) <- c("gender", "birthyr"),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}}'
+        ) ## same
     })
 
     test_that("unhideVariables with various input types makes the right request", {
-        expect_PATCH(ds <- unhideVariables(ds, "birthyr"),
+        expect_PATCH(
+            ds <- unhideVariables(ds, "birthyr"),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}')
-        expect_PATCH(ds <- unhideVariables(ds, c("gender", "birthyr")),
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}}'
+        )
+        expect_PATCH(
+            ds <- unhideVariables(ds, c("gender", "birthyr")),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}') ## same
-        expect_PATCH(ds <- unhideVariables(ds, vg),
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}}'
+        ) ## same
+        expect_PATCH(
+            ds <- unhideVariables(ds, vg),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}') ## same
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}}'
+        ) ## same
         expect_no_request(ds <- unhideVariables(ds, c("gender", "starttime")))
     })
 
     test_that("hide method on variable makes right request", {
-        expect_PATCH(hide(ds$gender),
+        expect_PATCH(
+            hide(ds$gender),
             "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}'
+        )
         expect_warning(
             expect_no_request(hide(ds$birthyr)),
-            "Variable birthyr is hidden")
+            "Variable birthyr is hidden"
+        )
     })
 
     test_that("unhide method on variable makes right request", {
         expect_warning(
-            expect_PATCH(unhide(ds$birthyr),
-            "https://app.crunch.io/api/datasets/3/variables/",
-            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}'),
-            "Variable birthyr is hidden")
+            expect_PATCH(
+                unhide(ds$birthyr),
+                "https://app.crunch.io/api/datasets/3/variables/",
+                '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}'
+            ),
+            "Variable birthyr is hidden"
+        )
         expect_no_request(unhide(ds$gender))
     })
 })
@@ -155,7 +192,7 @@ with_test_authentication({
     })
 
     test_that("Can hide array variables even if they only have one subvar", {
-        ds <- mrdf.setup(newDataset(mrdf[c(1,4)]))
+        ds <- mrdf.setup(newDataset(mrdf[c(1, 4)]))
         expect_identical(names(ds), c("CA", "v4"))
         expect_length(subvariables(ds$CA), 1)
         hiddenVariables(ds) <- "CA"

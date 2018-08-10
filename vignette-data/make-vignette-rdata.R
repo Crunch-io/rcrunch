@@ -130,6 +130,37 @@ exclusion(ds) <- ds$perc_skipped > 15
 high_perc_skipped <- capture.output(print(exclusion(ds)))
 dim.ds.excluded <- dim(ds)
 
-save.image(file="../vignettes/vignettes.RData")
+message("subtotals")
+sub_initial_subtotals <- subtotals(ds$manningknowledge)
+subtotals(ds$manningknowledge) <- list(
+    Subtotal(name = "Follows closely",
+             categories = c("Somewhat closely", "Very closely"),
+             after = "Somewhat closely"),
+    Subtotal(name = "Doesn't Follow Closely",
+             categories = c("Not very closely", "Not at all"),
+             after = "Not at all"))
+sub_subtotals1 <- subtotals(ds$manningknowledge)
+subtotals(ds$obamaapp) <- list(
+    Heading(name = "Approves",
+            after = 0),
+    Heading(name = "Disapprove",
+            after = "Somewhat Approve"),
+    Heading(name = "No Answer",
+            after = "Strongly Disapprove"))
+sub_headings <- subtotals(ds$obamaapp)
+subtotals(ds$obamaapp) <- NULL
+approve_subtotals <- list(
+    Subtotal(name = "Approves",
+            categories = c("Somewhat approve", "Strongly approve"),
+            after = "Somewhat approve"),
+    Subtotal(name = "Disapprove",
+            categories = c("Somewhat disapprove", "Strongly disapprove"),
+            after = "Strongly disapprove"))
+subtotals(ds$snowdenleakapp) <- approve_subtotals
+subtotals(ds$congapp) <- approve_subtotals
+sub_snowdon <- subtotals(ds$snowdenleakapp)
+sub_con <- subtotals(ds$congapp)
+sub_crtab <- crtabs(~congapp + gender, ds)
 
+save.image(file="../vignettes/vignettes.RData")
 with_consent(delete(ds)) ## cleanup

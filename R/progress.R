@@ -1,16 +1,29 @@
+#' Check a Crunch progress URL until it finishes
+#'
+#' You'll probably only call this function if progress polling times out and its
+#' error message tells you to call `pollProgress` to resume.
+#'
+#' @param progress_url A Crunch progress URL
+#' @param wait Number of seconds to wait between polling. This time is increased
+#' 20 percent on each poll.
+#' @return The percent completed of the progress. Assuming the
+#' `options(crunch.timeout)` (default: 15 minutes) hasn't been reached, this
+#' will be 100. If the timeout is reached, it will be the last reported progress
+#' value.
+#' @export
 #' @importFrom httpcache uncached
-pollProgress <- function (progress_url, wait=.5) {
+pollProgress <- function(progress_url, wait = .5) {
     ## Configure polling interval. Will increase by rate (>1) until reaches max
     max.wait <- 30
     increase.by <- 1.2
 
     starttime <- Sys.time()
     timeout <- crunchTimeout()
-    timer <- function (since, units="secs") {
-        difftime(Sys.time(), since, units=units)
+    timer <- function(since, units = "secs") {
+        difftime(Sys.time(), since, units = units)
     }
     ## Set up the progress bar
-    pb <- setup_progress_bar(0, 100, style=3)
+    pb <- setup_progress_bar(0, 100, style = 3)
 
     prog <- uncached(crGET(progress_url))
     status <- prog$progress
@@ -28,23 +41,38 @@ pollProgress <- function (progress_url, wait=.5) {
         msg <- prog$message %||% "There was an error on the server. Please contact support@crunch.io"
         halt(msg)
     } else if (status != 100) {
-        halt('Your process is still running on the server. It is currently ',
-            round(status), '% complete. Check `httpcache::uncached(crGET("',
-            progress_url, '"))` until it reports 100% complete')
+        halt(
+            "Your process is still running on the server. It is currently ",
+            round(status), '% complete. Check `pollProgress("',
+            progress_url, '")` until it reports 100% complete'
+        )
     }
     return(status)
 }
 
-## Make these pass through so they can be mocked (silenced) in tests
-
 #' @importFrom utils txtProgressBar
-setup_progress_bar <- function (...) txtProgressBar(...)
+setup_progress_bar <- function(...) {
+    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
+        return(txtProgressBar(...))
+    } else {
+        ## Need to return a connection so that `close()` works in silent mode
+        return(pipe(""))
+    }
+}
 
 #' @importFrom utils setTxtProgressBar
-update_progress_bar <- function (...) setTxtProgressBar(...)
+update_progress_bar <- function(...) {
+    if (isTRUE(getOption("crunch.show.progress", TRUE))) setTxtProgressBar(...)
+}
 
-crunchTimeout <- function () {
+crunchTimeout <- function() {
     opt <- getOption("crunch.timeout")
     if (!is.numeric(opt)) opt <- 900
     return(opt)
+}
+
+progressMessage <- function(msg) {
+    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
+        message(msg)
+    }
 }

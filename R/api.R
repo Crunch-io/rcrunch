@@ -8,16 +8,16 @@
 #' function to call in the case where that status is returned. Passed to the
 #' [handleAPIresponse()] function.
 #' @keywords internal
-crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
+crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(), ...) {
     url ## force lazy eval of url
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
         payload <- list(...)$body
-        if (!is.null(payload)) try(cat("\n", payload, "\n"), silent=TRUE)
+        if (!is.null(payload)) try(cat("\n", payload, "\n"), silent = TRUE)
     }
-    FUN <- get(http.verb, envir=asNamespace("httpcache"))
-    x <- FUN(url, ..., config=c(get_crunch_config(), config))
-    out <- handleAPIresponse(x, special.statuses=status.handlers)
+    FUN <- get(http.verb, envir = asNamespace("httpcache"))
+    x <- FUN(url, ..., config = c(get_crunch_config(), config))
+    out <- handleAPIresponse(x, special.statuses = status.handlers)
     return(out)
 }
 
@@ -34,19 +34,19 @@ crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ..
 #' @importFrom httpcache GET PUT PATCH POST DELETE
 #' @name http-methods
 #' @export
-crGET <- function (...) crunchAPI("GET", ...)
+crGET <- function(...) crunchAPI("GET", ...)
 #' @rdname http-methods
 #' @export
-crPUT <- function (...) crunchAPI("PUT", ...)
+crPUT <- function(...) crunchAPI("PUT", ...)
 #' @rdname http-methods
 #' @export
-crPATCH <- function (...) crunchAPI("PATCH", ...)
+crPATCH <- function(...) crunchAPI("PATCH", ...)
 #' @rdname http-methods
 #' @export
-crPOST <- function (...) crunchAPI("POST", ...)
+crPOST <- function(...) crunchAPI("POST", ...)
 #' @rdname http-methods
 #' @export
-crDELETE <- function (...) crunchAPI("DELETE", ...)
+crDELETE <- function(...) crunchAPI("DELETE", ...)
 
 #' Do the right thing with the HTTP response
 #' @param response an httr response object
@@ -55,7 +55,7 @@ crDELETE <- function (...) crunchAPI("DELETE", ...)
 #' status-specific action
 #' @importFrom httr content http_status
 #' @keywords internal
-handleAPIresponse <- function (response, special.statuses=list()) {
+handleAPIresponse <- function(response, special.statuses = list()) {
     code <- response$status_code
     handler <- special.statuses[[as.character(code)]]
     if (is.function(handler)) {
@@ -75,14 +75,15 @@ handleAPIresponse <- function (response, special.statuses=list()) {
                 ## Quick validation
                 if (is.character(progress_url) && length(progress_url) == 1) {
                     tryCatch(pollProgress(progress_url),
-                        error=function (e) {
+                        error = function(e) {
                             ## Handle the error here so we can message the
                             ## Location header, if present
                             if (!is.null(loc)) {
                                 message("Result URL: ", loc)
                             }
                             stop(e)
-                        })
+                        }
+                    )
                 }
             }
             ## Return the location header, if it exists
@@ -101,26 +102,29 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         if (code == 401) {
             halt("You are not authenticated. Please `login()` and try again.")
         } else if (code == 410) {
-            halt("The API resource at ",
+            halt(
+                "The API resource at ",
                 response$url,
                 " has moved permanently. Please upgrade crunch to the ",
-                "latest version.")
+                "latest version."
+            )
         } else if (code == 503 && response$request$method == "GET" &&
-                   "retry-after" %in% tolower(names(response$headers))) {
+            "retry-after" %in% tolower(names(response$headers))) {
             ## Server is busy and telling us to retry the request again after
             ## some period.
             wait <- response$headers[[which(tolower(names(response$headers)) == "retry-after")]]
             message("This request is taking longer than expected. Please stand by...",
-                call.=FALSE)
+                call. = FALSE
+            )
             Sys.sleep(as.numeric(wait))
             ## TODO: resend request headers? Or, include the request to evaluate
             ## inside this function, do match.call at the beginning, and re-eval?
             return(crGET(response$url))
         }
         msg <- http_status(response)$message
-        msg2 <- try(content(response)$message, silent=TRUE)
+        msg2 <- try(content(response)$message, silent = TRUE)
         if (!is.error(msg2)) {
-            msg <- paste(msg, msg2, sep=": ")
+            msg <- paste(msg, msg2, sep = ": ")
         }
         if (code == 409 && grepl("current editor", msg)) {
             halt("You are not the current editor of this dataset. `unlock()` it and try again.")
@@ -129,25 +133,27 @@ handleAPIresponse <- function (response, special.statuses=list()) {
     }
 }
 
-locationHeader <- function (response) {
+locationHeader <- function(response) {
     loc <- response$headers$location
     return(loc)
 }
 
-get_crunch_config <- function () getOption("crunch.httr_config")
+get_crunch_config <- function() getOption("crunch.httr_config")
 
-set_crunch_config <- function (cfg=c(config(postredir=3),
-                                add_headers(`user-agent`=crunchUserAgent())),
-                               update=FALSE) {
+set_crunch_config <- function(cfg = c(
+                                  config(postredir = 3),
+                                  add_headers(`user-agent` = crunchUserAgent())
+                              ),
+                              update = FALSE) {
     if (update) {
         cfg <- c(get_crunch_config(), cfg)
     }
-    options(crunch.httr_config=cfg)
+    options(crunch.httr_config = cfg)
 }
 
 #' @importFrom utils packageVersion
 #' @importFrom curl curl_version
-crunchUserAgent <- function (x) {
+crunchUserAgent <- function(x) {
     ## Cf. httr:::default_ua
     versions <- c(
         libcurl = curl_version()$version,
@@ -160,7 +166,7 @@ crunchUserAgent <- function (x) {
     return(ua)
 }
 
-handleShoji <- function (x) {
+handleShoji <- function(x) {
     if (is.shoji.like(x)) {
         class(x) <- c("shoji", x$element)
     }
@@ -170,15 +176,15 @@ handleShoji <- function (x) {
     return(x)
 }
 
-getAPIRoot <- function (x=getOption("crunch.api")) {
+getAPIRoot <- function(x = getOption("crunch.api")) {
     ShojiObject(crGET(x))
 }
 
-sessionURL <- function (key, collection="catalogs") {
-    return(shojiURL(session_store$root, collection, key))
+sessionURL <- function(key, collection = "catalogs") {
+    return(shojiURL(getAPIRoot(), collection, key))
 }
 
-rootURL <- function (x, obj=session_store$root) {
+rootURL <- function(x, obj = getAPIRoot()) {
     ## DEPRECATE ME
     if (is.shojiObject(obj)) {
         return(obj@urls[[paste0(x, "_url")]])
@@ -187,12 +193,12 @@ rootURL <- function (x, obj=session_store$root) {
     }
 }
 
-retry <- function (expr, wait=.1, max.tries=10) {
+retry <- function(expr, wait = .1, max.tries = 10) {
     ## Retry (e.g. a request)
     e <- substitute(expr)
     tries <- 0
     while (tries < max.tries) {
-        out <- try(eval.parent(e), silent=TRUE)
+        out <- try(eval.parent(e), silent = TRUE)
         if (inherits(out, "try-error")) {
             tries <- tries + 1
             Sys.sleep(wait)
@@ -207,10 +213,10 @@ retry <- function (expr, wait=.1, max.tries=10) {
 }
 
 #' @importFrom httr write_disk
-crDownload <- function (url, file, ...) {
+crDownload <- function(url, file, ...) {
     ## Retry is for delay in propagating the file to the CDN
     ## TODO: consider only "retry" if `url` is in CDN (don't want to retry
     ## necessarily on every url/server response)
-    retry(crGET(url, config=write_disk(file, overwrite=TRUE)))
+    retry(crGET(url, config = write_disk(file, overwrite = TRUE)))
     return(file)
 }

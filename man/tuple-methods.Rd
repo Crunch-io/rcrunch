@@ -76,6 +76,9 @@
 \item{i}{In [[, a Tuple slot to get}
 
 \item{...}{additional arguments to [[, ignored}
+
+\item{object}{Same as \code{x} but for the \code{alias} method, in order to
+match the generic from another package.}
 }
 \description{
 ShojiTuples are objects extracted from ShojiCatalogs. They are internally

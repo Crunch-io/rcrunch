@@ -13,18 +13,20 @@
 #' @return (invisibly) `dataset` with the specified variables deleted
 #' @seealso [`hide`]
 #' @export
-deleteVariables <- function (dataset, variables) {
+deleteVariables <- function(dataset, variables) {
     to.delete <- allVariables(dataset[variables])
     if (length(to.delete) == 1) {
         prompt <- paste0("Really delete ", dQuote(names(to.delete)), "?")
     } else {
-        prompt <- paste0("Really delete these ", length(to.delete),
-            " variables?")
+        prompt <- paste0(
+            "Really delete these ", length(to.delete),
+            " variables?"
+        )
     }
     if (!askForPermission(prompt)) {
         halt("Must confirm deleting variable(s)")
     }
-    out <- lapply(urls(to.delete), crDELETE)
+    out <- lapply(unique(urls(to.delete)), crDELETE)
     dropCache(self(to.delete))
     invisible(refresh(dataset))
 }
@@ -35,7 +37,7 @@ deleteVariable <- deleteVariables
 
 #' @rdname delete
 #' @export
-setMethod("delete", "CrunchVariable", function (x, ...) {
+setMethod("delete", "CrunchVariable", function(x, ...) {
     out <- delete(tuple(x), ...)
     dropCache(absoluteURL("../", self(x)))
     invisible(out)
@@ -43,7 +45,7 @@ setMethod("delete", "CrunchVariable", function (x, ...) {
 
 #' @rdname delete
 #' @export
-setMethod("delete", "VariableTuple", function (x, ...) {
+setMethod("delete", "VariableTuple", function(x, ...) {
     if (!askForPermission(paste0("Really delete ", name(x), "?"))) {
         halt("Must confirm deleting variable")
     }
@@ -65,19 +67,23 @@ setMethod("delete", "VariableTuple", function (x, ...) {
 #' of variables to delete.
 #' @return a new version of variable without the indicated subvariables
 #' @export
-deleteSubvariables <- function (variable, to.delete) {
+deleteSubvariables <- function(variable, to.delete) {
     ## Identify subvariable URLs
-    delete.these <- urls(variable[,to.delete])
+    delete.these <- urls(variable[, to.delete])
 
     if (length(delete.these) == 1) {
         subvars <- subvariables(variable)
         subvar.urls <- urls(subvars)
         subvar.names <- names(subvars)
-        prompt <- paste0("Really delete ",
-            dQuote(subvar.names[match(delete.these, subvar.urls)]), "?")
+        prompt <- paste0(
+            "Really delete ",
+            dQuote(subvar.names[match(delete.these, subvar.urls)]), "?"
+        )
     } else {
-        prompt <- paste0("Really delete these ", length(delete.these),
-            " variables?")
+        prompt <- paste0(
+            "Really delete these ", length(delete.these),
+            " variables?"
+        )
     }
     if (!askForPermission(prompt)) {
         halt("Must confirm deleting subvariable(s)")

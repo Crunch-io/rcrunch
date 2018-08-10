@@ -1,37 +1,44 @@
 context("Comparing datasets and variables")
 
 cat1 <- Categories(
-    list(id=1L, name="B", numeric_value=1L, missing=FALSE),
-    list(id=2L, name="C", numeric_value=2L, missing=FALSE),
-    list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+    list(id = 1L, name = "B", numeric_value = 1L, missing = FALSE),
+    list(id = 2L, name = "C", numeric_value = 2L, missing = FALSE),
+    list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
 )
 cat2 <- Categories(
-    list(id=1L, name="Name 1", numeric_value=3L, missing=FALSE),
-    list(id=2L, name="B", numeric_value=4L, missing=FALSE),
-    list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+    list(id = 1L, name = "Name 1", numeric_value = 3L, missing = FALSE),
+    list(id = 2L, name = "B", numeric_value = 4L, missing = FALSE),
+    list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
 )
 
 test_that("compareCategories", {
-    expect_equivalent(compareCategories(cat1, cat2),
+    expect_equivalent(
+        compareCategories(cat1, cat2),
         data.frame(
             # numeric_value.A=c(1L, 2L, NA, NA),
-            id.A=c(1L, 2L, -1L, NA),
-            name=c("B", "C", "No Data", "Name 1"),
-            id.B=c(2L, NA, -1L, 1L),
+            id.A = c(1L, 2L, -1L, NA),
+            name = c("B", "C", "No Data", "Name 1"),
+            id.B = c(2L, NA, -1L, 1L),
             # numeric_value.B=c(4L, NA, NA, 3L),
-            stringsAsFactors=FALSE
-        ))
+            stringsAsFactors = FALSE
+        )
+    )
 })
 
 test_that("summarizeCompareCategories", {
-    expect_equal(summary(compareCategories(cat1, cat2))$problems,
-        list(mismatched.ids=c("B", "C", "Name 1")))
-    expect_equal(summary(compareCategories(cat1, cat1))$problems,
-        list(mismatched.ids=character(0)))
+    expect_equal(
+        summary(compareCategories(cat1, cat2))$problems,
+        list(mismatched.ids = c("B", "C", "Name 1"))
+    )
+    expect_equal(
+        summary(compareCategories(cat1, cat1))$problems,
+        list(mismatched.ids = character(0))
+    )
 })
 
 test_that("print compareCategory summary", {
-    expect_output(summary(compareCategories(cat1, cat2)),
+    expect_prints(
+        summary(compareCategories(cat1, cat2)),
         paste(
             "Total categories: 4 ",
             "",
@@ -40,17 +47,21 @@ test_that("print compareCategory summary", {
             "    1      B    2",
             "    2      C   NA",
             "   NA Name 1    1",
-            sep="\n"))
+            sep = "\n"
+        )
+    )
 })
 
 test_that("print compareCategory summary when categories are equivalent", {
     summary(compareCategories(cat1, cat1))
-    expect_output(summary(compareCategories(cat1, cat1)),
+    expect_prints(
+        summary(compareCategories(cat1, cat1)),
         paste(
             "Total categories: 3 ",
             "All good :)",
-            sep="\n"
-            ))
+            sep = "\n"
+        )
+    )
 })
 
 with_mock_crunch({
@@ -58,13 +69,18 @@ with_mock_crunch({
     ds2 <- loadDataset("an archived dataset", "archived")
 
     test_that("compareVariables", {
-        expect_equal(summarizeCompareVariables(compareVariables(allVariables(ds1), allVariables(ds2)))$problems,
-            list(mismatched.type="birthyr",
-                mismatched.name=c("birthyr", "starttime", "birthyr2")))
+        expect_equal(
+            summarizeCompareVariables(compareVariables(allVariables(ds1), allVariables(ds2)))$problems,
+            list(
+                mismatched.type = "birthyr",
+                mismatched.name = c("birthyr", "starttime", "birthyr2")
+            )
+        )
     })
 
     test_that("print compareVariables", {
-        expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds2))),
+        expect_prints(
+            summary(compareVariables(allVariables(ds1), allVariables(ds2))),
             paste(
                 "Total variables: 9 ",
                 "",
@@ -77,16 +93,19 @@ with_mock_crunch({
                 " Birth Year   birthyr  starttime",
                 "  starttime starttime       <NA>",
                 "       <NA>  birthyr2 Birth Year",
-                sep="\n"
-                ))
+                sep = "\n"
+            )
+        )
     })
     test_that("compareVariables when everything is ok", {
-        expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds1))),
+        expect_prints(
+            summary(compareVariables(allVariables(ds1), allVariables(ds1))),
             paste(
                 "Total variables: 7 ",
                 "No type or name mismatches.",
-                sep="\n"
-                ))
+                sep = "\n"
+            )
+        )
     })
 
     test_that("compareSubvariables", {
@@ -95,7 +114,7 @@ with_mock_crunch({
 
     test_that("compareDatasets", {
         compareDatasets(ds1, ds2)
-        expect_output(summary(compareDatasets(ds1, ds2)),
+        expect_prints(summary(compareDatasets(ds1, ds2)),
             paste(
                 "Total variables: 9 ",
                 "",
@@ -143,16 +162,20 @@ with_mock_crunch({
                 "",
                 "Contains subvariables found in other arrays after matching: mymrset2 ",
                 "",
-                sep="\n"),
-                fixed=TRUE)
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
 
     test_that("compareDatasets when everything is ok", {
-        expect_output(summary(compareDatasets(ds2, ds2)),
+        expect_prints(
+            summary(compareDatasets(ds2, ds2)),
             paste(
                 "Total variables: 5 ",
                 "All good :)",
-                sep="\n"
-                ))
+                sep = "\n"
+            )
+        )
     })
 })

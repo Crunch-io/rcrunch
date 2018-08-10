@@ -1,5 +1,6 @@
 ---
 title: "Crunch Variables"
+description: "Datasets contain variables, which in Crunch contain rich metadata so that they display and export with human-friendly labeling. This set of tools enables you to clean and refine that metadata."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Crunch Variables}
@@ -10,8 +11,6 @@ vignette: >
 [Previous: create and load datasets](datasets.md)
 
 
-
-# Manipulating variables within datasets
 
 Once you've uploaded data to Crunch, you'll likely want to spend some time cleaning up the metadata associated with your dataset. Legacy statistical programs offer only limited support for variable metadata, both in type and quality. Because Crunch facilitates data visualization, collaboration, and sharing results with others, making your dataset presentation-quality is worthwhile, and this often requires additional work after uploading a data file.
 

@@ -8,6 +8,14 @@ with_mock_crunch({
         expect_identical(names(projects), c("Project One", "Project Two"))
     })
 
+    test_that("ProjectCatalog print (as.data.frame) method", {
+        expect_identical(dim(as.data.frame(projects)), c(2L, 3L))
+        expect_identical(
+            names(as.data.frame(projects)),
+            c("name", "id", "description")
+        )
+    })
+
     aproject <- projects[["Project One"]]
     test_that("Getting project from catalog", {
         expect_is(projects[[1]], "CrunchProject")
@@ -21,42 +29,56 @@ with_mock_crunch({
     })
 
     test_that("Simple project creation by assignment", {
-        expect_POST(projects[["A new project"]] <- list(),
-            'https://app.crunch.io/api/projects/',
-            '{"name":"A new project"}')
-        expect_POST(projects$`A new project` <- list(),
-            'https://app.crunch.io/api/projects/',
-            '{"name":"A new project"}')
+        expect_POST(
+            projects[["A new project"]] <- list(),
+            "https://app.crunch.io/api/projects/",
+            '{"name":"A new project"}'
+        )
+        expect_POST(
+            projects$`A new project` <- list(),
+            "https://app.crunch.io/api/projects/",
+            '{"name":"A new project"}'
+        )
     })
 
     test_that("Project creation with newProject", {
-        expect_POST(newProject("A new project"),
-            'https://app.crunch.io/api/projects/',
-            '{"name":"A new project"}')
+        expect_POST(
+            newProject("A new project"),
+            "https://app.crunch.io/api/projects/",
+            '{"name":"A new project"}'
+        )
         with_POST("https://app.crunch.io/api/projects/project1/", {
             ## Mock the return of that creation
             pro <- newProject("This is being ignored")
             expect_is(pro, "CrunchProject")
             expect_identical(name(pro), "Project One")
             ## Now also check that the PATCH to add members happens
-            expect_PATCH(newProject("A new project", members="new.user@crunch.io"),
-                'https://app.crunch.io/api/projects/project1/members/',
-                '{"new.user@crunch.io":{}}')
+            expect_PATCH(
+                newProject("A new project", members = "new.user@crunch.io"),
+                "https://app.crunch.io/api/projects/project1/members/",
+                '{"new.user@crunch.io":{}}'
+            )
         })
     })
 
     test_that("Project editing", {
-        expect_PATCH(names(projects)[2] <- "New name",
-            'https://app.crunch.io/api/projects/',
-            '{"https://app.crunch.io/api/projects/project2/":{"name":"New name"}}')
-        expect_PATCH(name(projects[[2]]) <- "New name",
-            'https://app.crunch.io/api/projects/',
-            '{"https://app.crunch.io/api/projects/project2/":{"name":"New name"}}')
+        expect_PATCH(
+            names(projects)[2] <- "New name",
+            "https://app.crunch.io/api/projects/",
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/projects/project2/":{"name":"New name"}}}'
+        )
+        expect_PATCH(
+            name(projects[[2]]) <- "New name",
+            "https://app.crunch.io/api/projects/",
+            '{"https://app.crunch.io/api/projects/project2/":{"name":"New name"}}'
+        )
     })
 
     test_that("Project deletion", {
-        expect_error(delete(projects[[1]]),
-            "Must confirm deleting project")
+        expect_error(
+            delete(projects[[1]]),
+            "Must confirm deleting project"
+        )
         with(consent(), {
             expect_DELETE(delete(projects[[1]]), "https://app.crunch.io/api/projects/project1/")
         })
@@ -67,32 +89,43 @@ with_mock_crunch({
         expect_is(m, "MemberCatalog")
         expect_identical(names(m), c("Fake User", "Roger User"))
         expect_identical(emails(m), c("fake.user@example.com", "roger.user@example.com"))
-        expect_identical(name(m[["roger.user@example.com"]]),
-            "Roger User")
-        expect_error(m[["NOTAUSER@example.com"]],
-            "Subscript out of bounds: NOTAUSER@example.com")
-        expect_identical(names(m["roger.user@example.com"]),
-            "Roger User")
-        expect_error(m["NOTAUSER@example.com"],
-            "Undefined elements selected: NOTAUSER@example.com")
+        expect_identical(
+            name(m[["roger.user@example.com"]]),
+            "Roger User"
+        )
+        expect_null(m[["NOTAUSER@example.com"]])
+        expect_identical(
+            names(m["roger.user@example.com"]),
+            "Roger User"
+        )
+        expect_error(
+            m["NOTAUSER@example.com"],
+            "Undefined elements selected: NOTAUSER@example.com"
+        )
     })
 
     test_that("Add members by members<-", {
-        expect_PATCH(members(aproject) <- c("new.user@crunch.io", "foo@example.co"),
-            'https://app.crunch.io/api/projects/project1/members/',
-            '{"new.user@crunch.io":{},"foo@example.co":{}}')
+        expect_PATCH(
+            members(aproject) <- c("new.user@crunch.io", "foo@example.co"),
+            "https://app.crunch.io/api/projects/project1/members/",
+            '{"new.user@crunch.io":{},"foo@example.co":{}}'
+        )
     })
 
     test_that("Add members doesn't re-add if already a member", {
-        expect_PATCH(members(aproject) <- c("new.user@crunch.io", "roger.user@example.com"),
-            'https://app.crunch.io/api/projects/project1/members/',
-            '{"new.user@crunch.io":{}}')
+        expect_PATCH(
+            members(aproject) <- c("new.user@crunch.io", "roger.user@example.com"),
+            "https://app.crunch.io/api/projects/project1/members/",
+            '{"new.user@crunch.io":{}}'
+        )
     })
 
     test_that("Remove members by <- NULL", {
-        expect_PATCH(members(aproject)[["roger.user@example.com"]] <- NULL,
-            'https://app.crunch.io/api/projects/project1/members/',
-            '{"roger.user@example.com":null}')
+        expect_PATCH(
+            members(aproject)[["roger.user@example.com"]] <- NULL,
+            "https://app.crunch.io/api/projects/project1/members/",
+            '{"roger.user@example.com":null}'
+        )
     })
 
     test_that("is.editor on member catalog", {
@@ -100,22 +133,28 @@ with_mock_crunch({
     })
 
     test_that("is.editor<- on member catalog", {
-        expect_PATCH(is.editor(m) <- c(TRUE, TRUE),
-            'https://app.crunch.io/api/projects/project1/members/',
-            '{"https://app.crunch.io/api/users/user2/":{"permissions":{"edit":true}}}')
-        expect_PATCH(is.editor(m[2]) <- TRUE,
-            'https://app.crunch.io/api/projects/project1/members/',
-            '{"https://app.crunch.io/api/users/user2/":{"permissions":{"edit":true}}}')
+        expect_PATCH(
+            is.editor(m) <- c(TRUE, TRUE),
+            "https://app.crunch.io/api/projects/project1/members/",
+            '{"https://app.crunch.io/api/users/user2/":{"permissions":{"edit":true}}}'
+        )
+        expect_PATCH(
+            is.editor(m[2]) <- TRUE,
+            "https://app.crunch.io/api/projects/project1/members/",
+            '{"https://app.crunch.io/api/users/user2/":{"permissions":{"edit":true}}}'
+        )
         expect_no_request(is.editor(m[2]) <- FALSE) ## No change, so no PATCH request made
     })
 
     test_that("Print method for MemberCatalog", {
-        expect_output(m,
+        expect_prints(
+            m,
             get_output(data.frame(
-                name=c("Fake User", "Roger User"),
-                email=c("fake.user@example.com", "roger.user@example.com"),
-                is.editor=c(TRUE, FALSE)
-            )))
+                name = c("Fake User", "Roger User"),
+                email = c("fake.user@example.com", "roger.user@example.com"),
+                is.editor = c(TRUE, FALSE)
+            ))
+        )
     })
 
     d <- datasets(aproject)
@@ -125,51 +164,103 @@ with_mock_crunch({
     })
 
     test_that("Can loadDataset from a project dataset catalog", {
-        ds <- loadDataset("ECON.sav", project=aproject)
+        ds <- loadDataset("ECON.sav", project = aproject)
         expect_is(ds, "CrunchDataset")
         expect_identical(name(ds), "ECON.sav")
-        expect_identical(loadDataset("ECON.sav", project="Project One"),
-            ds)
+        expect_identical(
+            loadDataset("ECON.sav", project = "Project One"),
+            ds
+        )
     })
 
     test_that("loadDataset project arg error handling", {
-        expect_error(loadDataset("foo", project=12),
-            "subscript out of bounds")
-        expect_error(loadDataset("foo", project="Not a project"),
-            'Project "Not a project" is not valid')
+        expect_error(
+            loadDataset("foo", project = 12),
+            "subscript out of bounds"
+        )
+        expect_error(
+            loadDataset("foo", project = "Not a project"),
+            'Project "Not a project" is not valid'
+        )
     })
 
     do <- ordering(d)
     test_that("Project datasets order", {
         expect_is(do, "DatasetOrder")
-        expect_identical(do@graph,
-            list(DatasetGroup("Group 1", "https://app.crunch.io/api/datasets/3/")))
-        expect_output(do,
-            paste("[+] Group 1", "    ECON.sav", sep="\n"), fixed=TRUE)
+        expect_identical(
+            do@graph,
+            list(DatasetGroup("Group 1", "https://app.crunch.io/api/datasets/3/"))
+        )
+        expect_prints(do,
+            paste("[+] Group 1", "    ECON.sav", sep = "\n"),
+            fixed = TRUE
+        )
     })
 
     test_that("Add datasets to project by <- a dataset (which transfers ownership)", {
         ds <- loadDataset("test ds")
-        expect_PATCH(datasets(aproject) <- ds,
-            'https://app.crunch.io/api/datasets/1/',
-            '{"owner":"https://app.crunch.io/api/projects/project1/"}')
+        expect_PATCH(
+            datasets(aproject) <- ds,
+            "https://app.crunch.io/api/datasets/1/",
+            '{"owner":"https://app.crunch.io/api/projects/project1/"}'
+        )
     })
 
     test_that("Organize datasets", {
-        expect_identical(DatasetOrder(DatasetGroup("new group", datasets(aproject))),
-            DatasetOrder(DatasetGroup("new group", "https://app.crunch.io/api/datasets/3/")))
-        expect_PUT(ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup("new group",
-            datasets(aproject))),
-            'https://app.crunch.io/api/projects/project1/datasets/order/',
-            '{"graph":[{"new group":["https://app.crunch.io/api/datasets/3/"]}]}')
+        options(crunch.already.shown.ds.order.msg = NULL) ## To make sure the warning fires
+        expect_identical(
+            DatasetOrder(DatasetGroup("new group", datasets(aproject))),
+            DatasetOrder(DatasetGroup("new group", "https://app.crunch.io/api/datasets/3/"))
+        )
+        expect_warning(
+            expect_PUT(
+                ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup(
+                    "new group",
+                    datasets(aproject)
+                )),
+                "https://app.crunch.io/api/projects/project1/datasets/order/",
+                '{"graph":[{"new group":["https://app.crunch.io/api/datasets/3/"]}]}'
+            ),
+            "Greetings!"
+        )
         nested.ord <- DatasetOrder("https://app.crunch.io/api/datasets/3/",
-            DatasetGroup("new group",
-                list(DatasetGroup("nested", "https://app.crunch.io/api/datasets/3/"))),
-            duplicates=TRUE)
-        expect_PUT(ordering(datasets(aproject)) <- nested.ord,
-            'https://app.crunch.io/api/projects/project1/datasets/order/',
-            '{"graph":["https://app.crunch.io/api/datasets/3/",',
-            '{"new group":[{"nested":["https://app.crunch.io/api/datasets/3/"]}]}]}')
+            DatasetGroup(
+                "new group",
+                list(DatasetGroup("nested", "https://app.crunch.io/api/datasets/3/"))
+            ),
+            duplicates = TRUE
+        )
+        ## Can also set on the project directly too
+        expect_warning(
+            expect_PUT(
+                ordering(aproject) <- nested.ord,
+                "https://app.crunch.io/api/projects/project1/datasets/order/",
+                '{"graph":["https://app.crunch.io/api/datasets/3/",',
+                '{"new group":[{"nested":["https://app.crunch.io/api/datasets/3/"]}]}]}'
+            ),
+            ## This one doesn't warn because it only warns the first time!
+            NA
+        )
+    })
+
+    test_that("Organize datasets cleans up unexpected entries", {
+        neword <- DatasetOrder(
+            DatasetGroup(
+                "new group",
+                c(
+                    "https://app.crunch.io/api/datasets/3/",
+                    "https://app.crunch.io/api/datasets/1/"
+                )
+            )
+        )
+        expect_warning(
+            expect_PUT(
+                ordering(datasets(aproject)) <- neword,
+                "https://app.crunch.io/api/projects/project1/datasets/order/",
+                '{"graph":[{"new group":["https://app.crunch.io/api/datasets/3/"]}]}'
+            ),
+            "Order contained dataset URL not found in the catalog. It has been automatically cleaned."
+        )
     })
 })
 
@@ -191,8 +282,10 @@ with_test_authentication({
         expect_true(length(myprojects) == nprojects.0 + 1L)
         expect_is(myprojects[[name.of.project1]], "CrunchProject")
         expect_length(members(myprojects[[name.of.project1]]), 1)
-        expect_identical(names(members(myprojects[[name.of.project1]])),
-            my.name)
+        expect_identical(
+            names(members(myprojects[[name.of.project1]])),
+            my.name
+        )
     })
 
     myprojects <- refresh(myprojects)
@@ -200,8 +293,10 @@ with_test_authentication({
     p_url <- self(pj)
     name2 <- paste(name.of.project1, "revised")
     test_that("Can rename a project by name<-", {
-        expect_identical(self(myprojects[[name.of.project1]]),
-            p_url)
+        expect_identical(
+            self(myprojects[[name.of.project1]]),
+            p_url
+        )
         expect_null(myprojects[[name2]])
         name(myprojects[[name.of.project1]]) <- name2
         expect_null(myprojects[[name.of.project1]])
@@ -241,31 +336,39 @@ with_test_authentication({
         name.of.project2 <- now()
         expect_false(name.of.project2 %in% names(myprojects))
         u <- testUser()
-        myprojects[[name.of.project2]] <- list(members=email(u))
+        myprojects[[name.of.project2]] <- list(members = email(u))
         expect_true(name.of.project2 %in% names(myprojects))
         expect_true(length(myprojects) == nprojects.2 + 1L)
-        expect_true(setequal(names(members(myprojects[[name.of.project2]])),
-            c(name(u), my.name)))
+        expect_true(setequal(
+            names(members(myprojects[[name.of.project2]])),
+            c(name(u), my.name)
+        ))
     })
 
     test_that("Can add members to a project (and then set as an editor)", {
         skip_on_jenkins("Jenkins user needs more permissions")
-        tp <- newProject(name=now())
+        tp <- newProject(name = now())
         u <- testUser()
         expect_identical(names(members(tp)), my.name)
         members(tp) <- email(u)
-        expect_true(setequal(names(members(tp)),
-            c(name(u), my.name)))
-        expect_identical(is.editor(members(tp)),
-            c(TRUE, FALSE))
+        expect_true(setequal(
+            names(members(tp)),
+            c(name(u), my.name)
+        ))
+        expect_identical(
+            is.editor(members(tp)),
+            c(TRUE, FALSE)
+        )
         is.editor(members(tp)[email(u)]) <- TRUE
-        expect_identical(is.editor(members(tp)),
-            c(TRUE, TRUE))
+        expect_identical(
+            is.editor(members(tp)),
+            c(TRUE, TRUE)
+        )
     })
 
     test_that("Can remove members from a project", {
         skip_on_jenkins("Jenkins user needs more permissions")
-        tp <- newProject(name=now())
+        tp <- newProject(name = now())
         u <- testUser()
         expect_identical(names(members(tp)), my.name)
         members(tp) <- email(u)
@@ -274,8 +377,8 @@ with_test_authentication({
         expect_identical(names(members(tp)), my.name)
     })
 
-    ds <- createDataset(name=now())
-    tp <- newProject(name=now())
+    ds <- createDataset(name = now())
+    tp <- newProject(name = now())
     test_that("Can add datasets to project", {
         expect_is(tp, "CrunchProject")
         expect_length(datasets(tp), 0)
@@ -289,43 +392,56 @@ with_test_authentication({
         expect_identical(self(ds2), self(ds))
     })
     test_that("Can organize datasets", {
-        expect_identical(as.list(urls(datasets(tp))),
-            entities(ordering(datasets(tp))))
-        ordering(datasets(tp)) <- DatasetOrder(DatasetGroup("A group of one",
-            list(ds)))
-        expect_identical(ordering(datasets(tp))@graph[[1]],
-            DatasetGroup(name="A group of one", entities=self(ds)))
+        expect_identical(
+            as.list(urls(datasets(tp))),
+            entities(ordering(datasets(tp)))
+        )
+        ordering(datasets(tp)) <- DatasetOrder(DatasetGroup(
+            "A group of one",
+            list(ds)
+        ))
+        expect_identical(
+            ordering(datasets(tp))@graph[[1]],
+            DatasetGroup(name = "A group of one", entities = self(ds))
+        )
     })
-    ds3 <- createDataset(name=now())
-    ord2 <- DatasetOrder(DatasetGroup("A group of two",
-        c(self(ds), self(ds3))))
-    test_that("Have to add dataset to project before organizing it", {
-        expect_error(ordering(datasets(tp)) <- ord2,
-            "Dataset URL referenced in Order not present in catalog")
-        expect_identical(ordering(datasets(tp))@graph[[1]],
-            DatasetGroup(name="A group of one", entities=self(ds)))
-    })
+    ds3 <- createDataset(name = now())
+    ord2 <- DatasetOrder(DatasetGroup(
+        "A group of two",
+        c(self(ds), self(ds3))
+    ))
     owner(ds3) <- tp
     tp <- refresh(tp)
     test_that("Can reorganize datasets", {
         ordering(datasets(tp)) <- ord2
-        expect_identical(ordering(datasets(tp))@graph[[1]],
-            DatasetGroup(name="A group of two",
-            entities=c(self(ds), self(ds3))))
-        expect_output(ordering(datasets(tp)),
+        expect_identical(
+            ordering(datasets(tp))@graph[[1]],
+            DatasetGroup(
+                name = "A group of two",
+                entities = c(self(ds), self(ds3))
+            )
+        )
+        expect_prints(ordering(datasets(tp)),
             paste("[+] A group of two",
-                  paste0("    ", name(ds)),
-                  paste0("    ", name(ds3)),
-                  sep="\n"),
-            fixed=TRUE)
+                paste0("    ", name(ds)),
+                paste0("    ", name(ds3)),
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
-    ord3 <- DatasetOrder(DatasetGroup("G1", self(ds3)),
-        DatasetGroup("G2", self(ds)))
-    ord3.list <- list(DatasetGroup("G1", self(ds3)),
-        DatasetGroup("G2", self(ds)))
+    ord3 <- DatasetOrder(
+        DatasetGroup("G1", self(ds3)),
+        DatasetGroup("G2", self(ds))
+    )
+    ord3.list <- list(
+        DatasetGroup("G1", self(ds3)),
+        DatasetGroup("G2", self(ds))
+    )
     ord3.alt <- DatasetOrder(
         DatasetGroup("G1", datasets(tp)[names(datasets(tp)) == name(ds3)]),
-        DatasetGroup("G2", datasets(tp)[names(datasets(tp)) == name(ds)]))
+        DatasetGroup("G2", datasets(tp)[names(datasets(tp)) == name(ds)])
+    )
     test_that("Can re-reorganize", {
         expect_identical(ord3, ord3.alt)
         ordering(datasets(tp)) <- ord3
@@ -335,15 +451,17 @@ with_test_authentication({
 
     test_that("Can create a Group by assigning by name", {
         ordering(datasets(tp))[["New group three"]] <- self(ds)
-        expect_output(ordering(datasets(tp)),
+        expect_prints(ordering(datasets(tp)),
             paste("[+] G1",
-                  paste0("    ", name(ds3)),
-                  "[+] G2",
-                  "    (Empty group)",
-                  "[+] New group three",
-                  paste0("    ", name(ds)),
-                  sep="\n"),
-            fixed=TRUE)
+                paste0("    ", name(ds3)),
+                "[+] G2",
+                "    (Empty group)",
+                "[+] New group three",
+                paste0("    ", name(ds)),
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
 
     test_that("Can rename a dataset in a project", {

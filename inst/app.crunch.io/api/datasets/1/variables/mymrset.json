@@ -16,6 +16,7 @@
         "dataset_id": "14715604be4d499fbe2445bca9f3eee0",
         "view": {"include_noneoftheabove": false, "column_width": null},
         "type": "multiple_response",
+        "uniform_basis": false,
         "subvariables": [
             "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/",
             "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/",
@@ -28,6 +29,9 @@
         "summary": "https://app.crunch.io/api/datasets/1/variables/mymrset/summary/",
         "values": "https://app.crunch.io/api/datasets/1/variables/mymrset/values/",
         "cast": "https://app.crunch.io/api/datasets/1/variables/mymrset/cast/"
+    },
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/1/folders/3/"
     },
     "urls": {
         "dataset_url": "https://app.crunch.io/api/datasets/1/"

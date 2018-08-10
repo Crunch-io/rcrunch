@@ -8,11 +8,13 @@ test:
 	R CMD INSTALL --install-tests .
 	R --slave -e 'library(httptest); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
+lint:
+	R --slave -e 'styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'
 deps:
-	R --slave -e 'cran <- "http://cran.at.r-project.org"; pkgs <- c("devtools", "Rcpp", "testthat", "jsonlite", "curl", "httpcache", "codetools", "httptest", "covr", "xml2", "spelling"); new <- setdiff(pkgs, dir(.libPaths()[1])); if (length(new)) install.packages(new, repo=cran); update.packages(.libPaths()[1], ask=FALSE, repo=cran)'
+	R --slave -e 'cran <- "http://cran.at.r-project.org"; pkgs <- c("devtools", "Rcpp", "testthat", "jsonlite", "curl", "httpcache", "codetools", "httptest", "covr", "xml2", "spelling", "roxygen2", "haven", "miniUI", "rmarkdown", "shiny"); new <- setdiff(pkgs, dir(.libPaths()[1])); if (length(new)) install.packages(new, repo=cran); update.packages(.libPaths()[1], ask=FALSE, repo=cran)'
 
 install-ci: deps
-	R -e 'devtools::install_github("nealrichardson/testthat", ref="tap-file-option"); devtools::install_github("nealrichardson/httptest")'
+	# R -e 'devtools::install_github("nealrichardson/testthat"); devtools::install_github("nealrichardson/httptest")'
 	R -e 'devtools::session_info(installed.packages()[, "Package"])'
 
 test-ci:
@@ -53,7 +55,7 @@ build-vignettes: md
 	R -e 'setwd("inst/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'
 	cd inst/doc && ls | grep .html | xargs -n 1 sed -i '' 's/.md)/.html)/g'
 	# That sed isn't working, fwiw
-	open inst/doc/getting-started.html
+	open inst/doc/crunch.html
 
 spell:
 	R --slave -e 'spelling::spell_check_package(vignettes=TRUE, lang="en_US")'
