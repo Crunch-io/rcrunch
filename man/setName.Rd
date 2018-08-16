@@ -21,7 +21,7 @@ other than the name of the current folder.
 }
 \examples{
 \dontrun{
-ds <- ds \%>\% 
+ds <- ds \%>\%
     cd("Demographics") \%>\%
     setName("Key Demos.")
 }

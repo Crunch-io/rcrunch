@@ -12,6 +12,9 @@
 #' @param dataset A CrunchDataset, potentially a selection of variables from it
 #' @param filters FilterCatalog, or `NULL` for no filters. Default all
 #' filters in your catalog, `filters(dataset)`.
+#' @param weight a CrunchVariable that has been designated as a potential
+#' weight variable for `dataset`, or `NULL` for unweighted results.
+#' Default is the currently applied [`weight()`].
 #' @param brand_colors an optional color vector of length 3 or less, or a named
 #' list with names 'primary', 'secondary', and 'message'. See "Details" for more
 #' about color specification.
@@ -48,9 +51,13 @@
 #' @aliases crunchBox CrunchBox
 #' @export
 #' @importFrom grDevices col2rgb colors rgb
-crunchBox <- function(dataset, filters = crunch::filters(dataset),
-                      brand_colors, static_colors,
-                      category_color_lookup, ...) {
+crunchBox <- function(dataset,
+                      filters = crunch::filters(dataset),
+                      weight = crunch::weight(dataset),
+                      brand_colors,
+                      static_colors,
+                      category_color_lookup,
+                      ...) {
     ## Validate inputs
     if (missing(dataset) || !is.dataset(dataset)) {
         halt("'dataset' must be a CrunchDataset, potentially subsetted on variables")
@@ -61,6 +68,10 @@ crunchBox <- function(dataset, filters = crunch::filters(dataset),
     }
     if (!inherits(filters, "FilterCatalog")) {
         halt("'filters' should be a FilterCatalog or NULL")
+    }
+    if (!is.null(weight)) {
+        ## TODO: could validate that weight is a weight variable
+        weight <- self(weight)
     }
 
     ## Subset on non-hidden variables only
@@ -81,6 +92,7 @@ crunchBox <- function(dataset, filters = crunch::filters(dataset),
     ## Construct the payload
     payload <- list(
         filters = lapply(urls(filters), function(x) list(filter = x)),
+        weight = weight,
         ...
     )
     ## Add "where" after so that it no-ops if variablesFilter returns NULL (i.e. no filter)

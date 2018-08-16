@@ -103,7 +103,7 @@ with_mock_crunch({
         expect_POST(
             crunchBox(ds, filters = NULL),
             "https://app.crunch.io/api/datasets/1/boxdata/",
-            '{"element":"shoji:entity","body":{"filters":[]}}'
+            '{"element":"shoji:entity","body":{"filters":[],"weight":null}}'
         )
     })
     test_that("Basic box with metadata and filters", {
@@ -113,14 +113,14 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{"filters":[',
             '{"filter":"https://app.crunch.io/api/datasets/1/filters/filter1/"},',
             '{"filter":"https://app.crunch.io/api/datasets/1/filters/filter2/"}],',
-            '"title":"Test box"}}'
+            '"weight":null,"title":"Test box"}}'
         )
     })
     test_that("Select variables in box", {
         expect_POST(
             crunchBox(ds[2:5], filters = NULL),
             "https://app.crunch.io/api/datasets/1/boxdata/",
-            '{"element":"shoji:entity","body":{"filters":[],',
+            '{"element":"shoji:entity","body":{"filters":[],"weight":null,',
             '"where":{"function":"select","args":[{"map":{',
             '"66ae9881e3524f7db84970d556c34552":',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
@@ -132,12 +132,26 @@ with_mock_crunch({
             "}}]}}}"
         )
     })
-    test_that("Hidden variables are automatically 'selected' out", {
+    test_that("Hidden variables are automatically 'selected' out (and weight is used)", {
         expect_POST(
             crunchBox(ds3),
             "https://app.crunch.io/api/datasets/3/boxdata/",
-            '{"element":"shoji:entity","body":{"filters":[],"where":',
-            '{"function":"select","args":[{"map":{',
+            '{"element":"shoji:entity","body":{"filters":[],',
+            '"weight":"https://app.crunch.io/api/datasets/3/variables/birthyr/",',
+            '"where":{"function":"select","args":[{"map":{',
+            '"66ae9881e3524f7db84970d556c34552":',
+            '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+            '"d7c21314ca9e453c93069168681a285c":',
+            '{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]}}}'
+        )
+    })
+    test_that("Can override the current weight", {
+        expect_POST(
+            crunchBox(ds3, weight = NULL),
+            "https://app.crunch.io/api/datasets/3/boxdata/",
+            '{"element":"shoji:entity","body":{"filters":[],',
+            '"weight":null,',
+            '"where":{"function":"select","args":[{"map":{',
             '"66ae9881e3524f7db84970d556c34552":',
             '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
             '"d7c21314ca9e453c93069168681a285c":',
@@ -151,13 +165,14 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{"filters":[',
             '{"filter":"https://app.crunch.io/api/datasets/1/filters/filter2/"},',
             '{"filter":"https://app.crunch.io/api/datasets/1/filters/filter1/"}],',
-            '"title":"Test box"}}'
+            '"weight":null,"title":"Test box"}}'
         )
         expect_POST(
             crunchBox(ds, filters = filters(ds)[2]),
             "https://app.crunch.io/api/datasets/1/boxdata/",
             '{"element":"shoji:entity","body":{"filters":[',
-            '{"filter":"https://app.crunch.io/api/datasets/1/filters/filter2/"}]}}'
+            '{"filter":"https://app.crunch.io/api/datasets/1/filters/filter2/"}],',
+            '"weight":null}}'
         )
     })
     test_that("Boxes can have color palletes specified", {
@@ -167,8 +182,8 @@ with_mock_crunch({
                 filters = NULL
             ),
             "https://app.crunch.io/api/datasets/1/boxdata/",
-            '{"element":"shoji:entity","body":{"filters":[]',
-            ',"display_settings":{"palette":{"brand_colors":',
+            '{"element":"shoji:entity","body":{"filters":[],"weight":null,',
+            '"display_settings":{"palette":{"brand_colors":',
             '{"primary":"#ff0aa4","secondary":"#af17ff",',
             '"message":"#260aff"}}}}}'
         )
@@ -178,8 +193,8 @@ with_mock_crunch({
                 filters = NULL
             ),
             "https://app.crunch.io/api/datasets/1/boxdata/",
-            '{"element":"shoji:entity","body":{"filters":[]',
-            ',"display_settings":{"palette":{"brand_colors":',
+            '{"element":"shoji:entity","body":{"filters":[],"weight":null,',
+            '"display_settings":{"palette":{"brand_colors":',
             '{"message":"#ff0aa4","secondary":"#af17ff",',
             '"primary":"#260aff"}}}}}'
         )
@@ -189,8 +204,8 @@ with_mock_crunch({
                 filters = NULL
             ),
             "https://app.crunch.io/api/datasets/1/boxdata/",
-            '{"element":"shoji:entity","body":{"filters":[]',
-            ',"display_settings":{"palette":{"brand_colors":',
+            '{"element":"shoji:entity","body":{"filters":[],"weight":null,',
+            '"display_settings":{"palette":{"brand_colors":',
             '{"secondary":"#af17ff","message":"#ff0aa4",',
             '"primary":"#260aff"}}}}}'
         )
@@ -204,8 +219,8 @@ with_mock_crunch({
                 filters = NULL
             ),
             "https://app.crunch.io/api/datasets/1/boxdata/",
-            '{"element":"shoji:entity","body":{"filters":[]',
-            ',"display_settings":{"palette":{"static_colors":',
+            '{"element":"shoji:entity","body":{"filters":[],"weight":null,',
+            '"display_settings":{"palette":{"static_colors":',
             '["#ff0aa4","#af17ff","#260aff"]}}}}'
         )
         expect_POST(
@@ -219,8 +234,8 @@ with_mock_crunch({
                 filters = NULL
             ),
             "https://app.crunch.io/api/datasets/1/boxdata/",
-            '{"element":"shoji:entity","body":{"filters":[]',
-            ',"display_settings":{"palette":{"category_lookup":',
+            '{"element":"shoji:entity","body":{"filters":[],"weight":null,',
+            '"display_settings":{"palette":{"category_lookup":',
             '{"cat1":"#ff0aa4","cat2":"#af17ff",',
             '"cat3":"#260aff"}}}}}'
         )
