@@ -45,7 +45,6 @@
         ],
         "description": ""
     },
-    "specification": "/api/specifications/numeric_variables/",
     "description": "Details for a given Variable",
     "urls": {
         "dataset_url": "/api/datasets/c5af0d/"

@@ -32,7 +32,6 @@
         "summary": "/api/datasets/c5af0d/summary/",
         "applied_filters": "/api/datasets/c5af0d/filters/applied/"
     },
-    "specification": "/api/specifications/datasets/",
     "description": "Detail for a given dataset",
     "body": {
         "size": {
