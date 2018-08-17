@@ -158,18 +158,18 @@ makeConditionalValues <- function(formulas, data, else_condition) {
         }
 
         cases[[i]] <- evalLHS(formula, data)
-        if (!inherits(cases[[i]], "CrunchLogicalExpr")) {
-            halt(
-                "The left-hand side provided must be a CrunchLogicalExpr: ",
-                dQuote(LHS_string(formula))
-            )
-        }
+        # if (!inherits(cases[[i]], "CrunchLogicalExpr")) {
+        #     halt(
+        #         "The left-hand side provided must be a CrunchLogicalExpr: ",
+        #         dQuote(LHS_string(formula))
+        #     )
+        # }
         values[[i]] <- evalRHS(formula, data)
     }
 
     # setup NAs for as default
     # check all datasets are the same and get the reference from the unique one
-    ds_refs <- unlist(unique(lapply(cases, datasetReference)))
+    ds_refs <- unlist(unique(lapply(c(cases, values), datasetReference)))
     if (length(ds_refs) > 1) {
         halt(
             "There must be only one dataset referenced. Did you accidentally ",
