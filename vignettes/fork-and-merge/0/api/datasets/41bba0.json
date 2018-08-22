@@ -32,7 +32,6 @@
         "summary": "/api/datasets/41bba0/summary/",
         "applied_filters": "/api/datasets/41bba0/filters/applied/"
     },
-    "specification": "/api/specifications/datasets/",
     "description": "Detail for a given dataset",
     "body": {
         "size": {

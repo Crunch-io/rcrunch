@@ -34,7 +34,6 @@
         "summary": "/api/datasets/1468ef/summary/",
         "applied_filters": "/api/datasets/1468ef/filters/applied/"
     },
-    "specification": "/api/specifications/datasets/",
     "description": "Detail for a given dataset",
     "body": {
         "size": {

@@ -4,7 +4,6 @@
 	"views": {
 		"tabbook": "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/"
 	},
-	"specification": "https://app.crunch.io/api/specifications/multitables/",
 	"description": "Detail information for one multitable definition",
 	"body": {
 		"name": "My banner",
