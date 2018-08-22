@@ -56,6 +56,17 @@ crDELETE <- function(...) crunchAPI("DELETE", ...)
 #' @importFrom httr content http_status
 #' @keywords internal
 handleAPIresponse <- function(response, special.statuses = list()) {
+    deprecation_warning <- get_header("Warning", response$headers)
+    if (!is.null(deprecation_warning)) {
+        warning(
+            "The API resource at ",
+            response$url,
+            " returned a deprecation warning. Updating to the latest version ",
+            "of the package is recommended and may resolve the issue. Details: ",
+            deprecation_warning,
+            call.=FALSE
+        )
+    }
     code <- response$status_code
     handler <- special.statuses[[as.character(code)]]
     if (is.function(handler)) {
@@ -112,7 +123,7 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             "retry-after" %in% tolower(names(response$headers))) {
             ## Server is busy and telling us to retry the request again after
             ## some period.
-            wait <- response$headers[[which(tolower(names(response$headers)) == "retry-after")]]
+            wait <- get_header("Retry-After", response$headers)
             message("This request is taking longer than expected. Please stand by...",
                 call. = FALSE
             )
@@ -130,6 +141,15 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             halt("You are not the current editor of this dataset. `unlock()` it and try again.")
         }
         halt(msg)
+    }
+}
+
+get_header <- function(x, headers, default=NULL) {
+    m <- tolower(names(headers)) == tolower(x)
+    if (any(m)) {
+        return(headers[[which(m)[1]]])
+    } else {
+        return(default)
     }
 }
 
