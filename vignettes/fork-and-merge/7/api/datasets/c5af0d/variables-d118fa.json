@@ -9,7 +9,6 @@
         "weights": "/api/datasets/c5af0d/variables/weights/",
         "hier": "/api/datasets/c5af0d/variables/hier/"
     },
-    "specification": "/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
         "000010/": {
