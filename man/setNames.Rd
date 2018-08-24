@@ -26,7 +26,7 @@ other than the names of the objects in the current folder.
 }
 \examples{
 \dontrun{
-ds <- ds \%>\% 
+ds <- ds \%>\%
     cd("Demographics") \%>\%
     setNames(c("Gender (4 category)", "Birth year", "Race (5 category)"))
 }

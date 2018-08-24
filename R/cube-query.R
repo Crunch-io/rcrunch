@@ -11,7 +11,7 @@
 #' @param data an object of class `CrunchDataset`
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `data`, or `NULL` for unweighted results.
-#' Default is the currently applied [`weight`].
+#' Default is the currently applied [`weight()`].
 #' @param useNA whether to include missing values in tabular results. See
 #' [base::table()].
 #' @return an object of class `CrunchCube`
