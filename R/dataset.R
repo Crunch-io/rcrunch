@@ -354,20 +354,7 @@ as.list.CrunchDataset <- function(x, ...) {
     lapply(seq_along(variables(x)), function(i) x[[i]])
 }
 
-#' See the appended batches of this dataset
-#' @param x a `CrunchDataset`
-#' @return a `BatchCatalog`
-#' @export
-batches <- function(x) BatchCatalog(crGET(shojiURL(x, "catalogs", "batches")))
-
 joins <- function(x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
-
-setDatasetVariables <- function(x, value) {
-    v <- urls(value)
-    x@variables[v] <- value
-    ordering(x@variables) <- ordering(value)
-    return(x)
-}
 
 #' @rdname dataset-reference
 setMethod("datasetReference", "CrunchDataset", function(x) self(x))
@@ -391,41 +378,6 @@ cubeURL <- function(x) {
         return(absoluteURL("./cube/", datasetReference(x)))
     }
 }
-
-#' Access a Dataset's Variables Catalog
-#'
-#' Datasets contain collections of variables. For a few purposes, such as
-#' editing variables' metadata, it is helpful to access these variable catalogs
-#' more directly.
-#'
-#' `variables` gives just the active variables in the dataset, while
-#' `allVariables` returns all variables, including hidden variables.
-#' @param x a Dataset
-#' @param value For the setters, a VariableCatalog to assign.
-#' @return Getters return VariableCatalog; setters return `x` duly
-#' modified.
-#' @name dataset-variables
-#' @aliases dataset-variables variables variables<- allVariables allVariables<-
-NULL
-
-#' @rdname dataset-variables
-#' @export
-setMethod("variables", "CrunchDataset", function(x) active(allVariables(x)))
-#' @rdname dataset-variables
-#' @export
-setMethod(
-    "variables<-", c("CrunchDataset", "VariableCatalog"),
-    setDatasetVariables
-)
-#' @rdname dataset-variables
-#' @export
-setMethod("allVariables", "CrunchDataset", function(x) x@variables)
-#' @rdname dataset-variables
-#' @export
-setMethod(
-    "allVariables<-", c("CrunchDataset", "VariableCatalog"),
-    setDatasetVariables
-)
 
 setMethod("hidden", "CrunchDataset", function(x) hidden(allVariables(x)))
 

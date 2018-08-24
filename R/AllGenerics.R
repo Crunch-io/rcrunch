@@ -98,13 +98,6 @@ setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
 setGeneric("categories", function(x) standardGeneric("categories"))
 setGeneric("categories<-", function(x, value) standardGeneric("categories<-"))
-setGeneric("variables", function(x) standardGeneric("variables"))
-setGeneric("variables<-", function(x, value) standardGeneric("variables<-"))
-setGeneric("allVariables", function(x) standardGeneric("allVariables"))
-setGeneric(
-    "allVariables<-",
-    function(x, value) standardGeneric("allVariables<-")
-)
 setGeneric("subvariables", function(x) standardGeneric("subvariables"))
 setGeneric(
     "subvariables<-",
