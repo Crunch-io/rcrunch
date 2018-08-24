@@ -37,6 +37,11 @@ getRootFolderURL <- function(dataset) {
     return(folder_url)
 }
 
+
+setMethod("variables", "VariableFolder", function(x) {
+    x[!(types(x) %in% "folder")]
+})
+
 #' @export
 #' @rdname describe-catalog
 setMethod("aliases", "VariableFolder", function(x) getIndexSlot(x, "alias"))
