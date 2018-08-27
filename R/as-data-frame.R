@@ -216,3 +216,12 @@ as.data.frame.ProjectCatalog <- function(x,
                                          ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
+
+#' @rdname catalog-to-data-frame
+#' @export
+as.data.frame.UserCatalog <- function (x, row.names = NULL,
+                                       optional = FALSE,
+                                       keys = c("name", "email", "teams", "collaborator"),
+                                       ...) {
+    catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
+}

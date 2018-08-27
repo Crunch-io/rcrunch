@@ -87,6 +87,10 @@ setMethod("entity", "DatasetTuple", function(x) {
 
 #' @rdname tuple-methods
 #' @export
+setMethod("id", "DatasetTuple", function(x) x$id)
+
+#' @rdname tuple-methods
+#' @export
 setMethod("delete", "ShojiTuple", function(x, ...) {
     crDELETE(x@entity_url, drop = dropCache(x@index_url))
 })

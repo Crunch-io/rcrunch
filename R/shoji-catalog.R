@@ -312,7 +312,11 @@ catalogToDataFrame <- function(x, keys = TRUE, rownames = NULL,
         names(out) <- names
         for (i in seq_along(entry_list)) {
             for (j in names(entry_list[[i]])) {
-                out[[j]][i] <- entry_list[[i]][[j]]
+                val <- entry_list[[i]][[j]]
+                if (identical(val, list())) {
+                    val <- NA
+                }
+                out[[j]][i] <- val
             }
         }
         #################

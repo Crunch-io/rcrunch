@@ -191,6 +191,7 @@ reference:
   - login
   - logout
   - me
+  - users
   - email
   - newProject
   - owners

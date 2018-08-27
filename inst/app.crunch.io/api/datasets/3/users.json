@@ -1,0 +1,38 @@
+{
+  "element": "shoji:catalog",
+  "self": "api/datasets/s/users/",
+  "index": {
+    "https://app.crunch.io/api/users/user3/": {
+      "project_permissions": {
+        "edit": false,
+        "view": false
+      },
+      "name": "Bill User",
+      "access_time": "2017-12-13T21:36:19.111000+00:00",
+      "teams": [],
+      "collaborator": false,
+      "email": "william.user@example.io",
+      "coalesced_permissions": {
+        "edit": true,
+        "change_permissions": true,
+        "view": true
+      }
+    },
+    "https://app.crunch.io/api/users/user2/": {
+      "project_permissions": {
+        "edit": false,
+        "view": false
+      },
+      "name": "Roger User",
+      "access_time": "2016-10-13T08:09:19.111000+00:00",
+      "teams": [],
+      "collaborator": true,
+      "email": "ruser@crunch.io",
+      "coalesced_permissions": {
+        "edit": false,
+        "change_permissions": false,
+        "view": true
+      }
+    }
+  }
+}

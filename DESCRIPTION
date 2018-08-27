@@ -145,6 +145,7 @@ Collate:
     'transform.R'
     'tuple.R'
     'univariate.R'
+    'user-info.R'
     'user.R'
     'variable-as-methods.R'
     'variable-catalog.R'
