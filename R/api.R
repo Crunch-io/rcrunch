@@ -58,7 +58,7 @@ crDELETE <- function(...) crunchAPI("DELETE", ...)
 handleAPIresponse <- function(response, special.statuses = list()) {
     warning <- get_header("Warning", response$headers)
     if (!is.null(warning)) {
-        if (grepl("299", warning)) {
+        if (startsWith(warning, "299")) {
             msg <- c(
                 "The API resource at ",
                 response$url,
