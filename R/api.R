@@ -56,14 +56,24 @@ crDELETE <- function(...) crunchAPI("DELETE", ...)
 #' @importFrom httr content http_status
 #' @keywords internal
 handleAPIresponse <- function(response, special.statuses = list()) {
-    deprecation_warning <- get_header("Warning", response$headers)
-    if (!is.null(deprecation_warning)) {
+    warning <- get_header("Warning", response$headers)
+    if (!is.null(warning)) {
+        if (grepl("299", warning)) {
+            msg <- c(
+                "The API resource at ",
+                response$url,
+                " returned a deprecation warning. Updating to the latest version ",
+                "of the package is recommended and may resolve the issue."
+            )
+        } else {
+            msg <- c("The API resource at ", response$url, " returned a warning.")
+        }
+
+        
         warning(
-            "The API resource at ",
-            response$url,
-            " returned a deprecation warning. Updating to the latest version ",
-            "of the package is recommended and may resolve the issue. Details: ",
-            deprecation_warning,
+            msg,
+            " Details: ",
+            warning,
             call.=FALSE
         )
     }

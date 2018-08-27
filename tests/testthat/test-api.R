@@ -29,6 +29,17 @@ with_mock_crunch({
             )
         )
     })
+    
+    test_that("But other kinds of warnings don't look like deprecations", {
+        expect_warning(
+            resp <- crGET("https://app.crunch.io/other-warning/"),
+            paste(
+                'The API resource at https://app.crunch.io/api/ returned a',
+                'warning. Details: 298 - "This is some other kind of warning"'
+            )
+        )
+    })
+    
     test_that("crunch.debug does not print if disabled", {
         expect_POST(
             expect_prints(
