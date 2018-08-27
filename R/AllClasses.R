@@ -5,68 +5,77 @@
 #' vector/list/data.frame methods jointly inherited in CrunchVariable and
 #' CrunchDataset.
 ShojiObject <- setClass("ShojiObject",
-    slots=c(
-        element="ANY",
-        self="ANY",
-        body="ANY",
-        urls="ANY",
-        catalogs="ANY",
-        views="ANY",
-        fragments="ANY"
-    ))
-ShojiEntity <- setClass("ShojiEntity", contains="ShojiObject")
-ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
-    slots=c(
-        index="list",
-        orders="list",
-        graph="list"
-    ))
-ShojiFolder <- setClass("ShojiFolder", contains="ShojiCatalog")
-VariableFolder <- setClass("VariableFolder", contains="ShojiFolder")
-ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
-    slots=c(
-        graph="list",
-        catalog_url="character",
-        duplicates="logical"
+    slots = c(
+        element = "ANY",
+        self = "ANY",
+        body = "ANY",
+        urls = "ANY",
+        catalogs = "ANY",
+        views = "ANY",
+        fragments = "ANY"
+    )
+)
+ShojiEntity <- setClass("ShojiEntity", contains = "ShojiObject")
+ShojiCatalog <- setClass("ShojiCatalog",
+    contains = "ShojiObject",
+    slots = c(
+        index = "list",
+        orders = "list",
+        graph = "list"
+    )
+)
+ShojiFolder <- setClass("ShojiFolder", contains = "ShojiCatalog")
+VariableFolder <- setClass("VariableFolder", contains = "ShojiFolder")
+ShojiOrder <- setClass("ShojiOrder",
+    contains = "ShojiObject",
+    slots = c(
+        graph = "list",
+        catalog_url = "character",
+        duplicates = "logical"
     ),
-    prototype=prototype(
-        graph=list(),
-        catalog_url="",
-        duplicates=FALSE
-    ))
-ShojiView <- setClass("ShojiView", contains="ShojiObject",
-    slots=c(
-        value="ANY"
-    ))
+    prototype = prototype(
+        graph = list(),
+        catalog_url = "",
+        duplicates = FALSE
+    )
+)
+ShojiView <- setClass("ShojiView",
+    contains = "ShojiObject",
+    slots = c(
+        value = "ANY"
+    )
+)
 
 ShojiTuple <- setClass("ShojiTuple",
-    slots=c(
-        index_url="character",
-        entity_url="character",
-        body="list"
-    ))
-VariableTuple <- setClass("VariableTuple", contains="ShojiTuple")
-DatasetTuple <- setClass("DatasetTuple", contains="ShojiTuple")
-CrunchProject <- setClass("CrunchProject", contains="ShojiTuple")
-PermissionTuple <- setClass("PermissionTuple", contains="ShojiTuple")
+    slots = c(
+        index_url = "character",
+        entity_url = "character",
+        body = "list"
+    )
+)
+VariableTuple <- setClass("VariableTuple", contains = "ShojiTuple")
+DatasetTuple <- setClass("DatasetTuple", contains = "ShojiTuple")
+CrunchProject <- setClass("CrunchProject", contains = "ShojiTuple")
+PermissionTuple <- setClass("PermissionTuple", contains = "ShojiTuple")
 
-VariableEntity <- setClass("VariableEntity", contains="ShojiObject")
-ProjectEntity <- setClass("ProjectEntity", contains="ShojiObject")
-UserEntity <- setClass("UserEntity", contains="ShojiObject")
+VariableEntity <- setClass("VariableEntity", contains = "ShojiObject")
+ProjectEntity <- setClass("ProjectEntity", contains = "ShojiObject")
+UserEntity <- setClass("UserEntity", contains = "ShojiObject")
 
 CrunchExpr <- setClass("CrunchExpr",
-    slots=c(
-        dataset_url="character",
-        expression="list",
-        filter="list"
+    slots = c(
+        dataset_url = "character",
+        expression = "list",
+        filter = "list"
     ),
-    prototype=prototype(
-        dataset_url="",
-        expression=list(),
-        filter=list()
-    ))
+    prototype = prototype(
+        dataset_url = "",
+        expression = list(),
+        filter = list()
+    )
+)
 
-CrunchLogicalExpr <- setClass("CrunchLogicalExpr", contains="CrunchExpr")
+CrunchLogicalExpr <- setClass("CrunchLogicalExpr", contains = "CrunchExpr")
 
 #' Variables in Crunch
 #'
@@ -77,22 +86,23 @@ CrunchLogicalExpr <- setClass("CrunchLogicalExpr", contains="CrunchExpr")
 #' @importFrom methods as callNextMethod new slot slot<- slotNames validObject
 #' @rdname CrunchVariable
 setClass("CrunchVariable",
-     slots=c(
-        filter="CrunchLogicalExpr",
-        tuple="VariableTuple"
+    slots = c(
+        filter = "CrunchLogicalExpr",
+        tuple = "VariableTuple"
     ),
-    prototype=prototype(filter=CrunchLogicalExpr(), tuple=VariableTuple()))
-
-.variableClasses <- list(
-    categorical="CategoricalVariable",
-    numeric="NumericVariable",
-    text="TextVariable",
-    datetime="DatetimeVariable",
-    multiple_response="MultipleResponseVariable",
-    categorical_array="CategoricalArrayVariable"
+    prototype = prototype(filter = CrunchLogicalExpr(), tuple = VariableTuple())
 )
 
-CrunchVariable <- function (tuple, filter=NULL, ...) {
+.variableClasses <- list(
+    categorical = "CategoricalVariable",
+    numeric = "NumericVariable",
+    text = "TextVariable",
+    datetime = "DatetimeVariable",
+    multiple_response = "MultipleResponseVariable",
+    categorical_array = "CategoricalArrayVariable"
+)
+
+CrunchVariable <- function(tuple, filter = NULL, ...) {
     ## Slight cheat: this isn't the "CrunchVariable" constructor. Instead
     ## returns a subclass of CrunchVariable
 
@@ -100,35 +110,38 @@ CrunchVariable <- function (tuple, filter=NULL, ...) {
     if (is.null(filter)) {
         filter <- CrunchLogicalExpr()
     }
-    return(new(cls, tuple=tuple, filter=filter, ...))
+    return(new(cls, tuple = tuple, filter = filter, ...))
 }
 
 #' @rdname CrunchVariable
 #' @export NumericVariable
-NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
+NumericVariable <- setClass("NumericVariable", contains = "CrunchVariable")
 
 #' @rdname CrunchVariable
 #' @export CategoricalVariable
 CategoricalVariable <- setClass("CategoricalVariable",
-    contains="CrunchVariable")
+    contains = "CrunchVariable"
+)
 
 #' @rdname CrunchVariable
 #' @export TextVariable
-TextVariable <- setClass("TextVariable", contains="CrunchVariable")
+TextVariable <- setClass("TextVariable", contains = "CrunchVariable")
 
 #' @rdname CrunchVariable
 #' @export DatetimeVariable
-DatetimeVariable <- setClass("DatetimeVariable", contains="CrunchVariable")
+DatetimeVariable <- setClass("DatetimeVariable", contains = "CrunchVariable")
 
 #' @rdname CrunchVariable
 #' @export CategoricalArrayVariable
 CategoricalArrayVariable <- setClass("CategoricalArrayVariable",
-    contains="CrunchVariable")
+    contains = "CrunchVariable"
+)
 
 #' @rdname CrunchVariable
 #' @export MultipleResponseVariable
-MultipleResponseVariable <-setClass("MultipleResponseVariable",
-    contains="CategoricalArrayVariable")
+MultipleResponseVariable <- setClass("MultipleResponseVariable",
+    contains = "CategoricalArrayVariable"
+)
 
 #' Organize Variables within a Dataset
 #'
@@ -150,29 +163,31 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 #' \code{NULL}, it will be used to look up variable names from the URLs.
 #' @rdname VariableOrder
 #' @export VariableOrder
-VariableOrder <- setClass("VariableOrder", contains="ShojiOrder")
+VariableOrder <- setClass("VariableOrder", contains = "ShojiOrder")
 
 OrderGroup <- setClass("OrderGroup",
-    slots=c(
-        group="character",
-        entities="list",
-        duplicates="logical"
+    slots = c(
+        group = "character",
+        entities = "list",
+        duplicates = "logical"
     ),
-    prototype=prototype(
-        group="",
-        entities=list(),
-        duplicates=FALSE
+    prototype = prototype(
+        group = "",
+        entities = list(),
+        duplicates = FALSE
     )
 )
 
 #' @rdname VariableOrder
 #' @export VariableGroup
-VariableGroup <- setClass("VariableGroup", contains="OrderGroup",
-    prototype=prototype(
-        group="",
-        entities=list(),
-        duplicates=FALSE
-    ))
+VariableGroup <- setClass("VariableGroup",
+    contains = "OrderGroup",
+    prototype = prototype(
+        group = "",
+        entities = list(),
+        duplicates = FALSE
+    )
+)
 
 #' Collection of Variables within a Dataset
 #'
@@ -182,35 +197,40 @@ VariableGroup <- setClass("VariableGroup", contains="OrderGroup",
 #' organized.
 #' @rdname VariableCatalog
 #' @aliases VariableCatalog
-VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
-    slots=c(order="VariableOrder"))
-DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
-BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
-PermissionCatalog <- setClass("PermissionCatalog", contains="ShojiCatalog")
-UserCatalog <- setClass("UserCatalog", contains="ShojiCatalog")
-TeamCatalog <- setClass("TeamCatalog", contains="ShojiCatalog")
-ProjectCatalog <- setClass("ProjectCatalog", contains="ShojiCatalog")
-MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
-VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
-FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")
-ForkCatalog <- setClass("ForkCatalog", contains="ShojiCatalog")
-MultitableCatalog <- setClass("MultitableCatalog", contains="ShojiCatalog")
+VariableCatalog <- setClass("VariableCatalog",
+    contains = "ShojiCatalog",
+    slots = c(order = "VariableOrder")
+)
+DatasetCatalog <- setClass("DatasetCatalog", contains = "ShojiCatalog")
+BatchCatalog <- setClass("BatchCatalog", contains = "ShojiCatalog")
+PermissionCatalog <- setClass("PermissionCatalog", contains = "ShojiCatalog")
+UserCatalog <- setClass("UserCatalog", contains = "ShojiCatalog")
+TeamCatalog <- setClass("TeamCatalog", contains = "ShojiCatalog")
+ProjectCatalog <- setClass("ProjectCatalog", contains = "ShojiCatalog")
+MemberCatalog <- setClass("MemberCatalog", contains = "ShojiCatalog")
+VersionCatalog <- setClass("VersionCatalog", contains = "ShojiCatalog")
+FilterCatalog <- setClass("FilterCatalog", contains = "ShojiCatalog")
+ForkCatalog <- setClass("ForkCatalog", contains = "ShojiCatalog")
+MultitableCatalog <- setClass("MultitableCatalog", contains = "ShojiCatalog")
 
 #' Crunch Datasets
 #'
 #' @rdname CrunchDataset
 #' @export CrunchDataset
 #' @exportClass CrunchDataset
-CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
-    slots=c(
-        variables="VariableCatalog",
-        filter="CrunchLogicalExpr",
-        tuple="DatasetTuple"
+CrunchDataset <- setClass("CrunchDataset",
+    contains = c("ShojiObject"),
+    slots = c(
+        variables = "VariableCatalog",
+        filter = "CrunchLogicalExpr",
+        tuple = "DatasetTuple"
     ),
-    prototype=prototype(
-        variables=VariableCatalog(),
-        filter=CrunchLogicalExpr(),
-        tuple=DatasetTuple()))
+    prototype = prototype(
+        variables = VariableCatalog(),
+        filter = CrunchLogicalExpr(),
+        tuple = DatasetTuple()
+    )
+)
 
 DeckCatalog <- setClass("DeckCatalog", contains = "ShojiCatalog")
 CrunchDeck <- setClass("CrunchDeck", contains = "ShojiObject")
@@ -249,7 +269,7 @@ GenericConstructor <- function (class) {
 #' @importFrom methods coerce as<- coerce<-
 #' @keywords internal
 #' @export
-setClass("AbstractCategories", contains="list")
+setClass("AbstractCategories", contains = "list")
 
 
 #' @rdname AbstractCategory
@@ -258,7 +278,7 @@ AbstractCategories <- GenericConstructor("AbstractCategories")
 
 #' @rdname AbstractCategory
 #' @export
-setClass("AbstractCategory", contains="namedList")
+setClass("AbstractCategory", contains = "namedList")
 
 #' @rdname AbstractCategory
 #' @export
@@ -295,7 +315,7 @@ AbstractCategory <- GenericConstructor("AbstractCategory")
 #' cats.1 <- Categories(cat.a, cat.c)
 #' cats.2 <- Categories(data=list(cat.a, cat.c))
 #' identical(cats.1, cats.2)
-setClass("Categories", contains="AbstractCategories")
+setClass("Categories", contains = "AbstractCategories")
 
 #' @rdname Categories
 #' @export
@@ -303,7 +323,7 @@ Categories <- GenericConstructor("Categories")
 
 #' @rdname Categories
 #' @export
-setClass("Category", contains="AbstractCategory")
+setClass("Category", contains = "AbstractCategory")
 
 #' @rdname Categories
 #' @export
@@ -312,7 +332,7 @@ Category <- GenericConstructor("Category")
 
 #' @rdname Insertions
 #' @export
-setClass("Insertions", contains="AbstractCategories")
+setClass("Insertions", contains = "AbstractCategories")
 
 #' @rdname Insertions
 #' @export
@@ -320,7 +340,7 @@ Insertions <- GenericConstructor("Insertions")
 
 #' @rdname Insertions
 #' @export
-setClass("Insertion", contains="AbstractCategory")
+setClass("Insertion", contains = "AbstractCategory")
 
 # Make a constructor with user-facing and package internal versions instead of
 # simply setMethod("initialize", "Insertions") so that the user-facing version
@@ -328,7 +348,7 @@ setClass("Insertion", contains="AbstractCategory")
 # making heterogenous insertions that include classes Subtotal and Heading.
 #' @rdname Insertions
 #' @export
-Insertion <- function (...) {
+Insertion <- function(...) {
     out <- .Insertion(...)
 
     # check validity (only when Insertion is called)
@@ -338,8 +358,8 @@ Insertion <- function (...) {
 }
 
 #' @rdname Insertions
-.Insertion <- function (..., data=NULL) {
-    out <- GenericConstructor("Insertion")(..., data=data)
+.Insertion <- function(..., data = NULL) {
+    out <- GenericConstructor("Insertion")(..., data = data)
 
     # ensure that args is a list, even if it is a single element
     if (!is.null(out$args) && length(out$args) == 1) {
@@ -352,7 +372,7 @@ Insertion <- function (...) {
 
 #' @rdname SubtotalsHeadings
 #' @export
-setClass("Subtotal", contains="Insertion")
+setClass("Subtotal", contains = "Insertion")
 
 #' @rdname SubtotalsHeadings
 #' @export
@@ -360,7 +380,7 @@ Subtotal <- GenericConstructor("Subtotal")
 
 #' @rdname SubtotalsHeadings
 #' @export
-setClass("Heading", contains="Insertion")
+setClass("Heading", contains = "Insertion")
 
 #' @rdname SubtotalsHeadings
 #' @export
@@ -368,7 +388,7 @@ Heading <- GenericConstructor("Heading")
 
 #' @rdname SummaryStat
 #' @export
-setClass("SummaryStat", contains="Insertion")
+setClass("SummaryStat", contains = "Insertion")
 
 #' @rdname SummaryStat
 #' @export
@@ -376,11 +396,11 @@ SummaryStat <- GenericConstructor("SummaryStat")
 
 #' @rdname Transforms
 #' @export
-setClass("Transforms", contains="namedList")
+setClass("Transforms", contains = "namedList")
 
 #' @rdname Transforms
 #' @export
-Transforms <- function (..., data = NULL) {
+Transforms <- function(..., data = NULL) {
     if (is.null(data)) {
         data <- list(...)
     }
@@ -398,26 +418,31 @@ Transforms <- function (..., data = NULL) {
 
 #' @rdname Subvariables
 #' @export
-Subvariables <- setClass("Subvariables", contains="VariableCatalog",
-    slots=c(
-        filter="CrunchLogicalExpr"
+Subvariables <- setClass("Subvariables",
+    contains = "VariableCatalog",
+    slots = c(
+        filter = "CrunchLogicalExpr"
     ),
-    prototype=prototype(
-        filter=CrunchLogicalExpr()
-    ))
+    prototype = prototype(
+        filter = CrunchLogicalExpr()
+    )
+)
 
-CubeDims <- setClass("CubeDims", contains="namedList")
+CubeDims <- setClass("CubeDims", contains = "namedList")
 
-CrunchCube <- setClass("CrunchCube", contains="list",
-    slots=c(
-        useNA="character",
-        dims="CubeDims",
-        arrays="list"),
-    prototype=prototype(useNA="no", dims=CubeDims(), arrays=list()))
+CrunchCube <- setClass("CrunchCube",
+    contains = "list",
+    slots = c(
+        useNA = "character",
+        dims = "CubeDims",
+        arrays = "list"
+    ),
+    prototype = prototype(useNA = "no", dims = CubeDims(), arrays = list())
+)
 
-CrunchTeam <- setClass("CrunchTeam", contains="ShojiObject")
-CrunchFilter <- setClass("CrunchFilter", contains="ShojiObject")
-Multitable <- setClass("Multitable", contains="ShojiObject")
+CrunchTeam <- setClass("CrunchTeam", contains = "ShojiObject")
+CrunchFilter <- setClass("CrunchFilter", contains = "ShojiObject")
+Multitable <- setClass("Multitable", contains = "ShojiObject")
 
 #' Organize Datasets
 #'
@@ -431,31 +456,33 @@ Multitable <- setClass("Multitable", contains="ShojiObject")
 #' combination of dataset URLs and DatasetGroup objects.
 #' @rdname DatasetOrder
 #' @export DatasetOrder
-DatasetOrder <- setClass("DatasetOrder", contains="ShojiOrder")
+DatasetOrder <- setClass("DatasetOrder", contains = "ShojiOrder")
 
 #' @rdname DatasetOrder
 #' @export DatasetGroup
-DatasetGroup <- setClass("DatasetGroup", contains="OrderGroup",
-    prototype=prototype(
-        group="",
-        entities=list(),
-        duplicates=FALSE
-    ))
+DatasetGroup <- setClass("DatasetGroup",
+    contains = "OrderGroup",
+    prototype = prototype(
+        group = "",
+        entities = list(),
+        duplicates = FALSE
+    )
+)
 
-setClass("Session", contains="list")
+setClass("Session", contains = "list")
 
-MultitableResult <- setClass("MultitableResult", contains="namedList")
-TabBookResult <- setClass("TabBookResult", contains="namedList")
+MultitableResult <- setClass("MultitableResult", contains = "namedList")
+TabBookResult <- setClass("TabBookResult", contains = "namedList")
 
-SearchResults <- setClass("SearchResults", contains="namedList")
+SearchResults <- setClass("SearchResults", contains = "namedList")
 
 #' @rdname geo
-setClass("CrunchGeography", contains="namedList")
+setClass("CrunchGeography", contains = "namedList")
 #' @rdname geo
 #' @export
 CrunchGeography <- GenericConstructor("CrunchGeography")
 
 #' @rdname geo
 #' @export Geodata
-Geodata <- setClass("Geodata", contains="ShojiEntity")
-GeoCatalog <- setClass("GeoCatalog", contains="ShojiCatalog")
+Geodata <- setClass("Geodata", contains = "ShojiEntity")
+GeoCatalog <- setClass("GeoCatalog", contains = "ShojiCatalog")

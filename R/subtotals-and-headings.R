@@ -112,42 +112,46 @@ NULL
 
 #' @rdname SubtotalsHeadings
 #' @export
-Subtotal <- function (name,
-                      categories,
-                      position = c("relative", "top", "bottom"),
-                      after = NULL) {
+Subtotal <- function(name,
+                     categories,
+                     position = c("relative", "top", "bottom"),
+                     after = NULL) {
     # match.args position
     position <- match.arg(position)
     validatePosition(position, after)
 
-    return(new("Subtotal", list(name = name,
-                                categories = categories,
-                                position = position,
-                                after = after)))
+    return(new("Subtotal", list(
+        name = name,
+        categories = categories,
+        position = position,
+        after = after
+    )))
 }
 
-validatePosition <- function (position, after) {
+validatePosition <- function(position, after) {
     if (position != "relative" && !is.null(after)) {
-        halt("If position is not relative, you cannot supply a category id",
-            " or name to the ", dQuote("after"), " argument")
+        halt(
+            "If position is not relative, you cannot supply a category id",
+            " or name to the ", dQuote("after"), " argument"
+        )
     }
 }
 
 #' @rdname SubtotalsHeadings
 #' @export
-is.Subtotal <- function (x) inherits(x, "Subtotal") %||% FALSE
+is.Subtotal <- function(x) inherits(x, "Subtotal") %||% FALSE
 #' @rdname SubtotalsHeadings
 #' @export
-is.Heading <- function (x) inherits(x, "Heading") %||% FALSE
+is.Heading <- function(x) inherits(x, "Heading") %||% FALSE
 
 #' @rdname SubtotalsHeadings
 #' @export
-are.Subtotals <- function (x) unlist(lapply(x, inherits, "Subtotal")) %||% FALSE
+are.Subtotals <- function(x) unlist(lapply(x, inherits, "Subtotal")) %||% FALSE
 #' @rdname SubtotalsHeadings
 #' @export
-are.Headings <- function (x) unlist(lapply(x, inherits, "Heading")) %||% FALSE
+are.Headings <- function(x) unlist(lapply(x, inherits, "Heading")) %||% FALSE
 
-setMethod("initialize", "Subtotal", function (.Object, ...) {
+setMethod("initialize", "Subtotal", function(.Object, ...) {
     .Object <- callNextMethod()
     # unlist, to flatten user inputs like list(1:2)
     .Object$categories <- unlist(.Object$categories)
@@ -156,25 +160,27 @@ setMethod("initialize", "Subtotal", function (.Object, ...) {
 
 #' @rdname SubtotalsHeadings
 #' @export
-Heading <- function (name,
-                     position = c("relative", "top", "bottom"),
-                     after = NULL) {
+Heading <- function(name,
+                    position = c("relative", "top", "bottom"),
+                    after = NULL) {
     position <- match.arg(position)
     validatePosition(position, after)
 
-    return(new("Heading", list(name = name,
-                                position = position,
-                                after = after)))
+    return(new("Heading", list(
+        name = name,
+        position = position,
+        after = after
+    )))
 }
 
-getSubtotals <- function (x) {
+getSubtotals <- function(x) {
     inserts <- transforms(x)$insertions
 
     if (is.null(transforms(x)) || is.null(inserts)) {
         return(NULL)
     }
 
-    sub_heads <-lapply(inserts, function (insrt) {
+    sub_heads <- lapply(inserts, function(insrt) {
         if (is.null(insrt$`function`) || insrt$`function` == "subtotal") {
             return(insrt)
         }
@@ -195,22 +201,24 @@ setMethod("subtotals", "VariableTuple", getSubtotals)
 
 #' @rdname SubtotalsHeadings
 #' @export
-setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
+setMethod("subtotals<-", c("CrunchVariable", "ANY"), function(x, value) {
     if (is.Subtotal(value) | is.Heading(value)) {
         # if the value is not a list, make it into one, in case we got a bare
         # Subtotal() or Heading()
         value <- list(value)
     }
     if (any(unlist(
-        Map(function (v) {
+        Map(function(v) {
             !is.Subtotal(v) & !is.Heading(v)
-        }, value)))) {
+        }, value)
+    ))) {
         halt("value must be a list of Subtotals, Headings, or both.")
     }
 
-    inserts = Insertions(data = lapply(value,
-                                       makeInsertion,
-                                       var_categories = categories(x)))
+    inserts <- Insertions(data = lapply(value,
+        makeInsertion,
+        var_categories = categories(x)
+    ))
 
     bd <- list("transform" = list("insertions" = inserts))
     # setEntitySlot manages old inserts so they are not duplicated
@@ -221,7 +229,7 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
 
 #' @rdname SubtotalsHeadings
 #' @export
-setMethod("subtotals<-", c("CrunchVariable", "NULL"), function (x, value) {
+setMethod("subtotals<-", c("CrunchVariable", "NULL"), function(x, value) {
     # maintain any non-subtotal insertions
     old_inserts <- transforms(x)$insertions
     subtots <- subtotals(x)
@@ -261,22 +269,24 @@ NULL
 
 #' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "Subtotal", function (x, var_categories) {
-    return(.Insertion(anchor = anchor(x, var_categories), name = name(x),
-                     `function` = "subtotal",
-                     args = arguments(x, var_categories)))
+setMethod("makeInsertion", "Subtotal", function(x, var_categories) {
+    return(.Insertion(
+        anchor = anchor(x, var_categories), name = name(x),
+        `function` = "subtotal",
+        args = arguments(x, var_categories)
+    ))
 })
 
 #' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "Heading", function (x, var_categories) {
+setMethod("makeInsertion", "Heading", function(x, var_categories) {
     return(.Insertion(anchor = anchor(x, var_categories), name = name(x)))
 })
 
 # makeInsertion(insertion) simply returns an insertion.
 #' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "Insertion", function (x, var_categories) return(x))
+setMethod("makeInsertion", "Insertion", function(x, var_categories) return(x))
 
 
 #' Convert from Insertion to Insertion subtypes
@@ -297,7 +307,7 @@ NULL
 
 #' @rdname subtypeInsertion
 #' @export
-subtypeInsertions <- function (inserts) {
+subtypeInsertions <- function(inserts) {
     if (!inherits(inserts, "Insertions")) {
         halt("Must provide an object of type Insertions")
     }
@@ -306,7 +316,7 @@ subtypeInsertions <- function (inserts) {
 
 #' @rdname subtypeInsertion
 #' @export
-subtypeInsertion <- function (insert) {
+subtypeInsertion <- function(insert) {
     if (!inherits(insert, "Insertion")) {
         halt("Must provide an object of type Insertion")
     }
@@ -326,25 +336,30 @@ subtypeInsertion <- function (insert) {
 
     if (!(is.na(func(insert)))) {
         # there is a function, check the kind.
-        if (func(insert) == 'subtotal') {
+        if (func(insert) == "subtotal") {
             # this is a subtotal, make it so
-            insert <- Subtotal(name = name(insert), after = after,
-                               position = position, categories = arguments(insert))
+            insert <- Subtotal(
+                name = name(insert), after = after,
+                position = position, categories = arguments(insert)
+            )
         }
         if (func(insert) %in% names(summaryStatInsertions)) {
             # this is a summary statistic, make it so
-            insert <- SummaryStat(name = name(insert),
-                                  stat = func(insert),
-                                  after = after,
-                                  position = position,
-                                  categories = arguments(insert),
-                                  includeNA = insert$includeNA)
+            insert <- SummaryStat(
+                name = name(insert),
+                stat = func(insert),
+                after = after,
+                position = position,
+                categories = arguments(insert),
+                includeNA = insert$includeNA
+            )
         }
-
     } else if (is.na(func(insert)) & !is.na(anchor(insert))) {
         # this is a heading, make it so
-        insert <- Heading(name = name(insert), after = after,
-                          position = position)
+        insert <- Heading(
+            name = name(insert), after = after,
+            position = position
+        )
     }
     # when all else fails, just return the insert as is
     return(insert)

@@ -4,7 +4,6 @@
     "orders": {
         "flat": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat/"
     },
-    "specification": "https://app.crunch.io/api/specifications/slides/",
     "description": "A catalog of the Slides in this Deck",
     "index": {
         "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/": {
@@ -41,8 +40,8 @@
                     "value": "app.datasets.analyze"
                 }
             },
-            "subtitle": "AGE",
-            "title": "MYMRSET"
+            "subtitle": "age",
+            "title": "mymrset"
         },
         "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/": {
             "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
@@ -79,7 +78,7 @@
                 }
             },
             "subtitle": "",
-            "title": "BIRTHYR"
+            "title": "birthyr"
         },
         "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/": {
             "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/analyses/3f2e2e6b00f748b7a966e5ba7def779f/",
@@ -116,7 +115,7 @@
                 }
             },
             "subtitle": "",
-            "title": "MYMRSET"
+            "title": "mymrset"
         }
     },
     "template": "{\"query\": {\"measures\": \"Object with keyed measures functions\", \"dimensions\": \"Array of variable references\", \"weight\": \"Optional weight variable URL\"}, \"display_settings\": {}, \"query_environment\": {\"filter\": \"Array of filter urls\"}}"

@@ -1,6 +1,9 @@
 context("Interacting with decks")
 
 with_mock_crunch({
+
+
+# Deck Catalog ------------------------------------------------------------
     ds <- loadDataset("test ds")
     test_that("newDeck posts correctly", {
         expect_POST(
@@ -17,14 +20,56 @@ with_mock_crunch({
     })
 
     main_deck <- deck_cat[[1]]
-    slide <- deck_cat[[1]]
 
-    test_that("Deck Catalog Subsetting", {
-        browser()
+
+# Crunch Decks ------------------------------------------------------------
+
+    test_that("Deck metadata", {
         expect_is(main_deck, "CrunchDeck")
         expect_equal(length(main_deck), 3)
-        expect_equal(titles(main_deck), c("BIRTHYR", "MYMRSET", "MYMRSET"))
-        expect_equal(subtitles(main_deck), c("", "", "AGE"))
+        expect_equal(titles(main_deck), c("birthyr", "mymrset", "mymrset"))
+        expect_equal(subtitles(main_deck), c("", "", "age"))
+    })
+
+    test_that("deck assignment produces POST", {
+        expect_POST(
+            deck_cat[["new_deck"]] <- main_deck,
+            'https://app.crunch.io/api/datasets/1/decks/',
+            '{"name":"new_deck","description":"","is_public":false}'
+        )
+    })
+
+    test_that("deck catalog show method", {
+        expected <- as.data.frame(deck_cat)[c("name", "team", "is_public", "owner_name")]
+        expect_prints(
+            deck_cat,
+            get_output(expected)
+        )
+    })
+
+    test_that("deck name and description getters and setters", {
+
+        expect_equal(name(main_deck), "Main Deck")
+        expect_equal(description(main_deck), "")
+        expect_PATCH(
+            name(main_deck) <- "new_name",
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/',
+            '{"name":"new_name"}'
+            )
+        expect_PATCH(
+            description(main_deck) <- "new_description",
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/',
+            '{"description":"new_description"}'
+            )
+    })
+
+    test_that("is.public method for decks", {
+        expect_false(is.public(main_deck))
+        expect_PATCH(
+            is.public(main_deck) <- TRUE,
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/',
+            '{"is_public":true}'
+            )
     })
 
     test_that("titles and subtitles assignment generates the correct PATCH", {
@@ -64,8 +109,39 @@ with_mock_crunch({
             '"currentTab":{"value":0},',
             '"uiView":{"value":"app.datasets.browse"}},',
             '"subtitle":"new_sub",',
-            '"title":"BIRTHYR"}'
+            '"title":"birthyr"'
         )
+
+
+        test_that("subset CrunchDecks", {
+            slide <- main_deck[[1]]
+            expect_is(slide, "CrunchSlide")
+        })
+        test_that("cube methods for crunch decks", {
+            cube <- cube(main_deck[[1]])
+            expect_is(cube, "CrunchCube")
+            cube_list <- cubes(main_deck)
+            expect_is(cube_list, "list")
+            expect_identical(cube, cube_list[[1]])
+        })
+
+
+# Crunch Slides -----------------------------------------------------------
+
+        test_that("Slide show method", {
+            slide <- main_deck[[1]]
+            expect_prints(
+                slide,
+                get_output(cube(slide))
+            )
+        })
+        test_that("newSlide", {
+
+        })
+
+
+
+
     })
 
 })

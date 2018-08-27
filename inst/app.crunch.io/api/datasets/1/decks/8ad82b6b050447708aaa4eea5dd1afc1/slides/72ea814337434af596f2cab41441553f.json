@@ -1,0 +1,49 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/",
+    "catalogs": {
+        "analyses": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/analyses/"
+    },
+    "description": "Returns the detail information for a given slide",
+    "body": {
+        "deck_id": "8ad82b6b050447708aaa4eea5dd1afc1",
+        "subtitle": "age",
+        "title": "mymrset",
+        "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/analyses/52fb9b5be6914477b7d7e3e5f8c35367/",
+        "version": "master__tip",
+        "display_settings": {
+            "percentageDirection": {
+                "value": "colPct"
+            },
+            "showEmpty": {
+                "value": false
+            },
+            "showMean": {
+                "value": true
+            },
+            "vizType": {
+                "value": "table"
+            },
+            "countsOrPercents": {
+                "value": "percent"
+            },
+            "decimalPlaces": {
+                "value": 1
+            },
+            "populationMagnitude": {
+                "value": 3
+            },
+            "showSignif": {
+                "value": true
+            },
+            "currentTab": {
+                "value": 0
+            },
+            "uiView": {
+                "value": "app.datasets.analyze"
+            }
+        },
+        "dataset_id": "1",
+        "id": "72ea814337434af596f2cab41441553f"
+    }
+}

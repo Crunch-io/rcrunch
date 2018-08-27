@@ -62,7 +62,7 @@ NULL
 
 #' @rdname variable-as-methods
 #' @export
-setMethod("as.Numeric", "CrunchVariable", function (x) {
+setMethod("as.Numeric", "CrunchVariable", function(x) {
     haltIfArray(x, callingFunc = "as.Numeric()")
 
     # datetimes are special
@@ -75,7 +75,7 @@ setMethod("as.Numeric", "CrunchVariable", function (x) {
 
 #' @rdname variable-as-methods
 #' @export
-setMethod("as.Text", "CrunchVariable", function (x, format) {
+setMethod("as.Text", "CrunchVariable", function(x, format) {
     haltIfArray(x, callingFunc = "as.Text()")
 
     # datetimes are special
@@ -91,7 +91,7 @@ setMethod("as.Text", "CrunchVariable", function (x, format) {
 
 #' @rdname variable-as-methods
 #' @export
-setMethod("as.Categorical", "CrunchVariable", function (x, format) {
+setMethod("as.Categorical", "CrunchVariable", function(x, format) {
     haltIfArray(x, callingFunc = "as.Categorical()")
 
     # datetimes are special
@@ -108,31 +108,33 @@ setMethod("as.Categorical", "CrunchVariable", function (x, format) {
 
 #' @rdname variable-as-methods
 #' @export
-setMethod("as.Datetime", "CrunchVariable",
-          function (x, format, resolution, offset) {
-    haltIfArray(x, callingFunc = "as.Datetime()")
+setMethod(
+    "as.Datetime", "CrunchVariable",
+    function(x, format, resolution, offset) {
+        haltIfArray(x, callingFunc = "as.Datetime()")
 
-    # datetimes are special, so each source type must be determined
-    if (is.Numeric(x)) {
-        validateResolution(resolution)
+        # datetimes are special, so each source type must be determined
+        if (is.Numeric(x)) {
+            validateResolution(resolution)
 
-        args <- list("numeric_to_datetime", x, list(value = resolution))
-        if (!missing(offset)) {
-            args <- append(args, list(list(value = offset)))
+            args <- list("numeric_to_datetime", x, list(value = resolution))
+            if (!missing(offset)) {
+                args <- append(args, list(list(value = offset)))
+            }
+
+            return(do.call(zfuncExpr, args))
+        } else if (is.Text(x) | is.Categorical(x)) {
+            return(zfuncExpr("parse_datetime", x, list(value = format)))
         }
 
-        return(do.call(zfuncExpr, args))
-    } else if (is.Text(x) | is.Categorical(x)) {
-        return(zfuncExpr("parse_datetime", x, list(value = format)))
+        halt("Can't derive Datetime variables from ", dQuote(type(x)), " variables.")
     }
-
-    halt("Can't derive Datetime variables from ", dQuote(type(x)), " variables.")
-})
+)
 
 #' @rdname variable-as-methods
 #' @export
-as.double.CrunchVariable <- function (x, ...) as.Numeric(x)
+as.double.CrunchVariable <- function(x, ...) as.Numeric(x)
 
 #' @rdname variable-as-methods
 #' @export
-as.character.CrunchVariable <- function (x, ...) as.Text(x)
+as.character.CrunchVariable <- function(x, ...) as.Text(x)

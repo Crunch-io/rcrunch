@@ -14,7 +14,7 @@
 #' the remote server, rather than pulling the entire dataset into local
 #' memory.
 #'
-#' If you call `as.data.frame` on a `CrunchDataset` with `force = TRUE`, you
+#' If you call `as.data.frame()` on a `CrunchDataset` with `force = TRUE`, you
 #' will instead get a true `data.frame`. You can also get this `data.frame` by
 #' calling `as.data.frame` on a `CrunchDataFrame` (effectively calling
 #' `as.data.frame` on the dataset twice)
@@ -45,7 +45,7 @@
 #'  Crunch Dataset order will be used.
 #' @param categorical.mode what mode should categoricals be pulled as? One of
 #' factor, numeric, id (default: factor)
-#' @param include.hidden logical: should hidden variables be included? (default: `FALSE`)
+#' @param include.hidden logical: should hidden variables be included? (default: `TRUE`)
 #' @param ... additional arguments passed to `as.data.frame` (default method).
 #' @return When called on a `CrunchDataset`, the method returns an object of
 #' class `CrunchDataFrame` unless `force = TRUE`, in which case the return is a
@@ -56,17 +56,19 @@ NULL
 
 #' @rdname dataset-to-R
 #' @export
-as.data.frame.CrunchDataset <- function (x,
-                                         row.names = NULL,
-                                         optional = FALSE,
-                                         force = FALSE,
-                                         categorical.mode = "factor",
-                                         include.hidden = FALSE,
-                                         row.order = NULL,
-                                         ...) {
-    out <- CrunchDataFrame(x, row.order = row.order,
+as.data.frame.CrunchDataset <- function(x,
+                                        row.names = NULL,
+                                        optional = FALSE,
+                                        force = FALSE,
+                                        categorical.mode = "factor",
+                                        row.order = NULL,
+                                        include.hidden = TRUE,
+                                        ...) {
+    out <- CrunchDataFrame(x,
+        row.order = row.order,
         categorical.mode = categorical.mode,
-        include.hidden = include.hidden)
+        include.hidden = include.hidden
+    )
     if (force) {
         out <- as.data.frame(out)
     }
@@ -76,21 +78,22 @@ as.data.frame.CrunchDataset <- function (x,
 #' @rdname dataset-to-R
 #' @importFrom utils read.csv
 #' @export
-as.data.frame.CrunchDataFrame <- function (x,
-                                           row.names = NULL,
-                                           optional = FALSE,
-                                           ...) {
+as.data.frame.CrunchDataFrame <- function(x,
+                                          row.names = NULL,
+                                          optional = FALSE,
+                                          include.hidden = attr(x, "include.hidden"),
+                                          ...) {
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     on.exit(unlink(tmp))
-    write.csv(ds, tmp, categorical = "id")
+    write.csv(ds, tmp, categorical = "id", include.hidden = include.hidden)
     # TODO: use variableMetadata to provide all `colClasses`?
     # meta <- variableMetadata(ds)
     ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
     return(csvToDataFrame(ds_out, x))
 }
 
-csvToDataFrame <- function (csv_df, crdf) {
+csvToDataFrame <- function(csv_df, crdf) {
     ds <- attr(crdf, "crunchDataset")
     mode <- attr(crdf, "mode")
     ## Use `variableMetadata` to avoid a GET on each variable entity for
@@ -102,16 +105,16 @@ csvToDataFrame <- function (csv_df, crdf) {
     ## Iterate over the names of crdf to preserve the desired order.
     ## Nest individual columns in a list and then unlist all because array
     ## variables can return multiple columns
-    out <- unlist(lapply(names(crdf), function (a) {
+    out <- unlist(lapply(names(crdf), function(a) {
         v <- ds[[a]]
         if (is.null(v)) {
             ## Not in the dataset, so it exists only in the CRDF. Get it there.
-            return(structure(list(crdf[[a]]), .Names=a))
+            return(structure(list(crdf[[a]]), .Names = a))
         } else if (is.Array(v)) {
             ## Find the subvar columns in the csv_df and parse them as categorical
             cp <- columnParser("categorical")
             sub_a <- aliases(subvariables(v))
-            return(structure(lapply(csv_df[sub_a], cp, v, mode), .Names=sub_a))
+            return(structure(lapply(csv_df[sub_a], cp, v, mode), .Names = sub_a))
         } else if (is.Numeric(v)) {
             # When data is downloaded using write.csv it includes the name of
             # the No Data category instead of a missing value, and this is read
@@ -122,14 +125,14 @@ csvToDataFrame <- function (csv_df, crdf) {
             # 2.7). as.numeric issues a warning when coercion creates NAs, and
             # because we expect that, we suppress the warning.
             df_vect <- suppressWarnings(as.numeric(csv_df[[a]]))
-            return(structure(list(df_vect), .Names=a))
+            return(structure(list(df_vect), .Names = a))
         } else {
             cp <- columnParser(type(v))
-            return(structure(list(cp(csv_df[[a]], v, mode)), .Names=a))
+            return(structure(list(cp(csv_df[[a]], v, mode)), .Names = a))
         }
-    }), recursive=FALSE)
+    }), recursive = FALSE)
     ## Wrap that list of columns in a data.frame structure
-    return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
+    return(structure(out, class = "data.frame", row.names = c(NA, -nrow(ds))))
 }
 
 #' as.data.frame method for catalog objects
@@ -167,39 +170,49 @@ csvToDataFrame <- function (csv_df, crdf) {
 #'
 #' @name catalog-dataframes
 #' @export
-as.data.frame.VariableCatalog <- function (x,
-                                           row.names = NULL,
-                                           optional = FALSE,
-                                           keys = c("alias", "name", "type"),
-                                           ...) {
+as.data.frame.VariableCatalog <- function(x,
+                                          row.names = NULL,
+                                          optional = FALSE,
+                                          keys = c("alias", "name", "type"),
+                                          ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 
 #' @rdname catalog-dataframes
 #' @export
-as.data.frame.ShojiCatalog <- function (x,
-                                        row.names = NULL,
-                                        optional = FALSE,
-                                        ...) {
+as.data.frame.ShojiCatalog <- function(x,
+                                       row.names = NULL,
+                                       optional = FALSE,
+                                       ...) {
     catalogToDataFrame(x, row.names = row.names, ...)
 }
 
 #' @rdname catalog-dataframes
 #' @export
-as.data.frame.BatchCatalog <- function (x,
+as.data.frame.BatchCatalog <- function(x,
+                                       row.names = NULL,
+                                       optional = FALSE,
+                                       keys = c("id", "status"),
+                                       ...) {
+    catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
+}
+
+#' @rdname catalog-dataframes
+#' @export
+as.data.frame.FilterCatalog <- function(x,
                                         row.names = NULL,
                                         optional = FALSE,
-                                        keys = c("id", "status"),
+                                        keys = c("name", "id", "is_public"),
                                         ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 
 #' @rdname catalog-dataframes
 #' @export
-as.data.frame.FilterCatalog <- function (x,
+as.data.frame.ProjectCatalog <- function(x,
                                          row.names = NULL,
                                          optional = FALSE,
-                                         keys = c("name", "id", "is_public"),
+                                         keys = c("name", "id", "description"),
                                          ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }

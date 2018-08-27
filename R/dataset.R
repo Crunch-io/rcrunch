@@ -1,4 +1,4 @@
-init.CrunchDataset <- function (.Object, ...) {
+init.CrunchDataset <- function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object@variables <- getDatasetVariables(.Object)
     activeFilter(.Object) <- NULL
@@ -6,16 +6,16 @@ init.CrunchDataset <- function (.Object, ...) {
 }
 setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 
-getDatasetVariables <- function (x) {
+getDatasetVariables <- function(x) {
     varcat_url <- variableCatalogURL(x)
     ## Add query params
-    return(VariableCatalog(crGET(varcat_url, query=list(relative="on"))))
+    return(VariableCatalog(crGET(varcat_url, query = list(relative = "on"))))
 }
 
-getNrow <- function (dataset) {
+getNrow <- function(dataset) {
     u <- summaryURL(dataset)
     f <- zcl(activeFilter(dataset))
-    q <- crGET(u, query=list(filter=toJSON(f)))
+    q <- crGET(u, query = list(filter = toJSON(f)))
     nrows <- as.integer(round(q$unweighted[["filtered"]]))
     return(nrows)
 }
@@ -25,7 +25,7 @@ getNrow <- function (dataset) {
 #' @param x an object
 #' @return logical
 #' @export
-is.dataset <- function (x) inherits(x, "CrunchDataset")
+is.dataset <- function(x) inherits(x, "CrunchDataset")
 
 #' Name, alias, and description for Crunch objects
 #'
@@ -43,48 +43,52 @@ NULL
 
 #' @rdname describe
 #' @export
-setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
+setMethod("name", "CrunchDataset", function(x) tuple(x)$name)
 #' @rdname describe
 #' @export
-setMethod("name<-", "CrunchDataset", function (x, value) {
+setMethod("name<-", "CrunchDataset", function(x, value) {
     invisible(setTupleSlot(x, "name", validateNewName(value)))
 })
 #' @rdname describe
 #' @export
-setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
+setMethod("description", "CrunchDataset", function(x) tuple(x)$description)
 #' @rdname describe
 #' @export
-setMethod("description<-", "CrunchDataset", function (x, value) {
+setMethod("description<-", "CrunchDataset", function(x, value) {
     setTupleSlot(x, "description", value)
 })
 #' @rdname describe
 #' @export
-setMethod("startDate", "CrunchDataset",
-    function (x) trimISODate(tuple(x)$start_date))
+setMethod(
+    "startDate", "CrunchDataset",
+    function(x) trimISODate(tuple(x)$start_date)
+)
 #' @rdname describe
 #' @export
-setMethod("startDate<-", "CrunchDataset", function (x, value) {
+setMethod("startDate<-", "CrunchDataset", function(x, value) {
     setTupleSlot(x, "start_date", value)
 })
 #' @rdname describe
 #' @export
-setMethod("endDate", "CrunchDataset",
-    function (x) trimISODate(tuple(x)$end_date))
+setMethod(
+    "endDate", "CrunchDataset",
+    function(x) trimISODate(tuple(x)$end_date)
+)
 #' @rdname describe
 #' @export
-setMethod("endDate<-", "CrunchDataset", function (x, value) {
+setMethod("endDate<-", "CrunchDataset", function(x, value) {
     setTupleSlot(x, "end_date", value)
 })
 #' @rdname describe
 #' @export
-setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
+setMethod("id", "CrunchDataset", function(x) tuple(x)$id)
 
 #' @rdname describe
 #' @export
-setMethod("notes", "CrunchDataset", function (x) x@body$notes)
+setMethod("notes", "CrunchDataset", function(x) x@body$notes)
 #' @rdname describe
 #' @export
-setMethod("notes<-", "CrunchDataset", function (x, value) {
+setMethod("notes<-", "CrunchDataset", function(x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
 
@@ -107,31 +111,31 @@ NULL
 
 #' @rdname population
 #' @export
-setMethod("popSize", "CrunchDataset", function (x) {
+setMethod("popSize", "CrunchDataset", function(x) {
     return(settings(x)$population$size)
 })
 
 #' @rdname population
 #' @export
-setMethod("popSize<-", "CrunchDataset", function (x, value) {
+setMethod("popSize<-", "CrunchDataset", function(x, value) {
     setPopulation(x, size = value)
 })
 
 #' @rdname population
 #' @export
-setMethod("popMagnitude", "CrunchDataset", function (x) {
+setMethod("popMagnitude", "CrunchDataset", function(x) {
     return(settings(x)$population$magnitude)
 })
 
 #' @rdname population
 #' @export
-setMethod("popMagnitude<-", "CrunchDataset", function (x, value) {
-   setPopulation(x, magnitude = value)
+setMethod("popMagnitude<-", "CrunchDataset", function(x, value) {
+    setPopulation(x, magnitude = value)
 })
 
 #' @rdname population
 #' @export
-setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
+setMethod("setPopulation", "CrunchDataset", function(x, size, magnitude) {
     # Population and magnitude can be an integer, NULL or missing. Moreover if
     # a dataset doesn't have a population both population size and magnitude need
     # to be sent together. The logic for setting magnitude is:
@@ -160,8 +164,10 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
     }
 
     if (is.null(magnitude)) {
-        halt("Magnitude cannot be set to `NULL`. Did you mean to remove ",
-             "population size with `popSize(x) <- NULL`?")
+        halt(
+            "Magnitude cannot be set to `NULL`. Did you mean to remove ",
+            "population size with `popSize(x) <- NULL`?"
+        )
     }
     if (!(magnitude %in% c(3, 6, 9))) {
         halt("Magnitude must be either 3, 6, or 9")
@@ -190,7 +196,7 @@ NULL
 
 #' @rdname pk
 #' @export
-setMethod("pk", "CrunchDataset", function (x)  {
+setMethod("pk", "CrunchDataset", function(x) {
     pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
     if (length(pk)) {
         return(x[[pk[[1]]]])
@@ -200,19 +206,19 @@ setMethod("pk", "CrunchDataset", function (x)  {
 })
 #' @rdname pk
 #' @export
-setMethod("pk<-", "CrunchDataset", function (x, value) {
+setMethod("pk<-", "CrunchDataset", function(x, value) {
     if (is.null(value)) {
         crDELETE(shojiURL(x, "fragments", "pk"))
     } else {
-        payload <- toJSON(list(pk=I(self(value))))
-        crPOST(shojiURL(x, "fragments", "pk"), body=payload)
+        payload <- toJSON(list(pk = I(self(value))))
+        crPOST(shojiURL(x, "fragments", "pk"), body = payload)
     }
 
     invisible(x)
 })
 
 
-trimISODate <- function (x) {
+trimISODate <- function(x) {
     ## Drop time from datestring if it's only a date
     if (is.character(x) && nchar(x) > 10 && endsWith(x, "T00:00:00+00:00")) {
         x <- substr(x, 1, 10)
@@ -220,7 +226,7 @@ trimISODate <- function (x) {
     return(x)
 }
 
-as.dataset <- function (x, tuple=DatasetTuple()) {
+as.dataset <- function(x, tuple = DatasetTuple()) {
     out <- CrunchDataset(x)
     tuple(out) <- tuple
     return(out)
@@ -238,14 +244,16 @@ NULL
 
 #' @rdname dim-dataset
 #' @export
-setMethod("dim", "CrunchDataset",
-    function (x) c(getNrow(x), ncol(x)))
+setMethod(
+    "dim", "CrunchDataset",
+    function(x) c(getNrow(x), ncol(x))
+)
 
 #' @rdname dim-dataset
 #' @export
-setMethod("ncol", "CrunchDataset", function (x) length(variables(x)))
+setMethod("ncol", "CrunchDataset", function(x) length(variables(x)))
 
-namekey <- function (x=NULL) {
+namekey <- function(x = NULL) {
     if (is.variable(x)) {
         return(match.arg(getOption("crunch.namekey.array"), c("alias", "name")))
     } else if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
@@ -257,12 +265,12 @@ namekey <- function (x=NULL) {
 
 #' @rdname describe-catalog
 #' @export
-setMethod("names", "CrunchDataset", function (x) {
+setMethod("names", "CrunchDataset", function(x) {
     getIndexSlot(variables(x), namekey(x))
 })
 
-setMethod("tuple", "CrunchDataset", function (x) x@tuple)
-setMethod("tuple<-", "CrunchDataset", function (x, value) {
+setMethod("tuple", "CrunchDataset", function(x) x@tuple)
+setMethod("tuple<-", "CrunchDataset", function(x, value) {
     x@tuple <- value
     return(x)
 })
@@ -285,7 +293,7 @@ NULL
 
 #' @rdname refresh
 #' @export
-setMethod("refresh", "CrunchDataset", function (x) {
+setMethod("refresh", "CrunchDataset", function(x) {
     url <- self(x)
     dropCache(url)
     dropOnly(shojiURL(x, "catalogs", "parent"))
@@ -296,8 +304,10 @@ setMethod("refresh", "CrunchDataset", function (x) {
     ## So that they test correctly, prune entity body attributes from the tuple
     old_tuple <- tuple(x)@body
     new_tuple <- tuple(out)@body
-    tuple(out)@body <- modifyList(old_tuple,
-        new_tuple[intersect(names(new_tuple), names(old_tuple))])
+    tuple(out)@body <- modifyList(
+        old_tuple,
+        new_tuple[intersect(names(new_tuple), names(old_tuple))]
+    )
 
     ## Keep settings in sync
     duplicates(allVariables(out)) <- duplicates(allVariables(x))
@@ -331,36 +341,25 @@ NULL
 
 #' @rdname delete
 #' @export
-setMethod("delete", "CrunchDataset",
-    function (x, ...) {
+setMethod(
+    "delete", "CrunchDataset",
+    function(x, ...) {
         out <- delete(tuple(x), ...)
         invisible(out)
-    })
+    }
+)
 
 #' @export
-as.list.CrunchDataset <- function (x, ...) {
-    lapply(seq_along(variables(x)), function (i) x[[i]])
+as.list.CrunchDataset <- function(x, ...) {
+    lapply(seq_along(variables(x)), function(i) x[[i]])
 }
 
-#' See the appended batches of this dataset
-#' @param x a `CrunchDataset`
-#' @return a `BatchCatalog`
-#' @export
-batches <- function (x) BatchCatalog(crGET(shojiURL(x, "catalogs", "batches")))
-
-joins <- function (x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
-
-setDatasetVariables <- function (x, value) {
-    v <- urls(value)
-    x@variables[v] <- value
-    ordering(x@variables) <- ordering(value)
-    return(x)
-}
+joins <- function(x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
 
 #' @rdname dataset-reference
-setMethod("datasetReference", "CrunchDataset", function (x) self(x))
+setMethod("datasetReference", "CrunchDataset", function(x) self(x))
 
-variableCatalogURL <- function (dataset) {
+variableCatalogURL <- function(dataset) {
     ## Get the variable catalog URL that corresponds to an object
     if (class(dataset) == "VariableCatalog") return(self(dataset))
     if (!is.dataset(dataset)) {
@@ -369,9 +368,9 @@ variableCatalogURL <- function (dataset) {
     return(shojiURL(dataset, "catalogs", "variables"))
 }
 
-summaryURL <- function (x) shojiURL(x, "views", "summary")
+summaryURL <- function(x) shojiURL(x, "views", "summary")
 
-cubeURL <- function (x) {
+cubeURL <- function(x) {
     if (is.dataset(x)) {
         return(shojiURL(x, "views", "cube"))
     } else {
@@ -380,47 +379,16 @@ cubeURL <- function (x) {
     }
 }
 
-#' Access a Dataset's Variables Catalog
-#'
-#' Datasets contain collections of variables. For a few purposes, such as
-#' editing variables' metadata, it is helpful to access these variable catalogs
-#' more directly.
-#'
-#' `variables` gives just the active variables in the dataset, while
-#' `allVariables` returns all variables, including hidden variables.
-#' @param x a Dataset
-#' @param value For the setters, a VariableCatalog to assign.
-#' @return Getters return VariableCatalog; setters return `x` duly
-#' modified.
-#' @name dataset-variables
-#' @aliases dataset-variables variables variables<- allVariables allVariables<-
-NULL
+setMethod("hidden", "CrunchDataset", function(x) hidden(allVariables(x)))
 
-#' @rdname dataset-variables
-#' @export
-setMethod("variables", "CrunchDataset", function (x) active(allVariables(x)))
-#' @rdname dataset-variables
-#' @export
-setMethod("variables<-", c("CrunchDataset", "VariableCatalog"),
-    setDatasetVariables)
-#' @rdname dataset-variables
-#' @export
-setMethod("allVariables", "CrunchDataset", function (x) x@variables)
-#' @rdname dataset-variables
-#' @export
-setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
-    setDatasetVariables)
-
-setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
-
-setMethod("APIToWebURL", "ANY", function (x) {
+setMethod("APIToWebURL", "ANY", function(x) {
     halt("Web URL is not available for objects of class ", class(x))
 })
-setMethod("APIToWebURL", "CrunchDataset", function (x) {
+setMethod("APIToWebURL", "CrunchDataset", function(x) {
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
 })
 
-webToAPIURL <- function (url) {
+webToAPIURL <- function(url) {
     id <- sub("^https.*?/dataset/([0-9a-f]+)/?.*$", "\\1", url)
     if (identical(id, url)) {
         halt("Not a valid web app URL")
@@ -448,21 +416,21 @@ webApp <- function(x) browseURL(APIToWebURL(x))
 #' @param x CrunchDataset
 #' @return an environment in which named objects are (promises that return)
 #' CrunchVariables.
-setMethod("as.environment", "CrunchDataset", function (x) {
+setMethod("as.environment", "CrunchDataset", function(x) {
     out <- new.env()
     out$.crunchDataset <- x
     with(out, {
         ## Note the difference from as.data.frame: not as.vector here
         for (a in aliases(allVariables(x))) {
-            eval(substitute(delayedAssign(v, .crunchDataset[[v]]), list(v=a)))
+            eval(substitute(delayedAssign(v, .crunchDataset[[v]]), list(v = a)))
         }
     })
     return(out)
 })
 
-.releaseDataset <- function (dataset) {
+.releaseDataset <- function(dataset) {
     release_url <- absoluteURL("release/", self(dataset))
-    crPOST(release_url, drop=dropCache(self(dataset)))
+    crPOST(release_url, drop = dropCache(self(dataset)))
 }
 
 #' Get and set the owner of a dataset
@@ -478,11 +446,11 @@ NULL
 
 #' @rdname dataset-owner
 #' @export
-setMethod("owner", "CrunchDataset", function (x) x@body$owner) ## Or can get from catalog
+setMethod("owner", "CrunchDataset", function(x) x@body$owner) ## Or can get from catalog
 
 #' @rdname dataset-owner
 #' @export
-setMethod("owner<-", "CrunchDataset", function (x, value) {
+setMethod("owner<-", "CrunchDataset", function(x, value) {
     if (!is.character(value)) {
         ## Assume we have a User or Project. Get self()
         ## Will error if self isn't defined, and if a different entity type is
@@ -534,41 +502,41 @@ NULL
 
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.archived", "CrunchDataset", function (x) tuple(x)$archived)
+setMethod("is.archived", "CrunchDataset", function(x) tuple(x)$archived)
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.draft", "CrunchDataset", function (x) !is.published(x))
+setMethod("is.draft", "CrunchDataset", function(x) !is.published(x))
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.published", "CrunchDataset", function (x) tuple(x)$is_published %||% TRUE)
+setMethod("is.published", "CrunchDataset", function(x) tuple(x)$is_published %||% TRUE)
 
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.archived<-", c("CrunchDataset", "logical"), function (x, value) {
+setMethod("is.archived<-", c("CrunchDataset", "logical"), function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
     setTupleSlot(x, "archived", value)
 })
 #' @rdname archive-and-publish
 #' @export
-archive <- function (x) {
+archive <- function(x) {
     is.archived(x) <- TRUE
     return(x)
 }
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.draft<-", c("CrunchDataset", "logical"), function (x, value) {
+setMethod("is.draft<-", c("CrunchDataset", "logical"), function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
     setTupleSlot(x, "is_published", !value)
 })
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.published<-", c("CrunchDataset", "logical"), function (x, value) {
+setMethod("is.published<-", c("CrunchDataset", "logical"), function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
     setTupleSlot(x, "is_published", value)
 })
 #' @rdname archive-and-publish
 #' @export
-publish <- function (x) {
+publish <- function(x) {
     is.published(x) <- TRUE
     return(x)
 }
@@ -595,14 +563,14 @@ publish <- function (x) {
 #' settings(ds)$weight <- ds$myWeightVariable
 #' }
 #' @export
-settings <- function (x) {
+settings <- function(x) {
     stopifnot(is.dataset(x))
     return(ShojiEntity(crGET(shojiURL(x, "fragments", "settings"))))
 }
 
 #' @rdname settings
 #' @export
-"settings<-" <- function (x, value) {
+"settings<-" <- function(x, value) {
     stopifnot(is.dataset(x))
     updateEntity(settings(x), value)
     return(x)
@@ -624,7 +592,7 @@ settings <- function (x) {
 #' dashboard(ds) <- "https://shiny.crunch.io/example/"
 #' }
 #' @export
-dashboard <- function (x) {
+dashboard <- function(x) {
     stopifnot(is.dataset(x))
     app_settings <- x@body[["app_settings"]] %||% list()
     whaam <- app_settings[["whaam"]] %||% list()
@@ -633,8 +601,8 @@ dashboard <- function (x) {
 
 #' @rdname dashboard
 #' @export
-setDashboardURL <- function (x, value) {
-    setEntitySlot(x, "app_settings", list(whaam=list(dashboardUrl=value)))
+setDashboardURL <- function(x, value) {
+    setEntitySlot(x, "app_settings", list(whaam = list(dashboardUrl = value)))
 }
 
 #' @rdname dashboard

@@ -1,0 +1,70 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/analyses/3f2e2e6b00f748b7a966e5ba7def779f/",
+    "description": "Data to build a given analysis",
+    "body": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "each": "https://app.crunch.io/api/datasets/1/variables/4c51593ab88e4c5e97a99c87e53784d0/"
+                },
+                {
+                    "function": "as_selected",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/1/variables/4c51593ab88e4c5e97a99c87e53784d0/"
+                        }
+                    ]
+                }
+            ],
+            "weight": null
+        },
+        "display_settings": {
+            "percentageDirection": {
+                "value": "colPct"
+            },
+            "showEmpty": {
+                "value": false
+            },
+            "showMean": {
+                "value": true
+            },
+            "vizType": {
+                "value": "table"
+            },
+            "countsOrPercents": {
+                "value": "percent"
+            },
+            "decimalPlaces": {
+                "value": 1
+            },
+            "populationMagnitude": {
+                "value": 3
+            },
+            "showSignif": {
+                "value": true
+            },
+            "currentTab": {
+                "value": 0
+            },
+            "uiView": {
+                "value": "app.datasets.browse"
+            }
+        },
+        "query_environment": {
+            "filter": [
+
+            ],
+            "weight": null
+        },
+        "id": "3f2e2e6b00f748b7a966e5ba7def779f"
+    }
+}

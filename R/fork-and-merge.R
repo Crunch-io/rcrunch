@@ -1,4 +1,4 @@
-forks <- function (dataset) {
+forks <- function(dataset) {
     stopifnot(is.dataset(dataset))
     return(ForkCatalog(crGET(shojiURL(dataset, "catalogs", "forks"))))
 }
@@ -27,15 +27,16 @@ forks <- function (dataset) {
 #' @return The new fork, a `CrunchDataset`.
 #' @seealso [mergeFork()]
 #' @export
-forkDataset <- function (dataset, name=defaultForkName(dataset), draft=FALSE, ...) {
+forkDataset <- function(dataset, name = defaultForkName(dataset), draft = FALSE, ...) {
     ## TODO: add owner field, default to self(me())
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
-        body=toJSON(wrapEntity(name=name, is_published=!draft, ...)))
+        body = toJSON(wrapEntity(name = name, is_published = !draft, ...))
+    )
     dropOnly(sessionURL("datasets"))
     invisible(loadDatasetFromURL(fork_url))
 }
 
-defaultForkName <- function (dataset) {
+defaultForkName <- function(dataset) {
     nforks <- length(forks(dataset))
     prefix <- ifelse(nforks, paste0("Fork #", nforks + 1, " of"), "Fork of")
     return(paste(prefix, name(dataset)))
@@ -79,15 +80,19 @@ defaultForkName <- function (dataset) {
 #' # Now the changes you did to fork are also on ds
 #' }
 #' @export
-mergeFork <- function (dataset, fork, autorollback=TRUE, force=FALSE) {
-    prompt <- paste("Force merge discards any additions or edits to the target",
+mergeFork <- function(dataset, fork, autorollback = TRUE, force = FALSE) {
+    prompt <- paste(
+        "Force merge discards any additions or edits to the target",
         "dataset that occurred after the point the fork was created. It cannot",
-        "be reverted or otherwise undone. Are you sure you want to continue?")
+        "be reverted or otherwise undone. Are you sure you want to continue?"
+    )
     if (force && !askForPermission(prompt)) {
         halt("Must confirm force merge")
     }
-    payload <- wrapEntity(dataset=self(fork), autorollback=autorollback,
-        force=force)
-    m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body=toJSON(payload))
+    payload <- wrapEntity(
+        dataset = self(fork), autorollback = autorollback,
+        force = force
+    )
+    m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body = toJSON(payload))
     return(refresh(dataset))
 }

@@ -18,7 +18,7 @@
 NULL
 
 
-.addVariableSetter <- function (x, i, value) {
+.addVariableSetter <- function(x, i, value) {
     if (i %in% names(x)) {
         ## We're not adding, we're updating.
         return(.updateValues(x, i, value))
@@ -30,13 +30,13 @@ NULL
             value$name <- value$name %||% i
         } else {
             ## Create a VarDef and use `i` as name and alias
-            value <- VariableDefinition(value, name=i, alias=i)
+            value <- VariableDefinition(value, name = i, alias = i)
         }
         addVariables(x, value)
     }
 }
 
-.updateValues <- function (x, i, value, filter=NULL) {
+.updateValues <- function(x, i, value, filter = NULL) {
     if (length(i) != 1) {
         halt("Can only update one variable at a time (for the moment)")
     }
@@ -49,10 +49,12 @@ NULL
     return(x)
 }
 
-.updateVariableMetadata <- function (x, i, value) {
+.updateVariableMetadata <- function(x, i, value) {
     ## Confirm that x[[i]] has the same URL as value
-    v <- Filter(function (a) a[[namekey(x)]] == i,
-        index(allVariables(x)))
+    v <- Filter(
+        function(a) a[[namekey(x)]] == i,
+        index(allVariables(x))
+    )
     if (length(v) == 0) {
         ## We may have a new variable, and it's not
         ## yet in our variable catalog. Let's check.
@@ -74,96 +76,120 @@ NULL
 
 #' @rdname dataset-update
 #' @export
-setMethod("[[<-",
+setMethod(
+    "[[<-",
     c("CrunchDataset", "character", "missing", "CrunchVariable"),
-    .updateVariableMetadata)
+    .updateVariableMetadata
+)
 #' @rdname dataset-update
 #' @export
-setMethod("[[<-",
+setMethod(
+    "[[<-",
     c("CrunchDataset", "ANY", "missing", "CrunchVariable"),
-    function (x, i, value) .updateVariableMetadata(x, names(x)[i], value))
+    function(x, i, value) .updateVariableMetadata(x, names(x)[i], value)
+)
 #' @rdname dataset-update
 #' @export
-setMethod("[[<-",
+setMethod(
+    "[[<-",
     c("CrunchDataset", "character", "missing", "ANY"),
-    .addVariableSetter)
+    .addVariableSetter
+)
 #' @rdname dataset-update
 #' @export
-setMethod("[[<-",
+setMethod(
+    "[[<-",
     c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"),
-    function (x, i, value) {
+    function(x, i, value) {
         halt("Cannot currently derive a logical variable")
-    })
+    }
+)
 #' @rdname dataset-update
 #' @export
-setMethod("[[<-",
+setMethod(
+    "[[<-",
     c("CrunchDataset", "ANY"),
-    function (x, i, value) {
+    function(x, i, value) {
         halt("Only character (name) indexing supported for [[<-")
-    })
+    }
+)
 #' @rdname dataset-update
 #' @export
-setMethod("[[<-",
+setMethod(
+    "[[<-",
     c("CrunchDataset", "character", "missing", "NULL"),
-    function (x, i, value) {
+    function(x, i, value) {
         allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
         if (!(i %in% allnames)) {
             message(dQuote(i), " is not a variable; nothing to delete by assigning NULL")
             return(x)
         }
         return(deleteVariables(x, i))
-    })
+    }
+)
 #' @rdname dataset-update
 #' @export
-setMethod("[[<-",
+setMethod(
+    "[[<-",
     c("CrunchDataset", "ANY", "missing", "NULL"),
-    function (x, i, value) deleteVariables(x, names(x)[i]))
+    function(x, i, value) deleteVariables(x, names(x)[i])
+)
 #' @rdname dataset-update
 #' @export
-setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
+setMethod("$<-", c("CrunchDataset"), function(x, name, value) {
     x[[name]] <- value
     return(x)
 })
 
 #' @rdname dataset-update
 #' @export
-setMethod("[[<-",
-          c("CrunchDataset", "character", "missing", "CrunchGeography"),
-          function (x, i, value) {
-              geo(x[[i]]) <- value
-              return(x)
-          })
+setMethod(
+    "[[<-",
+    c("CrunchDataset", "character", "missing", "CrunchGeography"),
+    function(x, i, value) {
+        geo(x[[i]]) <- value
+        return(x)
+    }
+)
 #' @rdname dataset-update
 #' @export
-setMethod("[[<-",
-          c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
-          function (x, i, value) {
-              geo(x[[i]]) <- value
-              return(x)
-          })
+setMethod(
+    "[[<-",
+    c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
+    function(x, i, value) {
+        geo(x[[i]]) <- value
+        return(x)
+    }
+)
 
 #' @rdname dataset-update
 #' @export
-setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
-    function (x, i, j, value) {
+setMethod(
+    "[<-", c("CrunchDataset", "ANY", "missing", "list"),
+    function(x, i, j, value) {
         ## For lapplying over variables to edit metadata
-        stopifnot(length(i) == length(value),
-            all(vapply(value, is.variable, logical(1))))
+        stopifnot(
+            length(i) == length(value),
+            all(vapply(value, is.variable, logical(1)))
+        )
         for (z in seq_along(i)) {
             x[[i[z]]] <- value[[z]]
         }
         return(x)
-    })
+    }
+)
 
 ## TODO: add similar [<-.CrunchDataset, CrunchDataset/VariableCatalog
 
 #' @rdname dataset-update
 #' @export
-setMethod("[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
-     function (x, i, j, value) {
+setMethod(
+    "[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
+    function(x, i, j, value) {
         if (j %in% names(x)) {
-            return(.updateValues(x, j, value, filter=i))
+            return(.updateValues(x, j, value, filter = i))
         } else {
             halt("Cannot add variable to dataset with a row index specified")
         }
-    })
+    }
+)

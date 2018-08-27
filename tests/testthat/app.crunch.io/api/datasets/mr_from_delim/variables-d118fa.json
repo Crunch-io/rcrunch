@@ -9,7 +9,6 @@
         "weights": "https://app.crunch.io/api/datasets/mr_from_delim/variables/weights/",
         "hier": "https://app.crunch.io/api/datasets/mr_from_delim/variables/hier/"
     },
-    "specification": "https://app.crunch.io/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
         "000003/": {

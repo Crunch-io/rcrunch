@@ -33,19 +33,19 @@
 #'     summary(comp)
 #' }
 #' @export
-compareDatasets <- function (A, B) {
+compareDatasets <- function(A, B) {
     varsA <- variableMetadata(A)
     varsB <- variableMetadata(B)
 
     ## Create alias to url maps for lookup below
-    a2uA <- structure(urls(varsA), .Names=aliases(varsA))
-    a2uB <- structure(urls(varsB), .Names=aliases(varsB))
+    a2uA <- structure(urls(varsA), .Names = aliases(varsA))
+    a2uB <- structure(urls(varsB), .Names = aliases(varsB))
 
     ## Do the same but for the flattened metadata, for the subariables
     fvarsA <- flattenVariableMetadata(varsA)
     fvarsB <- flattenVariableMetadata(varsB)
-    a2uFA <- structure(urls(fvarsA), .Names=aliases(fvarsA))
-    a2uFB <- structure(urls(fvarsB), .Names=aliases(fvarsB))
+    a2uFA <- structure(urls(fvarsA), .Names = aliases(fvarsA))
+    a2uFB <- structure(urls(fvarsB), .Names = aliases(fvarsB))
 
     ## Compare.
     comp.vars <- compareVariables(varsA, varsB)
@@ -53,7 +53,7 @@ compareDatasets <- function (A, B) {
     same.type <- comp.vars$type.A == comp.vars$type.B ## is NA if either is NA, i.e. not found
     ## How to address CA vs MR not a problem?
     vars.in.both <- same.type & !is.na(same.type)
-    intersect.vars <- comp.vars[vars.in.both,]
+    intersect.vars <- comp.vars[vars.in.both, ]
 
     has.cats <- has.categories(intersect.vars$type.A)
     ## Grab all array variables because we need to check subvars across arrays
@@ -62,15 +62,18 @@ compareDatasets <- function (A, B) {
         comp.vars$type.B %in% c("categorical_array", "multiple_response")
 
     return(structure(list(
-        variables=comp.vars,
-        categories=sapply(intersect.vars$alias[has.cats],
-            function (x) {
-                compareCategories(Categories(data=varsA[[a2uA[x]]]$categories),
-                    Categories(data=varsB[[a2uB[x]]]$categories))
+        variables = comp.vars,
+        categories = sapply(intersect.vars$alias[has.cats],
+            function(x) {
+                compareCategories(
+                    Categories(data = varsA[[a2uA[x]]]$categories),
+                    Categories(data = varsB[[a2uB[x]]]$categories)
+                )
             },
-            simplify=FALSE),
-        subvariables=sapply(comp.vars$alias[arrays],
-            function (x) {
+            simplify = FALSE
+        ),
+        subvariables = sapply(comp.vars$alias[arrays],
+            function(x) {
                 ## Pull together the union of aliases
                 if (x %in% names(a2uA)) {
                     aa <- aliases(fvarsA[subvariableURLs(varsA[[a2uA[x]]])])
@@ -84,50 +87,60 @@ compareDatasets <- function (A, B) {
                 }
                 allaliases <- c(aa, setdiff(ab, aa))
                 ## Grab the subvariables with aliases that match for the union
-                compareSubvariables(fvarsA[na.omit(a2uFA[allaliases])],
-                    fvarsB[na.omit(a2uFB[allaliases])])
+                compareSubvariables(
+                    fvarsA[na.omit(a2uFA[allaliases])],
+                    fvarsB[na.omit(a2uFB[allaliases])]
+                )
             },
-            simplify=FALSE)
-        ),
-        class="compareDatasets"
+            simplify = FALSE
+        )
+    ),
+    class = "compareDatasets"
     ))
 }
 
-summarizeCompareDatasets <- function (comp) {
+summarizeCompareDatasets <- function(comp) {
     ## summarize the summaries of each
     cats <- lapply(comp$categories, summarizeCompareCategories)
-    ok.cats <- vapply(cats,
-        function (x) length(x$problems$mismatched.ids) == 0,
-        logical(1))
+    ok.cats <- vapply(
+        cats,
+        function(x) length(x$problems$mismatched.ids) == 0,
+        logical(1)
+    )
     subs <- lapply(comp$subvariables, summarizeCompareSubvariables)
     ## Check for array overlap separately: requires comparing against all other
     ## arrays. If any problems found, poke into the summary output.
     overlap <- checkSubvariableParents(comp$subvariables)
     if (length(overlap)) {
-        subs <- modifyList(subs, lapply(overlap, function (x) {
-            list(problems=list(overlap=x))
+        subs <- modifyList(subs, lapply(overlap, function(x) {
+            list(problems = list(overlap = x))
         }))
     }
-    ok.subs <- vapply(subs,
-        function (x) {
+    ok.subs <- vapply(
+        subs,
+        function(x) {
             p <- x$problems
             return(length(p$mismatched.name) == 0 &
-                    length(p$parents$A) <= 1 &
-                    length(p$parents$B) <= 1 &
-                    is.null(p$overlap))
+                length(p$parents$A) <= 1 &
+                length(p$parents$B) <= 1 &
+                is.null(p$overlap))
         },
-        logical(1))
+        logical(1)
+    )
     vars <- summarizeCompareVariables(comp$variables)
-    return(structure(list(cats=cats, ok.cats=ok.cats, subs=subs,
-        ok.subs=ok.subs, vars=vars),
-        class="compareDatasetsSummary"))
+    return(structure(list(
+        cats = cats, ok.cats = ok.cats, subs = subs,
+        ok.subs = ok.subs, vars = vars
+    ),
+    class = "compareDatasetsSummary"
+    ))
 }
 
 #' @export
-summary.compareDatasets <- function (object, ...) summarizeCompareDatasets(object)
+summary.compareDatasets <- function(object, ...) summarizeCompareDatasets(object)
 
 #' @export
-print.compareDatasetsSummary <- function (x, ...) {
+print.compareDatasetsSummary <- function(x, ...) {
     ## Variables
     bad.var.count <- length(x$vars$problems$mismatched.type) +
         length(x$vars$problems$mismatched.name)
@@ -144,7 +157,7 @@ print.compareDatasetsSummary <- function (x, ...) {
         cat("\nMatched variables with categories:", length(x$cats), "\n")
         cat("With issues:", bad.cat.count, "\n\n")
         for (i in names(x$cats[bad.cats])) {
-            cat("$", i, "\n", sep="")
+            cat("$", i, "\n", sep = "")
             print(x$cats[[i]])
             cat("\n")
         }
@@ -157,7 +170,7 @@ print.compareDatasetsSummary <- function (x, ...) {
         cat("\nArray variables:", length(x$subs), "\n")
         cat("With subvariable issues:", bad.sub.count, "\n\n")
         for (i in names(x$subs[bad.subs])) {
-            cat("$", i, "\n", sep="")
+            cat("$", i, "\n", sep = "")
             print(x$subs[[i]])
             cat("\n")
         }

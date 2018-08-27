@@ -45,7 +45,7 @@
 #' @aliases transforms transforms<-
 NULL
 
-getTransforms <- function (x) {
+getTransforms <- function(x) {
     var_entity <- entity(x)
     trans <- var_entity@body$view$transform
     if (is.null(trans) || length(trans) == 0) {
@@ -55,7 +55,7 @@ getTransforms <- function (x) {
     if (is.null(trans$insertions) || length(trans$insertions) == 0) {
         inserts <- NULL
     } else {
-        inserts <- Insertions(data=trans$insertions)
+        inserts <- Insertions(data = trans$insertions)
         # subtype insertions so that Subtotal, Heading, etc. are their rightful
         # selves
         inserts <- subtypeInsertions(inserts)
@@ -68,9 +68,11 @@ getTransforms <- function (x) {
         return(NULL)
     }
 
-    trans_out <- Transforms(insertions = inserts,
-                            categories = NULL,
-                            elements = NULL)
+    trans_out <- Transforms(
+        insertions = inserts,
+        categories = NULL,
+        elements = NULL
+    )
     return(trans_out)
 }
 
@@ -84,27 +86,28 @@ setMethod("transforms", "VariableTuple", getTransforms)
 
 #' @rdname Transforms
 #' @export
-setMethod("transforms<-", c("CrunchVariable", "Transforms"), function (x, value) {
+setMethod("transforms<-", c("CrunchVariable", "Transforms"), function(x, value) {
     # ensure that the value is all insertions, and only insertions
     value$insertions <- lapply(value$insertions, makeInsertion,
-                               var_categories = categories(x))
+        var_categories = categories(x)
+    )
 
     frmt <- wrapEntity("view" = list("transform" = value))
-    crPATCH(self(x), body=toJSON(frmt))
+    crPATCH(self(x), body = toJSON(frmt))
     dropCache(cubeURL(x))
     return(invisible(x))
 })
 
 #' @rdname Transforms
 #' @export
-setMethod("transforms<-", c("CrunchVariable", "NULL"), function (x, value) {
+setMethod("transforms<-", c("CrunchVariable", "NULL"), function(x, value) {
     frmt <- wrapEntity("view" = list("transform" = emptyObject()))
-    crPATCH(self(x), body=toJSON(frmt))
+    crPATCH(self(x), body = toJSON(frmt))
     dropCache(cubeURL(x))
     return(invisible(x))
 })
 
-setValidity("Transforms", function (object) {
+setValidity("Transforms", function(object) {
     one_of_names <- c("insertions", "categories", "elements") %in% names(object)
     if (!any(one_of_names)) {
         val <- paste("Transforms must have at least one of", serialPaste(dQuote(c("insertions", "categories", "elements")), "or"))
@@ -154,7 +157,7 @@ NULL
 
 #' @rdname showTransforms
 #' @export
-setMethod("showTransforms", "CategoricalVariable", function (x) {
+setMethod("showTransforms", "CategoricalVariable", function(x) {
     tab <- table(x)
     tab <- as.array(calcTransforms(tab, transforms(x), categories(x)))
 
@@ -163,6 +166,6 @@ setMethod("showTransforms", "CategoricalVariable", function (x) {
     styles <- transformStyles(transforms(x), categories(x)[!is.na(categories(x))])
 
     out <- prettyPrint2d(tab, row_styles = styles)
-    cat(unlist(out), sep="\n")
+    cat(unlist(out), sep = "\n")
     return(invisible(tab))
 })

@@ -69,8 +69,8 @@ class(pet_feelings)
 #attr(,"package")
 #[1] "crunch"
 
-# Since `pet_feelings` is a CrunchCube, although it has similar properties 
-# and behaviors to arrays, it is not a R array: 
+# Since `pet_feelings` is a CrunchCube, although it has similar properties
+# and behaviors to arrays, it is not a R array:
 is.array(pet_feelings)
 #[1] FALSE
 

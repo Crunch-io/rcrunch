@@ -11,19 +11,23 @@ with_mock_crunch({
     test_that("Test dataset has 2 filters", {
         expect_is(filters(ds), "FilterCatalog")
         expect_length(filters(ds), 2)
-        expect_identical(as.data.frame(filters(ds)),
+        expect_identical(
+            as.data.frame(filters(ds)),
             data.frame(
-                name=c("Occasional Political Interest", "Public filter"),
-                id=c("filter1", "filter2"),
-                is_public=c(FALSE, TRUE),
-                stringsAsFactors=FALSE
-            ))
+                name = c("Occasional Political Interest", "Public filter"),
+                id = c("filter1", "filter2"),
+                is_public = c(FALSE, TRUE),
+                stringsAsFactors = FALSE
+            )
+        )
         expect_prints(filters(ds),
             get_output(data.frame(
-                    name=c("Occasional Political Interest", "Public filter"),
-                    id=c("filter1", "filter2"),
-                    is_public=c(FALSE, TRUE)
-                )), fixed=TRUE)
+                name = c("Occasional Political Interest", "Public filter"),
+                id = c("filter1", "filter2"),
+                is_public = c(FALSE, TRUE)
+            )),
+            fixed = TRUE
+        )
     })
 
     test_that("Empty filter catalog", {
@@ -33,13 +37,21 @@ with_mock_crunch({
     })
 
     test_that("Filter catalog methods", {
-        expect_identical(names(filters(ds)),
-            c("Occasional Political Interest", "Public filter"))
-        expect_identical(urls(filters(ds)),
-            c("https://app.crunch.io/api/datasets/1/filters/filter1/",
-              "https://app.crunch.io/api/datasets/1/filters/filter2/"))
-        expect_identical(names(filters(ds)[c(2, 1)]),
-           c("Public filter", "Occasional Political Interest"))
+        expect_identical(
+            names(filters(ds)),
+            c("Occasional Political Interest", "Public filter")
+        )
+        expect_identical(
+            urls(filters(ds)),
+            c(
+                "https://app.crunch.io/api/datasets/1/filters/filter1/",
+                "https://app.crunch.io/api/datasets/1/filters/filter2/"
+            )
+        )
+        expect_identical(
+            names(filters(ds)[c(2, 1)]),
+            c("Public filter", "Occasional Political Interest")
+        )
     })
 
     f <- filters(ds)[["Occasional Political Interest"]]
@@ -51,9 +63,11 @@ with_mock_crunch({
 
     test_that("Filter entity is.public", {
         expect_false(is.public(f))
-        expect_PATCH(is.public(f) <- TRUE,
+        expect_PATCH(
+            is.public(f) <- TRUE,
             "https://app.crunch.io/api/datasets/1/filters/filter1/",
-            '{"is_public":true}')
+            '{"is_public":true}'
+        )
         expect_no_request(is.public(f) <- FALSE)
     })
 
@@ -63,12 +77,14 @@ with_mock_crunch({
     })
 
     test_that("Create a filter by newFilter", {
-        expect_POST(newFilter("A filter", ds$gender == "Male", catalog = filters(ds)),
-            'https://app.crunch.io/api/datasets/1/filters/',
+        expect_POST(
+            newFilter("A filter", ds$gender == "Male", catalog = filters(ds)),
+            "https://app.crunch.io/api/datasets/1/filters/",
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
-            '{"value":1}]}}')
+            '{"value":1}]}}'
+        )
         with_POST("https://app.crunch.io/api/datasets/1/filters/filter1/", {
             ## Mock the return of that creation
             f <- newFilter("A filter", ds$gender == "Male", catalog = filters(ds))
@@ -78,48 +94,60 @@ with_mock_crunch({
     })
 
     test_that("newFilter without explicitly setting 'catalog'", {
-        expect_POST(newFilter("A filter", ds$gender == "Male", catalog = ds),
-            'https://app.crunch.io/api/datasets/1/filters/',
+        expect_POST(
+            newFilter("A filter", ds$gender == "Male", catalog = ds),
+            "https://app.crunch.io/api/datasets/1/filters/",
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
-            '{"value":1}]}}')
-        expect_POST(newFilter("A filter", ds$gender == "Male"),
-            'https://app.crunch.io/api/datasets/1/filters/',
+            '{"value":1}]}}'
+        )
+        expect_POST(
+            newFilter("A filter", ds$gender == "Male"),
+            "https://app.crunch.io/api/datasets/1/filters/",
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
-            '{"value":1}]}}')
+            '{"value":1}]}}'
+        )
     })
 
     test_that("newFilter on an invalid 'catalog'", {
-        expect_error(newFilter("A filter", ds$gender == "Male", catalog = "Foo!"),
-            "Cannot create a filter entity on an object of class character")
+        expect_error(
+            newFilter("A filter", ds$gender == "Male", catalog = "Foo!"),
+            "Cannot create a filter entity on an object of class character"
+        )
     })
 
     test_that("Create a filter by [[<-", {
-        expect_POST(filters(ds)[["A filter"]] <- ds$gender == "Male",
-            'https://app.crunch.io/api/datasets/1/filters/',
+        expect_POST(
+            filters(ds)[["A filter"]] <- ds$gender == "Male",
+            "https://app.crunch.io/api/datasets/1/filters/",
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
-            '{"value":1}]}}')
+            '{"value":1}]}}'
+        )
     })
 
     test_that("Alter a filter by [[<-", {
-        expect_PATCH(filters(ds)[["Occasional Political Interest"]] <- ds$gender == "Female",
-                    'https://app.crunch.io/api/datasets/1/filters/filter1/',
-                    '{"expression":',
-                    '{"function":"==","args":[',
-                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
-                    '{"value":2}]}}')
+        expect_PATCH(
+            filters(ds)[["Occasional Political Interest"]] <- ds$gender == "Female",
+            "https://app.crunch.io/api/datasets/1/filters/filter1/",
+            '{"expression":',
+            '{"function":"==","args":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+            '{"value":2}]}}'
+        )
     })
 
     test_that("Print method for filter entity (debug)", {
         f <- CrunchFilter(crGET("a-filter/"))
         expect_is(f, "CrunchFilter")
-        expect_prints(f,
-            'starttime %in% c("2016-04-06", "2016-04-15", "2016-04-25", "2016-05-06", "2016-05-13", "2016-05-27", "2016-06-06", "2016-06-14", "2016-06-29") & gender %in% "Male"')
+        expect_prints(
+            f,
+            'starttime %in% c("2016-04-06", "2016-04-15", "2016-04-25", "2016-05-06", "2016-05-13", "2016-05-27", "2016-06-06", "2016-06-14", "2016-06-29") & gender %in% "Male"'
+        )
     })
 })
 
@@ -139,13 +167,19 @@ with_test_authentication({
     test_that("Show methods for filter and filter catalog", {
         expect_prints(filters(ds),
             get_output(data.frame(
-                    name="Test filter",
-                    id=filters(ds)[["Test filter"]]@body$id,
-                    is_public=FALSE
-                )), fixed=TRUE)
-        expect_prints(filters(ds)[["Test filter"]],
-            paste0('Crunch filter ', dQuote("Test filter"),
-                '\nExpression: v4 == "B"'))
+                name = "Test filter",
+                id = filters(ds)[["Test filter"]]@body$id,
+                is_public = FALSE
+            )),
+            fixed = TRUE
+        )
+        expect_prints(
+            filters(ds)[["Test filter"]],
+            paste0(
+                "Crunch filter ", dQuote("Test filter"),
+                '\nExpression: v4 == "B"'
+            )
+        )
     })
 
     test_that("We can make it public/private", {
@@ -165,22 +199,32 @@ with_test_authentication({
     })
 
     test_that("Can update a filter's expression by name", {
-        expect_json_equivalent(zcl(expr(filters(ds)[[1]])),
-            zcl(ds$v4 == "B"))
+        expect_json_equivalent(
+            zcl(expr(filters(ds)[[1]])),
+            zcl(ds$v4 == "B")
+        )
         filters(ds)[["Test filter"]] <- ds$v4 == "C"
-        expect_json_equivalent(zcl(expr(filters(ds)[[1]])),
-            zcl(ds$v4 == "C"))
+        expect_json_equivalent(
+            zcl(expr(filters(ds)[[1]])),
+            zcl(ds$v4 == "C")
+        )
     })
     test_that("Can update a filter's expression by index", {
-        expect_json_equivalent(zcl(expr(filters(ds)[[1]])),
-            zcl(ds$v4 == "C"))
+        expect_json_equivalent(
+            zcl(expr(filters(ds)[[1]])),
+            zcl(ds$v4 == "C")
+        )
         filters(ds)[[1]] <- ds$v4 == "B"
-        expect_json_equivalent(zcl(expr(filters(ds)[[1]])),
-            zcl(ds$v4 == "B"))
+        expect_json_equivalent(
+            zcl(expr(filters(ds)[[1]])),
+            zcl(ds$v4 == "B")
+        )
     })
     test_that("Error handling for [[<-", {
-        expect_error(filters(ds)[[6]] <- ds$v4 == "B",
-            "Subscript out of bounds: 6")
+        expect_error(
+            filters(ds)[[6]] <- ds$v4 == "B",
+            "Subscript out of bounds: 6"
+        )
     })
 
     test_that("We have an applied filters view", {
@@ -208,7 +252,9 @@ with_test_authentication({
 
     test_that("If we set an active filter, cubes will be filtered by it (and not UI filters)", {
         activeFilter(ds) <- ds$v4 == "C"
-        expect_equivalent(as.array(crtabs(~ v4, data=ds)),
-            array(c(0, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+        expect_equivalent(
+            as.array(crtabs(~v4, data = ds)),
+            array(c(0, 10), dim = 2L, dimnames = list(v4 = c("B", "C")))
+        )
     })
 })

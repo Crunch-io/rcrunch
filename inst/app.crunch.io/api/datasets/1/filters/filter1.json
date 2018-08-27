@@ -1,7 +1,6 @@
 {
 	"element": "shoji:entity",
 	"self": "https://app.crunch.io/api/datasets/1/filters/filter1/",
-	"specification": "https://app.crunch.io/api/specifications/filters/",
 	"description": "Detail information for one filter",
 	"body": {
         "is_public": false,

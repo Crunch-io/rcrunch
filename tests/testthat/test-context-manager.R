@@ -2,8 +2,10 @@ context("Context manager")
 
 test_that("Enter and exit are run", {
     a <- NULL
-    tester <- ContextManager(function () a <<- FALSE,
-        function () a <<- TRUE)
+    tester <- ContextManager(
+        function() a <<- FALSE,
+        function() a <<- TRUE
+    )
 
     expect_null(a)
     with(tester, {
@@ -17,8 +19,10 @@ test_that("Enter and exit are run", {
 
 test_that("An error in the code being executed is thrown but exit still runs", {
     a <- NULL
-    tester <- ContextManager(function () a <<- FALSE,
-        function () a <<- TRUE)
+    tester <- ContextManager(
+        function() a <<- FALSE,
+        function() a <<- TRUE
+    )
 
     expect_null(a)
     expect_error(with(tester, {
@@ -29,9 +33,10 @@ test_that("An error in the code being executed is thrown but exit still runs", {
 
 test_that("Custom error handlers", {
     a <- NULL
-    tester <- ContextManager(function () a <<- FALSE,
-        function () a <<- TRUE,
-        error=function (e) halt("Custom error"))
+    tester <- ContextManager(function() a <<- FALSE,
+        function() a <<- TRUE,
+        error = function(e) halt("Custom error")
+    )
 
     expect_null(a)
     expect_error(with(tester, {
@@ -42,11 +47,13 @@ test_that("Custom error handlers", {
 
 test_that("'as' argument for output of enter function", {
     a <- FALSE
-    ctx <- ContextManager(function () return(1:4),
-        function () a <<- TRUE)
+    ctx <- ContextManager(
+        function() return(1:4),
+        function() a <<- TRUE
+    )
 
     expect_false(a)
-    with(ctx, as="b", {
+    with(ctx, as = "b", {
         expect_equivalent(sum(b), 10)
         d <- sum(b)
     })
@@ -56,9 +63,10 @@ test_that("'as' argument for output of enter function", {
 
 test_that("'as' specified in the context manager itself", {
     a <- FALSE
-    ctx <- ContextManager(function () return(1:4),
-        function () a <<- TRUE,
-        as="b")
+    ctx <- ContextManager(function() return(1:4),
+        function() a <<- TRUE,
+        as = "b"
+    )
 
     expect_false(a)
     with(ctx, {
@@ -68,11 +76,13 @@ test_that("'as' specified in the context manager itself", {
 })
 
 test_that("temp.options", {
-    options(crunch.test.option.test="foo")
+    options(crunch.test.option.test = "foo")
     expect_identical(getOption("crunch.test.option.test"), "foo")
     expect_null(getOption("crunch.test.test.test.test"))
-    with(temp.options(crunch.test.option.test="bar",
-                     crunch.test.test.test.test="test"), {
+    with(temp.options(
+        crunch.test.option.test = "bar",
+        crunch.test.test.test.test = "test"
+    ), {
         expect_identical(getOption("crunch.test.option.test"), "bar")
         expect_identical(getOption("crunch.test.test.test.test"), "test")
     })

@@ -16,8 +16,8 @@
 #'
 #' @return an array with transforms calculated and added or applied
 #' @keywords internal
-calcTransforms <- function (array, trans, var_cats,
-                            include = c("subtotals", "headings", "cube_cells", "other_insertions")) {
+calcTransforms <- function(array, trans, var_cats,
+                           include = c("subtotals", "headings", "cube_cells", "other_insertions")) {
     # TODO: other possible Transforms
 
     ### Insertions
@@ -36,7 +36,7 @@ calcTransforms <- function (array, trans, var_cats,
 # this map is a collation of the categories with the insertions that are
 # specified the output is an abstract category object with both `Category`s and
 # `Insertion`s in it, in the order we want.
-mapInsertions <- function (inserts, var_cats, include) {
+mapInsertions <- function(inserts, var_cats, include) {
     # make an empty list to store the insertions in
     new_inserts <- list()
 
@@ -55,13 +55,13 @@ mapInsertions <- function (inserts, var_cats, include) {
     # or headings
     if ("other_insertions" %in% include) {
         nonsubtots <- inserts[!are.Subtotals(inserts) &
-                                  !are.Headings(inserts)]
+            !are.Headings(inserts)]
         new_inserts <- c(new_inserts, nonsubtots)
     }
 
     # make an insertions object that includes only the insertions that were
     # requested in include
-    new_inserts <- Insertions(data=new_inserts)
+    new_inserts <- Insertions(data = new_inserts)
 
     # collate with variable categories to get the order right. This is necessary
     # even if the cube_cells aren't being requested because the insertion order
@@ -82,25 +82,25 @@ mapInsertions <- function (inserts, var_cats, include) {
 # collate insertions and categories together
 # given a set of insertions and categories, collate together into a single set
 # of AbstractCategories which includes both `Category`s and `Insertion`s
-collateCats <- function (inserts, var_cats) {
+collateCats <- function(inserts, var_cats) {
     # setup an empty AbstractCategories object to collate into
     cats_out <- AbstractCategories()
     cats_out@.Data <- var_cats
-    
+
     if (length(var_cats) < 1) {
         halt("Can't collateCats with no categories.")
     }
-    
+
     last_category <- tail(ids(var_cats), 1)
 
     # for each insert, find the position for its anchor, and add the insertion
     # at that position we use a for loop, because as we insert, the positions of
     # categories (which may serve as anchors) will change. We also reverse the
     # list because for insertions that have the same anchor, we want to maintain
-    # the order as it is stored in the API. To do this we insert the last one 
-    # first so that when we insert ones before that they are higher up (closer 
+    # the order as it is stored in the API. To do this we insert the last one
+    # first so that when we insert ones before that they are higher up (closer
     # to the category anchor)
-    # Categoies: A, B, C 
+    # Categoies: A, B, C
     # Insertions: [{name = first, anchor = A}, {name = second, anchor = A}]
     # Desired result: A, first, second, B, C
     # Result if not `rev(inserts)`: A, second, first, B, C
@@ -113,7 +113,7 @@ collateCats <- function (inserts, var_cats) {
 
 # for a single Insertion, and a set of categories (or collated categories and
 # insertions) find the position to insert to
-findInsertPosition <- function (insert, cats, last_category) {
+findInsertPosition <- function(insert, cats, last_category) {
     anchr <- anchor(insert)
     # if the anchor is top, put at the beginning
     if (anchr == "top") {
@@ -143,16 +143,18 @@ findInsertPosition <- function (insert, cats, last_category) {
 #' @return the values given in `vec`, with any insertions specified in
 #' `trans` calculated and inserted
 #' @keywords internal
-calcInsertions <- function (vec, elements, var_cats) {
+calcInsertions <- function(vec, elements, var_cats) {
     # we always calculate insertions at the lowest dimension so warn if there is
     # more than one dimension.
     if (length(dim(vec)) > 1) {
-        halt("Calculating varaible transforms is not implemented for dimensions ",
-             "greater than 1.")
+        halt(
+            "Calculating varaible transforms is not implemented for dimensions ",
+            "greater than 1."
+        )
     }
 
     # make the actual calculations and insertions
-    vec_out <- vapply(elements, function (element) {
+    vec_out <- vapply(elements, function(element) {
         # if element is a category, simply return the value
         if (is.category(element)) {
             return(vec[name(element)])
@@ -184,8 +186,10 @@ calcInsertions <- function (vec, elements, var_cats) {
         # then return NA
         unknown_funcs <- !(element[["function"]] %in% c("subtotal", names(summaryStatInsertions)))
         if (unknown_funcs) {
-            warning("Transform functions other than subtotal are not supported.",
-                    " Applying only subtotals and ignoring ", element[["function"]])
+            warning(
+                "Transform functions other than subtotal are not supported.",
+                " Applying only subtotals and ignoring ", element[["function"]]
+            )
         }
         return(NA)
     }, double(1), USE.NAMES = TRUE)

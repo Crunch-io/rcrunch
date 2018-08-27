@@ -32,7 +32,6 @@
         "summary": "/api/datasets/6045c0/summary/",
         "applied_filters": "/api/datasets/6045c0/filters/applied/"
     },
-    "specification": "/api/specifications/datasets/",
     "description": "Detail for a given dataset",
     "body": {
         "size": {

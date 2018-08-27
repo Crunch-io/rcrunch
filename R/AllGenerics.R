@@ -1,99 +1,108 @@
 #' @export
-setGeneric("values", function (x) standardGeneric("values"))
-setGeneric("values<-", function (x, value) standardGeneric("values<-"))
+setGeneric("values", function(x) standardGeneric("values"))
+setGeneric("values<-", function(x, value) standardGeneric("values<-"))
 
-setGeneric("id", function (x) standardGeneric("id"))
-setGeneric("is.selected", function (x) standardGeneric("is.selected"))
-setGeneric("is.selected<-", function (x, value) standardGeneric("is.selected<-"))
+setGeneric("id", function(x) standardGeneric("id"))
+setGeneric("is.selected", function(x) standardGeneric("is.selected"))
+setGeneric("is.selected<-", function(x, value) standardGeneric("is.selected<-"))
 
-setGeneric("ids", function (x) standardGeneric("ids"))
-setGeneric("ids<-", function (x, value) standardGeneric("ids<-"))
-setGeneric("is.dichotomized", function (x) standardGeneric("is.dichotomized"))
-setGeneric("dichotomize", function (x, i) standardGeneric("dichotomize"))
-setGeneric("undichotomize", function (x) standardGeneric("undichotomize"))
-setGeneric("value", function (x) standardGeneric("value"))
-setGeneric("value<-", function (x, value) standardGeneric("value<-"))
-setGeneric("name", function (x) standardGeneric("name"))
-setGeneric("name<-", function (x, value) standardGeneric("name<-"))
-setGeneric("uniformBasis", function (x) standardGeneric("uniformBasis"))
-setGeneric("uniformBasis<-", function (x, value) standardGeneric("uniformBasis<-"))
-setGeneric("popSize", function (x) standardGeneric("popSize"))
-setGeneric("popMagnitude", function (x) standardGeneric("popMagnitude"))
-setGeneric("popSize<-", function (x, value) standardGeneric("popSize<-"))
-setGeneric("popMagnitude<-", function (x, value) standardGeneric("popMagnitude<-"))
-setGeneric("setPopulation", function (x, size, magnitude) standardGeneric("setPopulation"))
+setGeneric("ids", function(x) standardGeneric("ids"))
+setGeneric("ids<-", function(x, value) standardGeneric("ids<-"))
+setGeneric("is.dichotomized", function(x) standardGeneric("is.dichotomized"))
+setGeneric("dichotomize", function(x, i) standardGeneric("dichotomize"))
+setGeneric("undichotomize", function(x) standardGeneric("undichotomize"))
+setGeneric("value", function(x) standardGeneric("value"))
+setGeneric("value<-", function(x, value) standardGeneric("value<-"))
+setGeneric("name", function(x) standardGeneric("name"))
+setGeneric("name<-", function(x, value) standardGeneric("name<-"))
+setGeneric("uniformBasis", function(x) standardGeneric("uniformBasis"))
+setGeneric("uniformBasis<-", function(x, value) standardGeneric("uniformBasis<-"))
+setGeneric("popSize", function(x) standardGeneric("popSize"))
+setGeneric("popMagnitude", function(x) standardGeneric("popMagnitude"))
+setGeneric("popSize<-", function(x, value) standardGeneric("popSize<-"))
+setGeneric("popMagnitude<-", function(x, value) standardGeneric("popMagnitude<-"))
+setGeneric("setPopulation", function(x, size, magnitude) standardGeneric("setPopulation"))
 
-setGeneric("expr", function (x) standardGeneric("expr"))
-setGeneric("expr<-", function (x, value) standardGeneric("expr<-"),
-    signature="x")
-setGeneric("description", function (x) standardGeneric("description"))
+setGeneric("expr", function(x) standardGeneric("expr"))
+setGeneric("expr<-", function(x, value) standardGeneric("expr<-"),
+    signature = "x"
+)
+setGeneric("description", function(x) standardGeneric("description"))
 setGeneric("description<-",
-    function (x, value) standardGeneric("description<-"), signature="x")
-setGeneric("startDate", function (x) standardGeneric("startDate"))
+    function(x, value) standardGeneric("description<-"),
+    signature = "x"
+)
+setGeneric("startDate", function(x) standardGeneric("startDate"))
 setGeneric("startDate<-",
-function (x, value) standardGeneric("startDate<-"), signature="x")
-setGeneric("endDate", function (x) standardGeneric("endDate"))
+    function(x, value) standardGeneric("startDate<-"),
+    signature = "x"
+)
+setGeneric("endDate", function(x) standardGeneric("endDate"))
 setGeneric("endDate<-",
-    function (x, value) standardGeneric("endDate<-"), signature="x")
+    function(x, value) standardGeneric("endDate<-"),
+    signature = "x"
+)
 setGeneric("alias")
-setGeneric("alias<-", function (x, value) standardGeneric("alias<-"),
-    signature="x")
-setGeneric("aliases", function (x) standardGeneric("aliases"))
-setGeneric("aliases<-", function (x, value) standardGeneric("aliases<-"),
-    signature="x")
-setGeneric("descriptions", function (x) standardGeneric("descriptions"))
+setGeneric("alias<-", function(x, value) standardGeneric("alias<-"),
+    signature = "x"
+)
+setGeneric("aliases", function(x) standardGeneric("aliases"))
+setGeneric("aliases<-", function(x, value) standardGeneric("aliases<-"),
+    signature = "x"
+)
+setGeneric("descriptions", function(x) standardGeneric("descriptions"))
 setGeneric("descriptions<-",
-    function (x, value) standardGeneric("descriptions<-"), signature="x")
-setGeneric("emails", function (x) standardGeneric("emails"))
+    function(x, value) standardGeneric("descriptions<-"),
+    signature = "x"
+)
+setGeneric("emails", function(x) standardGeneric("emails"))
 
 #' Extract the email from a User Entity
 #'
 #' @param x a UserEntity returned from `me()`
 #' @return a character string of the user's email
 #' @rdname user-email
-setGeneric("email", function (x) standardGeneric("email"))
+setGeneric("email", function(x) standardGeneric("email"))
 
-setGeneric("notes", function (x) standardGeneric("notes"))
-setGeneric("notes<-", function (x, value) standardGeneric("notes<-"),
-    signature="x")
-setGeneric("pk", function (x) standardGeneric("pk"))
-setGeneric("pk<-", function (x, value) standardGeneric("pk<-"))
-setGeneric("digits", function (x) standardGeneric("digits"))
-setGeneric("digits<-", function (x, value) standardGeneric("digits<-"))
-setGeneric("transforms", function (x) standardGeneric("transforms"))
-setGeneric("transforms<-", function (x, value) standardGeneric("transforms<-"))
-setGeneric("showTransforms", function (x) standardGeneric("showTransforms"))
-setGeneric("geo", function (x) standardGeneric("geo"))
-setGeneric("geo<-", function (x, value) standardGeneric("geo<-"))
-setGeneric("fetchGeoFile", function (x) standardGeneric("fetchGeoFile"))
-setGeneric("anchor", function (x, ...) standardGeneric("anchor"))
-setGeneric("anchors", function (x) standardGeneric("anchors"))
-setGeneric("anchor<-", function (x, value) standardGeneric("anchor<-"))
-setGeneric("arguments", function (x, ...) standardGeneric("arguments"))
-setGeneric("arguments<-", function (x, value) standardGeneric("arguments<-"))
-setGeneric("func", function (x) standardGeneric("func"))
-setGeneric("funcs", function (x) standardGeneric("funcs"))
-setGeneric("subtotals", function (x, ...) standardGeneric("subtotals"))
-setGeneric("subtotals<-", function (x, value) standardGeneric("subtotals<-"))
-setGeneric("makeInsertion", function (x, var_categories) standardGeneric("makeInsertion"))
-setGeneric("subtotalArray", function (x, ...) standardGeneric("subtotalArray"))
+setGeneric("notes", function(x) standardGeneric("notes"))
+setGeneric("notes<-", function(x, value) standardGeneric("notes<-"),
+    signature = "x"
+)
+setGeneric("pk", function(x) standardGeneric("pk"))
+setGeneric("pk<-", function(x, value) standardGeneric("pk<-"))
+setGeneric("digits", function(x) standardGeneric("digits"))
+setGeneric("digits<-", function(x, value) standardGeneric("digits<-"))
+setGeneric("transforms", function(x) standardGeneric("transforms"))
+setGeneric("transforms<-", function(x, value) standardGeneric("transforms<-"))
+setGeneric("showTransforms", function(x) standardGeneric("showTransforms"))
+setGeneric("geo", function(x) standardGeneric("geo"))
+setGeneric("geo<-", function(x, value) standardGeneric("geo<-"))
+setGeneric("fetchGeoFile", function(x) standardGeneric("fetchGeoFile"))
+setGeneric("anchor", function(x, ...) standardGeneric("anchor"))
+setGeneric("anchors", function(x) standardGeneric("anchors"))
+setGeneric("anchor<-", function(x, value) standardGeneric("anchor<-"))
+setGeneric("arguments", function(x, ...) standardGeneric("arguments"))
+setGeneric("arguments<-", function(x, value) standardGeneric("arguments<-"))
+setGeneric("func", function(x) standardGeneric("func"))
+setGeneric("funcs", function(x) standardGeneric("funcs"))
+setGeneric("subtotals", function(x, ...) standardGeneric("subtotals"))
+setGeneric("subtotals<-", function(x, value) standardGeneric("subtotals<-"))
+setGeneric("makeInsertion", function(x, var_categories) standardGeneric("makeInsertion"))
+setGeneric("subtotalArray", function(x, ...) standardGeneric("subtotalArray"))
 
-setGeneric("types", function (x) standardGeneric("types"))
-setGeneric("timestamps", function (x) standardGeneric("timestamps"))
+setGeneric("types", function(x) standardGeneric("types"))
+setGeneric("timestamps", function(x) standardGeneric("timestamps"))
 
-setGeneric("type", function (x) standardGeneric("type"))
-setGeneric("type<-", function (x, value) standardGeneric("type<-"))
+setGeneric("type", function(x) standardGeneric("type"))
+setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
-setGeneric("categories", function (x) standardGeneric("categories"))
-setGeneric("categories<-", function (x, value) standardGeneric("categories<-"))
-setGeneric("variables", function (x) standardGeneric("variables"))
-setGeneric("variables<-", function (x, value) standardGeneric("variables<-"))
-setGeneric("allVariables", function (x) standardGeneric("allVariables"))
-setGeneric("allVariables<-",
-    function (x, value) standardGeneric("allVariables<-"))
-setGeneric("subvariables", function (x) standardGeneric("subvariables"))
-setGeneric("subvariables<-",
-    function (x, value) standardGeneric("subvariables<-"))
+setGeneric("categories", function(x) standardGeneric("categories"))
+setGeneric("categories<-", function(x, value) standardGeneric("categories<-"))
+setGeneric("subvariables", function(x) standardGeneric("subvariables"))
+setGeneric(
+    "subvariables<-",
+    function(x, value) standardGeneric("subvariables<-")
+)
 
 #' Get a Crunch object's dataset
 #'
@@ -102,11 +111,11 @@ setGeneric("subvariables<-",
 #' @keywords internal
 #' @rdname dataset-reference
 #' @export
-setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
-setGeneric("hide", function (x) standardGeneric("hide"))
-setGeneric("unhide", function (x) standardGeneric("unhide"))
-setGeneric("derivation", function (x) standardGeneric("derivation"))
-setGeneric("derivation<-", function (x, value) standardGeneric("derivation<-"))
+setGeneric("datasetReference", function(x) standardGeneric("datasetReference"))
+setGeneric("hide", function(x) standardGeneric("hide"))
+setGeneric("unhide", function(x) standardGeneric("unhide"))
+setGeneric("derivation", function(x) standardGeneric("derivation"))
+setGeneric("derivation<-", function(x, value) standardGeneric("derivation<-"))
 
 
 setGeneric("urls", function (x) standardGeneric("urls"))
@@ -243,8 +252,8 @@ setGeneric("is.weight<-", function (x, value) standardGeneric("is.weight<-"))
 setGeneric("whichCatalogEntry", function (x, i, ...) standardGeneric("whichCatalogEntry"))
 setGeneric("APIToWebURL", function(x) standardGeneric("APIToWebURL"))
 
-setGeneric("owner", function (x) standardGeneric("owner"))
-setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
+setGeneric("owner", function(x) standardGeneric("owner"))
+setGeneric("owner<-", function(x, value) standardGeneric("owner<-"))
 
 setGeneric("showMissing", function(cube) standardGeneric("showMissing"))
 setGeneric("hideMissing", function(cube) standardGeneric("hideMissing"))
@@ -267,13 +276,13 @@ setGeneric("prop.table")
 setGeneric("round")
 setGeneric("rstandard")
 
-setGeneric("bases", function (x, margin=NULL) standardGeneric("bases"))
-setGeneric("dimensions", function (x) standardGeneric("dimensions"))
-setGeneric("dimensions<-", function (x, value) standardGeneric("dimensions<-"))
-setGeneric("measures", function (x) standardGeneric("measures"))
+setGeneric("bases", function(x, margin = NULL) standardGeneric("bases"))
+setGeneric("dimensions", function(x) standardGeneric("dimensions"))
+setGeneric("dimensions<-", function(x, value) standardGeneric("dimensions<-"))
+setGeneric("measures", function(x) standardGeneric("measures"))
 
 setGeneric("subset")
-setGeneric("which", signature="x")
+setGeneric("which", signature = "x")
 
 #' Generic method for converting objects to Crunch representations
 #'
@@ -311,16 +320,16 @@ setGeneric("which", signature="x")
 #' ds <- addVariables(ds, toVariable(var1, name="Random"))
 #' }
 #' @export
-setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))
+setGeneric("toVariable", function(x, ...) standardGeneric("toVariable"))
 
 setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
-setGeneric("write.csv", function (x, ...) utils::write.csv(x, ...))
+setGeneric("write.csv", function(x, ...) utils::write.csv(x, ...))
 setGeneric("duplicated")
 
-setGeneric("zcl", function (x) standardGeneric("zcl"))
+setGeneric("zcl", function(x) standardGeneric("zcl"))
 
 #' toJSON methods for Crunch objects
 #'
@@ -343,12 +352,14 @@ NULL
 
 #' @rdname tojson-crunch
 #' @export
-setGeneric("jsonprep", function (x, ...) standardGeneric("jsonprep"))
+setGeneric("jsonprep", function(x, ...) standardGeneric("jsonprep"))
 
-setGeneric("getShowContent",
-    function (x, ...) standardGeneric("getShowContent"))
+setGeneric(
+    "getShowContent",
+    function(x, ...) standardGeneric("getShowContent")
+)
 
-.backstopUpdate <- function (x, i, j, value) {
+.backstopUpdate <- function(x, i, j, value) {
     ## Backstop error so you don't get "Object of class S4 is not subsettable"
     halt(paste("Cannot update", class(x), "with type", class(value)))
 }

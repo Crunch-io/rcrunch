@@ -7,15 +7,15 @@
 #' @examples
 #' \dontrun{
 #' ds <- dropRows(ds, ds$gender == "Male")
-#'}
+#' }
 #' @export
-dropRows <- function (dataset, expr) {
+dropRows <- function(dataset, expr) {
     if (!length(expr)) {
         ## Could be NULL or like NULL == something, which is logical(0)
         halt("Invalid expression: ", deparseAndFlatten(match.call()$expr))
     }
-    payload <- list(command="delete", filter=zcl(expr))
-    out <- crPOST(shojiURL(dataset, "fragments", "table"), body=toJSON(payload))
+    payload <- list(command = "delete", filter = zcl(expr))
+    out <- crPOST(shojiURL(dataset, "fragments", "table"), body = toJSON(payload))
     dropCache(self(dataset)) ## Could do a more surgical cache drop, but this is safe
     return(dataset)
 }

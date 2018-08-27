@@ -6,14 +6,14 @@
 #' @param dataset a `CrunchDataset`
 #' @return `dataset`, invisibly, after having set the current editor.
 #' @export
-lock <- function (dataset) {
-    crPATCH(self(dataset), body=toJSON(list(current_editor=NULL)))
+lock <- function(dataset) {
+    crPATCH(self(dataset), body = toJSON(list(current_editor = NULL)))
     invisible(dataset)
 }
 
 #' @rdname lock
 #' @export
-unlock <- function (dataset) {
-    crPATCH(self(dataset), body=toJSON(list(current_editor=userURL())))
+unlock <- function(dataset) {
+    crPATCH(self(dataset), body = toJSON(list(current_editor = userURL())))
     invisible(dataset)
 }

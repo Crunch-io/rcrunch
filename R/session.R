@@ -16,7 +16,7 @@ NULL
 
 #' @rdname session-extract
 #' @export
-setMethod("[[", "Session", function (x, i, ..., drop=FALSE) {
+setMethod("[[", "Session", function(x, i, ..., drop = FALSE) {
     if (i %in% c("datasets", "projects")) {
         return(do.call(i, list()))
     } else {
@@ -26,11 +26,11 @@ setMethod("[[", "Session", function (x, i, ..., drop=FALSE) {
 
 #' @rdname session-extract
 #' @export
-setMethod("$", "Session", function (x, name) x[[name]])
+setMethod("$", "Session", function(x, name) x[[name]])
 
 #' @rdname session-extract
 #' @export
-setMethod("[[<-", "Session", function (x, i, value) {
+setMethod("[[<-", "Session", function(x, i, value) {
     if (i %in% c("datasets", "projects")) {
         return(x)
     } else {
@@ -40,4 +40,4 @@ setMethod("[[<-", "Session", function (x, i, value) {
 
 #' @rdname session-extract
 #' @export
-setMethod("$<-", "Session", function (x, name, value) session())
+setMethod("$<-", "Session", function(x, name, value) session())

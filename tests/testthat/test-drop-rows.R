@@ -3,17 +3,23 @@ context("Deleting rows of a dataset")
 with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("dropRows generates the right request", {
-        expect_POST(dropRows(ds, ds$gender == "Male"),
-            'https://app.crunch.io/api/datasets/1/table/',
+        expect_POST(
+            dropRows(ds, ds$gender == "Male"),
+            "https://app.crunch.io/api/datasets/1/table/",
             '{"command":"delete","filter":{"function":"==",',
             '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
-            '{"value":1}]}}')
+            '{"value":1}]}}'
+        )
     })
     test_that("dropRows doesn't send invalid expressions", {
         expect_error(dropRows(ds, ds$NOTAVARIABLE == "Male"),
-            'Invalid expression: ds$NOTAVARIABLE == "Male"', fixed=TRUE)
-        expect_error(dropRows(ds, NULL),
-            'Invalid expression: NULL')
+            'Invalid expression: ds$NOTAVARIABLE == "Male"',
+            fixed = TRUE
+        )
+        expect_error(
+            dropRows(ds, NULL),
+            "Invalid expression: NULL"
+        )
     })
 })
 
@@ -22,7 +28,7 @@ with_test_authentication({
         ds1 <- newDataset(df)
         ds1 <- dropRows(ds1, ds1$v4 == "C")
         expect_identical(dim(ds1), c(10L, ncol(df)))
-        expect_identical(as.vector(ds1$v4, mode="id"), rep(1, 10))
+        expect_identical(as.vector(ds1$v4, mode = "id"), rep(1, 10))
         expect_identical(as.vector(ds1$v3), seq(8, 26, 2))
     })
 

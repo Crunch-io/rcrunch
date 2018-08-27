@@ -1,0 +1,13 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/analyses/",
+    "orders": {
+        "order": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/analyses/order/"
+    },
+    "description": "List of all analyses inside this slide",
+    "index": {
+        "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/analyses/52fb9b5be6914477b7d7e3e5f8c35367/": {
+
+        }
+    }
+}

@@ -20,7 +20,8 @@
         "permissions": "https://app.crunch.io/api/datasets/3/permissions/"
     },
     "views": {
-        "summary": "https://app.crunch.io/api/datasets/3/summary/"
+        "summary": "https://app.crunch.io/api/datasets/3/summary/",
+        "export": "https://app.crunch.io/api/datasets/3/export/"
     },
     "fragments": {
         "table": "https://app.crunch.io/api/datasets/3/table/",

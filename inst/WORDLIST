@@ -30,6 +30,7 @@ DatasetGroups
 DatasetOrder
 Datetime
 DatetimeVariable
+Devs
 Dichotomize
 FilterCatalog
 Getter
@@ -106,6 +107,7 @@ customizations
 darkgreen
 dataset's
 datetime
+deduplicated
 deserialization
 df
 dichotomization

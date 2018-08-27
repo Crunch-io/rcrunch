@@ -1,3 +1,11 @@
+# crunch 1.23.1 (under development)
+* Added `setName()` and `setNames()` for renaming variable folders
+* Updates to the indexes of Shoji Catalogs are now always wrapped appropriately according to the Shoji spec.
+* New `mv()` functions for organizing datasets within projects.
+* Adjusted the calculation of `index.table()` to better reflect analysts' intentions. Now, `index.table()` calcualtes the index with respect to the marginal proportion of the `margin` given, so for `index.table(cube, 2)` the column proportions of the table are indexed to the marginal row proportions. In other words: for each column how much larger or smaller is the proportion in that column when compared to the proportions for the row variable alone.
+* Fixed a bug when using the `makeWeight()` function with categorical variables that had non-sequential IDs.
+* Fixed a bug wherby hidden variables were not being included in the output of `write.csv` or `as.data.frame(force = TRUE)`
+
 # crunch 1.23.0
 
 ## Improved support for subtotals
