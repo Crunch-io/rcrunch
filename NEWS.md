@@ -1,4 +1,5 @@
 # crunch 1.23.1 (under development)
+* The package now warns user when an endpoint is deprecated.
 * Added `setName()` and `setNames()` for renaming variable folders
 * Updates to the indexes of Shoji Catalogs are now always wrapped appropriately according to the Shoji spec.
 * New `mv()` functions for organizing datasets within projects.
