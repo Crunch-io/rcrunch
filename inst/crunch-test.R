@@ -22,11 +22,31 @@ skip_on_local_env <- function(...) {
     }
 }
 
-loadCube <- function(filename) {
-    file <- system.file(filename, package = "crunch")
+decompress_fixtures <- function(dest = tempdir()) {
+    untar(find_file("cubes.tgz"), compressed = TRUE, exdir = tempdir())
+}
+
+cubePath <- function(filename) {
+    # check the temp place
+    file <- file.path(tempdir(), filename) 
+    
+    # if it's not there, see if it's in the package
+    if (!file.exists(file)) {
+        file <- NULL
+        # file <- system.file(filename, package = "crunch")
+    }
+    
     if (nchar(file) > 0) {
         filename <- file
     }
+    
+    return(filename)
+}
+
+loadCube <- function(filename) {
+    # check the temp place
+    filename <- cubePath(filename)
+    
 
     # if the cube json has a value name, it has full metadata and we need to
     # extract only the value
