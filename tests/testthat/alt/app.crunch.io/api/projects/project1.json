@@ -1,0 +1,63 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/projects/project1/",
+    "catalogs": {
+        "datasets": "https://app.crunch.io/api/projects/project1/datasets/",
+        "users": "https://app.crunch.io/api/projects/project1/users/",
+        "members": "https://app.crunch.io/api/projects/project1/members/",
+        "project": "https://app.crunch.io/api/projects/"
+    },
+    "description": "Details for a specific project",
+    "body": {
+        "name": "Project One",
+        "description": "Long description text",
+        "icon": ""
+    },
+    "index": {
+        "https://app.crunch.io/api/datasets/1/": {
+            "owner_display_name": "Fake User",
+            "name": "test ds",
+            "description": "",
+            "start_date":"2016-01-01",
+            "end_date":"2016-01-01",
+            "archived": false,
+            "id": "511a7c49778030653aab5963",
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "is_published": true,
+            "type": "dataset"
+        },
+        "https://app.crunch.io/api/datasets/2/": {
+            "owner_display_name": "Fake User",
+            "name": "an archived dataset",
+            "description": "This dataset does not exist",
+            "archived": true,
+            "id": "aa80d2e969b34e6ea9ededaa528c6248",
+            "start_date": null,
+            "end_date": null,
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "type": "dataset"
+        },
+        "https://app.crunch.io/api/projects/project2/": {
+            "name": "Project Two",
+            "description": "A nested project",
+            "type": "project"
+        },
+        "https://app.crunch.io/api/datasets/streaming-no-msg/": {
+            "owner_display_name": "Fake User",
+            "name": "streaming no messages",
+            "description": "",
+            "start_date":"2016-01-01",
+            "end_date":"2016-01-01",
+            "archived": false,
+            "id": "5367caab4292e7ce4b8994bdce9dbb11",
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "is_published": true,
+            "type": "dataset"
+        }
+    },
+    "graph": [
+        "https://app.crunch.io/api/datasets/2/",
+        "https://app.crunch.io/api/projects/project2/",
+        "https://app.crunch.io/api/datasets/1/", "https://app.crunch.io/api/datasets/streaming-no-msg/"
+    ]
+}
