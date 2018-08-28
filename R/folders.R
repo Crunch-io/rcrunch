@@ -50,7 +50,7 @@
 mv <- function(x, variables, path) {
     ## TODO: add an "after" argument, pass to addToFolder
 
-    if (inherits(x, "CrunchProject")) {
+    if (inherits(x, "CrunchProject") && featureFlag("old_projects_order")) {
         ## Temporary? call a different function
         return(mv.project(x, variables, path))
     }
@@ -82,7 +82,7 @@ mv <- function(x, variables, path) {
 #' @export
 mkdir <- function(x, path) {
     ## TODO: add an "after" argument, move created folder there
-    if (inherits(x, "CrunchProject")) {
+    if (inherits(x, "CrunchProject") && featureFlag("old_projects_order")) {
         ## Temporary? call a different function
         return(mkdir.project(x, path))
     }
@@ -218,7 +218,7 @@ cd <- function(x, path, create = FALSE) {
 #' }
 #' @export
 rmdir <- function(x, path) {
-    if (inherits(x, "CrunchProject")) {
+    if (inherits(x, "CrunchProject") && featureFlag("old_projects_order")) {
         ## Temporary? call a different function
         return(rmdir.project(x, path))
     }
