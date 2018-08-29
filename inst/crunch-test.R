@@ -30,10 +30,10 @@ cubePath <- function(filename) {
     # check the temp place
     file <- file.path(tempdir(), filename) 
     
-    # if it's not there, see if it's in the package
+    # if it's not there, see if it's in the package this should only be needed 
+    # for backwards compatibility wit hchild packages
     if (!file.exists(file)) {
-        file <- NULL
-        # file <- system.file(filename, package = "crunch")
+        file <- system.file(filename, package = "crunch")
     }
     
     if (nchar(file) > 0) {
