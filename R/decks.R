@@ -211,6 +211,8 @@ setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
               }
               if (i > length(x)) {
                   # create new slide
+                  # Replace with newSlide function when we have the
+                  # analysesToFormula functions implemented.
                   payload <- value@body[c("title", "subtitle")]
                   analyses <- analyses(value)
                   payload$analyses <- analysesToQueryList(analyses(value))
@@ -245,6 +247,16 @@ setMethod("show", "CrunchSlide", function(object){
     print(out)
 })
 
+# TODO: Find out what the mandatory display settings should be for the app then
+# change this list to reflect those settings.
+default_display_settings <- list(
+                         percentageDirection = "colPct",
+                         vizType = "table",
+                         countsOrPercents = "percent",
+                         decimalPlaces = 1L,
+                         uiView = "app.datasets.browse"
+                         )
+
 newSlide <- function(deck,
                      query,
                      display_settings,
@@ -252,6 +264,17 @@ newSlide <- function(deck,
                      subtitle = "",
                      ...) {
     ds <- loadDataset(datasetReference(deck))
+    settings <- default_display_settings
+    if (is.list(display_settings)) {
+        in_default <- names(display_settings) %in% names(default_display_settings)
+        valid_names <- names(display_settings)[in_default]
+        settings[valid_names] <- display_settings[valid_names]
+        if (any(in_default)) {
+            warning("Invalid display settings ommitted: ",
+                    serialPaste(dQuote(names(display_settings))[!in_default])
+            )
+        }
+    }
     if (inherits(query, "formula")) {
         query <- list(query)
     }
@@ -363,8 +386,7 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
                   #TODO what to do with adding an analysis that's not the next one.
               }
 
-              display_fields <- c("decimalPlaces", "percentageDirection",
-                                  "vizType", "countsOrPercents", "uiView")
+              display_fields <- names(default_display_settings)
               payload <- value@body[c("query", "display_settings", "query_environment")]
               payload$display_settings <- payload$display_settings[display_fields]
               payload <- wrapEntity(body = payload)
