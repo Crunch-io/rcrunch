@@ -50,7 +50,7 @@
 mv <- function(x, variables, path) {
     ## TODO: add an "after" argument, pass to addToFolder
 
-    if (inherits(x, "CrunchProject") && featureFlag("old_projects_order")) {
+    if (is.project(x) && !new_projects_api()) {
         ## Temporary? call a different function
         return(mv.project(x, variables, path))
     }
@@ -82,7 +82,7 @@ mv <- function(x, variables, path) {
 #' @export
 mkdir <- function(x, path) {
     ## TODO: add an "after" argument, move created folder there
-    if (inherits(x, "CrunchProject") && featureFlag("old_projects_order")) {
+    if (is.project(x) && !new_projects_api()) {
         ## Temporary? call a different function
         return(mkdir.project(x, path))
     }
@@ -178,19 +178,20 @@ setMethod("setNames", "VariableFolder", function(object, nm) {
 #' }
 #' @export
 cd <- function(x, path, create = FALSE) {
-    if (is.character(x)) {
+    if (is.folder(path)) {
+        ## Great! No lookup required
+        return(path)
+    }
+    if (is.dataset(x)) {
+        ## Get the variable folders root catalog
+        x <- folders(x)
+    }
+    if (!is.folder(x)) {
         ## Probably user error
         halt(
             dQuote("cd()"),
             " requires a Crunch Dataset or Folder as its first argument"
         )
-    }
-    if (is.folder(path)) {
-        ## Great! No lookup required
-        return(path)
-    }
-    if (!is.folder(x)) {
-        x <- folders(x)
     }
     out <- x[[path, create = create]]
     if (!is.folder(out)) {
@@ -218,7 +219,7 @@ cd <- function(x, path, create = FALSE) {
 #' }
 #' @export
 rmdir <- function(x, path) {
-    if (inherits(x, "CrunchProject") && featureFlag("old_projects_order")) {
+    if (is.project(x) && !new_projects_api()) {
         ## Temporary? call a different function
         return(rmdir.project(x, path))
     }

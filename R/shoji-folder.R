@@ -1,7 +1,10 @@
 setMethod("initialize", "ShojiFolder", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object@graph <- lapply(.Object@graph, absoluteURL, .Object@self)
-    .Object@index <- .Object@index[unlist(.Object@graph)]
+    if (length(.Object@graph)) {
+        # Root catalogs may not have a graph (right?)
+        .Object@index <- .Object@index[unlist(.Object@graph)]
+    }
     return(.Object)
 })
 

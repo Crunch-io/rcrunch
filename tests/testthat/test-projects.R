@@ -18,9 +18,9 @@ with_mock_crunch({
 
     aproject <- projects[["Project One"]]
     test_that("Getting project from catalog", {
-        expect_is(projects[[1]], "CrunchProject")
-        expect_is(projects$`Project One`, "CrunchProject")
-        expect_is(projects[["Project One"]], "CrunchProject")
+        expect_true(is.project(projects[[1]]))
+        expect_true(is.project(projects$`Project One`))
+        expect_true(is.project(projects[["Project One"]]))
         expect_null(projects$`Beta Project`)
     })
 
@@ -50,7 +50,7 @@ with_mock_crunch({
         with_POST("https://app.crunch.io/api/projects/project1/", {
             ## Mock the return of that creation
             pro <- newProject("This is being ignored")
-            expect_is(pro, "CrunchProject")
+            expect_true(is.project(pro))
             expect_identical(name(pro), "Project One")
             ## Now also check that the PATCH to add members happens
             expect_PATCH(
@@ -280,7 +280,7 @@ with_test_authentication({
         myprojects[[name.of.project1]] <- list()
         expect_true(name.of.project1 %in% names(myprojects))
         expect_true(length(myprojects) == nprojects.0 + 1L)
-        expect_is(myprojects[[name.of.project1]], "CrunchProject")
+        expect_true(is.project(myprojects[[name.of.project1]]))
         expect_length(members(myprojects[[name.of.project1]]), 1)
         expect_identical(
             names(members(myprojects[[name.of.project1]])),
@@ -380,7 +380,7 @@ with_test_authentication({
     ds <- createDataset(name = now())
     tp <- newProject(name = now())
     test_that("Can add datasets to project", {
-        expect_is(tp, "CrunchProject")
+        expect_true(is.project(tp))
         expect_length(datasets(tp), 0)
         datasets(tp) <- ds
         expect_identical(names(datasets(tp)), name(ds))
