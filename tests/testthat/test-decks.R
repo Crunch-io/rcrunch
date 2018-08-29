@@ -135,9 +135,16 @@ with_mock_crunch({
                 get_output(cube(slide))
             )
         })
-        test_that("newSlide", {
-
+        test_that("slide subsetting", {
+            browser()
+            an_cat <- analyses(slide)
+            expect_is(an_cat, "AnalysisCatalog")
+            expect_equal(length(an_cat), 1)
+            expect_is(an_cat[[1]], "Analysis")
         })
+
+
+# Analyses ----------------------------------------------------------------
 
 
 

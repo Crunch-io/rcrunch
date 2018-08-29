@@ -293,8 +293,8 @@ newSlide <- function(deck,
 }
 
 setMethod("[[", "CrunchSlide", function (x, i, ...) {
-    anCat <- analyses(x)
-    return(ancat[[i]])
+    an_cat <- analyses(x)
+    return(an_cat[[i]])
 })
 
 setMethod("[[<-", "CrunchSlide", function(x, i, j, value) {
