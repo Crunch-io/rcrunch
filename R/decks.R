@@ -130,6 +130,7 @@ exportDeck <- function(deck, file, type = c("xlsx", "json")) {
             )
         ext <- ".xlsx"
     }
+    browser()
     if (missing(file)) {
         file <-  paste0(name(deck), ext)
     }
@@ -308,8 +309,7 @@ setMethod("title", "CrunchSlide", function (x){
 })
 
 setMethod("title<-", "CrunchSlide", function(x, value){
-    payload <- x@body
-    payload$title <- value
+    payload <- list(title = value)
     crPATCH(self(x), body = toJSON(wrapEntity(body = payload)))
     invisible(refresh(x))
 })
@@ -319,8 +319,7 @@ setMethod("subtitle", "CrunchSlide", function (x){
 })
 
 setMethod("subtitle<-", "CrunchSlide", function(x, value){
-    payload <- x@body
-    payload$subtitle <- value
+    payload <- list(subtitle = value)
     crPATCH(self(x), body = toJSON(wrapEntity(body = payload)))
     invisible(refresh(x))
 })
@@ -402,13 +401,15 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"), function (x, i, j, value) {
   all_fmla <- vapply(value, function(x) inherits(x, "formula"), logical(1))
   if (any(!all_fmla)) {
-      halt("Entry", which(!all_fmla), "is not a formula")
+      halt("Entry ", which(!all_fmla), " is not a formula")
   }
   if (length(i) != length(value)) {
-      halt("Invalid assignment. You tried to assign ", length(value), " formulas to ", length(i), "entries.")
+      noun <- if (length(i) == 1) " analysis." else " analyses."
+      halt("Invalid assignment. You tried to assign ", length(value),
+           " formulas to ", length(i), noun)
   }
   mapply(function(analysis, fmla){
-      analysis <- fmls
+      analysis <- fmla
   }, analysis = x[[i]], fmla = value)
 })
 
@@ -441,8 +442,7 @@ setMethod("query", c("Analysis"), function(x) {
 
 setMethod("query<-", c("Analysis", "formula"), function(x, value) {
     ds <- loadDataset(datasetReference(x))
-    payload <- x@body
-    payload$query <- formulaToCubeQuery(value, data = ds)
+    payload <- list(query = formulaToCubeQuery(value, data = ds))
     payload <- wrapEntity(body = payload)
     crPATCH(self(x), body = toJSON(payload))
     invisible(refresh(x))

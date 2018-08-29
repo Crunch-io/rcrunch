@@ -3,7 +3,7 @@ context("Interacting with decks")
 with_mock_crunch({
 
 
-# Deck Catalog ------------------------------------------------------------
+    # Deck Catalog ------------------------------------------------------------
     ds <- loadDataset("test ds")
     test_that("newDeck posts correctly", {
         expect_POST(
@@ -22,7 +22,7 @@ with_mock_crunch({
     main_deck <- deck_cat[[1]]
 
 
-# Crunch Decks ------------------------------------------------------------
+    # Crunch Decks ------------------------------------------------------------
 
     test_that("Deck metadata", {
         expect_is(main_deck, "CrunchDeck")
@@ -55,12 +55,12 @@ with_mock_crunch({
             name(main_deck) <- "new_name",
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/',
             '{"name":"new_name"}'
-            )
+        )
         expect_PATCH(
             description(main_deck) <- "new_description",
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/',
             '{"description":"new_description"}'
-            )
+        )
     })
 
     test_that("is.public method for decks", {
@@ -69,89 +69,89 @@ with_mock_crunch({
             is.public(main_deck) <- TRUE,
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/',
             '{"is_public":true}'
+        )
+    })
+    test_that("subset CrunchDecks", {
+        slide <- main_deck[[1]]
+        expect_is(slide, "CrunchSlide")
+    })
+    test_that("cube methods for crunch decks", {
+        cube <- cube(main_deck[[1]])
+        expect_is(cube, "CrunchCube")
+        cube_list <- cubes(main_deck)
+        expect_is(cube_list, "list")
+        expect_identical(cube, cube_list[[1]])
+    })
+
+    test_that("export decks generates correct POST", {
+        expect_POST(
+            exportDeck(main_deck, type = "json"),
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/',
+            '')
+        expect_POST(
+            exportDeck(main_deck, type = "xlsx"),
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/',
+            '')
+    })
+
+    # Crunch Slides -----------------------------------------------------------
+    slide <- main_deck[[1]]
+    test_that("Slide show method", {
+        expect_prints(
+            slide,
+            get_output(cube(slide))
+        )
+    })
+
+    test_that("Slide titles and subtitles", {
+        expect_equal(title(slide), "birthyr")
+        expect_equal(subtitle(slide), "")
+        expect_PATCH(
+            title(slide) <- "new_title",
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/',
+            '{"element":"shoji:entity","body":{"title":"new_title"}}'
+        )
+         expect_PATCH(
+            subtitle(slide) <- "new_subtitle",
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/',
+            '{"element":"shoji:entity","body":{"subtitle":"new_subtitle"}}'
+        )
+    })
+    test_that("slide subsetting", {
+        slide <- main_deck[[1]]
+        an_cat <- analyses(slide)
+        expect_is(an_cat, "AnalysisCatalog")
+        expect_equal(length(an_cat), 1)
+        expect_is(an_cat[[1]], "Analysis")
+        expect_identical(analysis(slide), an_cat[[1]])
+    })
+    test_that("query assignment for slides", {
+        expect_PATCH(
+            query(slide) <- ~birthyr,
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+    })
+
+
+    # Analyses ----------------------------------------------------------------
+
+    test_that("analysis assignment errors correctly", {
+         slide <- main_deck[[1]]
+        an_cat <- analyses(slide)
+        expect_error(an_cat[[1]] <- list("test"), "Entry 1 is not a formula")
+        expect_error(
+            an_cat[[1]] <- list(~birthyr, ~gender),
+            "Invalid assignment. You tried to assign 2 formulas to 1 analysis."
             )
     })
 
-    test_that("titles and subtitles assignment generates the correct PATCH", {
-        expect_PATCH(
-            titles(main_deck)[1] <- "birthyr",
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
-            '{"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{',
-            '"analysis_url":"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",',
-            '"display_settings":{',
-            '"percentageDirection":{"value":"colPct"},',
-            '"showEmpty":{"value":false},',
-            '"showMean":{"value":true},',
-            '"vizType":{"value":"table"},',
-            '"countsOrPercents":{"value":"percent"},',
-            '"decimalPlaces":{"value":1},',
-            '"populationMagnitude":{"value":3},',
-            '"showSignif":{"value":true},',
-            '"currentTab":{"value":0},',
-            '"uiView":{"value":"app.datasets.browse"}},',
-            '"subtitle":"",',
-            '"title":"birthyr"}'
-        )
-        expect_PATCH(
-            subtitles(main_deck)[1] <- "new_sub",
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
-            '{"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{',
-            '"analysis_url":"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",',
-            '"display_settings":{',
-            '"percentageDirection":{"value":"colPct"},',
-            '"showEmpty":{"value":false},',
-            '"showMean":{"value":true},',
-            '"vizType":{"value":"table"},',
-            '"countsOrPercents":{"value":"percent"},',
-            '"decimalPlaces":{"value":1},',
-            '"populationMagnitude":{"value":3},',
-            '"showSignif":{"value":true},',
-            '"currentTab":{"value":0},',
-            '"uiView":{"value":"app.datasets.browse"}},',
-            '"subtitle":"new_sub",',
-            '"title":"birthyr"'
-        )
-
-
-        test_that("subset CrunchDecks", {
-            slide <- main_deck[[1]]
-            expect_is(slide, "CrunchSlide")
-        })
-        test_that("cube methods for crunch decks", {
-            cube <- cube(main_deck[[1]])
-            expect_is(cube, "CrunchCube")
-            cube_list <- cubes(main_deck)
-            expect_is(cube_list, "list")
-            expect_identical(cube, cube_list[[1]])
-        })
-
-
-# Crunch Slides -----------------------------------------------------------
-
-        test_that("Slide show method", {
-            slide <- main_deck[[1]]
-            expect_prints(
-                slide,
-                get_output(cube(slide))
-            )
-        })
-        test_that("slide subsetting", {
-            browser()
-            an_cat <- analyses(slide)
-            expect_is(an_cat, "AnalysisCatalog")
-            expect_equal(length(an_cat), 1)
-            expect_is(an_cat[[1]], "Analysis")
-        })
-
-
-# Analyses ----------------------------------------------------------------
-
-
-
-
-    })
 
 })
+
 
 with_test_authentication({
     ds <- newDataset(df)
