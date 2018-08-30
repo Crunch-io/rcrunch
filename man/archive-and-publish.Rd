@@ -21,10 +21,8 @@
 \alias{is.draft,CrunchDataset-method}
 \alias{is.published,CrunchDataset-method}
 \alias{is.archived<-,CrunchDataset,logical-method}
-\alias{archive}
 \alias{is.draft<-,CrunchDataset,logical-method}
 \alias{is.published<-,CrunchDataset,logical-method}
-\alias{publish}
 \title{Get and set "archived" and "published" status of a dataset}
 \usage{
 \S4method{is.archived}{DatasetCatalog}(x)

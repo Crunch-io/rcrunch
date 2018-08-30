@@ -8,7 +8,8 @@
 \usage{
 user2realMargin(margin, dimTypes = getDimTypes(cube), cube)
 
-real2userMargin(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE)
+real2userMargin(margin, dimTypes = getDimTypes(cube), cube,
+  dedupe = TRUE)
 }
 \arguments{
 \item{margin}{the margin or margins for the user cube to be translated}

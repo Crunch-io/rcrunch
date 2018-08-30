@@ -38,7 +38,8 @@
 
 \S4method{[}{CrunchVariable,ANY,missing,CrunchVariable}(x, i, j) <- value
 
-\S4method{[}{CrunchVariable,ANY,missing,CrunchLogicalExpr}(x, i, j) <- value
+\S4method{[}{CrunchVariable,ANY,missing,CrunchLogicalExpr}(x, i,
+  j) <- value
 
 \S4method{[}{CategoricalVariable,ANY,missing,numeric}(x, i, j) <- value
 
@@ -46,11 +47,14 @@
 
 \S4method{[}{CategoricalVariable,ANY,missing,factor}(x, i, j) <- value
 
-\S4method{[}{CategoricalArrayVariable,ANY,missing,numeric}(x, i, j) <- value
+\S4method{[}{CategoricalArrayVariable,ANY,missing,numeric}(x, i,
+  j) <- value
 
-\S4method{[}{CategoricalArrayVariable,ANY,missing,character}(x, i, j) <- value
+\S4method{[}{CategoricalArrayVariable,ANY,missing,character}(x, i,
+  j) <- value
 
-\S4method{[}{CategoricalArrayVariable,ANY,missing,factor}(x, i, j) <- value
+\S4method{[}{CategoricalArrayVariable,ANY,missing,factor}(x, i,
+  j) <- value
 
 \S4method{[}{CrunchVariable,ANY,missing,logical}(x, i, j) <- value
 

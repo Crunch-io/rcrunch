@@ -6,7 +6,8 @@
 \alias{which,CrunchLogicalExpr-method}
 \title{"which" method for CrunchLogicalExpr}
 \usage{
-\S4method{which}{CrunchLogicalExpr}(x, arr.ind = FALSE, useNames = TRUE)
+\S4method{which}{CrunchLogicalExpr}(x, arr.ind = FALSE,
+  useNames = TRUE)
 }
 \arguments{
 \item{x}{CrunchLogicalExpr}

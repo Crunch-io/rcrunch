@@ -6,7 +6,6 @@
 \alias{AbstractCategory}
 \alias{AbstractCategories}
 \alias{AbstractCategory-class}
-\alias{AbstractCategory}
 \title{Abstract categories}
 \usage{
 AbstractCategories(..., data = NULL)

@@ -132,6 +132,8 @@ reference:
   - cd
   - rmdir
   - setOrder
+  - setName
+  - setNames
 - title: Analysis
   contents:
   - crtabs
