@@ -1,6 +1,6 @@
 {
 	"element": "shoji:catalog",
-	"self": "https://app.crunch.io/api/datasets/1/multitables/",
+	"self": "https://app.crunch.io/api/datasets/3/multitables/",
 	"description": "List of multitable definitions for this dataset",
 	"index": {
 		"ed30c4/": {

@@ -234,6 +234,7 @@ with_mock_crunch({
 
     test_that("tabBook can return a subset of variables", {
         expect_equivalent(weight(ds2), ds[["birthyr"]])
+        m <- multitables(ds2)[[1]]
         expect_header(
             expect_POST(
                 tabBook(m, data = ds2[c("gender", "starttime")]),
