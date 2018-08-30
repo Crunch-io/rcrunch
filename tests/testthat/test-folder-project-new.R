@@ -122,7 +122,16 @@ with_mock_crunch({
     })
 
     test_that("mv project", {
+        expect_PATCH(
+            projects() %>%
+                cd("Project One") %>%
+                mv("Project Two", "Project Five"),
+            "https://app.crunch.io/api/projects/project5/",
+            '{"element":"shoji:catalog",',
+            '"index":{"https://app.crunch.io/api/projects/project2/":{}},',
+            '"graph":["https://app.crunch.io/api/projects/project2/"]}'
 
+        )
     })
 
     test_that("can't move anything to root", {
@@ -130,17 +139,56 @@ with_mock_crunch({
     })
 
     test_that("mv error handling", {
-
+        expect_error(
+            proj %>%
+                mv("NOT A GROUP", "Project Two"),
+            "Undefined elements selected: NOT A GROUP"
+        )
     })
 
     test_that("rmdir an empty project", {
-
+        expect_error(
+            proj %>% rmdir("Project Five"),
+            "Must confirm deleting folder" # TODO: should error say "project"?
+        )
+        with_consent({
+            expect_DELETE(
+                proj %>% rmdir("Project Five"),
+                "https://app.crunch.io/api/projects/project5/"
+            )
+            expect_DELETE(
+                projects() %>% rmdir("Project One/Project Five"),
+                "https://app.crunch.io/api/projects/project5/"
+            )
+            expect_DELETE(
+                projects() %>%
+                    cd("Project One/Project Two") %>%
+                    rmdir("../Project Five"),
+                "https://app.crunch.io/api/projects/project5/"
+            )
+        })
     })
     test_that("rmdir a non-empty project errors", {
-
+        with_consent({
+            expect_error(
+                proj %>%
+                    rmdir("Project Two"),
+                "Cannot remove 'Project Two' because it is not empty. Move its contents somewhere else and then retry."
+            )
+        })
+    })
+    test_that("Can't rmdir the root", {
+        expect_error(
+            ds %>% rmdir("/"),
+            "Cannot delete root folder"
+        )
     })
 
     test_that("rmdir error handling", {
-
+        expect_error(
+            proj %>%
+                rmdir("NOT A GROUP"),
+            '"NOT A GROUP" is not a folder'
+        )
     })
 })

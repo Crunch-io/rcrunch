@@ -196,7 +196,14 @@ rmdir <- function(x, path) {
         ## Temporary? call a different function
         return(rmdir.project(x, path))
     }
-    delete(cd(x, path))
+    to_delete <- cd(x, path)
+    if (is.project(x) && length(to_delete) > 0) {
+        halt(
+            "Cannot remove '", name(to_delete), "' because it is not empty. ",
+            "Move its contents somewhere else and then retry."
+        )
+    }
+    delete(to_delete)
     invisible(refresh(x))
 }
 
