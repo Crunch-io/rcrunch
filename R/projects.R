@@ -21,8 +21,8 @@ projects <- function(x = getAPIRoot()) {
 }
 
 new_projects_api <- function () {
-    # TODO can feature flag this with R options too
-    !featureFlag("old_projects_order")
+    # Temporary: use R option to test locally
+    getOption("crunch.project.folders", !featureFlag("old_projects_order"))
 }
 
 is.project <- function (x) inherits(x, c("CrunchProject", "ProjectFolder"))
