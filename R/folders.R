@@ -114,40 +114,6 @@ setName <- function(object, nm) {
     return(invisible(object))
 }
 
-#' Change the name of the objects contained in the current folder
-#'
-#' If you want to rename all of the objects (variables, folders, etc.), you
-#' can use `setNames()` to do so. It doesn't move variables or change anything
-#' other than the names of the objects in the current folder.
-#'
-#' @param object A `VariableFolder`
-#' @param nm A character vector of new names of the same length as the number
-#'   of objects in the folder
-#' @return `object`, with the names of its children duly changed
-#' @seealso [cd()] and [mv()]
-#' @examples
-#' \dontrun{
-#' ds <- ds %>%
-#'     cd("Demographics") %>%
-#'     setNames(c("Gender (4 category)", "Birth year", "Race (5 category)"))
-#' }
-#'
-#' @name setNames
-#' @export
-setGeneric("setNames", function(object, nm) stats::setNames(object, nm))
-
-#' @rdname setNames
-#' @export
-setMethod("setNames", "VariableFolder", function(object, nm) {
-    # check lengths to provide a friendly user-facing error message.
-    if (length(object) != length(nm)) {
-        halt("names must have the same length as the number of children: ", length(object))
-    }
-
-    names(object) <- nm
-    return(invisible(object))
-})
-
 #' Change to different folder
 #'
 #' Like `cd` in a file system, this function takes you to a different folder,
@@ -178,6 +144,13 @@ setMethod("setNames", "VariableFolder", function(object, nm) {
 #' }
 #' @export
 cd <- function(x, path, create = FALSE) {
+    if (is.character(x)) {
+        ## Probably user error
+        halt(
+            dQuote("cd()"),
+            " requires a Crunch Dataset or Folder as its first argument"
+        )
+    }
     if (is.folder(path)) {
         ## Great! No lookup required
         return(path)
@@ -274,24 +247,36 @@ folder <- function(x) {
     return(refresh(x)) ## Actually, just need to get entity again, cache already busted
 }
 
-.moveToFolder <- function(folder, variables) {
-    if (is.dataset(variables)) {
-        variables <- allVariables(variables)
+.moveToFolder <- function(folder, what) {
+    ## Get the URLs of things to move
+    if (is.project(folder)) {
+        ## If moving a dataset into a project, get its self
+        if (is.dataset(what)) {
+            what <- self(what)
+        }
+    } else {
+        ## Variable folder
+        if (is.dataset(what)) {
+            ## If moving a "dataset" into a variable folder, it's a variable
+            ## catalog subset. So get the catalog.
+            what <- allVariables(what)
+        }
     }
-    if (inherits(variables, "ShojiCatalog")) {
-        variables <- urls(variables)
+    if (inherits(what, "ShojiCatalog")) {
+        what <- urls(what)
     }
+
     ## No need to include vars that already exist in this folder
-    variables <- setdiff(variables, urls(folder))
-    if (length(variables)) {
-        ind <- sapply(variables, emptyObject, simplify = FALSE)
+    what <- setdiff(what, urls(folder))
+    if (length(what)) {
+        ind <- sapply(what, emptyObject, simplify = FALSE)
         crPATCH(self(folder), body = toJSON(wrapCatalog(
             index = ind,
-            graph = I(c(urls(folder), variables))
+            graph = I(c(urls(folder), what))
         )))
         ## Additional cache invalidation
         ## Drop all variable entities because their catalogs.folder refs are stale
-        dropOnly(variables)
+        dropOnly(what)
         ## Drop all folders
         ## Hard to be smarter about figuring out which folders are dirty without
         ## doing a bunch of GETs.

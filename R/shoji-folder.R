@@ -71,7 +71,12 @@ parseFolderPath <- function(path) {
 folderDelimiter <- function() getOption("crunch.delimiter", "/")
 
 parentFolderURL <- function(x) {
-    tryCatch(shojiURL(x, "catalogs", "folder"), error = function(e) return(NULL))
+    if (is.variable(x) || inherits(x, "VariableFolder")) {
+        shojiURL(x, "catalogs", "folder", mustWork=FALSE)
+    } else {
+        # A dataset or project
+        shojiURL(x, "catalogs", "project", mustWork=FALSE)
+    }
 }
 
 rootFolder <- function(x) {

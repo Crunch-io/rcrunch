@@ -42,6 +42,11 @@
             "description": "A nested project",
             "type": "project"
         },
+        "https://app.crunch.io/api/projects/project5/": {
+            "name": "Project Five",
+            "description": "An empty project",
+            "type": "project"
+        },
         "https://app.crunch.io/api/datasets/streaming-no-msg/": {
             "owner_display_name": "Fake User",
             "name": "streaming no messages",
@@ -58,6 +63,7 @@
     "graph": [
         "https://app.crunch.io/api/datasets/2/",
         "https://app.crunch.io/api/projects/project2/",
-        "https://app.crunch.io/api/datasets/1/", "https://app.crunch.io/api/datasets/streaming-no-msg/"
+        "https://app.crunch.io/api/datasets/1/",
+        "https://app.crunch.io/api/projects/project5/", "https://app.crunch.io/api/datasets/streaming-no-msg/"
     ]
 }
