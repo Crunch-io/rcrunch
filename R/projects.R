@@ -159,6 +159,9 @@ setMethod("delete", "CrunchProject", function(x, ...) {
 #' @export
 `datasets<-` <- function(x, value) {
     stopifnot(is.project(x))
+    if (new_projects_api()) {
+        .moveToFolder(x, value)
+    }
     if (is.dataset(value)) {
         ## This is how we add a dataset to a project: change its owner
         owner(value) <- x

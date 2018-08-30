@@ -1,7 +1,8 @@
 #' Functions to manipulate variables' or project's folder structure
 #'
 #' Variables in Crunch datasets are organized into folders, like in a file
-#' system. These functions allow you to create new folders and move objects into
+#' system. Datasets are similarly organized into hierarchical Projects.
+#' These functions allow you to create new folders and move objects into
 #' folders. Their names, `mv` and `mkdir`, suggest their Unix file utility
 #' inspiration.
 #'
@@ -12,22 +13,18 @@
 #' require that the directory to move to already exist---it will effectively
 #' call `mkdir` along the way.
 #'
-#' Just like variables are organized into folders within a dataset, datasets can
-#' be organized into folders within projects. Working with datasets inside of
-#' projects is experimental right now, but follows a similar philosophy as
-#' organizing variables within a dataset.
-#'
-#' @param x A `CrunchDataset`, `VariableFolder`, or `CrunchProject`
+#' @param x A `CrunchDataset` or `Folder` (`VariableFolder` or `ProjectFolder`)
 #' @param path A character "path" to the folder: either a
 #' vector of nested folder names or a single string with nested folders
 #' separated by a delimiter ("/" default, configurable via
 #' `options(crunch.delimiter)`). The path is interpreted as
 #' relative to the location of the folder `x` (when `x` is a dataset, that
-#' means the root, top-level folder). `path` may also be a `VariableFolder` object.
-#' @param variables A Variable, selection of variables from `dataset`, or any
-#' other object that can be moved to a folder (e.g. a dataset when organizing projects).
+#' means the root, top-level folder). `path` may also be a `Folder` object.
+#' @param what A Variable, selection of variables from `dataset`, or any
+#' other object that can be moved to a folder (e.g. a dataset when organizing
+#' projects).
 #' @return `x`, with the folder at `path` guaranteed to be created, and for
-#' `mv`, containing `variables` moved into it.
+#' `mv`, containing `what` moved into it.
 #' @seealso [cd()] to select a folder by path; [rmdir()] to delete a folder; [folder()] to identify and set an object's parent folder; [base::dir.create()] if you literally want to create a directory in your local file system, which `mkdir()` does not do
 #' @examples
 #' \dontrun{
@@ -45,14 +42,17 @@
 #'     mv("nps_x", "../Net Promoters")
 #' # Can combine with folder() to move objects to the same place as something else
 #' ds %>% mv("nps_y", folder(ds$nps_x))
+#' # Now let's put ds in a Project
+#' projects() %>%
+#'     mv(ds, "Brand Tracking Studies")
 #' }
 #' @export
-mv <- function(x, variables, path) {
+mv <- function(x, what, path) {
     ## TODO: add an "after" argument, pass to addToFolder
 
     if (is.project(x) && !new_projects_api()) {
         ## Temporary? call a different function
-        return(mv.project(x, variables, path))
+        return(mv.project(x, what, path))
     }
     ## dplyr/tidyselect-ish functions, hacked in here (inspired by how pkgdown does it)
     fns <- list(
@@ -61,20 +61,20 @@ mv <- function(x, variables, path) {
         matches = function(str, ...) grep(str, names(x), ...),
         contains = function(str, ...) grep(str, names(x), ..., fixed = TRUE)
     )
-    e2 <- substitute(substitute(zzz, fns), list(zzz = match.call()[["variables"]]))
-    variables <- eval.parent(eval(e2))
-    if (is.language(variables)) {
+    e2 <- substitute(substitute(zzz, fns), list(zzz = match.call()[["what"]]))
+    what <- eval.parent(eval(e2))
+    if (is.language(what)) {
         ## It's one of our fns. Eval it again
-        variables <- eval(variables)
+        what <- eval(what)
     }
 
-    if (!is.shojiObject(variables)) {
+    if (!is.shojiObject(what)) {
         ## Character, numeric, logical. Extract from the dataset/folder
         ## TODO: add a "*" special case for for ShojiFolder [ method
-        variables <- x[variables]
+        what <- x[what]
     }
     f <- cd(x, path, create = TRUE)
-    .moveToFolder(f, variables)
+    .moveToFolder(f, what)
     return(invisible(x))
 }
 
@@ -93,10 +93,10 @@ mkdir <- function(x, path) {
 #' Change the name of the current folder
 #'
 #' If you just need to change the name of the folder you are currently in, you
-#' can use `setName()` to do so. It doesn't move variables or change anything
+#' can use `setName()`. It doesn't move variables or change anything
 #' other than the name of the current folder.
 #'
-#' @param object A `VariableFolder`
+#' @param object A `Folder`
 #' @param nm A character that is the new name the folder should have
 #' @return `object`, with its name duly changed
 #' @seealso [cd()] and [mv()]
@@ -122,10 +122,10 @@ setName <- function(object, nm) {
 #' @inheritParams mv
 #' @param create logical: if the folder indicated by `path` does not exist,
 #' should it be created? Default is `FALSE`. Argument mainly exists for the
-#' convenience of `mv()`, which moves variables to a folder and ensures that
+#' convenience of `mv()`, which moves entities to a folder and ensures that
 #' the folder exists. You can call `cd` directly with `create=TRUE`, though that
 #' seems unnatural.
-#' @return A `VariableFolder`
+#' @return A `Folder` (`VariableFolder` or `ProjectFolder`)
 #' @seealso [mv()] to move entities to a folder; [rmdir()] to delete a folder; [base::setwd()] if you literally want to change your working directory in your local file system, which `cd()` does not do
 #' @examples
 #' \dontrun{
@@ -207,7 +207,7 @@ rmdir <- function(x, path) {
     invisible(refresh(x))
 }
 
-#' Find and move variables to a new folder
+#' Find and move entities to a new folder
 #'
 #' @param x For `folder`, a Variable to find. For folder assignment, a Variable, selection of variables in a
 #' Dataset, or any other object that can be moved to a folder.

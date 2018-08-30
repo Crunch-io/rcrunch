@@ -67,14 +67,14 @@ with_mock_crunch({
         )
     })
 
+    move_testds <- paste0(
+        '{"element":"shoji:catalog",',
+        '"index":{"https://app.crunch.io/api/datasets/1/":{}},"graph":[',
+        '"https://app.crunch.io/api/datasets/3/",',
+        '"https://app.crunch.io/api/datasets/1streaming/",',
+        '"https://app.crunch.io/api/datasets/1/"]}'
+    )
     test_that("mv dataset", {
-        move_testds <- paste0(
-            '{"element":"shoji:catalog",',
-            '"index":{"https://app.crunch.io/api/datasets/1/":{}},"graph":[',
-            '"https://app.crunch.io/api/datasets/3/",',
-            '"https://app.crunch.io/api/datasets/1streaming/",',
-            '"https://app.crunch.io/api/datasets/1/"]}'
-        )
         expect_PATCH(
             projects() %>%
                 cd("Project One") %>%
@@ -92,6 +92,13 @@ with_mock_crunch({
             # That's already where it is
             projects() %>%
                 mv(ds, "Project One")
+        )
+    })
+    test_that("Legacy methods: datasets<-", {
+        expect_PATCH(
+            datasets(proj[["Project Two"]]) <- ds,
+            "https://app.crunch.io/api/projects/project2/",
+            move_testds
         )
     })
 
@@ -190,5 +197,11 @@ with_mock_crunch({
                 rmdir("NOT A GROUP"),
             '"NOT A GROUP" is not a folder'
         )
+    })
+
+    test_that("members() methods work on ProjectFolders", {
+        expect_is(members(proj), "MemberCatalog")
+        expect_PATCH(members(proj) <- "me@myself.io",
+            self(members(proj)))
     })
 })

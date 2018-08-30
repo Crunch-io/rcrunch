@@ -3,7 +3,7 @@
 \name{folder}
 \alias{folder}
 \alias{folder<-}
-\title{Find and move variables to a new folder}
+\title{Find and move entities to a new folder}
 \usage{
 folder(x)
 
@@ -22,7 +22,7 @@ separated by a delimiter ("/" default)}
 \code{x} input, having been moved to the requested location.
 }
 \description{
-Find and move variables to a new folder
+Find and move entities to a new folder
 }
 \examples{
 \dontrun{
