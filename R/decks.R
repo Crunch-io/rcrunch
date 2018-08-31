@@ -190,8 +190,9 @@ updateSlideCatTitles <- function(x, value, type) {
     # TODO update a single title.
     stopifnot(is.character(value))
     payload <- mapply(function (item, new_title){
-        item[[type]] <- new_title
-        return(item)
+        out <- item[type]
+        out[[type]] <- new_title
+        return(out)
     }, x@index, value, SIMPLIFY = FALSE)
     crPATCH(self(x), body = toJSON(payload))
     invisible(refresh(x))
@@ -250,32 +251,46 @@ setMethod("show", "CrunchSlide", function(object){
 
 # TODO: Find out what the mandatory display settings should be for the app then
 # change this list to reflect those settings.
-default_display_settings <- list(
-                         percentageDirection = "colPct",
-                         vizType = "table",
-                         countsOrPercents = "percent",
-                         decimalPlaces = 1L,
-                         uiView = "app.datasets.browse"
-                         )
+generateDefaultDisplays <- function(popMagnitude = 3) {
+    out <- list(
+        percentageDirection = "colPct",
+        showEmpty = FALSE,
+        showMean = FALSE,
+        vizType = "table",
+        countsOrPercents = "percent",
+        decimalPlaces = 1L,
+        populationMagnitude = popMagnitude,
+        showSignif = TRUE,
+        currentTab = 0L,
+        uiView = "app.datasets.browse"
+        )
+    return(out)
+}
+
+
+spliceDisplaySettings <- function(new_settings, default = generateDefaultDisplays()) {
+    in_default <- names(new_settings) %in% names(default)
+    valid_names <- names(new_settings)[in_default]
+    default[valid_names] <- new_settings[valid_names]
+    if (any(!in_default)) {
+        warning("Invalid display settings ommitted: ",
+                serialPaste(dQuote(names(new_settings))[!in_default])
+        )
+    }
+    return(default)
+}
 
 newSlide <- function(deck,
                      query,
-                     display_settings,
+                     display_settings = list(),
                      title = "",
                      subtitle = "",
                      ...) {
     ds <- loadDataset(datasetReference(deck))
-    settings <- default_display_settings
-    if (is.list(display_settings)) {
-        in_default <- names(display_settings) %in% names(default_display_settings)
-        valid_names <- names(display_settings)[in_default]
-        settings[valid_names] <- display_settings[valid_names]
-        if (any(in_default)) {
-            warning("Invalid display settings ommitted: ",
-                    serialPaste(dQuote(names(display_settings))[!in_default])
-            )
-        }
-    }
+    settings <- spliceDisplaySettings(
+        generateDefaultDisplays(ds), display_settings
+    )
+
     if (inherits(query, "formula")) {
         query <- list(query)
     }
@@ -461,9 +476,10 @@ setMethod("displaySettings", "Analysis", function(x){
 })
 
 setMethod("displaySettings<-", "Analysis", function(x, value){
-    value <- wrapDisplaySettings(value)
+    settings <- spliceDisplaySettings(value, default = displaySettings(x))
+    settings <- wrapDisplaySettings(settings)
     payload <- x@body
-    payload$display_settings <- value
+    payload$display_settings <- settings
     payload <- wrapEntity(body = payload)
     crPATCH(self(x), body = toJSON(payload))
     invisible(refresh(x))

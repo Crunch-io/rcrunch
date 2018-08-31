@@ -21,7 +21,6 @@ with_mock_crunch({
 
     main_deck <- deck_cat[[1]]
 
-
     # Crunch Decks ------------------------------------------------------------
 
     test_that("Deck metadata", {
@@ -63,6 +62,24 @@ with_mock_crunch({
         )
     })
 
+    test_that("deck titles and subtitles", {
+        expect_equal(titles(main_deck), c("birthyr", "mymrset", "mymrset"))
+        expect_PATCH(
+            titles(main_deck) <- paste("slide", 1:3),
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"title":"slide 1"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/":{"title":"slide 2"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/":{"title":"slide 3"}}'
+        )
+        expect_PATCH(
+            subtitles(main_deck) <- paste("slide", 1:3),
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"subtitle":"slide 1"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/":{"subtitle":"slide 2"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/":{"subtitle":"slide 3"}}'
+        )
+    })
+
     test_that("is.public method for decks", {
         expect_false(is.public(main_deck))
         expect_PATCH(
@@ -95,6 +112,31 @@ with_mock_crunch({
     })
 
     # Crunch Slides -----------------------------------------------------------
+
+
+
+    test_that("spliceDisplaySettings works correctly", {
+        display_names <- c("percentageDirection", "showEmpty", "showMean", "vizType",
+                           "countsOrPercents", "decimalPlaces", "populationMagnitude", "showSignif",
+                           "currentTab", "uiView")
+        settings <- spliceDisplaySettings(list(decimalPlaces = 2))
+        expect_equal(length(settings), 10)
+        expect_equal(names(settings), display_names)
+        expect_equal(settings$decimalPlaces, 2)
+
+        settings <- spliceDisplaySettings(list(decimalPlaces = 2, showMean = TRUE))
+        expect_equal(length(settings), 10)
+        expect_equal(names(settings), display_names)
+        expect_equal(settings$decimalPlaces, 2)
+        expect_equal(settings$showMean, TRUE)
+
+        expect_warning(
+            settings <<- spliceDisplaySettings(list(notAsetting = TRUE)),
+            "Invalid display settings ommitted: “notAsetting”"
+        )
+        expect_equal(length(settings), 10)
+        expect_equal(names(settings), display_names)
+    })
     slide <- main_deck[[1]]
     test_that("Slide show method", {
         expect_prints(
@@ -111,15 +153,17 @@ with_mock_crunch({
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/',
             '{"element":"shoji:entity","body":{"title":"new_title"}}'
         )
-         expect_PATCH(
+        expect_PATCH(
             subtitle(slide) <- "new_subtitle",
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/',
             '{"element":"shoji:entity","body":{"subtitle":"new_subtitle"}}'
         )
     })
+
+    slide <- main_deck[[1]]
+    an_cat <- analyses(slide)
+
     test_that("slide subsetting", {
-        slide <- main_deck[[1]]
-        an_cat <- analyses(slide)
         expect_is(an_cat, "AnalysisCatalog")
         expect_equal(length(an_cat), 1)
         expect_is(an_cat[[1]], "Analysis")
@@ -138,20 +182,40 @@ with_mock_crunch({
 
 
     # Analyses ----------------------------------------------------------------
-
-    test_that("analysis assignment errors correctly", {
-         slide <- main_deck[[1]]
-        an_cat <- analyses(slide)
-        expect_error(an_cat[[1]] <- list("test"), "Entry 1 is not a formula")
+    test_that("analysis assignment errors", {
         expect_error(
             an_cat[[1]] <- list(~birthyr, ~gender),
             "Invalid assignment. You tried to assign 2 formulas to 1 analysis."
-            )
+        )
     })
 
 
-})
+    test_that("analysis display settings", {
 
+        analysis <- an_cat[[1]]
+        settings <- displaySettings(analysis)
+        expect_is(settings, "list")
+        expect_equal(length(settings), 10)
+        expect_equal(settings$decimalPlaces, 1)
+        expect_equal(
+            names(settings),
+            c("percentageDirection", "showEmpty", "showMean", "vizType",
+              "countsOrPercents", "decimalPlaces", "populationMagnitude", "showSignif",
+              "currentTab", "uiView")
+        )
+        expect_PATCH(
+            displaySettings(analysis) <- list(decimalPlaces = 1),
+            '{https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            ' {"element":"shoji:entity",',
+            '"body":{"query":{"measures":{"count":{"function":"cube_count","args":[]}},',
+            '"dimensions":[{"function":"bin",',
+            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/000002/"}]}],',
+            '"weight":null},"display_settings":{"decimalPlaces":{"value":1}},',
+            '"query_environment":{"filter":[],"weight":null},"id":"bce96ae7d0aa4f5ea5fc1ff82ebbcb42"}}'
+        )
+    })
+
+})
 
 with_test_authentication({
     ds <- newDataset(df)
