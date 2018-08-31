@@ -141,8 +141,12 @@ test_that("toVariable parses haven::labelled_spss", {
 
     # backwards compatilbity with old class names
     class(labelled) <- c("labelled_spss", "labelled")
-    # hack to make the the is.na method act like the old one
-    is.na.labelled_spss <<- haven:::is.na.haven_labelled_spss
+
+    # hack to make the the is.na method act like the old one if we have a newer 
+    # haven
+    if (packageVersion("haven") > '1.1.2') {
+        is.na.labelled_spss <<- haven:::is.na.haven_labelled_spss
+    }
     expect_equivalent(
         toVariable(labelled),
         list(values = rep(1:3, 3), type = "categorical", categories = list(
