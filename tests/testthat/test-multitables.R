@@ -13,7 +13,7 @@ with_mock_crunch({
         expect_is(multitables(ds), "MultitableCatalog")
         expect_is(multitables(ds2), "MultitableCatalog")
         expect_length(multitables(ds), 2)
-        expect_length(multitables(ds2), 0)
+        expect_length(multitables(ds2), 1)
     })
 
     test_that("Extract multitable", {
@@ -232,6 +232,18 @@ with_mock_crunch({
         )
     })
 
+    test_that("tabBook can return a subset of variables", {
+        expect_equivalent(weight(ds2), ds[["birthyr"]])
+        m <- multitables(ds2)[[1]]
+        expect_header(
+            expect_POST(
+                tabBook(m, data = ds2[c("gender", "starttime")]),
+                "https://app.crunch.io/api/datasets/3/multitables/ed30c4/tabbook/"
+            ),
+            "Accept: application/json"
+        )
+    })
+    
     ## TODO: test the query shape
 
     with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
