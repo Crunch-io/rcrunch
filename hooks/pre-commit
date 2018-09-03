@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# To enable this hook, rename this file to "pre-commit".
+
+cubesUpdated=`git diff --cached --name-only --diff-filter=ACM cubes/`
+
+# IFF files in cubes/ have changed then compress, and add the archive
+if [ ${#cubesUpdated} -gt 0 ]
+then
+	echo "It looks like there are new cube fixtures."
+	echo "Compressing them now: this could take a few seconds."
+	make compress-fixtures
+	git add inst/cubes.tgz
+	echo "Cube fixtures compressed: inst/cubes.tgz"
+fi
+
