@@ -111,9 +111,52 @@ with_mock_crunch({
             '')
     })
 
+    test_that("deck assignment", {
+        expect_POST(
+            main_deck[[4]] <- main_deck[[1]],
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            '{"element":"shoji:entity",',
+            '"body":{"title":"birthyr",',
+            '"subtitle":"",',
+            '"analyses":[{"query":{"measures":{"count":{"function":"cube_count","args":[]}},',
+            '"dimensions":[{"function":"bin","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/000002/"}]}],',
+            '"weight":null},',
+            '"query_environment":{"filter":[],"weight":null},',
+            '"display_settings":{"decimalPlaces":{"value":1},"percentageDirection":{"value":"colPct"},"vizType":{"value":"table"},"countsOrPercents":{"value":"percent"},"uiView":{"value":"app.datasets.browse"}}}]}}'
+        )
+    })
+    test_that("delete decks", {
+        with_consent({
+            expect_DELETE(
+                delete(main_deck),
+                'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/'
+            )
+        })
+    })
+
     # Crunch Slides -----------------------------------------------------------
 
-
+    test_that("New Slide", {
+        expect_POST(
+            newSlide(main_deck, ~birthyr, title = "Title", subtitle = "SubTitle"),
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            '{"element":"shoji:entity",',
+            '"body":{"title":"Title",',
+            '"subtitle":"SubTitle",',
+            '"analyses":[{"query":{"dimensions":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}},',
+            '"display_settings":{"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":false},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"populationMagnitude":{"value":3},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0},',
+            '"uiView":{"value":"app.datasets.browse"}}}]}}'
+        )
+    })
 
     test_that("spliceDisplaySettings works correctly", {
         display_names <- c("percentageDirection", "showEmpty", "showMean", "vizType",
@@ -132,7 +175,7 @@ with_mock_crunch({
 
         expect_warning(
             settings <<- spliceDisplaySettings(list(notAsetting = TRUE)),
-            "Invalid display settings ommitted: “notAsetting”"
+            paste0("Invalid display settings ommitted: ", dQuote('notAsetting'))
         )
         expect_equal(length(settings), 10)
         expect_equal(names(settings), display_names)
@@ -180,8 +223,44 @@ with_mock_crunch({
         )
     })
 
+    test_that("Subset Crunch Slide", {
+        an <- slide[[1]]
+        expect_is(an, "Analysis")
+    })
+
 
     # Analyses ----------------------------------------------------------------
+
+    test_that("Analysis Assignment", {
+        payload <- paste0(
+            '{"element":"shoji:entity",',
+            '"body":{"query":{',
+            '"measures":{"count":{"function":"cube_count","args":[]}},',
+            '"dimensions":[{"function":"bin","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/000002/"}]}],',
+            '"weight":null},',
+            '"display_settings":{"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":true},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"populationMagnitude":{"value":3},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0},',
+            '"uiView":{"value":"app.datasets.browse"}},',
+            '"query_environment":{"filter":[],"weight":null}}}'
+        )
+        expect_POST(
+            slide[[2]] <- slide[[1]],
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/',
+            payload)
+        expect_PATCH(
+            slide[[1]] <- slide[[1]],
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            payload)
+
+    })
+
     test_that("analysis assignment errors", {
         expect_error(
             an_cat[[1]] <- list(~birthyr, ~gender),
@@ -190,8 +269,9 @@ with_mock_crunch({
     })
 
 
-    test_that("analysis display settings", {
 
+
+    test_that("analysis display settings", {
         analysis <- an_cat[[1]]
         settings <- displaySettings(analysis)
         expect_is(settings, "list")
@@ -205,16 +285,61 @@ with_mock_crunch({
         )
         expect_PATCH(
             displaySettings(analysis) <- list(decimalPlaces = 1),
-            '{https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
-            ' {"element":"shoji:entity",',
-            '"body":{"query":{"measures":{"count":{"function":"cube_count","args":[]}},',
-            '"dimensions":[{"function":"bin",',
-            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/000002/"}]}],',
-            '"weight":null},"display_settings":{"decimalPlaces":{"value":1}},',
-            '"query_environment":{"filter":[],"weight":null},"id":"bce96ae7d0aa4f5ea5fc1ff82ebbcb42"}}'
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            '{"element":"shoji:entity",',
+            '"body":{"display_settings":{',
+            '"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":true},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"populationMagnitude":{"value":3},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0},',
+            '"uiView":{"value":"app.datasets.browse"}}}}'
         )
     })
 
+    test_that("AnalysisCatelog display settings", {
+        ancat <- analyses(slide)
+        settings_list <- displaySettings(ancat)
+        expect_is(settings_list, "list")
+        expect_identical(displaySettings(ancat), displaySettings(ancat[[1]]))
+        expect_PATCH(
+            displaySettings(ancat) <- list(decimalPlaces = 2),
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            '{"element":"shoji:entity",',
+            '"body":{"display_settings":{',
+            '"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":true},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":2},',
+            '"populationMagnitude":{"value":3},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0},',
+            '"uiView":{"value":"app.datasets.browse"}}}}'
+        )
+    })
+
+    test_that("Assigning formulas to analysis", {
+        ancat <- analyses(slide)
+        expect_error(
+            ancat[[5]] <- ~birthyr,
+            "Index out of bounds, you can only assign a formula to an existing analysis."
+        )
+        expect_PATCH(
+            ancat[[1]] <- ~birthyr + gender,
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+    })
 })
 
 with_test_authentication({
@@ -357,12 +482,12 @@ with_test_authentication({
         expect_is(settings, "list")
         expect_equal(
             names(settings),
-            c("percentageDirection", "showEmpty", "vizType", "countsOrPercents",
+            c("percentageDirection", "showEmpty", "showMean", "vizType", "countsOrPercents",
               "decimalPlaces", "populationMagnitude", "showSignif", "currentTab",
               "uiView"
             )
         )
-        expect_euqal(settings$countsOrPercents, "percent")
+        expect_equal(settings$countsOrPercents, "percent")
         settings$countsOrPercents <- "count"
         displaySettings(analysis) <- settings
     })

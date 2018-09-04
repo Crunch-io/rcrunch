@@ -50,6 +50,7 @@ setMethod("[[", "CrunchDeck", function (x, i, ...) {
     return(slideCat[[i]])
 })
 setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
+
     slideCat <- slides(x)
     slideCat[[i]] <- value
     invisible(refresh(x))
@@ -130,7 +131,7 @@ exportDeck <- function(deck, file, type = c("xlsx", "json")) {
             )
         ext <- ".xlsx"
     }
-    browser()
+
     if (missing(file)) {
         file <-  paste0(name(deck), ext)
     }
@@ -216,16 +217,16 @@ setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
                   # Replace with newSlide function when we have the
                   # analysesToFormula functions implemented.
                   payload <- value@body[c("title", "subtitle")]
+
                   analyses <- analyses(value)
                   payload$analyses <- analysesToQueryList(analyses(value))
                   payload <- wrapEntity(body = payload)
                   crPOST(self(x), body = toJSON(payload))
               } else {
-                  slide <- x[[i]]
-                  analyses(slide) <- analyses(value)
-                  payload <- list(title = title(value), subtitle = subtitle(value))
-                  payload <- wrapEntity(body = payload)
-                  crPATCH(self(slide), body = toJSON(payload))
+                  #TODO You can't actually patch a slide so we need
+                  # To delete the slide, post a new one, and then
+                  # reorder the slide catalog. So wait for slide reorder
+                  # Should we take out the rest of the `[[<-` method until then?
               }
               invisible(refresh(x))
           })
@@ -287,19 +288,17 @@ newSlide <- function(deck,
                      subtitle = "",
                      ...) {
     ds <- loadDataset(datasetReference(deck))
-    settings <- spliceDisplaySettings(
-        generateDefaultDisplays(ds), display_settings
-    )
+    settings <- spliceDisplaySettings(display_settings)
 
     if (inherits(query, "formula")) {
         query <- list(query)
     }
-    display_settings <- wrapDisplaySettings(display_settings)
+    settings <- wrapDisplaySettings(settings)
     payload <- list(title = title, subtitle = subtitle, ...)
     queries <- lapply(query, function(x) {
         return(list(
             query = formulaToCubeQuery(x, ds),
-            display_settings = display_settings
+            display_settings = settings
             ))
         })
     payload[["analyses"]] <- queries
@@ -345,14 +344,6 @@ setMethod("analyses", "CrunchSlide", {
     }
 })
 
-setMethod("analyses<-", c("CrunchSlide", "AnalysisCatalog"), function(x, value){
-    x_analyses <- analyses(x)
-    lapply(seq_along(value), function(i){
-        x_analyses[[i]] <- value[[i]]
-    })
-    return(invisible(refresh(x)))
-})
-
 setMethod("analysis", "CrunchSlide", function (x) {
     out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
     return(out[[1]])
@@ -382,12 +373,12 @@ setMethod("[[", "AnalysisCatalog", function (x, i, ...) {
 })
 
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), function (x, i, j, value) {
-  if (i <= length(x)) {
-      analysis <- x[[i]]
-      analysis <- value
-  } else {
-      halt("Index out of bounds, you can only assign a formula to an existing analysis.")
-  }
+    if (i > length(x)) {
+        halt("Index out of bounds, you can only assign a formula to an existing analysis.")
+    }
+    analysis <- x[[i]]
+    query(analysis) <- value
+    invisible(refresh(x))
 })
 
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
@@ -399,10 +390,7 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
               if (i > length(x) + 1) {
                   #TODO what to do with adding an analysis that's not the next one.
               }
-
-              display_fields <- names(default_display_settings)
               payload <- value@body[c("query", "display_settings", "query_environment")]
-              payload$display_settings <- payload$display_settings[display_fields]
               payload <- wrapEntity(body = payload)
               if (i <= length(x)) {
                   url <- names(x@index)[i]
@@ -440,11 +428,8 @@ setMethod("displaySettings", "AnalysisCatalog", function(x){
     return(displaySettings(analyses[[1]]))
 })
 
-setMethod("displaySettings<-", "AnalysisCatalog", function(x, value){
+setMethod("displaySettings<-", c("AnalysisCatalog", "list"), function(x, value){
     analyses <- lapply(seq_along(length(x)), function(i) x[[i]])
-    if (length(x) > 1) {
-        warning("Slide has multiple analyses, returning display settings for the first analysis")
-    }
     lapply(analyses, function(x) displaySettings(x) <- value)
 })
 
@@ -478,8 +463,7 @@ setMethod("displaySettings", "Analysis", function(x){
 setMethod("displaySettings<-", "Analysis", function(x, value){
     settings <- spliceDisplaySettings(value, default = displaySettings(x))
     settings <- wrapDisplaySettings(settings)
-    payload <- x@body
-    payload$display_settings <- settings
+    payload <- list(display_settings = settings)
     payload <- wrapEntity(body = payload)
     crPATCH(self(x), body = toJSON(payload))
     invisible(refresh(x))
