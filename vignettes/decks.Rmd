@@ -11,15 +11,19 @@ vignette: >
 ![Crunch Decks](https://support.crunch.io/crunch/crunch_saving-analyses.html) are the main way that Crunch helps you organize your analyses. You can save graphs, cross-tabs, and summaries to a deck and export it, set it as a dashboard, or share it with other analysts. 
 
 The **crunch** package provides an interface to programatically manipulate decks in the Crunch app. While it is possible to create a Deck from scratch in R using the `newDeck()` and `newSlide()` functions, for the most part you will probably be manipulating decks which have already been created in the web app. We can view the decks associated with a dataset using the `decks` function
-
-```{r, echo = FALSE}
-login()
+```{r, message=FALSE}
+library(crunch)
 ```
 
+```{r, results='hide', include = FALSE}
+library(httptest)
+start_vignette("decks")
+```
 
 ```{r}
-login()
+library(crunch)
 ds <- loadDataset("stackoverflow_survey_decks")
+ds <- forkDataset(ds)
 ds_decks <- decks(ds)
 ds_decks
 ```
@@ -32,6 +36,10 @@ name(gender_deck)
 
 You can modify a couple of attributes of decks such as the name, the description, and whether the deck is public.
 
+```{r, include=FALSE}
+change_state()
+```
+
 ```{r}
 name(gender_deck) <- "Gender and Country (June 2017)"
 name(gender_deck)
@@ -40,38 +48,40 @@ is.public(gender_deck) <- TRUE
 ```
 
 Decks are composed of slides. Each slide has a title and a subtitle, and you can get and set these with the `titles` and `subtitles` methods. In this case we could change the slide title to specify the timeliness of the data, and split up the subtitles to make them easier for humans to read. 
-
+```{r, include=FALSE}
+change_state()
+```
 ```{r}
-titles(gender_deck)
 titles(gender_deck) <- paste(titles(gender_deck), "(2017 data)")
-titles(gender_deck)
-subtitles(gender_deck)
 subtitles(gender_deck) <- gsub("([A-Z])", " \\1", subtitles(gender_deck))
+titles(gender_deck)
 subtitles(gender_deck)
 ```
 
 We can access a slide by subsetting a deck using a numeric index. 
 
 ```{r}
-slide3 <- gender_deck[[3]]
-slide3
+slide2 <- gender_deck[[2]]
+slide2
 ```
 
 You might notice that the printed slide looks a lot like a CrunchCube, this is because the CrunchCube is the fundamental unit of analyses in Crunch, and slides are more or less wrappers around Cubes. Indeed you can assign the same formulas you use to create CrunchCubes into the `query` function to change what a slide displays. In this case we might want to flip the row and column variables. 
 
-
+```{r, echo=FALSE}
+change_state()
+```
 ```{r}
-query(slide3) <- ~Professional + TabsSpaces
-slide3
+query(slide2) <- ~TabsSpaces + Professional
+slide2
 ```
 
 Since the analyses in a slide are basically crunch cubes, you can access the cubes with the `cube` function. This is useful if you want to do further analysis on the data. 
 
 ```{r}
-cube(slide3)
+cube(slide2)
 # You can also get a list of cubes for the whole deck
 cube_list <- cubes(gender_deck)
-cube_list[[4]]
+cube_list[[2]]
 ```
 
 
@@ -81,22 +91,17 @@ cube_list[[4]]
 ```
 
 
-# Copying Decks and Slides
+# Copying Decks
 
 You can copy decks by assigning them into the deck catalog for a dataset. Currently it is only possible to copy decks within a dataset and it is not possible to copy decks between datasets. This is useful if you have need to create several decks which are similar to one another. 
-
+```{r, echo=FALSE}
+change_state()
+```
 ```{r}
 ds_decks[["new deck"]] <- gender_deck
 ds_decks
 ```
-
-You can copy slides either within a single deck, or between decks by assignment. 
-
 ```{r}
-titles(gender_deck)
-gender_deck[[5]] <- gender_deck[[1]]
-titles(gender_deck)
-titles(gender_deck)[1] <- "test"
-titles(gender_deck)
+with_consent(delete(ds))
+end_vignette()
 ```
-

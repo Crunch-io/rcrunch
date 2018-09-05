@@ -1,0 +1,13 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/695373/decks/0f718f/slides/418c51/analyses/",
+    "orders": {
+        "order": "/api/datasets/695373/decks/0f718f/slides/418c51/analyses/order/"
+    },
+    "description": "List of all analyses inside this slide",
+    "index": {
+        "/api/datasets/695373/decks/0f718f/slides/418c51/analyses/ad0b98/": {
+
+        }
+    }
+}

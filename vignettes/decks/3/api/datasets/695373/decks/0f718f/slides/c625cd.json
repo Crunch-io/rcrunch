@@ -1,0 +1,49 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/695373/decks/0f718f/slides/c625cd/",
+    "catalogs": {
+        "analyses": "/api/datasets/695373/decks/0f718f/slides/c625cd/analyses/"
+    },
+    "description": "Returns the detail information for a given slide",
+    "body": {
+        "deck_id": "0f718f",
+        "subtitle": "",
+        "title": "Country (2017 data)",
+        "analysis_url": "/api/datasets/695373/decks/0f718f/slides/c625cd/analyses/e75cde/",
+        "version": "master__tip",
+        "display_settings": {
+            "percentageDirection": {
+                "value": "colPct"
+            },
+            "showEmpty": {
+                "value": false
+            },
+            "showMean": {
+                "value": true
+            },
+            "vizType": {
+                "value": "table"
+            },
+            "countsOrPercents": {
+                "value": "percent"
+            },
+            "decimalPlaces": {
+                "value": 1
+            },
+            "populationMagnitude": {
+                "value": 3
+            },
+            "showSignif": {
+                "value": true
+            },
+            "currentTab": {
+                "value": 0
+            },
+            "uiView": {
+                "value": "app.datasets.browse"
+            }
+        },
+        "dataset_id": "695373",
+        "id": "c625cd"
+    }
+}

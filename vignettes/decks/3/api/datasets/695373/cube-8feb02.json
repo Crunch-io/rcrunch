@@ -1,0 +1,204 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/695373/cube/?query=%7B%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F695373%2Fvariables%2F000004%2F%22%7D%2C%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F695373%2Fvariables%2F000013%2F%22%7D%5D%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/695373/variables/000004/"
+                },
+                {
+                    "variable": "/api/datasets/695373/variables/000013/"
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "alias": "TabsSpaces",
+                        "name": "TabsSpaces"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "Both"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Spaces"
+                            },
+                            {
+                                "numeric_value": 3,
+                                "missing": false,
+                                "id": 3,
+                                "name": "Tabs"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "references": {
+                        "alias": "Professional",
+                        "name": "Professional"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "None of these"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Professional developer"
+                            },
+                            {
+                                "numeric_value": 3,
+                                "missing": false,
+                                "id": 3,
+                                "name": "Professional non-developer who sometimes writes code"
+                            },
+                            {
+                                "numeric_value": 4,
+                                "missing": false,
+                                "id": 4,
+                                "name": "Student"
+                            },
+                            {
+                                "numeric_value": 5,
+                                "missing": false,
+                                "id": 5,
+                                "name": "Used to be a professional developer"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 24,
+            "measures": {
+                "count": {
+                    "data": [
+                        6,
+                        284,
+                        192,
+                        88,
+                        16,
+                        0,
+                        50,
+                        748,
+                        328,
+                        106,
+                        30,
+                        0,
+                        32,
+                        648,
+                        444,
+                        246,
+                        26,
+                        0,
+                        0,
+                        10,
+                        6,
+                        6,
+                        2,
+                        0
+                    ],
+                    "n_missing": 24,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "n": 3268,
+            "unfiltered": {
+                "unweighted_n": 3268,
+                "weighted_n": 3268
+            },
+            "filtered": {
+                "unweighted_n": 3268,
+                "weighted_n": 3268
+            },
+            "counts": [
+                6,
+                284,
+                192,
+                88,
+                16,
+                0,
+                50,
+                748,
+                328,
+                106,
+                30,
+                0,
+                32,
+                648,
+                444,
+                246,
+                26,
+                0,
+                0,
+                10,
+                6,
+                6,
+                2,
+                0
+            ],
+            "element": "crunch:cube"
+        }
+    }
+}

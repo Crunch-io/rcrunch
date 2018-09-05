@@ -1,0 +1,49 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/695373/decks/0f718f/slides/84bd56/",
+    "catalogs": {
+        "analyses": "/api/datasets/695373/decks/0f718f/slides/84bd56/analyses/"
+    },
+    "description": "Returns the detail information for a given slide",
+    "body": {
+        "deck_id": "0f718f",
+        "subtitle": " Tabs Spaces",
+        "title": "ImportantHiringAlgorithms (2017 data)",
+        "analysis_url": "/api/datasets/695373/decks/0f718f/slides/84bd56/analyses/628235/",
+        "version": "master__tip",
+        "display_settings": {
+            "percentageDirection": {
+                "value": "colPct"
+            },
+            "showEmpty": {
+                "value": false
+            },
+            "showMean": {
+                "value": false
+            },
+            "vizType": {
+                "value": "table"
+            },
+            "countsOrPercents": {
+                "value": "percent"
+            },
+            "decimalPlaces": {
+                "value": 1
+            },
+            "populationMagnitude": {
+                "value": 3
+            },
+            "showSignif": {
+                "value": true
+            },
+            "currentTab": {
+                "value": 0
+            },
+            "uiView": {
+                "value": "app.datasets.analyze"
+            }
+        },
+        "dataset_id": "695373",
+        "id": "84bd56"
+    }
+}

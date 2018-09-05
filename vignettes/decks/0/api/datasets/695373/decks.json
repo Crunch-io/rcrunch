@@ -1,0 +1,26 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/695373/decks/",
+    "orders": {
+        "order": "/api/datasets/695373/decks/order/"
+    },
+    "description": "List of decks available for this user under this dataset",
+    "index": {
+        "/api/datasets/695373/decks/0f718f/": {
+            "owner_name": "Gordon Shotwell",
+            "name": "Gender and Country",
+            "creation_time": "2018-09-05T13:56:13.787000+00:00",
+            "team": null,
+            "is_public": false,
+            "owner_id": "/api/users/7bbff9/"
+        },
+        "/api/datasets/695373/decks/9b3f5b/": {
+            "owner_name": "Gordon Shotwell",
+            "name": "Main Deck",
+            "creation_time": "2018-08-09T12:16:12.774000+00:00",
+            "team": null,
+            "is_public": false,
+            "owner_id": "/api/users/7bbff9/"
+        }
+    }
+}

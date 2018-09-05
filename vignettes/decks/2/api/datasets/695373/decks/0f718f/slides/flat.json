@@ -1,0 +1,11 @@
+{
+    "element": "shoji:order",
+    "self": "/api/datasets/695373/decks/0f718f/slides/flat/",
+    "description": "Order of the slides on this deck",
+    "graph": [
+        "/api/datasets/695373/decks/0f718f/slides/c625cd/",
+        "/api/datasets/695373/decks/0f718f/slides/418c51/",
+        "/api/datasets/695373/decks/0f718f/slides/5a63c8/",
+        "/api/datasets/695373/decks/0f718f/slides/84bd56/"
+    ]
+}

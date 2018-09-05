@@ -1,0 +1,65 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/695373/decks/0f718f/slides/84bd56/analyses/628235/",
+    "description": "Data to build a given analysis",
+    "body": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/695373/variables/000021/"
+                },
+                {
+                    "variable": "/api/datasets/695373/variables/000004/"
+                }
+            ],
+            "weight": null
+        },
+        "display_settings": {
+            "percentageDirection": {
+                "value": "colPct"
+            },
+            "showEmpty": {
+                "value": false
+            },
+            "showMean": {
+                "value": false
+            },
+            "vizType": {
+                "value": "table"
+            },
+            "countsOrPercents": {
+                "value": "percent"
+            },
+            "decimalPlaces": {
+                "value": 1
+            },
+            "populationMagnitude": {
+                "value": 3
+            },
+            "showSignif": {
+                "value": true
+            },
+            "currentTab": {
+                "value": 0
+            },
+            "uiView": {
+                "value": "app.datasets.analyze"
+            }
+        },
+        "query_environment": {
+            "filter": [
+
+            ],
+            "weight": null
+        },
+        "id": "628235"
+    }
+}
