@@ -162,8 +162,7 @@ setGeneric("decks", function (x) standardGeneric("decks"))
 #' API.
 #'
 #' @param x a CrunchDeck
-#'
-#' @return
+#' @export
 setGeneric("slides", function (x) standardGeneric("slides"))
 
 
@@ -190,28 +189,43 @@ setGeneric("slides", function (x) standardGeneric("slides"))
 #' }
 setGeneric("titles", function (x) standardGeneric("titles"))
 #' @rdname deck-titles
+#' @export
 setGeneric("titles<-", function (x, value) standardGeneric("titles<-"))
 #' @rdname deck-titles
 setGeneric("title", function (x) standardGeneric("title"))
 #' @rdname deck-titles
 setGeneric("title<-", function (x, value) standardGeneric("title<-"))
 #' @rdname deck-titles
+#' @export
 setGeneric("subtitles", function (x, value) standardGeneric("subtitles"))
 #' @rdname deck-titles
+#' @export
 setGeneric("subtitles<-", function (x, value) standardGeneric("subtitles<-"))
 #' @rdname deck-titles
+#' @export
 setGeneric("subtitle", function (x, value) standardGeneric("subtitle"))
 #' @rdname deck-titles
+#' @export
 setGeneric("subtitle<-", function (x, value) standardGeneric("subtitle<-"))
+#' @export
 setGeneric("analyses", function (x) standardGeneric("analyses"))
+#' @export
 setGeneric("analyses<-", function(x, value) standardGeneric("analyses<-"))
+#' @export
 setGeneric("analysis", function (x) standardGeneric("analysis"))
+#' @export
 setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
+#' @export
 setGeneric("query", function (x) standardGeneric("query"))
+#' @export
 setGeneric("query<-", function(x, value) standardGeneric("query<-"))
+#' @export
 setGeneric("cube", function (x) standardGeneric("cube"))
+#' @export
 setGeneric("cubes", function (x) standardGeneric("cubes"))
+#' @export
 setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
+#' @export
 setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
 
 setGeneric("multitables", function (x) standardGeneric("multitables"))

@@ -29,6 +29,19 @@ setMethod("[[", "DeckCatalog",  function (x, i, ...) {
     getEntity(x, i, CrunchDeck, ...)
 })
 
+setMethod("[[", c("DeckCatalog", "character", "ANY"),  function (x, i, ...) {
+    matches <- i %in% names(x)
+    if (!matches) {
+        halt(i, " is not present in deck catalog")
+    }
+    index <- which(matches)
+    if (sum(matches) > 1) {
+        warning(i, " does not uniquely identify elements. Returning the first match")
+        index <- index[1]
+    }
+    getEntity(x, index, CrunchDeck, ...)
+})
+
 setMethod("[[<-", c("DeckCatalog", "character", "ANY", "CrunchDeck"),
           function (x, i, j, value) {
               payload <- value@body[c("name", "description", "is_public", "team")]
