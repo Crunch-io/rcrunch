@@ -1,8 +1,6 @@
 context("Interacting with decks")
 
 with_mock_crunch({
-
-
     # Deck Catalog ------------------------------------------------------------
     ds <- loadDataset("test ds")
     test_that("newDeck posts correctly", {
@@ -15,16 +13,23 @@ with_mock_crunch({
     deck_cat <- decks(ds)
     test_that("Deck Catalog can be retrieved", {
         expect_is(deck_cat, "DeckCatalog")
-        expect_equal(length(deck_cat), 1)
-        expect_equal(names(deck_cat), "Main Deck")
+        expect_equal(length(deck_cat), 2)
+        expect_equal(names(deck_cat), c("Main Deck", "Main Deck"))
     })
-
-    expect_identical(deck_cat[["Main Deck"]], deck_cat[[1]])
+    expect_warning(
+        expect_GET(deck_cat[["Main Deck"]],
+                   'https://app.crunch.io/api/datasets/1/decks/f9b502afe2e54e79b3e17f3cc61174ae/'),
+        paste0(dQuote("Main Deck"), " does not uniquely identify elements. Returning the first match")
+    )
     expect_error(
         deck_cat[["Not a name"]],
         paste0(dQuote("Not a name"), " is not present in deck catalog")
     )
-    main_deck <- deck_cat[[1]]
+    expect_error(
+        deck_cat[[c("name 1", "name 2")]],
+        "You can only select one deck at a time"
+    )
+    main_deck <- deck_cat[[2]]
 
     # Crunch Decks ------------------------------------------------------------
 
@@ -303,10 +308,11 @@ with_mock_crunch({
             an_cat[[1]] <- list(~birthyr, ~gender),
             "Invalid assignment. You tried to assign 2 formulas to 1 analysis."
         )
+        expect_error(
+            an_cat[[1]] <- list(~birthyr, "gender"),
+            "Entry 2 is not a formula"
+        )
     })
-
-
-
 
     test_that("analysis display settings", {
         analysis <- an_cat[[1]]

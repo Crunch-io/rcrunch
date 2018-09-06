@@ -30,8 +30,11 @@ setMethod("[[", "DeckCatalog",  function (x, i, ...) {
 })
 
 setMethod("[[", c("DeckCatalog", "character", "ANY"),  function (x, i, ...) {
-    matches <- i %in% names(x)
-    if (!matches) {
+    if (length(i) > 1) {
+        halt("You can only select one deck at a time")
+    }
+    matches <- names(x) %in% i
+    if (all(!matches)) {
         halt(dQuote(i), " is not present in deck catalog")
     }
     index <- which(matches)

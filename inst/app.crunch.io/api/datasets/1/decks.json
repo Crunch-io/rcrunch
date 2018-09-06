@@ -7,6 +7,14 @@
     "specification": "https://app.crunch.io/api/specifications/decks/",
     "description": "List of decks available for this user under this dataset",
     "index": {
+        "https://app.crunch.io/api/datasets/1/decks/f9b502afe2e54e79b3e17f3cc61174ae/": {
+            "owner_name": "Gordon Shotwell",
+            "name": "Main Deck",
+            "creation_time": "2018-09-06T13:32:54.116000+00:00",
+            "team": null,
+            "is_public": false,
+            "owner_id": "https://app.crunch.io/api/users/7bbff9139cb443e69422e89512a22688/"
+        },
         "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/": {
             "owner_name": "Gordon Shotwell",
             "name": "Main Deck",
