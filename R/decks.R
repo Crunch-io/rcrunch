@@ -32,11 +32,11 @@ setMethod("[[", "DeckCatalog",  function (x, i, ...) {
 setMethod("[[", c("DeckCatalog", "character", "ANY"),  function (x, i, ...) {
     matches <- i %in% names(x)
     if (!matches) {
-        halt(i, " is not present in deck catalog")
+        halt(dQuote(i), " is not present in deck catalog")
     }
     index <- which(matches)
     if (sum(matches) > 1) {
-        warning(i, " does not uniquely identify elements. Returning the first match")
+        warning(dQuote(i), " does not uniquely identify elements. Returning the first match")
         index <- index[1]
     }
     getEntity(x, index, CrunchDeck, ...)
@@ -63,7 +63,6 @@ setMethod("[[", "CrunchDeck", function (x, i, ...) {
     return(slideCat[[i]])
 })
 setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
-
     slideCat <- slides(x)
     slideCat[[i]] <- value
     invisible(refresh(x))
@@ -185,7 +184,7 @@ setMethod("names", "SlideCatalog", function(x) titles(x))
 setMethod("names<-", "SlideCatalog", function(x, value) titles(x) <- value)
 
 setMethod("titles", "SlideCatalog", function (x){
-    as.character(lapply(x@index, function(x) x$title))
+    as.character(lapply(index(x), function(a) a$title))
 })
 
 setMethod("titles<-", "SlideCatalog", function (x, value){
@@ -193,7 +192,7 @@ setMethod("titles<-", "SlideCatalog", function (x, value){
 })
 
 setMethod("subtitles", "SlideCatalog", function (x){
-    as.character(lapply(x@index, function(x) x$subtitle))
+    as.character(lapply(index(x), function(a) a$subtitle))
 })
 
 setMethod("subtitles<-", "SlideCatalog", function (x, value){
@@ -225,21 +224,21 @@ setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
                   #TODO what to do with missing slide entries
                   i <- length(x) + 1
               }
-              if (i > length(x)) {
-                  # create new slide
-                  # Replace with newSlide function when we have the
-                  # analysesToFormula functions implemented.
-                  payload <- value@body[c("title", "subtitle")]
 
-                  analyses <- analyses(value)
-                  payload$analyses <- analysesToQueryList(analyses(value))
-                  payload <- wrapEntity(body = payload)
-                  crPOST(self(x), body = toJSON(payload))
-              } else {
-                  #TODO You can't actually patch a slide so we need
-                  # To delete the slide, post a new one, and then
-                  # reorder the slide catalog. So wait for slide reorder
-                  # Should we take out the rest of the `[[<-` method until then?
+              n_slides <- length(x)
+
+              payload <- value@body[c("title", "subtitle")]
+              payload$analyses <- analysesToQueryList(analyses(value))
+              payload <- wrapEntity(body = payload)
+              crPOST(self(x), body = toJSON(payload))
+
+              if (i < n_slides) {
+                  # You can't modify the contents of a slide by patching it
+                  # so we need to add the new slide, delete the original slide,
+                  # and reorder the slideCatalog.
+                  new_order <- moveLastElement(seq_len(n_slides + 1), i)
+                  reorderSlides(x, new_order)
+                  with_consent(delete(x[[length(x)]]))
               }
               invisible(refresh(x))
           })
@@ -254,6 +253,34 @@ analysesToQueryList <- function(anCat) {
         out
     })
 }
+
+moveLastElement <- function(v, idx){
+    v[idx] <- v[length(v)]
+    out <- v[1:(length(v) -1)]
+    return(out)
+}
+
+#' Reorder slides in a crunchdeck
+#'
+#' @param x A SlideCatalog
+#' @param order The numeric order for slides to be reordered to.
+#'
+#' @return A SlideCatalog
+reorderSlides <- function(x, order) {
+    url <- paste0(self(x), "flat")
+    payload <- crGET(url)
+    payload$graph <- payload$graph[order]
+    crPATCH(url, body = toJSON(payload))
+    return(refresh(x))
+}
+
+setMethod("delete", "CrunchSlide", function (x, ...) {
+    if (!askForPermission(paste0("Really delete slide ", dQuote(title(x)), "?"))) {
+        halt("Must confirm deleting CrunchSlide")
+    }
+    out <- crDELETE(self(x), drop = dropCache(gsub("slides/.*", "slides/", self(x))))
+    invisible(out)
+})
 
 # CrunchSlide -------------------------------------------------------------------
 

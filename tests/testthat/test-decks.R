@@ -19,6 +19,11 @@ with_mock_crunch({
         expect_equal(names(deck_cat), "Main Deck")
     })
 
+    expect_identical(deck_cat[["Main Deck"]], deck_cat[[1]])
+    expect_error(
+        deck_cat[["Not a name"]],
+        paste0(dQuote("Not a name"), " is not present in deck catalog")
+    )
     main_deck <- deck_cat[[1]]
 
     # Crunch Decks ------------------------------------------------------------
@@ -134,6 +139,29 @@ with_mock_crunch({
         })
     })
 
+    # Slide Catalog -----------------------------------------------------------
+
+    test_that("moveLastElement", {
+        expect_equal(moveLastElement(1:5, 3), c(1,2,5,4))
+        expect_equal(moveLastElement(1:5, 5), c(1,2,3,4))
+        expect_equal(moveLastElement(1:5, 1), c(5,2,3,4))
+        expect_equal(moveLastElement(1:5, 2), c(1,5,3,4))
+    })
+
+    test_that("reorderSlides", {
+        expect_PATCH(
+            reorderSlides(slides(main_deck), c(3, 2, 1)),
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat',
+            '{"element":"shoji:order",',
+            '"self":"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat/",',
+            '"description":"Order of the slides on this deck",',
+            '"graph":["https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/",',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/",',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/"]}'
+        )
+    })
+
+
     # Crunch Slides -----------------------------------------------------------
 
     test_that("New Slide", {
@@ -226,6 +254,15 @@ with_mock_crunch({
     test_that("Subset Crunch Slide", {
         an <- slide[[1]]
         expect_is(an, "Analysis")
+    })
+
+    test_that("delete slide", {
+        with_consent({
+            expect_DELETE(
+                delete(slide),
+                'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/'
+            )
+        })
     })
 
 
