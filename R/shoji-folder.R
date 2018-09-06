@@ -94,7 +94,14 @@ createFolder <- function(where, name, index, ...) {
     ## turn index into index + graph in payload
     ## TODO: also for reordering, function that takes a list (index) and returns
     ## list(index=index, graph=names(index))
-    crPOST(self(where), body = toJSON(wrapCatalog(body = list(name = name, ...))))
+    if (inherits(where, "VariableFolder")) {
+        bod <- wrapCatalog(body = list(name = name, ...))
+    } else {
+        ## Special case: projects strictly require "entity"
+        ## Remove after https://www.pivotaltracker.com/story/show/160328444
+        bod <- wrapEntity(body = list(name = name, ...))
+    }
+    crPOST(self(where), body = toJSON(bod))
 }
 
 #' @rdname describe

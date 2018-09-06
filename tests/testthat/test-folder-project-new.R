@@ -37,7 +37,7 @@ with_mock_crunch({
         )
     })
 
-    create_group_2 <- '{"element":"shoji:catalog","body":{"name":"Group 2"}}'
+    create_group_2 <- '{"element":"shoji:entity","body":{"name":"Group 2"}}'
     test_that("mkdir on root", {
         expect_POST(
             projects() %>% mkdir("Group 2"),
