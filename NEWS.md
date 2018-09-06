@@ -1,4 +1,5 @@
 # crunch 1.23.1 (under development)
+* Updated compatibility with the Haven package's `new haven_labelled` and `haven_labelled_spss` object names
 * Tabbooks for subsets of variables with weights no longer error
 * The package now warns user when an endpoint is deprecated
 * Added `setName()` and `setNames()` for renaming variable folders
