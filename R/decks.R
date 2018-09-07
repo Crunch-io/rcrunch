@@ -45,15 +45,6 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"),  function (x, i, ...) {
     getEntity(x, index, CrunchDeck, ...)
 })
 
-setMethod("[[<-", c("DeckCatalog", "character", "ANY", "CrunchDeck"),
-          function (x, i, j, value) {
-              payload <- value@body[c("name", "description", "is_public", "team")]
-              payload$name <- i
-              payload <- payload[vapply(payload, function(x)is.character(x) | is.logical(x), logical(1))]
-              crPOST(self(x), body = toJSON(payload))
-              return(invisible(refresh(x)))
-          })
-
 setMethod("show", "DeckCatalog", function(object){
     out <- as.data.frame(object)
     print(out[, c("name", "team", "is_public", "owner_name")])
@@ -110,21 +101,15 @@ setMethod("is.public<-", "CrunchDeck", function(x, value) {
 setMethod("names", "CrunchDeck", function(x) titles(slides(x)))
 setMethod("names<-", "CrunchDeck", function(x, value) titles(slides(x)) <- value)
 
-setMethod("titles", "CrunchDeck", function (x){
-    titles(slides(x))
-})
-
+setMethod("titles", "CrunchDeck", function(x) titles(slides(x)))
 setMethod("titles<-", "CrunchDeck", function (x, value){
     slides <- slides(x)
     titles(slides) <- value
     invisible(refresh(x))
 })
 
-setMethod("subtitles", "CrunchDeck", function (x){
-     subtitles(slides(x))
-})
-
-setMethod("subtitles<-", "CrunchDeck", function (x, value){
+setMethod("subtitles", "CrunchDeck", function(x) subtitles(slides(x)))
+setMethod("subtitles<-", "CrunchDeck", function(x, value){
     slides <- slides(x)
     subtitles(slides) <- value
     invisible(refresh(x))
@@ -153,13 +138,14 @@ exportDeck <- function(deck, file, type = c("xlsx", "json")) {
     crDownload(dl_link, file)
 }
 
-setMethod("length", "CrunchDeck", function(x){
-    return(length(slides(x)))
-})
+setMethod("length", "CrunchDeck", function(x) return(length(slides(x))))
 
 setMethod("cubes", "CrunchDeck", function(x){
     out <- lapply(seq_len(length(x)), function(i){
         cubes <- cubes(x[[i]])
+        # If a slide has several analyses we should return a sublist of
+        # cubes, but most of the time they will have one analysis so not
+        # including the sublist is preferable.
         if (length(cubes) == 1) {
             cubes <- cubes[[1]]
         }
@@ -250,9 +236,6 @@ analysesToQueryList <- function(anCat) {
     lapply(seq_along(anCat), function(i){
         out <- anCat[[i]]
         out <- out@body[c("query", "query_environment", "display_settings")]
-        out$display_settings <- out$display_settings[c(
-            "decimalPlaces", "percentageDirection",
-            "vizType", "countsOrPercents", "uiView")]
         out
     })
 }
@@ -331,20 +314,20 @@ newSlide <- function(deck,
                      subtitle = "",
                      ...) {
     ds <- loadDataset(datasetReference(deck))
-    settings <- spliceDisplaySettings(display_settings)
-
     if (inherits(query, "formula")) {
         query <- list(query)
     }
+
+    settings <- spliceDisplaySettings(display_settings)
     settings <- wrapDisplaySettings(settings)
+
     payload <- list(title = title, subtitle = subtitle, ...)
-    queries <- lapply(query, function(x) {
+    payload[["analyses"]] <- lapply(query, function(x) {
         return(list(
             query = formulaToCubeQuery(x, ds),
             display_settings = settings
-            ))
-        })
-    payload[["analyses"]] <- queries
+        ))
+    })
     payload <- wrapEntity(body = payload)
     url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
     return(CrunchSlide(crGET(url)))
@@ -356,8 +339,8 @@ setMethod("[[", "CrunchSlide", function (x, i, ...) {
 })
 
 setMethod("[[<-", "CrunchSlide", function(x, i, j, value) {
-    anCat <- analyses(x)
-    anCat[[i]] <- value
+    an_cat <- analyses(x)
+    an_cat[[i]] <- value
     invisible(refresh(x))
 })
 
@@ -407,7 +390,7 @@ setMethod("cube", "CrunchSlide", function(x) cube(analyses(x)[[1]]))
 setMethod("displaySettings", "CrunchSlide", function(x) displaySettings(analyses(x)))
 setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
     displaySettings(analyses(x)) <- value
-    })
+})
 
 # AnalysisCatalog --------------------------------------------------------------
 

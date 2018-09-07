@@ -40,14 +40,6 @@ with_mock_crunch({
         expect_equal(subtitles(main_deck), c("", "", "age"))
     })
 
-    test_that("deck assignment produces POST", {
-        expect_POST(
-            deck_cat[["new_deck"]] <- main_deck,
-            'https://app.crunch.io/api/datasets/1/decks/',
-            '{"name":"new_deck","description":"","is_public":false}'
-        )
-    })
-
     test_that("deck catalog show method", {
         expected <- as.data.frame(deck_cat)[c("name", "team", "is_public", "owner_name")]
         expect_prints(
@@ -132,7 +124,17 @@ with_mock_crunch({
             '"dimensions":[{"function":"bin","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/000002/"}]}],',
             '"weight":null},',
             '"query_environment":{"filter":[],"weight":null},',
-            '"display_settings":{"decimalPlaces":{"value":1},"percentageDirection":{"value":"colPct"},"vizType":{"value":"table"},"countsOrPercents":{"value":"percent"},"uiView":{"value":"app.datasets.browse"}}}]}}'
+            '"display_settings":',
+            '{"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":true},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"populationMagnitude":{"value":3},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0},',
+            '"uiView":{"value":"app.datasets.browse"}}}]}}'
         )
     })
     test_that("delete decks", {
