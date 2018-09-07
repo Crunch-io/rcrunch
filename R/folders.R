@@ -257,8 +257,13 @@ folder <- function(x) {
 .moveToFolder <- function(folder, what) {
     ## Get the URLs of things to move
     if (is.project(folder)) {
-        ## If moving a dataset into a project, get its self
         if (is.dataset(what)) {
+            # If moving a dataset into a project, get its self, but first
+            # check that we're not trying to move dataset to root project,
+            # which is not allowed
+            if (is.null(parentFolderURL(folder))) {
+                halt("Can't move a dataset to the top-level project")
+            }
             what <- self(what)
         }
     } else {

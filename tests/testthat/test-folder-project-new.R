@@ -141,8 +141,12 @@ with_mock_crunch({
         )
     })
 
-    test_that("can't move anything to root", {
-        skip("TODO")
+    test_that("can't move datasets to root", {
+        expect_error(
+            proj %>%
+                mv(ds, "/"),
+            "Can't move a dataset to the top-level project"
+        )
     })
 
     test_that("mv error handling", {
