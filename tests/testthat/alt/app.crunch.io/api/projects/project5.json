@@ -1,0 +1,18 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/projects/project5/",
+    "catalogs": {
+        "datasets": "https://app.crunch.io/api/projects/project5/datasets/",
+        "users": "https://app.crunch.io/api/projects/project5/users/",
+        "members": "https://app.crunch.io/api/projects/project5/members/",
+        "project": "https://app.crunch.io/api/projects/project1/"
+    },
+    "description": "Details for a specific project",
+    "body": {
+        "name": "Project Five",
+        "description": "An empty project",
+        "icon": ""
+    },
+    "index": {},
+    "graph": []
+}

@@ -1,4 +1,4 @@
-userURL <- function() rootURL("user")
+userURL <- function() sessionURL("user", "views")
 
 #' My user entity
 #'

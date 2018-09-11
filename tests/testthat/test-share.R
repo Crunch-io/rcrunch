@@ -142,15 +142,6 @@ with_test_authentication({
         }
     })
 
-    test_that("Cannot unmake myself editor without passing", {
-        share(ds, me, notify = FALSE, edit = TRUE)
-        expect_true(is.editor(permissions(ds)[[me]]))
-        expect_error(share(ds, me, notify = FALSE, edit = FALSE),
-            "Client error: (400) Bad Request: Cannot remove all editors from dataset",
-            fixed = TRUE
-        )
-    })
-
     test_that("Can make multiple people editors", {
         skip("TODO invite a and b as advanced users")
         ds <- share(ds, c("a@crunch.io", "b@crunch.io"),

@@ -1,0 +1,8 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/feature_flag/?feature_name=this_is_on",
+    "description": "Indicates the status of a given feature",
+    "value": {
+        "active": true
+    }
+}

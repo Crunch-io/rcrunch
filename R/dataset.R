@@ -457,6 +457,7 @@ setMethod("owner<-", "CrunchDataset", function(x, value) {
         ## given, the PATCH below will 400.
         value <- self(value)
     }
+    ## TODO: .moveToFolder(value, x)
     x <- setEntitySlot(x, "owner", value)
     return(x)
 })

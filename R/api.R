@@ -69,7 +69,7 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             msg <- c("The API resource at ", response$url, " returned a warning.")
         }
 
-        
+
         warning(
             msg,
             " Details: ",
@@ -249,4 +249,10 @@ crDownload <- function(url, file, ...) {
     ## necessarily on every url/server response)
     retry(crGET(url, config = write_disk(file, overwrite = TRUE)))
     return(file)
+}
+
+featureFlag <- function (flag) {
+    url <- sessionURL("feature_flag", "views")
+    f <- crGET(url, query=list(feature_name=flag))
+    return(isTRUE(f$active))
 }
