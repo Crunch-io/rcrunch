@@ -184,7 +184,7 @@ path <- function(x) {
     parent <- folder(x)
     ## If the parent of x is NULL, we're already at top level.
     while (!is.null(parent)) {
-        out <- c(name(parent), out)
+        out <- c(name(parent) %||% "", out)
         parent <- folder(parent)
     }
     out <- paste(out, collapse = folderDelimiter())

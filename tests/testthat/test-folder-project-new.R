@@ -37,6 +37,22 @@ with_mock_crunch({
         )
     })
 
+    test_that("folder() and rootFolder() for projects", {
+        expect_null(folder(projects()))
+        expect_identical(folder(cd(projects(), "Project One")), projects())
+        expect_identical(folder(cd(projects(), "Project One/Project Two")),
+            cd(projects(), "Project One"))
+        expect_identical(rootFolder(cd(projects(), "Project One/Project Two")),
+            projects())
+    })
+
+    test_that("path()", {
+        expect_identical(path(projects()), "/")
+        expect_identical(path(cd(projects(), "Project One")), "/Project One")
+        expect_identical(path(cd(projects(), "Project One/Project Two")),
+            "/Project One/Project Two")
+    })
+
     create_group_2 <- '{"element":"shoji:entity","body":{"name":"Group 2"}}'
     test_that("mkdir on root", {
         expect_POST(
@@ -207,5 +223,19 @@ with_mock_crunch({
         expect_is(members(proj), "MemberCatalog")
         expect_PATCH(members(proj) <- "me@myself.io",
             self(members(proj)))
+    })
+
+    test_that("print project folders", {
+        with(temp.option(crayon.enabled = FALSE), {
+            ## Coloring aside, the default print method should look like you
+            ## printed the vector of names (plus the path printed above)
+            expect_output(print(projects()),
+                capture.output(print(names(projects()))),
+                fixed = TRUE
+            )
+            ## These are obfuscated because of archaic restrictions on UTF-8
+            skip_on_cran()
+            source("print-projects.R", local = TRUE)
+        })
     })
 })

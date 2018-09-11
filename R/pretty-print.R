@@ -156,7 +156,7 @@ print_tree <- function(x, prefix = "", depth = 100, current_depth = 0) {
         pass <- ifelse(last, "    ", "\u2502   ")
         ## Prepare the current node
         out <- paste0(prefix, node, these[i])
-        if (what[i] == "folder") {
+        if (what[i] %in% c("folder", "project")) {
             ## If this one is a folder, indicate that it is
             out <- paste0(out, folderDelimiter())
             if (depth > current_depth) {
@@ -237,7 +237,7 @@ formatFolderTitle <- function(folder) {
 
 #' @importFrom crayon bold cyan red
 colorize_folder_contents <- function(contents, types) {
-    folders <- types %in% "folder"
+    folders <- types %in% c("folder", "project")
     contents[folders] <- bold$red(contents[folders])
     arrays <- types %in% c("multiple_response", "categorical_array")
     contents[arrays] <- cyan(contents[arrays])

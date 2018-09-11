@@ -13,10 +13,10 @@ skip_on_local_backend <- function(...) {
 skip_on_local_env <- function(...) {
     jenkins <- identical(Sys.getenv("JENKINS_HOME"), "true")
     travis <- identical(Sys.getenv("TRAVIS"), "true")
-    cran <- identical(Sys.getenv("NOT_CRAN"), "true")
+    cran <- !identical(Sys.getenv("NOT_CRAN"), "true")
     appveyor <- identical(Sys.getenv("APPVEYOR"), "True")
 
-    # if we are trying to skip when the tests are bieng run locally
+    # if we are trying to skip when the tests are being run locally
     if (!any(jenkins, travis, cran, appveyor)) {
         return(skip(...))
     }
