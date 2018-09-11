@@ -8,6 +8,7 @@
 * Requesting tab books for subsets of variables with weights no longer errors.
 * `makeWeight()` is now correct for categorical variables with non-sequential IDs.
 * Hidden variables are now included in the output of `write.csv` or `as.data.frame(force = TRUE)` if requested.
+* The print method for empty dataset/variable folders now prints something informative.
 
 ## Other
 * Adjusted the calculation of `index.table()` to better reflect analysts' intentions. Now, `index.table()` calculates the index with respect to the marginal proportion of the `margin` given, so for `index.table(cube, 2)` the column proportions of the table are indexed to the marginal row proportions. In other words: for each column how much larger or smaller is the proportion in that column when compared to the proportions for the row variable alone.

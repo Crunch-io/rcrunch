@@ -185,32 +185,43 @@ setMethod("show", "ShojiFolder", function(object) {
     ## Temporary: don't show hidden variables (which soon won't be here at all)
     ## cf active() method in variable-catalog.R
     index(object) <- Filter(Negate(.discardedTuple), index(object))
-    colored_print(names(object), function(x) colorize_folder_contents(x, types(object)))
+    colored_print(
+        names(object),
+        styler = function(x) colorize_folder_contents(x, types(object)),
+        empty = ifelse(is.project(object), "project(0)", "folder(0)")
+    )
 })
 
-colored_print <- function(x, styler = force) {
+colored_print <- function(x, styler = force, empty = "") {
     ## Simulate the print.default method, which doesn't handle crayon right
     len <- length(x)
-    ## The header is like "[12345] ". Find its theoretical max width based on
-    ## the max value (len) + 3 for "[] "
-    header_width <- nchar(len) + 3L
-    ## Each "cell" is as wide as the widest one, plus 1 for padding and 2 for ""
-    w <- max(nchar(x)) + 3L
-    ## Find out how many we can fit on a line, allowing for the header
-    n <- (getOption("width") - header_width) %/% w
-    ## And thus how many rows we need
-    rows <- ceiling(len / n)
-
-    ## Quote and pad
-    x <- col_align(paste0('"', x, '"'), w)
-    ## Color
-    x <- styler(x)
-    ## Print
-    for (i in seq_len(rows)) {
-        start <- 1L + n * (i - 1)
-        cat(col_align(paste0("[", start, "] "), header_width, "right"))
-        cat(x[start:min(n * i, len)], sep = "")
+    if (len == 0) {
+        ## Special case length-0 because the arithmetic below won't work
+        cat(empty)
         cat("\n")
+    } else {
+        ## The header is like "[12345] ". Find its theoretical max width based
+        ## on the max value (len) + 3 for "[] "
+        header_width <- nchar(len) + 3L
+        ## Each "cell" is as wide as the widest one, plus 1 for padding and 2
+        ## for ""
+        w <- max(nchar(x)) + 3L
+        ## Find out how many we can fit on a line, allowing for the header
+        n <- (getOption("width") - header_width) %/% w
+        ## And thus how many rows we need
+        rows <- ceiling(len / n)
+
+        ## Quote and pad
+        x <- col_align(paste0('"', x, '"'), w)
+        ## Color
+        x <- styler(x)
+        ## Print
+        for (i in seq_len(rows)) {
+            start <- 1L + n * (i - 1)
+            cat(col_align(paste0("[", start, "] "), header_width, "right"))
+            cat(x[start:min(n * i, len)], sep = "")
+            cat("\n")
+        }
     }
 }
 

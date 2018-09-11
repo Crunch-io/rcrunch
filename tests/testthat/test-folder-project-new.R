@@ -229,8 +229,14 @@ with_mock_crunch({
         with(temp.option(crayon.enabled = FALSE), {
             ## Coloring aside, the default print method should look like you
             ## printed the vector of names (plus the path printed above)
-            expect_output(print(projects()),
+            expect_output(
+                print(projects()),
                 capture.output(print(names(projects()))),
+                fixed = TRUE
+            )
+            expect_output(
+                print(cd(projects(), "Project Three")),
+                "project(0)",
                 fixed = TRUE
             )
             ## These are obfuscated because of archaic restrictions on UTF-8
