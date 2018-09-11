@@ -7,14 +7,14 @@
 rmdir(x, path)
 }
 \arguments{
-\item{x}{A \code{CrunchDataset}, \code{VariableFolder}, or \code{CrunchProject}}
+\item{x}{A \code{CrunchDataset} or \code{Folder} (\code{VariableFolder} or \code{ProjectFolder})}
 
 \item{path}{A character "path" to the folder: either a
 vector of nested folder names or a single string with nested folders
 separated by a delimiter ("/" default, configurable via
 \code{options(crunch.delimiter)}). The path is interpreted as
 relative to the location of the folder \code{x} (when \code{x} is a dataset, that
-means the root, top-level folder). \code{path} may also be a \code{VariableFolder} object.}
+means the root, top-level folder). \code{path} may also be a \code{Folder} object.}
 }
 \value{
 \code{NULL}

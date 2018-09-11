@@ -29,7 +29,7 @@ with_mock_crunch({
             )
         )
     })
-    
+
     test_that("But other kinds of warnings don't look like deprecations", {
         expect_warning(
             resp <- crGET("https://app.crunch.io/other-warning/"),
@@ -39,7 +39,7 @@ with_mock_crunch({
             )
         )
     })
-    
+
     test_that("crunch.debug does not print if disabled", {
         expect_POST(
             expect_prints(
@@ -73,6 +73,11 @@ with_mock_crunch({
             "This request is taking longer than expected. Please stand by..."
         )
         expect_identical(resp, crGET("https://app.crunch.io/api/"))
+    })
+
+    test_that("Checking feature flags", {
+        expect_true(featureFlag("this_is_on"))
+        expect_false(featureFlag("this_is_off"))
     })
 })
 

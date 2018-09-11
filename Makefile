@@ -6,7 +6,7 @@ doc:
 
 test:
 	R CMD INSTALL --install-tests .
-	R --slave -e 'library(httptest); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
+	export NOT_CRAN=true && R --slave -e 'library(httptest); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 lint:
 	R --slave -e 'styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'

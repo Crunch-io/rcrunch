@@ -13,10 +13,10 @@ skip_on_local_backend <- function(...) {
 skip_on_local_env <- function(...) {
     jenkins <- identical(Sys.getenv("JENKINS_HOME"), "true")
     travis <- identical(Sys.getenv("TRAVIS"), "true")
-    cran <- identical(Sys.getenv("NOT_CRAN"), "true")
+    cran <- !identical(Sys.getenv("NOT_CRAN"), "true")
     appveyor <- identical(Sys.getenv("APPVEYOR"), "True")
-    
-    # if we are trying to skip when the tests are bieng run locally
+
+    # if we are trying to skip when the tests are being run locally
     if (!any(jenkins, travis, cran, appveyor)) {
         return(skip(...))
     }
@@ -97,8 +97,7 @@ test_options <- temp.options(
 
     crunch.email = crunch::envOrOption("test.user"),
     crunch.pw = crunch::envOrOption("test.pw"),
-    crunch.show.progress = FALSE,
-    crunch.variable.folders = TRUE
+    crunch.show.progress = FALSE
 )
 
 with_test_authentication <- function(expr) {

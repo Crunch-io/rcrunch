@@ -12,8 +12,20 @@
 #' proj <- myprojects[["Project name"]]
 #' }
 projects <- function(x = getAPIRoot()) {
-    ProjectCatalog(crGET(shojiURL(x, "catalogs", "projects")))
+    cont <- crGET(shojiURL(x, "catalogs", "projects"))
+    if (new_projects_api()) {
+        return(ProjectFolder(cont))
+    } else {
+        return(ProjectCatalog(cont))
+    }
 }
+
+new_projects_api <- function () {
+    # Temporary: use R option to test locally
+    getOption("crunch.project.folders", !featureFlag("old_projects_order"))
+}
+
+is.project <- function (x) inherits(x, c("CrunchProject", "ProjectFolder"))
 
 #' @rdname catalog-extract
 #' @export
@@ -146,7 +158,10 @@ setMethod("delete", "CrunchProject", function(x, ...) {
 #' @rdname datasets
 #' @export
 `datasets<-` <- function(x, value) {
-    stopifnot(inherits(x, "CrunchProject"))
+    stopifnot(is.project(x))
+    if (new_projects_api()) {
+        .moveToFolder(x, value)
+    }
     if (is.dataset(value)) {
         ## This is how we add a dataset to a project: change its owner
         owner(value) <- x
@@ -170,7 +185,7 @@ setMethod("delete", "CrunchProject", function(x, ...) {
 #' @name project-icon
 #' @export
 icon <- function(x) {
-    stopifnot(inherits(x, "CrunchProject"))
+    stopifnot(is.project(x))
     return(x@body$icon)
 }
 

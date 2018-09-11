@@ -125,6 +125,7 @@ Collate:
     'permission-catalog.R'
     'pretty-print.R'
     'progress.R'
+    'project-folder.R'
     'projects.R'
     'search.R'
     'session.R'

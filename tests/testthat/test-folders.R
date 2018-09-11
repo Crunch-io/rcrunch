@@ -38,12 +38,12 @@ with_mock_crunch({
         )
     })
     test_that("cd errors if it doesn't receive a dataset or folder as first arg", {
-        expect_error(cd("/"), paste(
+        msg <- paste(
             dQuote("cd()"),
             "requires a Crunch Dataset or Folder as its first argument"
-        ),
-        fixed = TRUE
         )
+        expect_error(cd("/"), msg, fixed = TRUE)
+        expect_error(cd(NULL, "foo"), msg, fixed = TRUE)
     })
     test_that("cd attempts to create folders if create=TRUE", {
         expect_POST(

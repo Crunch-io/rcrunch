@@ -26,6 +26,7 @@ ShojiCatalog <- setClass("ShojiCatalog",
 )
 ShojiFolder <- setClass("ShojiFolder", contains = "ShojiCatalog")
 VariableFolder <- setClass("VariableFolder", contains = "ShojiFolder")
+ProjectFolder <- setClass("ProjectFolder", contains = "ShojiFolder")
 ShojiOrder <- setClass("ShojiOrder",
     contains = "ShojiObject",
     slots = c(
