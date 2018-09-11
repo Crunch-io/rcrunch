@@ -4,9 +4,6 @@
 \name{is-na-categories}
 \alias{is-na-categories}
 \alias{is.na,Categories-method}
-\alias{is-na-categories}
-\alias{is.na,Categories-method}
-\alias{is-na-categories}
 \alias{is.na<-,Categories,character-method}
 \alias{is.na<-,Categories,logical-method}
 \alias{is.na,Category-method}

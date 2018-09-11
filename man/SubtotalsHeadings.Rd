@@ -9,12 +9,10 @@
 \alias{SubtotalsHeadings}
 \alias{subtotals}
 \alias{subtotals<-}
-\alias{Subtotal}
 \alias{is.Subtotal}
 \alias{is.Heading}
 \alias{are.Subtotals}
 \alias{are.Headings}
-\alias{Heading}
 \alias{subtotals,CrunchVariable-method}
 \alias{subtotals,VariableTuple-method}
 \alias{subtotals<-,CrunchVariable,ANY-method}

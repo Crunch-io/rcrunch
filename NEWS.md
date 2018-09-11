@@ -1,5 +1,7 @@
 # crunch 1.23.1 (under development)
-* The package now warns user when an endpoint is deprecated.
+* Updated compatibility with the Haven package's `new haven_labelled` and `haven_labelled_spss` object names
+* Tabbooks for subsets of variables with weights no longer error
+* The package now warns user when an endpoint is deprecated
 * Added `setName()` and `setNames()` for renaming variable folders
 * Updates to the indexes of Shoji Catalogs are now always wrapped appropriately according to the Shoji spec.
 * New `mv()` functions for organizing datasets within projects.
