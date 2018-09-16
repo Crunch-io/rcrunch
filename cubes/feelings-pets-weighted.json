@@ -1,0 +1,198 @@
+{
+    "element": "shoji:view",
+    "self": "api/datasets/123/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2F000001%2F%22%7D%2C%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2F000000%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Aapi%2Fdatasets%2F123%2Fvariables%2F000003%2F%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": []
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "api/datasets/123/variables/000001/"
+                },
+                {
+                    "variable": "api/datasets/123/variables/000000/"
+                }
+            ],
+            "weight": "ap/Fdatasets/12/Fvariables/000003/"
+        },
+        "query_environment": {
+            "filter": []
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "alias": "feelings",
+                        "name": "feelings",
+                        "view": {
+                            "show_counts": false,
+                            "show_numeric_values": false,
+                            "transform": {
+                                "insertions": [
+                                    {
+                                        "function": "subtotal",
+                                        "args": [
+                                            1,
+                                            4
+                                        ],
+                                        "anchor": 4,
+                                        "name": "happy"
+                                    },
+                                    {
+                                        "function": "subtotal",
+                                        "args": [
+                                            2,
+                                            5
+                                        ],
+                                        "anchor": 2,
+                                        "name": "unhappy"
+                                    }
+                                ]
+                            },
+                            "include_missing": false,
+                            "column_width": null
+                        }
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 10,
+                                "missing": false,
+                                "id": 1,
+                                "name": "extremely happy"
+                            },
+                            {
+                                "numeric_value": 7.5,
+                                "missing": false,
+                                "id": 4,
+                                "name": "somewhat happy"
+                            },
+                            {
+                                "numeric_value": 5,
+                                "missing": false,
+                                "id": 3,
+                                "name": "neutral"
+                            },
+                            {
+                                "numeric_value": 2.5,
+                                "missing": false,
+                                "id": 5,
+                                "name": "somewhat unhappy"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 2,
+                                "name": "extremely unhappy"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "references": {
+                        "alias": "animals",
+                        "name": "animals"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "cats"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "dogs"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 0,
+            "measures": {
+                "count": {
+                    "data": [
+                        119,
+                        5,
+                        0,
+                        12,
+                        12,
+                        0,
+                        12,
+                        7,
+                        0,
+                        10,
+                        10,
+                        0,
+                        11,
+                        112,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "n_missing": 0,
+                    "metadata": {
+                        "references": {},
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {},
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                9,
+                5,
+                0,
+                12,
+                12,
+                0,
+                12,
+                7,
+                0,
+                10,
+                10,
+                0,
+                11,
+                12,
+                0,
+                0,
+                0,
+                0
+            ],
+            "n": 100
+        }
+    }
+}

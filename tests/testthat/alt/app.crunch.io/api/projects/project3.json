@@ -1,0 +1,18 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/projects/project3/",
+    "catalogs": {
+        "datasets": "https://app.crunch.io/api/projects/project3/datasets/",
+        "users": "https://app.crunch.io/api/projects/project3/users/",
+        "members": "https://app.crunch.io/api/projects/project3/members/",
+        "project": "https://app.crunch.io/api/projects/"
+    },
+    "description": "Details for a specific project",
+    "body": {
+        "name": "Project Three",
+        "description": "Long description text here as well",
+        "icon": ""
+    },
+    "index": {},
+    "graph": []
+}

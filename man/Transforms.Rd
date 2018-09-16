@@ -9,7 +9,6 @@
 \alias{transforms,VariableCatalog-method}
 \alias{transforms<-,CrunchCube,list-method}
 \alias{transforms<-,CrunchCube,NULL-method}
-\alias{Transforms}
 \alias{transforms}
 \alias{transforms<-}
 \alias{transforms,CrunchVariable-method}

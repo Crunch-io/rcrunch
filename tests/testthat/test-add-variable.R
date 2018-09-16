@@ -76,6 +76,18 @@ test_that("toVariable parses haven::labelled", {
         ))
     )
 
+    # backwards compatilbity with old class names
+    class(labelled) <- "labelled"
+    expect_equivalent(
+        toVariable(labelled),
+        list(values = rep(1:3, 3), type = "categorical", categories = list(
+            list(id = 1L, name = "A", numeric_value = 1L, missing = FALSE),
+            list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
+            list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
+            list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
+        ))
+    )
+    
     # even if only some values are labelled, the values are still used
     labelled <- haven::labelled(
         rep(LETTERS[1:3], 3),
@@ -127,6 +139,24 @@ test_that("toVariable parses haven::labelled_spss", {
         ))
     )
 
+    # backwards compatilbity with old class names
+    class(labelled) <- c("labelled_spss", "labelled")
+
+    # hack to make the the is.na method act like the old one if we have a newer 
+    # haven
+    if (packageVersion("haven") > '1.1.2') {
+        is.na.labelled_spss <<- haven:::is.na.haven_labelled_spss
+    }
+    expect_equivalent(
+        toVariable(labelled),
+        list(values = rep(1:3, 3), type = "categorical", categories = list(
+            list(id = 1L, name = "A", numeric_value = 1L, missing = TRUE),
+            list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
+            list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
+            list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
+        ))
+    )
+    
     # even if only some values are labelled, the values are still used
     labelled <- haven::labelled_spss(rep(LETTERS[1:3], 3),
         structure(LETTERS[2],

@@ -94,9 +94,11 @@
 
 \S4method{$}{OrderGroup}(x, name) <- value
 
-\S4method{[[}{VariableOrder,character,missing,CrunchDataset}(x, i, j) <- value
+\S4method{[[}{VariableOrder,character,missing,CrunchDataset}(x, i,
+  j) <- value
 
-\S4method{[[}{VariableGroup,character,missing,CrunchDataset}(x, i, j) <- value
+\S4method{[[}{VariableGroup,character,missing,CrunchDataset}(x, i,
+  j) <- value
 }
 \arguments{
 \item{x}{a VariableOrder or VariableGroup}

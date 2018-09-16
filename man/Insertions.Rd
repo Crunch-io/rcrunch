@@ -7,7 +7,6 @@
 \alias{Insertion-class}
 \alias{Insertion}
 \alias{.Insertion}
-\alias{Insertions}
 \alias{anchor}
 \alias{anchor<-}
 \alias{anchors}

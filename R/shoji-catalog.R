@@ -312,7 +312,11 @@ catalogToDataFrame <- function(x, keys = TRUE, rownames = NULL,
         names(out) <- names
         for (i in seq_along(entry_list)) {
             for (j in names(entry_list[[i]])) {
-                out[[j]][i] <- entry_list[[i]][[j]]
+                val <- entry_list[[i]][[j]]
+                if (identical(val, list())) {
+                    val <- NA
+                }
+                out[[j]][i] <- val
             }
         }
         #################
@@ -365,3 +369,37 @@ prepareCatalogEntry <- function(entry) {
     entry[list_cols] <- lapply(entry[list_cols], list)
     return(entry)
 }
+
+#' Change the name of the entities in a catalog
+#'
+#' This is an alternative to assigning `names(catalog) <- something`, suitable
+#' for inclusion in a pipeline.
+#'
+#' @param object A catalog object, such as `VariableFolder`
+#' @param nm A character vector of new names of the same length as the number
+#'   of entities in the index
+#' @return `object`, with the names of its children duly changed
+#' @seealso [cd()] and [mv()]
+#' @examples
+#' \dontrun{
+#' ds <- ds %>%
+#'     cd("Demographics") %>%
+#'     setNames(c("Gender (4 category)", "Birth year", "Race (5 category)"))
+#' }
+#'
+#' @name setNames
+#' @export
+setGeneric("setNames", function(object, nm) stats::setNames(object, nm))
+
+#' @rdname setNames
+#' @export
+setMethod("setNames", "ShojiCatalog", function(object, nm) {
+    # check lengths to provide a friendly user-facing error message.
+    if (length(object) != length(nm)) {
+        # TODO: should this check be lower, inside names<- or even lower?
+        halt("names must have the same length as the number of children: ", length(object))
+    }
+
+    names(object) <- nm
+    return(invisible(object))
+})

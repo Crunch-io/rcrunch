@@ -18,6 +18,7 @@
 \alias{entity,VariableTuple-method}
 \alias{entity,CrunchVariable-method}
 \alias{entity,DatasetTuple-method}
+\alias{id,DatasetTuple-method}
 \alias{delete,ShojiTuple-method}
 \alias{delete,DatasetTuple-method}
 \alias{name,ShojiTuple-method}
@@ -52,6 +53,8 @@
 \S4method{entity}{CrunchVariable}(x)
 
 \S4method{entity}{DatasetTuple}(x)
+
+\S4method{id}{DatasetTuple}(x)
 
 \S4method{delete}{ShojiTuple}(x, ...)
 

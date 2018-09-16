@@ -11,7 +11,6 @@
 \alias{values<-}
 \alias{id.AbstractCategory}
 \alias{ids.AbstractCategories}
-\alias{Categories}
 \alias{Category-class}
 \alias{Category}
 \alias{[,AbstractCategories,ANY,ANY-method}
@@ -43,7 +42,8 @@ Category(..., data = NULL)
 
 \S4method{[[}{AbstractCategories,character}(x, i, j, ...)
 
-\S4method{[[}{AbstractCategories,character,ANY,ANY}(x, i, j, ...) <- value
+\S4method{[[}{AbstractCategories,character,ANY,ANY}(x, i, j,
+  ...) <- value
 
 \S4method{names}{AbstractCategories}(x)
 

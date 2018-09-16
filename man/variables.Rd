@@ -7,9 +7,6 @@
 \alias{variables<-}
 \alias{allVariables}
 \alias{allVariables<-}
-\alias{variables<-}
-\alias{allVariables}
-\alias{allVariables<-}
 \alias{variables,CubeDims-method}
 \alias{variables,CrunchCube-method}
 \alias{variables,CrunchDataset-method}
