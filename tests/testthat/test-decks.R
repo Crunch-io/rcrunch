@@ -105,12 +105,12 @@ with_mock_crunch({
     test_that("export decks generates correct POST", {
         expect_POST(
             exportDeck(main_deck, type = "json"),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/',
-            '')
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/'
+        )
         expect_POST(
             exportDeck(main_deck, type = "xlsx"),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/',
-            '')
+            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/'
+        )
     })
 
     test_that("deck assignment", {
@@ -193,28 +193,6 @@ with_mock_crunch({
         )
     })
 
-    test_that("spliceDisplaySettings works correctly", {
-        display_names <- c("percentageDirection", "showEmpty", "showMean", "vizType",
-                           "countsOrPercents", "decimalPlaces", "populationMagnitude", "showSignif",
-                           "currentTab", "uiView")
-        settings <- spliceDisplaySettings(list(decimalPlaces = 2))
-        expect_equal(length(settings), 10)
-        expect_equal(names(settings), display_names)
-        expect_equal(settings$decimalPlaces, 2)
-
-        settings <- spliceDisplaySettings(list(decimalPlaces = 2, showMean = TRUE))
-        expect_equal(length(settings), 10)
-        expect_equal(names(settings), display_names)
-        expect_equal(settings$decimalPlaces, 2)
-        expect_equal(settings$showMean, TRUE)
-
-        expect_warning(
-            settings <<- spliceDisplaySettings(list(notAsetting = TRUE)),
-            paste0("Invalid display settings ommitted: ", dQuote('notAsetting'))
-        )
-        expect_equal(length(settings), 10)
-        expect_equal(names(settings), display_names)
-    })
     slide <- main_deck[[1]]
     test_that("Slide show method", {
         expect_prints(

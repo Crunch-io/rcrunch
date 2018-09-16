@@ -50,10 +50,8 @@ setMethod("show", "DeckCatalog", function(object){
 
 # CrunchDeck --------------------------------------------------------------
 
-setMethod("[[", "CrunchDeck", function (x, i, ...) {
-    slideCat <- slides(x)
-    return(slideCat[[i]])
-})
+setMethod("[[", "CrunchDeck", function (x, i, ...) slides(x)[[i]])
+
 setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
     slideCat <- slides(x)
     slideCat[[i]] <- value
@@ -79,7 +77,7 @@ setMethod("name<-", "CrunchDeck", function(x, value) {
     stopifnot(length(value) == 1)
     setEntitySlot(x, "name", value)
     invisible(refresh(x))
-    })
+})
 
 setMethod("description", "CrunchDeck", function(x) x@body$description)
 setMethod("description<-", "CrunchDeck", function(x, value) {
@@ -87,7 +85,7 @@ setMethod("description<-", "CrunchDeck", function(x, value) {
     stopifnot(length(value) == 1)
     setEntitySlot(x, "description", value)
     invisible(refresh(x))
-    })
+})
 
 setMethod("is.public", "CrunchDeck", function(x) x@body$is_public)
 setMethod("is.public<-", "CrunchDeck", function(x, value) {
@@ -199,36 +197,37 @@ updateSlideCatTitles <- function(x, value, type) {
 }
 
 setMethod("[[", "SlideCatalog", function (x, i, ...) {
-  getEntity(x, i, CrunchSlide)
+    getEntity(x, i, CrunchSlide)
 })
 
 setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
-          function(x, i, j, value) {
-              if (length(i) > 1) {
-                  #TODO, allow assignment of more than one slide
-              }
-              if (i > length(x) + 1) {
-                  #TODO what to do with missing slide entries
-                  i <- length(x) + 1
-              }
+    function(x, i, j, value) {
+        if (length(i) > 1) {
+            # TODO, allow assignment of more than one slide
+        }
+        if (i > length(x) + 1) {
+            # TODO what to do with missing slide entries
+            i <- length(x) + 1
+        }
 
-              n_slides <- length(x)
+        n_slides <- length(x)
 
-              payload <- value@body[c("title", "subtitle")]
-              payload$analyses <- analysesToQueryList(analyses(value))
-              payload <- wrapEntity(body = payload)
-              crPOST(self(x), body = toJSON(payload))
+        payload <- value@body[c("title", "subtitle")]
+        payload$analyses <- analysesToQueryList(analyses(value))
+        payload <- wrapEntity(body = payload)
+        crPOST(self(x), body = toJSON(payload))
 
-              if (i < n_slides) {
-                  # You can't modify the contents of a slide by patching it
-                  # so we need to add the new slide, delete the original slide,
-                  # and reorder the slideCatalog.
-                  new_order <- moveLastElement(seq_len(n_slides + 1), i)
-                  reorderSlides(x, new_order)
-                  with_consent(delete(x[[length(x)]]))
-              }
-              invisible(refresh(x))
-          })
+        if (i < n_slides) {
+            # You can't modify the contents of a slide by patching it
+            # so we need to add the new slide, delete the original slide,
+            # and reorder the slideCatalog.
+            new_order <- moveLastElement(seq_len(n_slides + 1), i)
+            reorderSlides(x, new_order)
+            with_consent(delete(x[[length(x)]]))
+        }
+        invisible(refresh(x))
+    }
+)
 
 analysesToQueryList <- function(anCat) {
     lapply(seq_along(anCat), function(i){
@@ -276,34 +275,18 @@ setMethod("show", "CrunchSlide", function(object){
 
 # TODO: Find out what the mandatory display settings should be for the app then
 # change this list to reflect those settings.
-generateDefaultDisplays <- function(popMagnitude = 3) {
-    out <- list(
-        percentageDirection = "colPct",
-        showEmpty = FALSE,
-        showMean = FALSE,
-        vizType = "table",
-        countsOrPercents = "percent",
-        decimalPlaces = 1L,
-        populationMagnitude = popMagnitude,
-        showSignif = TRUE,
-        currentTab = 0L,
-        uiView = "app.datasets.browse"
-        )
-    return(out)
-}
-
-
-spliceDisplaySettings <- function(new_settings, default = generateDefaultDisplays()) {
-    in_default <- names(new_settings) %in% names(default)
-    valid_names <- names(new_settings)[in_default]
-    default[valid_names] <- new_settings[valid_names]
-    if (any(!in_default)) {
-        warning("Invalid display settings ommitted: ",
-                serialPaste(dQuote(names(new_settings))[!in_default])
-        )
-    }
-    return(default)
-}
+DEFAULT_DISPLAY_SETTINGS <- list(
+    percentageDirection = "colPct",
+    showEmpty = FALSE,
+    showMean = FALSE,
+    vizType = "table",
+    countsOrPercents = "percent",
+    decimalPlaces = 1L,
+    populationMagnitude = 3L,
+    showSignif = TRUE,
+    currentTab = 0L,
+    uiView = "app.datasets.browse"
+)
 
 newSlide <- function(deck,
                      query,
@@ -316,7 +299,7 @@ newSlide <- function(deck,
         query <- list(query)
     }
 
-    settings <- spliceDisplaySettings(display_settings)
+    settings <- modifyList(display_settings, DEFAULT_DISPLAY_SETTINGS)
     settings <- wrapDisplaySettings(settings)
 
     payload <- list(title = title, subtitle = subtitle, ...)
@@ -362,10 +345,8 @@ setMethod("subtitle<-", "CrunchSlide", function(x, value){
     invisible(refresh(x))
 })
 
-setMethod("analyses", "CrunchSlide", {
-    function (x) {
-        AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
-    }
+setMethod("analyses", "CrunchSlide", function (x) {
+    AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
 })
 
 setMethod("analysis", "CrunchSlide", function (x) {
@@ -406,39 +387,42 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), functio
 })
 
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
-          function(x, i, j, value){
-              if (length(i) > 1) {
-                  #TODO, recurse through i
-              }
+    function(x, i, j, value){
+        if (length(i) > 1) {
+            # TODO, recurse through i
+        }
 
-              if (i > length(x) + 1) {
-                  #TODO what to do with adding an analysis that's not the next one.
-              }
-              payload <- value@body[c("query", "display_settings", "query_environment")]
-              payload <- wrapEntity(body = payload)
-              if (i <= length(x)) {
-                  url <- names(x@index)[i]
-                  crPATCH(url, body=toJSON(payload))
-              } else {
-                  crPOST(self(x), body = toJSON(payload))
-              }
-              invisible(refresh(x))
-          })
+        if (i > length(x) + 1) {
+            # TODO what to do with adding an analysis that's not the next one.
+        }
+        payload <- value@body[c("query", "display_settings", "query_environment")]
+        payload <- wrapEntity(body = payload)
+        if (i <= length(x)) {
+            url <- names(x@index)[i]
+            crPATCH(url, body=toJSON(payload))
+        } else {
+            crPOST(self(x), body = toJSON(payload))
+        }
+        invisible(refresh(x))
+    }
+)
 
-setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"), function (x, i, j, value) {
-  all_fmla <- vapply(value, function(x) inherits(x, "formula"), logical(1))
-  if (any(!all_fmla)) {
-      halt("Entry ", which(!all_fmla), " is not a formula")
-  }
-  if (length(i) != length(value)) {
-      noun <- if (length(i) == 1) " analysis." else " analyses."
-      halt("Invalid assignment. You tried to assign ", length(value),
-           " formulas to ", length(i), noun)
-  }
-  mapply(function(analysis, fmla){
-      analysis <- fmla
-  }, analysis = x[[i]], fmla = value)
-})
+setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"),
+    function (x, i, j, value) {
+        all_fmla <- vapply(value, function(x) inherits(x, "formula"), logical(1))
+        if (any(!all_fmla)) {
+            halt("Entry ", which(!all_fmla), " is not a formula")
+        }
+        if (length(i) != length(value)) {
+            noun <- if (length(i) == 1) " analysis." else " analyses."
+            halt("Invalid assignment. You tried to assign ", length(value),
+                " formulas to ", length(i), noun)
+        }
+        mapply(function(analysis, fmla) {
+            analysis <- fmla
+        }, analysis = x[[i]], fmla = value)
+    }
+)
 
 setMethod("cubes", "AnalysisCatalog", function(x) {
     lapply(seq_along(x@index), function(i) cube(x[[i]]))
@@ -472,20 +456,20 @@ setMethod("query<-", c("Analysis", "formula"), function(x, value) {
     invisible(refresh(x))
 })
 
-setMethod("cube", "Analysis", function (x) {
-CrunchCube(crGET(cubeURL(x),
-    query = list(query = toJSON(x@body$query)),
-    filter = toJSON(x@body$query_environment$filter))
-    )
+setMethod("cube", "Analysis", function(x) {
+    CrunchCube(crGET(
+        cubeURL(x),
+        query = list(query = toJSON(x@body$query)),
+        filter = toJSON(x@body$query_environment$filter)
+    ))
 })
 
-setMethod("displaySettings", "Analysis", function(x){
-    out <- lapply(x@body$display_settings, function(x) x$value)
-    return(out)
+setMethod("displaySettings", "Analysis", function(x) {
+    lapply(x@body$display_settings, function(x) x$value)
 })
 
-setMethod("displaySettings<-", "Analysis", function(x, value){
-    settings <- spliceDisplaySettings(value, default = displaySettings(x))
+setMethod("displaySettings<-", "Analysis", function(x, value) {
+    settings <- modifyList(displaySettings(x), value)
     settings <- wrapDisplaySettings(settings)
     payload <- list(display_settings = settings)
     payload <- wrapEntity(body = payload)
