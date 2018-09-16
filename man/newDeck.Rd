@@ -14,6 +14,9 @@ newDeck(dataset, name, ...)
 \item{...}{Further attributes of the deck such as the description, see API
 docs for options.}
 }
+\value{
+The \code{CrunchDeck} that was created.
+}
 \description{
 Create an empty Crunch Deck
 }

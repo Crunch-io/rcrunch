@@ -172,16 +172,16 @@ setGeneric("slides", function (x) standardGeneric("slides"))
 #' either the Deck level by assigning a character vector which is
 #' the same length as the Deck to the Crunch deck, or by assigning character strings to the
 #' the slide.
-#' @param x a CrunchDeck or CrunchSlide
-#' @param value (Character) the new title or subtitle
+#' @param x a `CrunchDeck` or `CrunchSlide`
+#' @param value character, the new title or subtitle
 #' @name deck-titles
-#' @return
+#' @return `x`, modified
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' titles(deck)
-#' titles(deck) <- c("new_title1, new_title2)
+#' titles(deck) <- c(new_title1, new_title2)
 #' slide <- deck[[1]]
 #' title(slide) <- "new title"
 #' subtitle(slide) <- "new subtitle"

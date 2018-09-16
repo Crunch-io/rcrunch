@@ -11,10 +11,8 @@ setMethod("decks", "CrunchDataset", function (x) {
 #' @param name The name of the Deck
 #' @param ... Further attributes of the deck such as the description, see API
 #'   docs for options.
-#' @return
+#' @return The `CrunchDeck` that was created.
 #' @export
-#'
-#' @examples
 newDeck <- function(dataset, name, ...) {
     stopifnot(is.dataset(dataset))
     payload <- wrapEntity(name = name, ...)

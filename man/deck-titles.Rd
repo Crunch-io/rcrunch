@@ -28,13 +28,26 @@ subtitle(x, value)
 subtitle(x) <- value
 }
 \arguments{
-\item{x}{a CrunchDeck or CrunchSlide}
+\item{x}{a \code{CrunchDeck} or \code{CrunchSlide}}
 
-\item{value}{(Character) the new title or subtitle}
+\item{value}{character, the new title or subtitle}
+}
+\value{
+\code{x}, modified
 }
 \description{
 Crunch slides have titles an subtitles. You can change these features at
 either the Deck level by assigning a character vector which is
 the same length as the Deck to the Crunch deck, or by assigning character strings to the
 the slide.
+}
+\examples{
+\dontrun{
+titles(deck)
+titles(deck) <- c(new_title1, new_title2)
+slide <- deck[[1]]
+title(slide) <- "new title"
+subtitle(slide) <- "new subtitle"
+subtitles(deck)
+}
 }
