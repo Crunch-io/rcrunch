@@ -118,30 +118,30 @@ setGeneric("derivation", function(x) standardGeneric("derivation"))
 setGeneric("derivation<-", function(x, value) standardGeneric("derivation<-"))
 
 
-setGeneric("urls", function (x) standardGeneric("urls"))
-setGeneric("self", function (x) standardGeneric("self"))
-setGeneric("refresh", function (x) standardGeneric("refresh"))
-setGeneric("delete", function (x, ...) standardGeneric("delete"),
+setGeneric("urls", function(x) standardGeneric("urls"))
+setGeneric("self", function(x) standardGeneric("self"))
+setGeneric("refresh", function(x) standardGeneric("refresh"))
+setGeneric("delete", function(x, ...) standardGeneric("delete"),
     signature="x")
-setGeneric("entities", function (x, ...) standardGeneric("entities"))
-setGeneric("entities<-", function (x, value) standardGeneric("entities<-"))
-setGeneric("tuple", function (x) standardGeneric("tuple"))
-setGeneric("tuple<-", function (x, value) standardGeneric("tuple<-"))
-setGeneric("ordering", function (x) standardGeneric("ordering"))
-setGeneric("ordering<-", function (x, value) standardGeneric("ordering<-"))
-setGeneric("duplicates", function (x) standardGeneric("duplicates"))
-setGeneric("duplicates<-", function (x, value) standardGeneric("duplicates<-"))
-setGeneric("entity", function (x) standardGeneric("entity"))
-setGeneric("index", function (x) standardGeneric("index"))
-setGeneric("index<-", function (x, value) standardGeneric("index<-"))
-setGeneric("active", function (x) standardGeneric("active"))
-setGeneric("hidden", function (x) standardGeneric("hidden"))
-setGeneric("archived", function (x) standardGeneric("archived"))
-setGeneric("imported", function (x) standardGeneric("imported"))
-setGeneric("pending", function (x) standardGeneric("pending"))
-setGeneric("permissions", function (x) standardGeneric("permissions"))
-setGeneric("members", function (x) standardGeneric("members"))
-setGeneric("members<-", function (x, value) standardGeneric("members<-"))
+setGeneric("entities", function(x, ...) standardGeneric("entities"))
+setGeneric("entities<-", function(x, value) standardGeneric("entities<-"))
+setGeneric("tuple", function(x) standardGeneric("tuple"))
+setGeneric("tuple<-", function(x, value) standardGeneric("tuple<-"))
+setGeneric("ordering", function(x) standardGeneric("ordering"))
+setGeneric("ordering<-", function(x, value) standardGeneric("ordering<-"))
+setGeneric("duplicates", function(x) standardGeneric("duplicates"))
+setGeneric("duplicates<-", function(x, value) standardGeneric("duplicates<-"))
+setGeneric("entity", function(x) standardGeneric("entity"))
+setGeneric("index", function(x) standardGeneric("index"))
+setGeneric("index<-", function(x, value) standardGeneric("index<-"))
+setGeneric("active", function(x) standardGeneric("active"))
+setGeneric("hidden", function(x) standardGeneric("hidden"))
+setGeneric("archived", function(x) standardGeneric("archived"))
+setGeneric("imported", function(x) standardGeneric("imported"))
+setGeneric("pending", function(x) standardGeneric("pending"))
+setGeneric("permissions", function(x) standardGeneric("permissions"))
+setGeneric("members", function(x) standardGeneric("members"))
+setGeneric("members<-", function(x, value) standardGeneric("members<-"))
 
 
 #' Get a dataset's DeckCatalog
@@ -153,7 +153,7 @@ setGeneric("members<-", function (x, value) standardGeneric("members<-"))
 #'
 #' @return a DeckCatalog
 #' @export
-setGeneric("decks", function (x) standardGeneric("decks"))
+setGeneric("decks", function(x) standardGeneric("decks"))
 
 #' Access the slides of a CrunchDeck
 #'
@@ -163,7 +163,7 @@ setGeneric("decks", function (x) standardGeneric("decks"))
 #'
 #' @param x a CrunchDeck
 #' @export
-setGeneric("slides", function (x) standardGeneric("slides"))
+setGeneric("slides", function(x) standardGeneric("slides"))
 
 
 #' Manipulate deck titles
@@ -187,83 +187,83 @@ setGeneric("slides", function (x) standardGeneric("slides"))
 #' subtitle(slide) <- "new subtitle"
 #' subtitles(deck)
 #' }
-setGeneric("titles", function (x) standardGeneric("titles"))
+setGeneric("titles", function(x) standardGeneric("titles"))
 #' @rdname deck-titles
 #' @export
-setGeneric("titles<-", function (x, value) standardGeneric("titles<-"))
+setGeneric("titles<-", function(x, value) standardGeneric("titles<-"))
 #' @rdname deck-titles
-setGeneric("title", function (x) standardGeneric("title"))
+setGeneric("title", function(x) standardGeneric("title"))
 #' @rdname deck-titles
-setGeneric("title<-", function (x, value) standardGeneric("title<-"))
-#' @rdname deck-titles
-#' @export
-setGeneric("subtitles", function (x, value) standardGeneric("subtitles"))
+setGeneric("title<-", function(x, value) standardGeneric("title<-"))
 #' @rdname deck-titles
 #' @export
-setGeneric("subtitles<-", function (x, value) standardGeneric("subtitles<-"))
+setGeneric("subtitles", function(x, value) standardGeneric("subtitles"))
 #' @rdname deck-titles
 #' @export
-setGeneric("subtitle", function (x, value) standardGeneric("subtitle"))
+setGeneric("subtitles<-", function(x, value) standardGeneric("subtitles<-"))
 #' @rdname deck-titles
 #' @export
-setGeneric("subtitle<-", function (x, value) standardGeneric("subtitle<-"))
+setGeneric("subtitle", function(x, value) standardGeneric("subtitle"))
+#' @rdname deck-titles
 #' @export
-setGeneric("analyses", function (x) standardGeneric("analyses"))
+setGeneric("subtitle<-", function(x, value) standardGeneric("subtitle<-"))
+#' @export
+setGeneric("analyses", function(x) standardGeneric("analyses"))
 #' @export
 setGeneric("analyses<-", function(x, value) standardGeneric("analyses<-"))
 #' @export
-setGeneric("analysis", function (x) standardGeneric("analysis"))
+setGeneric("analysis", function(x) standardGeneric("analysis"))
 #' @export
 setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
 #' @export
-setGeneric("query", function (x) standardGeneric("query"))
+setGeneric("query", function(x) standardGeneric("query"))
 #' @export
 setGeneric("query<-", function(x, value) standardGeneric("query<-"))
 #' @export
-setGeneric("cube", function (x) standardGeneric("cube"))
+setGeneric("cube", function(x) standardGeneric("cube"))
 #' @export
-setGeneric("cubes", function (x) standardGeneric("cubes"))
+setGeneric("cubes", function(x) standardGeneric("cubes"))
 #' @export
 setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
 #' @export
 setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
 
-setGeneric("multitables", function (x) standardGeneric("multitables"))
-setGeneric("multitables<-", function (x, value) standardGeneric("multitables<-"))
-setGeneric("filters", function (x) standardGeneric("filters"))
-setGeneric("filters<-", function (x, value) standardGeneric("filters<-"))
-setGeneric("appliedFilters", function (x) standardGeneric("appliedFilters"))
+setGeneric("multitables", function(x) standardGeneric("multitables"))
+setGeneric("multitables<-", function(x, value) standardGeneric("multitables<-"))
+setGeneric("filters", function(x) standardGeneric("filters"))
+setGeneric("filters<-", function(x, value) standardGeneric("filters<-"))
+setGeneric("appliedFilters", function(x) standardGeneric("appliedFilters"))
 setGeneric("appliedFilters<-",
-    function (x, value) standardGeneric("appliedFilters<-"))
-setGeneric("activeFilter", function (x) standardGeneric("activeFilter"))
+    function(x, value) standardGeneric("appliedFilters<-"))
+setGeneric("activeFilter", function(x) standardGeneric("activeFilter"))
 setGeneric("activeFilter<-",
-    function (x, value) standardGeneric("activeFilter<-"))
-setGeneric("is.public", function (x) standardGeneric("is.public"))
-setGeneric("is.public<-", function (x, value) standardGeneric("is.public<-"))
-setGeneric("is.editor", function (x) standardGeneric("is.editor"))
-setGeneric("is.editor<-", function (x, value) standardGeneric("is.editor<-"))
-setGeneric("is.archived", function (x) standardGeneric("is.archived"))
-setGeneric("is.archived<-", function (x, value) standardGeneric("is.archived<-"))
-setGeneric("is.draft", function (x) standardGeneric("is.draft"))
-setGeneric("is.draft<-", function (x, value) standardGeneric("is.draft<-"))
-setGeneric("is.published", function (x) standardGeneric("is.published"))
-setGeneric("is.published<-", function (x, value) standardGeneric("is.published<-"))
-setGeneric("is.derived", function (x) standardGeneric("is.derived"))
-setGeneric("is.derived<-", function (x, value) standardGeneric("is.derived<-"))
-setGeneric("as.Text", function (x, ...) standardGeneric("as.Text"))
-setGeneric("as.Numeric", function (x) standardGeneric("as.Numeric"))
-setGeneric("as.Categorical", function (x, ...) standardGeneric("as.Categorical"))
-setGeneric("as.Datetime", function (x, format = "%Y-%m-%d %H:%M:%S", resolution, offset) standardGeneric("as.Datetime"))
-setGeneric("rollupResolution<-", function (x, value) standardGeneric("rollupResolution<-"))
-setGeneric("groupClass", function (x) standardGeneric("groupClass"))
-setGeneric("entityClass", function (x) standardGeneric("entityClass"))
-setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
-setGeneric("folderExtraction", function (x, tuple) standardGeneric("folderExtraction"))
-setGeneric("weightVariables", function (x) standardGeneric("weightVariables"))
-setGeneric("weightVariables<-", function (x, value) standardGeneric("weightVariables<-"))
-setGeneric("is.weightVariable<-", function (x, value) standardGeneric("is.weightVariable<-"))
-setGeneric("is.weight<-", function (x, value) standardGeneric("is.weight<-"))
-setGeneric("whichCatalogEntry", function (x, i, ...) standardGeneric("whichCatalogEntry"))
+    function(x, value) standardGeneric("activeFilter<-"))
+setGeneric("is.public", function(x) standardGeneric("is.public"))
+setGeneric("is.public<-", function(x, value) standardGeneric("is.public<-"))
+setGeneric("is.editor", function(x) standardGeneric("is.editor"))
+setGeneric("is.editor<-", function(x, value) standardGeneric("is.editor<-"))
+setGeneric("is.archived", function(x) standardGeneric("is.archived"))
+setGeneric("is.archived<-", function(x, value) standardGeneric("is.archived<-"))
+setGeneric("is.draft", function(x) standardGeneric("is.draft"))
+setGeneric("is.draft<-", function(x, value) standardGeneric("is.draft<-"))
+setGeneric("is.published", function(x) standardGeneric("is.published"))
+setGeneric("is.published<-", function(x, value) standardGeneric("is.published<-"))
+setGeneric("is.derived", function(x) standardGeneric("is.derived"))
+setGeneric("is.derived<-", function(x, value) standardGeneric("is.derived<-"))
+setGeneric("as.Text", function(x, ...) standardGeneric("as.Text"))
+setGeneric("as.Numeric", function(x) standardGeneric("as.Numeric"))
+setGeneric("as.Categorical", function(x, ...) standardGeneric("as.Categorical"))
+setGeneric("as.Datetime", function(x, format = "%Y-%m-%d %H:%M:%S", resolution, offset) standardGeneric("as.Datetime"))
+setGeneric("rollupResolution<-", function(x, value) standardGeneric("rollupResolution<-"))
+setGeneric("groupClass", function(x) standardGeneric("groupClass"))
+setGeneric("entityClass", function(x) standardGeneric("entityClass"))
+setGeneric("entitiesInitializer", function(x) standardGeneric("entitiesInitializer"))
+setGeneric("folderExtraction", function(x, tuple) standardGeneric("folderExtraction"))
+setGeneric("weightVariables", function(x) standardGeneric("weightVariables"))
+setGeneric("weightVariables<-", function(x, value) standardGeneric("weightVariables<-"))
+setGeneric("is.weightVariable<-", function(x, value) standardGeneric("is.weightVariable<-"))
+setGeneric("is.weight<-", function(x, value) standardGeneric("is.weight<-"))
+setGeneric("whichCatalogEntry", function(x, i, ...) standardGeneric("whichCatalogEntry"))
 setGeneric("APIToWebURL", function(x) standardGeneric("APIToWebURL"))
 
 setGeneric("owner", function(x) standardGeneric("owner"))
