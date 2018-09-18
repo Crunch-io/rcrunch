@@ -68,7 +68,6 @@ setMethod("ordering<-", "VariableCatalog", function(x, value) {
         ## Refresh
         x@order <- VariableOrder(crGET(order_url))
     }
-    duplicates(x@order) <- duplicates(value)
     return(x)
 })
 
