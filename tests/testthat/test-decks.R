@@ -187,10 +187,8 @@ with_mock_crunch({
             '"vizType":{"value":"table"},',
             '"countsOrPercents":{"value":"percent"},',
             '"decimalPlaces":{"value":1},',
-            '"populationMagnitude":{"value":3},',
             '"showSignif":{"value":true},',
-            '"currentTab":{"value":0},',
-            '"uiView":{"value":"app.datasets.browse"}}}]}}'
+            '"currentTab":{"value":0}}}]}}'
         )
     })
 
@@ -425,6 +423,7 @@ with_test_authentication({
     })
 
     test_that("deck titles and subtitles", {
+
         expect_equal(titles(deck), c("slide1", "slide2"))
         expect_equal(subtitles(deck), c("one analysis", "two analyses"))
         titles(deck) <- c("new_title1", "new_title2")
@@ -437,12 +436,6 @@ with_test_authentication({
         expect_equal(subtitles(deck)[1],  "one analysis")
     })
 
-    test_that("Decks can be created by assignment", {
-        deckCat <- decks(ds)
-        deckCat[["Deck 2"]] <- deck
-        expect_equal(length(decks(ds)), 3)
-        expect_true("Deck 2" %in% names(deckCat))
-    })
     slideCat <- slides(deck)
     test_that("slides method",{
         expect_is(slideCat, "SlideCatalog")
