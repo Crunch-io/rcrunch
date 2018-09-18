@@ -1,7 +1,81 @@
-setMethod("decks", "CrunchDataset", function (x) {
-    DeckCatalog(crGET(shojiURL(x, "catalogs", "decks")))
-})
 
+# Generics ----------------------------------------------------------------
+
+#' Manipulate deck titles
+#'
+#' Crunch slides have titles an subtitles. You can change these features at
+#' either the Deck level by assigning a character vector which is
+#' the same length as the Deck to the Crunch deck, or by assigning character strings to the
+#' the slide.
+#' @param x a `CrunchDeck` or `CrunchSlide`
+#' @param value character, the new title or subtitle
+#' @name deck-titles
+#' @return `x`, modified
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' titles(deck)
+#' titles(deck) <- c(new_title1, new_title2)
+#' slide <- deck[[1]]
+#' title(slide) <- "new title"
+#' subtitle(slide) <- "new subtitle"
+#' subtitles(deck)
+#' }
+setGeneric("titles", function(x) standardGeneric("titles"))
+#' @rdname deck-titles
+#' @export
+setGeneric("titles<-", function(x, value) standardGeneric("titles<-"))
+#' @rdname deck-titles
+setGeneric("title", function(x) standardGeneric("title"))
+#' @rdname deck-titles
+setGeneric("title<-", function(x, value) standardGeneric("title<-"))
+#' @rdname deck-titles
+#' @export
+setGeneric("subtitles", function(x, value) standardGeneric("subtitles"))
+#' @rdname deck-titles
+#' @export
+setGeneric("subtitles<-", function(x, value) standardGeneric("subtitles<-"))
+#' @rdname deck-titles
+#' @export
+setGeneric("subtitle", function(x, value) standardGeneric("subtitle"))
+#' @rdname deck-titles
+#' @export
+setGeneric("subtitle<-", function(x, value) standardGeneric("subtitle<-"))
+#' @export
+setGeneric("analyses", function(x) standardGeneric("analyses"))
+#' @export
+setGeneric("analyses<-", function(x, value) standardGeneric("analyses<-"))
+#' @export
+setGeneric("analysis", function(x) standardGeneric("analysis"))
+#' @export
+setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
+#' @export
+setGeneric("query", function(x) standardGeneric("query"))
+#' @export
+setGeneric("query<-", function(x, value) standardGeneric("query<-"))
+#' @export
+setGeneric("cube", function(x) standardGeneric("cube"))
+#' @export
+setGeneric("cubes", function(x) standardGeneric("cubes"))
+#' @export
+setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
+#' @export
+setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
+
+
+#' Get a dataset's DeckCatalog
+#'
+#' Crunch decks are stored in catalogs. This function returns those catalogs so
+#' that you can access and manipulate decks in R.
+#'
+#' @param dataset a Crunch Dataset
+#' @return a DeckCatalog
+#' @export
+decks <- function(dataset){
+    stopifnot(is.dataset(dataset))
+    DeckCatalog(crGET(shojiURL(dataset, "catalogs", "decks")))
+}
 
 # Deck Catalog ------------------------------------------------------------
 
@@ -16,8 +90,8 @@ setMethod("decks", "CrunchDataset", function (x) {
 newDeck <- function(dataset, name, ...) {
     stopifnot(is.dataset(dataset))
     payload <- wrapEntity(name = name, ...)
-    url <- shojiURL(dataset, "catalogs", "decks")
-    url <- crPOST(url, body = toJSON(payload))
+    shoji <- shojiURL(dataset, "catalogs", "decks")
+    url <- crPOST(shoji, body = toJSON(payload))
     return(CrunchDeck(crGET(url)))
 }
 
@@ -62,45 +136,53 @@ setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
 #' @export
 setMethod("delete", "CrunchDeck", function (x, ...) {
     if (!askForPermission(paste0("Really delete deck ", dQuote(name(x)), "?"))) {
-        halt("Must confirm deleting CrunchDeck")
+        halt("Must confirm deleting a deck")
     }
     out <- crDELETE(self(x))
     invisible(out)
 })
 
-setMethod("slides", "CrunchDeck", function (x) {
+#' Access the slides of a CrunchDeck
+#'
+#' Return a SlideCatalog from a CrunchDeck. All slide catalog methods should be
+#' available for CrunchDecks, but this function is used internally to model the
+#' API.
+#'
+#' @param x a CrunchDeck
+#' @return a SliDe Catalog
+#' @export
+slides <- function(x){
     SlideCatalog(crGET(shojiURL(x, "catalogs", "slides")))
-})
+}
 
 setMethod("name<-", "CrunchDeck", function(x, value) {
-    stopifnot(is.character(value))
-    stopifnot(length(value) == 1)
+    stopifnot(is.singleCharacter(value))
     setEntitySlot(x, "name", value)
-    invisible(refresh(x))
+    invisible(x)
 })
 
 setMethod("description", "CrunchDeck", function(x) x@body$description)
 setMethod("description<-", "CrunchDeck", function(x, value) {
-    stopifnot(is.character(value))
-    stopifnot(length(value) == 1)
+    stopifnot(is.singleCharacter(value))
     setEntitySlot(x, "description", value)
-    invisible(refresh(x))
+    invisible(x)
 })
 
 setMethod("is.public", "CrunchDeck", function(x) x@body$is_public)
 setMethod("is.public<-", "CrunchDeck", function(x, value) {
-    stopifnot(is.logical(value))
-    stopifnot(length(value) == 1)
+    stopifnot(is.TRUEorFALSE(value))
     setEntitySlot(x, "is_public", value)
 })
 
 setMethod("names", "CrunchDeck", function(x) titles(slides(x)))
-setMethod("names<-", "CrunchDeck", function(x, value) titles(slides(x)) <- value)
+setMethod("names<-", "CrunchDeck", function(x, value) {
+    slide_cat <- slides(x)
+    titles(slide_cat) <- value
+})
 
 setMethod("titles", "CrunchDeck", function(x) titles(slides(x)))
 setMethod("titles<-", "CrunchDeck", function (x, value){
-    slides <- slides(x)
-    titles(slides) <- value
+    titles(slides(x)) <- value
     invisible(refresh(x))
 })
 
@@ -111,26 +193,27 @@ setMethod("subtitles<-", "CrunchDeck", function(x, value){
     invisible(refresh(x))
 })
 
-exportDeck <- function(deck, file, type = c("xlsx", "json")) {
+#' Export a Crunch Deck
+#'
+#' Crunch decks can be exported as excel or json files.
+#'
+#' @param deck A CrunchDeck
+#' @param file The file path to save the exported deck
+#' @param format Either `xlsx` or `json`
+#'
+#' @return
+#' @export
+exportDeck <- function(deck, file, format = c("xlsx", "json")) {
     if (!inherits(deck, "CrunchDeck")) {
         halt("exportDeck is only available for CrunchDecks.")
     }
     url <- deck@views$export
-    type <- match.arg(type)
-    if (type == "json") {
-        dl_link <- crPOST(url, config = add_headers(`Accept`="application/json"))
-        ext <- ".json"
-    } else {
-        dl_link <- crPOST(
-            url,
-            config = add_headers(`Accept` = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            )
-        ext <- ".xlsx"
-    }
-
+    format <- match.arg(format)
+    accept <- extToContentType(format)
     if (missing(file)) {
-        file <-  paste0(name(deck), ext)
+        file <- paste0(name(deck), ".", format)
     }
+    dl_link <- crPOST(url, config = add_headers(`Accept` = accept))
     crDownload(dl_link, file)
 }
 
@@ -168,33 +251,15 @@ setMethod("initialize", "SlideCatalog", function(.Object, ...){
 setMethod("names", "SlideCatalog", function(x) titles(x))
 setMethod("names<-", "SlideCatalog", function(x, value) titles(x) <- value)
 
-setMethod("titles", "SlideCatalog", function (x){
-    as.character(lapply(index(x), function(a) a$title))
-})
-
+setMethod("titles", "SlideCatalog", function(x) getIndexSlot(x, "title"))
 setMethod("titles<-", "SlideCatalog", function (x, value){
-    updateSlideCatTitles(x, value, "title")
+    setIndexSlot(x, "title", value)
 })
 
-setMethod("subtitles", "SlideCatalog", function (x){
-    as.character(lapply(index(x), function(a) a$subtitle))
-})
-
+setMethod("subtitles", "SlideCatalog", function (x) getIndexSlot(x, "subtitle"))
 setMethod("subtitles<-", "SlideCatalog", function (x, value){
-    updateSlideCatTitles(x, value, "subtitle")
+    setIndexSlot(x, "subtitle", value)
 })
-
-updateSlideCatTitles <- function(x, value, type) {
-    # TODO update a single title.
-    stopifnot(is.character(value))
-    payload <- mapply(function (item, new_title){
-        out <- item[type]
-        out[[type]] <- new_title
-        return(out)
-    }, x@index, value, SIMPLIFY = FALSE)
-    crPATCH(self(x), body = toJSON(payload))
-    invisible(refresh(x))
-}
 
 setMethod("[[", "SlideCatalog", function (x, i, ...) {
     getEntity(x, i, CrunchSlide)
@@ -213,7 +278,12 @@ setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
         n_slides <- length(x)
 
         payload <- value@body[c("title", "subtitle")]
-        payload$analyses <- analysesToQueryList(analyses(value))
+        anCat <- analyses(value)
+        payload$analyses <- lapply(seq_len(anCat), function(i){
+            out <- anCat[[i]]
+            out <- out@body[c("query", "query_environment", "display_settings")]
+            out
+        })
         payload <- wrapEntity(body = payload)
         crPOST(self(x), body = toJSON(payload))
 
@@ -229,14 +299,14 @@ setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
     }
 )
 
-analysesToQueryList <- function(anCat) {
-    lapply(seq_along(anCat), function(i){
-        out <- anCat[[i]]
-        out <- out@body[c("query", "query_environment", "display_settings")]
-        out
-    })
-}
-
+#' Move and delete last element of a vector
+#' This moves the last element of a vector to an index, then deletes the last
+#' element, it is broken out for testing purposes
+#'
+#' @param v a vector
+#' @param idx The index to move the last element to.
+#'
+#' @return a vector
 moveLastElement <- function(v, idx){
     v[idx] <- v[length(v)]
     out <- v[1:(length(v) -1)]
@@ -261,7 +331,7 @@ setMethod("delete", "CrunchSlide", function (x, ...) {
     if (!askForPermission(paste0("Really delete slide ", dQuote(title(x)), "?"))) {
         halt("Must confirm deleting CrunchSlide")
     }
-    out <- crDELETE(self(x), drop = dropCache(gsub("slides/.*", "slides/", self(x))))
+    out <- crDELETE(self(x), drop = dropCache(absoluteURL("../", self(x))))
     invisible(out)
 })
 
@@ -288,6 +358,28 @@ DEFAULT_DISPLAY_SETTINGS <- list(
     uiView = "app.datasets.browse"
 )
 
+#' Append a new slide to a Crunch Deck
+#'
+#' @param deck A Crunch Deck
+#' @param query A formula definition of a query to be used by the slide. This is
+#' similar to CrunchCube query
+#' @param display_settings (optional) A list of display settings, if om
+#' @param title The slide's title
+#' @param subtitle The slide's subtitle
+#' @param ... Further options to be passed on to the API
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' newSlide(
+#'     main_deck,
+#'     ~cyl + wt,
+#'     title = "Cyl and Weight",
+#'     subtitle = 2017 Data"
+#'     )
+#' }
 newSlide <- function(deck,
                      query,
                      display_settings = list(),
@@ -330,9 +422,7 @@ setMethod("title", "CrunchSlide", function (x){
 })
 
 setMethod("title<-", "CrunchSlide", function(x, value){
-    payload <- list(title = value)
-    crPATCH(self(x), body = toJSON(wrapEntity(body = payload)))
-    invisible(refresh(x))
+    setEntitySlot(x, "title", value)
 })
 
 setMethod("subtitle", "CrunchSlide", function (x){
@@ -340,9 +430,7 @@ setMethod("subtitle", "CrunchSlide", function (x){
 })
 
 setMethod("subtitle<-", "CrunchSlide", function(x, value){
-    payload <- list(subtitle = value)
-    crPATCH(self(x), body = toJSON(wrapEntity(body = payload)))
-    invisible(refresh(x))
+    setEntitySlot(x, "subtitle", value)
 })
 
 setMethod("analyses", "CrunchSlide", function (x) {
@@ -429,25 +517,23 @@ setMethod("cubes", "AnalysisCatalog", function(x) {
 })
 
 setMethod("displaySettings", "AnalysisCatalog", function(x){
-    analyses <- lapply(seq_along(length(x)), function(i) x[[i]])
-    if (length(x) > 1) {
-        warning("Slide has multiple analyses, returning display settings for the first analysis")
+    settings_list <- lapply(seq_len(length(x)), function(i) {
+        displaySettings(x[[i]])
+        })
+    if (length(settings_list) == 1) {
+        return(settings_list[[1]])
+    } else {
+        return(settings_list)
     }
-    return(displaySettings(analyses[[1]]))
 })
 
 setMethod("displaySettings<-", c("AnalysisCatalog", "list"), function(x, value){
-    analyses <- lapply(seq_along(length(x)), function(i) x[[i]])
+    analyses <- lapply(seq_len(length(x)), function(i) x[[i]])
     lapply(analyses, function(x) displaySettings(x) <- value)
 })
 
 
 # Analysis ----------------------------------------------------------------
-
-setMethod("query", c("Analysis"), function(x) {
-    # This should return a formula, wait to implement QueryToFormula function
-})
-
 setMethod("query<-", c("Analysis", "formula"), function(x, value) {
     ds <- loadDataset(datasetReference(x))
     payload <- list(query = formulaToCubeQuery(value, data = ds))
@@ -477,6 +563,8 @@ setMethod("displaySettings<-", "Analysis", function(x, value) {
     invisible(refresh(x))
 })
 
+# This processes a names list of display setting values to the form that is
+# required by the API.
 wrapDisplaySettings <- function(settings) {
     return(lapply(settings, function(x) list(value = x)))
 }

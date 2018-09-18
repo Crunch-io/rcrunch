@@ -245,6 +245,14 @@ test_that("is.TRUEorFALSE errors correctly", {
     expect_false(is.TRUEorFALSE(c(TRUE, TRUE)))
 })
 
+test_that("is.singleCharacter", {
+    expect_true(is.singleCharacter("char"))
+    expect_false(is.singleCharacter(c("char", "char2")))
+    expect_false(is.singleCharacter(NULL))
+    expect_false(is.singleCharacter(NA))
+    expect_false(is.singleCharacter(1))
+})
+
 test_that("checkInstalledPackages", {
     expect_error(
         checkInstalledPackages(c("NoTaPaCkAgE", "NoRtHiSoNe")),

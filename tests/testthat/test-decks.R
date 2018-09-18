@@ -69,16 +69,18 @@ with_mock_crunch({
         expect_PATCH(
             titles(main_deck) <- paste("slide", 1:3),
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
-            '{"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"title":"slide 1"},',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"title":"slide 1"},',
             '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/":{"title":"slide 2"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/":{"title":"slide 3"}}'
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/":{"title":"slide 3"}}}'
         )
         expect_PATCH(
             subtitles(main_deck) <- paste("slide", 1:3),
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
-            '{"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"subtitle":"slide 1"},',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"subtitle":"slide 1"},',
             '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/":{"subtitle":"slide 2"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/":{"subtitle":"slide 3"}}'
+            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/":{"subtitle":"slide 3"}}}'
         )
     })
 
@@ -101,14 +103,13 @@ with_mock_crunch({
         expect_is(cube_list, "list")
         expect_identical(cube, cube_list[[1]])
     })
-
     test_that("export decks generates correct POST", {
         expect_POST(
-            exportDeck(main_deck, type = "json"),
+            exportDeck(main_deck, format = "json"),
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/'
         )
         expect_POST(
-            exportDeck(main_deck, type = "xlsx"),
+            exportDeck(main_deck, format = "xlsx"),
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/'
         )
     })
@@ -207,12 +208,12 @@ with_mock_crunch({
         expect_PATCH(
             title(slide) <- "new_title",
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/',
-            '{"element":"shoji:entity","body":{"title":"new_title"}}'
+            '{"title":"new_title"}'
         )
         expect_PATCH(
             subtitle(slide) <- "new_subtitle",
             'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/',
-            '{"element":"shoji:entity","body":{"subtitle":"new_subtitle"}}'
+            '{"subtitle":"new_subtitle"}'
         )
     })
 

@@ -92,7 +92,6 @@ setGeneric("subtotalArray", function(x, ...) standardGeneric("subtotalArray"))
 
 setGeneric("types", function(x) standardGeneric("types"))
 setGeneric("timestamps", function(x) standardGeneric("timestamps"))
-
 setGeneric("type", function(x) standardGeneric("type"))
 setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
@@ -142,91 +141,6 @@ setGeneric("pending", function(x) standardGeneric("pending"))
 setGeneric("permissions", function(x) standardGeneric("permissions"))
 setGeneric("members", function(x) standardGeneric("members"))
 setGeneric("members<-", function(x, value) standardGeneric("members<-"))
-
-
-#' Get a dataset's DeckCatalog
-#'
-#' Crunch decks are stored in catalogs. This function returns those catalogs so
-#' that you can access and manipulate decks in R.
-#'
-#' @param a Crunch Dataset
-#'
-#' @return a DeckCatalog
-#' @export
-setGeneric("decks", function(x) standardGeneric("decks"))
-
-#' Access the slides of a CrunchDeck
-#'
-#' Return a SlideCatalog from a CrunchDeck. All slide catalog methods should be
-#' available for CrunchDecks, but this function is used internally to model the
-#' API.
-#'
-#' @param x a CrunchDeck
-#' @export
-setGeneric("slides", function(x) standardGeneric("slides"))
-
-
-#' Manipulate deck titles
-#'
-#' Crunch slides have titles an subtitles. You can change these features at
-#' either the Deck level by assigning a character vector which is
-#' the same length as the Deck to the Crunch deck, or by assigning character strings to the
-#' the slide.
-#' @param x a `CrunchDeck` or `CrunchSlide`
-#' @param value character, the new title or subtitle
-#' @name deck-titles
-#' @return `x`, modified
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' titles(deck)
-#' titles(deck) <- c(new_title1, new_title2)
-#' slide <- deck[[1]]
-#' title(slide) <- "new title"
-#' subtitle(slide) <- "new subtitle"
-#' subtitles(deck)
-#' }
-setGeneric("titles", function(x) standardGeneric("titles"))
-#' @rdname deck-titles
-#' @export
-setGeneric("titles<-", function(x, value) standardGeneric("titles<-"))
-#' @rdname deck-titles
-setGeneric("title", function(x) standardGeneric("title"))
-#' @rdname deck-titles
-setGeneric("title<-", function(x, value) standardGeneric("title<-"))
-#' @rdname deck-titles
-#' @export
-setGeneric("subtitles", function(x, value) standardGeneric("subtitles"))
-#' @rdname deck-titles
-#' @export
-setGeneric("subtitles<-", function(x, value) standardGeneric("subtitles<-"))
-#' @rdname deck-titles
-#' @export
-setGeneric("subtitle", function(x, value) standardGeneric("subtitle"))
-#' @rdname deck-titles
-#' @export
-setGeneric("subtitle<-", function(x, value) standardGeneric("subtitle<-"))
-#' @export
-setGeneric("analyses", function(x) standardGeneric("analyses"))
-#' @export
-setGeneric("analyses<-", function(x, value) standardGeneric("analyses<-"))
-#' @export
-setGeneric("analysis", function(x) standardGeneric("analysis"))
-#' @export
-setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
-#' @export
-setGeneric("query", function(x) standardGeneric("query"))
-#' @export
-setGeneric("query<-", function(x, value) standardGeneric("query<-"))
-#' @export
-setGeneric("cube", function(x) standardGeneric("cube"))
-#' @export
-setGeneric("cubes", function(x) standardGeneric("cubes"))
-#' @export
-setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
-#' @export
-setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
 
 setGeneric("multitables", function(x) standardGeneric("multitables"))
 setGeneric("multitables<-", function(x, value) standardGeneric("multitables<-"))
