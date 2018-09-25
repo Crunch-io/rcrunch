@@ -1,7 +1,7 @@
 #' @rdname cube-methods
 #' @export
 setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
-    if (as.logical(Sys.getenv("debug"))) browser()
+    #if (as.logical(Sys.getenv("debug"))) browser()
     # Missing arguments to a subset method means "select all the items along this
     # dimension". In order to do this we need to capture the unevaluated arguments
     # and replace all the missing elements of that list with TRUE.
@@ -76,6 +76,7 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
     # hidden categories
     # 3) Subset the cube using the index 4) Return the display
     # setting to the original
+    if (as.logical(Sys.getenv("debug"))) browser()
     if (x@useNA != "always") {
         NA_setting <- x@useNA
         index <- skipMissingCategories(x, index, drop)
@@ -195,13 +196,7 @@ translateCubeIndex <- function(x, subset, drop) {
 
         # If we are dropping and MR response variable is a single number
         if (drop && length(out[[i - 1]]) == 1 && !isTRUE(out[[i - 1]])) {
-            if (x@useNA == "no") {
-                # This is used by skipMissingCategories below
-                return("mr_select_drop")
-            } else {
-                # assign index value to "Selected" along the mr_selection dimension
-                return(1)
-            }
+            return(1)
         }
         # return TRUE in all other circumstances
         return(TRUE)
@@ -233,11 +228,6 @@ skipMissingCategories <- function(cube, index, drop) {
     missing_list <- lapply(cube@dims[not_slected_dim], function(x) x$missing)
     out <- mapply(
         function(missing, idx, vis) {
-            if (identical(idx, "mr_select_drop")) {
-                # select the "Selected" element of the selection dimension.
-                ## TODO: Don't assume "selected" is position 1; consider an is.selected attr/vector
-                return(c(TRUE, FALSE, FALSE))
-            }
             if (isTRUE(idx)) {
                 out <- rep(TRUE, length(missing))
             } else {
@@ -250,28 +240,33 @@ skipMissingCategories <- function(cube, index, drop) {
 }
 
 translateHidden <- function(index,
-                            is_hidden,
+                            not_hidden,
                             drop = TRUE,
                             # vis default is to simplify tests
-                            vis = rep(TRUE, length(is_hidden))) {
-    if (length(index) > sum(!is_hidden)) {
+                            vis = not_hidden) {
+    if (length(index) > sum(vis)) {
         halt("Incorrect number of dimensions")
     }
+    if (as.logical(Sys.getenv("debug"))) browser()
     mapping <- data.frame(
-        is_hidden = is_hidden,
+        is_hidden = !not_hidden,
         visible = vis
     )
-     if (as.logical(Sys.getenv("debug"))) browser()
     mapping$true_index <-  1:nrow(mapping)
     mapping$new_order <- NA
-    mapping$new_order[is_hidden] <- mapping$true_index[is_hidden]
-    mapping$new_order[!is_hidden][1:length(index)] <- mapping$true_index[!is_hidden][index]
-    out <- mapping[mapping$visible, "new_order"]
 
-    if (drop && length(index) == 1) {
-        return(out[!mapping$is_hidden & !is.na(out)])
+    mapping$new_order[!vis] <- mapping$true_index[!vis]
+    mapping$new_order[vis][1:length(index)] <- mapping$true_index[vis][index]
+
+    out <- mapping$new_order
+    if (length(index) == 1) {
+        if (drop) {
+            return(out[vis & !is.na(out)])
+        } else {
+            return(out[!is.na(out)])
+        }
     } else {
-        return(out[!is.na(out)][index])
+        return(out[vis & !is.na(out)])
     }
 }
 
