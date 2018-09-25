@@ -1,10 +1,14 @@
 #' @rdname cube-methods
 #' @export
 setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
+    if (as.logical(Sys.getenv("debug"))) browser()
     # Missing arguments to a subset method means "select all the items along this
     # dimension". In order to do this we need to capture the unevaluated arguments
     # and replace all the missing elements of that list with TRUE.
-    if (nargs() == 2) {
+
+    # This is to handle cases where one subset argument is set, but drop is also
+    # specified.
+    if (nargs() == (3 - missing(drop))) {
         index <- eval(substitute(alist(i)))
     } else {
         index <- eval(substitute(alist(i, j, ...)))
@@ -25,7 +29,7 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
         )
     }
 
-    # This block of code checks whether the user has supplied a valid index. For
+        # This block of code checks whether the user has supplied a valid index. For
     # instance it will error if they tried to select element 4 from a dimension
     # with only three elements.
     err_indices <- lapply(index, function(idx) {
@@ -62,16 +66,30 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
         )
     }
 
+    # The index needs to be transformed to skip over missing categories.
+    # See the "Crunch Internals" vignette for more on this.
+    #
+    # In order to ensure that reording subsets like `cube[c(2,1), ]` preseve
+    # hidden categories we do the following:
+    # 1) Change the cube to useNA = "always"
+    # 2) Translated the provided index to one which explictly includes
+    # hidden categories
+    # 3) Subset the cube using the index 4) Return the display
+    # setting to the original
+    if (x@useNA != "always") {
+        NA_setting <- x@useNA
+        index <- skipMissingCategories(x, index, drop)
+        x@useNA <- "always"
+        out <- do.call("[", c(list(x, drop = drop), unname(index)))
+        out@useNA <- NA_setting
+        return(out)
+    }
+    if (as.logical(Sys.getenv("debug"))) browser()
     # We then translate the index which the user supplied of the user cube to
     # the dimensionality of the real cube. See documentation to
     # translateCubeIndex
     translated_index <- translateCubeIndex(x, index, drop)
 
-    # The index needs to be further transformed to skip over missing categories.
-    # See the "Crunch Internals" vignette for more on this.
-    if (x@useNA != "always") {
-        translated_index <- skipMissingCategories(x, translated_index)
-    }
     # Finally we can use that translated subset on the real cube.
     out <- x
     out@arrays[] <- lapply(out@arrays, function(arr) {
@@ -208,26 +226,55 @@ translateCubeIndex <- function(x, subset, drop) {
 #'   `translateCubeIndex()`
 #' @return A list of logical vectors
 #' @keywords internal
-skipMissingCategories <- function(cube, index) {
-    visible_cats <- evalUseNA(cube@arrays$count, dims = cube@dims, useNA = cube@useNA)
-    mapply(
-        function(visible, sub) {
-            if (identical(sub, "mr_select_drop")) {
+skipMissingCategories <- function(cube, index, drop) {
+    not_slected_dim <- !is.selectedDimension(cube)
+    visible <- evalUseNA(cube@arrays$count, dims = cube@dims, useNA = cube@useNA)
+    visible <- visible[not_slected_dim]
+    missing_list <- lapply(cube@dims[not_slected_dim], function(x) x$missing)
+    out <- mapply(
+        function(missing, idx, vis) {
+            if (identical(idx, "mr_select_drop")) {
                 # select the "Selected" element of the selection dimension.
                 ## TODO: Don't assume "selected" is position 1; consider an is.selected attr/vector
                 return(c(TRUE, FALSE, FALSE))
             }
-            if (isTRUE(sub)) {
-                out <- rep(TRUE, length(visible))
+            if (isTRUE(idx)) {
+                out <- rep(TRUE, length(missing))
             } else {
-                out <- rep(FALSE, length(visible))
-                out[visible][sub] <- rep(TRUE, length(sub))
+                out <- translateHidden(idx, missing, drop, vis)
             }
             return(out)
         },
-        visible = visible_cats, sub = index, SIMPLIFY = FALSE
+        missing = missing_list, idx = index, vis = visible, SIMPLIFY = FALSE
     )
 }
+
+translateHidden <- function(index,
+                            is_hidden,
+                            drop = TRUE,
+                            # vis default is to simplify tests
+                            vis = rep(TRUE, length(is_hidden))) {
+    if (length(index) > sum(!is_hidden)) {
+        halt("Incorrect number of dimensions")
+    }
+    mapping <- data.frame(
+        is_hidden = is_hidden,
+        visible = vis
+    )
+     if (as.logical(Sys.getenv("debug"))) browser()
+    mapping$true_index <-  1:nrow(mapping)
+    mapping$new_order <- NA
+    mapping$new_order[is_hidden] <- mapping$true_index[is_hidden]
+    mapping$new_order[!is_hidden][1:length(index)] <- mapping$true_index[!is_hidden][index]
+    out <- mapping[mapping$visible, "new_order"]
+
+    if (drop && length(index) == 1) {
+        return(out[!mapping$is_hidden & !is.na(out)])
+    } else {
+        return(out[!is.na(out)][index])
+    }
+}
+
 
 subsetArrayDimension <- function(dim, idx, dim_type) {
     dim$missing <- dim$missing[idx]

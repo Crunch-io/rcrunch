@@ -1,5 +1,5 @@
 context("Cube subsets")
-
+Sys.setenv("debug" = FALSE)
 test_that("replaceMissingWithTRUE", {
     expect_identical(
         replaceMissingWithTRUE(alist(, 1)),
@@ -10,6 +10,27 @@ test_that("replaceMissingWithTRUE", {
         "object 'non_object' not found"
     )
 })
+
+
+test_that("translateHidden", {
+    hidden <- c(F, F, T, T)
+    expect_equal(translateHidden(1:2, hidden), 1:4)
+    expect_equal(translateHidden(2:1, hidden), c(2, 1, 3, 4))
+    expect_equal(translateHidden(1, hidden, drop = FALSE), c(1, 3, 4))
+    expect_equal(translateHidden(2, hidden, drop = FALSE), c(2, 3, 4))
+
+    hidden <- c(T, F, T, T, F, F)
+    expect_equal(translateHidden(1:2, hidden), 1:5)
+    expect_equal(translateHidden(c(3, 1), hidden), c(1, 6, 3, 4, 2))
+    expect_equal(translateHidden(c(3, 1, 2), hidden), c(1,6, 3, 4, 2, 5))
+    expect_error(translateHidden(1:20, hidden), "Incorrect number of dimensions")
+
+    hidden <- c(T, F, F)
+    expect_equal(translateHidden(2, hidden, drop = TRUE), 3)
+    expect_equal(translateHidden(2, hidden, drop = FALSE), c(1,3))
+    expect_equal(translateHidden(1:2, hidden, drop = TRUE), 1:3)
+})
+browser()
 
 cat_x_mr_x_mr <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
 catarray_x_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
@@ -175,7 +196,7 @@ test_that("[ method for cat by cat cubes", {
 
     expect_equal(dim(subset_cube), c(2, 4))
     expect_equal(as.array(subset_cube), as.array(showMissing(cube))[1:2, ])
-
+#Sys.setenv("debug" = TRUE)
     # drop a non-missing row
     subset_cube <- cube[1, , drop = FALSE] # drop the second row (C)
     expect_is(subset_cube, "CrunchCube")
@@ -221,6 +242,8 @@ test_that("[ method for MR cubes", {
 
     # subset cols
     # drop the No Data row which is #2 here!
+     browser()
+    Sys.setenv("debug" = TRUE)
     subset_cat_x_mr_x_mr <- cat_x_mr_x_mr[, c(1, 3), ]
     expect_is(subset_cat_x_mr_x_mr, "CrunchCube")
     expect_equal(dim(showMissing(subset_cat_x_mr_x_mr)), c(3, 2, 2))
@@ -281,6 +304,7 @@ test_that("[ method for cat array cubes", {
     # subset cols with drop
     subset_cube <- cube[, 3, ]
     expect_is(subset_cube, "CrunchCube")
+
     expect_equal(dim(subset_cube), c(2, 2))
     expect_equal(as.array(subset_cube), as.array(cube)[, 3, ])
 
@@ -299,12 +323,26 @@ test_that("[ method for cat array cubes", {
     expect_equal(as.array(subset_cube_withNA), as.array(cube_withNA)[, , 1:2])
 })
 
+
+# test_that("subsetting with reordering works", {
+#     cube <- loadCube("cubes/cat-x-cat.json")
+#     array <- as.array(cube)[2:1, 2:1]
+#     subset <- cube[2:1, 2:1]
+#     expect_is(subset, "CrunchCube")
+#     expect_equal(dim(subset), c(2, 2))
+#     expect_equal(subset[1,2], array[1, 2])
+#     expect_equal(subset[1:2,2], array[1:2, 2])
+#     expect_equal(subset[1,1:2], array[1, 1:2])
+# })
+
 test_that("subsetting works when @useNA == 'ifany'", {
     cube <- loadCube("cubes/univariate-categorical.json")
     expect_equal(dim(cube), 2)
     cube_ifany <- showIfAny(cube)
     expect_equal(dim(cube_ifany), 3)
     expect_equal(as.array(cube_ifany[1]), as.array(cube_ifany)[1])
+    #Sys.setenv("debug" = TRUE)
+    #browser()
     expect_equal(as.array(cube_ifany[1:2]), as.array(cube_ifany)[1:2])
 
     # multivariate
