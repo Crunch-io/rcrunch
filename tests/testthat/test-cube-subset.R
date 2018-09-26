@@ -1,15 +1,41 @@
 context("Cube subsets")
 Sys.setenv("debug" = FALSE)
-# test_that("replaceMissingWithTRUE", {
-#     expect_identical(
-#         replaceMissingWithTRUE(alist(, 1)),
-#         list(TRUE, 1)
-#     )
-#     expect_error(
-#         replaceMissingWithTRUE(alist(, non_object))[[2]],
-#         "object 'non_object' not found"
-#     )
-# })
+test_that("replaceMissingWithTRUE", {
+    expect_identical(
+        replaceMissingWithTRUE(alist(, 1)),
+        list(TRUE, 1)
+    )
+    expect_error(
+        replaceMissingWithTRUE(alist(, non_object))[[2]],
+        "object 'non_object' not found"
+    )
+})
+
+test_that("replaceCharWithNumeric", {
+    dimnames <- c("cats", "dogs", "llamas")
+    expect_equal(
+        replaceCharWithNumeric(dimnames, c("dogs", "cats", "llamas")),
+        c(2, 1, 3)
+    )
+    expect_equal(
+        replaceCharWithNumeric(dimnames, c("cats", "llamas"), visible = c(T, F, T)),
+        c(1, 2)
+    )
+    expect_error(
+        replaceCharWithNumeric(dimnames, c("apple", "bananas")),
+        "Invalid categories: apple and bananas"
+    )
+
+    expect_error(
+        replaceCharWithNumeric(dimnames, c("dogs", "dogs", "cats")),
+        "Index is not unique. Cube subetting is only supported for unique indices."
+    )
+    expect_error(
+        replaceCharWithNumeric(dimnames, c(1,1,1,1)),
+        "Index is not unique. Cube subetting is only supported for unique indices."
+    )
+
+})
 
 
 test_that("translateHidden", {
@@ -39,6 +65,8 @@ test_that("translate hidden handles ifAny", {
     expect_equal(translateHidden(c(1, 2), not_hidden), c(2, 3))
     expect_equal(translateHidden(c(1, 2), not_hidden, vis = visible), c(1, 2))
 })
+
+
 
 cat_x_mr_x_mr <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
 catarray_x_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
@@ -215,7 +243,6 @@ test_that("[ method for cat by cat cubes", {
     subset_cube_withNA <- cube_withNA[c(1, 3), ] # drop the second row (C)
     expect_equal(as.array(subset_cube_withNA), as.array(cube_withNA)[c(1, 3), ])
 
-    #Sys.setenv("debug" = TRUE)
     # drop, selecting a missing category on columns
     drop_cube <- cube[1:2, 1:2]
     expect_is(subset_cube, "CrunchCube")
@@ -247,7 +274,6 @@ test_that("[ method for MR cubes", {
 
     # subset cols
     # drop the No Data row which is #2 here!
-    #Sys.setenv("debug" = TRUE)
     subset_cat_x_mr_x_mr <- cat_x_mr_x_mr[, c(1, 3), ]
     expect_is(subset_cat_x_mr_x_mr, "CrunchCube")
     expect_equal(dim(showMissing(subset_cat_x_mr_x_mr)), c(3, 2, 2))
@@ -260,7 +286,6 @@ test_that("[ method for MR cubes", {
     expect_equal(as.array(subset_cat_x_mr_x_mr_withNA), as.array(cat_x_mr_x_mr_withNA)[, c(1, 2), ])
 
     # subset cols with drop
-    #Sys.setenv("debug" = TRUE)
     subset_cat_x_mr_x_mr <- cat_x_mr_x_mr[, 3, ]
     expect_is(subset_cat_x_mr_x_mr, "CrunchCube")
     expect_equal(dim(subset_cat_x_mr_x_mr), c(2, 2))
@@ -321,7 +346,6 @@ test_that("[ method for cat array cubes", {
     subset_cube <- cube[, , 1:2]
     expect_is(subset_cube, "CrunchCube")
     expect_equal(dim(subset_cube), c(2, 5, 2))
-    browser()
     expect_equal(dim(showMissing(subset_cube)), c(2, 6, 2))
     expect_equal(as.array(subset_cube), as.array(cube)[, , 1:2])
 
@@ -355,7 +379,6 @@ test_that("subsetting works when @useNA == 'ifany'", {
     expect_equal(dim(cube), 2)
     cube_ifany <- showIfAny(cube)
     expect_equal(dim(cube_ifany), 3)
-    browser()
     expect_equal(as.array(cube_ifany[1]), as.array(cube_ifany)[1])
     expect_equal(as.array(cube_ifany[1:2]), as.array(cube_ifany)[1:2])
 

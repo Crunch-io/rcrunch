@@ -1,7 +1,7 @@
 #' @rdname cube-methods
 #' @export
 setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
-    #if (as.logical(Sys.getenv("debug"))) browser()
+    if (as.logical(Sys.getenv("debug"))) browser()
     # Missing arguments to a subset method means "select all the items along this
     # dimension". In order to do this we need to capture the unevaluated arguments
     # and replace all the missing elements of that list with TRUE.
@@ -14,6 +14,14 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
         index <- eval(substitute(alist(i, j, ...)))
     }
     index <- replaceMissingWithTRUE(index)
+    useNA_list <- evalUseNA(x@arrays$count, dims = x@dims, useNA = x@useNA)
+    useNA_list <- useNA_list[!is.selectedDimension(x)]
+    index <- mapply(
+        replaceCharWithNumeric,
+        cat_names = dimnames(x),
+        idx = index,
+        visible = useNA_list,
+        SIMPLIFY = FALSE)
 
     dims <- dim(x)
     # Check if the user has supplied the right number of dimensions
@@ -29,7 +37,7 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
         )
     }
 
-        # This block of code checks whether the user has supplied a valid index. For
+    # This block of code checks whether the user has supplied a valid index. For
     # instance it will error if they tried to select element 4 from a dimension
     # with only three elements.
     err_indices <- lapply(index, function(idx) {
@@ -121,6 +129,23 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
     }
     return(out)
 })
+
+replaceCharWithNumeric <- function(cat_names, idx, visible = TRUE){
+    if (!is.logical(idx) &&
+        length(idx) != length(unique(idx))) {
+        halt("Index is not unique. Cube subetting is only supported for unique indices.")
+    }
+
+    if (is.character(idx)) {
+        visible_categories <-  cat_names[visible]
+        not_categories <- !(idx %in% visible_categories)
+        if (any(not_categories)) {
+            halt("Invalid categories: ", serialPaste(idx[not_categories]))
+        }
+        return(match(idx, visible_categories))
+    }
+    return(idx)
+}
 
 #' Replace missing elements with TRUE
 #'
@@ -247,7 +272,6 @@ translateHidden <- function(index,
     if (length(index) > sum(vis)) {
         halt("Incorrect number of dimensions")
     }
-    if (as.logical(Sys.getenv("debug"))) browser()
     mapping <- data.frame(
         is_hidden = !not_hidden,
         visible = vis
