@@ -90,7 +90,6 @@ mkdir <- function(x, path) {
     # Refresh without busting cache, in case there was no change
     # If there had been a change, cd() would have busted cache already
     x <- do.call(class(x), crGET(self(x)))
-    print(str(x))
     return(invisible(x))
 }
 
