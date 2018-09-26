@@ -3,7 +3,7 @@
 #' Crunch datasets are associated with catalogs. A project catalog will
 #' have a set of datasets associated with it, as will a user or team. This
 #' function allows you to get or modify the datasets associated with a catalog.
-#' @param x a `ShojiObject`, such as a `CrunchProject`. If omitted,
+#' @param x a `ShojiObject`, such as a `ProjectFolder`. If omitted,
 #' the function will load the user's primary dataset catalog. #'
 #' @param value `CrunchDataset` for the setter
 #' @return An object of class `DatasetCatalog`. The setter returns the
@@ -42,7 +42,7 @@ datasets <- function(x = getAPIRoot()) {
 #'
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
-#' @param project `CrunchProject` entity, character name of a project, or
+#' @param project `ProjectFolder` entity, character name of a project, or
 #' NULL, the default. If a Project entity or reference is supplied, the
 #' function will display datasets from that Project's datasets. If NULL,
 #' the primary dataset catalog for the user will be used.
@@ -116,7 +116,7 @@ updateDatasetList <- function() {
 #' to, or a `DatasetTuple`.
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
-#' @param project `CrunchProject` entity, character name of a project, or
+#' @param project `ProjectFolder` entity, character name of a project, or
 #' `NULL`, the default. If a Project entity or reference is supplied, the
 #' function will display datasets from that Project's datasets. If `NULL`,
 #' the primary dataset catalog for the user will be used.
@@ -167,6 +167,33 @@ loadDatasetFromURL <- function(url) {
         index_url = shojiURL(dataset, "catalogs", "parent")
     )
     return(dataset)
+}
+
+datasetURLFromPath <- function(path) {
+    # TODO: remove "ordering" bits
+
+    ## Given a /path/to/a/dataset, return that dataset's URL
+    path <- parseFolderPath(path)
+    ## First, pop off the dataset name as the last segment
+    dsname <- tail(path, 1)
+    path <- path[-length(path)]
+    if (length(path) == 0 || path[1] == "~") {
+        ## Default, and ~/, is "personal project"
+        dscat <- datasets()
+        path <- c()
+    } else {
+        ## Find the project and see if there is any path left
+        dscat <- datasets(projects()[[path[1]]])
+        path <- path[-1]
+        ## Now, let's walk the "ordering" with any path segments remaining
+        ord <- ordering(dscat)
+        for (segment in path) {
+            ord <- ord[[segment]]
+        }
+        ## Then, select the subset of dscat corresponding to that group
+        dscat <- dscat[urls(ord)]
+    }
+    return(self(dscat[[dsname]]))
 }
 
 
