@@ -1,5 +1,4 @@
 context("Cube subsets")
-Sys.setenv("debug" = FALSE)
 test_that("replaceMissingWithTRUE", {
     expect_identical(
         replaceMissingWithTRUE(alist(, 1)),

@@ -1,13 +1,12 @@
 #' @rdname cube-methods
 #' @export
 setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
-
     # Missing arguments to a subset method means "select all the items along this
     # dimension". In order to do this we need to capture the unevaluated arguments
     # and replace all the missing elements of that list with TRUE.
-
-    # This is to handle cases where one subset argument is set, but drop is also
-    # specified.
+    #
+    # The 3 - missing(drop) is to handle cases were drop is specified but only one
+    # index is used.
     if (nargs() == (3 - missing(drop))) {
         index <- eval(substitute(alist(i)))
     } else {
@@ -21,7 +20,8 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
         cat_names = dimnames(x),
         idx = index,
         visible = useNA_list,
-        SIMPLIFY = FALSE)
+        SIMPLIFY = FALSE
+    )
 
     dims <- dim(x)
     # Check if the user has supplied the right number of dimensions
@@ -139,14 +139,14 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
 #' @param visible whether or not a category is visible to the user
 #'
 #' @keywords internal
-replaceCharWithNumeric <- function(cat_names, idx, visible = TRUE){
+replaceCharWithNumeric <- function(cat_names, idx, visible = TRUE) {
     if (!is.logical(idx) &&
         length(idx) != length(unique(idx))) {
         halt("Index is not unique. Cube subetting is only supported for unique indices.")
     }
 
     if (is.character(idx)) {
-        visible_categories <-  cat_names[visible]
+        visible_categories <- cat_names[visible]
         not_categories <- !(idx %in% visible_categories)
         if (any(not_categories)) {
             halt("Invalid categories: ", serialPaste(idx[not_categories]))
@@ -306,7 +306,7 @@ translateHidden <- function(index,
         is_hidden = !not_hidden,
         visible = vis
     )
-    mapping$true_index <-  1:nrow(mapping)
+    mapping$true_index <- 1:nrow(mapping)
     mapping$new_order <- NA
 
     # The non-visible dimensions get their true index
