@@ -76,7 +76,6 @@ TabBookResult
 TabBookResults
 Unhide
 UserEntity
-UserCatalog
 VariableCatalog
 VariableDefinition
 VariableDefinitions
@@ -126,6 +125,7 @@ gzipped
 hispanic
 http
 httr
+ifAny
 iframe
 imiss
 impl
@@ -170,6 +170,7 @@ unhidden
 unhide
 unshare
 untransformed
+useNA
 varlabels
 vectorized
 votereg

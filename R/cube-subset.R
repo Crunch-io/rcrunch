@@ -139,8 +139,6 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
 #' @param visible whether or not a category is visible to the user
 #'
 #' @keywords internal
-#'
-#' @examples
 replaceCharWithNumeric <- function(cat_names, idx, visible = TRUE){
     if (!is.logical(idx) &&
         length(idx) != length(unique(idx))) {
@@ -252,6 +250,7 @@ translateCubeIndex <- function(x, subset, drop) {
 #'
 #' @param cube a CrunchCube
 #' @param index the user supplied index
+#' @param drop whether dimensions should be dropped
 #' @return A list translated indexes
 #' @keywords internal
 skipMissingCategories <- function(cube, index, drop) {
@@ -275,7 +274,7 @@ skipMissingCategories <- function(cube, index, drop) {
 #' Translate provided index to an index which accounts for hidden categories.
 #'
 #' When the user subsets a cube in which "useNA" is either "no" or "ifAny" they
-#' are not interacitng with hidden categories. This function takes the index which
+#' are not interacting with hidden categories. This function takes the index which
 #' they provide and translates it to an index which includes hidden categories.
 #'
 #' For example, if `v` includes c("cat1", "hidden_cat", "cat2") and `useNA` is
@@ -287,7 +286,7 @@ skipMissingCategories <- function(cube, index, drop) {
 #' @param index The index to be translated
 #' @param not_hidden Logical, `TRUE` indicates a category is not hidden.
 #' @param drop Should dimensions with a single category be dropped
-#' @param vis Logical, is a category visible or not. Because of the `useNA` behaviour,
+#' @param vis Logical, is a category visible or not. Because of the `useNA` behavior,
 #' categories can be visible even if they are hidden.
 #'
 #' @return The translated index
