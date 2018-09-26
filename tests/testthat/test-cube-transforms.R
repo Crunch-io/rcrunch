@@ -884,13 +884,13 @@ test_that("subtotals after cube subsetting", {
 
     one_col <- cubify(
         c(
-            5, 0, 5,
-            12, 0, 12,
-            17, 0, 17,
-            7, 0, 7,
-            10, 0, 10,
-            12, 0, 12,
-            22, 0, 22
+            5,  5,  0,
+            12, 12, 0,
+            17, 17, 0,
+            7,  7,  0,
+            10, 10, 0,
+            12, 12, 0,
+            22, 22, 0
         ),
         dims = list(
             "feelings" =
@@ -898,12 +898,13 @@ test_that("subtotals after cube subsetting", {
                     "extremely happy", "somewhat happy", "happy", "neutral",
                     "somewhat unhappy", "extremely unhappy", "unhappy"
                 ),
-            "animals" = c("dogs", "felines", "both")
+            "animals" = c("dogs", "both", "felines")
         )
     )
 
     # need drop = FALSE to maintain the columns dimension since selection 1
     # usually removes the dimension
+    subset <- pet_feeling_both[, c(2), drop = FALSE]
     expect_equivalent(
         applyTransforms(pet_feeling_both[, c(2), drop = FALSE]),
         one_col
@@ -1184,11 +1185,11 @@ with_test_authentication({
             ))
         )
         trans_pets <- showTransforms(ds$pets)
-        
+
         expect_is(trans_pets, "array")
         expect_equal(dim(trans_pets), 10)
         expect_equivalent(trans_pets, cat_show_trans)
-        
+
         skip_on_local_env("Pretty formatting isn't exactly the same in many terminals")
         expect_prints(
             trans_pets <- showTransforms(ds$pets),
@@ -1226,7 +1227,7 @@ with_test_authentication({
         expect_equal(dim(showMissing(pets_cube)), 6)
         expect_equal(dim(trans_cube), 10)
         expect_equivalent(trans_cube, cat_show_trans)
-        
+
         skip_on_local_env("Pretty formatting isn't exactly the same in many terminals")
         expect_prints(
             trans_cube <- showTransforms(pets_cube),
