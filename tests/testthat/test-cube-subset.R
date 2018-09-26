@@ -1,5 +1,4 @@
 context("Cube subsets")
-Sys.setenv("debug" = FALSE)
 test_that("replaceMissingWithTRUE", {
     expect_identical(
         replaceMissingWithTRUE(alist(, 1)),
@@ -31,10 +30,16 @@ test_that("replaceCharWithNumeric", {
         "Index is not unique. Cube subetting is only supported for unique indices."
     )
     expect_error(
-        replaceCharWithNumeric(dimnames, c(1,1,1,1)),
+        replaceCharWithNumeric(dimnames, c(1, 1, 1, 1)),
         "Index is not unique. Cube subetting is only supported for unique indices."
     )
-
+    expect_error(
+        replaceCharWithNumeric(
+            c("cats", "cats", "cats"),
+            c("cats"),
+            "Duplicate categories detected, please use a numeric or logical subset."
+        )
+    )
 })
 
 
@@ -185,6 +190,12 @@ test_that("translateCubeIndex", {
     expect_identical(
         translateCubeIndex(cat_x_mr_x_mr, alist(1:2, 1, 2), drop = FALSE),
         alist(1:2, 1, TRUE, 2, TRUE)
+    )
+
+    # MR selection entries are set to index 1 when the indicator is dropped
+    expect_identical(
+        translateCubeIndex(cat_x_mr_x_mr, alist(1:2, 1, 2), drop = TRUE),
+        alist(1:2, 1, 1, 2, 1)
     )
 
     expect_identical(
@@ -363,15 +374,29 @@ test_that("subsetting with reordering works", {
     expect_equal(
         as.array(catarray_x_mr[c(2, 1), , ]),
         as.array(catarray_x_mr)[c(2, 1), , ]
-        )
+    )
     expect_equal(
         as.array(catarray_x_mr[, , c(3, 1, 2)]),
         as.array(catarray_x_mr)[, , c(3, 1, 2)]
-        )
+    )
     expect_equal(
         as.array(catarray_x_mr[, 5:2, ]),
         as.array(catarray_x_mr)[, 5:2, ]
-        )
+    )
+
+    expect_equal(
+        as.array(catarray_x_mr[, 5:2, ]),
+        as.array(catarray_x_mr)[, 5:2, ]
+    )
+    expect_equal(
+        as.array(catarray_x_mr[2:1, c("Extremely Happy", "Somewhat Happy"), 1:2]),
+        as.array(catarray_x_mr)[2:1, c("Extremely Happy", "Somewhat Happy"), 1:2]
+    )
+    catarray_x_mr_ifany <- catarray_x_mr
+    expect_equal(
+        as.array(catarray_x_mr_ifany[2:1, 2:3, 1:2]),
+        as.array(catarray_x_mr_ifany)[2:1, 2:3, 1:2]
+    )
 })
 
 test_that("subsetting works when @useNA == 'ifany'", {
