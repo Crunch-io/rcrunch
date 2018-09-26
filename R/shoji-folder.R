@@ -106,8 +106,7 @@ createFolder <- function(where, name, index, ...) {
 
 #' @rdname describe
 #' @export
-setMethod(
-    "name<-", "ShojiFolder",
+setMethod("name<-", "ShojiFolder",
     function(x, value) setEntitySlot(x, "name", value)
 )
 

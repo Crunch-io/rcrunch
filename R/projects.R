@@ -81,13 +81,17 @@ setMethod(
 #' }
 #' @export
 newProject <- function(name, members = NULL, catalog = projects(), ...) {
-    u <- crPOST(self(catalog), body = toJSON(list(name = name, ...)))
-    ## Fake a CrunchProject (tuple) by getting the entity
-    ## TODO: make this more robust and formal (useful elsewhere too?)
-    out <- CrunchProject(
-        index_url = self(catalog), entity_url = u,
-        body = crGET(u)$body
-    )
+    if (new_projects_api()) {
+        out <- cd(catalog, name, create = TRUE)
+    } else {
+        u <- crPOST(self(catalog), body = toJSON(list(name = name, ...)))
+        ## Fake a CrunchProject (tuple) by getting the entity
+        ## TODO: make this more robust and formal (useful elsewhere too?)
+        out <- CrunchProject(
+            index_url = self(catalog), entity_url = u,
+            body = crGET(u)$body
+        )
+    }
     ## Add members to project, if given
     if (!is.null(members)) {
         members(out) <- members
@@ -136,6 +140,10 @@ setMethod("members<-", c("CrunchProject", "character"), function(x, value) {
 #' @rdname tuple-methods
 #' @export
 setMethod("entity", "CrunchProject", function(x) {
+    if (new_projects_api()) {
+        # It already is the entity
+        return(x)
+    }
     return(ProjectEntity(crGET(x@entity_url)))
 })
 
@@ -161,8 +169,7 @@ setMethod("delete", "CrunchProject", function(x, ...) {
     stopifnot(is.project(x))
     if (new_projects_api()) {
         .moveToFolder(x, value)
-    }
-    if (is.dataset(value)) {
+    } else if (is.dataset(value)) {
         ## This is how we add a dataset to a project: change its owner
         owner(value) <- x
         dropCache(shojiURL(x, "catalogs", "datasets"))

@@ -271,7 +271,8 @@ with_test_authentication({
 
     nprojects.0 <- length(myprojects)
     test_that("Can get project catalog", {
-        expect_is(myprojects, "ProjectCatalog")
+        # TODO: update test after the folder switch
+        expect_true(inherits(myprojects, c("ProjectCatalog", "ProjectFolder")))
     })
 
     name.of.project1 <- now()
@@ -392,6 +393,7 @@ with_test_authentication({
         expect_identical(self(ds2), self(ds))
     })
     test_that("Can organize datasets", {
+        skip_if(new_projects_api())
         expect_identical(
             as.list(urls(datasets(tp))),
             entities(ordering(datasets(tp)))
@@ -413,6 +415,7 @@ with_test_authentication({
     owner(ds3) <- tp
     tp <- refresh(tp)
     test_that("Can reorganize datasets", {
+        skip_if(new_projects_api())
         ordering(datasets(tp)) <- ord2
         expect_identical(
             ordering(datasets(tp))@graph[[1]],
@@ -443,6 +446,7 @@ with_test_authentication({
         DatasetGroup("G2", datasets(tp)[names(datasets(tp)) == name(ds)])
     )
     test_that("Can re-reorganize", {
+        skip_if(new_projects_api())
         expect_identical(ord3, ord3.alt)
         ordering(datasets(tp)) <- ord3
         expect_identical(ordering(datasets(tp))@graph, ord3.list)
@@ -450,6 +454,7 @@ with_test_authentication({
     })
 
     test_that("Can create a Group by assigning by name", {
+        skip_if(new_projects_api())
         ordering(datasets(tp))[["New group three"]] <- self(ds)
         expect_prints(ordering(datasets(tp)),
             paste("[+] G1",

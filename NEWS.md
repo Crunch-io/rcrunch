@@ -1,4 +1,5 @@
 # crunch 1.24.1 (under development)
+* Minor fixes for backwards compatibility with the old projects API
 
 # crunch 1.24.0
 

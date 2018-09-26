@@ -147,7 +147,8 @@ with_test_authentication({
     proj <- newProject(name = now())
 
     proj %>%
-        mv(ds1, "/")
+        mv(ds1, ".") ->
+        proj
     test_that("Can move dataset into project root", {
         expect_identical(urls(datasets(proj)), self(ds1))
         expect_identical(urls(ordering(proj)), self(ds1))
@@ -155,7 +156,10 @@ with_test_authentication({
 
     proj %>%
         mkdir("A group/Within another") %>%
-        mv(ds2, "A group")
+        # print(depth=5) %>% # TODO: print should return the folder
+        mv(ds2, "A group") ->
+        proj
+    print(proj, depth=5)
     test_that("Can move datasets into a project in a folder", {
         expect_true(setequal(urls(datasets(proj)), c(self(ds1), self(ds2))))
         expect_true(setequal(urls(ordering(proj)), c(self(ds1), self(ds2))))

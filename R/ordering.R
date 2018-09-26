@@ -88,6 +88,12 @@ setMethod("ordering", "CrunchProject", function(x) {
 
 #' @rdname ordering
 #' @export
+setMethod("ordering", "ProjectFolder", function(x) {
+    return(ordering(datasets(x)))
+})
+
+#' @rdname ordering
+#' @export
 setMethod("ordering<-", "DatasetCatalog", function(x, value) {
     stopifnot(inherits(value, "DatasetOrder"))
 
