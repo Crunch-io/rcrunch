@@ -158,11 +158,11 @@ with_mock_crunch({
     })
 
     test_that("Can loadDataset from a project dataset catalog", {
-        ds <- loadDataset("ECON.sav", project = aproject)
+        ds <- loadDataset("test ds", project = aproject)
         expect_is(ds, "CrunchDataset")
-        expect_identical(name(ds), "ECON.sav")
+        expect_identical(name(ds), "test ds")
         expect_identical(
-            loadDataset("ECON.sav", project = "Project One"),
+            loadDataset("test ds", project = "Project One"),
             ds
         )
     })
@@ -199,14 +199,13 @@ with_mock_crunch({
         )
     })
     test_that("Add datasets to project by <- does nothing if already present", {
-        skip("TODO")
-        ds <- loadDataset("ECON.sav")
+        ds <- loadDataset("test ds")
         expect_no_request(datasets(aproject) <- ds)
     })
 
     test_that("Organize datasets is gone!", {
         expect_error(
-            ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup(
+            ordering(aproject) <- DatasetOrder(DatasetGroup(
                 "new group",
                 datasets(aproject)
             )),

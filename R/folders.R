@@ -274,7 +274,7 @@ folder <- function(x) {
         ind <- sapply(what, emptyObject, simplify = FALSE)
         crPATCH(self(folder), body = toJSON(wrapCatalog(
             index = ind,
-            graph = I(c(urls(folder), what))
+            graph = I(c(folder@graph, what))
         )))
         ## Additional cache invalidation
         ## Drop all variable entities because their catalogs.folder refs are stale

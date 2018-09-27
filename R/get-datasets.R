@@ -53,8 +53,10 @@ datasets <- function(x = getAPIRoot()) {
 #' @return Character vector of dataset names, each of which would be a valid
 #' input for [loadDataset()]
 #' @export
-listDatasets <- function(kind = c("active", "all", "archived"), project = NULL,
-                         refresh = FALSE, shiny = FALSE) {
+listDatasets <- function(kind = c("active", "all", "archived"),
+                         project = NULL,
+                         refresh = FALSE,
+                         shiny = FALSE) {
     if (shiny) {
         checkInstalledPackages(c("rstudioapi", "shiny", "miniUI"))
         rstudioapi::verifyAvailable("0.99.878")
@@ -66,11 +68,12 @@ listDatasets <- function(kind = c("active", "all", "archived"), project = NULL,
 }
 
 selectDatasetCatalog <- function(kind = c("active", "all", "archived"),
-                                 project = NULL, refresh = FALSE) {
+                                 project = NULL,
+                                 refresh = FALSE) {
     Call <- match.call()
     if (is.null(project)) {
         ## Default: we'll get the dataset catalog from the API root
-        project <- getAPIRoot()
+        project <- datasets()
     } else if (!(is.shojiObject(project) || inherits(project, "ShojiTuple"))) {
         ## Project name, URL, or index
         project <- projects()[[project]]
@@ -84,30 +87,20 @@ selectDatasetCatalog <- function(kind = c("active", "all", "archived"),
     }
 
     if (refresh) {
-        ## drop cache for the ds catalog URL of the "project"
-        dropOnly(shojiURL(project, "catalogs", "datasets"))
+        project <- refresh(project)
     }
-    ## Ok, get the catalog.
-    catalog <- datasets(project)
 
+    # TODO: active/archived methods for ProjectFolder?
+    if (is.project(project)) {
+        # Keep only datasets if ProjectFolder
+        project <- project[types(project) %in% "dataset"]
+    }
     ## Subset as indicated
     return(switch(match.arg(kind),
-        active = active(catalog),
-        all = catalog,
-        archived = archived(catalog)
+        active = active(project),
+        all = project,
+        archived = archived(project)
     ))
-}
-
-#' Refresh the local list of Crunch datasets
-#'
-#' Refreshes the local environment list of Crunch datasets. This function is deprecated.
-#' @return Nothing. Called for its side effects of resetting the cache.
-#' @export
-#' @importFrom httpcache dropOnly
-#' @keywords internal
-updateDatasetList <- function() {
-    warning("updateDatasetList is being deprecated.")
-    dropOnly(sessionURL("datasets"))
 }
 
 #' Load a Crunch Dataset
@@ -130,36 +123,44 @@ updateDatasetList <- function() {
 #' ds <- loadDatasets(dsName)
 #' }
 #' @export
-loadDataset <- function(dataset, kind = c("active", "all", "archived"), project = NULL, refresh = FALSE) {
+loadDataset <- function(dataset,
+                        kind = c("active", "all", "archived"),
+                        project = NULL,
+                        refresh = FALSE) {
+
     if (is.character(dataset) && startsWith(dataset, "http")) {
-        ## Check to see if this is a URL, in which case, GET it
-        if (!grepl("/api/", dataset)) {
-            ## It's a web app URL, probably. Turn it into an API URL
-            dataset <- webToAPIURL(dataset)
-        }
         return(loadDatasetFromURL(dataset))
-    } else if (!inherits(dataset, "DatasetTuple")) {
-        if (missing(project) && is.character(dataset)) {
-            ## See if "dataset" is a path
-            dataset <- parseFolderPath(dataset)
-            if (length(dataset) > 1) {
-                ## Walk the path
-                ds_url <- datasetURLFromPath(dataset)
-                return(loadDatasetFromURL(ds_url))
-            } # else, proceed normally
-        }
-        dscat <- selectDatasetCatalog(kind, project, refresh)
-        dsname <- dataset
-        dataset <- dscat[[dataset]]
-        if (is.null(dataset)) {
-            halt(dQuote(dsname), " not found")
+    }
+
+    if (inherits(dataset, "DatasetTuple")) {
+        return(entity(dataset))
+    }
+
+    if (is.character(dataset)) {
+        ## See if "dataset" is a path
+        dspath <- parseFolderPath(dataset)
+        dataset <- tail(dspath, 1)
+        if (length(dspath) > 1) {
+            project <- dspath[-length(dspath)]
         }
     }
-    return(entity(dataset))
+    dscat <- selectDatasetCatalog(kind, project, refresh)
+    dsname <- dataset
+    dataset <- dscat[[dataset]]
+    if (is.null(dataset)) {
+        halt(dQuote(dsname), " not found")
+    } else if (inherits(dataset, "DatasetTuple")) {
+        dataset <- entity(dataset)
+    }
+    return(dataset)
 }
 
 loadDatasetFromURL <- function(url) {
     ## Load dataset without touching a dataset catalog
+    if (!grepl("/api/", url)) {
+        ## It's a web app URL, probably. Turn it into an API URL
+        url <- webToAPIURL(url)
+    }
     dataset <- CrunchDataset(crGET(url))
     tuple(dataset) <- DatasetTuple(
         entity_url = self(dataset),
@@ -168,34 +169,6 @@ loadDatasetFromURL <- function(url) {
     )
     return(dataset)
 }
-
-datasetURLFromPath <- function(path) {
-    # TODO: remove "ordering" bits
-
-    ## Given a /path/to/a/dataset, return that dataset's URL
-    path <- parseFolderPath(path)
-    ## First, pop off the dataset name as the last segment
-    dsname <- tail(path, 1)
-    path <- path[-length(path)]
-    if (length(path) == 0 || path[1] == "~") {
-        ## Default, and ~/, is "personal project"
-        dscat <- datasets()
-        path <- c()
-    } else {
-        ## Find the project and see if there is any path left
-        dscat <- datasets(projects()[[path[1]]])
-        path <- path[-1]
-        ## Now, let's walk the "ordering" with any path segments remaining
-        ord <- ordering(dscat)
-        for (segment in path) {
-            ord <- ord[[segment]]
-        }
-        ## Then, select the subset of dscat corresponding to that group
-        dscat <- dscat[urls(ord)]
-    }
-    return(self(dscat[[dsname]]))
-}
-
 
 #' Delete a dataset from the dataset list
 #'
@@ -212,7 +185,7 @@ datasetURLFromPath <- function(path) {
 #' vectorized (for your protection).
 #' @param ... additional parameters passed to `delete`
 #' @return (Invisibly) the API response from deleting the dataset
-#' @seealso [delete]
+#' @seealso [delete()]
 #' @export
 deleteDataset <- function(x, ...) {
     if (!is.dataset(x)) {
