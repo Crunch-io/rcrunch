@@ -90,7 +90,6 @@ selectDatasetCatalog <- function(kind = c("active", "all", "archived"),
         project <- refresh(project)
     }
 
-    # TODO: active/archived methods for ProjectFolder?
     if (is.project(project)) {
         # Keep only datasets if ProjectFolder
         project <- project[types(project) %in% "dataset"]
