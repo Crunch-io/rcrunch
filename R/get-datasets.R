@@ -53,11 +53,11 @@ datasets <- function(x = getAPIRoot()) {
 #' @return Character vector of dataset names, each of which would be a valid
 #' input for [loadDataset()]
 #' @export
-listDatasets <- function(kind = c("active", "all", "archived"), project = NULL,
-                         refresh = FALSE, shiny = FALSE) {
+listDatasets <- function(kind = c("active", "all", "archived"),
+                         project = NULL,
+                         refresh = FALSE,
+                         shiny = FALSE) {
     if (shiny) {
-        checkInstalledPackages(c("rstudioapi", "shiny", "miniUI"))
-        rstudioapi::verifyAvailable("0.99.878")
         listDatasetGadget(kind, refresh)
     } else {
         dscat <- selectDatasetCatalog(kind, project, refresh)
@@ -66,7 +66,8 @@ listDatasets <- function(kind = c("active", "all", "archived"), project = NULL,
 }
 
 selectDatasetCatalog <- function(kind = c("active", "all", "archived"),
-                                 project = NULL, refresh = FALSE) {
+                                 project = NULL,
+                                 refresh = FALSE) {
     Call <- match.call()
     if (is.null(project)) {
         ## Default: we'll get the dataset catalog from the API root
@@ -130,7 +131,10 @@ updateDatasetList <- function() {
 #' ds <- loadDatasets(dsName)
 #' }
 #' @export
-loadDataset <- function(dataset, kind = c("active", "all", "archived"), project = NULL, refresh = FALSE) {
+loadDataset <- function(dataset,
+                        kind = c("active", "all", "archived"),
+                        project = NULL,
+                        refresh = FALSE) {
     if (is.character(dataset) && startsWith(dataset, "http")) {
         ## Check to see if this is a URL, in which case, GET it
         if (!grepl("/api/", dataset)) {
