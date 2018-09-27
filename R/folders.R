@@ -87,6 +87,9 @@ mkdir <- function(x, path) {
         return(mkdir.project(x, path))
     }
     f <- cd(x, path, create = TRUE)
+    # Refresh without busting cache, in case there was no change
+    # If there had been a change, cd() would have busted cache already
+    x <- do.call(class(x), crGET(self(x)))
     return(invisible(x))
 }
 

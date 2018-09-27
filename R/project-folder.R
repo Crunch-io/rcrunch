@@ -34,3 +34,41 @@ setMethod("members<-", c("ProjectFolder", "character"), function(x, value) {
     }
     return(x)
 })
+
+#' @rdname catalog-extract
+#' @export
+setMethod(
+    "[[<-", c("ProjectFolder", "character", "missing", "list"),
+    function(x, i, j, value) {
+        # This is for backwards compatibility with the old project API
+        if (i %in% names(x)) {
+            ## TODO: update team attributes
+            halt("Cannot (yet) modify project attributes")
+        } else {
+            ## Creating a new project
+            proj <- do.call(
+                newProject,
+                modifyList(value, list(name = i, catalog = x))
+            )
+            return(refresh(x))
+        }
+    }
+)
+
+#' @rdname catalog-extract
+#' @export
+setMethod(
+    "[[<-", c("ProjectFolder", "character", "missing", "ProjectFolder"),
+    function(x, i, j, value) {
+        # This is for backwards compatibility with the old project API
+
+        ## Assumes that modifications have already been persisted
+        ## by other operations on the team entity (like members<-)
+        if (i %in% names(x) && identical(self(x[[i]]), self(value))) {
+            # TODO: could patch up the tuple with the entity
+            return(refresh(x))
+        } else {
+            halt("Not implemented")
+        }
+    }
+)
