@@ -68,7 +68,7 @@ test_that("simple with row subtotals", {
     expect_equivalent(applyTransforms(pet_feelings), all)
 
     # can apply to an array of the same shape
-    new_array <- cubeToArray(showMissing(pet_feelings)) - 1
+    new_array <- cubeToArray(pet_feelings) - 1
     new_all <- all - c(1, 1, 2, 1, 1, 1, 2) # must subtract two from every subtotal
     expect_equivalent(applyTransforms(pet_feelings, array = new_array), new_all)
 })
@@ -734,7 +734,7 @@ test_that("cat by mr, with cat subtotals", {
     expect_equivalent(applyTransforms(cat_mr), all)
 
     # can apply to an array of the same shape
-    new_array <- cubeToArray(showMissing(cat_mr)) - 1
+    new_array <- cubeToArray(cat_mr) - 1
     # must subtract one for each category in the subtotal
     new_all <- all - c(1, 3, 1, 1, 1, 1)
     expect_equivalent(applyTransforms(cat_mr, array = new_array), new_all)
@@ -1222,6 +1222,7 @@ with_test_authentication({
 
         expect_is(trans_cube, "array")
         expect_equal(dim(showMissing(pets_cube)), 6)
+        expect_equal(dim(pets_cube), 4)
         expect_equal(dim(trans_cube), 10)
         expect_equivalent(trans_cube, cat_show_trans)
         

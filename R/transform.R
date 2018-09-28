@@ -165,10 +165,9 @@ setMethod("showTransforms", "CategoricalVariable", function(x) {
     tab <- as.array(calcTransforms(
         tab, 
         insert_funcs =  makeInsertionFunctions(
-            # remove missing categories since we will not display them
-            # TODO: this should be incroporated into `makeInsertionFunctions`
-            categories(x)[!(names(categories(x)) %in% remove_these)],
-            transforms(x)
+            categories(x),
+            transforms(x),
+            cats_in_array = names(tab)
         )
     ))
 

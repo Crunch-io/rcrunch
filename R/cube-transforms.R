@@ -139,7 +139,7 @@ applyTransforms <- function(x,
     }
 
     # Try to calculate the transforms for any dimension that has them, but
-    # fail silently if they aren't calcuable. We use a for loop so that failing
+    # fail silently if they aren't calculable We use a for loop so that failing
     # one dimension doesn't break others. We could possibly use something like
     # abind::abind here and bind together the insertion vectors in array form,
     # but that would add a dependency
@@ -161,7 +161,13 @@ applyTransforms <- function(x,
             var_cats <- Categories(data = variables(dims_list)[[d]]$categories)
 
             # TODO: calculate category/element changes
-            insert_funcs <- makeInsertionFunctions(var_cats, transforms_list[[d]], ...)
+            insert_funcs <- makeInsertionFunctions(
+                var_cats, 
+                transforms_list[[d]], 
+                cats_in_array = dimnames(array)[[d]], 
+                ...
+            )
+            
             
             array <- applyAgainst(
                 X = array,
@@ -192,7 +198,7 @@ applyTransforms <- function(x,
 }
 
 
-makeInsertionFunctions <- function(var_cats, transforms, ...) {
+makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, ...) {
     ### Insertions
     # collate insertions with categories for rearranging and calculation purposes
     # we need the categories to know what order the the cube cells should be in
@@ -210,11 +216,26 @@ makeInsertionFunctions <- function(var_cats, transforms, ...) {
         include = includes
     )
     
+    # remove missing categories (this should be smarter and look at useNA)
+    # is_missing <- vapply(cat_insert_map, function(x) {
+    #     return(x$missing %||% FALSE)
+    # }, logical(1))
+    # cat_insert_map <- cat_insert_map[!is_missing]
+    
     # add transforms function list here
     # setup functions to use (this makes it much cheaper to vapply later)
     transforms_funcs <- base::lapply(cat_insert_map, function(element) {
         # if element is a category, simply return the value
         if (is.category(element)) {
+            if (!is.null(cats_in_array) && !name(element) %in% cats_in_array) {
+                # if this category is in the cat_insert_map, but isn't in the
+                # list of cats_in_array, we should retunr NULL which will be
+                # removed later. This will prevent No Data categories from
+                # failing when applying transforms to non-cube arrays that might
+                # not have them
+                return(NULL)
+            }
+            
             id <- which(ids(var_cats) %in% id(element))
             which.cat <- names(var_cats[id])
             return(function(vec) vec[[which.cat]])
@@ -257,6 +278,9 @@ makeInsertionFunctions <- function(var_cats, transforms, ...) {
     
     names(transforms_funcs) <- names(cat_insert_map)
  
+    # remove any NULLs above
+    transforms_funcs <- Filter(Negate(is.null), transforms_funcs)
+    
     return(transforms_funcs)   
 }
 
