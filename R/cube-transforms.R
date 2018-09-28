@@ -216,13 +216,7 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
         include = includes
     )
     
-    # remove missing categories (this should be smarter and look at useNA)
-    # is_missing <- vapply(cat_insert_map, function(x) {
-    #     return(x$missing %||% FALSE)
-    # }, logical(1))
-    # cat_insert_map <- cat_insert_map[!is_missing]
     
-    # add transforms function list here
     # setup functions to use (this makes it much cheaper to vapply later)
     transforms_funcs <- base::lapply(cat_insert_map, function(element) {
         # if element is a category, simply return the value
