@@ -132,8 +132,13 @@ applyTransforms <- function(x,
                             useNA = x@useNA,
                             ...) {
     trans_indices <- which(vapply(transforms_list, Negate(is.null), logical(1)))
+    
+    if (!missing(x)) {
+        # we don't need to try and transform ca_items!
+        trans_indices <- trans_indices[getDimTypes(x)[trans_indices] != "ca_items"]   
+    }
 
-    # Try to calculate the transforms for any dimensiton that have them, but
+    # Try to calculate the transforms for any dimension that has them, but
     # fail silently if they aren't calcuable. We use a for loop so that failing
     # one dimension doesn't break others. We could possibly use something like
     # abind::abind here and bind together the insertion vectors in array form,
@@ -156,14 +161,14 @@ applyTransforms <- function(x,
             var_cats <- Categories(data = variables(dims_list)[[d]]$categories)
 
             # TODO: calculate category/element changes
-
+            insert_funcs <- makeInsertionFunctions(var_cats, transforms_list[[d]], ...)
+            
             array <- applyAgainst(
                 X = array,
                 MARGIN = d,
                 FUN = calcTransforms,
-                trans = transforms_list[[d]],
-                var_cats = var_cats,
-                ...
+                insert_funcs = insert_funcs,
+                dim_names = names(insert_funcs)
             )
         },
         error = function(e) {
@@ -186,6 +191,74 @@ applyTransforms <- function(x,
     return(array)
 }
 
+
+makeInsertionFunctions <- function(var_cats, transforms, ...) {
+    ### Insertions
+    # collate insertions with categories for rearranging and calculation purposes
+    # we need the categories to know what order the the cube cells should be in
+    # and where to insert insertions (as they are `anchor`ed) to a category id.
+    dots <- list(...)
+    if (!"include" %in% names(dots)) {
+        includes <- c("subtotals", "headings", "cube_cells", "other_insertions")
+    } else {
+        includes <- dots$include
+    }
+    
+    cat_insert_map <- mapInsertions(
+        transforms$insertions,
+        var_cats,
+        include = includes
+    )
+    
+    # add transforms function list here
+    # setup functions to use (this makes it much cheaper to vapply later)
+    transforms_funcs <- base::lapply(cat_insert_map, function(element) {
+        # if element is a category, simply return the value
+        if (is.category(element)) {
+            id <- which(ids(var_cats) %in% id(element))
+            which.cat <- names(var_cats[id])
+            return(function(vec) vec[[which.cat]])
+        }
+        
+        # if element is a heading return NA (since there is no value to be
+        # calculated but we need a placeholder non-number)
+        if (is.Heading(element)) {
+            return(function(vec) NA)
+        }
+        
+        # if element is a subtotal, sum the things it corresponds to which are
+        # found with arguments()
+        if (is.Subtotal(element)) {
+            # grab category combinations, and then sum those categories.
+            combos <- unlist(arguments(element, var_cats))
+            combo_ids <- which(ids(var_cats) %in% combos)
+            which.cats <- names(var_cats[combo_ids])
+            return(function(vec) sum(vec[which.cats]))
+        }
+        
+        # if element is a summaryStat, grab the function from summaryStatInsertions
+        # to use.
+        if (is.SummaryStat(element)) {
+            statFunc <- summaryStatInsertions[[func(element)]]
+            return(function(vec) statFunc(element, var_cats, vec))
+        }
+        
+        # finally, check if there are other functions, if there are warn, and
+        # then return NA
+        unknown_funcs <- !(element[["function"]] %in% c("subtotal", names(summaryStatInsertions)))
+        if (unknown_funcs) {
+            warning(
+                "Transform functions other than subtotal are not supported.",
+                " Applying only subtotals and ignoring ", element[["function"]]
+            )
+        }
+        return(function(vec) NA)
+    })
+    
+    names(transforms_funcs) <- names(cat_insert_map)
+ 
+    return(transforms_funcs)   
+}
 
 #' apply a function against a dimension
 #'
