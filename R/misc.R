@@ -275,10 +275,6 @@ is.TRUEorFALSE <- function(value) {
     return(is.logical(value) && !is.na(value) && length(value) == 1)
 }
 
-escapeQuotes <- function(str) {
-    gsub("'", "\\\\'", str)
-}
-
 #' Check if a user has packages installed
 #'
 #' @param pkgs a character vector of package names to check.

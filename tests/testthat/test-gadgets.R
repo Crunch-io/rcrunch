@@ -1,37 +1,11 @@
-context("shiny gadgets")
+context("Shiny gadgets")
 
-test_that("buildLoadDatasetCall", {
-    expect_identical(
-        buildLoadDatasetCall("Personal Project", "data", "ds"),
-        "ds <- loadDataset('data')"
-    )
-    expect_identical(
-        buildLoadDatasetCall("proj", "data", "ds"),
-        "ds <- loadDataset('data', project = 'proj')"
-    )
-    expect_identical(
-        buildLoadDatasetCall("Personal Project", "data"),
-        "loadDataset('data')"
-    )
-    expect_identical(
-        buildLoadDatasetCall("proj", "data"),
-        "loadDataset('data', project = 'proj')"
-    )
-    expect_identical(
-        buildLoadDatasetCall("Personal Project", "weird's dataset", "ds"),
-        "ds <- loadDataset('weird\\'s dataset')"
-    )
-})
-
-test_that("escapeQuotes", {
-    expect_identical(escapeQuotes("test's tests"), "test\\'s tests")
-    str <- "no quotes"
-    expect_identical(escapeQuotes(str), str)
-})
-
-with_mock_crunch({
-    test_that("listDatasets gets expected input from other Crunch functions", {
-        expect_is(names(projects()), "character")
-        expect_is(listDatasets(), "character")
-    })
+test_that("callFromOtherPackage", {
+    NOTAFUNCTION <- sum <- function (x) {
+        call <- match.call()
+        callFromOtherPackage(call, "base")
+    }
+    expect_equal(sum(1:4), 10)
+    expect_error(NOTAFUNCTION(1:4),
+        "Please install the latest version of base to access this function")
 })

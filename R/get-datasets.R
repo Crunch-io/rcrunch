@@ -58,8 +58,6 @@ listDatasets <- function(kind = c("active", "all", "archived"),
                          refresh = FALSE,
                          shiny = FALSE) {
     if (shiny) {
-        checkInstalledPackages(c("rstudioapi", "shiny", "miniUI"))
-        rstudioapi::verifyAvailable("0.99.878")
         listDatasetGadget(kind, refresh)
     } else {
         dscat <- selectDatasetCatalog(kind, project, refresh)
