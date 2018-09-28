@@ -82,53 +82,26 @@ setMethod("ordering", "DatasetCatalog", function(x) {
 
 #' @rdname ordering
 #' @export
-setMethod("ordering", "CrunchProject", function(x) {
+setMethod("ordering", "ProjectFolder", function(x) {
     return(ordering(datasets(x)))
 })
 
 #' @rdname ordering
 #' @export
 setMethod("ordering<-", "DatasetCatalog", function(x, value) {
-    stopifnot(inherits(value, "DatasetOrder"))
-
-    if (!identical(ordering(x)@graph, value@graph)) {
-        ## Validate.
-        bad.entities <- setdiff(urls(value), urls(x))
-        if (length(bad.entities)) {
-            ## Due to some unidentified bug, we sometimes see order refs that
-            ## should have been removed but haven't been. So let's drop them
-            ## ourselves from the payload.
-            plural <- length(bad.entities) > 1
-            warning(
-                "Order contained dataset URL", ifelse(plural, "s", ""),
-                " not found in the catalog. ",
-                ifelse(plural, "They have", "It has"),
-                " been automatically cleaned."
-            )
-            value <- setdiff_entities(value, bad.entities, remove.na = TRUE)
-        }
-        ## Update on server
-        if (!isTRUE(getOption("crunch.already.shown.ds.order.msg", FALSE))) {
-            warning(paste(
-                "Greetings! There's a new way to organize datasets within",
-                "projects: the 'folder' methods. They're easier to use and",
-                "more reliable, just like the folder methods for organizing",
-                "variables. See `vignettes('projects', package='crunch')` for",
-                "examples of how to use them to organize datasets.",
-                "You're seeing this message because you're still using the",
-                "ordering<- method, which is fine today, but it will be going",
-                "away in the future, so check out the new methods."
-            ))
-            options(crunch.already.shown.ds.order.msg = TRUE)
-        }
-        crPUT(shojiURL(x, "orders", "order"), body = toJSON(value))
-    }
-    return(x)
+    halt(
+        "Hi there! `ordering<-` no longer works to organize datasets. ",
+        " There's a new way to organize datasets within ",
+        "projects: the 'folder' methods. They're easier to use and ",
+        "more reliable, just like the folder methods for organizing ",
+        "variables. See `vignettes('projects', package='crunch')` for ",
+        "details."
+    )
 })
 
 #' @rdname ordering
 #' @export
-setMethod("ordering<-", "CrunchProject", function(x, value) {
+setMethod("ordering<-", "ProjectFolder", function(x, value) {
     ordering(datasets(x)) <- value
     return(x)
 })

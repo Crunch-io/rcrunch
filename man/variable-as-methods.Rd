@@ -21,8 +21,8 @@
 
 \S4method{as.Categorical}{CrunchVariable}(x, format)
 
-\S4method{as.Datetime}{CrunchVariable}(x, format = "\%Y-\%m-\%d \%H:\%M:\%S",
-  resolution, offset)
+\S4method{as.Datetime}{CrunchVariable}(x,
+  format = "\%Y-\%m-\%d \%H:\%M:\%S", resolution, offset)
 
 \method{as.double}{CrunchVariable}(x, ...)
 

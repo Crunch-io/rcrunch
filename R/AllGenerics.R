@@ -98,13 +98,6 @@ setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
 setGeneric("categories", function(x) standardGeneric("categories"))
 setGeneric("categories<-", function(x, value) standardGeneric("categories<-"))
-setGeneric("variables", function(x) standardGeneric("variables"))
-setGeneric("variables<-", function(x, value) standardGeneric("variables<-"))
-setGeneric("allVariables", function(x) standardGeneric("allVariables"))
-setGeneric(
-    "allVariables<-",
-    function(x, value) standardGeneric("allVariables<-")
-)
 setGeneric("subvariables", function(x) standardGeneric("subvariables"))
 setGeneric(
     "subvariables<-",
@@ -185,6 +178,7 @@ setGeneric("groupClass", function(x) standardGeneric("groupClass"))
 setGeneric("entityClass", function(x) standardGeneric("entityClass"))
 setGeneric("entitiesInitializer", function(x) standardGeneric("entitiesInitializer"))
 setGeneric("folderExtraction", function(x, tuple) standardGeneric("folderExtraction"))
+setGeneric("personalFolder", function(x) standardGeneric("personalFolder"))
 setGeneric("weightVariables", function(x) standardGeneric("weightVariables"))
 setGeneric("weightVariables<-", function(x, value) standardGeneric("weightVariables<-"))
 setGeneric("is.weightVariable<-", function(x, value) standardGeneric("is.weightVariable<-"))
@@ -194,6 +188,7 @@ setGeneric("APIToWebURL", function(x) standardGeneric("APIToWebURL"))
 
 setGeneric("owner", function(x) standardGeneric("owner"))
 setGeneric("owner<-", function(x, value) standardGeneric("owner<-"))
+setGeneric("users", function(x) standardGeneric("users"))
 
 setGeneric("showMissing", function(cube) standardGeneric("showMissing"))
 setGeneric("hideMissing", function(cube) standardGeneric("hideMissing"))

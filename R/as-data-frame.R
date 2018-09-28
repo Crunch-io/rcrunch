@@ -209,10 +209,9 @@ as.data.frame.FilterCatalog <- function(x,
 
 #' @rdname catalog-dataframes
 #' @export
-as.data.frame.ProjectCatalog <- function(x,
-                                         row.names = NULL,
-                                         optional = FALSE,
-                                         keys = c("name", "id", "description"),
-                                         ...) {
+as.data.frame.UserCatalog <- function (x, row.names = NULL,
+                                       optional = FALSE,
+                                       keys = c("name", "email", "teams", "collaborator"),
+                                       ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }

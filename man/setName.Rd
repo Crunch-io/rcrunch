@@ -7,7 +7,7 @@
 setName(object, nm)
 }
 \arguments{
-\item{object}{A \code{VariableFolder}}
+\item{object}{A \code{Folder}}
 
 \item{nm}{A character that is the new name the folder should have}
 }
@@ -16,12 +16,12 @@ setName(object, nm)
 }
 \description{
 If you just need to change the name of the folder you are currently in, you
-can use \code{setName()} to do so. It doesn't move variables or change anything
+can use \code{setName()}. It doesn't move variables or change anything
 other than the name of the current folder.
 }
 \examples{
 \dontrun{
-ds <- ds \%>\% 
+ds <- ds \%>\%
     cd("Demographics") \%>\%
     setName("Key Demos.")
 }

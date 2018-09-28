@@ -7,13 +7,15 @@
 \title{Add columns from one dataset to another, joining on a key}
 \usage{
 joinDatasets(x, y, by = intersect(names(x), names(y)), by.x = by,
-  by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE, copy = TRUE)
+  by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE,
+  copy = TRUE)
 
 extendDataset(x, y, by = intersect(names(x), names(y)), by.x = by,
   by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE, ...)
 
 \method{merge}{CrunchDataset}(x, y, by = intersect(names(x), names(y)),
-  by.x = by, by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE, ...)
+  by.x = by, by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{CrunchDataset to add data to}

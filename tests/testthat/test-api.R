@@ -1,6 +1,6 @@
 context("API calling")
 
-test_that("Deprecated endpoints tell user to upgrade", {
+test_that("Deleted endpoints tell user to upgrade", {
     fake410 <- fake_response("http://crunch.io/410", status_code = 410)
     expect_error(
         handleAPIresponse(fake410),
@@ -11,7 +11,35 @@ test_that("Deprecated endpoints tell user to upgrade", {
     )
 })
 
+test_that("get_header", {
+    expect_identical(get_header("bar", list(bar=5)), 5)
+    expect_identical(get_header("foo", list(bar=5)), NULL)
+    expect_identical(get_header("foo", list(bar=5), default=42), 42)
+})
+
 with_mock_crunch({
+    test_that("Deprecation warnings report to the user", {
+        expect_warning(
+            resp <- crGET("https://app.crunch.io/deprecated/"),
+            paste(
+                'The API resource at https://app.crunch.io/api/ returned a',
+                'deprecation warning. Updating to the latest version of the',
+                'package is recommended and may resolve the issue. Details:',
+                '299 - "This resource is scheduled for removal on 2018-03-20"'
+            )
+        )
+    })
+
+    test_that("But other kinds of warnings don't look like deprecations", {
+        expect_warning(
+            resp <- crGET("https://app.crunch.io/other-warning/"),
+            paste(
+                'The API resource at https://app.crunch.io/api/ returned a',
+                'warning. Details: 298 - "This is some other kind of warning"'
+            )
+        )
+    })
+
     test_that("crunch.debug does not print if disabled", {
         expect_POST(
             expect_prints(
@@ -45,6 +73,11 @@ with_mock_crunch({
             "This request is taking longer than expected. Please stand by..."
         )
         expect_identical(resp, crGET("https://app.crunch.io/api/"))
+    })
+
+    test_that("Checking feature flags", {
+        expect_true(featureFlag("this_is_on"))
+        expect_false(featureFlag("this_is_off"))
     })
 })
 

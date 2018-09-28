@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Checks if any files have been updated in the cubes/ directory, if they have 
+# then it makes a new .tgz archive of that directory and adds it before the 
+# commit is finished. This should ensure that inst/cubes.tgz is always in sync 
+# with cubes/
+#
+
+cubesUpdated=`git diff --cached --name-only --diff-filter=ACM cubes/`
+
+# IFF files in cubes/ have changed then compress, and add the archive
+if [ ${#cubesUpdated} -gt 0 ]
+then
+	echo "It looks like there are new cube fixtures."
+	echo "Compressing them now: this could take a few seconds."
+	make compress-fixtures
+	git add inst/cubes.tgz
+	echo "Cube fixtures compressed: inst/cubes.tgz"
+fi
+

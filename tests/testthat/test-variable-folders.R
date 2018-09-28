@@ -31,6 +31,9 @@ with_mock_crunch({
             c("Birth Year", "Text variable ftw")
         )
     })
+    test_that("variables() method on folders", {
+        expect_identical(aliases(variables(g1)), c("birthyr", "textVar"))
+    })
     test_that("Get folder from a folder (via $)", {
         expect_is(g1$Nested, "VariableFolder")
         expect_identical(name(g1$Nested), "Nested")
@@ -147,8 +150,15 @@ with_mock_crunch({
         with(temp.option(crayon.enabled = FALSE), {
             ## Coloring aside, the default print method should look like you
             ## printed the vector of names (plus the path printed above)
-            expect_output(print(folders(ds)),
+            expect_output(
+                print(folders(ds)),
                 capture.output(print(names(folders(ds)))),
+                fixed = TRUE
+            )
+            ## Test that an empty folder doesn't error on printing
+            expect_output(
+                print(VariableFolder()),
+                "folder(0)",
                 fixed = TRUE
             )
             ## These are obfuscated because of archaic restrictions on UTF-8

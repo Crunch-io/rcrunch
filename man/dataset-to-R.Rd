@@ -6,9 +6,9 @@
 \alias{as.data.frame.CrunchDataFrame}
 \title{as.data.frame method for CrunchDataset}
 \usage{
-\method{as.data.frame}{CrunchDataset}(x, row.names = NULL, optional = FALSE,
-  force = FALSE, categorical.mode = "factor", row.order = NULL,
-  include.hidden = TRUE, ...)
+\method{as.data.frame}{CrunchDataset}(x, row.names = NULL,
+  optional = FALSE, force = FALSE, categorical.mode = "factor",
+  row.order = NULL, include.hidden = TRUE, ...)
 
 \method{as.data.frame}{CrunchDataFrame}(x, row.names = NULL,
   optional = FALSE, include.hidden = attr(x, "include.hidden"), ...)
@@ -30,7 +30,7 @@ factor, numeric, id (default: factor)}
 the dataset should be presented as (default: \code{NULL}). If \code{NULL}, then the
 Crunch Dataset order will be used.}
 
-\item{include.hidden}{logical: should hidden variables be included?}
+\item{include.hidden}{logical: should hidden variables be included? (default: \code{TRUE})}
 
 \item{...}{additional arguments passed to \code{as.data.frame} (default method).}
 }
@@ -55,7 +55,7 @@ that require select columns of a dataset to retrieve only those variables from
 the remote server, rather than pulling the entire dataset into local
 memory.
 
-If you call \code{as.data.frame} on a \code{CrunchDataset} with \code{force = TRUE}, you
+If you call \code{as.data.frame()} on a \code{CrunchDataset} with \code{force = TRUE}, you
 will instead get a true \code{data.frame}. You can also get this \code{data.frame} by
 calling \code{as.data.frame} on a \code{CrunchDataFrame} (effectively calling
 \code{as.data.frame} on the dataset twice)

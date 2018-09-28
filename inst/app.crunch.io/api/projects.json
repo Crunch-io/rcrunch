@@ -7,14 +7,16 @@
             "description": "Long description text",
             "icon": "",
             "permissions": {},
-            "id": "project1"
+            "id": "project1",
+            "type": "project"
         },
-        "https://app.crunch.io/api/projects/project2/": {
-            "name": "Project Two",
+        "https://app.crunch.io/api/projects/project3/": {
+            "name": "Project Three",
             "description": "Long description text here as well",
             "icon": "",
             "permissions": {},
-            "id": "project2"
+            "id": "project3",
+            "type": "project"
         }
     }
 }

@@ -1,7 +1,10 @@
 setMethod("initialize", "ShojiFolder", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object@graph <- lapply(.Object@graph, absoluteURL, .Object@self)
-    .Object@index <- .Object@index[unlist(.Object@graph)]
+    if (length(.Object@graph)) {
+        # Root catalogs may not have a graph (right?)
+        .Object@index <- .Object@index[unlist(.Object@graph)]
+    }
     return(.Object)
 })
 
@@ -28,6 +31,10 @@ setMethod("[[", c("ShojiFolder", "character"), function(x, i, ..., drop = FALSE)
     if (nchar(path[1]) == 0) {
         ## Go to root level
         x <- rootFolder(x)
+        path <- path[-1]
+    } else if (identical(path[1], "~")) {
+        ## Go to personal
+        x <- personalFolder(x)
         path <- path[-1]
     }
     create <- isTRUE(list(...)$create)
@@ -68,7 +75,12 @@ parseFolderPath <- function(path) {
 folderDelimiter <- function() getOption("crunch.delimiter", "/")
 
 parentFolderURL <- function(x) {
-    tryCatch(shojiURL(x, "catalogs", "folder"), error = function(e) return(NULL))
+    if (is.variable(x) || inherits(x, "VariableFolder")) {
+        shojiURL(x, "catalogs", "folder", mustWork=FALSE)
+    } else {
+        # A dataset or project
+        shojiURL(x, "catalogs", "project", mustWork=FALSE)
+    }
 }
 
 rootFolder <- function(x) {
@@ -86,13 +98,19 @@ createFolder <- function(where, name, index, ...) {
     ## turn index into index + graph in payload
     ## TODO: also for reordering, function that takes a list (index) and returns
     ## list(index=index, graph=names(index))
-    crPOST(self(where), body = toJSON(wrapCatalog(body = list(name = name, ...))))
+    if (inherits(where, "VariableFolder")) {
+        bod <- wrapCatalog(body = list(name = name, ...))
+    } else {
+        ## Special case: projects strictly require "entity"
+        ## Remove after https://www.pivotaltracker.com/story/show/160328444
+        bod <- wrapEntity(body = list(name = name, ...))
+    }
+    crPOST(self(where), body = toJSON(bod))
 }
 
 #' @rdname describe
 #' @export
-setMethod(
-    "name<-", "ShojiFolder",
+setMethod("name<-", "ShojiFolder",
     function(x, value) setEntitySlot(x, "name", value)
 )
 
@@ -169,7 +187,7 @@ path <- function(x) {
     parent <- folder(x)
     ## If the parent of x is NULL, we're already at top level.
     while (!is.null(parent)) {
-        out <- c(name(parent), out)
+        out <- c(name(parent) %||% "", out)
         parent <- folder(parent)
     }
     out <- paste(out, collapse = folderDelimiter())
@@ -184,3 +202,7 @@ path <- function(x) {
 #     ## Default method: return a folder of the same type
 #     return(get(class(x))(crGET(names(tuple))))
 # })
+
+setMethod("personalFolder", "ShojiFolder", function (x) {
+    halt("Not implemented")
+})

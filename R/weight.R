@@ -21,7 +21,12 @@ weight <- function(x) {
     prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "preferences")))
     w <- prefs$weight
     if (!is.null(w)) {
-        w <- CrunchVariable(allVariables(x)[[w]], filter = activeFilter(x))
+        # we need the full dataset here because we might have been given a
+        # subset of the dataset, and we still need to be able to find the
+        # weight. `loadDataset` shouldn't be costly because the dataset is
+        # already cached.
+        full_ds <- loadDataset(datasetReference(x))
+        w <- CrunchVariable(allVariables(full_ds)[[w]], filter = activeFilter(x))
     }
     return(w)
 }

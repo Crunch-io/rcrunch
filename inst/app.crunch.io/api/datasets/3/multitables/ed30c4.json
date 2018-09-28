@@ -1,0 +1,20 @@
+{
+	"element": "shoji:entity",
+	"self": "https://app.crunch.io/api/datasets/3/multitables/ed30c4/",
+	"views": {
+		"tabbook": "https://app.crunch.io/api/datasets/3/multitables/ed30c4/tabbook/"
+	},
+	"description": "Detail information for one multitable definition",
+	"body": {
+		"name": "My banner",
+		"user": "https://app.crunch.io/api/users/me/",
+		"template": [{
+			"query": [{
+				"variable": "https://app.crunch.io/api/datasets/3/variables/66ae9881e3524f7db84970d556c34552/"
+			}]
+		}],
+		"is_public": false,
+		"display_settings": {},
+		"id": "ed30c4"
+	}
+}

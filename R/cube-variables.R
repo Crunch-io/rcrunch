@@ -1,12 +1,5 @@
 #' @rdname cube-methods
 #' @export
-setMethod("variables", "CubeDims", function(x) {
-    ind <- lapply(x@.Data, vget("references"))
-    return(.pseudoCatalog(ind))
-})
-
-#' @rdname cube-methods
-#' @export
 setMethod("measures", "CrunchCube", function(x) {
     ## Drop "count" measures, which lack metadata
     ind <- Filter(
@@ -21,14 +14,6 @@ setMethod("measures", "CrunchCube", function(x) {
     names(index) <- as.character(seq_along(index)) ## Names just have to exist
     return(VariableCatalog(index = index, self = "")) ## Self just has to exist
 }
-
-#' @rdname cube-methods
-#' @export
-setMethod("variables", "CrunchCube", function(x) {
-    out <- variables(dimensions(x))
-    out@index <- c(out@index, measures(x)@index)
-    return(out)
-})
 
 #' @rdname cube-methods
 #' @export

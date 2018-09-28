@@ -32,7 +32,6 @@
         "summary": "/api/datasets/a1548c/summary/",
         "applied_filters": "/api/datasets/a1548c/filters/applied/"
     },
-    "specification": "/api/specifications/datasets/",
     "description": "Detail for a given dataset",
     "body": {
         "size": {

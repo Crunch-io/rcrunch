@@ -11,6 +11,13 @@ with_mock_crunch({
             "Variable birthyr is hidden"
         )
     })
+    
+    test_that("Can get weights from a subset dataset", {
+        expect_warning(
+            expect_identical(weight(newds[c("gender", "starttime")]), newds$birthyr),
+            "Variable birthyr is hidden"
+        )
+    })
 
     test_that("Setting weights", {
         expect_PATCH(
