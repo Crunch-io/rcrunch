@@ -37,6 +37,12 @@ with_mock_crunch({
         catalog_url = varcat_url
     )
 
+    test_that("urls() on Order/Group", {
+        expect_identical(urls(nested.ord), ent.urls)
+        expect_identical(urls(nested.ord[["Group 1"]]), ent.urls[1:5])
+        expect_identical(urls(nested.ord[["Group 1"]][["Nested"]]), ent.urls[2:4])
+    })
+
     test_that("Validation on entities<-", {
         expect_error(
             entities(ordering(ds)) <- NULL,
@@ -554,7 +560,8 @@ with_mock_crunch({
     test_that("Order print method follows namekey", {
         with(temp.option(crunch.namekey.variableorder = "alias"), {
             expect_prints(ord,
-                paste("[+] Arrays",
+                paste(
+                    "[+] Arrays",
                     "    catarray",
                     "    [+] MR",
                     "        mymrset",
@@ -570,6 +577,29 @@ with_mock_crunch({
                 fixed = TRUE
             )
         })
+    })
+
+    test_that("VariableOrder to/fromJSON", {
+        expect_identical(
+            cereal(ord),
+            list(graph = list(
+                list(Arrays = list(
+                    self(ds$catarray),
+                    list(MR = list(
+                        self(ds$mymrset)
+                    ))
+                )),
+                list(Demos = list(
+                    list(Others = list(
+                        self(ds$birthyr),
+                        self(ds$textVar)
+                    )),
+                    self(ds$gender)
+                )),
+                self(ds$starttime),
+                self(ds$location)
+            ))
+        )
     })
 
     test_that("locateEntity", {
@@ -700,6 +730,15 @@ with_mock_crunch({
             "Both source and target must be Crunch datasets."
         )
     })
+
+    test_that("duplicates is deprecated", {
+        expect_deprecated(
+            expect_false(duplicates(ordering(ds)))
+        )
+        expect_deprecated(
+            duplicates(ordering(ds)) <- FALSE
+        )
+    })
 })
 
 
@@ -742,20 +781,6 @@ with_test_authentication({
         )
     )
 
-    test_that("Get urls from VariableOrder and Group", {
-        expect_identical(
-            urls(vg[[1]]),
-            c(self(ds$v1), self(ds$v3), self(ds$v5))
-        )
-        expect_identical(
-            urls(vg),
-            c(
-                self(ds$v1), self(ds$v3), self(ds$v5), self(ds$v4),
-                self(ds$v6), self(ds$v2)
-            )
-        )
-    })
-
     try(entities(vg[[2]]) <- self(ds$v2))
     test_that("Set URLs -> entities on VariableGroup", {
         expect_identical(urls(vg[[2]]), self(ds$v2))
@@ -779,23 +804,6 @@ with_test_authentication({
     try(names(vg) <- c("G3", "G1", "G2"))
     test_that("Set names on VariableOrder", {
         expect_identical(names(vg), c("G3", "G1", "G2"))
-    })
-
-    try(vglist <- cereal(vg))
-    test_that("VariableOrder to/fromJSON", {
-        skip("Temporary so that the bus isn't blocked")
-        expect_identical(vglist, list(graph = list(
-            list(`G3` = list(self(ds$v1), self(ds$v3), self(ds$v5))),
-            list(`G1` = list(self(ds$v3))),
-            list(`G2` = list(self(ds$v6), self(ds$v2)))
-        )))
-
-        vg[1:2] <- vg[c(2, 1)]
-        expect_identical(cereal(vg), list(graph = list(
-            list(`G1` = list(self(ds$v3))),
-            list(`G3` = list(self(ds$v1), self(ds$v3), self(ds$v5))),
-            list(`G2` = list(self(ds$v6), self(ds$v2)))
-        )))
     })
 
     original.order <- ordering(ds)
@@ -892,15 +900,6 @@ with_test_authentication({
         expect_identical(
             names(grouped(ordering(ds))),
             c("Group 1", "Group 2.5", "Three")
-        )
-    })
-
-    test_that("duplicates is deprecated", {
-        expect_deprecated(
-            expect_false(duplicates(ordering(ds)))
-        )
-        expect_deprecated(
-            duplicates(ordering(ds)) <- FALSE
         )
     })
 
