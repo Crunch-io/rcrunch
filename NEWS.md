@@ -1,6 +1,8 @@
 # crunch 1.24.1 (under development)
 * The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
 * Minor fixes for backwards compatibility with the old projects API
+* Remove code paths that modify the project dataset order, which was removed from the Crunch API.
+* List as deprecated many functions that modify variable order, suggesting `mv()` and the other folder operations. These functions will be removed in December 2018.
 
 # crunch 1.24.0
 

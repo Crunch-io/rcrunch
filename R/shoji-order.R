@@ -670,7 +670,7 @@ moveToGroup <- function(x, value) {
 #' to the depth of nesting. If not found, `NA` is returned
 #' @export
 locateEntity <- function(x, ord) {
-    .Deprecated("path")
+    .Deprecated("folder")
 
     if (!is.character(x)) x <- self(x)
     out <- character(0)
