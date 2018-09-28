@@ -99,7 +99,6 @@ Collate:
     'export-dataset.R'
     'expressions.R'
     'filters.R'
-    'folders-projects.R'
     'folders.R'
     'fork-and-merge.R'
     'formula.R'

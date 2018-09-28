@@ -49,11 +49,6 @@
 #' @export
 mv <- function(x, what, path) {
     ## TODO: add an "after" argument, pass to addToFolder
-
-    if (is.project(x) && !new_projects_api()) {
-        ## Temporary? call a different function
-        return(mv.project(x, what, path))
-    }
     ## dplyr/tidyselect-ish functions, hacked in here (inspired by how pkgdown does it)
     fns <- list(
         starts_with = function(str, ...) grep(paste0("^", str), names(x), ...),
@@ -82,10 +77,6 @@ mv <- function(x, what, path) {
 #' @export
 mkdir <- function(x, path) {
     ## TODO: add an "after" argument, move created folder there
-    if (is.project(x) && !new_projects_api()) {
-        ## Temporary? call a different function
-        return(mkdir.project(x, path))
-    }
     f <- cd(x, path, create = TRUE)
     # Refresh without busting cache, in case there was no change
     # If there had been a change, cd() would have busted cache already
@@ -195,10 +186,6 @@ cd <- function(x, path, create = FALSE) {
 #' }
 #' @export
 rmdir <- function(x, path) {
-    if (is.project(x) && !new_projects_api()) {
-        ## Temporary? call a different function
-        return(rmdir.project(x, path))
-    }
     to_delete <- cd(x, path)
     if (is.project(x) && length(to_delete) > 0) {
         halt(
@@ -287,7 +274,7 @@ folder <- function(x) {
         ind <- sapply(what, emptyObject, simplify = FALSE)
         crPATCH(self(folder), body = toJSON(wrapCatalog(
             index = ind,
-            graph = I(c(urls(folder), what))
+            graph = I(c(folder@graph, what))
         )))
         ## Additional cache invalidation
         ## Drop all variable entities because their catalogs.folder refs are stale

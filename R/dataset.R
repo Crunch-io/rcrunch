@@ -288,7 +288,7 @@ setMethod("tuple<-", "CrunchDataset", function(x, value) {
 #' @return a new version of `x`
 #' @name refresh
 #' @aliases refresh
-#' @importFrom httpcache dropCache
+#' @importFrom httpcache dropCache dropOnly
 NULL
 
 #' @rdname refresh

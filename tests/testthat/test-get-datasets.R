@@ -61,7 +61,7 @@ with_mock_crunch({
     })
 
     test_that("loadDataset by path", {
-        ds3 <- loadDataset("Project One/Group 1/ECON.sav")
+        ds3 <- loadDataset("Project One/Project Two/ECON.sav")
         expect_is(ds3, "CrunchDataset")
         expect_identical(name(ds3), "ECON.sav")
         ds1 <- loadDataset("~/test ds")

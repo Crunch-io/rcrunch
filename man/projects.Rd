@@ -12,7 +12,7 @@ the default value for \code{x} means that you will load the user's primary
 project catalog. (Currently, there are no other project catalogs to load.)}
 }
 \value{
-An object of class \code{ProjectCatalog}.
+An object of class \code{ProjectFolder}.
 }
 \description{
 Get the project catalog

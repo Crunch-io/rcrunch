@@ -5,7 +5,7 @@
 #' can be translated into a data.frame with [catalogToDataFrame()] if information
 #' needs to be extracted, queried, transformed, etc.
 #'
-#' @param x a `CrunchDataset`, `DatasetTuple`, or `CrunchProject` object to get
+#' @param x a `CrunchDataset`, `DatasetTuple`, or `ProjectFolder` object to get
 #' users from
 #'
 #' @return a `UserCatalog` with information about users who have access to the
@@ -26,5 +26,4 @@ setMethod("users", "DatasetTuple", .getUsers)
 
 #' @rdname users
 #' @export
-setMethod("users", "CrunchProject", .getUsers)
-
+setMethod("users", "ProjectFolder", .getUsers)

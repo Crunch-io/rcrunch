@@ -1,8 +1,0 @@
-{
-    "element": "shoji:view",
-    "self": "https://app.crunch.io/api/feature_flag/?feature_name=old_projects_order",
-    "description": "Indicates the status of a given feature",
-    "value": {
-        "active": false
-    }
-}

@@ -5,8 +5,13 @@ setMethod("folderExtraction", "ProjectFolder", function(x, tuple) {
     if (tuple$type == "project") {
         return(ProjectFolder(crGET(url)))
     } else {
-        return(CrunchDataset(tuple))
+        return(loadDatasetFromURL(url))
     }
+})
+
+setMethod("personalFolder", "ProjectFolder", function (x) {
+    # TODO: implement the real personal project. This is legacy behavior
+    datasets()
 })
 
 #' @rdname teams
@@ -72,3 +77,13 @@ setMethod(
         }
     }
 )
+
+setMethod("active", "ProjectFolder", function(x) {
+    index(x) <- Filter(function(a) !isTRUE(a$archived), index(x))
+    return(x)
+})
+
+setMethod("archived", "ProjectFolder", function(x) {
+    index(x) <- Filter(function(a) isTRUE(a$archived), index(x))
+    return(x)
+})
