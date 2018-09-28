@@ -12,14 +12,14 @@ newProject(name, members = NULL, catalog = projects(), ...)
 \item{members}{Optional character vector of emails or user URLs to add as
 project members.}
 
-\item{catalog}{ProjectCatalog in which to create the new project. There is
+\item{catalog}{ProjectFolder in which to create the new project. There is
 only one project catalog currently, \code{\link[=projects]{projects()}}, but this is left here
 so that all \code{new*} functions follow the same pattern.}
 
 \item{...}{Additional project attributes to set}
 }
 \value{
-A \code{CrunchProject} object.
+A \code{ProjectFolder} object.
 }
 \description{
 This function creates a new project. You can achieve the same results by
@@ -40,4 +40,7 @@ proj2 <- newProject("Another project", members="you@yourco.com")
 p[["Another project"]] <- list(members="you@yourco.com")
 proj <- p[["Another project"]]
 }
+}
+\seealso{
+\code{\link[=mkdir]{mkdir()}}
 }

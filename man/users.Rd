@@ -5,17 +5,17 @@
 \alias{users}
 \alias{users,CrunchDataset-method}
 \alias{users,DatasetTuple-method}
-\alias{users,CrunchProject-method}
+\alias{users,ProjectFolder-method}
 \title{Get information about users who have access to a dataset}
 \usage{
 \S4method{users}{CrunchDataset}(x)
 
 \S4method{users}{DatasetTuple}(x)
 
-\S4method{users}{CrunchProject}(x)
+\S4method{users}{ProjectFolder}(x)
 }
 \arguments{
-\item{x}{a \code{CrunchDataset}, \code{DatasetTuple}, or \code{CrunchProject} object to get
+\item{x}{a \code{CrunchDataset}, \code{DatasetTuple}, or \code{ProjectFolder} object to get
 users from}
 }
 \value{

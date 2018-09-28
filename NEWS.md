@@ -1,4 +1,6 @@
 # crunch 1.24.1 (under development)
+* The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
+* Minor fixes for backwards compatibility with the old projects API
 
 # crunch 1.24.0
 

@@ -32,6 +32,10 @@ setMethod("[[", c("ShojiFolder", "character"), function(x, i, ..., drop = FALSE)
         ## Go to root level
         x <- rootFolder(x)
         path <- path[-1]
+    } else if (identical(path[1], "~")) {
+        ## Go to personal
+        x <- personalFolder(x)
+        path <- path[-1]
     }
     create <- isTRUE(list(...)$create)
     while (length(path)) {
@@ -106,8 +110,7 @@ createFolder <- function(where, name, index, ...) {
 
 #' @rdname describe
 #' @export
-setMethod(
-    "name<-", "ShojiFolder",
+setMethod("name<-", "ShojiFolder",
     function(x, value) setEntitySlot(x, "name", value)
 )
 
@@ -199,3 +202,7 @@ path <- function(x) {
 #     ## Default method: return a folder of the same type
 #     return(get(class(x))(crGET(names(tuple))))
 # })
+
+setMethod("personalFolder", "ShojiFolder", function (x) {
+    halt("Not implemented")
+})
