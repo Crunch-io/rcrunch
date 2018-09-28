@@ -129,8 +129,8 @@ findInsertPosition <- function(insert, cats, last_category) {
 #'
 #' @param vec values to transform (a single dimension of an array)
 #' @param trans_funcs a (named) list of functions that return the correct vector
-#'  of the array (with desired instertions and transformations included)
-#' @param dim_names the names of the dimensions (although this is calcuable at
+#'  of the array (with desired insertions and transformations included)
+#' @param dim_names the names of the dimensions (although this is calculable at
 #'   call-time, it's much more efficient to provide this to the call)
 #'   
 #' @return the values given in `vec`, with any insertions specified in
