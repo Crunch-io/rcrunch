@@ -751,6 +751,7 @@ with_test_authentication({
         ))
     })
     test_that("Can construct VariableOrder from variables", {
+        # TODO: probably covered by unit tests
         vg <- VariableOrder(
             VariableGroup(
                 name = "Group 1",
@@ -783,6 +784,7 @@ with_test_authentication({
 
     try(entities(vg[[2]]) <- self(ds$v2))
     test_that("Set URLs -> entities on VariableGroup", {
+        # TODO: move to unit test
         expect_identical(urls(vg[[2]]), self(ds$v2))
         expect_identical(
             urls(vg),
@@ -794,15 +796,18 @@ with_test_authentication({
     })
     try(entities(vg[[2]]) <- list(ds$v3))
     test_that("Set variables -> entities on VariableGroup", {
+        # TODO: move to unit test
         expect_identical(urls(vg[[2]]), self(ds$v3))
     })
 
     try(name(vg[[2]]) <- "Group 3")
     test_that("Set name on VariableGroup", {
+        # TODO: move to unit test
         expect_identical(names(vg), c("Group 1", "Group 3", "Group 2"))
     })
     try(names(vg) <- c("G3", "G1", "G2"))
     test_that("Set names on VariableOrder", {
+        # TODO: move to unit test
         expect_identical(names(vg), c("G3", "G1", "G2"))
     })
 
@@ -904,6 +909,7 @@ with_test_authentication({
     })
 
     test_that("ordering<- validation", {
+        # TODO: move to unit test
         bad.vg <- starting.vg
         entities(bad.vg[[1]]) <- c(
             entities(bad.vg[[1]])[-2],

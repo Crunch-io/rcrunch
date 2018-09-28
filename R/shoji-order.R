@@ -588,12 +588,14 @@ flattenOrder <- function(x) {
 #' @seealso [`VariableOrder`]
 #' @export
 grouped <- function(order.obj) {
+    # TODO: deprecate and suggest a folder method
     Filter(Negate(is.character), order.obj)
 }
 
 #' @rdname grouped
 #' @export
 ungrouped <- function(order.obj) {
+    # TODO: deprecate and suggest a folder method
     return(do.call(groupClass(order.obj), list(
         name = "ungrouped",
         entities = entities(Filter(is.character, order.obj))
