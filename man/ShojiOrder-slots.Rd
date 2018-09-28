@@ -17,12 +17,6 @@
 \alias{names,ShojiOrder-method}
 \alias{names,OrderGroup-method}
 \alias{names<-,ShojiOrder-method}
-\alias{duplicates,ShojiOrder-method}
-\alias{duplicates,OrderGroup-method}
-\alias{duplicates,VariableCatalog-method}
-\alias{duplicates<-,ShojiOrder,logical-method}
-\alias{duplicates<-,OrderGroup,logical-method}
-\alias{duplicates<-,VariableCatalog,logical-method}
 \title{Manipulate VariableGroup and VariableOrder}
 \usage{
 \S4method{entities}{OrderGroup}(x, simplify = FALSE)
@@ -45,17 +39,9 @@
 
 \S4method{names}{ShojiOrder}(x) <- value
 
-\S4method{duplicates}{ShojiOrder}(x)
+duplicates(x)
 
-\S4method{duplicates}{OrderGroup}(x)
-
-\S4method{duplicates}{VariableCatalog}(x)
-
-\S4method{duplicates}{ShojiOrder,logical}(x) <- value
-
-\S4method{duplicates}{OrderGroup,logical}(x) <- value
-
-\S4method{duplicates}{VariableCatalog,logical}(x) <- value
+duplicates(x) <- value
 }
 \arguments{
 \item{x}{a VariableGroup or VariableOrder}

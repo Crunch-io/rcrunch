@@ -309,8 +309,6 @@ setMethod("refresh", "CrunchDataset", function(x) {
         new_tuple[intersect(names(new_tuple), names(old_tuple))]
     )
 
-    ## Keep settings in sync
-    duplicates(allVariables(out)) <- duplicates(allVariables(x))
     ## Make sure the activeFilter's dataset_url is also up to date
     filt <- activeFilter(x)
     if (!is.null(filt)) {
