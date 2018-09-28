@@ -496,32 +496,6 @@ setdiff_entities <- function(x, ents, remove.na = FALSE) {
     return(x)
 }
 
-intersect_entities <- function(x, ents, remove.na = TRUE) {
-    ## Keep only the part of x (Order) containing "ents" (entity references)
-    if (!is.character(ents)) {
-        ## Get just the entity URLs
-        ents <- urls(ents)
-    }
-
-    if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {
-        entities(x) <- intersect_entities(entities(x), ents)
-    } else if (is.list(x)) {
-        ## We're inside entities, which may have nested groups
-        grps <- vapply(x, inherits, logical(1), what = "OrderGroup")
-        x[grps] <- lapply(x[grps], intersect_entities, ents)
-        matches <- unlist(x[!grps]) %in% ents
-        if (any(!matches)) {
-            ## Put in NAs so that any subsequent assignment into this object
-            ## assigns into the right position. Then strip NAs after
-            x[!grps][!matches] <- rep(list(NA_character_), sum(!matches))
-        }
-    }
-    if (remove.na) {
-        x <- removeMissingEntities(x)
-    }
-    return(x)
-}
-
 removeMissingEntities <- function(x) {
     ## Remove NA entries, left by setdiff_entities, from @graph/entities
     if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {

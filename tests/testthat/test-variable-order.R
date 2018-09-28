@@ -687,21 +687,6 @@ with_mock_crunch({
         )
     })
 
-    test_that("intersect_entities", {
-        expect_prints(intersect_entities(ord, ds[c("birthyr", "starttime")]),
-            paste("[+] Demos",
-                "    [+] Others",
-                "        starttime",
-                "    [+] Arrays",
-                "        [+] MR",
-                "            (Empty group)",
-                "        Birth Year",
-                sep = "\n"
-            ),
-            fixed = TRUE
-        )
-    })
-
     test_that("copyOrder returns the order of target as a VariableOrder", {
         ds_again <- loadDataset("test ds")
         expect_silent(new_order <- copyOrder(ds, ds_again))
