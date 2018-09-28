@@ -440,7 +440,6 @@ with_test_authentication({
         expect_identical(which(duplicated(ds$v3)), integer(0))
         expect_equivalent(as.vector(ds$v3[duplicated(ds$v4)]), 10:27)
         expect_identical(which(duplicated(ds$v3 + 4)), integer(0))
-        skip("'which' isn't implemented correctly")
         expect_identical(which(duplicated(ds$v4)), 3:20)
     })
 
