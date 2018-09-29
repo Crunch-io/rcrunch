@@ -371,14 +371,7 @@ with_test_authentication({
                     c(
                         "[+] Key Pet Indicators",
                         "    Pet",
-                        "    Pets by location",
-                        "[+] Dog Metrics",
-                        "    [+] Number of dogs by type",
-                        "        (Empty group)",
-                        "[+] Details",
-                        "    (Empty group)",
-                        "[+] Dimensions",
-                        "    (Empty group)"
+                        "    Pets by location"
                     ),
                     sep = "", collapse = "\n"
                 )
