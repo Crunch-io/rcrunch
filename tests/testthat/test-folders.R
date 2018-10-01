@@ -279,6 +279,16 @@ with_mock_crunch({
             ds %>% rmdir("Group 1/Nested"),
             "Must confirm deleting folder"
         )
+        expect_message(
+            expect_error(
+                ds %>% rmdir("Group 2"),
+                "Must confirm deleting folder"
+            ),
+            paste0(
+                "This folder contains 2 objects: .*starttime.* and ",
+                ".*Cat Array.*"
+            )
+        )
         with_consent({
             expect_DELETE(
                 ds %>% rmdir("Group 1/Nested"),
