@@ -21,6 +21,7 @@ library(crunch)
 ```{r, results='hide', include = FALSE}
 library(httptest)
 start_vignette("decks")
+login()
 ```
 
 ```{r}
@@ -67,6 +68,9 @@ subtitles(gender_deck)
 
 We can access a slide by selecting from the deck with a numeric index.
 
+```{r, include=FALSE}
+change_state()
+```
 ```{r}
 slide2 <- gender_deck[[2]]
 slide2
@@ -74,7 +78,7 @@ slide2
 
 You might notice that the printed slide looks a lot like a CrunchCube. Slides are essentially wrappers around cube queries with some additional settings and metadata. Indeed, you can assign the same formulas you use to create cubes into the `query` function to change what a slide displays. For example, we might want to flip the row and column variables:
 
-```{r, echo=FALSE}
+```{r, include=FALSE}
 change_state()
 ```
 ```{r}
@@ -84,6 +88,9 @@ slide2
 
 Since the analyses in a slide contain cubes, you can access them with the `cube` function. This is useful if you want to do further analysis on the data.
 
+```{r, include=FALSE}
+change_state()
+```
 ```{r}
 cube(slide2)
 # You can also get a list of cubes for the whole deck
@@ -95,14 +102,14 @@ cube_list[[2]]
 
 You can copy decks by assigning them into the deck catalog for a dataset. This is useful if you have need to create several decks which are similar to one another. Currently it is only possible to copy decks within a dataset, not between datasets.
 
-```{r, echo=FALSE}
+```{r, include=FALSE}
 change_state()
 ```
 ```{r}
 ds_decks[["new deck"]] <- gender_deck
 ds_decks
 ```
-```{r, echo=FALSE}
+```{r, include=FALSE}
 with_consent(delete(ds))
 end_vignette()
 ```

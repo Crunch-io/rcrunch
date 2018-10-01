@@ -130,7 +130,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' @param subtitle The slide's subtitle
 #' @param ... Further options to be passed on to the API
 #'
-#' @return
+#' @return CrunchSlide object
 #' @export
 #'
 #' @examples
@@ -139,7 +139,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     main_deck,
 #'     ~cyl + wt,
 #'     title = "Cyl and Weight",
-#'     subtitle = 2017 Data"
+#'     subtitle = "2017 Data"
 #'     )
 #' }
 newSlide <- function(deck,
