@@ -72,7 +72,7 @@ setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySetti
 #' @param dataset a Crunch Dataset
 #' @return a DeckCatalog
 #' @export
-decks <- function(dataset){
+decks <- function(dataset) {
     stopifnot(is.dataset(dataset))
     DeckCatalog(crGET(shojiURL(dataset, "catalogs", "decks")))
 }
@@ -97,11 +97,11 @@ newDeck <- function(dataset, name, ...) {
 
 setMethod("initialize", "DeckCatalog", init.sortCatalog)
 
-setMethod("[[", "DeckCatalog",  function (x, i, ...) {
+setMethod("[[", "DeckCatalog", function(x, i, ...) {
     getEntity(x, i, CrunchDeck, ...)
 })
 
-setMethod("[[", c("DeckCatalog", "character", "ANY"),  function (x, i, ...) {
+setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     if (length(i) > 1) {
         halt("You can only select one deck at a time")
     }
@@ -117,14 +117,14 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"),  function (x, i, ...) {
     getEntity(x, index, CrunchDeck, ...)
 })
 
-setMethod("show", "DeckCatalog", function(object){
+setMethod("show", "DeckCatalog", function(object) {
     out <- as.data.frame(object)
     print(out[, c("name", "team", "is_public", "owner_name")])
 })
 
 # CrunchDeck --------------------------------------------------------------
 
-setMethod("[[", "CrunchDeck", function (x, i, ...) slides(x)[[i]])
+setMethod("[[", "CrunchDeck", function(x, i, ...) slides(x)[[i]])
 
 setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
     slideCat <- slides(x)
@@ -134,7 +134,7 @@ setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
 
 #' @rdname delete
 #' @export
-setMethod("delete", "CrunchDeck", function (x, ...) {
+setMethod("delete", "CrunchDeck", function(x, ...) {
     if (!askForPermission(paste0("Really delete deck ", dQuote(name(x)), "?"))) {
         halt("Must confirm deleting a deck")
     }
@@ -151,7 +151,7 @@ setMethod("delete", "CrunchDeck", function (x, ...) {
 #' @param x a CrunchDeck
 #' @return a SliDe Catalog
 #' @export
-slides <- function(x){
+slides <- function(x) {
     SlideCatalog(crGET(shojiURL(x, "catalogs", "slides")))
 }
 
@@ -181,14 +181,14 @@ setMethod("names<-", "CrunchDeck", function(x, value) {
 })
 
 setMethod("titles", "CrunchDeck", function(x) titles(slides(x)))
-setMethod("titles<-", "CrunchDeck", function (x, value){
+setMethod("titles<-", "CrunchDeck", function(x, value) {
     slide_cat <- slides(x)
     titles(slide_cat) <- value
     invisible(refresh(x))
 })
 
 setMethod("subtitles", "CrunchDeck", function(x) subtitles(slides(x)))
-setMethod("subtitles<-", "CrunchDeck", function(x, value){
+setMethod("subtitles<-", "CrunchDeck", function(x, value) {
     slide_cat <- slides(x)
     subtitles(slide_cat) <- value
     invisible(refresh(x))
@@ -220,8 +220,8 @@ exportDeck <- function(deck, file, format = c("xlsx", "json")) {
 
 setMethod("length", "CrunchDeck", function(x) return(length(slides(x))))
 
-setMethod("cubes", "CrunchDeck", function(x){
-    out <- lapply(seq_len(length(x)), function(i){
+setMethod("cubes", "CrunchDeck", function(x) {
+    out <- lapply(seq_len(length(x)), function(i) {
         cubes <- cubes(x[[i]])
         # If a slide has several analyses we should return a sublist of
         # cubes, but most of the time they will have one analysis so not
@@ -235,6 +235,6 @@ setMethod("cubes", "CrunchDeck", function(x){
     return(out)
 })
 
-setMethod("show", "CrunchDeck", function(object){
+setMethod("show", "CrunchDeck", function(object) {
     print(cubes(object))
 })

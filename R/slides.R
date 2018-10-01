@@ -3,7 +3,7 @@
 
 # Slide Catalog -----------------------------------------------------------
 
-setMethod("initialize", "SlideCatalog", function(.Object, ...){
+setMethod("initialize", "SlideCatalog", function(.Object, ...) {
     .Object <- callNextMethod()
     order <- crGET(.Object@orders$flat)
     order <- unlist(order$graph)
@@ -15,20 +15,21 @@ setMethod("names", "SlideCatalog", function(x) titles(x))
 setMethod("names<-", "SlideCatalog", function(x, value) titles(x) <- value)
 
 setMethod("titles", "SlideCatalog", function(x) getIndexSlot(x, "title"))
-setMethod("titles<-", "SlideCatalog", function (x, value){
+setMethod("titles<-", "SlideCatalog", function(x, value) {
     setIndexSlot(x, "title", value)
 })
 
-setMethod("subtitles", "SlideCatalog", function (x) getIndexSlot(x, "subtitle"))
-setMethod("subtitles<-", "SlideCatalog", function (x, value){
+setMethod("subtitles", "SlideCatalog", function(x) getIndexSlot(x, "subtitle"))
+setMethod("subtitles<-", "SlideCatalog", function(x, value) {
     setIndexSlot(x, "subtitle", value)
 })
 
-setMethod("[[", "SlideCatalog", function (x, i, ...) {
+setMethod("[[", "SlideCatalog", function(x, i, ...) {
     getEntity(x, i, CrunchSlide)
 })
 
-setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
+setMethod(
+    "[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
     function(x, i, j, value) {
         if (length(i) > 1) {
             # TODO, allow assignment of more than one slide
@@ -42,7 +43,7 @@ setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
 
         payload <- value@body[c("title", "subtitle")]
         anCat <- analyses(value)
-        payload$analyses <- lapply(seq_along(anCat), function(i){
+        payload$analyses <- lapply(seq_along(anCat), function(i) {
             out <- anCat[[i]]
             out <- out@body[c("query", "query_environment", "display_settings")]
             out
@@ -70,9 +71,9 @@ setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
 #' @param idx The index to move the last element to.
 #'
 #' @return a vector
-moveLastElement <- function(v, idx){
+moveLastElement <- function(v, idx) {
     v[idx] <- v[length(v)]
-    out <- v[1:(length(v) -1)]
+    out <- v[1:(length(v) - 1)]
     return(out)
 }
 
@@ -90,7 +91,7 @@ reorderSlides <- function(x, order) {
     return(refresh(x))
 }
 
-setMethod("delete", "CrunchSlide", function (x, ...) {
+setMethod("delete", "CrunchSlide", function(x, ...) {
     if (!askForPermission(paste0("Really delete slide ", dQuote(title(x)), "?"))) {
         halt("Must confirm deleting CrunchSlide")
     }
@@ -100,7 +101,7 @@ setMethod("delete", "CrunchSlide", function (x, ...) {
 
 # CrunchSlide -------------------------------------------------------------------
 
-setMethod("show", "CrunchSlide", function(object){
+setMethod("show", "CrunchSlide", function(object) {
     out <- cubes(object)
     names(out) <- title(object)
     print(out)
@@ -167,7 +168,7 @@ newSlide <- function(deck,
     return(CrunchSlide(crGET(url)))
 }
 
-setMethod("[[", "CrunchSlide", function (x, i, ...) {
+setMethod("[[", "CrunchSlide", function(x, i, ...) {
     an_cat <- analyses(x)
     return(an_cat[[i]])
 })
@@ -178,36 +179,36 @@ setMethod("[[<-", "CrunchSlide", function(x, i, j, value) {
     invisible(refresh(x))
 })
 
-setMethod("title", "CrunchSlide", function (x){
+setMethod("title", "CrunchSlide", function(x) {
     return(x@body$title)
 })
 
-setMethod("title<-", "CrunchSlide", function(x, value){
+setMethod("title<-", "CrunchSlide", function(x, value) {
     setEntitySlot(x, "title", value)
 })
 
-setMethod("subtitle", "CrunchSlide", function (x){
+setMethod("subtitle", "CrunchSlide", function(x) {
     return(x@body$subtitle)
 })
 
-setMethod("subtitle<-", "CrunchSlide", function(x, value){
+setMethod("subtitle<-", "CrunchSlide", function(x, value) {
     setEntitySlot(x, "subtitle", value)
 })
 
-setMethod("analyses", "CrunchSlide", function (x) {
+setMethod("analyses", "CrunchSlide", function(x) {
     AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
 })
 
-setMethod("analysis", "CrunchSlide", function (x) {
+setMethod("analysis", "CrunchSlide", function(x) {
     out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
     return(out[[1]])
 })
 
-setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value){
+setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value) {
     analyses[[1]] <- value
 })
 
-setMethod("query<-", "CrunchSlide", function(x, value){
+setMethod("query<-", "CrunchSlide", function(x, value) {
     analysis <- analyses(x)[[1]]
     query(analysis) <- value
     return(invisible(x))
@@ -222,11 +223,11 @@ setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
 
 # AnalysisCatalog --------------------------------------------------------------
 
-setMethod("[[", "AnalysisCatalog", function (x, i, ...) {
-  getEntity(x, i, Analysis)
+setMethod("[[", "AnalysisCatalog", function(x, i, ...) {
+    getEntity(x, i, Analysis)
 })
 
-setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), function (x, i, j, value) {
+setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), function(x, i, j, value) {
     if (i > length(x)) {
         halt("Index out of bounds, you can only assign a formula to an existing analysis.")
     }
@@ -235,8 +236,9 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), functio
     invisible(refresh(x))
 })
 
-setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
-    function(x, i, j, value){
+setMethod(
+    "[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
+    function(x, i, j, value) {
         if (length(i) > 1) {
             # TODO, recurse through i
         }
@@ -248,7 +250,7 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
         payload <- wrapEntity(body = payload)
         if (i <= length(x)) {
             url <- names(x@index)[i]
-            crPATCH(url, body=toJSON(payload))
+            crPATCH(url, body = toJSON(payload))
         } else {
             crPOST(self(x), body = toJSON(payload))
         }
@@ -256,16 +258,19 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
     }
 )
 
-setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("AnalysisCatalog", "numeric", "missing", "list"),
+    function(x, i, j, value) {
         all_fmla <- vapply(value, function(x) inherits(x, "formula"), logical(1))
         if (any(!all_fmla)) {
             halt("Entry ", which(!all_fmla), " is not a formula")
         }
         if (length(i) != length(value)) {
             noun <- if (length(i) == 1) " analysis." else " analyses."
-            halt("Invalid assignment. You tried to assign ", length(value),
-                " formulas to ", length(i), noun)
+            halt(
+                "Invalid assignment. You tried to assign ", length(value),
+                " formulas to ", length(i), noun
+            )
         }
         mapply(function(analysis, fmla) {
             analysis <- fmla
@@ -277,10 +282,10 @@ setMethod("cubes", "AnalysisCatalog", function(x) {
     lapply(seq_along(x@index), function(i) cube(x[[i]]))
 })
 
-setMethod("displaySettings", "AnalysisCatalog", function(x){
+setMethod("displaySettings", "AnalysisCatalog", function(x) {
     settings_list <- lapply(seq_along(x), function(i) {
         displaySettings(x[[i]])
-        })
+    })
     if (length(settings_list) == 1) {
         return(settings_list[[1]])
     } else {
@@ -288,7 +293,7 @@ setMethod("displaySettings", "AnalysisCatalog", function(x){
     }
 })
 
-setMethod("displaySettings<-", c("AnalysisCatalog", "list"), function(x, value){
+setMethod("displaySettings<-", c("AnalysisCatalog", "list"), function(x, value) {
     analyses <- lapply(seq_along(x), function(i) x[[i]])
     lapply(analyses, function(x) displaySettings(x) <- value)
 })

@@ -121,7 +121,8 @@ setGeneric("urls", function(x) standardGeneric("urls"))
 setGeneric("self", function(x) standardGeneric("self"))
 setGeneric("refresh", function(x) standardGeneric("refresh"))
 setGeneric("delete", function(x, ...) standardGeneric("delete"),
-    signature="x")
+    signature = "x"
+)
 setGeneric("entities", function(x, ...) standardGeneric("entities"))
 setGeneric("entities<-", function(x, value) standardGeneric("entities<-"))
 setGeneric("tuple", function(x) standardGeneric("tuple"))
@@ -147,11 +148,15 @@ setGeneric("multitables<-", function(x, value) standardGeneric("multitables<-"))
 setGeneric("filters", function(x) standardGeneric("filters"))
 setGeneric("filters<-", function(x, value) standardGeneric("filters<-"))
 setGeneric("appliedFilters", function(x) standardGeneric("appliedFilters"))
-setGeneric("appliedFilters<-",
-    function(x, value) standardGeneric("appliedFilters<-"))
+setGeneric(
+    "appliedFilters<-",
+    function(x, value) standardGeneric("appliedFilters<-")
+)
 setGeneric("activeFilter", function(x) standardGeneric("activeFilter"))
-setGeneric("activeFilter<-",
-    function(x, value) standardGeneric("activeFilter<-"))
+setGeneric(
+    "activeFilter<-",
+    function(x, value) standardGeneric("activeFilter<-")
+)
 setGeneric("is.public", function(x) standardGeneric("is.public"))
 setGeneric("is.public<-", function(x, value) standardGeneric("is.public<-"))
 setGeneric("is.editor", function(x) standardGeneric("is.editor"))

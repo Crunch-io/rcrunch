@@ -6,7 +6,7 @@ with_mock_crunch({
     test_that("newDeck posts correctly", {
         expect_POST(
             newDeck(ds, "deck1"),
-            'https://app.crunch.io/api/datasets/1/decks/',
+            "https://app.crunch.io/api/datasets/1/decks/",
             '{"element":"shoji:entity","body":{"name":"deck1"}}'
         )
     })
@@ -17,8 +17,10 @@ with_mock_crunch({
         expect_equal(names(deck_cat), c("Main Deck", "Main Deck"))
     })
     expect_warning(
-        expect_GET(deck_cat[["Main Deck"]],
-                   'https://app.crunch.io/api/datasets/1/decks/f9b502afe2e54e79b3e17f3cc61174ae/'),
+        expect_GET(
+            deck_cat[["Main Deck"]],
+            "https://app.crunch.io/api/datasets/1/decks/f9b502afe2e54e79b3e17f3cc61174ae/"
+        ),
         paste0(dQuote("Main Deck"), " does not uniquely identify elements. Returning the first match")
     )
     expect_error(
@@ -49,17 +51,16 @@ with_mock_crunch({
     })
 
     test_that("deck name and description getters and setters", {
-
         expect_equal(name(main_deck), "Main Deck")
         expect_equal(description(main_deck), "")
         expect_PATCH(
             name(main_deck) <- "new_name",
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/",
             '{"name":"new_name"}'
         )
         expect_PATCH(
             description(main_deck) <- "new_description",
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/",
             '{"description":"new_description"}'
         )
     })
@@ -68,7 +69,7 @@ with_mock_crunch({
         expect_equal(titles(main_deck), c("birthyr", "mymrset", "mymrset"))
         expect_PATCH(
             titles(main_deck) <- paste("slide", 1:3),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
             '{"element":"shoji:catalog","index":{',
             '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"title":"slide 1"},',
             '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/":{"title":"slide 2"},',
@@ -76,7 +77,7 @@ with_mock_crunch({
         )
         expect_PATCH(
             subtitles(main_deck) <- paste("slide", 1:3),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
             '{"element":"shoji:catalog","index":{',
             '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"subtitle":"slide 1"},',
             '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/":{"subtitle":"slide 2"},',
@@ -88,7 +89,7 @@ with_mock_crunch({
         expect_false(is.public(main_deck))
         expect_PATCH(
             is.public(main_deck) <- TRUE,
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/",
             '{"is_public":true}'
         )
     })
@@ -106,18 +107,18 @@ with_mock_crunch({
     test_that("export decks generates correct POST", {
         expect_POST(
             exportDeck(main_deck, format = "json"),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/'
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/"
         )
         expect_POST(
             exportDeck(main_deck, format = "xlsx"),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/'
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/"
         )
     })
 
     test_that("deck assignment", {
         expect_POST(
             main_deck[[4]] <- main_deck[[1]],
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
             '{"element":"shoji:entity",',
             '"body":{"title":"birthyr",',
             '"subtitle":"",',
@@ -142,7 +143,7 @@ with_mock_crunch({
         with_consent({
             expect_DELETE(
                 delete(main_deck),
-                'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/'
+                "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/"
             )
         })
     })
@@ -150,16 +151,16 @@ with_mock_crunch({
     # Slide Catalog -----------------------------------------------------------
 
     test_that("moveLastElement", {
-        expect_equal(moveLastElement(1:5, 3), c(1,2,5,4))
-        expect_equal(moveLastElement(1:5, 5), c(1,2,3,4))
-        expect_equal(moveLastElement(1:5, 1), c(5,2,3,4))
-        expect_equal(moveLastElement(1:5, 2), c(1,5,3,4))
+        expect_equal(moveLastElement(1:5, 3), c(1, 2, 5, 4))
+        expect_equal(moveLastElement(1:5, 5), c(1, 2, 3, 4))
+        expect_equal(moveLastElement(1:5, 1), c(5, 2, 3, 4))
+        expect_equal(moveLastElement(1:5, 2), c(1, 5, 3, 4))
     })
 
     test_that("reorderSlides", {
         expect_PATCH(
             reorderSlides(slides(main_deck), c(3, 2, 1)),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat",
             '{"element":"shoji:order",',
             '"self":"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat/",',
             '"description":"Order of the slides on this deck",',
@@ -175,7 +176,7 @@ with_mock_crunch({
     test_that("New Slide", {
         expect_POST(
             newSlide(main_deck, ~birthyr, title = "Title", subtitle = "SubTitle"),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
             '{"element":"shoji:entity",',
             '"body":{"title":"Title",',
             '"subtitle":"SubTitle",',
@@ -205,12 +206,12 @@ with_mock_crunch({
         expect_equal(subtitle(slide), "")
         expect_PATCH(
             title(slide) <- "new_title",
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/",
             '{"title":"new_title"}'
         )
         expect_PATCH(
             subtitle(slide) <- "new_subtitle",
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/",
             '{"subtitle":"new_subtitle"}'
         )
     })
@@ -227,7 +228,7 @@ with_mock_crunch({
     test_that("query assignment for slides", {
         expect_PATCH(
             query(slide) <- ~birthyr,
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
             '{"element":"shoji:entity",',
             '"body":{"query":{"dimensions":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
@@ -244,7 +245,7 @@ with_mock_crunch({
         with_consent({
             expect_DELETE(
                 delete(slide),
-                'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/'
+                "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/"
             )
         })
     })
@@ -273,13 +274,14 @@ with_mock_crunch({
         )
         expect_POST(
             slide[[2]] <- slide[[1]],
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/',
-            payload)
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/",
+            payload
+        )
         expect_PATCH(
             slide[[1]] <- slide[[1]],
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
-            payload)
-
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
+            payload
+        )
     })
 
     test_that("analysis assignment errors", {
@@ -301,13 +303,15 @@ with_mock_crunch({
         expect_equal(settings$decimalPlaces, 1)
         expect_equal(
             names(settings),
-            c("percentageDirection", "showEmpty", "showMean", "vizType",
-              "countsOrPercents", "decimalPlaces", "populationMagnitude", "showSignif",
-              "currentTab", "uiView")
+            c(
+                "percentageDirection", "showEmpty", "showMean", "vizType",
+                "countsOrPercents", "decimalPlaces", "populationMagnitude", "showSignif",
+                "currentTab", "uiView"
+            )
         )
         expect_PATCH(
             displaySettings(analysis) <- list(decimalPlaces = 1),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
             '{"element":"shoji:entity",',
             '"body":{"display_settings":{',
             '"percentageDirection":{"value":"colPct"},',
@@ -330,7 +334,7 @@ with_mock_crunch({
         expect_identical(displaySettings(ancat), displaySettings(ancat[[1]]))
         expect_PATCH(
             displaySettings(ancat) <- list(decimalPlaces = 2),
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
             '{"element":"shoji:entity",',
             '"body":{"display_settings":{',
             '"percentageDirection":{"value":"colPct"},',
@@ -354,7 +358,7 @@ with_mock_crunch({
         )
         expect_PATCH(
             ancat[[1]] <- ~birthyr + gender,
-            'https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/',
+            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
             '{"element":"shoji:entity",',
             '"body":{"query":{"dimensions":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
@@ -405,13 +409,13 @@ with_test_authentication({
     )
 
     test_that("slides can be added to a deck", {
-
         univariate_slide <- newSlide(
             deck,
             query = ~v1,
             display_settings = settings,
             title = "slide1",
-            subtitle = "one analysis")
+            subtitle = "one analysis"
+        )
         expect_is(univariate_slide, "CrunchSlide")
         anCat <- analyses(univariate_slide)
         expect_is(anCat, "AnalysisCatalog")
@@ -423,7 +427,6 @@ with_test_authentication({
     })
 
     test_that("deck titles and subtitles", {
-
         expect_equal(titles(deck), c("slide1", "slide2"))
         expect_equal(subtitles(deck), c("one analysis", "two analyses"))
         titles(deck) <- c("new_title1", "new_title2")
@@ -433,11 +436,11 @@ with_test_authentication({
         titles(deck)[1] <- "slide1"
         expect_equal(titles(deck)[1], "slide1")
         subtitles(deck)[1] <- "one analysis"
-        expect_equal(subtitles(deck)[1],  "one analysis")
+        expect_equal(subtitles(deck)[1], "one analysis")
     })
 
     slideCat <- slides(deck)
-    test_that("slides method",{
+    test_that("slides method", {
         expect_is(slideCat, "SlideCatalog")
         expect_equal(length(slideCat), 2)
         expect_equal(titles(slideCat), c("slide1", "new_title2"))
@@ -476,7 +479,7 @@ with_test_authentication({
     })
 
     test_that("An analysis can be turned into a cube", {
-        expect_identical(cube(analysis), crtabs( ~v1, ds))
+        expect_identical(cube(analysis), crtabs(~v1, ds))
     })
 
     test_that("cubes on an analysis catalog returns a list of cubes", {
@@ -499,9 +502,10 @@ with_test_authentication({
         expect_is(settings, "list")
         expect_equal(
             names(settings),
-            c("percentageDirection", "showEmpty", "showMean", "vizType", "countsOrPercents",
-              "decimalPlaces", "populationMagnitude", "showSignif", "currentTab",
-              "uiView"
+            c(
+                "percentageDirection", "showEmpty", "showMean", "vizType", "countsOrPercents",
+                "decimalPlaces", "populationMagnitude", "showSignif", "currentTab",
+                "uiView"
             )
         )
         expect_equal(settings$countsOrPercents, "percent")

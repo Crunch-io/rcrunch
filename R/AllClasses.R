@@ -240,8 +240,8 @@ CrunchSlide <- setClass("CrunchSlide", contains = "ShojiObject")
 AnalysisCatalog <- setClass("AnalysisCatalog", contains = "ShojiCatalog")
 Analysis <- setClass("Analysis", contains = "ShojiObject")
 
-GenericConstructor <- function (class) {
-    return(function (..., data=NULL) {
+GenericConstructor <- function(class) {
+    return(function(..., data = NULL) {
         if (!is.null(data)) {
             return(new(class, data))
         } else {
