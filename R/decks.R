@@ -3,9 +3,9 @@
 
 #' Manipulate deck titles
 #'
-#' Crunch slides have titles an subtitles. You can change these features at
-#' either the Deck level by assigning a character vector which is
-#' the same length as the Deck to the Crunch deck, or by assigning character strings to the
+#' Crunch slides have titles and subtitles. You can change these features at
+#' either the deck level by assigning a character vector which is
+#' the same length as the deck to the CrunchDeck, or by assigning character strings to the
 #' the slide.
 #' @param x a `CrunchDeck` or `CrunchSlide`
 #' @param value character, the new title or subtitle

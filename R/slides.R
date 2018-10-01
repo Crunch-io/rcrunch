@@ -96,7 +96,7 @@ setMethod("delete", "CrunchSlide", function(x, ...) {
         halt("Must confirm deleting CrunchSlide")
     }
     out <- crDELETE(self(x), drop = dropCache(absoluteURL("../", self(x))))
-    invisible(out)
+    return(invisible(out))
 })
 
 # CrunchSlide -------------------------------------------------------------------
@@ -153,7 +153,7 @@ newSlide <- function(deck,
         query <- list(query)
     }
 
-    settings <- modifyList(display_settings, DEFAULT_DISPLAY_SETTINGS)
+    settings <- modifyList(DEFAULT_DISPLAY_SETTINGS, display_settings)
     settings <- wrapDisplaySettings(settings)
 
     payload <- list(title = title, subtitle = subtitle, ...)
@@ -206,6 +206,7 @@ setMethod("analysis", "CrunchSlide", function(x) {
 
 setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value) {
     analyses[[1]] <- value
+    return(invisible(x))
 })
 
 setMethod("query<-", "CrunchSlide", function(x, value) {
@@ -219,6 +220,7 @@ setMethod("cube", "CrunchSlide", function(x) cube(analyses(x)[[1]]))
 setMethod("displaySettings", "CrunchSlide", function(x) displaySettings(analyses(x)))
 setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
     displaySettings(analyses(x)) <- value
+    return(invisible(x))
 })
 
 # AnalysisCatalog --------------------------------------------------------------
