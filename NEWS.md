@@ -1,5 +1,6 @@
 # crunch 1.24.3 (under development)
 * Improved robustness of API usage for moving datasets in projects.
+* Support for `"."` as a folder path/segment, referencing the current folder. `cd(project, ".")` returns `project`; `mv(project, ds, ".")` moves `ds` into `project`.
 
 # crunch 1.24.2
 * The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.

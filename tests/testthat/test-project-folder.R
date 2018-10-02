@@ -99,6 +99,15 @@ with_mock_crunch({
                 mv(ds, "Project One")
         )
     })
+    test_that("mv to .", {
+        expect_PATCH(
+            projects() %>%
+                cd("Project One/Project Two") %>%
+                mv(ds, "."),
+            "https://app.crunch.io/api/projects/project2/",
+            move_testds
+        )
+    })
     test_that("Legacy methods: datasets<-", {
         expect_PATCH(
             datasets(proj[["Project Two"]]) <- ds,

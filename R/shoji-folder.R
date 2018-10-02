@@ -41,7 +41,10 @@ setMethod("[[", c("ShojiFolder", "character"), function(x, i, ..., drop = FALSE)
     while (length(path)) {
         ## Recurse
         segment <- path[1]
-        if (segment == "..") {
+        if (segment == ".") {
+            ## We're already here
+            this <- x
+        } else if (segment == "..") {
             ## Go up a level
             this <- folder(x)
             if (is.null(this)) {
