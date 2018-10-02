@@ -7,6 +7,8 @@ get_output <- function(x) {
     paste(capture.output(print(x)), collapse = "\n")
 }
 
+expect_deprecated <- function(...) expect_warning(..., "deprecated")
+
 expect_valid_df_import <- function(ds) {
     ## Pull out common tests that "df" was imported correctly
     expect_true(is.dataset(ds))

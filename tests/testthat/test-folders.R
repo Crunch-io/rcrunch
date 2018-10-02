@@ -89,12 +89,7 @@ with_mock_crunch({
         "https://app.crunch.io/api/datasets/1/folders/2/",
         " ",
         '{"element":"shoji:catalog","index":{',
-        '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}},',
-        '"graph":[',
-        '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
-        '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
-        '"https://app.crunch.io/api/datasets/1/variables/birthyr/"',
-        "]}"
+        '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}'
     )
     test_that("mv variables to existing folder, selecting from dataset", {
         expect_PATCH(
@@ -190,12 +185,7 @@ with_mock_crunch({
             ds %>% cd("Group 1") %>% mv("Nested", "../Group 2"),
             "https://app.crunch.io/api/datasets/1/folders/2/",
             '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/folders/3/":{}},',
-            '"graph":[',
-            '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
-            '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
-            '"https://app.crunch.io/api/datasets/1/folders/3/"',
-            "]}"
+            '"https://app.crunch.io/api/datasets/1/folders/3/":{}}}'
         )
     })
 

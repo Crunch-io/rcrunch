@@ -10,18 +10,11 @@ dedupeOrder(x)
 \item{x}{VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup}
 }
 \value{
-\code{x} with duplicate entities removed.
+\code{x}
 }
 \description{
-This function recurses through a \code{ShojiOrder} or \code{OrderGroup} and
-removes any duplicate entities. As with \code{\link[base:duplicated]{base::duplicated}},
-the first appearance of an entity is kept, and subsequent occurrences are marked as duplicated
-and removed. (Unlike \code{duplicated}, there is no option to reverse that order.)
-The first occurrence of an entity is determined by the function's recursion:
-within each group, nested groups are processed first, in order, and
-their nested groups are processed recursively. See the test suite, in
-test-variable-order.R, for an example that illustrates which entities are
-dropped as duplicate.
+This function no longer does anything because variables can no longer appear
+in more than one folder. It is deprecated and scheduled for removal.
 }
 \seealso{
 \code{\link{duplicates}}, which when set to \code{FALSE} also calls this function.

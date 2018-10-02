@@ -114,41 +114,13 @@ setMethod(
 
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("duplicates", "ShojiOrder", function(x) x@duplicates)
+duplicates <- function(x) {
+    .Deprecated(msg="'duplicates' is deprecated. Entities can exist in one and only one folder, so this function does nothing.")
+    return(FALSE)
+}
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("duplicates", "OrderGroup", function(x) x@duplicates)
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates", "VariableCatalog", function(x) duplicates(x@order))
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates<-", c("ShojiOrder", "logical"), function(x, value) {
-    value <- isTRUE(value) ## To purge NA_logical_
-    x@duplicates <- value
-    grps <- vapply(x@graph, inherits, logical(1), what = "OrderGroup")
-    x@graph[grps] <- lapply(x@graph[grps], `duplicates<-`, value = value)
-    if (!value) {
-        ## We're setting duplicates: FALSE, so dedupe
-        x <- dedupeOrder(x)
-    }
+"duplicates<-" <- function(x, value) {
+    .Deprecated(msg="'duplicates<-' is deprecated. Entities can exist in one and only one folder, so this function does nothing")
     return(x)
-})
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates<-", c("OrderGroup", "logical"), function(x, value) {
-    value <- isTRUE(value) ## To purge NA_logical_
-    x@duplicates <- value
-    grps <- vapply(x@entities, inherits, logical(1), what = "OrderGroup")
-    x@entities[grps] <- lapply(x@entities[grps], `duplicates<-`, value = value)
-    ## Note: not calling dedupeOrder here because it's most likely that this is
-    ## only called from within the duplicates<- method for ShojiOrder, which
-    ## does the deduping
-    return(x)
-})
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates<-", c("VariableCatalog", "logical"), function(x, value) {
-    duplicates(x@order) <- isTRUE(value) ## To purge NA_logical_
-    return(x)
-})
+}
