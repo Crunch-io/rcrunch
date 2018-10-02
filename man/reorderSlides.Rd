@@ -2,7 +2,7 @@
 % Please edit documentation in R/slides.R
 \name{reorderSlides}
 \alias{reorderSlides}
-\title{Reorder slides in a crunchdeck}
+\title{Reorder slides in a CrunchDeck}
 \usage{
 reorderSlides(x, order)
 }
@@ -15,5 +15,5 @@ reorderSlides(x, order)
 A SlideCatalog
 }
 \description{
-Reorder slides in a crunchdeck
+Reorder slides in a CrunchDeck
 }

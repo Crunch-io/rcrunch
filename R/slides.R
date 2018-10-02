@@ -77,7 +77,7 @@ moveLastElement <- function(v, idx) {
     return(out)
 }
 
-#' Reorder slides in a crunchdeck
+#' Reorder slides in a CrunchDeck
 #'
 #' @param x A SlideCatalog
 #' @param order The numeric order for slides to be reordered to.

@@ -10,7 +10,7 @@ slides(x)
 \item{x}{a CrunchDeck}
 }
 \value{
-a SliDe Catalog
+a Slide Catalog
 }
 \description{
 Return a SlideCatalog from a CrunchDeck. All slide catalog methods should be
