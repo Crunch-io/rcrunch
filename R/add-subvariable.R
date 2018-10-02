@@ -5,7 +5,7 @@
 #' dataset subset. You can supply variables, variable definitions or lists of
 #' variables and variable definitions.
 #' @return `variable` with the indicated subvariables added.
-#' @seealso [`subvariables`]
+#' @seealso [subvariables()]
 #' @examples
 #' \dontrun{
 #' ds$allpets <- addSubvariable(ds$allpets, ds$allpets_4)
@@ -13,6 +13,7 @@
 #' }
 #' @export
 addSubvariable <- function(variable, subvariable) {
+    stopifnot(is.Array(variable))
     new.urls <- addSubvarDef(variable, subvariable)
 
     ## Store these for post workaround
