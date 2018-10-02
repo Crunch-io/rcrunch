@@ -77,10 +77,7 @@ with_mock_crunch({
 
     move_testds <- paste0(
         '{"element":"shoji:catalog",',
-        '"index":{"https://app.crunch.io/api/datasets/1/":{}},"graph":[',
-        '"https://app.crunch.io/api/datasets/3/",',
-        '"https://app.crunch.io/api/datasets/1streaming/",',
-        '"https://app.crunch.io/api/datasets/1/"]}'
+        '"index":{"https://app.crunch.io/api/datasets/1/":{}}}'
     )
     test_that("mv dataset", {
         expect_PATCH(
@@ -143,8 +140,7 @@ with_mock_crunch({
                 mv("Project Two", "Project Five"),
             "https://app.crunch.io/api/projects/project5/",
             '{"element":"shoji:catalog",',
-            '"index":{"https://app.crunch.io/api/projects/project2/":{}},',
-            '"graph":["https://app.crunch.io/api/projects/project2/"]}'
+            '"index":{"https://app.crunch.io/api/projects/project2/":{}}}'
 
         )
     })

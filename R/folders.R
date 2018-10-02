@@ -271,11 +271,22 @@ folder <- function(x) {
     ## No need to include vars that already exist in this folder
     what <- setdiff(what, urls(folder))
     if (length(what)) {
-        ind <- sapply(what, emptyObject, simplify = FALSE)
-        crPATCH(self(folder), body = toJSON(wrapCatalog(
-            index = ind,
-            graph = I(c(folder@graph, what))
-        )))
+        payload <- wrapCatalog(
+            index = sapply(what, emptyObject, simplify = FALSE)
+        )
+        if (length(what) > 1) {
+            # If we're only adding one thing, no need to specify the graph
+            # because by default it will be added to the end on the server.
+            # Only need to specify the graph if we care about the order of
+            # what we're sending (i.e. we're sending several (ordered)
+            # variables).
+            # Choosing not to send the graph should make the operation more
+            # robust to stale local state or other concurrency concerns
+            # (or overzealous/mistaken server validation)
+            # TODO later, also send if the mv() specifies a position ("after")
+            payload$graph <- I(c(folder@graph, what))
+        }
+        crPATCH(self(folder), body = toJSON(payload))
         ## Additional cache invalidation
         ## Drop all variable entities because their catalogs.folder refs are stale
         dropOnly(what)
