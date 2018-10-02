@@ -83,13 +83,11 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
     # 2) Translate the provided index to one which accounts for hidden categories
     # 3) Subset the cube using the index
     # 4) Return the display setting to the original
+
+    NA_setting <- x@useNA
     if (x@useNA != "always") {
-        NA_setting <- x@useNA
         index <- skipMissingCategories(x, index, drop)
         x@useNA <- "always"
-        on.exit(expr = {
-            out@useNA <- NA_setting
-        })
     }
 
     # We then translate the index which the user supplied of the user cube to
@@ -125,6 +123,8 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
         }, FUN.VALUE = logical(1))
         out@dims <- out@dims[keep_args]
     }
+
+    out@useNA <- NA_setting
     return(out)
 })
 
