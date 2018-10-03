@@ -146,8 +146,8 @@ with_mock_crunch({
         expect_identical(path(folders(ds)), "/")
     })
 
-    test_that("print folders", {
-        with(temp.option(crayon.enabled = FALSE), {
+    with(temp.option(crayon.enabled = FALSE), {
+        test_that("print folders: basic", {
             ## Coloring aside, the default print method should look like you
             ## printed the vector of names (plus the path printed above)
             expect_output(
@@ -155,12 +155,27 @@ with_mock_crunch({
                 capture.output(print(names(folders(ds)))),
                 fixed = TRUE
             )
-            ## Test that an empty folder doesn't error on printing
+        })
+        test_that("An empty folder doesn't error on printing", {
             expect_output(
                 print(VariableFolder()),
                 "folder(0)",
                 fixed = TRUE
             )
+        })
+        test_that("If there are names longer than 'width', it still prints", {
+            with(temp.option(width=10), {
+                alphabet <- paste(letters, collapse="")
+                expect_true(nchar(alphabet) > getOption("width"))
+                skip("testthat::expect_output doesn't respect options(width)")
+                expect_output(
+                    colored_print(alphabet),
+                    paste0('[1] "', alphabet, '"'),
+                    fixed = TRUE
+                )
+            })
+        })
+        test_that("Folder tree printing", {
             ## These are obfuscated because of archaic restrictions on UTF-8
             skip_on_cran()
             source("print-folders.R", local = TRUE)
