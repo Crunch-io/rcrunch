@@ -170,7 +170,7 @@ with_mock_crunch({
                 skip("testthat::expect_output doesn't respect options(width)")
                 expect_output(
                     colored_print(alphabet),
-                    paste0('[1] "', alphabet, '"'),
+                    '[1] "abcdefghijklmnopqrstuvwxyz"',
                     fixed = TRUE
                 )
             })
