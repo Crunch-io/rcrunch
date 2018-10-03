@@ -119,18 +119,16 @@ with_mock_crunch({
 })
 
 with_test_authentication({
+    dscat0 <- datasets()
     test_that("datasets() gets the dataset catalog", {
-        col0 <- datasets()
-        expect_is(col0, "DatasetCatalog")
-        with(test.dataset(), {
-            col1 <- datasets()
-            expect_is(col1, "DatasetCatalog")
-            expect_equal(length(col1), length(col0) + 1)
-        })
+        expect_is(dscat0, "DatasetCatalog")
     })
 
     ds <- createDataset(name = now())
     dsname <- name(ds)
+    test_that("Adding a dataset refreshes the list", {
+        expect_equal(length(datasets()), length(dscat0) + 1)
+    })
 
     test_that("Dataset list can be retrieved if authenticated", {
         expect_true(is.character(listDatasets()))
