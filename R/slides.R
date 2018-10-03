@@ -11,23 +11,39 @@ setMethod("initialize", "SlideCatalog", function(.Object, ...) {
     return(.Object)
 })
 
+#' @rdname describe
+#' @export
 setMethod("names", "SlideCatalog", function(x) titles(x))
+#' @rdname describe
+#' @export
 setMethod("names<-", "SlideCatalog", function(x, value) titles(x) <- value)
 
+#' @rdname deck-titles
+#' @export
 setMethod("titles", "SlideCatalog", function(x) getIndexSlot(x, "title"))
+#' @rdname deck-titles
+#' @export
 setMethod("titles<-", "SlideCatalog", function(x, value) {
     setIndexSlot(x, "title", value)
 })
 
+#' @rdname deck-titles
+#' @export
 setMethod("subtitles", "SlideCatalog", function(x) getIndexSlot(x, "subtitle"))
+#' @rdname deck-titles
+#' @export
 setMethod("subtitles<-", "SlideCatalog", function(x, value) {
     setIndexSlot(x, "subtitle", value)
 })
 
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", "SlideCatalog", function(x, i, ...) {
     getEntity(x, i, CrunchSlide)
 })
 
+#' @rdname catalog-extract
+#' @export
 setMethod(
     "[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
     function(x, i, j, value) {
@@ -91,6 +107,8 @@ reorderSlides <- function(x, order) {
     return(refresh(x))
 }
 
+#' @rdname delete
+#' @export
 setMethod("delete", "CrunchSlide", function(x, ...) {
     if (!askForPermission(paste0("Really delete slide ", dQuote(title(x)), "?"))) {
         halt("Must confirm deleting CrunchSlide")
@@ -101,6 +119,8 @@ setMethod("delete", "CrunchSlide", function(x, ...) {
 
 # CrunchSlide -------------------------------------------------------------------
 
+#' @rdname show-crunch
+#' @export
 setMethod("show", "CrunchSlide", function(object) {
     out <- cubes(object)
     names(out) <- title(object)
@@ -168,67 +188,98 @@ newSlide <- function(deck,
     return(CrunchSlide(crGET(url)))
 }
 
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", "CrunchSlide", function(x, i, ...) {
     an_cat <- analyses(x)
     return(an_cat[[i]])
 })
-
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", "CrunchSlide", function(x, i, j, value) {
     an_cat <- analyses(x)
     an_cat[[i]] <- value
     invisible(refresh(x))
 })
 
+#' @rdname deck-titles
+#' @export
 setMethod("title", "CrunchSlide", function(x) {
     return(x@body$title)
 })
 
+#' @rdname deck-titles
+#' @export
 setMethod("title<-", "CrunchSlide", function(x, value) {
     setEntitySlot(x, "title", value)
 })
 
+#' @rdname deck-titles
+#' @export
 setMethod("subtitle", "CrunchSlide", function(x) {
     return(x@body$subtitle)
 })
 
+#' @rdname deck-titles
+#' @export
 setMethod("subtitle<-", "CrunchSlide", function(x, value) {
     setEntitySlot(x, "subtitle", value)
 })
 
+#' @rdname analysis-methods
+#' @export
 setMethod("analyses", "CrunchSlide", function(x) {
     AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
 })
 
+#' @rdname analysis-methods
+#' @export
 setMethod("analysis", "CrunchSlide", function(x) {
     out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
     return(out[[1]])
 })
 
+#' @rdname analysis-methods
+#' @export
 setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value) {
     analyses[[1]] <- value
     return(invisible(x))
 })
 
+#' @rdname analysis-methods
+#' @export
 setMethod("query<-", "CrunchSlide", function(x, value) {
     analysis <- analyses(x)[[1]]
     query(analysis) <- value
     return(invisible(x))
 })
 
+#' @rdname analysis-methods
+#' @export
 setMethod("cubes", "CrunchSlide", function(x) cubes(analyses(x)))
+#' @rdname analysis-methods
+#' @export
 setMethod("cube", "CrunchSlide", function(x) cube(analyses(x)[[1]]))
+#' @rdname display-settings
+#' @export
 setMethod("displaySettings", "CrunchSlide", function(x) displaySettings(analyses(x)))
+#' @rdname display-settings
+#' @export
 setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
-    displaySettings(analyses(x)) <- value
+    an_cat <- analyses(x)
+    displaySettings(an_cat) <- value
     return(invisible(x))
 })
 
 # AnalysisCatalog --------------------------------------------------------------
 
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", "AnalysisCatalog", function(x, i, ...) {
     getEntity(x, i, Analysis)
 })
-
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), function(x, i, j, value) {
     if (i > length(x)) {
         halt("Index out of bounds, you can only assign a formula to an existing analysis.")
@@ -237,7 +288,8 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), functio
     query(analysis) <- value
     invisible(refresh(x))
 })
-
+#' @rdname catalog-extract
+#' @export
 setMethod(
     "[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
     function(x, i, j, value) {
@@ -259,7 +311,8 @@ setMethod(
         invisible(refresh(x))
     }
 )
-
+#' @rdname catalog-extract
+#' @export
 setMethod(
     "[[<-", c("AnalysisCatalog", "numeric", "missing", "list"),
     function(x, i, j, value) {
@@ -280,10 +333,14 @@ setMethod(
     }
 )
 
+#' @rdname analysis-methods
+#' @export
 setMethod("cubes", "AnalysisCatalog", function(x) {
     lapply(seq_along(x@index), function(i) cube(x[[i]]))
 })
 
+#' @rdname display-settings
+#' @export
 setMethod("displaySettings", "AnalysisCatalog", function(x) {
     settings_list <- lapply(seq_along(x), function(i) {
         displaySettings(x[[i]])
@@ -294,7 +351,8 @@ setMethod("displaySettings", "AnalysisCatalog", function(x) {
         return(settings_list)
     }
 })
-
+#' @rdname display-settings
+#' @export
 setMethod("displaySettings<-", c("AnalysisCatalog", "list"), function(x, value) {
     analyses <- lapply(seq_along(x), function(i) x[[i]])
     lapply(analyses, function(x) displaySettings(x) <- value)
@@ -302,6 +360,8 @@ setMethod("displaySettings<-", c("AnalysisCatalog", "list"), function(x, value) 
 
 
 # Analysis ----------------------------------------------------------------
+#' @rdname analysis-methods
+#' @export
 setMethod("query<-", c("Analysis", "formula"), function(x, value) {
     ds <- loadDataset(datasetReference(x))
     payload <- list(query = formulaToCubeQuery(value, data = ds))
@@ -310,6 +370,8 @@ setMethod("query<-", c("Analysis", "formula"), function(x, value) {
     invisible(refresh(x))
 })
 
+#' @rdname analysis-methods
+#' @export
 setMethod("cube", "Analysis", function(x) {
     CrunchCube(crGET(
         cubeURL(x),
@@ -317,11 +379,13 @@ setMethod("cube", "Analysis", function(x) {
         filter = toJSON(x@body$query_environment$filter)
     ))
 })
-
+#' @rdname display-settings
+#' @export
 setMethod("displaySettings", "Analysis", function(x) {
     lapply(x@body$display_settings, function(x) x$value)
 })
-
+#' @rdname display-settings
+#' @export
 setMethod("displaySettings<-", "Analysis", function(x, value) {
     settings <- modifyList(displaySettings(x), value)
     settings <- wrapDisplaySettings(settings)
