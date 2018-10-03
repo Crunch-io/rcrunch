@@ -199,6 +199,8 @@ setMethod("!", "CrunchExpr", function(x) zfuncExpr("not", x))
         ## bound and explicitly overriding that is failing. See #112089103.
         ## When that is fixed, we can do the following:
         # rep(TRUE, 2L))) ## Inclusive on both sides
+        ## TODO: ^ shipped so we can unhack this, but note that it should be
+        ## as.zcl(value=rep(TRUE, 2L)) # not "column"
     } else {
         return(zfunc(ifelse(length(table) == 1L, "==", "in"), x, table))
     }
