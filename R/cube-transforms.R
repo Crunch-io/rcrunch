@@ -204,10 +204,11 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
     # we need the categories to know what order the the cube cells should be in
     # and where to insert insertions (as they are `anchor`ed) to a category id.
     dots <- list(...)
-    if (!"include" %in% names(dots)) {
-        includes <- c("subtotals", "headings", "cube_cells", "other_insertions")
-    } else {
+    if ("include" %in% names(dots)) {
         includes <- dots$include
+    } else {
+        # defaults if none are given
+        includes <- c("subtotals", "headings", "cube_cells", "other_insertions")
     }
     
     cat_insert_map <- mapInsertions(
