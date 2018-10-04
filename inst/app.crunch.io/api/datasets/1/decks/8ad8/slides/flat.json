@@ -1,0 +1,10 @@
+{
+    "element": "shoji:order",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/flat/",
+    "description": "Order of the slides on this deck",
+    "graph": [
+        "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/",
+        "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/",
+        "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/"
+    ]
+}

@@ -55,12 +55,12 @@ with_mock_crunch({
         expect_equal(description(main_deck), "")
         expect_PATCH(
             name(main_deck) <- "new_name",
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/",
             '{"name":"new_name"}'
         )
         expect_PATCH(
             description(main_deck) <- "new_description",
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/",
             '{"description":"new_description"}'
         )
     })
@@ -69,19 +69,19 @@ with_mock_crunch({
         expect_equal(titles(main_deck), c("birthyr", "mymrset", "mymrset"))
         expect_PATCH(
             titles(main_deck) <- paste("slide", 1:3),
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
             '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"title":"slide 1"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/":{"title":"slide 2"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/":{"title":"slide 3"}}}'
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":{"title":"slide 1"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":{"title":"slide 2"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":{"title":"slide 3"}}}'
         )
         expect_PATCH(
             subtitles(main_deck) <- paste("slide", 1:3),
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
             '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/":{"subtitle":"slide 1"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/":{"subtitle":"slide 2"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/":{"subtitle":"slide 3"}}}'
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":{"subtitle":"slide 1"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":{"subtitle":"slide 2"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":{"subtitle":"slide 3"}}}'
         )
     })
 
@@ -89,7 +89,7 @@ with_mock_crunch({
         expect_false(is.public(main_deck))
         expect_PATCH(
             is.public(main_deck) <- TRUE,
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/",
             '{"is_public":true}'
         )
     })
@@ -107,18 +107,18 @@ with_mock_crunch({
     test_that("export decks generates correct POST", {
         expect_POST(
             exportDeck(main_deck, format = "json"),
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/"
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
         )
         expect_POST(
             exportDeck(main_deck, format = "xlsx"),
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/export/"
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
         )
     })
 
     test_that("deck assignment", {
         expect_POST(
             main_deck[[4]] <- main_deck[[1]],
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
             '{"element":"shoji:entity",',
             '"body":{"title":"birthyr",',
             '"subtitle":"",',
@@ -143,7 +143,7 @@ with_mock_crunch({
         with_consent({
             expect_DELETE(
                 delete(main_deck),
-                "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/"
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/"
             )
         })
     })
@@ -160,13 +160,13 @@ with_mock_crunch({
     test_that("reorderSlides", {
         expect_PATCH(
             reorderSlides(slides(main_deck), c(3, 2, 1)),
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/flat",
             '{"element":"shoji:order",',
-            '"self":"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat/",',
+            '"self":"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/flat/",',
             '"description":"Order of the slides on this deck",',
-            '"graph":["https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/",',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/",',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/"]}'
+            '"graph":["https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/",',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/",',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/"]}'
         )
     })
 
@@ -176,7 +176,7 @@ with_mock_crunch({
     test_that("New Slide", {
         expect_POST(
             newSlide(main_deck, ~birthyr, title = "Title", subtitle = "SubTitle"),
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
             '{"element":"shoji:entity",',
             '"body":{"title":"Title",',
             '"subtitle":"SubTitle",',
@@ -206,12 +206,12 @@ with_mock_crunch({
         expect_equal(subtitle(slide), "")
         expect_PATCH(
             title(slide) <- "new_title",
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/",
             '{"title":"new_title"}'
         )
         expect_PATCH(
             subtitle(slide) <- "new_subtitle",
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/",
             '{"subtitle":"new_subtitle"}'
         )
     })
@@ -228,7 +228,7 @@ with_mock_crunch({
     test_that("query assignment for slides", {
         expect_PATCH(
             query(slide) <- ~birthyr,
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
             '{"element":"shoji:entity",',
             '"body":{"query":{"dimensions":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
@@ -245,7 +245,7 @@ with_mock_crunch({
         with_consent({
             expect_DELETE(
                 delete(slide),
-                "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/"
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/"
             )
         })
     })
@@ -274,12 +274,12 @@ with_mock_crunch({
         )
         expect_POST(
             slide[[2]] <- slide[[1]],
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/",
             payload
         )
         expect_PATCH(
             slide[[1]] <- slide[[1]],
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
             payload
         )
     })
@@ -311,7 +311,7 @@ with_mock_crunch({
         )
         expect_PATCH(
             displaySettings(analysis) <- list(decimalPlaces = 1),
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
             '{"element":"shoji:entity",',
             '"body":{"display_settings":{',
             '"percentageDirection":{"value":"colPct"},',
@@ -334,7 +334,7 @@ with_mock_crunch({
         expect_identical(displaySettings(ancat), displaySettings(ancat[[1]]))
         expect_PATCH(
             displaySettings(ancat) <- list(decimalPlaces = 2),
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
             '{"element":"shoji:entity",',
             '"body":{"display_settings":{',
             '"percentageDirection":{"value":"colPct"},',
@@ -358,7 +358,7 @@ with_mock_crunch({
         )
         expect_PATCH(
             ancat[[1]] <- ~birthyr + gender,
-            "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
             '{"element":"shoji:entity",',
             '"body":{"query":{"dimensions":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',

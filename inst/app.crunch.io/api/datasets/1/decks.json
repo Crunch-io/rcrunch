@@ -15,7 +15,7 @@
             "is_public": false,
             "owner_id": "https://app.crunch.io/api/users/7bbff9139cb443e69422e89512a22688/"
         },
-        "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/": {
+        "https://app.crunch.io/api/datasets/1/decks/8ad8/": {
             "owner_name": "Gordon Shotwell",
             "name": "Main Deck",
             "creation_time": "2017-10-18T15:11:57.524000+00:00",

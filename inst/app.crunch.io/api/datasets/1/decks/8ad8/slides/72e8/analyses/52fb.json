@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
     "description": "Data to build a given analysis",
     "body": {
         "query": {
@@ -14,10 +14,21 @@
             },
             "dimensions": [
                 {
+                    "each": "https://app.crunch.io/api/datasets/1/variables/4c51593ab88e4c5e97a99c87e53784d0/"
+                },
+                {
+                    "function": "as_selected",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/1/variables/4c51593ab88e4c5e97a99c87e53784d0/"
+                        }
+                    ]
+                },
+                {
                     "function": "bin",
                     "args": [
                         {
-                            "variable": "https://app.crunch.io/api/datasets/1/variables/000002/"
+                            "variable": "https://app.crunch.io/api/datasets/1/variables/0127c71ba3094ea4a12ca5823050991c/"
                         }
                     ]
                 }
@@ -53,7 +64,7 @@
                 "value": 0
             },
             "uiView": {
-                "value": "app.datasets.browse"
+                "value": "app.datasets.analyze"
             }
         },
         "query_environment": {
@@ -62,6 +73,6 @@
             ],
             "weight": null
         },
-        "id": "bce96ae7d0aa4f5ea5fc1ff82ebbcb42"
+        "id": "52fb"
     }
 }

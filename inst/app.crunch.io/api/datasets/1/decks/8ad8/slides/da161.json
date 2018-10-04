@@ -1,15 +1,15 @@
 {
     "element": "shoji:entity",
-    "self": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/",
     "catalogs": {
-        "analyses": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/analyses/"
+        "analyses": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/"
     },
     "description": "Returns the detail information for a given slide",
     "body": {
-        "deck_id": "8ad82b6b050447708aaa4eea5dd1afc1",
+        "deck_id": "8ad8",
         "subtitle": "",
-        "title": "mymrset",
-        "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/analyses/3f2e2e6b00f748b7a966e5ba7def779f/",
+        "title": "birthyr",
+        "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
         "version": "master__tip",
         "display_settings": {
             "percentageDirection": {
@@ -44,6 +44,6 @@
             }
         },
         "dataset_id": "1",
-        "id": "5938aef59f6f42aeaafd7651781030e4"
+        "id": "da161"
     }
 }

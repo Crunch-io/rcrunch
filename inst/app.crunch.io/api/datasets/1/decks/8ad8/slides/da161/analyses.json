@@ -1,0 +1,13 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/",
+    "orders": {
+        "order": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/order/"
+    },
+    "description": "List of all analyses inside this slide",
+    "index": {
+        "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/": {
+
+        }
+    }
+}

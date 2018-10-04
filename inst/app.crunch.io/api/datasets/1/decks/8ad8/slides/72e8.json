@@ -1,15 +1,15 @@
 {
     "element": "shoji:entity",
-    "self": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/",
     "catalogs": {
-        "analyses": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/analyses/"
+        "analyses": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/"
     },
     "description": "Returns the detail information for a given slide",
     "body": {
-        "deck_id": "8ad82b6b050447708aaa4eea5dd1afc1",
+        "deck_id": "8ad8",
         "subtitle": "age",
         "title": "mymrset",
-        "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/analyses/52fb9b5be6914477b7d7e3e5f8c35367/",
+        "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
         "version": "master__tip",
         "display_settings": {
             "percentageDirection": {
@@ -44,6 +44,6 @@
             }
         },
         "dataset_id": "1",
-        "id": "72ea814337434af596f2cab41441553f"
+        "id": "72e8"
     }
 }

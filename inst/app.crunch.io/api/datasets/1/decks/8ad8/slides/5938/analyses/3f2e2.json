@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/analyses/3f2e2e6b00f748b7a966e5ba7def779f/",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/analyses/3f2e2/",
     "description": "Data to build a given analysis",
     "body": {
         "query": {
@@ -65,6 +65,6 @@
             ],
             "weight": null
         },
-        "id": "3f2e2e6b00f748b7a966e5ba7def779f"
+        "id": "3f2e2"
     }
 }

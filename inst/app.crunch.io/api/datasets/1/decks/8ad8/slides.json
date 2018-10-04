@@ -1,13 +1,13 @@
 {
     "element": "shoji:catalog",
-    "self": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
     "orders": {
-        "flat": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/flat/"
+        "flat": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/flat/"
     },
     "description": "A catalog of the Slides in this Deck",
     "index": {
-        "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/": {
-            "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/72ea814337434af596f2cab41441553f/analyses/52fb9b5be6914477b7d7e3e5f8c35367/",
+        "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/": {
+            "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
             "display_settings": {
                 "percentageDirection": {
                     "value": "colPct"
@@ -43,8 +43,8 @@
             "subtitle": "age",
             "title": "mymrset"
         },
-        "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/": {
-            "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/da16186d29bf46e39a2fcaaa20d43ccc/analyses/bce96ae7d0aa4f5ea5fc1ff82ebbcb42/",
+        "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/": {
+            "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
             "display_settings": {
                 "percentageDirection": {
                     "value": "colPct"
@@ -80,8 +80,8 @@
             "subtitle": "",
             "title": "birthyr"
         },
-        "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/": {
-            "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad82b6b050447708aaa4eea5dd1afc1/slides/5938aef59f6f42aeaafd7651781030e4/analyses/3f2e2e6b00f748b7a966e5ba7def779f/",
+        "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/": {
+            "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/analyses/3f2e2/",
             "display_settings": {
                 "percentageDirection": {
                     "value": "colPct"
