@@ -3,14 +3,14 @@ library(httptest)
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 
 
-skip_on_local_backend <- function(...) {
+skip_on_local_backend <- function(message) {
     # if we are trying to skip when the backend is local
     if (grepl("^https?://local\\.", getOption("crunch.api"))) {
-        return(skip(...))
+        return(skip(paste("Skipping with local backend:", message)))
     }
 }
 
-skip_on_local_env <- function(...) {
+skip_on_local_env <- function(message) {
     jenkins <- identical(Sys.getenv("JENKINS_HOME"), "true")
     travis <- identical(Sys.getenv("TRAVIS"), "true")
     cran <- !identical(Sys.getenv("NOT_CRAN"), "true")
@@ -18,7 +18,7 @@ skip_on_local_env <- function(...) {
 
     # if we are trying to skip when the tests are being run locally
     if (!any(jenkins, travis, cran, appveyor)) {
-        return(skip(...))
+        return(skip(paste("Skipping locally:", message)))
     }
 }
 
@@ -28,25 +28,25 @@ decompress_fixtures <- function(dest = tempdir()) {
 
 cubePath <- function(filename) {
     # check the temp place
-    file <- file.path(tempdir(), filename) 
-    
-    # if it's not there, see if it's in the package this should only be needed 
+    file <- file.path(tempdir(), filename)
+
+    # if it's not there, see if it's in the package this should only be needed
     # for backwards compatibility wit hchild packages
     if (!file.exists(file)) {
         file <- system.file(filename, package = "crunch")
     }
-    
+
     if (nchar(file) > 0) {
         filename <- file
     }
-    
+
     return(filename)
 }
 
 loadCube <- function(filename) {
     # check the temp place
     filename <- cubePath(filename)
-    
+
 
     # if the cube json has a value name, it has full metadata and we need to
     # extract only the value

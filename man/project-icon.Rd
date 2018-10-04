@@ -11,7 +11,7 @@ icon(x)
 icon(x) <- value
 }
 \arguments{
-\item{x}{a \code{CrunchProject}}
+\item{x}{a \code{ProjectFolder}}
 
 \item{value}{character file path of the icon image file to set}
 }

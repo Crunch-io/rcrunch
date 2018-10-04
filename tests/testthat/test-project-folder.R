@@ -1,14 +1,6 @@
 context("Folder methods for projects with the new API")
 
 with_mock_crunch({
-    .mockPaths("alt")
-    clearCache() # Make sure we read from our alternate fixtures
-    on.exit(clearCache())
-
-    test_that("The feature flag is 'on'", {
-        expect_false(featureFlag("old_projects_order"))
-    })
-
     proj <- projects()[["Project One"]]
     ds <- loadDataset("test ds")
 
@@ -85,10 +77,7 @@ with_mock_crunch({
 
     move_testds <- paste0(
         '{"element":"shoji:catalog",',
-        '"index":{"https://app.crunch.io/api/datasets/1/":{}},"graph":[',
-        '"https://app.crunch.io/api/datasets/3/",',
-        '"https://app.crunch.io/api/datasets/1streaming/",',
-        '"https://app.crunch.io/api/datasets/1/"]}'
+        '"index":{"https://app.crunch.io/api/datasets/1/":{}}}'
     )
     test_that("mv dataset", {
         expect_PATCH(
@@ -108,6 +97,15 @@ with_mock_crunch({
             # That's already where it is
             projects() %>%
                 mv(ds, "Project One")
+        )
+    })
+    test_that("mv to .", {
+        expect_PATCH(
+            projects() %>%
+                cd("Project One/Project Two") %>%
+                mv(ds, "."),
+            "https://app.crunch.io/api/projects/project2/",
+            move_testds
         )
     })
     test_that("Legacy methods: datasets<-", {
@@ -151,8 +149,7 @@ with_mock_crunch({
                 mv("Project Two", "Project Five"),
             "https://app.crunch.io/api/projects/project5/",
             '{"element":"shoji:catalog",',
-            '"index":{"https://app.crunch.io/api/projects/project2/":{}},',
-            '"graph":["https://app.crunch.io/api/projects/project2/"]}'
+            '"index":{"https://app.crunch.io/api/projects/project2/":{}}}'
 
         )
     })

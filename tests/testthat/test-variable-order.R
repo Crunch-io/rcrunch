@@ -37,6 +37,12 @@ with_mock_crunch({
         catalog_url = varcat_url
     )
 
+    test_that("urls() on Order/Group", {
+        expect_identical(urls(nested.ord), ent.urls)
+        expect_identical(urls(nested.ord[["Group 1"]]), ent.urls[1:5])
+        expect_identical(urls(nested.ord[["Group 1"]][["Nested"]]), ent.urls[2:4])
+    })
+
     test_that("Validation on entities<-", {
         expect_error(
             entities(ordering(ds)) <- NULL,
@@ -350,24 +356,6 @@ with_mock_crunch({
         )
     })
 
-    test_that("Assignment by new group name with duplicates", {
-        nested.o <- nested.ord
-        duplicates(nested.o) <- TRUE
-        expect_true(duplicates(nested.o))
-        nested.o[["Group 3"]] <- ds["starttime"]
-        expect_identical(names(nested.o), c("Group 1", "Group 2", "Group 3"))
-        expect_identical(
-            entities(nested.o[["Group 3"]]),
-            list(self(ds$starttime))
-        )
-        ## Test the "duplicates option": starttime should not have been removed
-        ## from Group 2
-        expect_identical(
-            entities(nested.o[["Group 2"]]),
-            list(self(ds$starttime), self(ds$catarray))
-        )
-    })
-
     test_that("Update group with Dataset", {
         nested.o <- nested.ord
         nested.o[["Group 2"]] <- ds[c("gender", "starttime")]
@@ -390,43 +378,6 @@ with_mock_crunch({
             self(ds$location),
             self(ds$mymrset)
         )
-    })
-
-    test_that("Assignment by new nested group name with duplicates", {
-        nested.o <- nested.ord
-        duplicates(nested.o) <- TRUE
-        expect_true(duplicates(nested.o[["Group 1"]]))
-        expect_true(duplicates(nested.o[["Group 1"]][[2]]))
-        nested.o[["Group 1"]][[2]][["More nesting"]] <- self(ds$gender)
-        expect_identical(
-            entities(nested.o[["Group 1"]]$Nested[["More nesting"]]),
-            list(self(ds$gender))
-        )
-        ## Test duplicates option: gender should still be in "More nesting"
-        expect_identical(
-            nested.o[["Group 1"]]$Nested[[1]],
-            self(ds$gender)
-        )
-        ## Test that duplicates option passes to new group
-        expect_true(duplicates(nested.o[["Group 1"]][[2]][["More nesting"]]))
-    })
-
-    test_that("c() Order/Group", {
-        skip("TODO")
-    })
-
-    test_that("Update group with URLs", {
-        skip("TODO")
-        to <- test.ord
-        expect_is(to, "VariableOrder")
-        expect_error(
-            to[[1]] <- ent.urls,
-            "Correct error expectation here"
-        )
-        ## Now try where [[1]] is a Group
-        nested.o <- nested.ord
-        try(nested.o[[1]] <- ent.urls)
-        expect_identical(entities(nested.o[[1]]), as.list(ent.urls))
     })
 
     ds3 <- loadDataset("ECON.sav")
@@ -609,7 +560,8 @@ with_mock_crunch({
     test_that("Order print method follows namekey", {
         with(temp.option(crunch.namekey.variableorder = "alias"), {
             expect_prints(ord,
-                paste("[+] Arrays",
+                paste(
+                    "[+] Arrays",
                     "    catarray",
                     "    [+] MR",
                     "        mymrset",
@@ -627,21 +579,52 @@ with_mock_crunch({
         })
     })
 
+    test_that("VariableOrder to/fromJSON", {
+        expect_identical(
+            cereal(ord),
+            list(graph = list(
+                list(Arrays = list(
+                    self(ds$catarray),
+                    list(MR = list(
+                        self(ds$mymrset)
+                    ))
+                )),
+                list(Demos = list(
+                    list(Others = list(
+                        self(ds$birthyr),
+                        self(ds$textVar)
+                    )),
+                    self(ds$gender)
+                )),
+                self(ds$starttime),
+                self(ds$location)
+            ))
+        )
+    })
+
     test_that("locateEntity", {
-        expect_identical(
-            locateEntity(ds$mymrset, ord),
-            c("Arrays", "MR")
+        expect_deprecated(
+            expect_identical(
+                locateEntity(ds$mymrset, ord),
+                c("Arrays", "MR")
+            )
         )
-        expect_identical(
-            locateEntity(ds$gender, ord),
-            "Demos"
+        expect_deprecated(
+            expect_identical(
+                locateEntity(ds$gender, ord),
+                "Demos"
+            )
         )
-        expect_length(locateEntity(ds$starttime, ord), 0)
-        expect_true(is.na(locateEntity(ds3$gender, ord)))
+        expect_deprecated(
+            expect_length(locateEntity(ds$starttime, ord), 0)
+        )
+        expect_deprecated(
+            expect_true(is.na(locateEntity(ds3$gender, ord)))
+        )
     })
 
     test_that("Composing a VariableOrder step by step: moveToGroup", {
-        moveToGroup(ord$Demos$Others) <<- ds$starttime
+        expect_deprecated(moveToGroup(ord$Demos$Others) <<- ds$starttime)
         expect_prints(ord,
             paste("[+] Arrays",
                 "    Cat Array",
@@ -661,7 +644,7 @@ with_mock_crunch({
     })
 
     test_that("moveToGroup with groups", {
-        moveToGroup(ord$Demos) <<- ord$Arrays
+        expect_deprecated(moveToGroup(ord$Demos) <<- ord$Arrays)
         ord <- removeEmptyGroups(ord)
         expect_prints(ord,
             paste("[+] Demos",
@@ -680,7 +663,7 @@ with_mock_crunch({
         )
     })
     test_that("moveToGroup with dataset subset", {
-        moveToGroup(ord$Demos$Arrays) <<- ds[c("birthyr", "gender")]
+        expect_deprecated(moveToGroup(ord$Demos$Arrays) <<- ds[c("birthyr", "gender")])
         ord <- removeEmptyGroups(ord)
         expect_prints(ord,
             paste("[+] Demos",
@@ -698,6 +681,8 @@ with_mock_crunch({
             fixed = TRUE
         )
     })
+    ord <- removeEmptyGroups(ord)
+
     test_that("flattenOrder on that composed order", {
         expect_prints(flattenOrder(ord),
             paste("Text variable ftw",
@@ -712,137 +697,23 @@ with_mock_crunch({
         )
     })
 
-    ord <- VariableOrder(
-        VariableGroup("Alpha", list(
-            self(ds$gender),
-            VariableGroup("Bravo", list(
-                self(ds$gender),
-                VariableGroup("Charlie", ds[c("gender", "birthyr")]),
-                self(ds$mymrset)
-            )),
-            ds$birthyr
-        )),
-        VariableGroup("Delta", list(
-            self(ds$gender),
-            self(ds$mymrset),
-            VariableGroup("Echo", list(
-                VariableGroup("Foxtrot", ds[c("birthyr", "catarray")]),
-                self(ds$starttime),
-                self(ds$starttime)
-            )),
-            self(ds$starttime)
-        )),
-        self(ds$gender),
-        self(ds$textVar),
-        self(ds$birthyr),
-        duplicates = TRUE,
-        catalog_url = varcat_url
-    )
-    test_that("Complex order with duplicates", {
-        expect_prints(ord,
-            paste("[+] Alpha",
-                "    Gender",
-                "    [+] Bravo",
-                "        Gender",
-                "        [+] Charlie",
-                "            Gender",
-                "            Birth Year",
-                "        mymrset",
-                "    Birth Year",
-                "[+] Delta",
-                "    Gender",
-                "    mymrset",
-                "    [+] Echo",
-                "        [+] Foxtrot",
-                "            Birth Year",
-                "            Cat Array",
-                "        starttime",
-                "        starttime",
-                "    starttime",
-                "Gender",
-                "Text variable ftw",
-                "Birth Year",
-                sep = "\n"
-            ),
-            fixed = TRUE
-        )
-    })
-    test_that("dedupeOrder removes duplicate entries", {
-        expect_prints(dedupeOrder(ord),
-            paste("[+] Alpha",
-                "    [+] Bravo",
-                "        [+] Charlie",
-                "            Gender",
-                "            Birth Year",
-                "        mymrset",
-                "[+] Delta",
-                "    [+] Echo",
-                "        [+] Foxtrot",
-                "            Cat Array",
-                "        starttime",
-                "Text variable ftw",
-                sep = "\n"
-            ),
-            fixed = TRUE
-        )
-    })
-    test_that("dedupeOrder doesn't mutate an order that's already deduped", {
-        expect_prints(dedupeOrder(dedupeOrder(ord)),
-            paste("[+] Alpha",
-                "    [+] Bravo",
-                "        [+] Charlie",
-                "            Gender",
-                "            Birth Year",
-                "        mymrset",
-                "[+] Delta",
-                "    [+] Echo",
-                "        [+] Foxtrot",
-                "            Cat Array",
-                "        starttime",
-                "Text variable ftw",
-                sep = "\n"
-            ),
-            fixed = TRUE
-        )
-    })
-    test_that("Setting duplicates <- FALSE triggers dedupeOrder", {
-        duplicates(ord) <- FALSE
-        expect_prints(ord,
-            paste("[+] Alpha",
-                "    [+] Bravo",
-                "        [+] Charlie",
-                "            Gender",
-                "            Birth Year",
-                "        mymrset",
-                "[+] Delta",
-                "    [+] Echo",
-                "        [+] Foxtrot",
-                "            Cat Array",
-                "        starttime",
-                "Text variable ftw",
-                sep = "\n"
-            ),
-            fixed = TRUE
-        )
-    })
-    test_that("intersect_entities", {
-        expect_prints(intersect_entities(ord, ds[c("birthyr", "starttime")]),
-            paste("[+] Alpha",
-                "    [+] Bravo",
-                "        [+] Charlie",
-                "            Birth Year",
-                "    Birth Year",
-                "[+] Delta",
-                "    [+] Echo",
-                "        [+] Foxtrot",
-                "            Birth Year",
-                "        starttime",
-                "        starttime",
-                "    starttime",
-                "Birth Year",
-                sep = "\n"
-            ),
-            fixed = TRUE
+    test_that("dedupeOrder is deprecated", {
+        expect_deprecated(
+            expect_prints(dedupeOrder(ord),
+                paste("[+] Demos",
+                    "    [+] Others",
+                    "        Text variable ftw",
+                    "        starttime",
+                    "    [+] Arrays",
+                    "        Cat Array",
+                    "        [+] MR",
+                    "            mymrset",
+                    "        Birth Year",
+                    "        Gender",
+                    sep = "\n"
+                ),
+                fixed = TRUE
+            )
         )
     })
 
@@ -859,6 +730,15 @@ with_mock_crunch({
             "Both source and target must be Crunch datasets."
         )
     })
+
+    test_that("duplicates is deprecated", {
+        expect_deprecated(
+            expect_false(duplicates(ordering(ds)))
+        )
+        expect_deprecated(
+            duplicates(ordering(ds)) <- FALSE
+        )
+    })
 })
 
 
@@ -871,6 +751,7 @@ with_test_authentication({
         ))
     })
     test_that("Can construct VariableOrder from variables", {
+        # TODO: probably covered by unit tests
         vg <- VariableOrder(
             VariableGroup(
                 name = "Group 1",
@@ -898,26 +779,12 @@ with_test_authentication({
         VariableGroup(
             name = "Group 2",
             entities = ds[c("v6", "v2")]
-        ),
-        duplicates = TRUE
+        )
     )
-
-    test_that("Get urls from VariableOrder and Group", {
-        expect_identical(
-            urls(vg[[1]]),
-            c(self(ds$v1), self(ds$v3), self(ds$v5))
-        )
-        expect_identical(
-            urls(vg),
-            c(
-                self(ds$v1), self(ds$v3), self(ds$v5), self(ds$v4),
-                self(ds$v6), self(ds$v2)
-            )
-        )
-    })
 
     try(entities(vg[[2]]) <- self(ds$v2))
     test_that("Set URLs -> entities on VariableGroup", {
+        # TODO: move to unit test
         expect_identical(urls(vg[[2]]), self(ds$v2))
         expect_identical(
             urls(vg),
@@ -929,32 +796,19 @@ with_test_authentication({
     })
     try(entities(vg[[2]]) <- list(ds$v3))
     test_that("Set variables -> entities on VariableGroup", {
+        # TODO: move to unit test
         expect_identical(urls(vg[[2]]), self(ds$v3))
     })
 
     try(name(vg[[2]]) <- "Group 3")
     test_that("Set name on VariableGroup", {
+        # TODO: move to unit test
         expect_identical(names(vg), c("Group 1", "Group 3", "Group 2"))
     })
     try(names(vg) <- c("G3", "G1", "G2"))
     test_that("Set names on VariableOrder", {
+        # TODO: move to unit test
         expect_identical(names(vg), c("G3", "G1", "G2"))
-    })
-
-    try(vglist <- cereal(vg))
-    test_that("VariableOrder to/fromJSON", {
-        expect_identical(vglist, list(graph = list(
-            list(`G3` = list(self(ds$v1), self(ds$v3), self(ds$v5))),
-            list(`G1` = list(self(ds$v3))),
-            list(`G2` = list(self(ds$v6), self(ds$v2)))
-        )))
-
-        vg[1:2] <- vg[c(2, 1)]
-        expect_identical(cereal(vg), list(graph = list(
-            list(`G1` = list(self(ds$v3))),
-            list(`G3` = list(self(ds$v1), self(ds$v3), self(ds$v5))),
-            list(`G2` = list(self(ds$v6), self(ds$v2)))
-        )))
     })
 
     original.order <- ordering(ds)
@@ -1027,10 +881,9 @@ with_test_authentication({
         ordering(ds)[["Group 1"]][[2]] <- nesting
         ## Update fixture with duplicates=TRUE, as it should be found
         ## after setting on a duplicates=TRUE order
-        duplicates(nesting) <- TRUE
         expect_identical(
             grouped(ordering(ds)[["Group 1"]]),
-            VariableGroup("Group 1", list(nesting), duplicates = TRUE)
+            VariableGroup("Group 1", list(nesting))
         )
         expect_identical(
             ungrouped(ordering(ds)[["Group 1"]]),
@@ -1055,32 +908,8 @@ with_test_authentication({
         )
     })
 
-    test_that("duplicates property: setup", {
-        expect_false(duplicates(ordering(ds)))
-    })
-    test_that("duplicates property set on order in dataset", {
-        duplicates(ordering(ds)) <<- TRUE
-        expect_true(duplicates(ordering(ds)))
-    })
-    test_that("duplicates property persists on refreshing dataset", {
-        expect_true(duplicates(ordering(refresh(ds))))
-    })
-    ord <- ordering(ds)
-    test_that("duplicates property persists on extracting order", {
-        expect_true(duplicates(ord))
-    })
-    test_that("duplicates property persists on refreshing order", {
-        skip("refresh method for VariableOrder not implemented")
-        expect_true(duplicates(refresh(ord)))
-    })
-    test_that("duplicates property from order is set on assign to ds", {
-        duplicates(ordering(ds)) <<- FALSE
-        expect_false(duplicates(ordering(ds)))
-        ordering(ds) <<- ord
-        expect_true(duplicates(ordering(ds)))
-    })
-
     test_that("ordering<- validation", {
+        # TODO: move to unit test
         bad.vg <- starting.vg
         entities(bad.vg[[1]]) <- c(
             entities(bad.vg[[1]])[-2],
@@ -1096,25 +925,12 @@ with_test_authentication({
         bad.vg <- do.call(VariableOrder, c(sapply(names(starting.vg),
             function(i) starting.vg[[i]],
             simplify = FALSE
-        ),
-        duplicates = TRUE
-        ))
+        )))
         ## The list of entities is named because sapply default is
         ## USE.NAMES=TRUE, but the VariableOrder constructor should
         ## handle this
         ordering(ds) <- bad.vg
         expect_identical(ordering(ds)@graph, starting.vg@graph)
-    })
-
-    ordering(ds) <- starting.vg
-    duplicates(ordering(ds)) <- FALSE
-    test_that("moveToGroup<-", {
-        expect_identical(urls(ordering(ds)[["Group 2.5"]]), self(ds$v4))
-        moveToGroup(ordering(ds)[["Group 2.5"]]) <- ds["v6"]
-        expect_identical(
-            urls(ordering(ds)[["Group 2.5"]]),
-            urls(variables(ds[c("v4", "v6")]))
-        )
     })
 
     test_that("copyOrder copies across datasets with simple order", {

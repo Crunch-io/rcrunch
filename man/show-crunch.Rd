@@ -10,7 +10,6 @@
 \alias{show,Categories-method}
 \alias{show,Insertion-method}
 \alias{show,Insertions-method}
-\alias{show,CrunchProject-method}
 \alias{show,CrunchExpr-method}
 \alias{show,CrunchLogicalExpr-method}
 \alias{show,CrunchCube-method}
@@ -32,8 +31,6 @@
 \S4method{show}{Insertion}(object)
 
 \S4method{show}{Insertions}(object)
-
-\S4method{show}{CrunchProject}(object)
 
 \S4method{show}{CrunchExpr}(object)
 

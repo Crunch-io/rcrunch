@@ -49,11 +49,6 @@
 #' @export
 mv <- function(x, what, path) {
     ## TODO: add an "after" argument, pass to addToFolder
-
-    if (is.project(x) && !new_projects_api()) {
-        ## Temporary? call a different function
-        return(mv.project(x, what, path))
-    }
     ## dplyr/tidyselect-ish functions, hacked in here (inspired by how pkgdown does it)
     fns <- list(
         starts_with = function(str, ...) grep(paste0("^", str), names(x), ...),
@@ -82,11 +77,10 @@ mv <- function(x, what, path) {
 #' @export
 mkdir <- function(x, path) {
     ## TODO: add an "after" argument, move created folder there
-    if (is.project(x) && !new_projects_api()) {
-        ## Temporary? call a different function
-        return(mkdir.project(x, path))
-    }
     f <- cd(x, path, create = TRUE)
+    # Refresh without busting cache, in case there was no change
+    # If there had been a change, cd() would have busted cache already
+    x <- do.call(class(x), crGET(self(x)))
     return(invisible(x))
 }
 
@@ -192,10 +186,6 @@ cd <- function(x, path, create = FALSE) {
 #' }
 #' @export
 rmdir <- function(x, path) {
-    if (is.project(x) && !new_projects_api()) {
-        ## Temporary? call a different function
-        return(rmdir.project(x, path))
-    }
     to_delete <- cd(x, path)
     if (is.project(x) && length(to_delete) > 0) {
         halt(
@@ -281,11 +271,22 @@ folder <- function(x) {
     ## No need to include vars that already exist in this folder
     what <- setdiff(what, urls(folder))
     if (length(what)) {
-        ind <- sapply(what, emptyObject, simplify = FALSE)
-        crPATCH(self(folder), body = toJSON(wrapCatalog(
-            index = ind,
-            graph = I(c(urls(folder), what))
-        )))
+        payload <- wrapCatalog(
+            index = sapply(what, emptyObject, simplify = FALSE)
+        )
+        if (length(what) > 1) {
+            # If we're only adding one thing, no need to specify the graph
+            # because by default it will be added to the end on the server.
+            # Only need to specify the graph if we care about the order of
+            # what we're sending (i.e. we're sending several (ordered)
+            # variables).
+            # Choosing not to send the graph should make the operation more
+            # robust to stale local state or other concurrency concerns
+            # (or overzealous/mistaken server validation)
+            # TODO later, also send if the mv() specifies a position ("after")
+            payload$graph <- I(c(folder@graph, what))
+        }
+        crPATCH(self(folder), body = toJSON(payload))
         ## Additional cache invalidation
         ## Drop all variable entities because their catalogs.folder refs are stale
         dropOnly(what)

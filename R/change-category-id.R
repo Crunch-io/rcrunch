@@ -29,11 +29,11 @@ changeCategoryID <- function(variable, from, to) {
         halt("The variable ", name(variable), " doesn't have categories.")
     }
 
-    if (!is.numeric(from) & length(from) == 1) {
+    if (!(is.numeric(from) & length(from) == 1)) {
         halt("from should be a single numeric")
     }
 
-    if (!is.numeric(to) & length(to) == 1) {
+    if (!(is.numeric(to) & length(to) == 1)) {
         halt("to should be a single numeric")
     }
 

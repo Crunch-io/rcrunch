@@ -208,6 +208,11 @@ colored_print <- function(x, styler = force, empty = "") {
         w <- max(nchar(x)) + 3L
         ## Find out how many we can fit on a line, allowing for the header
         n <- (getOption("width") - header_width) %/% w
+        if (n == 0) {
+            ## Handle if our widest element is wider than the width:
+            ## make it 1 per line.
+            n <- 1
+        }
         ## And thus how many rows we need
         rows <- ceiling(len / n)
 
