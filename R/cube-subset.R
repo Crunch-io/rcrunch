@@ -272,6 +272,7 @@ skipMissingCategories <- function(cube, index, drop) {
         },
         missing = missing_list, idx = index, vis = visible, SIMPLIFY = FALSE
     )
+    return(out)
 }
 
 #' Translate provided index to an index which accounts for hidden categories.
