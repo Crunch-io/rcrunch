@@ -2,6 +2,7 @@ API's
 AbstractCategories
 AbstractCategory
 Agresti
+AnalysisCatalog
 BatchCatalog
 CategoricalVariable
 CategoricalVariables
@@ -16,9 +17,12 @@ CrunchCubes
 CrunchDataFrame
 CrunchDataFrames
 CrunchDataset
+CrunchDeck
+CrunchDecks
 CrunchExpr
 CrunchGeodata
 CrunchLogicalExpr
+CrunchSlide
 CrunchVariable
 CrunchVariables
 CubeDims
@@ -30,6 +34,7 @@ DatasetGroups
 DatasetOrder
 Datetime
 DatetimeVariable
+DeckCatalog
 Devs
 Dichotomize
 FilterCatalog
@@ -67,6 +72,7 @@ ShojiCatalogs
 ShojiObject
 ShojiOrder
 ShojiTuples
+SlideCatalog
 Snowden
 Snowden's
 Subvariable
@@ -170,7 +176,6 @@ unhidden
 unhide
 unshare
 untransformed
-useNA
 varlabels
 vectorized
 votereg

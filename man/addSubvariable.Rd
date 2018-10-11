@@ -29,5 +29,5 @@ ds$petloc <- addSubvariables(ds$petloc, ds[c("petloc_school", "petloc_daycare")]
 }
 }
 \seealso{
-\code{\link{subvariables}}
+\code{\link[=subvariables]{subvariables()}}
 }
