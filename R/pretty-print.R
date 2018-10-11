@@ -116,7 +116,7 @@ applyStyles <- function(string, styles = NULL) {
 
 # make styles based on transforms and categories
 transformStyles <- function(trans, cats) {
-    # collate categories and instertions
+    # collate categories and insertions
     all_labs <- collateCats(trans$insertions, cats)
 
     # make a list of styles to apply

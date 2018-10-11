@@ -4,7 +4,7 @@ context("Cube transformations")
 ### Transforms calculation tests (ie the numbers are right)
 ##############################################################
 
-unicat_trans_cube <- loadCube(test_path("cubes/univariate-categorical-with-trans.json"))
+unicat_trans_cube <- loadCube("cubes/univariate-categorical-with-trans.json")
 
 test_that("Can show a simple cube with transform", {
     loc_array <- cubify(c(10, 5, 15, 10),
@@ -13,7 +13,7 @@ test_that("Can show a simple cube with transform", {
     expect_prints(expect_equivalent(showTransforms(unicat_trans_cube), loc_array))
 })
 
-complex_trans_cube <- loadCube(test_path("cubes/complex-categorical-with-trans.json"))
+complex_trans_cube <- loadCube("cubes/complex-categorical-with-trans.json")
 
 test_that("Can show a complex cube with transform", {
     # "top" and "bottom" anchors, multiple insertions at the same anchor, an
@@ -35,7 +35,7 @@ test_that("Can show a complex cube with transform", {
     expect_prints(expect_equivalent(showTransforms(complex_trans_cube), loc_array))
 })
 
-pet_feelings <- loadCube(test_path("./cubes/feelings-pets.json"))
+pet_feelings <- loadCube("./cubes/feelings-pets.json")
 
 pet_feelings_headers <- pet_feeling_both <- pet_feelings
 
@@ -183,18 +183,16 @@ test_that("applyTransforms can return what is asked for", {
     )
 
     expect_equivalent(applyTransforms(pet_feelings_headers), all)
-
+    
     pet_array <- cubeToArray(pet_feelings_headers)
-    feeling_cats <- Categories(data = index(variables(pet_feelings_headers))[[1]]$categories)
-    insert_map <- mapInsertions(transforms(pet_feelings_headers)[[1]]$insertions,
-        feeling_cats,
+    insert_funcs <-  makeInsertionFunctions(
+        Categories(data = index(variables(pet_feelings_headers))[[1]]$categories),
+        transforms(pet_feelings_headers)[[1]],
         include = c("subtotals", "headings")
     )
-    tst <- apply(
-        pet_array, 2, calcInsertions,
-        insert_map,
-        feeling_cats
-    )
+    
+    tst <- apply(pet_array, 2, calcInsertions, insert_funcs)
+
     expect_equivalent(tst, all[c(1, 4, 8), ])
 })
 
@@ -313,7 +311,7 @@ test_that("applyTransforms handles useNA", {
 
 
 # cat by mr with subtotals fixture
-cat_by_cat <- loadCube(test_path("cubes/cat-by-cat-col-subtotals.json"))
+cat_by_cat <- loadCube("cubes/cat-by-cat-col-subtotals.json")
 cat_by_cat_dims <- dimnames(cat_by_cat)
 # drop no data categories, and add in the subtotals
 cat_by_cat_dims$food_groups <- cat_by_cat_dims$food_groups[!(cat_by_cat_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))]
@@ -713,7 +711,7 @@ test_that("Two bad transforms are both ignored", {
 
 
 # cat by mr with subtotals fixture
-cat_mr <- loadCube(test_path("cubes/cat-x-mr-subtotals-on-cat.json"))
+cat_mr <- loadCube("cubes/cat-x-mr-subtotals-on-cat.json")
 cat_mr_dims <- dimnames(cat_mr)
 # drop no data categories, and add in the subtotals
 cat_mr_dims$food_groups <- cat_mr_dims$food_groups[!(cat_mr_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))]
@@ -808,7 +806,7 @@ test_that("cat by mr, with cat subtotals (margins and proportions)", {
     expect_equivalent(prop.table(cat_mr), table_prop)
 })
 
-cat_array_cube <- loadCube(test_path("./cubes/catarray-with-transforms.json"))
+cat_array_cube <- loadCube("./cubes/catarray-with-transforms.json")
 
 test_that("categorical arrays with subtotals", {
     all <- cubify(
@@ -962,7 +960,7 @@ test_that("Can get subtotals with headers", {
     expect_equivalent(subtotalArray(pet_feelings_headers, headings = TRUE), subtotes)
 })
 
-cat <- loadCube(test_path("cubes/cat-subtotals-0id.json"))
+cat <- loadCube("cubes/cat-subtotals-0id.json")
 cat_dims <- dimnames(cat)
 # drop no data categories, and add in the subtotals
 cat_dims$food_groups <- cat_dims$food_groups[!(cat_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))]
@@ -1224,6 +1222,7 @@ with_test_authentication({
 
         expect_is(trans_cube, "array")
         expect_equal(dim(showMissing(pets_cube)), 6)
+        expect_equal(dim(pets_cube), 4)
         expect_equal(dim(trans_cube), 10)
         expect_equivalent(trans_cube, cat_show_trans)
         

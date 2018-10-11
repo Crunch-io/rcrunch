@@ -159,9 +159,18 @@ NULL
 #' @export
 setMethod("showTransforms", "CategoricalVariable", function(x) {
     tab <- table(x)
-    tab <- as.array(calcTransforms(tab, transforms(x), categories(x)))
 
     remove_these <- names(categories(x)[is.na(categories(x))])
+    
+    tab <- as.array(calcTransforms(
+        tab, 
+        insert_funcs =  makeInsertionFunctions(
+            categories(x),
+            transforms(x),
+            cats_in_array = names(tab)
+        )
+    ))
+
     tab <- tab[!(names(tab) %in% remove_these)]
     styles <- transformStyles(transforms(x), categories(x)[!is.na(categories(x))])
 
