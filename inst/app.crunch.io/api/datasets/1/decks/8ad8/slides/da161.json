@@ -1,0 +1,49 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/",
+    "catalogs": {
+        "analyses": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/"
+    },
+    "description": "Returns the detail information for a given slide",
+    "body": {
+        "deck_id": "8ad8",
+        "subtitle": "",
+        "title": "birthyr",
+        "analysis_url": "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+        "version": "master__tip",
+        "display_settings": {
+            "percentageDirection": {
+                "value": "colPct"
+            },
+            "showEmpty": {
+                "value": false
+            },
+            "showMean": {
+                "value": true
+            },
+            "vizType": {
+                "value": "table"
+            },
+            "countsOrPercents": {
+                "value": "percent"
+            },
+            "decimalPlaces": {
+                "value": 1
+            },
+            "populationMagnitude": {
+                "value": 3
+            },
+            "showSignif": {
+                "value": true
+            },
+            "currentTab": {
+                "value": 0
+            },
+            "uiView": {
+                "value": "app.datasets.browse"
+            }
+        },
+        "dataset_id": "1",
+        "id": "da161"
+    }
+}

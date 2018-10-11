@@ -92,7 +92,6 @@ setGeneric("subtotalArray", function(x, ...) standardGeneric("subtotalArray"))
 
 setGeneric("types", function(x) standardGeneric("types"))
 setGeneric("timestamps", function(x) standardGeneric("timestamps"))
-
 setGeneric("type", function(x) standardGeneric("type"))
 setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
@@ -143,6 +142,7 @@ setGeneric("pending", function(x) standardGeneric("pending"))
 setGeneric("permissions", function(x) standardGeneric("permissions"))
 setGeneric("members", function(x) standardGeneric("members"))
 setGeneric("members<-", function(x, value) standardGeneric("members<-"))
+
 setGeneric("multitables", function(x) standardGeneric("multitables"))
 setGeneric("multitables<-", function(x, value) standardGeneric("multitables<-"))
 setGeneric("filters", function(x) standardGeneric("filters"))

@@ -38,10 +38,7 @@
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                     format = c("json", "xlsx"), file, ...) {
     f <- match.arg(format)
-    accept <- list(
-        json = "application/json",
-        xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )[[f]]
+    accept <- extToContentType(f)
     if (missing(file)) {
         if (f == "json") {
             ## We don't need a file.
@@ -83,6 +80,14 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         ## (invisibly) return the filename
         invisible(file)
     }
+}
+
+extToContentType <- function(ext){
+    mapping <- list(
+        json = "application/json",
+        xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    return(mapping[[ext]])
 }
 
 #' TabBookResult and MultitableResult methods
