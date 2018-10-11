@@ -127,11 +127,17 @@ setMethod("delete", "ShojiFolder", function(x, ...) {
     # a message before the prompt for test-ability, and so the prompt isn't lost
     # at then end of a long line.
     if (inherits(x, "VariableFolder")) {
-        obj_names <- serialPaste(dQuote(names(x)))
+        obj_names <- names(x)
         num_vars <- length(x)
         obj_word <- if(num_vars > 1) "objects" else "object"
+
+        if (num_vars > 5) {
+            obj_string <- serialPaste(dQuote(head(obj_names, 5)), "...")
+        } else {
+            obj_string <- serialPaste(dQuote(obj_names))
+        }
         message(
-            "This folder contains ", num_vars, " ", obj_word, ": ", obj_names, 
+            "This folder contains ", num_vars, " ", obj_word, ": ", obj_string, 
             ". Deleting the folder will also delete these objects (including ",
             "their contents)."
         )
