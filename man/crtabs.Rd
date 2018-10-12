@@ -18,7 +18,7 @@ Compare to \code{\link[stats:xtabs]{stats::xtabs()}}.}
 
 \item{weight}{a CrunchVariable that has been designated as a potential
 weight variable for \code{data}, or \code{NULL} for unweighted results.
-Default is the currently applied \code{\link{weight}}.}
+Default is the currently applied \code{\link[=weight]{weight()}}.}
 
 \item{useNA}{whether to include missing values in tabular results. See
 \code{\link[base:table]{base::table()}}.}

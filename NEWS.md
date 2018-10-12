@@ -1,15 +1,42 @@
-# crunch 1.23.1 (under development)
-* fixed a bug when using the `makeWeight()` function with categorical variables that had non-sequential IDs.
+# crunch 1.24.3 (under development)
+* Improved robustness of API usage for moving datasets in projects.
+* Support for `"."` as a folder path/segment, referencing the current folder. `cd(project, ".")` returns `project`; `mv(project, ds, ".")` moves `ds` into `project`.
+* Fix bug in printing folders that contain entities with excessively long names
+* Improved speed for calculating insertions (subtotals, headers, etc.) on large cubes (speed ups of ~25x on large, realistic cubes).
+* First draft support for deck creation and manipulation.
+
+# crunch 1.24.2
+* The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
+* Minor fixes for backwards compatibility with the old projects API
+* Remove code paths that modify the project dataset order, which was removed from the Crunch API.
+* List as deprecated many functions that modify variable order, suggesting `mv()` and the other folder operations. These functions will be removed in December 2018.
+
+# crunch 1.24.0
+
+## Organization
+* New folder methods (`cd()`, `mv()`, `mkdir()`, `rmdir()`) for organizing datasets within projects, following the pattern of variable folders. See `vignette("projects", package = "crunch")`.
+* Added `setName()` and `setNames()` for renaming folders and folder contents, respectively.
+
+## Bugfixes
+* Requesting tab books for subsets of variables with weights no longer errors.
+* `makeWeight()` is now correct for categorical variables with non-sequential IDs.
+* Hidden variables are now included in the output of `write.csv` or `as.data.frame(force = TRUE)` if requested.
+* The print method for empty dataset/variable folders now prints something informative.
+
+## Other
+* Adjusted the calculation of `index.table()` to better reflect analysts' intentions. Now, `index.table()` calculates the index with respect to the marginal proportion of the `margin` given, so for `index.table(cube, 2)` the column proportions of the table are indexed to the marginal row proportions. In other words: for each column how much larger or smaller is the proportion in that column when compared to the proportions for the row variable alone.
+* Updated for compatibility with the upcoming release of the `haven` package and its new `haven_labelled` and `haven_labelled_spss` object classes.
+* The package now warns when an API endpoint is deprecated.
 
 # crunch 1.23.0
 
 ## Improved support for subtotals
-* CrunchCubes can now be displayed with subtotals on any axis (not just rows). 
-* Subtotals in CrunchCubes have been improved and stabalised, and should work in many more places than they did before (e.g. `margin.table`, `prop.table`, etc.)
+* CrunchCubes can now be displayed with subtotals on any axis (not just rows).
+* Subtotals in CrunchCubes have been improved and stabilized, and should work in many more places than they did before (e.g. `margin.table`, `prop.table`, etc.)
 
 ## Bugfixes
 * Fix order of variables when using `mv()` to move them to a folder.
-* `deleteVariables()` no longer tries to delete duplicate varaibles.
+* `deleteVariables()` no longer tries to delete duplicate variables.
 * Resolved a but when using `as.data.frame(..., force = TRUE)` with numeric variables that have missing values.
 * Resolve missing `Suggests` reference for test packages, following new `check` requirement.
 
@@ -26,10 +53,10 @@
 * Fix a similar yet unrelated bug in creating numeric and other types of variables with all-`NA` data.
 * Fix `streamRows()` for case when sending only one row (#253).
 * Internal: support for the "selected_array" method of multiple response calculation, deprecated since 1.20.0, has been removed.
-* Internal: `getDimTypes()` returns a richer set of cube dimension types differentiating multiple response from categorical array dimensions. 
+* Internal: `getDimTypes()` returns a richer set of cube dimension types differentiating multiple response from categorical array dimensions.
 * Internal: Added support for `alias`, `description`, and `notes` on `VariableTuples`
-* `makeArrayGadget()` launches a an RStudio to help you build valid categorical arrays
-and multiple response variables. 
+* `makeArrayGadget()` launches an RStudio gadget to help you build valid categorical arrays
+and multiple response variables.
 
 # crunch 1.22.0
 

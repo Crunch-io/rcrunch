@@ -16,9 +16,7 @@
 \alias{dim,CrunchCube-method}
 \alias{dimnames,CrunchCube-method}
 \alias{[,CrunchCube,ANY,ANY-method}
-\alias{variables,CubeDims-method}
 \alias{measures,CrunchCube-method}
-\alias{variables,CrunchCube-method}
 \alias{names,CrunchCube-method}
 \alias{aliases,CrunchCube-method}
 \alias{descriptions,CrunchCube-method}
@@ -44,11 +42,7 @@
 
 \S4method{[}{CrunchCube,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{variables}{CubeDims}(x)
-
 \S4method{measures}{CrunchCube}(x)
-
-\S4method{variables}{CrunchCube}(x)
 
 \S4method{names}{CrunchCube}(x)
 

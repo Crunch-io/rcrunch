@@ -3,60 +3,42 @@
 #' @inheritParams listDatasets
 #' @return A `loadDataset()` call is pasted into your RStudio session`
 #' @keywords internal
-listDatasetGadget <- function (kind=c("active", "all", "archived"),
-    refresh = FALSE){
-    projects <- c("Personal Project", names(projects()))
-    personal_datasets <- listDatasets(kind = kind, refresh = refresh)
-
-    ui <- miniUI::miniPage(
-        miniUI::gadgetTitleBar("Select Dataset"),
-        miniUI::miniContentPanel(
-            shiny::column(width = 3,
-                shiny::selectInput("project",
-                    "Select Project",
-                    projects)),
-            shiny::column(width = 3,
-                shiny::uiOutput("dataset")
-            ),
-            shiny::column(width = 3,
-                shiny::textInput("ds_name", "Object Name (Optional)")
-            )
-        )
-    )
-
-    server <- function (input, output, session) {
-        output$dataset <- shiny::renderUI({
-            if (input$project == "Personal Project") {
-                selections <- personal_datasets
-            } else {
-                selections <- listDatasets(project = input$project, kind = kind, refresh = refresh)
-            }
-            shiny::selectInput("dataset",
-                "Select Dataset",
-                selections)
-        })
-        shiny::observeEvent(input$done, {
-            code <- buildLoadDatasetCall(project = input$project,
-                dataset = input$dataset,
-                ds_name = input$ds_name)
-            shiny::stopApp(returnValue = rstudioapi::insertText(text = code))
-        })
-    }
-    shiny::runGadget(ui, server)
+listDatasetGadget <- function(kind = c("active", "all", "archived"),
+                              refresh = FALSE) {
+    rstudioapi::verifyAvailable("0.99.878")
+    call <- match.call()
+    callFromOtherPackage(call, "crunchy")
 }
 
-buildLoadDatasetCall <- function (project, dataset, ds_name = "") {
-    dataset <- escapeQuotes(dataset)
-    assignment <- ifelse(nchar(ds_name) > 0,
-        paste0(ds_name, " <- "),
-        "")
-    if (project == "Personal Project") {
-        code <- paste0(assignment, "loadDataset('", dataset,"')")
+#' Array builder
+#'
+#' Launch array builder gadget
+#'
+#' Categorical Array and Multiple Response variables can be difficult to
+#' construct without being able to investigate the available variables, and
+#' their categories. This shiny gadget lets you select subvariables from the
+#' dataset list, and ensures that those variables have consistent categories. To
+#' use the gadget you must have at least one CrunchDataset loaded into the global
+#' environment.
+#'
+#' @return a valid call to `makeArray()` or `makeMR()`
+#' @export
+makeArrayGadget <- function() {
+    call <- match.call()
+    callFromOtherPackage(call, "crunchy")
+}
+
+callFromOtherPackage <- function (call, pkg) {
+    # Find the function of the same name in the crunchy package and call it instead
+    function_name <- as.character(call[[1]])
+    if (hasFunction(function_name, pkg)) {
+        call[[1]] <- get(function_name, asNamespace(pkg))
     } else {
-        code <- paste0(assignment, "loadDataset('",
-            dataset,
-            "', project = '",
-            escapeQuotes(project), "')" )
+        halt(
+            "Please install the latest version of ",
+            pkg,
+            " to access this function."
+        )
     }
-    return(code)
+    eval.parent(call)
 }

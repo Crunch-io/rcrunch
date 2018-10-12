@@ -24,25 +24,27 @@ NULL
 
 #' @rdname variable-to-R
 #' @export
-setMethod("as.vector", "CrunchExpr", function (x, mode) {
-    payload <- list(query=toJSON(list(out=zcl(x))))
+setMethod("as.vector", "CrunchExpr", function(x, mode) {
+    payload <- list(query = toJSON(list(out = zcl(x))))
     if (length(x@filter)) {
         payload[["filter"]] <- toJSON(x@filter)
     } else {
         payload$filter <- "{}"
     }
     out <- paginatedGET(paste0(x@dataset_url, "table/"),
-        query=payload, table=TRUE, limit=.crunchPageSize(x))
+        query = payload, table = TRUE, limit = .crunchPageSize(x)
+    )
     ## pass in the variable metadata to the column parser
-    variable <- VariableEntity(structure(list(body=out$metadata$out),
-        class="shoji"))
+    variable <- VariableEntity(structure(list(body = out$metadata$out),
+        class = "shoji"
+    ))
     return(columnParser(out$metadata$out$type)(out$data$out, variable, mode))
 })
 
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "CrunchExpr", function (x, ...) {
-    structure(list(derivation=zcl(x), ...), class="VariableDefinition")
+setMethod("toVariable", "CrunchExpr", function(x, ...) {
+    structure(list(derivation = zcl(x), ...), class = "VariableDefinition")
 })
 
 ## "Ops" for Crunch Variables
@@ -50,7 +52,7 @@ setMethod("toVariable", "CrunchExpr", function (x, ...) {
 ## Most of the indirection here is to programatically create the Ops methods
 ## for the right combinations of multiple-dispatch signatures
 
-math.exp <- function (e1, e2, operator) {
+math.exp <- function(e1, e2, operator) {
     ## Generic function that creates CrunchExpr of `e1 %operator% e2`
     if (identical(e1, logical(0)) || identical(e2, logical(0))) {
         ## If you reference a variable in a dataset that doesn't exist, you
@@ -59,21 +61,23 @@ math.exp <- function (e1, e2, operator) {
         ##
         ## Because of how this function is invoked, get the offending expression
         ## from the call before this one
-        halt("Invalid expression (probably a reference to a variable that doesn't exist): ",
-             deparseAndFlatten(tail(sys.calls(), 2)[[1]]))
+        halt(
+            "Invalid expression (probably a reference to a variable that doesn't exist): ",
+            deparseAndFlatten(tail(sys.calls(), 2)[[1]])
+        )
     }
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
-    out <- ExprConstructor(operator)(expression=ex, dataset_url=ds.url)
+    out <- ExprConstructor(operator)(expression = ex, dataset_url = ds.url)
     activeFilter(out) <- getOperationFilter(e1, e2)
     return(out)
 }
 
-getOperationFilter <- function (e1, e2) {
+getOperationFilter <- function(e1, e2) {
     ## If either e1 or e2 are Crunch objects with filters, pass those along,
     ## and if both do, make sure that they're the same
-    f1 <- try(activeFilter(e1), silent=TRUE)
-    f2 <- try(activeFilter(e2), silent=TRUE)
+    f1 <- try(activeFilter(e1), silent = TRUE)
+    f2 <- try(activeFilter(e2), silent = TRUE)
     if (is.error(f1)) {
         if (is.error(f2)) {
             ## Neither object is a Crunch object? We shouldn't be here.
@@ -93,10 +97,12 @@ getOperationFilter <- function (e1, e2) {
     return(filt)
 }
 
-ExprConstructor <- function (operator) {
+ExprConstructor <- function(operator) {
     ## Based on the operator function, make either CrunchExpr or CrunchLogicalExpr
-    logics <- c("in", "<", ">", ">=", "<=", "==", "!=", "and", "or", "not",
-        "is_missing", "duplicates", "selected", "not_selected")
+    logics <- c(
+        "in", "<", ">", ">=", "<=", "==", "!=", "and", "or", "not",
+        "is_missing", "duplicates", "selected", "not_selected"
+    )
     if (operator %in% logics) {
         Constructor <- CrunchLogicalExpr
     } else {
@@ -105,10 +111,10 @@ ExprConstructor <- function (operator) {
     return(Constructor)
 }
 
-crunch.ops <- function (i) {
+crunch.ops <- function(i) {
     ## Create math.exp of Variable x R.object, R.object x Variable, or V x V
     force(i)
-    return(function (e1, e2) math.exp(e1, e2, i))
+    return(function(e1, e2) math.exp(e1, e2, i))
 }
 
 .sigs <- list(
@@ -120,10 +126,12 @@ crunch.ops <- function (i) {
     c("CategoricalVariable", "numeric") ## TODO: add cast(x, "numeric") around var for this?
 )
 
-.rtypes <- unique(vapply(.sigs, function (a) a[[2]], character(1)))
-.nomath <- which(!vapply(.sigs,
-    function (a) a[[1]] %in% c("TextVariable", "CategoricalVariable"),
-    logical(1)))
+.rtypes <- unique(vapply(.sigs, function(a) a[[2]], character(1)))
+.nomath <- which(!vapply(
+    .sigs,
+    function(a) a[[1]] %in% c("TextVariable", "CategoricalVariable"),
+    logical(1)
+))
 
 for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
     for (j in .nomath) {
@@ -147,22 +155,22 @@ setMethod("|", c("CrunchExpr", "CrunchExpr"), crunch.ops("or"))
 setMethod("|", c("logical", "CrunchExpr"), crunch.ops("or"))
 setMethod("|", c("CrunchExpr", "logical"), crunch.ops("or"))
 
-zfuncExpr <- function (fun, x, ...) {
+zfuncExpr <- function(fun, x, ...) {
     ## Wrap zfunc(fun, x) in a way that preserves x's active filter
     ## Returns CrunchExpr instead of zcl/list
     ## Currently only implemented for one arg with a filter (x)
-    out <- ExprConstructor(fun)(expression=zfunc(fun, x, ...),
-        dataset_url=datasetReference(x) %||% "")
+    out <- ExprConstructor(fun)(expression = zfunc(fun, x, ...),
+        dataset_url = datasetReference(x) %||% "")
     activeFilter(out) <- activeFilter(x)
     return(out)
 }
 
 #' @rdname expressions
 #' @export
-setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
+setMethod("!", "CrunchExpr", function(x) zfuncExpr("not", x))
 
 #' @importFrom utils head tail
-.seqCrunch <- function (x, table) {
+.seqCrunch <- function(x, table) {
     ## Given x %in% table, if table is numeric, see if we can/should collapse
     ## it into a range query rather than sending lots of distinct values
 
@@ -181,29 +189,37 @@ setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
             end <- head(table, 1)
         }
 
-        return(zfunc("between",
+        return(zfunc(
+            "between",
             x,
             beg,
-            end + 1))
-            ## Add 1 because "between" by default doesn't include the upper
-            ## bound and explicitly overriding that is failing. See #112089103.
-            ## When that is fixed, we can do the following:
-            #rep(TRUE, 2L))) ## Inclusive on both sides
+            end + 1
+        ))
+        ## Add 1 because "between" by default doesn't include the upper
+        ## bound and explicitly overriding that is failing. See #112089103.
+        ## When that is fixed, we can do the following:
+        # rep(TRUE, 2L))) ## Inclusive on both sides
+        ## TODO: ^ shipped so we can unhack this, but note that it should be
+        ## as.zcl(value=rep(TRUE, 2L)) # not "column"
     } else {
         return(zfunc(ifelse(length(table) == 1L, "==", "in"), x, table))
     }
 }
 
-.inCrunch <- function (x, table) zfuncExpr("selected", math.exp(x, r2zcl(I(table)), "in"))
+.inCrunch <- function(x, table) zfuncExpr("selected", math.exp(x, r2zcl(I(table)), "in"))
 
 #' @rdname expressions
 #' @export
-setMethod("%in%", c("CategoricalVariable", "character"),
-    function (x, table) .inCrunch(x, n2i(table, categories(x), strict=FALSE)))
+setMethod(
+    "%in%", c("CategoricalVariable", "character"),
+    function(x, table) .inCrunch(x, n2i(table, categories(x), strict = FALSE))
+)
 #' @rdname expressions
 #' @export
-setMethod("%in%", c("CategoricalVariable", "factor"),
-    function (x, table) x %in% as.character(table))
+setMethod(
+    "%in%", c("CategoricalVariable", "factor"),
+    function(x, table) x %in% as.character(table)
+)
 
 ## Iterated version of below:
 for (i in seq_along(.sigs)) {
@@ -245,7 +261,7 @@ for (i in c("==", "!=")) {
 
 #' @rdname expressions
 #' @export
-setMethod("==", c("CategoricalVariable", "numeric"), function (e1, e2) {
+setMethod("==", c("CategoricalVariable", "numeric"), function(e1, e2) {
     if (length(e2) == 0) {
         ## The specified category doesn't exist. But `== BAD` breaks server
         ## However, "in []" is fine
@@ -256,18 +272,20 @@ setMethod("==", c("CategoricalVariable", "numeric"), function (e1, e2) {
 
 #' @rdname expressions
 #' @export
-setMethod("==", c("CategoricalVariable", "character"), function (e1, e2) {
-    e2 <- n2i(e2, categories(e1), strict=FALSE)
+setMethod("==", c("CategoricalVariable", "character"), function(e1, e2) {
+    e2 <- n2i(e2, categories(e1), strict = FALSE)
     return(e1 == e2)
 })
 #' @rdname expressions
 #' @export
-setMethod("==", c("CategoricalVariable", "factor"),
-    function (e1, e2) e1 == as.character(e2))
+setMethod(
+    "==", c("CategoricalVariable", "factor"),
+    function(e1, e2) e1 == as.character(e2)
+)
 
 #' @rdname expressions
 #' @export
-setMethod("!=", c("CategoricalVariable", "numeric"), function (e1, e2) {
+setMethod("!=", c("CategoricalVariable", "numeric"), function(e1, e2) {
     if (length(e2) == 0) {
         ## The specified category was doesn't exist. But `== BAD` breaks server
         ## However, "in []" is fine. So do `not (in [])`
@@ -277,29 +295,31 @@ setMethod("!=", c("CategoricalVariable", "numeric"), function (e1, e2) {
 })
 #' @rdname expressions
 #' @export
-setMethod("!=", c("CategoricalVariable", "character"), function (e1, e2) {
-    e2 <- n2i(e2, categories(e1), strict=FALSE)
+setMethod("!=", c("CategoricalVariable", "character"), function(e1, e2) {
+    e2 <- n2i(e2, categories(e1), strict = FALSE)
     return(e1 != e2)
 })
 #' @rdname expressions
 #' @export
-setMethod("!=", c("CategoricalVariable", "factor"),
-    function (e1, e2) e1 != as.character(e2))
+setMethod(
+    "!=", c("CategoricalVariable", "factor"),
+    function(e1, e2) e1 != as.character(e2)
+)
 
 #' @rdname dataset-reference
-setMethod("datasetReference", "CrunchExpr", function (x) x@dataset_url)
+setMethod("datasetReference", "CrunchExpr", function(x) x@dataset_url)
 
 #' @rdname expressions
 #' @export
-setMethod("is.na", "CrunchVariable", function (x) zfuncExpr("is_missing", x))
+setMethod("is.na", "CrunchVariable", function(x) zfuncExpr("is_missing", x))
 
 #' @rdname expressions
 #' @export
-bin <- function (x) zfuncExpr("bin", x)
+bin <- function(x) zfuncExpr("bin", x)
 
 #' @rdname expressions
 #' @export
-rollup <- function (x, resolution = rollupResolution(x)) {
+rollup <- function(x, resolution = rollupResolution(x)) {
     validateResolution(force(resolution))
     if (is.variable(x) && !is.Datetime(x)) {
         halt("Cannot rollup a variable of type ", dQuote(type(x)))
@@ -309,7 +329,7 @@ rollup <- function (x, resolution = rollupResolution(x)) {
 
 #' @rdname expressions
 #' @export
-rollupResolution <- function (x) {
+rollupResolution <- function(x) {
     if (is.Datetime(x)) {
         return(tuple(x)$rollup_resolution)
     } else {
@@ -319,7 +339,7 @@ rollupResolution <- function (x) {
 
 #' @rdname expressions
 #' @export
-setMethod("rollupResolution<-",  "DatetimeVariable", function (x, value) {
+setMethod("rollupResolution<-", "DatetimeVariable", function(x, value) {
     validateResolution(force(value))
     setEntitySlot(entity(x), "view", list(rollup_resolution = value))
     return(refresh(x))
@@ -330,10 +350,12 @@ setMethod("rollupResolution<-",  "DatetimeVariable", function (x, value) {
 #' @export
 setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
 
-.updateActiveFilterLogical <- function (x, i, ...) {
+.updateActiveFilterLogical <- function(x, i, ...) {
     if (length(i)) {
-        i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
-            expression=.dispatchFilter(i))
+        i <- CrunchLogicalExpr(
+            dataset_url = datasetReference(x),
+            expression = .dispatchFilter(i)
+        )
         return(x[i])
     } else {
         ## If you reference a variable in a dataset that doesn't exist, you
@@ -349,9 +371,11 @@ setMethod("[", c("CrunchExpr", "logical"), .updateActiveFilterLogical)
 
 #' @rdname variable-extract
 #' @export
-setMethod("[", c("CrunchExpr", "numeric"), function (x, i, ...) {
-    i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
-        expression=.dispatchFilter(i))
+setMethod("[", c("CrunchExpr", "numeric"), function(x, i, ...) {
+    i <- CrunchLogicalExpr(
+        dataset_url = datasetReference(x),
+        expression = .dispatchFilter(i)
+    )
     return(x[i])
 })
 
@@ -368,7 +392,7 @@ setMethod("[", c("CrunchExpr", "numeric"), function (x, i, ...) {
 NULL
 
 #' @rdname which
-setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
+setMethod("which", "CrunchLogicalExpr", function(x, arr.ind, useNames) {
     which(as.vector(x))
 })
 
@@ -387,19 +411,19 @@ NULL
 
 #' @rdname duplicated
 #' @export
-setMethod("duplicated", "CrunchVariable", function (x, incomparables=FALSE, ...) {
+setMethod("duplicated", "CrunchVariable", function(x, incomparables = FALSE, ...) {
     zfuncExpr("duplicates", x)
 })
 
 #' @rdname duplicated
 #' @export
-setMethod("duplicated", "CrunchExpr", function (x, incomparables=FALSE, ...) {
+setMethod("duplicated", "CrunchExpr", function(x, incomparables = FALSE, ...) {
     zfuncExpr("duplicates", x)
 })
 
 #' @rdname crunch-is
 #' @export
-is.CrunchExpr <- function (x) inherits(x, "CrunchExpr")
+is.CrunchExpr <- function(x) inherits(x, "CrunchExpr")
 
 #' @rdname crunch-is
 #' @export

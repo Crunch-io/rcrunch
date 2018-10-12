@@ -15,6 +15,10 @@ addSummaryStat(cube, stat = c("mean", "median"), var, margin, ...)
 summary statistic for generally the alias of the variable in Crunch, but
 might include Crunch functions like \code{rollup()}, \code{bin()}, etc.}
 
+\item{margin}{which margin should the summary statistic be applied for (used
+in the cases of categorical arrays where a variable might contribute more
+than one margin)}
+
 \item{...}{options to pass to \code{SummaryStat()} (e.g., position, after, etc.)}
 }
 \value{

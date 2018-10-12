@@ -2,6 +2,7 @@ API's
 AbstractCategories
 AbstractCategory
 Agresti
+AnalysisCatalog
 BatchCatalog
 CategoricalVariable
 CategoricalVariables
@@ -16,9 +17,12 @@ CrunchCubes
 CrunchDataFrame
 CrunchDataFrames
 CrunchDataset
+CrunchDeck
+CrunchDecks
 CrunchExpr
 CrunchGeodata
 CrunchLogicalExpr
+CrunchSlide
 CrunchVariable
 CrunchVariables
 CubeDims
@@ -30,6 +34,8 @@ DatasetGroups
 DatasetOrder
 Datetime
 DatetimeVariable
+DeckCatalog
+Devs
 Dichotomize
 FilterCatalog
 Getter
@@ -54,7 +60,7 @@ POSTed
 POSTing
 POSTs
 PermissionCatalog
-ProjectCatalog
+ProjectFolder
 RMarkdown
 RStudio
 Rprofile
@@ -66,6 +72,7 @@ ShojiCatalogs
 ShojiObject
 ShojiOrder
 ShojiTuples
+SlideCatalog
 Snowden
 Snowden's
 Subvariable
@@ -106,6 +113,7 @@ customizations
 darkgreen
 dataset's
 datetime
+deduplicated
 deserialization
 df
 dichotomization

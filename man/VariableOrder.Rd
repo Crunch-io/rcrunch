@@ -27,9 +27,9 @@ more generally, this field can be referenced as "name" as well.}
 combination of variable URLs and VariableGroup objects.}
 
 \item{\code{duplicates}}{logical: should duplicate variable references be allowed in
-this object? Default is \code{FALSE}.}
+this object? Deprecated field: duplicates are never allowed.}
 
-\item{\code{vars}}{either \code{NULL} or a \code{\link{VariableCatalog}}. If not
+\item{\code{vars}}{either \code{NULL} or a \code{\link[=VariableCatalog]{VariableCatalog()}}. If not
 \code{NULL}, it will be used to look up variable names from the URLs.}
 }}
 

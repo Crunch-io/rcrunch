@@ -1,13 +1,15 @@
-expect_prints <- function (object, ..., fixed=TRUE) {
-    expect_output(print(object), ..., fixed=fixed)
+expect_prints <- function(object, ..., fixed = TRUE) {
+    expect_output(print(object), ..., fixed = fixed)
 }
 
-get_output <- function (x) {
+get_output <- function(x) {
     ## For comparing print output in expect_prints
-    paste(capture.output(print(x)), collapse="\n")
+    paste(capture.output(print(x)), collapse = "\n")
 }
 
-expect_valid_df_import <- function (ds) {
+expect_deprecated <- function(...) expect_warning(..., "deprecated")
+
+expect_valid_df_import <- function(ds) {
     ## Pull out common tests that "df" was imported correctly
     expect_true(is.dataset(ds))
     expect_identical(description(ds), "")
@@ -18,12 +20,16 @@ expect_valid_df_import <- function (ds) {
     expect_identical(name(ds$v2), "v2")
     expect_true(is.Numeric(ds[["v3"]]))
     expect_identical(description(ds$v3), "")
-    expect_equivalent(as.array(crtabs(mean(v3) ~ v4, data=ds)),
-        tapply(df$v3, df$v4, mean, na.rm=TRUE))
+    expect_equivalent(
+        as.array(crtabs(mean(v3) ~ v4, data = ds)),
+        tapply(df$v3, df$v4, mean, na.rm = TRUE)
+    )
     expect_equivalent(as.vector(ds$v3), df$v3)
     expect_true(is.Categorical(ds[["v4"]]))
-    expect_equivalent(as.array(crtabs(~ v4, data=ds)),
-        array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+    expect_equivalent(
+        as.array(crtabs(~v4, data = ds)),
+        array(c(10, 10), dim = 2L, dimnames = list(v4 = c("B", "C")))
+    )
     expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
     expect_identical(categories(ds$v4), categories(refresh(ds$v4)))
     expect_identical(ds$v4, refresh(ds$v4))
@@ -35,13 +41,19 @@ expect_valid_df_import <- function (ds) {
     expect_identical(names(versions(ds)), "initial import")
 }
 
-expect_valid_apidocs_import <- function (ds) {
+expect_valid_apidocs_import <- function(ds) {
     expect_true(is.dataset(ds))
     expect_identical(dim(ds), c(20L, 9L))
-    expect_identical(names(ds),
-        c("allpets", "q1", "petloc", "ndogs", "ndogs_a", "ndogs_b", "q3",
-        "country", "wave"))
+    expect_identical(
+        names(ds),
+        c(
+            "allpets", "q1", "petloc", "ndogs", "ndogs_a", "ndogs_b", "q3",
+            "country", "wave"
+        )
+    )
     expect_identical(name(ds), "Example dataset")
-    expect_identical(names(categories(ds$q1)),
-        c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+    expect_identical(
+        names(categories(ds$q1)),
+        c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+    )
 }

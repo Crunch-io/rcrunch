@@ -7,23 +7,23 @@
 cd(x, path, create = FALSE)
 }
 \arguments{
-\item{x}{A \code{CrunchDataset} or \code{VariableFolder}}
+\item{x}{A \code{CrunchDataset} or \code{Folder} (\code{VariableFolder} or \code{ProjectFolder})}
 
 \item{path}{A character "path" to the folder: either a
 vector of nested folder names or a single string with nested folders
 separated by a delimiter ("/" default, configurable via
 \code{options(crunch.delimiter)}). The path is interpreted as
 relative to the location of the folder \code{x} (when \code{x} is a dataset, that
-means the root, top-level folder). \code{path} may also be a \code{VariableFolder} object.}
+means the root, top-level folder). \code{path} may also be a \code{Folder} object.}
 
 \item{create}{logical: if the folder indicated by \code{path} does not exist,
 should it be created? Default is \code{FALSE}. Argument mainly exists for the
-convenience of \code{mv()}, which moves variables to a folder and ensures that
+convenience of \code{mv()}, which moves entities to a folder and ensures that
 the folder exists. You can call \code{cd} directly with \code{create=TRUE}, though that
 seems unnatural.}
 }
 \value{
-A \code{VariableFolder}
+A \code{Folder} (\code{VariableFolder} or \code{ProjectFolder})
 }
 \description{
 Like \code{cd} in a file system, this function takes you to a different folder,

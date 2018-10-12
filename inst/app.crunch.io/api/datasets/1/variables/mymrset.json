@@ -31,6 +31,8 @@
         "cast": "https://app.crunch.io/api/datasets/1/variables/mymrset/cast/"
     },
     "catalogs": {
+        "parent": "https://app.crunch.io/api/datasets/1/variables/",
+        "subvariables": "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
         "folder": "https://app.crunch.io/api/datasets/1/folders/3/"
     },
     "urls": {

@@ -1,4 +1,4 @@
-init.sortCatalog <- function (.Object, ...) {
+init.sortCatalog <- function(.Object, ...) {
     ## Sort a ShojiCatalog by the object's "names" (as defined by its names method)
     .Object <- callNextMethod(.Object, ...)
     .Object@index <- .Object@index[order(names(.Object))]
@@ -7,13 +7,13 @@ init.sortCatalog <- function (.Object, ...) {
 
 setMethod("initialize", "DatasetCatalog", init.sortCatalog)
 
-setMethod("active", "DatasetCatalog", function (x) {
-    index(x) <- Filter(function (a) !isTRUE(a$archived), index(x))
+setMethod("active", "DatasetCatalog", function(x) {
+    index(x) <- Filter(function(a) !isTRUE(a$archived), index(x))
     return(x)
 })
 
-setMethod("archived", "DatasetCatalog", function (x) {
-    index(x) <- Filter(function (a) isTRUE(a$archived), index(x))
+setMethod("archived", "DatasetCatalog", function(x) {
+    index(x) <- Filter(function(a) isTRUE(a$archived), index(x))
     return(x)
 })
 
@@ -23,41 +23,39 @@ setMethod("archived", "DatasetCatalog", function (x) {
 #' @return For `owners`, the URLs of the users or projects that own
 #' these datasets. For `ownerNames`, their names.
 #' @export
-owners <- function (x) {
-    getIndexSlot(x, "owner_id")
-}
+owners <- function(x) getIndexSlot(x, "owner_id")
 
 #' @rdname owners
 #' @export
-ownerNames <- function (x) {
-    getIndexSlot(x, "owner_display_name")
-}
+ownerNames <- function(x) getIndexSlot(x, "owner_display_name")
 
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.archived", "DatasetCatalog",
-    function (x) getIndexSlot(x, "archived", logical(1)))
+    function(x) getIndexSlot(x, "archived", logical(1))
+)
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.draft", "DatasetCatalog", function (x) !is.published(x))
+setMethod("is.draft", "DatasetCatalog", function(x) !is.published(x))
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.published", "DatasetCatalog",
-    function (x) getIndexSlot(x, "is_published", logical(1), ifnot=TRUE))
+    function(x) getIndexSlot(x, "is_published", logical(1), ifnot = TRUE)
+)
 
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.archived<-", c("DatasetCatalog", "logical"), function (x, value) {
+setMethod("is.archived<-", c("DatasetCatalog", "logical"), function(x, value) {
     setIndexSlot(x, "archived", value)
 })
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.draft<-", c("DatasetCatalog", "logical"), function (x, value) {
+setMethod("is.draft<-", c("DatasetCatalog", "logical"), function(x, value) {
     setIndexSlot(x, "is_published", !value)
 })
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.published<-", c("DatasetCatalog", "logical"), function (x, value) {
+setMethod("is.published<-", c("DatasetCatalog", "logical"), function(x, value) {
     setIndexSlot(x, "is_published", value)
 })
 
@@ -78,17 +76,19 @@ NULL
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("DatasetCatalog", "numeric"), function (x, i, ...) {
+setMethod("[[", c("DatasetCatalog", "numeric"), function(x, i, ...) {
     getTuple(x, i, DatasetTuple)
 })
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
+    function(x, i, j, value) {
         index(x)[[i]] <- value@body
         return(x)
-    })
+    }
+)
 
 #' Get and set names, aliases on Catalog-type objects
 #'

@@ -1,8 +1,8 @@
 # Setup is executed when tests are run, but not when loadall is run
 
 # find a file that is either in the package root or inst folders while testing
-find_file <- function (file_name) {
-    pth <- system.file(file_name, package="crunch")
+find_file <- function(file_name) {
+    pth <- system.file(file_name, package = "crunch")
     if (nchar(pth)) {
         return(pth)
     }
@@ -13,3 +13,6 @@ find_file <- function (file_name) {
 
 # Our "test package" common harness code
 source(find_file("crunch-test.R"), local = TRUE)
+
+# untar cubes
+decompress_fixtures()

@@ -1,19 +1,22 @@
-setMethod("initialize", "ShojiFolder", function (.Object, ...) {
+setMethod("initialize", "ShojiFolder", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object@graph <- lapply(.Object@graph, absoluteURL, .Object@self)
-    .Object@index <- .Object@index[unlist(.Object@graph)]
+    if (length(.Object@graph)) {
+        # Root catalogs may not have a graph (right?)
+        .Object@index <- .Object@index[unlist(.Object@graph)]
+    }
     return(.Object)
 })
 
-is.folder <- function (x) inherits(x, "ShojiFolder")
+is.folder <- function(x) inherits(x, "ShojiFolder")
 
 #' @export
 #' @rdname describe-catalog
-setMethod("types", "ShojiFolder", function (x) getIndexSlot(x, "type"))
+setMethod("types", "ShojiFolder", function(x) getIndexSlot(x, "type"))
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("ShojiFolder", "numeric"), function (x, i, ..., drop=FALSE) {
+setMethod("[[", c("ShojiFolder", "numeric"), function(x, i, ..., drop = FALSE) {
     out <- index(x)[i]
     if (is.null(out[[1]])) {
         return(NULL)
@@ -23,18 +26,25 @@ setMethod("[[", c("ShojiFolder", "numeric"), function (x, i, ..., drop=FALSE) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("ShojiFolder", "character"), function (x, i, ..., drop=FALSE) {
+setMethod("[[", c("ShojiFolder", "character"), function(x, i, ..., drop = FALSE) {
     path <- parseFolderPath(i)
     if (nchar(path[1]) == 0) {
         ## Go to root level
         x <- rootFolder(x)
+        path <- path[-1]
+    } else if (identical(path[1], "~")) {
+        ## Go to personal
+        x <- personalFolder(x)
         path <- path[-1]
     }
     create <- isTRUE(list(...)$create)
     while (length(path)) {
         ## Recurse
         segment <- path[1]
-        if (segment == "..") {
+        if (segment == ".") {
+            ## We're already here
+            this <- x
+        } else if (segment == "..") {
             ## Go up a level
             this <- folder(x)
             if (is.null(this)) {
@@ -56,22 +66,27 @@ setMethod("[[", c("ShojiFolder", "character"), function (x, i, ..., drop=FALSE) 
     return(x)
 })
 
-parseFolderPath <- function (path) {
+parseFolderPath <- function(path) {
     ## path can be "/" separated, and can change that delimiter with
     ## options(crunch.delimiter="|") or something in case you have real "/"
     if (length(path) == 1) {
-        path <- unlist(strsplit(path, folderDelimiter(), fixed=TRUE))
+        path <- unlist(strsplit(path, folderDelimiter(), fixed = TRUE))
     }
     return(path)
 }
 
-folderDelimiter <- function () getOption("crunch.delimiter", "/")
+folderDelimiter <- function() getOption("crunch.delimiter", "/")
 
-parentFolderURL <- function (x) {
-    tryCatch(shojiURL(x, "catalogs", "folder"), error=function (e) return(NULL))
+parentFolderURL <- function(x) {
+    if (is.variable(x) || inherits(x, "VariableFolder")) {
+        shojiURL(x, "catalogs", "folder", mustWork=FALSE)
+    } else {
+        # A dataset or project
+        shojiURL(x, "catalogs", "project", mustWork=FALSE)
+    }
 }
 
-rootFolder <- function (x) {
+rootFolder <- function(x) {
     this <- folder(x)
     ## If the parent of x is NULL, we're already at top level.
     while (!is.null(this)) {
@@ -81,22 +96,30 @@ rootFolder <- function (x) {
     return(x)
 }
 
-createFolder <- function (where, name, index, ...) {
+createFolder <- function(where, name, index, ...) {
     ## TODO: include index of variables/folders in a single request;
     ## turn index into index + graph in payload
     ## TODO: also for reordering, function that takes a list (index) and returns
     ## list(index=index, graph=names(index))
-    crPOST(self(where), body=toJSON(wrapCatalog(body=list(name=name, ...))))
+    if (inherits(where, "VariableFolder")) {
+        bod <- wrapCatalog(body = list(name = name, ...))
+    } else {
+        ## Special case: projects strictly require "entity"
+        ## Remove after https://www.pivotaltracker.com/story/show/160328444
+        bod <- wrapEntity(body = list(name = name, ...))
+    }
+    crPOST(self(where), body = toJSON(bod))
 }
 
 #' @rdname describe
 #' @export
 setMethod("name<-", "ShojiFolder",
-    function (x, value) setEntitySlot(x, "name", value))
+    function(x, value) setEntitySlot(x, "name", value)
+)
 
 #' @rdname delete
 #' @export
-setMethod("delete", "ShojiFolder", function (x, ...) {
+setMethod("delete", "ShojiFolder", function(x, ...) {
     if (is.null(parentFolderURL(x))) {
         halt("Cannot delete root folder")
     }
@@ -116,15 +139,17 @@ setMethod("delete", "ShojiFolder", function (x, ...) {
 #' @return `folder` with the order dictated by `ord`. The function also persists
 #' that order on the server.
 #' @export
-setOrder <- function (folder, ord) {
+setOrder <- function(folder, ord) {
     # If ord is character, match against names/aliases/urls
     if (is.character(ord)) {
         nums <- whichCatalogEntry(folder, ord)
         # Validate that none are NA
         bads <- is.na(nums)
         if (any(bads)) {
-            halt(ifelse(sum(bads) > 1, "Invalid values: ", "Invalid value: "),
-                paste(ord[bads], collapse=", "))
+            halt(
+                ifelse(sum(bads) > 1, "Invalid values: ", "Invalid value: "),
+                paste(ord[bads], collapse = ", ")
+            )
         }
         ord <- nums
     }
@@ -135,14 +160,16 @@ setOrder <- function (folder, ord) {
     valid <- seq_len(length(folder))
     bad <- setdiff(ord, valid)
     if (length(bad)) {
-        halt(ifelse(length(bad) > 1, "Invalid values: ", "Invalid value: "),
-            paste(bad, collapse=", "))
+        halt(
+            ifelse(length(bad) > 1, "Invalid values: ", "Invalid value: "),
+            paste(bad, collapse = ", ")
+        )
     }
     dupes <- duplicated(ord)
     if (any(dupes)) {
         halt(
             "Order values must be unique: ",
-            paste(unique(ord[dupes]), collapse=", "),
+            paste(unique(ord[dupes]), collapse = ", "),
             ifelse(sum(dupes) > 1, " are", " is"), " duplicated"
         )
     }
@@ -153,20 +180,20 @@ setOrder <- function (folder, ord) {
         index(folder) <- index(folder)[ord]
         folder@graph <- as.list(urls(folder))
         # PATCH graph
-        crPATCH(self(folder), body=toJSON(wrapCatalog(graph=urls(folder))))
+        crPATCH(self(folder), body = toJSON(wrapCatalog(graph = urls(folder))))
     }
     return(folder)
 }
 
-path <- function (x) {
+path <- function(x) {
     out <- name(x)
     parent <- folder(x)
     ## If the parent of x is NULL, we're already at top level.
     while (!is.null(parent)) {
-        out <- c(name(parent), out)
+        out <- c(name(parent) %||% "", out)
         parent <- folder(parent)
     }
-    out <- paste(out, collapse=folderDelimiter())
+    out <- paste(out, collapse = folderDelimiter())
     if (nchar(out) == 0) {
         ## Root
         out <- folderDelimiter()
@@ -178,3 +205,7 @@ path <- function (x) {
 #     ## Default method: return a folder of the same type
 #     return(get(class(x))(crGET(names(tuple))))
 # })
+
+setMethod("personalFolder", "ShojiFolder", function (x) {
+    halt("Not implemented")
+})

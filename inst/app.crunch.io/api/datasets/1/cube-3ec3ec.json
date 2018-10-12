@@ -1,0 +1,469 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/416225a5c88743fea07eb68117ca47ad/cube/?query=%7B%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22dimensions%22%3A%5B%7B%22each%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F416225a5c88743fea07eb68117ca47ad%2Fvariables%2F4c51593ab88e4c5e97a99c87e53784d0%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F416225a5c88743fea07eb68117ca47ad%2Fvariables%2F4c51593ab88e4c5e97a99c87e53784d0%2F%22%7D%5D%7D%2C%7B%22function%22%3A%22bin%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F416225a5c88743fea07eb68117ca47ad%2Fvariables%2F0127c71ba3094ea4a12ca5823050991c%2F%22%7D%5D%7D%5D%2C%22weight%22%3Anull%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "each": "https://app.crunch.io/api/datasets/416225a5c88743fea07eb68117ca47ad/variables/4c51593ab88e4c5e97a99c87e53784d0/"
+                },
+                {
+                    "function": "as_selected",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/416225a5c88743fea07eb68117ca47ad/variables/4c51593ab88e4c5e97a99c87e53784d0/"
+                        }
+                    ]
+                },
+                {
+                    "function": "bin",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/416225a5c88743fea07eb68117ca47ad/variables/0127c71ba3094ea4a12ca5823050991c/"
+                        }
+                    ]
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "derived": true,
+                    "references": {
+                        "subreferences": [
+                            {
+                                "alias": "subvar2",
+                                "name": "subvar2"
+                            },
+                            {
+                                "alias": "subvar1",
+                                "name": "subvar1"
+                            },
+                            {
+                                "alias": "subvar3",
+                                "name": "subvar3"
+                            }
+                        ],
+                        "name": "mymrset",
+                        "alias": "mymrset"
+                    },
+                    "type": {
+                        "subtype": {
+                            "class": "variable"
+                        },
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "subvar2",
+                                        "name": "subvar2"
+                                    },
+                                    "id": "8d04878e51aa4f41b687469ff3f6ed86",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Other"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "subvar1",
+                                        "name": "subvar1"
+                                    },
+                                    "id": "010474a0a5d04010b638c30e125463f7",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Other"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "subvar3",
+                                        "name": "subvar3"
+                                    },
+                                    "id": "976b5112e37544c9b195c6a9144f2002",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Other"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
+                },
+                {
+                    "references": {
+                        "subreferences": [
+                            {
+                                "alias": "subvar2",
+                                "name": "subvar2"
+                            },
+                            {
+                                "alias": "subvar1",
+                                "name": "subvar1"
+                            },
+                            {
+                                "alias": "subvar3",
+                                "name": "subvar3"
+                            }
+                        ],
+                        "name": "mymrset",
+                        "alias": "mymrset"
+                    },
+                    "derived": true,
+                    "type": {
+                        "ordinal": false,
+                        "subvariables": [
+                            "8d04878e51aa4f41b687469ff3f6ed86",
+                            "010474a0a5d04010b638c30e125463f7",
+                            "976b5112e37544c9b195c6a9144f2002"
+                        ],
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "selected": true,
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 0,
+                                "name": "Other"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "references": {
+                        "alias": "age",
+                        "name": "age"
+                    },
+                    "derived": true,
+                    "type": {
+                        "subtype": {
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        },
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": [
+                                    2013.0,
+                                    2013.5
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": [
+                                    2013.5,
+                                    2014.0
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": [
+                                    2014.0,
+                                    2014.5
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 4,
+                                "value": [
+                                    2014.5,
+                                    2015.0
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 5,
+                                "value": [
+                                    2015.0,
+                                    2015.5
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 6,
+                                "value": [
+                                    2015.5,
+                                    2016.0
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 7,
+                                "value": [
+                                    2016.0,
+                                    2016.5
+                                ],
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
+                }
+            ],
+            "missing": 6,
+            "measures": {
+                "count": {
+                    "data": [
+                        1,
+                        1,
+                        4,
+                        3,
+                        1,
+                        0,
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        2,
+                        3,
+                        2,
+                        0,
+                        0,
+                        0,
+                        1,
+                        1,
+                        2,
+                        2,
+                        1,
+                        0,
+                        3,
+                        1,
+                        1,
+                        2,
+                        1,
+                        0,
+                        1,
+                        2,
+                        2,
+                        2,
+                        1,
+                        2,
+                        0,
+                        0,
+                        0,
+                        1,
+                        1,
+                        2,
+                        2,
+                        0,
+                        0,
+                        2,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        3,
+                        2,
+                        2,
+                        2,
+                        2,
+                        0,
+                        0,
+                        0,
+                        1,
+                        1,
+                        2,
+                        2
+                    ],
+                    "n_missing": 6,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                1,
+                1,
+                4,
+                3,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                2,
+                3,
+                2,
+                0,
+                0,
+                0,
+                1,
+                1,
+                2,
+                2,
+                1,
+                0,
+                3,
+                1,
+                1,
+                2,
+                1,
+                0,
+                1,
+                2,
+                2,
+                2,
+                1,
+                2,
+                0,
+                0,
+                0,
+                1,
+                1,
+                2,
+                2,
+                0,
+                0,
+                2,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                3,
+                2,
+                2,
+                2,
+                2,
+                0,
+                0,
+                0,
+                1,
+                1,
+                2,
+                2
+            ],
+            "n": 25
+        }
+    }
+}

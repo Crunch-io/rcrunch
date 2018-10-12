@@ -6,12 +6,12 @@
         "users": "/api/users/",
         "roles": "/api/roles/",
         "icons": "/api/icons/",
-        "specifications": "/api/specifications/",
         "snapshots": "/api/snapshots/",
         "teams": "/api/teams/",
         "sources": "/api/sources/",
         "projects": "/api/projects/",
         "geodata": "/api/geodata/",
+        "orgs": "/api/orgs/",
         "public": "/api/public/",
         "lobs": "/api/lobs/"
     },
@@ -20,10 +20,10 @@
         "feature_flag": "/api/feature_flag/",
         "migration": "/api/migration/",
         "account": "/api/account/",
-        "user": "/api/users/518278c707a7d8253b685722/"
+        "user": "/api/users/8e01e9/"
     },
     "urls": {
-        "user_url": "/api/users/518278c707a7d8253b685722/",
+        "user_url": "/api/users/8e01e9/",
         "account_roles_url": "/api/roles/accounts/",
         "notebook_url": "https://jupyter.crunch.io/",
         "logout_url": "/api/logout/",
