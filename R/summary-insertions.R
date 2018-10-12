@@ -155,6 +155,9 @@ setMethod("makeInsertion", "SummaryStat", function (x, var_categories) {
 #' @param var a character with the name of the dimension variable to add the
 #' summary statistic for generally the alias of the variable in Crunch, but
 #' might include Crunch functions like `rollup()`, `bin()`, etc.
+#' @param margin which margin should the summary statistic be applied for (used
+#' in the cases of categorical arrays where a variable might contribute more
+#' than one margin)
 #' @param ... options to pass to `SummaryStat()` (e.g., position, after, etc.)
 #'
 #' @return a CrunchCube with the summary statistic Insertion added to the
@@ -203,9 +206,9 @@ setMethod("makeInsertion", "SummaryStat", function (x, var_categories) {
 #' #[1] "CrunchCube"
 #' #attr(,"package")
 #' #[1] "crunch"
-#' 
-#' # Since `pet_feelings` is a CrunchCube, although it has similar properties 
-#' # and behaviors to arrays, it is not a R array: 
+#'
+#' # Since `pet_feelings` is a CrunchCube, although it has similar properties
+#' # and behaviors to arrays, it is not a R array:
 #' is.array(pet_feelings)
 #' #[1] FALSE
 #'
@@ -243,10 +246,23 @@ setMethod("makeInsertion", "SummaryStat", function (x, var_categories) {
 #' }
 #'
 #' @export
-addSummaryStat <- function (cube, stat = c("mean", "median"), var, ...) {
+addSummaryStat <- function (cube, stat = c("mean", "median"), var, margin, ...) {
     stat = match.arg(stat)
 
-    validateNamesInDims(var, cube, what = "variables")
+    if (!missing(var)) {
+        validateNamesInDims(var, cube, what = "variables")
+        margin <- which(names(cube) %in% var)
+    } else if (!missing(margin)) {
+        # TODO: use check_margin() when index-redux is mergedin
+        if (any(margin > length(dim(cube)))) {
+            halt(
+                "Margin ", max(margin),
+                " exceeds Cube's number of dimensions (",
+                length(dim(cube)), ")")
+        }
+    } else {
+        halt("Must supply either a `margin` or `var` argument.")
+    }
 
     # setup default options
     opts <- list(..., stat = stat)
@@ -257,14 +273,15 @@ addSummaryStat <- function (cube, stat = c("mean", "median"), var, ...) {
 
     summary_stat <- do.call(SummaryStat, opts)
 
-    if (is.null(transforms(cube)[[var]])) {
-        transes <- list(Transforms(insertions = Insertions(summary_stat)))
-        # add variable name
-        names(transes) <- var
-        transforms(cube) <- transes
-    } else {
-        inserts <- append(transforms(cube)[[var]]$insertions, list(summary_stat))
-        transforms(cube)[[var]]$insertions <- inserts
+    for (one_margin in margin) {
+        if (is.null(transforms(cube)[[one_margin]])) {
+            transes <- Transforms(insertions = Insertions(summary_stat))
+            transforms(cube)[[one_margin]] <- transes
+        } else {
+            inserts <- append(transforms(cube)[[one_margin]]$insertions, list(summary_stat))
+            transforms(cube)[[one_margin]]$insertions <- inserts
+        }
     }
+
     return(cube)
 }

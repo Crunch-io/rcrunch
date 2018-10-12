@@ -1,7 +1,7 @@
 #' @rdname showTransforms
 #' @export
 setMethod("showTransforms", "CrunchCube", function (x) {
-    if (all(is.null(transforms(x)))) {
+    if (all(vapply(transforms(x), is.null, logical(1)))) {
         print(cubeToArray(x))
         return(invisible(x))
     } else {
@@ -356,9 +356,6 @@ setMethod("transforms", "CrunchCube", function(x) { transforms(variables(x)) })
 setMethod("transforms", "VariableCatalog", function (x) {
     transes <- lapply(x, function (i) {i$view$transform})
 
-    if (all(unlist(lapply(transes, is.null)))) {
-        return(NULL)
-    }
     transes_out <- lapply(transes, function (i) {
         # TODO: when other transforms are implemented, this should check those too.
 
@@ -379,37 +376,50 @@ setMethod("transforms", "VariableCatalog", function (x) {
     })
 
     names(transes_out) <- aliases(x)
-    return(transes_out)
+    return(TransformsList(data = transes_out))
 })
 
 #' @rdname Transforms
 #' @export
-setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
+setMethod("transforms<-", c("CrunchCube", "ANY"), function (x, value) {
+    if (!is.null(names(value))) {
+        # check if the names of the dimensions and the transforms match
+        validateNamesInDims(names(value), x, what = "transforms")
+
+        transforms_list <- TransformsList(data = value)
+        transforms(x)[names(value)] <- transforms_list
+    } else {
+        transforms(x) <- TransformsList(data = value)
+    }
+
+    return(invisible(x))
+})
+
+setMethod("[[<-", c("TransformsList", "ANY", "missing", "NULL"), function (x, i, j, value) {
+    # if we remove a transform, we must set a Transform filled with NULLs and
+    # not totally remove the item itself
+    x[[i]] <- Transforms(insertions = NULL, elements = NULL, categories = NULL)
+    return(x)
+})
+
+
+setMethod("transforms<-", c("CrunchCube", "TransformsList"), function (x, value) {
     dims <- dimensions(x)
     dimnames <- names(dims)
+    stopifnot(length(value) == length(dims))
 
-    # check if the names of the dimensions and the names of the transforms line up
-    validateNamesInDims(names(value), x, what = "transforms")
+    vars <- variables(x)
+    dims <- CubeDims(mapply(function (dim, val, var) {
+        cats <- categories(var)
+        val$insertions <- Insertions(
+            data = lapply(val$insertions, makeInsertion, var_categories = cats)
+        )
 
-    # replace the transforms for each dimension
-    dims <- CubeDims(lapply(dimnames, function (dim_name) {
-        dim_out <- dims[[dim_name]]
-        if (dim_name %in% names(value)) {
-            # grab the matching insertions, make sure they are proper Insertions
-            # and then add them to the dimensions to return.
-            one_trans <- value[[dim_name]]
-            vars <- variables(x)
-            cats <- categories(vars[[which(aliases(vars) == dim_name)]])
-            one_trans$insertions <- Insertions(
-                data = lapply(one_trans$insertions, makeInsertion,
-                              var_categories = cats)
-            )
-            dim_out$references$view$transform <- jsonprep(one_trans)
-        }
-        return(dim_out)
-    }))
+        dim$references$view$transform <- jsonprep(val)
+        return(dim)
+    }, dim = dims, val = value, var = vars, SIMPLIFY = FALSE))
 
-    # rename, replace the dimensions and return the cube
+    # replace names, replace the dimensions and return the cube
     names(dims) <- dimnames
     dimensions(x) <- dims
     return(invisible(x))

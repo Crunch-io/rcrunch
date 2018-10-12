@@ -4,7 +4,7 @@
 \alias{applyAgainst}
 \title{apply a function against a dimension}
 \usage{
-applyAgainst(X, MARGIN, FUN, ...)
+applyAgainst(X, MARGIN, FUN, skip, ...)
 }
 \arguments{
 \item{X}{an array}

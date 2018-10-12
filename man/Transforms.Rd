@@ -5,11 +5,12 @@
 \name{Transforms-class}
 \alias{Transforms-class}
 \alias{Transforms}
+\alias{TransformsList-class}
+\alias{TransformsList}
 \alias{transforms,CrunchCube-method}
 \alias{transforms,VariableCatalog-method}
-\alias{transforms<-,CrunchCube,list-method}
+\alias{transforms<-,CrunchCube,ANY-method}
 \alias{transforms<-,CrunchCube,NULL-method}
-\alias{Transforms}
 \alias{transforms}
 \alias{transforms<-}
 \alias{transforms,CrunchVariable-method}
@@ -20,11 +21,13 @@
 \usage{
 Transforms(..., data = NULL)
 
+TransformsList(..., data = NULL)
+
 \S4method{transforms}{CrunchCube}(x)
 
 \S4method{transforms}{VariableCatalog}(x)
 
-\S4method{transforms}{CrunchCube,list}(x) <- value
+\S4method{transforms}{CrunchCube,ANY}(x) <- value
 
 \S4method{transforms}{CrunchCube,`NULL`}(x) <- value
 

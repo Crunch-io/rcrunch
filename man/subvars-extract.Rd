@@ -30,7 +30,8 @@
 
 \S4method{[}{Subvariables,character,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[[}{Subvariables,character,missing,CrunchVariable}(x, i) <- value
+\S4method{[[}{Subvariables,character,missing,CrunchVariable}(x,
+  i) <- value
 
 \S4method{[[}{Subvariables,ANY,missing,CrunchVariable}(x, i) <- value
 
@@ -47,7 +48,8 @@
 \S4method{[}{CategoricalArrayVariable,character,ANY}(x, i, j, ...,
   drop = TRUE)
 
-\S4method{[}{CategoricalArrayVariable,missing,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CategoricalArrayVariable,missing,ANY}(x, i, j, ...,
+  drop = TRUE)
 
 \S4method{[}{CategoricalArrayVariable,missing,character}(x, i, j, ...,
   drop = TRUE)
@@ -60,7 +62,8 @@
 
 \S4method{[[}{CategoricalArrayVariable,ANY,missing,ANY}(x, i) <- value
 
-\S4method{[[}{CategoricalArrayVariable,character,missing,ANY}(x, i) <- value
+\S4method{[[}{CategoricalArrayVariable,character,missing,ANY}(x,
+  i) <- value
 
 \S4method{$}{CategoricalArrayVariable}(x, name) <- value
 }

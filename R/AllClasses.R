@@ -388,6 +388,14 @@ Transforms <- function (..., data = NULL) {
     return(new("Transforms", data))
 }
 
+#' @rdname Transforms
+#' @export
+setClass("TransformsList", contains="namedList")
+
+#' @rdname Transforms
+#' @export
+TransformsList <- GenericConstructor("TransformsList")
+
 
 #' @rdname Subvariables
 #' @export

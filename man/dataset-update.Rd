@@ -17,7 +17,8 @@
 \alias{[<-,CrunchDataset,CrunchExpr,ANY,ANY-method}
 \title{Update a variable or variables in a dataset}
 \usage{
-\S4method{[[}{CrunchDataset,character,missing,CrunchVariable}(x, i) <- value
+\S4method{[[}{CrunchDataset,character,missing,CrunchVariable}(x,
+  i) <- value
 
 \S4method{[[}{CrunchDataset,ANY,missing,CrunchVariable}(x, i) <- value
 
@@ -34,7 +35,8 @@
 
 \S4method{$}{CrunchDataset}(x, name) <- value
 
-\S4method{[[}{CrunchDataset,character,missing,CrunchGeography}(x, i) <- value
+\S4method{[[}{CrunchDataset,character,missing,CrunchGeography}(x,
+  i) <- value
 
 \S4method{[[}{CrunchDataset,ANY,missing,CrunchGeography}(x, i) <- value
 

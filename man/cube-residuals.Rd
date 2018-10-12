@@ -4,7 +4,6 @@
 \name{cube-residuals}
 \alias{cube-residuals}
 \alias{rstandard,CrunchCube-method}
-\alias{rstandard,CrunchCube-method}
 \title{Calculate standardized residuals from a CrunchCube}
 \usage{
 \S4method{rstandard}{CrunchCube}(model)
