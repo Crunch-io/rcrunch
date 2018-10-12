@@ -255,8 +255,9 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
         # if element is a summaryStat, grab the function from summaryStatInsertions
         # to use.
         if (is.SummaryStat(element)) {
-            statFunc <- summaryStatInsertions[[func(element)]]
-            return(function(vec) statFunc(element, var_cats, vec))
+            statFunc <- summaryStatInsertions[[func(element)]](element, var_cats)
+
+            return(function(vec) statFunc(vec))
         }
 
         # finally, check if there are other functions, if there are warn, and

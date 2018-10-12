@@ -265,7 +265,6 @@ test_that("can set and calc a mean for two dimensions", {
     # check that they are calculated and added in the correct place.
     base_cube <- as.array(pet_feelings)
     row_means <- c(apply(base_cube, 1, weighted.mean, x = c(1, 2)), NA)
-    row_means <- c(apply(base_cube, 1, weighted.mean, x = c(1, 2)), 1.46976946498478) # TODO: wrong but kept for now
     col_means <- apply(base_cube, 2, weighted.mean, x = c(10, 7.5, 5, 2.5, 0))
     expect_equivalent(applyTransforms(pet_feelings),
                       cbind(rbind(base_cube, "mean" = col_means), "mean" = row_means))
@@ -289,7 +288,6 @@ test_that("can set and calc a mean for two dimensions", {
     # check that they are calculated and added in the correct place.
     base_cube <- as.array(pet_feelings_w)
     row_means <- c(apply(base_cube, 1, weighted.mean, x = c(1, 2)), NA)
-    row_means <- c(apply(base_cube, 1, weighted.mean, x = c(1, 2)), 1.1413244861907)  # TODO: wrong but kept for now
     col_means <- apply(base_cube, 2, weighted.mean, x = c(10, 7.5, 5, 2.5, 0))
     expect_equivalent(applyTransforms(pet_feelings_w),
                       cbind(rbind(base_cube, "mean" = col_means), "mean" = row_means))
@@ -381,10 +379,11 @@ test_that("addSummaryStat validates", {
 
 test_that("meanInsert function calculates weighted means", {
     insertion <- SummaryStat(name = "mean", stat = "mean", position = "bottom")
-    var_cats <- categories(variables(pet_feelings)[["feelings"]])
+    # remove nodata, which would be inside the cube calc functions
+    var_cats <- categories(variables(pet_feelings)[["feelings"]])[1:5]
     vector_from_cube <- as.array(pet_feelings)[, 1]
     expect_equal(
-        meanInsert(insertion, var_cats, vector_from_cube),
+        meanInsert(insertion, var_cats)(vector_from_cube),
         weighted.mean(c(10, 7.5, 5, 2.5, 0), c(9, 12, 12, 10, 11))
     )
 })
@@ -397,10 +396,10 @@ test_that("SummaryStat defaults to following the last category given (like subto
 
 test_that("medianInsert function calculates weighted medians", {
     insertion <- SummaryStat(name = "median", stat = "median", position = "top")
-    var_cats <- categories(variables(pet_feelings)[["feelings"]])
+    var_cats <- categories(variables(pet_feelings)[["feelings"]])[1:5]
     vector_from_cube <- as.array(pet_feelings)[, 1]
     expect_equal(
-        medianInsert(insertion, var_cats, vector_from_cube),
+        medianInsert(insertion, var_cats)(vector_from_cube),
         5
     )
 
@@ -409,7 +408,7 @@ test_that("medianInsert function calculates weighted medians", {
     var_cats <- categories(variables(pet_feelings)[["feelings"]])[c(2, 3)]
     vector_from_cube <- c("somewhat happy" = 12, "neutral" = 12)
     expect_equal(
-        medianInsert(insertion, var_cats, vector_from_cube),
+        medianInsert(insertion, var_cats)(vector_from_cube),
         6.25
     )
 })

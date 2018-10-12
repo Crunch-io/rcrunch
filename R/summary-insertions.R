@@ -62,17 +62,13 @@ SummaryStat <- function(name,
 
 #' @importFrom stats weighted.mean
 # a list of possible summary statistics to use as an insertion
-meanInsert <- function(element, var_cats, vec, includeNA = FALSE) {
+meanInsert <- function(element, var_cats, includeNA = FALSE) {
     # grab category combinations, and then sum those categories.
     combos <- unlist(arguments(element, var_cats))
     which.cats <- names(var_cats[ids(var_cats) %in% combos])
     num_values <- values(var_cats[which.cats])
-    counts <- vec[which.cats]
 
-    # TODO: do something smarter about NA categories that have counts / have
-    # numeric values if a user cares
-    ok <- !is.na(counts)
-    return(weighted.mean(num_values[ok], counts[ok], includeNA = includeNA))
+    return(function(vec) weighted.mean(num_values, vec, includeNA = includeNA))
 }
 
 medianInsert <- function(element, var_cats, vec, includeNA = FALSE) {
@@ -80,33 +76,36 @@ medianInsert <- function(element, var_cats, vec, includeNA = FALSE) {
     combos <- unlist(arguments(element, var_cats))
     which.cats <- names(var_cats[ids(var_cats) %in% combos])
     num_values <- values(var_cats[which.cats])
-    counts <- vec[which.cats]
 
-    # TODO: do something smarter about NA categories that have counts / have
-    # numeric values if a user cares
-    ok <- !is.na(counts)
+    return(function(vec) {
+        counts <- vec
 
-    # weighted median function
-    num_values <- num_values[ok]
-    counts <- counts[ok]
-    o <- order(num_values)
-    num_values <- num_values[o]
-    counts <- counts[o]
-    perc <- cumsum(counts) / sum(counts)
-    # if any of the bins are 0.5, return the mean of that and the one above it.
-    if (any(!is.na(perc) & perc == 0.5)) {
-        n <- which(perc == 0.5)
-        return((num_values[n] + num_values[n + 1]) / 2)
-    }
+        # TODO: do something smarter about NA categories that have counts / have
+        # numeric values if a user cares
+        ok <- !is.na(counts)
 
-    # otherwise return the first bin that is more than 50%
-    over0.5 <- which(perc > 0.5)
-    if (length(over0.5 > 0)) {
-        out <- num_values[min(over0.5)]
-    } else {
-        out <- NA
-    }
-    return(out)
+        # weighted median function
+        num_values <- num_values[ok]
+        counts <- counts[ok]
+        o <- order(num_values)
+        num_values <- num_values[o]
+        counts <- counts[o]
+        perc <- cumsum(counts) / sum(counts)
+        # if any of the bins are 0.5, return the mean of that and the one above it.
+        if (any(!is.na(perc) & perc == 0.5)) {
+            n <- which(perc == 0.5)
+            return((num_values[n] + num_values[n + 1]) / 2)
+        }
+
+        # otherwise return the first bin that is more than 50%
+        over0.5 <- which(perc > 0.5)
+        if (length(over0.5 > 0)) {
+            out <- num_values[min(over0.5)]
+        } else {
+            out <- NA
+        }
+        return(out)
+    })
 }
 
 summaryStatInsertions <- list(
