@@ -420,13 +420,10 @@ with_test_authentication({
         anCat <- analyses(univariate_slide)
         expect_is(anCat, "AnalysisCatalog")
         expect_equal(length(anCat), 1)
-
-        multiple_analyses <- newSlide(deck, list(~v1, ~v2), settings, title = "slide2", subtitle = "two analyses")
-        expect_is(multiple_analyses, "CrunchSlide")
-        expect_equal(length(analyses(multiple_analyses)), 2)
     })
 
     test_that("deck titles and subtitles", {
+        slide_2 <- newSlide(deck, ~v2, settings, title = "slide2", subtitle = "two analyses")
         expect_equal(titles(deck), c("slide1", "slide2"))
         expect_equal(subtitles(deck), c("one analysis", "two analyses"))
         titles(deck) <- c("new_title1", "new_title2")
@@ -462,7 +459,7 @@ with_test_authentication({
 
     test_that("analyses", {
         expect_is(anCat, "AnalysisCatalog")
-        expect_equal(length(anCat), 2)
+        expect_equal(length(anCat), 1)
     })
 
     analysis <- anCat[[1]]
@@ -471,26 +468,15 @@ with_test_authentication({
         expect_is(analysis, "Analysis")
     })
     test_that("analyses can be cubed", {
-        skip("TODO fixme")
-        expect_identical(cube(analysis), crtabs(~v1, ds))
-        cube_list <- cubes(anCat)
-        expect_is(cube_list, "list")
-        expect_equal(length(cube_list), length(anCat))
-        expect_identical(cube_list[[1]], crtabs(~v1, ds))
-    })
-
-    test_that("An analysis can be turned into a cube", {
-        skip("TODO fixme")
-        expect_identical(cube(analysis), crtabs(~v1, ds))
+        expect_identical(cube(analysis), crtabs(~v2, ds))
     })
 
     test_that("cubes on an analysis catalog returns a list of cubes", {
-        skip("TODO fixme")
         ancat <- analyses(slide)
         cube_list <- cubes(ancat)
         expect_is(cube_list, "list")
         expect_identical(length(cube_list), length(ancat))
-        expect_identical(cube_list[[1]], crtabs(~v1, ds))
+        expect_identical(cube_list[[1]], crtabs(~v2, ds))
     })
 
     test_that("Formula's can be assigned to analyses", {

@@ -168,10 +168,12 @@ newSlide <- function(deck,
                      title = "",
                      subtitle = "",
                      ...) {
+    # TODO allow newSlide to accept list of formulas. In order for this to work
+    # we need to send the analysis order. The only current use case for multiple
+    # analyses is Profiles, and those probably shouldn't be set from R anyway.
+    stopifnot(inherits(query, "formula"))
     ds <- loadDataset(datasetReference(deck))
-    if (inherits(query, "formula")) {
-        query <- list(query)
-    }
+    query <- list(query)
 
     settings <- modifyList(DEFAULT_DISPLAY_SETTINGS, display_settings)
     settings <- wrapDisplaySettings(settings)
@@ -272,6 +274,8 @@ setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
 })
 
 # AnalysisCatalog --------------------------------------------------------------
+
+setMethod("initialize", "AnalysisCatalog", init.sortCatalog)
 
 #' @rdname catalog-extract
 #' @export
