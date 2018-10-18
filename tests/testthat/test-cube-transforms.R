@@ -7,7 +7,7 @@ context("Cube transformations")
 unicat_trans_cube <- loadCube("cubes/univariate-categorical-with-trans.json")
 
 test_that("Can show a simple cube with transform", {
-    loc_array <- cubify(c(10, 5, 15, 10),
+    loc_array <- cubify(c(10, 5, 15, 5),
         dims = list("v7" = c("C", "E", "C, E", "D, E"))
     )
     expect_prints(expect_equivalent(showTransforms(unicat_trans_cube), loc_array))
@@ -21,7 +21,7 @@ test_that("Can show a complex cube with transform", {
     loc_array <- cubify(
         c(
             40, 10, 20, 30, 30, 40, 50, 60, 70, 250, 250, 80, 90,
-            100, 520, 150, 145
+            100, 520, 150, 100
         ),
         dims = list("v7" = c(
             "First!", "A", "B", "Top 2", "C",
@@ -882,13 +882,13 @@ test_that("subtotals after cube subsetting", {
 
     one_col <- cubify(
         c(
-            5, 0, 5,
-            12, 0, 12,
-            17, 0, 17,
-            7, 0, 7,
-            10, 0, 10,
-            12, 0, 12,
-            22, 0, 22
+            5, 5, 0,
+            12, 12, 0,
+            17, 17, 0,
+            7, 7, 0,
+            10, 10, 0,
+            12, 12, 0,
+            22, 22, 0
         ),
         dims = list(
             "feelings" =
@@ -896,7 +896,7 @@ test_that("subtotals after cube subsetting", {
                     "extremely happy", "somewhat happy", "happy", "neutral",
                     "somewhat unhappy", "extremely unhappy", "unhappy"
                 ),
-            "animals" = c("dogs", "felines", "both")
+            "animals" = c("dogs", "both", "felines")
         )
     )
 
@@ -1266,7 +1266,7 @@ with_test_authentication({
     })
 
     test_that("showTransforms works on a variable", {
-        cat_show_trans <- cubify(c(75, 30, 45, 50, 95, 25, 55, 75, 75, 35),
+        cat_show_trans <- cubify(c(75, 30, 45, 50, 95, 25, 55, 75, 75, 30),
             dims = list(pets = c(
                 "First one", "Birds", "Cats", "Dogs",
                 "Dogs+Cats", "Lizards", "Birds+Lizards",
@@ -1299,7 +1299,7 @@ with_test_authentication({
                 "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
                 "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
                 "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
-                "\033[30m\033[3mRocks+Birds (incl. missing) 35\033[23m\033[39m",
+                "\033[30m\033[3mRocks+Birds (incl. missing) 30\033[23m\033[39m",
                 sep = "\n"),
             fixed = TRUE)
     })

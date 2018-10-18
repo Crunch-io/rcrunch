@@ -206,6 +206,26 @@ test_that("can set and calc a median insertion", {
     )
 })
 
+test_that("can set and calc a mean insertion that ignores missings", {
+    # hack the cube as if extremely unhappy was missing
+    pet_feelings@dims$feelings$missing <- c(rep(FALSE, 4), rep(TRUE, 2))
+    pet_feelings@dims$feelings$references$categories[[4]]$missing <- TRUE
+
+    # remove subtotals
+    transforms(pet_feelings) <- NULL
+
+    # add transforms
+    pet_feelings <- addSummaryStat(pet_feelings, stat = "mean", var = "feelings")
+
+    # check that they are calculated and added in the correct place.
+    base_cube <- as.array(pet_feelings)
+    calced_means <- apply(base_cube, 2, weighted.mean, x = c(10, 7.5, 5, 2.5))
+    expect_equivalent(
+        applyTransforms(pet_feelings),
+        rbind(base_cube, "mean" = calced_means)
+    )
+})
+
 cat_array <- loadCube("./cubes/cat-array.json")
 
 test_that("can set and calc a mean insertion with catarrays", {
