@@ -147,8 +147,7 @@ applyTransforms <- function(x,
     # abind::abind here and bind together the insertion vectors in array form,
     # but that would add a dependency
     errors <- list()
-    first <- TRUE
-    na_mask <- TRUE
+    na_mask <- data.frame()
     for (d in trans_indices) {
         tryCatch({
             # if we have an mr or categorical array items, we skip quickly. We
@@ -177,9 +176,8 @@ applyTransforms <- function(x,
             # calculated from that they shouldn't be (that is, don't treat means
             # as if they were actually counts and do weighted means of the the
             # means)
-            if (!first) {
-                array[as.matrix(na_mask[,1:2])] <- NA
-            }
+            var_coord_cols <- startsWith(colnames(na_mask), "Var")
+            array[as.matrix(na_mask[,var_coord_cols])] <- NA
 
             array <- applyAgainst(
                 X = array,
@@ -190,23 +188,33 @@ applyTransforms <- function(x,
             )
 
             # censor any values that should not have been calculated.
+
+            # return any values that had been censored already before we
+            # recalcualte the na_mask. We only have to do this if the na_mask
+            # has anything in it.
             insert_types <- attributes(insert_funcs)$types
-
-            if (first) {
-                first <- FALSE
-                # disable the next transform's insertions that overlap?
-                ind_to_censor <- which(insert_types == "SummaryStat")
-                coords <- lapply(dim(array), function(to) 1:to)
-                coords[[d]] <- ind_to_censor
-
-                na_mask <- expand.grid(coords)
-                na_mask$values <- array[as.matrix(na_mask)]
-            } else {
+            if (length(na_mask) > 0) {
                 id_map <- which(insert_types == "Category")
                 names(id_map) <- seq_along(id_map)
                 na_mask[,d] <- id_map[na_mask[,d]]
-                array[as.matrix(na_mask[,1:2])] <- na_mask$values
+                var_coord_cols <- startsWith(colnames(na_mask), "Var")
+                if (!(all(is.na(array[as.matrix(na_mask[,var_coord_cols])])))) {
+                    halt("Trying to overwrite uncensored values something is wrong")
+                }
+                array[as.matrix(na_mask[,var_coord_cols])] <- na_mask$values
             }
+
+
+
+            # re-calculate the na_mask to include numbers that should be
+            # censored from this transform going forward
+            ind_to_censor <- which(insert_types == "SummaryStat")
+            coords <- lapply(dim(array), function(to) 1:to)
+            coords[[d]] <- ind_to_censor
+
+            na_mask_new <- expand.grid(coords)
+            na_mask_new$values <- array[as.matrix(na_mask_new)]
+            na_mask <- rbind(na_mask, na_mask_new)
         },
         error = function(e) {
             assign("errors", append(errors, d), envir = parent.env(environment()))

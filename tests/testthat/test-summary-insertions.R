@@ -432,3 +432,103 @@ test_that("medianInsert function calculates weighted medians", {
         6.25
     )
 })
+
+
+test_that("mean and median value redaction works with a 3-dimensional cube", {
+    three_d_cube <- loadCube("cubes/cat-x-cat-x-cat.json")
+
+    # dim one
+    three_d_cube_one <- addSummaryStat(three_d_cube, stat = "mean", margin = 1)
+
+    # values are unchanged
+    expect_equal(
+        applyTransforms(three_d_cube_one)[c(1:6), , ],
+        as.array(noTransforms(three_d_cube_one))
+    )
+
+    # the means are correct
+    expect_equal(
+        applyTransforms(three_d_cube_one)[7, , ],
+        apply(
+            as.array(noTransforms(three_d_cube_one)),
+            MARGIN = c(2, 3),
+            FUN = function (w) weighted.mean(c(1, 2, 0, 4, 5, 6), w = w)
+            )
+    )
+
+    # dim two
+    three_d_cube_two <- addSummaryStat(three_d_cube, stat = "mean", margin = 2)
+
+    # values are unchanged
+    expect_equal(
+        applyTransforms(three_d_cube_two)[, c(1:4), ],
+        as.array(noTransforms(three_d_cube_two))
+    )
+
+    # the means are correct
+    expect_equal(
+        applyTransforms(three_d_cube_two)[, 5, ],
+        apply(
+            as.array(noTransforms(three_d_cube_two)),
+            MARGIN = c(1, 3),
+            FUN = function (w) weighted.mean(c(0, 2, 5, 4), w = w)
+        )
+    )
+
+    # dim three
+    three_d_cube_three <- addSummaryStat(three_d_cube, stat = "mean", margin = 3)
+
+    # values are unchanged
+    expect_equal(
+        applyTransforms(three_d_cube_three)[, , c(1:8)],
+        as.array(noTransforms(three_d_cube_three))
+    )
+
+    # the means are correct
+    expect_equal(
+        applyTransforms(three_d_cube_three)[, , 9],
+        apply(
+            as.array(noTransforms(three_d_cube_three)),
+            MARGIN = c(1, 2),
+            FUN = function (w) weighted.mean(c(1, 2, 3, 4, 5, 6, 7, 8), w = w)
+        )
+    )
+
+    # dim one, two, and three
+    three_d_cube_123 <- addSummaryStat(three_d_cube, stat = "mean", margin = c(1, 2, 3))
+
+    # values are unchanged
+    expect_equal(
+        applyTransforms(three_d_cube_123)[c(1:6), c(1:4), c(1:8)],
+        as.array(noTransforms(three_d_cube_123))
+    )
+
+    # the means are correct
+    expect_equal(
+        applyTransforms(three_d_cube_123)[7, c(1:4), c(1:8)],
+        apply(
+            as.array(noTransforms(three_d_cube_123)),
+            MARGIN = c(2, 3),
+            FUN = function (w) weighted.mean(c(1, 2, 0, 4, 5, 6), w = w)
+        )
+    )
+
+    expect_equal(
+        applyTransforms(three_d_cube_123)[c(1:6), 5, c(1:8)],
+        apply(
+            as.array(noTransforms(three_d_cube_123)),
+            MARGIN = c(1, 3),
+            FUN = function (w) weighted.mean(c(0, 2, 5, 4), w = w)
+        )
+    )
+
+    expect_equal(
+        applyTransforms(three_d_cube_123)[c(1:6), c(1:4), 9],
+        apply(
+            as.array(noTransforms(three_d_cube_123)),
+            MARGIN = c(1, 2),
+            FUN = function (w) weighted.mean(c(1, 2, 3, 4, 5, 6, 7, 8), w = w)
+        )
+    )
+
+})
