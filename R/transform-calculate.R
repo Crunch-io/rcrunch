@@ -91,8 +91,6 @@ collateCats <- function(inserts, var_cats) {
         list(AbstractCategory(name = "__fake__bottom__category__"))
     )
 
-    bottom_category <- tail(ids(var_cats), 1)
-
     # for each insert, find the position for its anchor, and add the insertion
     # at that position we use a for loop, because as we insert, the positions of
     # categories (which may serve as anchors) will change. We also reverse the

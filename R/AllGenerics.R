@@ -172,7 +172,12 @@ setGeneric("is.derived<-", function(x, value) standardGeneric("is.derived<-"))
 setGeneric("as.Text", function(x, ...) standardGeneric("as.Text"))
 setGeneric("as.Numeric", function(x) standardGeneric("as.Numeric"))
 setGeneric("as.Categorical", function(x, ...) standardGeneric("as.Categorical"))
-setGeneric("as.Datetime", function(x, format = "%Y-%m-%d %H:%M:%S", resolution, offset) standardGeneric("as.Datetime"))
+setGeneric("as.Datetime", function(x,
+                                   format = "%Y-%m-%d %H:%M:%S",
+                                   resolution,
+                                   offset) {
+    standardGeneric("as.Datetime")
+})
 setGeneric("rollupResolution<-", function(x, value) standardGeneric("rollupResolution<-"))
 setGeneric("groupClass", function(x) standardGeneric("groupClass"))
 setGeneric("entityClass", function(x) standardGeneric("entityClass"))

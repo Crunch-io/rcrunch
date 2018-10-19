@@ -112,7 +112,10 @@ setMethod("transforms<-", c("CrunchVariable", "NULL"), function(x, value) {
 setValidity("Transforms", function(object) {
     one_of_names <- c("insertions", "categories", "elements") %in% names(object)
     if (!any(one_of_names)) {
-        val <- paste("Transforms must have at least one of", serialPaste(dQuote(c("insertions", "categories", "elements")), "or"))
+        val <- paste(
+            "Transforms must have at least one of",
+            serialPaste(dQuote(c("insertions", "categories", "elements")), "or")
+        )
     } else {
         val <- TRUE
     }

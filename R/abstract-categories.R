@@ -101,7 +101,6 @@ setMethod("[[<-", c("AbstractCategories", "character"), function(x, i, ..., valu
 # a version of modifyList that doesn't recurse into the AbstractCategories themselves
 modifyCats <- function(x, val) {
     stopifnot(is.AbstractCategories(x), is.AbstractCategories(val))
-    xnames <- names(x)
     vnames <- names(val)
     vnames <- vnames[nzchar(vnames)]
     for (v in vnames) {

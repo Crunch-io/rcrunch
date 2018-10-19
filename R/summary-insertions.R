@@ -252,7 +252,7 @@ setMethod("makeInsertion", "SummaryStat", function(x, var_categories) {
 #'
 #' @export
 addSummaryStat <- function(cube, stat = c("mean", "median"), var, margin, ...) {
-    stat = match.arg(stat)
+    stat <- match.arg(stat)
 
     if (!missing(var)) {
         validateNamesInDims(var, cube, what = "variables")
@@ -283,7 +283,10 @@ addSummaryStat <- function(cube, stat = c("mean", "median"), var, margin, ...) {
             transes <- Transforms(insertions = Insertions(summary_stat))
             transforms(cube)[[one_margin]] <- transes
         } else {
-            inserts <- append(transforms(cube)[[one_margin]]$insertions, list(summary_stat))
+            inserts <- append(
+                transforms(cube)[[one_margin]]$insertions,
+                list(summary_stat)
+            )
             transforms(cube)[[one_margin]]$insertions <- inserts
         }
     }

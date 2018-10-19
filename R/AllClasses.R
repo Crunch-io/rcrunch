@@ -416,7 +416,7 @@ Transforms <- function(..., data = NULL) {
 
 #' @rdname Transforms
 #' @export
-setClass("TransformsList", contains="namedList")
+setClass("TransformsList", contains = "namedList")
 
 #' @rdname Transforms
 #' @export

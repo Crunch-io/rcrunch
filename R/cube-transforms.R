@@ -25,7 +25,8 @@ setMethod("showTransforms", "CrunchCube", function(x) {
         }
 
         # if the columns dimension is categorical, make styles
-        if (length(dim(x)) > 1 && getDimTypes(x)[2] %in% c("categorical", "ca_categories")) {
+        cat_dims <- c("categorical", "ca_categories")
+        if (length(dim(x)) > 1 && getDimTypes(x)[2] %in% cat_dims) {
             try({
                 col_cats <- Categories(data = index(variables(x))[[2]]$categories)
                 # subset the categories by those that evaleUseNA thinks we should keep:
@@ -301,7 +302,8 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
 
         # finally, check if there are other functions, if there are warn, and
         # then return NA
-        unknown_funcs <- !(element[["function"]] %in% c("subtotal", names(summaryStatInsertions)))
+        known_inserts <- c("subtotal", names(summaryStatInsertions))
+        unknown_funcs <- !(element[["function"]] %in% known_inserts)
         if (unknown_funcs) {
             warning(
                 "Transform functions other than subtotal are not supported.",
@@ -343,7 +345,8 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
 
         # finally, check if there are other functions, if there are warn, and
         # then return NA
-        unknown_funcs <- !(element[["function"]] %in% c("subtotal", names(summaryStatInsertions)))
+        known_inserts <- c("subtotal", names(summaryStatInsertions))
+        unknown_funcs <- !(element[["function"]] %in% known_inserts)
         if (unknown_funcs) {
             return("Unknown")
         }
@@ -584,7 +587,10 @@ setMethod("transforms<-", c("CrunchCube", "ANY"), function(x, value) {
 
 #' @rdname Transforms
 #' @export
-setMethod("[[<-", c("TransformsList", "ANY", "missing", "NULL"), function(x, i, j, value) {
+setMethod("[[<-", c("TransformsList", "ANY", "missing", "NULL"), function(x,
+                                                                          i,
+                                                                          j,
+                                                                          value) {
     # if we remove a transform, we must set a Transform filled with NULLs and
     # not totally remove the item itself
     x[[i]] <- Transforms(insertions = NULL, elements = NULL, categories = NULL)
