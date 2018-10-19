@@ -17,10 +17,12 @@ test_that("SummaryStats accepts a variety of inputs", {
     expect_true(is.SummaryStat(mean3))
     expect_message(
         expect_equal(anchor(mean3), NA_integer_),
-        paste0("Can't determine the anchor position without a ",
-               "variable. However, when this is added to a Crunch ",
-               "variable or CrunchCube it will follow the last ",
-               "category given")
+        paste0(
+            "Can't determine the anchor position without a ",
+            "variable. However, when this is added to a Crunch ",
+            "variable or CrunchCube it will follow the last ",
+            "category given"
+        )
     )
 
     median1 <- SummaryStat(
