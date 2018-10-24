@@ -275,7 +275,15 @@ setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
 
 # AnalysisCatalog --------------------------------------------------------------
 
-setMethod("initialize", "AnalysisCatalog", init.sortCatalog)
+setMethod("initialize", "AnalysisCatalog", function(.Object, ...) {
+    .Object <- callNextMethod()
+    if (length(.Object@index) > 1) {
+        order <- crGET(.Object@orders$order)
+        order <- unlist(order$graph)
+        .Object@index <- .Object@index[match(order, names(.Object@index))]
+    }
+    return(.Object)
+})
 
 #' @rdname catalog-extract
 #' @export

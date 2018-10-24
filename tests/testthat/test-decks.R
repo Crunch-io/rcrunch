@@ -253,6 +253,24 @@ with_mock_crunch({
 
     # Analyses ----------------------------------------------------------------
 
+    test_that("Analysis Catalog is ordered correctly", {
+        anCat <- analyses(main_deck[[2]])
+        expect_equal(length(anCat), 2)
+
+        # This checks that the analyses are ordered according to
+        # the ".../slides/5938/analyses/order.json object and not
+        # the index of the json file. Currently the only slides which
+        # will have more than one analysis are profiles slides, so this
+        # is somewhat of an edge case for the R package.
+
+        expect_equal(
+            names(index(anCat)),
+            c("https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/analyses/3f2e3/",
+              "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/analyses/3f2e2/"
+            )
+        )
+    })
+
     test_that("Analysis Assignment", {
         payload <- paste0(
             '{"element":"shoji:entity",',
