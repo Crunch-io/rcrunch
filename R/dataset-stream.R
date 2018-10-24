@@ -51,3 +51,31 @@ appendStream <- function(ds) {
 
     return(ds)
 }
+
+
+#' Set the streaming property of a dataset
+#'
+#' Only datasets that have their streamining property set to "streaming" can
+#' have rows streamed to them. Before attempting to streaming rows (with
+#' [streamRows] for example), the dataset has to be set up to stream rows. Use
+#' `streaming(ds)` to get the streaming status, and `streaming(ds) <-
+#' "streaming"` to set the streaming status.
+#' 
+#' @param ds a CrunchDataset
+#' @param value for setting only (values can be: `"no"`, `"streaming"`, or
+#' `"finished"`)
+#' 
+#' @return the streaming status
+#' @name streaming-flag
+#' @export
+setMethod("streaming", "CrunchDataset", function(x) x@body$streaming)
+
+
+#' @rdname streaming-flag
+#' @export
+setMethod("streaming<-", "CrunchDataset", function(x, value) {
+    if (!(value %in% c("no", "streaming", "finished"))) {
+        halt("Streaming can only be set to no, streaming, or finished.")
+    }
+    return(setEntitySlot(x, "streaming", value))
+})

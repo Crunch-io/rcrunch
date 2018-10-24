@@ -190,6 +190,9 @@ setGeneric("owner", function(x) standardGeneric("owner"))
 setGeneric("owner<-", function(x, value) standardGeneric("owner<-"))
 setGeneric("users", function(x) standardGeneric("users"))
 
+setGeneric("streaming", function(x) standardGeneric("streaming"))
+setGeneric("streaming<-", function(x, value) standardGeneric("streaming<-"))
+
 setGeneric("showMissing", function(cube) standardGeneric("showMissing"))
 setGeneric("hideMissing", function(cube) standardGeneric("hideMissing"))
 setGeneric("showIfAny", function(cube) standardGeneric("showIfAny"))

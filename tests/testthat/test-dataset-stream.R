@@ -19,6 +19,19 @@ with_mock_crunch({
         expect_GET(pendingStream(ds2), "https://app.crunch.io/api/datasets/2/stream")
     })
 
+    test_that("streaming attribute setting", {
+        expect_equal(streaming(ds), "streaming")
+        expect_PATCH(
+            streaming(ds) <- "finished",
+            "https://app.crunch.io/api/datasets/1streaming/",
+            '{"streaming":"finished"}'
+        )
+        expect_error(
+            streaming(ds) <- "foo bar", 
+            "Streaming can only be set to no, streaming, or finished."
+        )
+    })  
+    
     test_that("streamRows streams rows", {
         expect_equal(streamRows(ds, data = data.frame()), ds)
         expect_POST(
