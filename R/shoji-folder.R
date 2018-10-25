@@ -129,7 +129,7 @@ setMethod("delete", "ShojiFolder", function(x, ...) {
     if (inherits(x, "VariableFolder")) {
         obj_names <- names(x)
         num_vars <- length(x)
-        obj_word <- if(num_vars > 1) "objects" else "object"
+        obj_word <- ifelse(num_vars > 1, "objects", "object")
 
         if (num_vars > 5) {
             obj_string <- serialPaste(dQuote(head(obj_names, 5)), "...")
