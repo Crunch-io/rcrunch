@@ -28,7 +28,7 @@ with_mock_crunch({
         )
         expect_error(
             streaming(ds) <- "foo bar", 
-            "Streaming can only be set to no, streaming, or finished."
+            "'arg' should be one of .*no.*, .*streaming.*, .*finished.*"
         )
     })  
     

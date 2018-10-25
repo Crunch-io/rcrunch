@@ -67,21 +67,17 @@ appendStream <- function(ds) {
 #' 
 #' @return the streaming status
 #' @rdname streaming
-setGeneric("streaming", function(x) standardGeneric("streaming"))
-
-#' @rdname streaming
-setGeneric("streaming<-", function(x, value) standardGeneric("streaming<-"))
+#' @export
+streaming <- function(x) {
+    stopifnot(is.dataset(x))
+    return(x@body$streaming)
+}
 
 #' @rdname streaming
 #' @export
-setMethod("streaming", "CrunchDataset", function(x) x@body$streaming)
-
-
-#' @rdname streaming
-#' @export
-setMethod("streaming<-", "CrunchDataset", function(x, value) {
-    if (!(value %in% c("no", "streaming", "finished"))) {
-        halt("Streaming can only be set to no, streaming, or finished.")
-    }
+`streaming<-` <- function(x, value = c("no", "streaming", "finished")) {
+    stopifnot(is.dataset(x))
+    value <- match.arg(value)
     return(setEntitySlot(x, "streaming", value))
-})
+}
+
