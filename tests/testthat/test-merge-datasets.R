@@ -229,8 +229,8 @@ printed_order_apidocs2_merge_by_stringid <- c(
     "        Wave",
     "[+] __hidden__",
     "    [+] Example dataset",
-    "        Case ID",
-    "        Weight"
+    "        Weight",
+    "        Case ID"
 )
 
 printed_order_apidocs2_merge_by_caseid <- c(
