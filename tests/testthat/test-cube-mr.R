@@ -51,7 +51,7 @@ test_that("as.array on cube with as_selected x cat", {
 
 test_that("margin.table for as_selected x cat", {
     expect_equal(
-        margin.table(mr_x_cat_wt, 1),
+        as.array(margin.table(mr_x_cat_wt, 1)),
         cubify(
             21453.03077997421,
             19390.097330135875,
@@ -63,7 +63,7 @@ test_that("margin.table for as_selected x cat", {
         )
     )
     expect_equal(
-        margin.table(mr_x_cat_wt, 2),
+        as.array(margin.table(mr_x_cat_wt, 2)),
         cubify(14566.261567907562, 15607.301233922663,
             14456.513325488017, 15450.609903833058,
             14415.136475733132, 15405.898678070093,
@@ -80,7 +80,7 @@ test_that("margin.table for as_selected x cat", {
     ## NULL margin is the same shape as margin 1 here but is sum of selected + not
     ## Note: not based on expectation from JS tests
     expect_equal(
-        margin.table(mr_x_cat_wt),
+        as.array(margin.table(mr_x_cat_wt)),
         cubify(
             30173.5628018302,
             29907.1232293211,
@@ -95,7 +95,7 @@ test_that("margin.table for as_selected x cat", {
 
 test_that("prop.table(row) for as_selected x cat", {
     expect_equal(
-        prop.table(mr_x_cat_wt, 1),
+        as.array(prop.table(mr_x_cat_wt, 1)),
         cubify(
             0.4627882020361299, 0.5372117979638701,
             0.4945227014975337, 0.5054772985024663,
@@ -109,7 +109,7 @@ test_that("prop.table(row) for as_selected x cat", {
 })
 test_that("prop.table(col) for as_selected x cat", {
     expect_equal(
-        prop.table(mr_x_cat_wt, 2),
+        as.array(prop.table(mr_x_cat_wt, 2)),
         cubify(
             0.6815894041587091, 0.7384249886863752,
             0.6632887957217867, 0.6343603312193796,
@@ -124,7 +124,7 @@ test_that("prop.table(col) for as_selected x cat", {
 test_that("prop.table(cell) for as_selected x cat", {
     ## Note: not based on expectation from JS tests
     expect_equal(
-        prop.table(mr_x_cat_wt),
+        as.array(prop.table(mr_x_cat_wt)),
         cubify(
             0.329036700375595, 0.381950958618156,
             0.320620717695708, 0.327723062528721,
@@ -148,7 +148,7 @@ cat_x_mr_dims$fruit <- cat_x_mr_dims$fruit[cat_x_mr_dims$fruit != "No Data"]
 
 test_that("margin.table for cat x as_selected", {
     expect_equal(
-        margin.table(cat_x_mr, 1),
+        as.array(margin.table(cat_x_mr, 1)),
         cubify(
             49.3701228167475, 48.4562012457907, 56.931621579619,
             116.632067482127, 93.411479439707, 124.061990989576,
@@ -156,14 +156,14 @@ test_that("margin.table for cat x as_selected", {
         )
     )
     expect_equal(
-        margin.table(cat_x_mr, 2),
+        as.array(margin.table(cat_x_mr, 2)),
         cubify(22.9672704148528, 45.7789165449064, 86.9728287914322,
             dims = cat_x_mr_dims["zoo"]
         )
     )
     ## NULL margin is the same shape as margin 1 here but is sum of selected + not
     expect_equal(
-        margin.table(cat_x_mr),
+        as.array(margin.table(cat_x_mr)),
         cubify(
             166.002190298874, 141.867680685498, 180.993612569195,
             dims = cat_x_mr_dims["zoo"]
@@ -173,7 +173,7 @@ test_that("margin.table for cat x as_selected", {
 
 test_that("prop.table(row) for cat x as_selected", {
     expect_equal(
-        prop.table(cat_x_mr, 1),
+        as.array(prop.table(cat_x_mr, 1)),
         cubify(
             0.17136174576676, 0.355633666090444, 0.463598595422233,
             0.124383630449479, 0.305596916163552, 0.488299506632138,
@@ -183,7 +183,7 @@ test_that("prop.table(row) for cat x as_selected", {
 })
 test_that("prop.table(col) for cat x as_selected", {
     expect_equal(
-        prop.table(cat_x_mr, 2),
+        as.array(prop.table(cat_x_mr, 2)),
         cubify(
             0.368356808701398, 0.376432161231965, 0.303467418114167,
             0.631643191298602, 0.623567838768035, 0.696532581885833,
@@ -194,7 +194,7 @@ test_that("prop.table(col) for cat x as_selected", {
 test_that("prop.table(cell) for cat x as_selected", {
     ## Note: not based on expectation from JS tests
     expect_equal(
-        prop.table(cat_x_mr),
+        as.array(prop.table(cat_x_mr)),
         cubify(
             0.0509640892048795, 0.121469924725558, 0.145825145013507,
             0.0873911359490897, 0.201217500089628, 0.334704678977833,
@@ -214,7 +214,7 @@ cat_x_mr_x_mr_dims$animal <- cat_x_mr_x_mr_dims$animal[cat_x_mr_x_mr_dims$animal
 
 test_that("prop.table(row) for cat x MR x MR", {
     expect_equal(
-        prop.table(cat_x_mr_x_mr, 1),
+        as.array(prop.table(cat_x_mr_x_mr, 1)),
         cubify(0.1159, 0.3597,
             0.0197, 0.0604,
             0.0192, 0.0582,
@@ -227,7 +227,7 @@ test_that("prop.table(row) for cat x MR x MR", {
 })
 test_that("prop.table(col) for cat x MR x MR", {
     expect_equal(
-        prop.table(cat_x_mr_x_mr, 2),
+        as.array(prop.table(cat_x_mr_x_mr, 2)),
         cubify(0.166284074605452, 0.516068866571019,
             0.0280267463366055, 0.0859297197325366,
             0.0276657060518732, 0.0838616714697406,
@@ -240,7 +240,7 @@ test_that("prop.table(col) for cat x MR x MR", {
 })
 test_that("prop.table(cell) for cat x MR x MR", {
     expect_equal(
-        prop.table(cat_x_mr_x_mr),
+        as.array(prop.table(cat_x_mr_x_mr)),
         cubify(0.05795, 0.17985,
             0.00985, 0.0302,
             0.0096, 0.0291,

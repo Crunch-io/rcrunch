@@ -91,7 +91,7 @@ test_that("residuals for MR by categorical unweighted", {
     ),
     dims = mr_by_cat_dims
     )
-    expect_equal(rstandard(mr_by_cat), out)
+    expect_equal(as.array(rstandard(mr_by_cat)), out)
 })
 
 test_that("residuals for MR by cat from app", {
@@ -101,7 +101,7 @@ test_that("residuals for MR by cat from app", {
     ),
     dims = rev(cat_by_mr_dims)
     )
-    expect_equal(rstandard(mr_by_cat_2), out)
+    expect_equal(as.array(rstandard(mr_by_cat_2)), out)
 })
 test_that("residuals for categorical by MR, should be transpose of above", {
     out <- cubify(c(
@@ -110,7 +110,7 @@ test_that("residuals for categorical by MR, should be transpose of above", {
     ),
     dims = cat_by_mr_dims
     )
-    expect_equal(rstandard(cat_by_mr), out)
+    expect_equal(as.array(rstandard(cat_by_mr)), out)
 })
 
 
@@ -123,7 +123,7 @@ test_that("residuals for MR by MR", {
     ),
     dims = mr_by_mr_dims
     )
-    expect_equal(rstandard(mr_by_mr), out)
+    expect_equal(as.array(rstandard(mr_by_mr)), out)
 })
 
 test_that("residuals for MR by MR (disparate MRs)", {
@@ -135,7 +135,7 @@ test_that("residuals for MR by MR (disparate MRs)", {
         ),
         dims = mr_by_mr_heterogeneous_dims
     )
-    expect_equal(rstandard(mr_by_mr_heterogeneous), out)
+    expect_equal(as.array(rstandard(mr_by_mr_heterogeneous)), out)
 })
 
 mr_by_mr_by_too_many <- loadCube("cubes/cat-x-mr-x-mr.json")

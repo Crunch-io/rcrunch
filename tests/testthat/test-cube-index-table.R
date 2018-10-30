@@ -109,7 +109,7 @@ test_that("index table on an mr x mr compared to calculation with mr cube", {
 
     expect_equal(
         index.table(mr_x_mr, 2),
-        prop.table(mr_x_mr, 2) /
+        as.array(prop.table(mr_x_mr, 2)) /
             broadcast(prop.table(mr_alone), dim = dim(mr_x_mr)) * 100
     )
 })
