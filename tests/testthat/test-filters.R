@@ -55,6 +55,7 @@ with_mock_crunch({
     })
 
     f <- filters(ds)[["Occasional Political Interest"]]
+    f_2 <- filters(ds)[["Public filter"]]
     test_that("Filter catalog extract", {
         expect_is(f, "CrunchFilter")
         expect_identical(f, filters(ds)[[1]])
@@ -71,6 +72,24 @@ with_mock_crunch({
         expect_no_request(is.public(f) <- FALSE)
     })
 
+    test_that("can get and set the team that a filter is on.", {
+        expect_identical(team(f), getTeams()[["Alpha Team"]])
+        expect_null(team(f_2))
+        
+        expect_PATCH(
+            team(f_2) <- getTeams()[["Alpha Team"]],
+            "https://app.crunch.io/api/datasets/1/filters/filter2/",
+            '{"team":"https://app.crunch.io/api/teams/team1/"}'
+        )
+        
+        # can also just use a url
+        expect_PATCH(
+            team(f_2) <- "https://app.crunch.io/api/teams/team1/",
+            "https://app.crunch.io/api/datasets/1/filters/filter2/",
+            '{"team":"https://app.crunch.io/api/teams/team1/"}'
+        )
+    })
+    
     test_that("Assigning filters<- on a dataset doesn't itself modify anything", {
         expect_no_request(filters(ds) <- filters(ds)[c(2, 1)])
         expect_true(is.dataset(ds))

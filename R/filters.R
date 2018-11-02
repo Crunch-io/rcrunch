@@ -48,6 +48,43 @@ setMethod("is.public<-", "CrunchFilter", function(x, value) {
     setEntitySlot(x, "is_public", value)
 })
 
+#' Get the team a filter is shared with
+#' 
+#' @param x a CrunchFilter
+#' 
+#' @return a url of the team that the filter is shared with.
+#' 
+#' @rdname filter-teams
+#' @export
+setGeneric("team", function(x) standardGeneric("team"))
+
+#' @rdname filter-teams
+#' @export
+setGeneric("team<-", function(x, value) standardGeneric("team<-"))
+
+#' @rdname filter-teams
+#' @export
+setMethod("team", "CrunchFilter", function(x) {
+    if (is.null(x@body$team)) {
+        return(NULL)
+    }
+    
+    return(CrunchTeam(crGET(x@body$team)))
+})
+
+#' @rdname filter-teams
+#' @export
+setMethod("team<-", c("CrunchFilter", "CrunchTeam"), function(x, value) {
+    return(setEntitySlot(x, "team", self(value)))
+})
+
+#' @rdname filter-teams
+#' @export
+setMethod("team<-", c("CrunchFilter", "character"), function(x, value) {
+    # TODO: check if value is at least something like a URL?
+    return(setEntitySlot(x, "team", value))
+})
+
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("FilterCatalog", "numeric"), function(x, i, ...) {
