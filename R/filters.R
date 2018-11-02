@@ -51,6 +51,7 @@ setMethod("is.public<-", "CrunchFilter", function(x, value) {
 #' Get the team a filter is shared with
 #' 
 #' @param x a CrunchFilter
+#' @param value a CrunchTeam or url for a Crunch team
 #' 
 #' @return a url of the team that the filter is shared with.
 #' 
