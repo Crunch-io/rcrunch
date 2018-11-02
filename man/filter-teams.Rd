@@ -20,9 +20,9 @@ team(x) <- value
 \S4method{team}{CrunchFilter,character}(x) <- value
 }
 \arguments{
-\item{x}{a CrunchFilter}
+\item{x}{a \code{CrunchFilter}}
 
-\item{value}{a CrunchTeam or url for a Crunch team}
+\item{value}{a \code{CrunchTeam} or url for a Crunch team}
 }
 \value{
 a url of the team that the filter is shared with.
