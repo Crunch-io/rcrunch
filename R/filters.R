@@ -81,7 +81,7 @@ setMethod("team<-", c("CrunchFilter", "CrunchTeam"), function(x, value) {
 
 #' @rdname filter-teams
 #' @export
-setMethod("team<-", c("CrunchFilter", "character"), function(x, value) {
+setMethod("team<-", c("CrunchFilter", "ANY"), function(x, value) {
     # TODO: check if value is at least something like a URL?
     return(setEntitySlot(x, "team", value))
 })

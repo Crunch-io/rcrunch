@@ -74,6 +74,14 @@ with_mock_crunch({
 
     test_that("can get and set the team that a filter is on.", {
         expect_identical(team(f), getTeams()[["Alpha Team"]])
+        expect_no_request(team(f) <- getTeams()[["Alpha Team"]])    
+        
+        expect_PATCH(
+            team(f) <- NULL,
+            "https://app.crunch.io/api/datasets/1/filters/filter1/",
+            '{"team":null}'
+        )
+        
         expect_null(team(f_2))
         
         expect_PATCH(
@@ -275,5 +283,23 @@ with_test_authentication({
             as.array(crtabs(~v4, data = ds)),
             array(c(0, 10), dim = 2L, dimnames = list(v4 = c("B", "C")))
         )
+    })
+    
+    test_that("team-sharing of filters", {
+        filters(ds)[["team filter"]] <- ds$v4 == "C"
+        team_filter <- filters(ds)[["team filter"]]
+        expect_null(team(team_filter))
+        
+        # can set a team
+        team(team_filter) <- getTeams()[["New team"]]
+        expect_identical(team(team_filter), getTeams()[["New team"]])
+
+        # can change a team (with a URL this time)
+        team(team_filter) <- self(getTeams()[["a really new one"]])
+        expect_identical(team(team_filter), getTeams()[["a really new one"]])
+        
+        # can remove the team
+        team(team_filter) <- NULL
+        expect_null(team(team_filter))
     })
 })

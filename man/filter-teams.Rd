@@ -6,7 +6,7 @@
 \alias{team<-}
 \alias{team,CrunchFilter-method}
 \alias{team<-,CrunchFilter,CrunchTeam-method}
-\alias{team<-,CrunchFilter,character-method}
+\alias{team<-,CrunchFilter,ANY-method}
 \title{Get the team a filter is shared with}
 \usage{
 team(x)
@@ -17,7 +17,7 @@ team(x) <- value
 
 \S4method{team}{CrunchFilter,CrunchTeam}(x) <- value
 
-\S4method{team}{CrunchFilter,character}(x) <- value
+\S4method{team}{CrunchFilter,ANY}(x) <- value
 }
 \arguments{
 \item{x}{a \code{CrunchFilter}}
