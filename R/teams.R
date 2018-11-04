@@ -95,3 +95,68 @@ setMethod("delete", "CrunchTeam", function(x, ...) {
     dropCache(absoluteURL("../", u))
     invisible(out)
 })
+
+#' Share Crunch assets with a team
+#' 
+#' You can share filters and multitables with a team that you are on. This will 
+#' give all team members access to view and edit these filters. Use `getTeams()`
+#' to see what teams you are on.
+#' 
+#' @param x a `CrunchFilter` or `Multitable`
+#' @param value a `CrunchTeam` or url for a Crunch team
+#' 
+#' @return a `CrunchTeam` that the asset is shared with.
+#' 
+#' @rdname team-sharing
+#' @export
+setGeneric("team", function(x) standardGeneric("team"))
+
+#' @rdname team-sharing
+#' @export
+setGeneric("team<-", function(x, value) standardGeneric("team<-"))
+
+#' @rdname team-sharing
+#' @export
+setMethod("team", "CrunchFilter", function(x) {
+    if (is.null(x@body$team)) {
+        return(NULL)
+    }
+    
+    return(CrunchTeam(crGET(x@body$team)))
+})
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("CrunchFilter", "CrunchTeam"), function(x, value) {
+    return(setEntitySlot(x, "team", self(value)))
+})
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("CrunchFilter", "ANY"), function(x, value) {
+    # TODO: check if value is at least something like a URL?
+    return(setEntitySlot(x, "team", value))
+})
+
+#' @rdname team-sharing
+#' @export
+setMethod("team", "Multitable", function(x) {
+    if (is.null(x@body$team)) {
+        return(NULL)
+    }
+    
+    return(CrunchTeam(crGET(x@body$team)))
+})
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("Multitable", "CrunchTeam"), function(x, value) {
+    return(setEntitySlot(x, "team", self(value)))
+})
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("Multitable", "ANY"), function(x, value) {
+    # TODO: check if value is at least something like a URL?
+    return(setEntitySlot(x, "team", value))
+})

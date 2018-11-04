@@ -12,7 +12,7 @@ with_mock_crunch({
     test_that("multitables() getter", {
         expect_is(multitables(ds), "MultitableCatalog")
         expect_is(multitables(ds2), "MultitableCatalog")
-        expect_length(multitables(ds), 2)
+        expect_length(multitables(ds), 3)
         expect_length(multitables(ds2), 1)
     })
 
@@ -25,25 +25,29 @@ with_mock_crunch({
 
     mults <- multitables(ds)
     test_that("Multitable catalog names", {
-        expect_identical(names(mults), c("My banner", "Shared multitable"))
+        expect_identical(
+            names(mults), 
+            c("My banner", "My team multitable", "Shared multitable")
+        )
         ## Note that this PATCHes the entity, not the catalog
         expect_PATCH(
-            names(mults)[2] <- "New name",
+            names(mults)[3] <- "New name",
             "https://app.crunch.io/api/datasets/1/multitables/4de322/",
             '{"name":"New name"}'
         )
     })
     test_that("Multitable catalog is.public", {
-        expect_identical(is.public(mults), c(FALSE, TRUE))
+        expect_identical(is.public(mults), c(FALSE, FALSE, TRUE))
         expect_identical(is.public(mults[[1]]), FALSE)
-        expect_identical(is.public(mults[[2]]), TRUE)
+        expect_identical(is.public(mults[[2]]), FALSE)
+        expect_identical(is.public(mults[[3]]), TRUE)
         ## Note that this PATCHes the entity, not the catalog
         expect_PATCH(
-            is.public(mults)[2] <- FALSE,
+            is.public(mults)[3] <- FALSE,
             "https://app.crunch.io/api/datasets/1/multitables/4de322/",
             '{"is_public":false}'
         )
-        expect_no_request(is.public(mults)[2] <- TRUE)
+        expect_no_request(is.public(mults)[3] <- TRUE)
     })
 
     test_that("Multitable delete requires consent", {
@@ -68,7 +72,7 @@ with_mock_crunch({
                 "https://app.crunch.io/api/datasets/1/multitables/4de322/"
             )
             expect_DELETE(
-                multitables(ds)[[2]] <- NULL,
+                multitables(ds)[[3]] <- NULL,
                 "https://app.crunch.io/api/datasets/1/multitables/4de322/"
             )
             expect_silent(multitables(ds)[[999]] <- NULL)
@@ -190,7 +194,7 @@ with_mock_crunch({
             "}}"
         )
         expect_PATCH(
-            multitables(ds)[[2]] <- ~gender + birthyr,
+            multitables(ds)[[3]] <- ~gender + birthyr,
             "https://app.crunch.io/api/datasets/1/multitables/4de322/",
             '{"element":"shoji:entity","body":',
             '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
@@ -212,6 +216,34 @@ with_mock_crunch({
         )
     })
 
+    test_that("can get and set the team for multitables", {
+        team_mult <- multitables(ds)[["My team multitable"]]
+        private_mult <- multitables(ds)[["My banner"]]
+        expect_identical(team(team_mult), getTeams()[["Alpha Team"]])
+        expect_no_request(team(team_mult) <- getTeams()[["Alpha Team"]])    
+        
+        expect_PATCH(
+            team(team_mult) <- NULL,
+            "https://app.crunch.io/api/datasets/1/multitables/f33123/",
+            '{"team":null}'
+        )
+        
+        expect_null(team(private_mult))
+        
+        expect_PATCH(
+            team(private_mult) <- getTeams()[["Alpha Team"]],
+            "https://app.crunch.io/api/datasets/1/multitables/ed30c4/",
+            '{"team":"https://app.crunch.io/api/teams/team1/"}'
+        )
+        
+        # can also just use a url
+        expect_PATCH(
+            team(private_mult) <- "https://app.crunch.io/api/teams/team1/",
+            "https://app.crunch.io/api/datasets/1/multitables/ed30c4/",
+            '{"team":"https://app.crunch.io/api/teams/team1/"}'
+        )
+    })
+    
     test_that("cache priming (so that requests don't cloud tests below)", {
         expect_null(weight(ds))
     })
@@ -534,5 +566,23 @@ with_test_authentication({
         expect_is(book, "TabBookResult")
         expect_identical(dim(book), c(ncol(ds), 3L))
         expect_identical(names(book), names(variables(ds)))
+    })
+    
+    test_that("team-sharing of multitables", {
+        multitables(ds)[["team multitable"]] <- ~allpets + q1
+        team_multitab <- multitables(ds)[["team multitable"]]
+        expect_null(team(team_multitab))
+        
+        # can set a team
+        team(team_multitab) <- getTeams()[["New team"]]
+        expect_identical(team(team_multitab), getTeams()[["New team"]])
+        
+        # can change a team (with a URL this time)
+        team(team_multitab) <- self(getTeams()[["a really new one"]])
+        expect_identical(team(team_multitab), getTeams()[["a really new one"]])
+        
+        # can remove the team
+        team(team_multitab) <- NULL
+        expect_null(team(team_multitab))
     })
 })

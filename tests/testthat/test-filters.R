@@ -72,7 +72,7 @@ with_mock_crunch({
         expect_no_request(is.public(f) <- FALSE)
     })
 
-    test_that("can get and set the team that a filter is on.", {
+    test_that("can get and set the team for filters", {
         expect_identical(team(f), getTeams()[["Alpha Team"]])
         expect_no_request(team(f) <- getTeams()[["Alpha Team"]])    
         
