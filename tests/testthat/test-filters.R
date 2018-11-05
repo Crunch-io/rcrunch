@@ -290,15 +290,27 @@ with_test_authentication({
         team_filter <- filters(ds)[["team filter"]]
         expect_null(team(team_filter))
 
-        skip("I think these teams need to be created first")
+        # set teams to use
+        teams <- getTeams()
+        teams[["A new team for filters"]] <- list()
+        teams[["A different team for filters"]] <- list()
+        
+        
         # can set a team
-        team(team_filter) <- getTeams()[["New team"]]
-        expect_identical(team(team_filter), getTeams()[["New team"]])
-
+        team(team_filter) <- getTeams()[["A new team for filters"]]
+        expect_identical(
+            team(team_filter), 
+            getTeams()[["A new team for filters"]]
+        )
+        
         # can change a team (with a URL this time)
-        team(team_filter) <- self(getTeams()[["a really new one"]])
-        expect_identical(team(team_filter), getTeams()[["a really new one"]])
-
+        team_url <- self(getTeams()[["A different team for filters"]])
+        team(team_filter) <- team_url
+        expect_identical(
+            team(team_filter),
+            getTeams()[["A different team for filters"]]
+        )
+        
         # can remove the team
         team(team_filter) <- NULL
         expect_null(team(team_filter))
