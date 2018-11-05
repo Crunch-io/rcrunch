@@ -74,22 +74,22 @@ with_mock_crunch({
 
     test_that("can get and set the team for filters", {
         expect_identical(team(f), getTeams()[["Alpha Team"]])
-        expect_no_request(team(f) <- getTeams()[["Alpha Team"]])    
-        
+        expect_no_request(team(f) <- getTeams()[["Alpha Team"]])
+
         expect_PATCH(
             team(f) <- NULL,
             "https://app.crunch.io/api/datasets/1/filters/filter1/",
             '{"team":null}'
         )
-        
+
         expect_null(team(f_2))
-        
+
         expect_PATCH(
             team(f_2) <- getTeams()[["Alpha Team"]],
             "https://app.crunch.io/api/datasets/1/filters/filter2/",
             '{"team":"https://app.crunch.io/api/teams/team1/"}'
         )
-        
+
         # can also just use a url
         expect_PATCH(
             team(f_2) <- "https://app.crunch.io/api/teams/team1/",
@@ -97,7 +97,7 @@ with_mock_crunch({
             '{"team":"https://app.crunch.io/api/teams/team1/"}'
         )
     })
-    
+
     test_that("Assigning filters<- on a dataset doesn't itself modify anything", {
         expect_no_request(filters(ds) <- filters(ds)[c(2, 1)])
         expect_true(is.dataset(ds))
@@ -284,19 +284,32 @@ with_test_authentication({
             array(c(0, 10), dim = 2L, dimnames = list(v4 = c("B", "C")))
         )
     })
-    
+
     test_that("team-sharing of filters", {
         filters(ds)[["team filter"]] <- ds$v4 == "C"
         team_filter <- filters(ds)[["team filter"]]
         expect_null(team(team_filter))
+
+        # set teams to use
+        teams <- getTeams()
+        teams[["A new team for filters"]] <- list()
+        teams[["A different team for filters"]] <- list()
+        
         
         # can set a team
-        team(team_filter) <- getTeams()[["New team"]]
-        expect_identical(team(team_filter), getTeams()[["New team"]])
-
+        team(team_filter) <- getTeams()[["A new team for filters"]]
+        expect_identical(
+            team(team_filter), 
+            getTeams()[["A new team for filters"]]
+        )
+        
         # can change a team (with a URL this time)
-        team(team_filter) <- self(getTeams()[["a really new one"]])
-        expect_identical(team(team_filter), getTeams()[["a really new one"]])
+        team_url <- self(getTeams()[["A different team for filters"]])
+        team(team_filter) <- team_url
+        expect_identical(
+            team(team_filter),
+            getTeams()[["A different team for filters"]]
+        )
         
         # can remove the team
         team(team_filter) <- NULL
