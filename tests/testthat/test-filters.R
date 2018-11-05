@@ -295,7 +295,6 @@ with_test_authentication({
         teams[["A new team for filters"]] <- list()
         teams[["A different team for filters"]] <- list()
         
-        
         # can set a team
         team(team_filter) <- getTeams()[["A new team for filters"]]
         expect_identical(
