@@ -381,7 +381,7 @@ setMethod("prop.table", "CrunchCube", function(x, margin = NULL) {
         out <- out / marg
     }
     class(out) <- class(marg)
-    attr(out, "dims") <- x@dims
+    attr(out, "dims") <- x@dims[!is.selectedDimension(x)]
     attr(out, "type") <- "proportion"
     return(out)
 })
@@ -458,10 +458,11 @@ setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
     # See comments in cubeToArray for more detail.
     margin_map <- which(!is.selectedDimension(x@dims))[margin]
     out <- cubeMarginTable(x, margin)
-
-    class(out) <- c("CrunchCubeCalculation", "array")
-    attr(out, "dims") <- x@dims[margin_map]
-    attr(out, "type") <- "margin"
+    if (is.array(out)) {
+        class(out) <- c("CrunchCubeCalculation", "array")
+        attr(out, "dims") <- x@dims[margin_map]
+        attr(out, "type") <- "margin"
+    }
     return(out)
 })
 

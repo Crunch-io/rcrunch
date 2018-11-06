@@ -89,8 +89,7 @@ test_that("simple with row subtotals (margins and proportions)", {
         dims = list("animals" = c("cats", "dogs"))
     )
     expect_equivalent(as.array(margin.table(pet_feelings, 2)), pets_margin)
-
-    expect_equivalent(as.array(margin.table(pet_feelings)), 100)
+    expect_equivalent(margin.table(pet_feelings), 100)
 
     feelings_prop <- cubify(
         c(
@@ -541,7 +540,7 @@ test_that("cat by cat with both column and row subtotals (margins and proportion
             "animals" = c("cats", "felines", "dogs", "both")
         )
     )
-    expect_equivalent(prop.table(pet_feeling_both, 1), feelings_prop)
+    expect_equivalent(as.array(prop.table(pet_feeling_both, 1)), feelings_prop)
 
     pets_prop <- cubify(
         c(
@@ -760,7 +759,7 @@ test_that("cat by mr, with cat subtotals (margins and proportions)", {
         798.062186185185,
         dims = cat_mr_dims_subtotals["nordics"]
     )
-    expect_equivalent(margin.table(cat_mr, 2), col_margin)
+    expect_equivalent(as.array(margin.table(cat_mr, 2)), col_margin)
 
     table_margin <- cubify(
         268.035610477756,

@@ -77,7 +77,7 @@ with_test_authentication({
     c1 <- crtabs(~MR, data = mrds)
     test_that("prop.table on univariate MR without NAs", {
         expect_equivalent(
-            prop.table(c1),
+            as.array(prop.table(c1)),
             array(c(2 / 3, 1 / 3, 1 / 3),
                 dim = c(3L),
                 dimnames = list(MR = c("mr_1", "mr_2", "mr_3"))
@@ -88,7 +88,7 @@ with_test_authentication({
         c2 <- c1
         c2@useNA <- "always"
         expect_equivalent(
-            prop.table(c2),
+            as.array(prop.table(c2)),
             array(c(.5, .25, .25),
                 dim = c(3L),
                 dimnames = list(MR = c("mr_1", "mr_2", "mr_3"))
@@ -113,14 +113,14 @@ with_test_authentication({
             )
         )
         expect_equivalent(
-            margin.table(c1),
+            as.array(margin.table(c1)),
             array(c(3, 3, 3),
                 dim = c(3L),
                 dimnames = list(MR = c("mr_1", "mr_2", "mr_3"))
             )
         )
         expect_equivalent(
-            prop.table(c1),
+            as.array(prop.table(c1)),
             array(c(1, 1, 0, 1, 0, 1) / 3,
                 dim = c(2L, 3L),
                 dimnames = list(
@@ -130,7 +130,7 @@ with_test_authentication({
             )
         )
         expect_equivalent(
-            margin.table(c1, 1),
+            as.array(margin.table(c1, 1)),
             array(c(2, 1, 2, 1, 2, 1),
                 dim = c(2L, 3L),
                 dimnames = list(
@@ -140,7 +140,7 @@ with_test_authentication({
             )
         )
         expect_equivalent(
-            prop.table(c1, margin = 1),
+            as.array(prop.table(c1, margin = 1)),
             array(c(.5, 1, 0, 1, 0, 1),
                 dim = c(2L, 3L),
                 dimnames = list(
@@ -150,11 +150,11 @@ with_test_authentication({
             )
         )
         expect_equivalent(
-            margin.table(c1, margin = 2),
+            as.array(margin.table(c1, margin = 2)),
             as.array(c(2, 1, 1))
         )
         expect_equivalent(
-            prop.table(c1, margin = 2),
+            as.array(prop.table(c1, margin = 2)),
             array(c(.5, .5, 0, 1, 0, 1),
                 dim = c(2L, 3L),
                 dimnames = list(
@@ -184,14 +184,14 @@ with_test_authentication({
 
         ## Sweep the whole table
         expect_equivalent(
-            margin.table(c2),
+            as.array(margin.table(c2)),
             array(c(4, 4, 4),
                 dim = c(3L),
                 dimnames = list(MR = c("mr_1", "mr_2", "mr_3"))
             )
         )
         expect_equivalent(
-            prop.table(c2),
+            as.array(prop.table(c2)),
             array(c(1, 1, 0, 1, 0, 1) / 4,
                 dim = c(2L, 3L),
                 dimnames = list(
@@ -203,7 +203,7 @@ with_test_authentication({
     })
     test_that("prop.table on bivariate with MR, margin=1, useNA=ifany", {
         expect_equivalent(
-            margin.table(c2, 1),
+            as.array(margin.table(c2, 1)),
             array(c(2, 2, 2, 2, 2, 2),
                 dim = c(2, 3L),
                 dimnames = list(
@@ -213,7 +213,7 @@ with_test_authentication({
             )
         )
         expect_equivalent(
-            prop.table(c2, margin = 1),
+            as.array(prop.table(c2, margin = 1)),
             array(c(.5, .5, 0, .5, 0, .5),
                 dim = c(2L, 3L),
                 dimnames = list(
@@ -225,14 +225,14 @@ with_test_authentication({
     })
     test_that("prop.table on bivariate with MR, margin=2, useNA=ifany", {
         expect_equivalent(
-            margin.table(c2, 2),
+            as.array(margin.table(c2, 2)),
             array(c(2, 1, 1),
                 dim = c(3L),
                 dimnames = list(MR = c("mr_1", "mr_2", "mr_3"))
             )
         )
         expect_equivalent(
-            prop.table(c2, margin = 2),
+            as.array(prop.table(c2, margin = 2)),
             array(c(.5, .5, 0, 1, 0, 1),
                 dim = c(2L, 3L),
                 dimnames = list(
