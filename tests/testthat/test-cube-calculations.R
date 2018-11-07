@@ -24,3 +24,8 @@ test_that("as.array method", {
     expect_null(attr(arr, "dims"))
     expect_is(as.array(prop), "matrix")
 })
+
+test_that("cube calculations print like arrays", {
+    expect_prints(prop, as.array(prop))
+    expect_print(marg, as.array(marg))
+})

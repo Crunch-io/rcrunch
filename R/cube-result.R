@@ -466,6 +466,7 @@ setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
     return(out)
 })
 
+#' @export
 as.array.CrunchCubeCalculation <- function(x) {
     attr(x, "dims") <- NULL
     attr(x, "type") <- NULL
@@ -473,6 +474,7 @@ as.array.CrunchCubeCalculation <- function(x) {
     return(x)
 }
 
+#' @export
 print.CrunchCubeCalculation <- function(x) print(as.array(x))
 
 #' Convert from user margins to real cube margins or vice versa
