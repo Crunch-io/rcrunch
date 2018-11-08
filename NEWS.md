@@ -2,6 +2,8 @@
 * Improved robustness of API usage for moving datasets in projects.
 * Support for `"."` as a folder path/segment, referencing the current folder. `cd(project, ".")` returns `project`; `mv(project, ds, ".")` moves `ds` into `project`.
 * Fix bug in printing folders that contain entities with excessively long names
+* Improved speed for calculating insertions (subtotals, headers, etc.) on large cubes (speed ups of ~25x on large, realistic cubes).
+* First draft support for deck creation and manipulation.
 
 # crunch 1.24.2
 * The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
