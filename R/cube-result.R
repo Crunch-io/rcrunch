@@ -456,11 +456,11 @@ NULL
 setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
     # This selects the margins while skipping over the MR selected dimension
     # See comments in cubeToArray for more detail.
-    margin_map <- which(!is.selectedDimension(x@dims))[margin]
+    mt_margins <- mr_items_margins(margin, cube = x)
     out <- cubeMarginTable(x, margin)
     if (is.array(out)) {
         class(out) <- c("CrunchCubeCalculation", "array")
-        attr(out, "dims") <- x@dims[margin_map]
+        attr(out, "dims") <- x@dims[mt_margins]
         attr(out, "type") <- "margin"
     }
     return(out)

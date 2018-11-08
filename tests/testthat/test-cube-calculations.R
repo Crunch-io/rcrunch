@@ -1,3 +1,25 @@
+test_that("dimensions attribute is correct on multiple MR cube", {
+    cube <- loadCube("cubes/cat-x-mr-x-mr.json")
+    marg <- margin.table(cube, 1:2)
+    expect_equal(names(attr(marg, "dims")), names(dimnames(marg)))
+
+    marg <- margin.table(cube, 1)
+    expect_equal(names(attr(marg, "dims")), names(dimnames(marg)))
+
+    marg <- margin.table(cube, 2)
+    expect_equal(names(attr(marg, "dims")), names(dimnames(marg)))
+
+    marg <- margin.table(cube, 3)
+    expect_equal(names(attr(marg, "dims")), names(dimnames(marg)))
+
+    marg <- margin.table(cube, 2:3)
+    expect_equal(names(attr(marg, "dims")), names(dimnames(marg)))
+
+    marg <- margin.table(cube, 1:3)
+    expect_equal(names(attr(marg, "dims")), names(dimnames(marg)))
+})
+
+
 cube <- loadCube(test_path("cubes/selected-crosstab-4.json"))
 marg <- margin.table(cube, 1)
 test_that("margin table returns a cube-calculation", {
@@ -25,7 +47,3 @@ test_that("as.array method", {
     expect_is(as.array(prop), "matrix")
 })
 
-test_that("cube calculations print like arrays", {
-    expect_prints(prop, as.array(prop))
-    expect_print(marg, as.array(marg))
-})
