@@ -79,6 +79,18 @@ with_mock_crunch({
         expect_true(featureFlag("this_is_on"))
         expect_false(featureFlag("this_is_off"))
     })
+
+    test_that("Request bodies are gzipped (if large enough)", {
+        with(temp.option(crunch.min.gzip.bytes=0), {
+            expect_header(
+                expect_error( # httptest errors printing the gzipped body
+                # expect_POST(
+                    crPOST("https://app.crunch.io/api/", body = '{"value":1}')
+                ),
+                "Content-Encoding: gzip"
+            )
+        })
+    })
 })
 
 test_that("retry", {

@@ -1,22 +1,40 @@
 #' Main Crunch API handling function
 #' @param http.verb character in GET, PUT, POST, PATCH, DELETE
 #' @param url character URL to do the verb on
-#' @param ... additional arguments passed to `GET`, `PUT`,
-#' `POST`, `PATCH`, or `DELETE`
 #' @param config list of config parameters. See httr documentation.
+#' @param body request body. See httr documentation.
+#' @param encode How to encode `body` if it is a named list. Unlike in `httr`,
+#' the default is `"json"`.
 #' @param status.handlers named list of specific HTTP statuses and a response
 #' function to call in the case where that status is returned. Passed to the
 #' [handleAPIresponse()] function.
+#' @param ... additional arguments passed to `GET`, `PUT`,
+#' `POST`, `PATCH`, or `DELETE`
 #' @keywords internal
-crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(), ...) {
+crunchAPI <- function(http.verb,
+                      url,
+                      config = list(),
+                      body = NULL,
+                      encode = "json",
+                      status.handlers = list(),
+                      ...) {
     url ## force lazy eval of url
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
-        payload <- list(...)$body
-        if (!is.null(payload)) try(cat("\n", payload, "\n"), silent = TRUE)
+        if (!is.null(body)) try(cat("\n", body, "\n"), silent = TRUE)
     }
     FUN <- get(http.verb, envir = asNamespace("httpcache"))
-    x <- FUN(url, ..., config = c(get_crunch_config(), config))
+    baseconfig <- get_crunch_config()
+    if (!is.null(body) && encode == "json") {
+        # TODO: push the toJSON to here?
+        baseconfig <- c(baseconfig, add_headers(`Content-Type`="application/json"))
+        if (object.size(body) > getOption("crunch.min.gzip.bytes", 1024L)) {
+            # Compress
+            body <- memCompress(body, "gzip")
+            baseconfig <- c(baseconfig, add_headers(`Content-Encoding`="gzip"))
+        }
+    }
+    x <- FUN(url, ..., body = body, encode = encode, config = c(baseconfig, config))
     out <- handleAPIresponse(x, special.statuses = status.handlers)
     return(out)
 }
