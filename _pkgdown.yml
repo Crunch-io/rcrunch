@@ -12,7 +12,6 @@ articles:
   desc: How to find, import, and clean data in Crunch
   contents:
   - crunch
-  - datasets
   - variables
   - array-variables
   - variable-order
