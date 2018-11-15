@@ -13,3 +13,6 @@ find_file <- function(file_name) {
 
 # Our "test package" common harness code
 source(find_file("crunch-test.R"), local = TRUE)
+
+# untar cubes
+decompress_fixtures()

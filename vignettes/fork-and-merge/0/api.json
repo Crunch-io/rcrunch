@@ -6,7 +6,6 @@
         "users": "/api/users/",
         "roles": "/api/roles/",
         "icons": "/api/icons/",
-        "specifications": "/api/specifications/",
         "snapshots": "/api/snapshots/",
         "teams": "/api/teams/",
         "sources": "/api/sources/",

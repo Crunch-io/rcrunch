@@ -68,6 +68,12 @@ createSource <- function(file, url, ...) {
     return(u)
 }
 
+#' See the appended batches of this dataset
+#' @param x a `CrunchDataset`
+#' @return a `BatchCatalog`
+#' @export
+batches <- function(x) BatchCatalog(crGET(shojiURL(x, "catalogs", "batches")))
+
 #' @importFrom methods initialize
 setMethod("initialize", "BatchCatalog", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)

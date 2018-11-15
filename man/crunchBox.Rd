@@ -5,17 +5,23 @@
 \alias{CrunchBox}
 \title{Make a CrunchBox}
 \usage{
-crunchBox(dataset, filters = crunch::filters(dataset), brand_colors,
-  static_colors, category_color_lookup, ...)
+crunchBox(dataset, filters = crunch::filters(dataset),
+  weight = crunch::weight(dataset), brand_colors, static_colors,
+  category_color_lookup, ...)
 
-CrunchBox(dataset, filters = crunch::filters(dataset), brand_colors,
-  static_colors, category_color_lookup, ...)
+CrunchBox(dataset, filters = crunch::filters(dataset),
+  weight = crunch::weight(dataset), brand_colors, static_colors,
+  category_color_lookup, ...)
 }
 \arguments{
 \item{dataset}{A CrunchDataset, potentially a selection of variables from it}
 
 \item{filters}{FilterCatalog, or \code{NULL} for no filters. Default all
 filters in your catalog, \code{filters(dataset)}.}
+
+\item{weight}{a CrunchVariable that has been designated as a potential
+weight variable for \code{dataset}, or \code{NULL} for unweighted results.
+Default is the currently applied \code{\link[=weight]{weight()}}.}
 
 \item{brand_colors}{an optional color vector of length 3 or less, or a named
 list with names 'primary', 'secondary', and 'message'. See "Details" for more

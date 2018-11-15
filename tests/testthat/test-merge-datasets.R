@@ -229,8 +229,8 @@ printed_order_apidocs2_merge_by_stringid <- c(
     "        Wave",
     "[+] __hidden__",
     "    [+] Example dataset",
-    "        Case ID",
-    "        Weight"
+    "        Weight",
+    "        Case ID"
 )
 
 printed_order_apidocs2_merge_by_caseid <- c(
@@ -371,14 +371,7 @@ with_test_authentication({
                     c(
                         "[+] Key Pet Indicators",
                         "    Pet",
-                        "    Pets by location",
-                        "[+] Dog Metrics",
-                        "    [+] Number of dogs by type",
-                        "        (Empty group)",
-                        "[+] Details",
-                        "    (Empty group)",
-                        "[+] Dimensions",
-                        "    (Empty group)"
+                        "    Pets by location"
                     ),
                     sep = "", collapse = "\n"
                 )

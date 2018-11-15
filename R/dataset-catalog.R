@@ -23,20 +23,15 @@ setMethod("archived", "DatasetCatalog", function(x) {
 #' @return For `owners`, the URLs of the users or projects that own
 #' these datasets. For `ownerNames`, their names.
 #' @export
-owners <- function(x) {
-    getIndexSlot(x, "owner_id")
-}
+owners <- function(x) getIndexSlot(x, "owner_id")
 
 #' @rdname owners
 #' @export
-ownerNames <- function(x) {
-    getIndexSlot(x, "owner_display_name")
-}
+ownerNames <- function(x) getIndexSlot(x, "owner_display_name")
 
 #' @rdname archive-and-publish
 #' @export
-setMethod(
-    "is.archived", "DatasetCatalog",
+setMethod("is.archived", "DatasetCatalog",
     function(x) getIndexSlot(x, "archived", logical(1))
 )
 #' @rdname archive-and-publish
@@ -44,8 +39,7 @@ setMethod(
 setMethod("is.draft", "DatasetCatalog", function(x) !is.published(x))
 #' @rdname archive-and-publish
 #' @export
-setMethod(
-    "is.published", "DatasetCatalog",
+setMethod("is.published", "DatasetCatalog",
     function(x) getIndexSlot(x, "is_published", logical(1), ifnot = TRUE)
 )
 

@@ -17,7 +17,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- newDataset(df[1:2, 1:2])
     test_that("Properly encoded UTF is sent and received", {
         s <- iconv("aided_follow_grid:ElCorteInglés", to = "UTF-8")
         name(ds$v1) <- s

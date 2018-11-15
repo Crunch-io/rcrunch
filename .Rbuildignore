@@ -19,3 +19,6 @@
 ^revdep$
 ^logo\.png$
 ^\.lintr$
+^cubes$
+^hooks$
+vignettes/

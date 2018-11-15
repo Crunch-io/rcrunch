@@ -362,11 +362,15 @@ with_mock_crunch({
             "from should be a single numeric"
         )
         expect_error(
+            ds$gender <- changeCategoryID(ds$gender, c(1, -1), 99),
+            "from should be a single numeric"
+        )
+        expect_error(
             ds$gender <- changeCategoryID(ds$gender, 1, "not a numeric"),
             "to should be a single numeric"
         )
         expect_error(
-            ds$gender <- changeCategoryID(ds$gender, c(1, -1), "not a numeric"),
+            ds$gender <- changeCategoryID(ds$gender, 99, c(1, -1)),
             "to should be a single numeric"
         )
         expect_error(

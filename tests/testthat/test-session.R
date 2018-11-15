@@ -4,7 +4,7 @@ with_mock_crunch({
     cr <- session()
     test_that("session() returns a session object", {
         expect_is(cr$datasets, "DatasetCatalog")
-        expect_is(cr[["projects"]], "ProjectCatalog")
+        expect_is(cr[["projects"]], "ProjectFolder")
     })
 
     test_that("Can assign into a session object", {

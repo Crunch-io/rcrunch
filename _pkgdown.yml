@@ -132,6 +132,8 @@ reference:
   - cd
   - rmdir
   - setOrder
+  - setName
+  - setNames
 - title: Analysis
   contents:
   - crtabs
@@ -191,6 +193,7 @@ reference:
   - login
   - logout
   - me
+  - users
   - email
   - newProject
   - owners

@@ -38,12 +38,12 @@ with_mock_crunch({
         )
     })
     test_that("cd errors if it doesn't receive a dataset or folder as first arg", {
-        expect_error(cd("/"), paste(
+        msg <- paste(
             dQuote("cd()"),
             "requires a Crunch Dataset or Folder as its first argument"
-        ),
-        fixed = TRUE
         )
+        expect_error(cd("/"), msg, fixed = TRUE)
+        expect_error(cd(NULL, "foo"), msg, fixed = TRUE)
     })
     test_that("cd attempts to create folders if create=TRUE", {
         expect_POST(
@@ -89,12 +89,7 @@ with_mock_crunch({
         "https://app.crunch.io/api/datasets/1/folders/2/",
         " ",
         '{"element":"shoji:catalog","index":{',
-        '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}},',
-        '"graph":[',
-        '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
-        '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
-        '"https://app.crunch.io/api/datasets/1/variables/birthyr/"',
-        "]}"
+        '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}'
     )
     test_that("mv variables to existing folder, selecting from dataset", {
         expect_PATCH(
@@ -190,14 +185,50 @@ with_mock_crunch({
             ds %>% cd("Group 1") %>% mv("Nested", "../Group 2"),
             "https://app.crunch.io/api/datasets/1/folders/2/",
             '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/folders/3/":{}},',
-            '"graph":[',
-            '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
-            '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
-            '"https://app.crunch.io/api/datasets/1/folders/3/"',
-            "]}"
+            '"https://app.crunch.io/api/datasets/1/folders/3/":{}}}'
         )
     })
+
+    test_that("rename a folder", {
+        # via setName
+        expect_PATCH(
+            ds %>% cd("Group 2") %>% setName("Group 2 New Name"),
+            "https://app.crunch.io/api/datasets/1/folders/2/",
+            '{"name":"Group 2 New Name"}'
+        )
+
+        # but also trying to move only sends name changes
+        expect_POST(
+            ds %>% cd("/") %>% mv("Group 2", "Group 2 New Name"),
+            "https://app.crunch.io/api/datasets/1/folders/",
+            '{"element":"shoji:catalog","body":{"name":"Group 2 New Name"}}'
+        )
+    })
+
+    test_that("rename objects inside a folder", {
+        expect_PATCH(
+            ds %>%
+                cd("Group 1") %>%
+                setNames(c("Year of birth", "Nested folder", "FTW! textvar")),
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
+            '{"name":"Year of birth"},',
+            '"https://app.crunch.io/api/datasets/1/folders/3/":',
+            '{"name":"Nested folder"},',
+            '"https://app.crunch.io/api/datasets/1/variables/textVar/":',
+            '{"name":"FTW! textvar"}}}'
+        )
+    })
+
+    test_that("rename objects inside a folder (validation)", {
+        expect_error(
+            ds %>%
+                cd("Group 1") %>%
+                setNames(c("Year of birth", "Nested folder")),
+            "names must have the same length as the number of children: 3"
+        )
+    })
+
     test_that("mv error handling", {
         expect_error(
             ds %>% cd("Group 1") %>% mv("NOT A VARIABLE", "../Group 2"),
@@ -237,6 +268,16 @@ with_mock_crunch({
         expect_error(
             ds %>% rmdir("Group 1/Nested"),
             "Must confirm deleting folder"
+        )
+        expect_message(
+            expect_error(
+                ds %>% rmdir("Group 2"),
+                "Must confirm deleting folder"
+            ),
+            paste0(
+                "This folder contains 2 objects: .*starttime.* and ",
+                ".*Cat Array.*"
+            )
         )
         with_consent({
             expect_DELETE(
@@ -334,5 +375,10 @@ with_test_authentication({
     test_that("mv preserves order of variables", {
         ds <- mv(ds, c("qsec", "drat", "vs", "wt"), "newdir")
         expect_identical(names(cd(ds, "newdir")), c("qsec", "drat", "vs", "wt"))
+    })
+
+    test_that("setNames works", {
+        ds %>% cd("newdir") %>% setNames(c("queue_sec", "drizzat", "versus", "weight"))
+        expect_identical(names(cd(ds, "newdir")), c("queue_sec", "drizzat", "versus", "weight"))
     })
 })

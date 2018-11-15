@@ -10,7 +10,7 @@ datasets(x = getAPIRoot())
 datasets(x) <- value
 }
 \arguments{
-\item{x}{a \code{ShojiObject}, such as a \code{CrunchProject}. If omitted,
+\item{x}{a \code{ShojiObject}, such as a \code{ProjectFolder}. If omitted,
 the function will load the user's primary dataset catalog. #'}
 
 \item{value}{\code{CrunchDataset} for the setter}

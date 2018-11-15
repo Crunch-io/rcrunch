@@ -1,0 +1,28 @@
+{
+  "element": "shoji:catalog",
+  "self": "https://app.crunch.io/api/projects/project1/users/",
+  "index": {
+    "https://app.crunch.io/api/users/user3/": {
+      "collaborator": false,
+      "coalesced_permissions": {
+        "edit": true,
+        "change_permissions": true,
+        "view": true
+      },
+      "teams": [],
+      "name": "Bill User",
+      "email": "william.user@example.io"
+    },
+    "https://app.crunch.io/api/users/user2/": {
+      "collaborator": true,
+      "coalesced_permissions": {
+        "edit": false,
+        "change_permissions": false,
+        "view": true
+      },
+      "teams": [],
+      "name": "Roger User",
+      "email": "ruser@crunch.io"
+    }
+  }
+}

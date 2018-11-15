@@ -31,6 +31,9 @@ with_mock_crunch({
             c("Birth Year", "Text variable ftw")
         )
     })
+    test_that("variables() method on folders", {
+        expect_identical(aliases(variables(g1)), c("birthyr", "textVar"))
+    })
     test_that("Get folder from a folder (via $)", {
         expect_is(g1$Nested, "VariableFolder")
         expect_identical(name(g1$Nested), "Nested")
@@ -83,12 +86,12 @@ with_mock_crunch({
         expect_PATCH(
             names(folders(ds)[[1]]) <- c("Year of Birth", "A folder in a folder", "Plain text"),
             "https://app.crunch.io/api/datasets/1/folders/1/",
-            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
             '{"name":"Year of Birth"},',
             '"https://app.crunch.io/api/datasets/1/folders/3/":',
             '{"name":"A folder in a folder"},',
             '"https://app.crunch.io/api/datasets/1/variables/textVar/":',
-            '{"name":"Plain text"}}'
+            '{"name":"Plain text"}}}'
         )
     })
     test_that("Set a variable's name inside a folder", {
@@ -143,14 +146,36 @@ with_mock_crunch({
         expect_identical(path(folders(ds)), "/")
     })
 
-    test_that("print folders", {
-        with(temp.option(crayon.enabled = FALSE), {
+    with(temp.option(crayon.enabled = FALSE), {
+        test_that("print folders: basic", {
             ## Coloring aside, the default print method should look like you
             ## printed the vector of names (plus the path printed above)
-            expect_output(print(folders(ds)),
+            expect_output(
+                print(folders(ds)),
                 capture.output(print(names(folders(ds)))),
                 fixed = TRUE
             )
+        })
+        test_that("An empty folder doesn't error on printing", {
+            expect_output(
+                print(VariableFolder()),
+                "folder(0)",
+                fixed = TRUE
+            )
+        })
+        test_that("If there are names longer than 'width', it still prints", {
+            with(temp.option(width=10), {
+                alphabet <- paste(letters, collapse="")
+                expect_true(nchar(alphabet) > getOption("width"))
+                skip("testthat::expect_output doesn't respect options(width)")
+                expect_output(
+                    colored_print(alphabet),
+                    '[1] "abcdefghijklmnopqrstuvwxyz"',
+                    fixed = TRUE
+                )
+            })
+        })
+        test_that("Folder tree printing", {
             ## These are obfuscated because of archaic restrictions on UTF-8
             skip_on_cran()
             source("print-folders.R", local = TRUE)

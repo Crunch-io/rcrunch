@@ -2,7 +2,6 @@
 {
     "element": "shoji:catalog",
     "self": "https://app.crunch.io/api/datasets/2/variables/",
-    "specification": "https://app.crunch.io/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
         "gender/": {

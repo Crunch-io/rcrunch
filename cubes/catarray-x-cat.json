@@ -1,0 +1,356 @@
+{
+  "element": "shoji:view",
+  "self": "api/datasets/123/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%2C%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%2C%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2F000003%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+  "value": {
+    "query": {
+      "measures": {
+        "count": {
+          "function": "cube_count",
+          "args": []
+        }
+      },
+      "dimensions": [
+        {
+          "each": "api/datasets/123/variables/var1/"
+        },
+        {
+          "variable": "api/datasets/123/variables/var1/"
+        },
+        {
+          "variable": "api/datasets/123/variables/000003/"
+        }
+      ],
+      "weight": null
+    },
+    "query_environment": {
+      "filter": []
+    },
+    "result": {
+      "dimensions": [
+        {
+          "derived": true,
+          "references": {
+            "subreferences": [
+              {
+                "alias": "cat_feeling",
+                "name": "cat_feeling"
+              },
+              {
+                "alias": "dog_feeling",
+                "name": "dog_feeling"
+              }
+            ],
+            "name": "feeling CA",
+            "alias": "feeling_ca"
+          },
+          "type": {
+            "subtype": {
+              "class": "variable"
+            },
+            "elements": [
+              {
+                "id": 1,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "cat_feeling",
+                    "name": "cat_feeling"
+                  },
+                  "id": "000001",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "id": 1,
+                        "name": "Extremely Happy",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": 2,
+                        "id": 2,
+                        "name": "Somewhat Happy",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": 3,
+                        "id": 3,
+                        "name": "Neutral",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": 4,
+                        "id": 4,
+                        "name": "Somewhat Unhappy",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": 5,
+                        "id": 5,
+                        "name": "Extremely Unhappy",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": null,
+                        "id": -1,
+                        "name": "No Data",
+                        "missing": true
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 2,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "dog_feeling",
+                    "name": "dog_feeling"
+                  },
+                  "id": "000004",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "id": 1,
+                        "name": "Extremely Happy",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": 2,
+                        "id": 2,
+                        "name": "Somewhat Happy",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": 3,
+                        "id": 3,
+                        "name": "Neutral",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": 4,
+                        "id": 4,
+                        "name": "Somewhat Unhappy",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": 5,
+                        "id": 5,
+                        "name": "Extremely Unhappy",
+                        "missing": false
+                      },
+                      {
+                        "numeric_value": null,
+                        "id": -1,
+                        "name": "No Data",
+                        "missing": true
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              }
+            ],
+            "class": "enum"
+          }
+        },
+        {
+          "derived": false,
+          "references": {
+            "subreferences": [
+              {
+                "alias": "cat_feeling",
+                "name": "cat_feeling"
+              },
+              {
+                "alias": "dog_feeling",
+                "name": "dog_feeling"
+              }
+            ],
+            "name": "feeling CA",
+            "alias": "feeling_ca"
+          },
+          "type": {
+            "ordinal": false,
+            "subvariables": [
+              "000001",
+              "000004"
+            ],
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "id": 1,
+                "name": "Extremely Happy",
+                "missing": false
+              },
+              {
+                "numeric_value": 2,
+                "id": 2,
+                "name": "Somewhat Happy",
+                "missing": false
+              },
+              {
+                "numeric_value": 3,
+                "id": 3,
+                "name": "Neutral",
+                "missing": false
+              },
+              {
+                "numeric_value": 4,
+                "id": 4,
+                "name": "Somewhat Unhappy",
+                "missing": false
+              },
+              {
+                "numeric_value": 5,
+                "id": 5,
+                "name": "Extremely Unhappy",
+                "missing": false
+              },
+              {
+                "numeric_value": null,
+                "id": -1,
+                "name": "No Data",
+                "missing": true
+              }
+            ]
+          }
+        },
+        {
+          "derived": false,
+          "references": {
+            "alias": "animal",
+            "name": "animal"
+          },
+          "type": {
+            "ordinal": false,
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "id": 1,
+                "name": "cats",
+                "missing": false
+              },
+              {
+                "numeric_value": 2,
+                "id": 2,
+                "name": "dogs",
+                "missing": false
+              },
+              {
+                "numeric_value": null,
+                "id": -1,
+                "name": "No Data",
+                "missing": true
+              }
+            ]
+          }
+        }
+      ],
+      "missing": 0,
+      "measures": {
+        "count": {
+          "data": [
+            1965,
+            1979,
+            0,
+            2050,
+            2016,
+            0,
+            1951,
+            1945,
+            0,
+            2057,
+            2070,
+            0,
+            1977,
+            1990,
+            0,
+            0,
+            0,
+            0,
+            6018,
+            970,
+            0,
+            1001,
+            953,
+            0,
+            1002,
+            968,
+            0,
+            986,
+            1070,
+            0,
+            993,
+            6039,
+            0,
+            0,
+            0,
+            0
+          ],
+          "n_missing": 0,
+          "metadata": {
+            "references": {},
+            "derived": true,
+            "type": {
+              "integer": true,
+              "missing_rules": {},
+              "missing_reasons": {
+                "No Data": -1
+              },
+              "class": "numeric"
+            }
+          }
+        }
+      },
+      "element": "crunch:cube",
+      "counts": [
+        1965,
+        1979,
+        0,
+        2050,
+        2016,
+        0,
+        1951,
+        1945,
+        0,
+        2057,
+        2070,
+        0,
+        1977,
+        1990,
+        0,
+        0,
+        0,
+        0,
+        6018,
+        970,
+        0,
+        1001,
+        953,
+        0,
+        1002,
+        968,
+        0,
+        986,
+        1070,
+        0,
+        993,
+        6039,
+        0,
+        0,
+        0,
+        0
+      ],
+      "n": 20000
+    }
+  }
+}

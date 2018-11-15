@@ -26,7 +26,10 @@ init.Shoji <- function(.Object, ...) {
 }
 setMethod("initialize", "ShojiObject", init.Shoji)
 
-is.shoji.like <- function(x) {
+#' @rdname dataset-reference
+setMethod("datasetReference", "ShojiObject", function(x) datasetReference(self(x)))
+
+is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && startsWith(as.character(x$element), "shoji")
 }
 
@@ -88,14 +91,21 @@ setEntitySlot <- function(x, i, value) {
 }
 
 #' Get a resource URL from a Shoji Object
+#'
 #' @param x a shojiObject
 #' @param collection one of c("catalogs", "views", "fragments", "orders")
-#' @param key character name of the URL to get from \code{collection}
-#' @return character URL
+#' @param key character name of the URL to get from `collection`
+#' @param mustWork logical: error if the URL is not found? Default is `TRUE`
+#' @return The indicated URL, or if it does not exist and `mustWork` is not
+#' `TRUE`, `NULL`.
 #' @export
 #' @keywords internal
 #' @importFrom httpcache logMessage
-shojiURL <- function(x, collection = c("catalogs", "views", "fragments", "orders"), key) {
+shojiURL <- function(x,
+                     collection = c("catalogs", "views", "fragments", "orders"),
+                     key,
+                     mustWork=TRUE) {
+
     if (is.variable(x) || inherits(x, "ShojiTuple")) {
         x <- entity(x) ## Get the *Entity (e.g. VariableEntity)
         logMessage("INFO", "GET entity in shojiURL")
@@ -106,7 +116,7 @@ shojiURL <- function(x, collection = c("catalogs", "views", "fragments", "orders
     collection <- match.arg(collection)
     urls <- slot(x, collection)
     out <- urls[[key]]
-    if (is.null(out)) {
+    if (is.null(out) && mustWork) {
         halt("No URL ", dQuote(key), " in collection ", dQuote(collection))
     }
     return(out)
@@ -117,3 +127,5 @@ wrapEntity <- function(..., body = list(...)) {
 }
 
 wrapCatalog <- function(...) list(element = "shoji:catalog", ...)
+
+wrapCatalogIndex <- function(...) wrapCatalog(index = as.list(...))

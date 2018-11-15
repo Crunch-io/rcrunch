@@ -66,23 +66,34 @@ setMethod("toVariable", "logical", function(x, ...) {
     ))
 })
 
-# haven::labelled* are S3 classes, so we have to register them
+# haven::haven_labelled* are S3 classes, so we have to register them the
+# labelled* classes are depricated in haven 2.0, but we are keeping them here
+# for backwards and forward compatibility
 setOldClass("labelled")
-#' @rdname toVariable
-#' @export
-setMethod("toVariable", "labelled", function(x, ...) {
+setOldClass("haven_labelled")
+
+haven_labelled_func <- function(x, ...) {
     # TODO: what if the values are numeric? Is it possible to tell these apart
     # from the labelled object?
     return(toVariable(as.factor(x), ...))
-})
+}
 
-setOldClass("labelled_spss")
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "labelled_spss", function(x, ...) {
+setMethod("toVariable", "labelled", haven_labelled_func)
+
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "haven_labelled", haven_labelled_func)
+
+
+setOldClass("labelled_spss")
+setOldClass("haven_labelled_spss")
+
+haven_labelled_spss_func <- function(x, ...) {
     # TODO: what if the values are numeric? Is it possible to tell these apart
     # from the labelled object?
-
+    
     # convert to factor quickly (the recommended workflow for labelled objects
     # from haven, since there are few methods for labelled objects)
     x_factor <- as.factor(x)
@@ -97,14 +108,22 @@ setMethod("toVariable", "labelled_spss", function(x, ...) {
         }
         return(cat)
     })
-
+    
     return(VariableDefinition(
         values = as.categorical.values(x_factor),
         type = "categorical",
         categories = categories,
         ...
     ))
-})
+}
+
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "labelled_spss", haven_labelled_spss_func)
+
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "haven_labelled_spss", haven_labelled_spss_func)
 
 as.categorical.values <- function(x) {
     vals <- as.integer(x)

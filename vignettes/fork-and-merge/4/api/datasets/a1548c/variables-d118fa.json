@@ -9,7 +9,6 @@
         "weights": "/api/datasets/a1548c/variables/weights/",
         "hier": "/api/datasets/a1548c/variables/hier/"
     },
-    "specification": "/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
         "000010/": {

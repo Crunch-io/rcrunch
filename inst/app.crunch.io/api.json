@@ -5,17 +5,22 @@
         "datasets": "https://app.crunch.io/api/datasets/",
         "users": "https://app.crunch.io/api/users/",
         "sources": "https://app.crunch.io/api/sources/",
-        "accounts": "https://app.crunch.io/api/accounts/",
+        "orgs": "https://app.crunch.io/api/orgs/",
+        "roles": "https://app.crunch.io/api/roles/",
+        "icons": "https://app.crunch.io/api/icons/",
         "teams": "https://app.crunch.io/api/teams/",
         "projects": "https://app.crunch.io/api/projects/",
         "public": "https://app.crunch.io/api/public/",
-        "geodata": "https://app.crunch.io/api/geodata/"
+        "geodata": "https://app.crunch.io/api/geodata/",
+        "lobs": "https://app.crunch.io/api/lobs/"
     },
     "views": {
-        "search": "https://app.crunch.io/api/search/"
+        "search": "https://app.crunch.io/api/search/",
+        "feature_flag": "https://app.crunch.io/api/feature_flag/",
+        "account": "https://app.crunch.io/api/account/",
+        "user": "https://app.crunch.io/api/users/user1/"
     },
     "urls": {
-        "user_url": "https://app.crunch.io/api/users/user1/",
         "logout_url": "https://app.crunch.io/api/logout/"
     },
     "description": "The API root. GET user_url to access your Crunch resources. GET logout_url to sign out."

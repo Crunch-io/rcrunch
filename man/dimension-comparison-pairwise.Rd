@@ -37,9 +37,8 @@ baseline. Internally this function uses \code{compareDims()} iteratively.
 \emph{Warning} since there is more than one comparison being made against each
 baseline the z-scores, and especially the p-values derived from these
 z-scores should be interpreted with caution. Using standard p-value cutoffs
-will result in anti-conservative interpretations because of the (multiple
-comparisons problem)\link{https://en.wikipedia.org/wiki/Multiple_comparisons_problem}.
-Adjustments to p-value cut offs (e.g. (Bonferonni
-correction)\link{https://en.wikipedia.org/wiki/Bonferroni_correction}) should be used when interpreting z-scores from the
+will result in anti-conservative interpretations because of the \href{https://en.wikipedia.org/wiki/Multiple_comparisons_problem}{multiple
+comparisons problem}.
+Adjustments to p-value cut offs (e.g. \href{https://en.wikipedia.org/wiki/Bonferroni_correction}{Bonferonni correction}) should be used when interpreting z-scores from the
 \code{compare[Rows|Cols|Dims]Pairwise()} family of functions.
 }

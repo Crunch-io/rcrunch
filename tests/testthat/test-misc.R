@@ -201,8 +201,8 @@ test_that("loadCube can handle a number of locations", {
 
 test_that("Cubify works with many dimensions", {
     # 1d
-    cube_json <- fromJSON(system.file("cubes/univariate-categorical.json", package = "crunch"))
-    cube <- loadCube(test_path("cubes/univariate-categorical.json"))
+    cube_json <- fromJSON(cubePath("cubes/univariate-categorical.json"))
+    cube <- loadCube("cubes/univariate-categorical.json")
 
     dn <- dimnames(cube@arrays$count)
     raw_values <- cube_json$value$result$measures$count$data
@@ -210,8 +210,8 @@ test_that("Cubify works with many dimensions", {
     expect_length(dim(cube@arrays$count), 1)
 
     # 2d
-    cube_json <- fromJSON(system.file("cubes/cat-array.json", package = "crunch"))
-    cube <- loadCube(test_path("cubes/cat-array.json"))
+    cube_json <- fromJSON(cubePath("cubes/cat-array.json"))
+    cube <- loadCube("cubes/cat-array.json")
 
     dn <- dimnames(cube@arrays$count)
     raw_values <- cube_json$value$result$measures$count$data
@@ -219,8 +219,8 @@ test_that("Cubify works with many dimensions", {
     expect_length(dim(cube@arrays$count), 2)
 
     # 3d
-    cube_json <- fromJSON(system.file("cubes/selected-crosstab-4.json", package = "crunch"))
-    cube <- loadCube(test_path("cubes/selected-crosstab-4.json"))
+    cube_json <- fromJSON(cubePath("cubes/selected-crosstab-4.json"))
+    cube <- loadCube("cubes/selected-crosstab-4.json")
 
     dn <- dimnames(cube@arrays$count)
     raw_values <- cube_json$value$result$measures$count$data
@@ -228,8 +228,8 @@ test_that("Cubify works with many dimensions", {
     expect_length(dim(cube@arrays$count), 3)
 
     # 3+d
-    cube_json <- fromJSON(system.file("cubes/cat-x-mr-x-mr.json", package = "crunch"))
-    cube <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
+    cube_json <- fromJSON(cubePath("cubes/cat-x-mr-x-mr.json"))
+    cube <- loadCube("cubes/cat-x-mr-x-mr.json")
 
     dn <- dimnames(cube@arrays$count)
     raw_values <- cube_json$value$result$measures$count$data
@@ -243,6 +243,14 @@ test_that("is.TRUEorFALSE errors correctly", {
     expect_false(is.TRUEorFALSE("char"))
     expect_false(is.TRUEorFALSE(NA))
     expect_false(is.TRUEorFALSE(c(TRUE, TRUE)))
+})
+
+test_that("is.singleCharacter", {
+    expect_true(is.singleCharacter("char"))
+    expect_false(is.singleCharacter(c("char", "char2")))
+    expect_false(is.singleCharacter(NULL))
+    expect_false(is.singleCharacter(NA))
+    expect_false(is.singleCharacter(1))
 })
 
 test_that("checkInstalledPackages", {

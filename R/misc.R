@@ -274,9 +274,8 @@ datetimeFormater <- function(resolution) {
 is.TRUEorFALSE <- function(value) {
     return(is.logical(value) && !is.na(value) && length(value) == 1)
 }
-
-escapeQuotes <- function(str) {
-    gsub("'", "\\\\'", str)
+is.singleCharacter <- function(value){
+    return(is.character(value) && length(value) == 1)
 }
 
 #' Check if a user has packages installed

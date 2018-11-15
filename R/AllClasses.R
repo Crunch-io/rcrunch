@@ -26,6 +26,7 @@ ShojiCatalog <- setClass("ShojiCatalog",
 )
 ShojiFolder <- setClass("ShojiFolder", contains = "ShojiCatalog")
 VariableFolder <- setClass("VariableFolder", contains = "ShojiFolder")
+ProjectFolder <- setClass("ProjectFolder", contains = "ShojiFolder")
 ShojiOrder <- setClass("ShojiOrder",
     contains = "ShojiObject",
     slots = c(
@@ -55,7 +56,6 @@ ShojiTuple <- setClass("ShojiTuple",
 )
 VariableTuple <- setClass("VariableTuple", contains = "ShojiTuple")
 DatasetTuple <- setClass("DatasetTuple", contains = "ShojiTuple")
-CrunchProject <- setClass("CrunchProject", contains = "ShojiTuple")
 PermissionTuple <- setClass("PermissionTuple", contains = "ShojiTuple")
 
 VariableEntity <- setClass("VariableEntity", contains = "ShojiObject")
@@ -158,9 +158,9 @@ MultipleResponseVariable <- setClass("MultipleResponseVariable",
 #' @slot entities a character vector of variable URLs, or a list containing a
 #' combination of variable URLs and VariableGroup objects.
 #' @slot duplicates logical: should duplicate variable references be allowed in
-#' this object? Default is \code{FALSE}.
-#' @slot vars either \code{NULL} or a \code{\link{VariableCatalog}}. If not
-#' \code{NULL}, it will be used to look up variable names from the URLs.
+#' this object? Deprecated field: duplicates are never allowed.
+#' @slot vars either `NULL` or a [VariableCatalog()]. If not
+#' `NULL`, it will be used to look up variable names from the URLs.
 #' @rdname VariableOrder
 #' @export VariableOrder
 VariableOrder <- setClass("VariableOrder", contains = "ShojiOrder")
@@ -206,7 +206,6 @@ BatchCatalog <- setClass("BatchCatalog", contains = "ShojiCatalog")
 PermissionCatalog <- setClass("PermissionCatalog", contains = "ShojiCatalog")
 UserCatalog <- setClass("UserCatalog", contains = "ShojiCatalog")
 TeamCatalog <- setClass("TeamCatalog", contains = "ShojiCatalog")
-ProjectCatalog <- setClass("ProjectCatalog", contains = "ShojiCatalog")
 MemberCatalog <- setClass("MemberCatalog", contains = "ShojiCatalog")
 VersionCatalog <- setClass("VersionCatalog", contains = "ShojiCatalog")
 FilterCatalog <- setClass("FilterCatalog", contains = "ShojiCatalog")
@@ -231,6 +230,13 @@ CrunchDataset <- setClass("CrunchDataset",
         tuple = DatasetTuple()
     )
 )
+
+DeckCatalog <- setClass("DeckCatalog", contains = "ShojiCatalog")
+CrunchDeck <- setClass("CrunchDeck", contains = "ShojiObject")
+SlideCatalog <- setClass("SlideCatalog", contains = "ShojiCatalog")
+CrunchSlide <- setClass("CrunchSlide", contains = "ShojiObject")
+AnalysisCatalog <- setClass("AnalysisCatalog", contains = "ShojiCatalog")
+Analysis <- setClass("Analysis", contains = "ShojiObject")
 
 GenericConstructor <- function(class) {
     return(function(..., data = NULL) {

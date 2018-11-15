@@ -1,7 +1,10 @@
 setMethod("initialize", "ShojiFolder", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object@graph <- lapply(.Object@graph, absoluteURL, .Object@self)
-    .Object@index <- .Object@index[unlist(.Object@graph)]
+    if (length(.Object@graph)) {
+        # Root catalogs may not have a graph (right?)
+        .Object@index <- .Object@index[unlist(.Object@graph)]
+    }
     return(.Object)
 })
 
@@ -29,12 +32,19 @@ setMethod("[[", c("ShojiFolder", "character"), function(x, i, ..., drop = FALSE)
         ## Go to root level
         x <- rootFolder(x)
         path <- path[-1]
+    } else if (identical(path[1], "~")) {
+        ## Go to personal
+        x <- personalFolder(x)
+        path <- path[-1]
     }
     create <- isTRUE(list(...)$create)
     while (length(path)) {
         ## Recurse
         segment <- path[1]
-        if (segment == "..") {
+        if (segment == ".") {
+            ## We're already here
+            this <- x
+        } else if (segment == "..") {
             ## Go up a level
             this <- folder(x)
             if (is.null(this)) {
@@ -68,7 +78,12 @@ parseFolderPath <- function(path) {
 folderDelimiter <- function() getOption("crunch.delimiter", "/")
 
 parentFolderURL <- function(x) {
-    tryCatch(shojiURL(x, "catalogs", "folder"), error = function(e) return(NULL))
+    if (is.variable(x) || inherits(x, "VariableFolder")) {
+        shojiURL(x, "catalogs", "folder", mustWork=FALSE)
+    } else {
+        # A dataset or project
+        shojiURL(x, "catalogs", "project", mustWork=FALSE)
+    }
 }
 
 rootFolder <- function(x) {
@@ -86,13 +101,19 @@ createFolder <- function(where, name, index, ...) {
     ## turn index into index + graph in payload
     ## TODO: also for reordering, function that takes a list (index) and returns
     ## list(index=index, graph=names(index))
-    crPOST(self(where), body = toJSON(wrapCatalog(body = list(name = name, ...))))
+    if (inherits(where, "VariableFolder")) {
+        bod <- wrapCatalog(body = list(name = name, ...))
+    } else {
+        ## Special case: projects strictly require "entity"
+        ## Remove after https://www.pivotaltracker.com/story/show/160328444
+        bod <- wrapEntity(body = list(name = name, ...))
+    }
+    crPOST(self(where), body = toJSON(bod))
 }
 
 #' @rdname describe
 #' @export
-setMethod(
-    "name<-", "ShojiFolder",
+setMethod("name<-", "ShojiFolder",
     function(x, value) setEntitySlot(x, "name", value)
 )
 
@@ -102,8 +123,30 @@ setMethod("delete", "ShojiFolder", function(x, ...) {
     if (is.null(parentFolderURL(x))) {
         halt("Cannot delete root folder")
     }
+
+    # count the variable/folder objects, and warn the user that they will be
+    # summarily deleted as well. Projects must be empty to be deleted (which is
+    # enforced on the server, so we only need to check VariableFolders) send as
+    # a message before the prompt for test-ability, and so the prompt isn't lost
+    # at then end of a long line.
+    if (inherits(x, "VariableFolder")) {
+        obj_names <- names(x)
+        num_vars <- length(x)
+        obj_word <- ifelse(num_vars > 1, "objects", "object")
+
+        if (num_vars > 5) {
+            obj_string <- serialPaste(dQuote(head(obj_names, 5)), "...")
+        } else {
+            obj_string <- serialPaste(dQuote(obj_names))
+        }
+        message(
+            "This folder contains ", num_vars, " ", obj_word, ": ", obj_string, 
+            ". Deleting the folder will also delete these objects (including ",
+            "their contents)."
+        )
+    }
+
     if (!askForPermission(paste0("Really delete ", name(x), "?"))) {
-        ## TODO: prompt should tell you how many elements (variables) are contained in it
         halt("Must confirm deleting folder")
     }
     out <- crDELETE(self(x))
@@ -169,7 +212,7 @@ path <- function(x) {
     parent <- folder(x)
     ## If the parent of x is NULL, we're already at top level.
     while (!is.null(parent)) {
-        out <- c(name(parent), out)
+        out <- c(name(parent) %||% "", out)
         parent <- folder(parent)
     }
     out <- paste(out, collapse = folderDelimiter())
@@ -184,3 +227,7 @@ path <- function(x) {
 #     ## Default method: return a folder of the same type
 #     return(get(class(x))(crGET(names(tuple))))
 # })
+
+setMethod("personalFolder", "ShojiFolder", function (x) {
+    halt("Not implemented")
+})

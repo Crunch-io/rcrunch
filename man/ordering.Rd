@@ -9,9 +9,9 @@
 \alias{ordering,VariableCatalog-method}
 \alias{ordering<-,VariableCatalog-method}
 \alias{ordering,DatasetCatalog-method}
-\alias{ordering,CrunchProject-method}
+\alias{ordering,ProjectFolder-method}
 \alias{ordering<-,DatasetCatalog-method}
-\alias{ordering<-,CrunchProject-method}
+\alias{ordering<-,ProjectFolder-method}
 \title{Get and set VariableOrder}
 \usage{
 \S4method{ordering}{CrunchDataset}(x)
@@ -24,11 +24,11 @@
 
 \S4method{ordering}{DatasetCatalog}(x)
 
-\S4method{ordering}{CrunchProject}(x)
+\S4method{ordering}{ProjectFolder}(x)
 
 \S4method{ordering}{DatasetCatalog}(x) <- value
 
-\S4method{ordering}{CrunchProject}(x) <- value
+\S4method{ordering}{ProjectFolder}(x) <- value
 }
 \arguments{
 \item{x}{a VariableCatalog or CrunchDataset}

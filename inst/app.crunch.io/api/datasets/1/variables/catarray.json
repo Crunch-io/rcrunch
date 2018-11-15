@@ -29,6 +29,8 @@
         "values": "https://app.crunch.io/api/datasets/1/variables/mymrset/values/"
     },
     "catalogs": {
+        "parent": "https://app.crunch.io/api/datasets/1/variables/",
+        "subvariables": "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
         "folder": "https://app.crunch.io/api/datasets/1/folders/2/"
     },
     "urls": {

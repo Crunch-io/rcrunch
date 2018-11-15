@@ -304,17 +304,20 @@ with_mock_crunch({
         )
         loc_ary <- c(7, 10, NA)
         names(loc_ary) <- c("London", "Scotland", "London+Scotland")
+        
         expect_warning(
-            expect_equivalent(calcTransforms(
-                table(loc_var), trns,
-                categories(loc_var)[!is.na(categories(loc_var))]
-            ), loc_ary),
+            insert_funcs <- makeInsertionFunctions(
+                categories(ds$location)[!is.na(categories(ds$location))],
+                trns
+            ),
             paste0(
                 "Transform functions other than subtotal are ",
                 "not supported. Applying only subtotals and ",
                 "ignoring foobar"
             )
         )
+        
+        expect_equivalent(calcTransforms(table(loc_var), insert_funcs),  loc_ary)
     })
 
     test_that("Transform respects anchors", {
@@ -322,15 +325,16 @@ with_mock_crunch({
         trns <- transforms(loc_var)
         trns[["insertions"]][[1]][["after"]] <- 1
 
-        loc_ary <- c(7, 17, 10, NA)
-        names(loc_ary) <- c("London", "London+Scotland", "Scotland", "No Data")
-        expect_equivalent(
-            calcTransforms(
-                table(loc_var), trns,
-                categories(loc_var)
-            ),
-            loc_ary
+        
+        insert_funcs <- makeInsertionFunctions(
+            categories(ds$location)[!is.na(categories(ds$location))],
+            trns
         )
+        
+        # No Data is no longer here ??? what made it be here in the first place?
+        loc_ary <- c(7, 17, 10)
+        names(loc_ary) <- c("London", "London+Scotland", "Scotland")
+        expect_equivalent(calcTransforms(table(loc_var), insert_funcs), loc_ary)
     })
 
     test_that("Transform works without a function (that is, with a heading)", {
@@ -338,13 +342,16 @@ with_mock_crunch({
         trns <- transforms(loc_var)
         trns[["insertions"]][[1]] <- Heading(name = "London+Scotland", after = 3)
 
-        loc_ary <- c(7, 10, NA, NA)
-        names(loc_ary) <- c("London", "Scotland", "London+Scotland", "No Data")
+        insert_funcs <- makeInsertionFunctions(
+            categories(ds$location)[!is.na(categories(ds$location))],
+            trns
+        )
+        
+        # No Data is no longer here ??? what made it be here in the first place?
+        loc_ary <- c(7, 10, NA)
+        names(loc_ary) <- c("London", "Scotland", "London+Scotland")
         expect_equivalent(
-            calcTransforms(
-                table(loc_var), trns,
-                categories(loc_var)
-            ),
+            calcTransforms(table(loc_var), insert_funcs),
             loc_ary
         )
     })
