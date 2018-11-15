@@ -91,6 +91,13 @@ with_mock_crunch({
             )
         })
     })
+
+    test_that("Other request headers", {
+        uncached({ # So we go to httr for these and not read cached responses
+            expect_header(crGET("https://app.crunch.io/api/"),
+                "User-Agent.*rcrunch", ignore.case=TRUE)
+        })
+    })
 })
 
 test_that("retry", {
@@ -108,29 +115,25 @@ test_that("retry", {
     )
 })
 
+test_that("crunchUserAgent", {
+    expect_true(grepl("rcrunch", crunchUserAgent()))
+    expect_true(grepl("libcurl", crunchUserAgent()))
+    expect_error(
+        crunchUserAgent("anotherpackage/3.1.4"),
+        NA
+    )
+    expect_true(grepl("anotherpackage", crunchUserAgent("anotherpackage")))
+})
+
 if (run.integration.tests) {
-    test_that("Request headers", {
+    test_that("Requests send Accept-Encoding: gzip", {
+        # libcurl adds this according to CURLOPT_ACCEPT_ENCODING, which appears
+        # to be on by default. expect_header() can't catch this because it gets
+        # added below httr, so we can't test this with mocks
         skip_if_disconnected()
         r <- crGET("http://httpbin.org/gzip")
         expect_true(r$gzipped)
         expect_true(grepl("gzip", r$headers[["Accept-Encoding"]]))
-        expect_true(grepl("rcrunch", r$headers[["User-Agent"]]))
-    })
-
-    test_that("crunchUserAgent", {
-        expect_true(grepl("rcrunch", crunchUserAgent()))
-        expect_true(grepl("libcurl", crunchUserAgent()))
-        expect_error(
-            crunchUserAgent("anotherpackage/3.1.4"),
-            NA
-        )
-        expect_true(grepl("anotherpackage", crunchUserAgent("anotherpackage")))
-    })
-
-    with_test_authentication({
-        test_that("API root can be fetched", {
-            expect_true(is.shojiObject(getAPIRoot()))
-        })
     })
 
     test_that("API calls throw an error if user is not authenticated", {

@@ -29,7 +29,11 @@ crunchAPI <- function(http.verb,
         # TODO: push the toJSON to here?
         baseconfig <- c(baseconfig, add_headers(`Content-Type`="application/json"))
         if (object.size(body) > getOption("crunch.min.gzip.bytes", 1024L)) {
-            # Compress
+            # Compress. But only compress above a minimum threshold because
+            # gzip can make small objects a little bigger,
+            # + compression/decompression overhead.
+            # getOption makes this configurable for tests and also to provide a
+            # way to turn it off in case of emergency.
             body <- memCompress(body, "gzip")
             baseconfig <- c(baseconfig, add_headers(`Content-Encoding`="gzip"))
         }

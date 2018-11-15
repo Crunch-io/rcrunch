@@ -8,9 +8,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-One of the main benefits of Crunch is that it lets analysts and clients work with the same datasets. Instead of emailing datasets to clients, you can update the live dataset and ensure that they will see see the most up-to-date information. The potential problem with this setup is that it can become difficult to make provisional changes to the dataset without publishing it to the client. Sometimes an analyst wants to investigate or experiment with a dataset without the risk of sending incorrect or confusing information to the end user This is why we implemented a fork-edit-merge workflow for Crunch datasets. 
+One of the main benefits of Crunch is that it lets analysts and clients work with the same datasets. Instead of emailing datasets to clients, you can update the live dataset and ensure that they will see see the most up-to-date information. The potential problem with this setup is that it can become difficult to make provisional changes to the dataset without publishing it to the client. Sometimes an analyst wants to investigate or experiment with a dataset without the risk of sending incorrect or confusing information to the end user This is why we implemented a fork-edit-merge workflow for Crunch datasets.
 
-"Fork" originates in computer version control systems and just means to take a copy of something with the intention of making some changes to the copy, and then incorporating those changes back into the original. A helpful mnemonic is to think of a path which forks off from the main road, but then rejoins it later on. To see how this works lets first upload a new dataset to Crunch. 
+"Fork" originates in computer version control systems and just means to take a copy of something with the intention of making some changes to the copy, and then incorporating those changes back into the original. A helpful mnemonic is to think of a path which forks off from the main road, but then rejoins it later on. To see how this works lets first upload a new dataset to Crunch.
 
 ```{r, eval = FALSE, message=FALSE}
 library(crunch)
@@ -19,6 +19,7 @@ login()
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 library(httptest)
+options(crunch.min.gzip.bytes = 1e9) ## Don't gzip request bodies in tests (until httptest can handle))
 start_vignette("fork-and-merge")
 ```
 
@@ -26,32 +27,32 @@ start_vignette("fork-and-merge")
 ds <- newDataset(SO_survey, "stackoverflow_survey")
 ```
 
-Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decision makers to make sure that the data is accurate before sharing it with clients. To do this you call `forkDataset()` to create a copy of the dataset. 
+Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decision makers to make sure that the data is accurate before sharing it with clients. To do this you call `forkDataset()` to create a copy of the dataset.
 
 ```{r fork dataset}
 forked_ds <- forkDataset(ds)
 ```
 
-You now have a copied dataset which is identical to the original, and are free to make changes without fear of disrupting the client's experience. You can add or remove variables, delete records, or change the dataset's organization. These changes will be isolated to your fork and won't be visible to the end user until you decide to merge the fork back into the original dataset. This lets you edit the dataset with confidence because your work is isolated. 
+You now have a copied dataset which is identical to the original, and are free to make changes without fear of disrupting the client's experience. You can add or remove variables, delete records, or change the dataset's organization. These changes will be isolated to your fork and won't be visible to the end user until you decide to merge the fork back into the original dataset. This lets you edit the dataset with confidence because your work is isolated.
 
-In this case, let's create a new categorical array variable. 
+In this case, let's create a new categorical array variable.
 ```{r state change1, include=FALSE}
 change_state()
 ```
 ```{r create Multiple Response Variable}
-ds$ImportantHiringCA <- makeArray(ds[, c("ImportantHiringTechExp", "ImportantHiringPMExp")], 
-    name = "importantCatArray") 
+ds$ImportantHiringCA <- makeArray(ds[, c("ImportantHiringTechExp", "ImportantHiringPMExp")],
+    name = "importantCatArray")
 ```
 
-Our forked dataset has diverged from the original dataset. Which we can see by comparing their names. 
+Our forked dataset has diverged from the original dataset. Which we can see by comparing their names.
 
 ```{r compare datasets}
 all(names(ds) %in% names(forked_ds))
 ```
 
-You can work with the forked dataset as long as you like, if you want to see it in the web App or share it with other analysts by you can do so by calling `webApp(forked_ds)`. You might create many forks and discard most of them without merging them into the original dataset. 
+You can work with the forked dataset as long as you like, if you want to see it in the web App or share it with other analysts by you can do so by calling `webApp(forked_ds)`. You might create many forks and discard most of them without merging them into the original dataset.
 
-If you do end up with changes to the forked dataset that you want to include in the original dataset you can do so with the `mergeFork()` function. This function figures out what changes you made the fork, and then applies those changes to the original dataset. 
+If you do end up with changes to the forked dataset that you want to include in the original dataset you can do so with the `mergeFork()` function. This function figures out what changes you made the fork, and then applies those changes to the original dataset.
 ```{r state change2, include=FALSE}
 change_state()
 ```
@@ -59,20 +60,20 @@ change_state()
 ds <- mergeFork(ds, forked_ds)
 ```
 
-After merging the original dataset includes the categorical array variable which we created on the fork. 
+After merging the original dataset includes the categorical array variable which we created on the fork.
 
 ```{r check successful merge}
 ds$ImportantHiringCA
 ```
 
-It's possible to to make changes to a fork which can't be easily merged into the original dataset. For instance if, while we were working on this fork someone added another variable called `ImportantHiringCA` to the original dataset the merge might fail because there's no safe way to reconcile the two forks. This is called a "merge conflict" and there are a couple best practices that you can follow to avoid this problem: 
+It's possible to to make changes to a fork which can't be easily merged into the original dataset. For instance if, while we were working on this fork someone added another variable called `ImportantHiringCA` to the original dataset the merge might fail because there's no safe way to reconcile the two forks. This is called a "merge conflict" and there are a couple best practices that you can follow to avoid this problem:
 
 1) **Make minimal changes to dataset forks.** Instead of making lots of changes to a fork, make a couple of small change to the fork, merge it back into the original dataset, and a create a new fork for the next set of changes
-2) **Have other analysts work on their own forks.** It's easier to avoid conflicts if each member of the team makes changes to their own fork and then periodically merges those changes back into the original dataset. This lets you coordinate the order that you want to apply changes to the original dataset, and so avoid some merge conflicts. 
+2) **Have other analysts work on their own forks.** It's easier to avoid conflicts if each member of the team makes changes to their own fork and then periodically merges those changes back into the original dataset. This lets you coordinate the order that you want to apply changes to the original dataset, and so avoid some merge conflicts.
 
 ## Appending data
 
-Another good use of the fork-edit-merge workflow is when you want to append data to an existing dataset. When appending data you usually want to check that the append operation completed successfully before publishing the data to users. This might come up if you are adding a second wave of a survey, or including some additional data which came in after the dataset was initially sent to clients. The first step is to upload the second survey wave as its own dataset. 
+Another good use of the fork-edit-merge workflow is when you want to append data to an existing dataset. When appending data you usually want to check that the append operation completed successfully before publishing the data to users. This might come up if you are adding a second wave of a survey, or including some additional data which came in after the dataset was initially sent to clients. The first step is to upload the second survey wave as its own dataset.
 
 ```{r state change3, include=FALSE}
 change_state()
@@ -82,7 +83,7 @@ wave2 <- newDataset(SO_survey, "SO_survey_wave2")
 
 ```
 
-We then fork the original dataset and append the new wave onto the forked dataset. 
+We then fork the original dataset and append the new wave onto the forked dataset.
 ```{r state change4, include=FALSE}
 change_state()
 ```
@@ -97,7 +98,7 @@ nrow(ds)
 nrow(ds_fork)
 ```
 
-Once we've confirmed that the append completed successfully we can merge the forked dataset back into the original one. 
+Once we've confirmed that the append completed successfully we can merge the forked dataset back into the original one.
 ```{r state change5, include=FALSE}
 change_state()
 ```
@@ -105,7 +106,7 @@ change_state()
 ds <- mergeFork(ds, ds_fork)
 ```
 
-`ds` now has the additional rows. 
+`ds` now has the additional rows.
 
 ```{r}
 nrow(ds)
@@ -113,7 +114,7 @@ nrow(ds)
 
 ## Merging datasets
 
-Merging two datasets together can often be the source of unexpected behavior like misaligning or overwriting variables, and so it's a good candidate for this workflow. Let's create a fake dataset with household size to merge onto the original one. 
+Merging two datasets together can often be the source of unexpected behavior like misaligning or overwriting variables, and so it's a good candidate for this workflow. Let's create a fake dataset with household size to merge onto the original one.
 ```{r state change6, include=FALSE}
 change_state()
 ```
@@ -127,20 +128,20 @@ house_table$HouseholdSize <- sample(
 house_ds <- newDataset(house_table, "House Size")
 ```
 
-There are a few reasons why we might not want to merge this new table onto our user facing data. For instance we might make a mistake in constructing the table, or have some category names which don't quite match up. Merging the data onto a forked dataset again gives us the safety to make changes and verify accuracy without affecting client-facing data. 
+There are a few reasons why we might not want to merge this new table onto our user facing data. For instance we might make a mistake in constructing the table, or have some category names which don't quite match up. Merging the data onto a forked dataset again gives us the safety to make changes and verify accuracy without affecting client-facing data.
 
 ```{r fork and merge recode, message=FALSE, results='hide'}
 ds_fork <- forkDataset(ds)
 ds_fork <- merge(ds_fork, house_ds, by = "Respondent")
 ```
 
-Before merging the fork back into the original dataset, we can check that everything went well with the join. 
+Before merging the fork back into the original dataset, we can check that everything went well with the join.
 
 ```{r check new data}
 crtabs(~ TabsSpaces + HouseholdSize, ds_fork)
 ```
 
-And finally once we're comfortable that everything went as expected we can send the data to the client by merging the fork back to the original dataset. 
+And finally once we're comfortable that everything went as expected we can send the data to the client by merging the fork back to the original dataset.
 ```{r state change7, include=FALSE}
 change_state()
 ```
@@ -151,7 +152,7 @@ ds$HouseholdSize
 
 ## Conclusion
 
-Forking and merging datasets is a great way to make changes to the data. It allows you to verify your work and get approval before putting the data in front of clients, and gives you the freedom to make changes and mistakes without worrying about disrupting production data. 
+Forking and merging datasets is a great way to make changes to the data. It allows you to verify your work and get approval before putting the data in front of clients, and gives you the freedom to make changes and mistakes without worrying about disrupting production data.
 
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
