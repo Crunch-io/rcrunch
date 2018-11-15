@@ -144,13 +144,6 @@ setMethod("values", "Categories", function(x) vapply(x, value, numeric(1)))
 #' @export
 setMethod("values<-", "Categories", setValues)
 
-#' @rdname is-na-categories
-#' @aliases is-na-categories
-#' @export
-setMethod("is.na", "Categories", function(x) {
-    structure(vapply(x, is.na, logical(1), USE.NAMES = FALSE), .Names = names(x))
-})
-
 #' @rdname is-selected-categories
 #' @export
 setMethod("is.selected", "Categories", function(x) {
@@ -174,7 +167,7 @@ setMethod("is.selected<-", "Categories", function(x, value) {
         is.selected(x) <- value
         return(x)
     }, x = x@.Data, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
-    return(x)
+    return(x) 
 })
 
 #' @rdname is-na-categories

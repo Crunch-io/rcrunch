@@ -142,6 +142,11 @@ applyTransforms <- function(x,
     # evaluate which categories should be kept
     keep_cats <- evalUseNA(array, dims_list, useNA = useNA)
 
+    # TODO: separate out the calculation of subtotals from others (like summary 
+    # stats) since a subtotal can have a mean, we need to calculate all 
+    # subtotals first and then calculate. Alternatively, change the process for 
+    # insertion function generation.
+    
     # Try to calculate the transforms for any dimension that has them, but
     # fail silently if they aren't calculable We use a for loop so that failing
     # one dimension doesn't break others. We could possibly use something like
@@ -164,7 +169,11 @@ applyTransforms <- function(x,
             }
 
             var_cats <- Categories(data = variables(dims_list)[[d]]$categories)
+            
             # TODO: calculate category/element changes
+        
+            # make a list of insertion functions to be used when calculating 
+            # below
             insert_funcs <- makeInsertionFunctions(
                 # only the kept categories must be passed
                 var_cats[keep_cats[[d]]],
@@ -173,49 +182,12 @@ applyTransforms <- function(x,
                 ...
             )
 
-            # mask the array before calculations so that no values are being
-            # calculated from that they shouldn't be (that is, don't treat means
-            # as if they were actually counts and do weighted means of the the
-            # means)
-            var_coord_cols <- startsWith(colnames(na_mask), "Var")
-            array[as.matrix(na_mask[,var_coord_cols])] <- NA
-
-            array <- applyAgainst(
-                X = array,
-                MARGIN = d,
-                FUN = calcTransforms,
-                insert_funcs = insert_funcs,
-                dim_names = names(insert_funcs)
-            )
-
-            # censor any values that should not have been calculated.
-
-            # return any values that had been censored already before we
-            # recalcualte the na_mask. We only have to do this if the na_mask
-            # has anything in it.
-            insert_types <- attributes(insert_funcs)$types
-            if (length(na_mask) > 0) {
-                id_map <- which(insert_types == "Category")
-                names(id_map) <- seq_along(id_map)
-                na_mask[,d] <- id_map[na_mask[,d]]
-                var_coord_cols <- startsWith(colnames(na_mask), "Var")
-                if (!(all(is.na(array[as.matrix(na_mask[,var_coord_cols])])))) {
-                    halt("Trying to overwrite uncensored values something is wrong")
-                }
-                array[as.matrix(na_mask[,var_coord_cols])] <- na_mask$values
-            }
-
-
+            # calculate the insertions, respecting the na_mask that is passeds
+            array <- maskAndApplyInserts(array, na_mask, d, insert_funcs)
 
             # re-calculate the na_mask to include numbers that should be
             # censored from this transform going forward
-            ind_to_censor <- which(insert_types == "SummaryStat")
-            coords <- lapply(dim(array), function(to) 1:to)
-            coords[[d]] <- ind_to_censor
-
-            na_mask_new <- expand.grid(coords)
-            na_mask_new$values <- array[as.matrix(na_mask_new)]
-            na_mask <- rbind(na_mask, na_mask_new)
+            na_mask <- calculate_na_mask(array, na_mask, d, insert_funcs)
         },
         error = function(e) {
             assign("errors", append(errors, d), envir = parent.env(environment()))
@@ -237,6 +209,62 @@ applyTransforms <- function(x,
     return(array)
 }
 
+# mask the array before calculations so that no values are being calculated from
+# those that they shouldn't be (for example, don't treat means as if they were
+# actually counts and do weighted means of the means)
+maskAndApplyInserts <- function(array, na_mask, d, insert_funcs) {
+    # get the coordinates of in the array that must be masked and turn them into 
+    # NAs
+    var_coord_cols <- startsWith(colnames(na_mask), "Var")
+    array[as.matrix(na_mask[,var_coord_cols])] <- NA
+    
+    # do the actual transforms calculations for the dimension d
+    array <- applyAgainst(
+        X = array,
+        MARGIN = d,
+        FUN = calcTransforms,
+        insert_funcs = insert_funcs,
+        dim_names = names(insert_funcs)
+    )
+    
+    # replace any values that had been masked with their previous values. We
+    # only have to do this if the na_mask has anything in it, and it will break
+    # if there's nothing in it
+    insert_types <- attributes(insert_funcs)$types
+    if (length(na_mask) > 0) {
+        # we use the id_map to map from positions in just the categories to the 
+        # positions after things have been inserted.
+        id_map <- which(insert_types == "Category")
+        names(id_map) <- seq_along(id_map)
+        na_mask[,d] <- id_map[na_mask[,d]]
+        var_coord_cols <- startsWith(colnames(na_mask), "Var")
+        if (!(all(is.na(array[as.matrix(na_mask[,var_coord_cols])])))) {
+            halt("Trying to overwrite uncensored values something is wrong")
+        }
+        array[as.matrix(na_mask[,var_coord_cols])] <- na_mask$values
+    }
+    
+    return(array)
+} 
+
+# given an array, na_mask, and insertion functions calculate a new na_mask that 
+# adds which elements in dimension d must be masked before further calculation
+calculate_na_mask <- function(array, na_mask, d, insert_funcs) {
+    # Find the coordinates of the cells that must be masked (for now this is
+    # just SummaryStats, but this should be any insertion that isn't allowed to
+    # have insertions calcualted from it)
+    ind_to_mask <- which(attributes(insert_funcs)$types == "SummaryStat")
+    coords <- lapply(dim(array), function(to) seq_len(to))
+    coords[[d]] <- ind_to_mask
+    
+    # add the new set of coordinates to the old na_mask since we iteratively 
+    # apply transforms
+    na_mask_new <- expand.grid(coords)
+    na_mask_new$values <- array[as.matrix(na_mask_new)]
+    na_mask <- rbind(na_mask, na_mask_new)
+    
+    return(na_mask)
+}
 
 makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, ...) {
     ### Insertions
@@ -257,9 +285,27 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
         include = includes
     )
 
+    # generate the functions to use (this makes it much cheaper to vapply later)
+    transforms_funcs <- makeTransFuncs(cat_insert_map, cats_in_array, var_cats)
+    names(transforms_funcs) <- names(cat_insert_map)
 
-    # setup functions to use (this makes it much cheaper to vapply later)
-    transforms_funcs <- base::lapply(cat_insert_map, function(element) {
+    # determine the types based on the cat_insert_map to be used later
+    types <- getInsertionTypes(cat_insert_map, cats_in_array)
+    attributes(transforms_funcs)$types <- types
+
+    # remove any NULLs above
+    transforms_funcs <- Filter(Negate(is.null), transforms_funcs)
+    attributes(transforms_funcs)$types <- types[!is.na(types)]
+
+    return(transforms_funcs)
+}
+
+makeTransFuncs <- function(cat_insert_map, cats_in_array, var_cats) {
+    # loop through the insertion map and make a function for each element in the
+    # map (either insertion or category) we use base::lapply here because we
+    # want to return a true list and not something of class AbstractCategories
+    # (which is what would happen with normal dispatch)
+    return(base::lapply(cat_insert_map, function(element) {
         # if element is a category, simply return the value
         if (is.category(element)) {
             if (!is.null(cats_in_array) && !name(element) %in% cats_in_array) {
@@ -270,18 +316,18 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
                 # not have them
                 return(NULL)
             }
-
+            
             id <- which(ids(var_cats) %in% id(element))
             which.cat <- names(var_cats[id])
             return(function(vec) vec[[which.cat]])
         }
-
+        
         # if element is a heading return NA (since there is no value to be
         # calculated but we need a placeholder non-number)
         if (is.Heading(element)) {
             return(function(vec) NA)
         }
-
+        
         # if element is a subtotal, sum the things it corresponds to which are
         # found with arguments()
         if (is.Subtotal(element)) {
@@ -291,15 +337,15 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
             which.cats <- names(var_cats[combo_ids])
             return(function(vec) sum(vec[which.cats]))
         }
-
-        # if element is a summaryStat, grab the function from summaryStatInsertions
-        # to use.
+        
+        # if element is a summaryStat, grab the function from 
+        # summaryStatInsertions to use.
         if (is.SummaryStat(element)) {
             statFunc <- summaryStatInsertions[[func(element)]](element, var_cats)
-
+            
             return(function(vec) statFunc(vec))
         }
-
+        
         # finally, check if there are other functions, if there are warn, and
         # then return NA
         known_inserts <- c("subtotal", names(summaryStatInsertions))
@@ -311,12 +357,11 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
             )
         }
         return(function(vec) NA)
-    })
+    }))
+}
 
-    names(transforms_funcs) <- names(cat_insert_map)
-
-    # determine the types based on the cat_insert_map to be used later
-    types <- vapply(cat_insert_map, function(element) {
+getInsertionTypes <- function(cat_insert_map, cats_in_array) {
+    return(vapply(cat_insert_map, function(element) {
         # if element is a category, simply return the value
         if (is.category(element)) {
             if (!is.null(cats_in_array) && !name(element) %in% cats_in_array) {
@@ -324,40 +369,25 @@ makeInsertionFunctions <- function(var_cats, transforms, cats_in_array = NULL, .
             }
             return("Category")
         }
-
-        # if element is a heading return NA (since there is no value to be
-        # calculated but we need a placeholder non-number)
+        
         if (is.Heading(element)) {
             return("Heading")
         }
-
-        # if element is a subtotal, sum the things it corresponds to which are
-        # found with arguments()
+        
         if (is.Subtotal(element)) {
             return("Subtotal")
         }
-
-        # if element is a summaryStat, grab the function from summaryStatInsertions
-        # to use.
+        
         if (is.SummaryStat(element)) {
             return("SummaryStat")
         }
-
-        # finally, check if there are other functions, if there are warn, and
-        # then return NA
+        
         known_inserts <- c("subtotal", names(summaryStatInsertions))
         unknown_funcs <- !(element[["function"]] %in% known_inserts)
         if (unknown_funcs) {
             return("Unknown")
         }
-    }, character(1))
-    attributes(transforms_funcs)$types <- types
-
-    # remove any NULLs above
-    transforms_funcs <- Filter(Negate(is.null), transforms_funcs)
-    attributes(transforms_funcs)$types <- types[!is.na(types)]
-
-    return(transforms_funcs)
+    }, character(1)))
 }
 
 #' apply a function against a dimension
