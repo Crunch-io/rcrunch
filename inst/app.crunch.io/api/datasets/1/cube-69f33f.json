@@ -1,0 +1,155 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22dimensions%22%3A%5B%7B%22function%22%3A%22bin%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2F000002%2F%22%7D%5D%7D%5D%2C%22weight%22%3Anull%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "function": "bin",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/1/variables/000002/"
+                        }
+                    ]
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "alias": "birthyr",
+                        "name": "birthyr"
+                    },
+                    "derived": true,
+                    "type": {
+                        "subtype": {
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        },
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": [
+                                    -1.5,
+                                    -1.0
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": [
+                                    -1.0,
+                                    -0.5
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": [
+                                    -0.5,
+                                    0.0
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 4,
+                                "value": [
+                                    0.0,
+                                    0.5
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 5,
+                                "value": [
+                                    0.5,
+                                    1.0
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 6,
+                                "value": [
+                                    1.0,
+                                    1.5
+                                ],
+                                "missing": false
+                            },
+                            {
+                                "id": 7,
+                                "value": [
+                                    1.5,
+                                    2.0
+                                ],
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
+                }
+            ],
+            "missing": 0,
+            "measures": {
+                "count": {
+                    "data": [
+                        5,
+                        5,
+                        4,
+                        4,
+                        5,
+                        1,
+                        1
+                    ],
+                    "n_missing": 0,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                5,
+                5,
+                4,
+                4,
+                5,
+                1,
+                1
+            ],
+            "n": 25
+        }
+    }
+}

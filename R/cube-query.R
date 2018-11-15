@@ -11,15 +11,15 @@
 #' @param data an object of class `CrunchDataset`
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `data`, or `NULL` for unweighted results.
-#' Default is the currently applied [`weight`].
+#' Default is the currently applied [`weight()`].
 #' @param useNA whether to include missing values in tabular results. See
 #' [base::table()].
 #' @return an object of class `CrunchCube`
 #' @importFrom stats as.formula terms
 #' @seealso [weight()]
 #' @export
-crtabs <- function (formula, data, weight=crunch::weight(data),
-                     useNA=c("no", "ifany", "always")) {
+crtabs <- function(formula, data, weight = crunch::weight(data),
+                   useNA = c("no", "ifany", "always")) {
     ## Validate inputs
     if (missing(formula)) {
         halt("Must provide a formula")
@@ -47,6 +47,7 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
 
     ## GET it.
     resp <- crGET(cubeURL(data),
-        query=list(query=toJSON(query), filter=toJSON(f)))
-    return(CrunchCube(resp, useNA=useNA))
+        query = list(query = toJSON(query), filter = toJSON(f))
+    )
+    return(CrunchCube(resp, useNA = useNA))
 }

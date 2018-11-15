@@ -12,6 +12,9 @@
 #' @param dataset A CrunchDataset, potentially a selection of variables from it
 #' @param filters FilterCatalog, or `NULL` for no filters. Default all
 #' filters in your catalog, `filters(dataset)`.
+#' @param weight a CrunchVariable that has been designated as a potential
+#' weight variable for `dataset`, or `NULL` for unweighted results.
+#' Default is the currently applied [`weight()`].
 #' @param brand_colors an optional color vector of length 3 or less, or a named
 #' list with names 'primary', 'secondary', and 'message'. See "Details" for more
 #' about color specification.
@@ -48,9 +51,13 @@
 #' @aliases crunchBox CrunchBox
 #' @export
 #' @importFrom grDevices col2rgb colors rgb
-crunchBox <- function (dataset, filters=crunch::filters(dataset),
-                       brand_colors, static_colors,
-                       category_color_lookup, ...) {
+crunchBox <- function(dataset,
+                      filters = crunch::filters(dataset),
+                      weight = crunch::weight(dataset),
+                      brand_colors,
+                      static_colors,
+                      category_color_lookup,
+                      ...) {
     ## Validate inputs
     if (missing(dataset) || !is.dataset(dataset)) {
         halt("'dataset' must be a CrunchDataset, potentially subsetted on variables")
@@ -62,6 +69,10 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
     if (!inherits(filters, "FilterCatalog")) {
         halt("'filters' should be a FilterCatalog or NULL")
     }
+    if (!is.null(weight)) {
+        ## TODO: could validate that weight is a weight variable
+        weight <- self(weight)
+    }
 
     ## Subset on non-hidden variables only
     dataset <- dataset[names(dataset)]
@@ -70,15 +81,20 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
     nvars <- length(variables(dataset))
     nfilt <- length(filters)
     if (boxTooBig(nvars, nfilt)) {
-        halt(nvars, " variable", ifelse(nvars == 1, "", "s"),
+        halt(
+            nvars, " variable", ifelse(nvars == 1, "", "s"),
             " and ", nfilt, " filter", ifelse(nfilt == 1, "", "s"),
             " results in too many cubes to fit in the box. ",
-            "Please try again with fewer of either.")
+            "Please try again with fewer of either."
+        )
     }
 
     ## Construct the payload
-    payload <- list(filters=lapply(urls(filters), function (x) list(filter=x)),
-        ...)
+    payload <- list(
+        filters = lapply(urls(filters), function(x) list(filter = x)),
+        weight = weight,
+        ...
+    )
     ## Add "where" after so that it no-ops if variablesFilter returns NULL (i.e. no filter)
     payload$where <- variablesFilter(dataset)
 
@@ -86,8 +102,10 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
     brand_labels <- c("primary", "secondary", "message")
     if (!missing(brand_colors)) {
         if (!vectorOrList(brand_colors, "character")) {
-            halt(sQuote("brand_colors"), " must be character vector or list",
-                 " of characters")
+            halt(
+                sQuote("brand_colors"), " must be character vector or list",
+                " of characters"
+            )
         }
         if (length(brand_colors) > 3) {
             halt(sQuote("brand_colors"), " must be at most 3 elements long")
@@ -101,9 +119,11 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
         if (is.null(names(brand_colors))) {
             names(brand_colors) <- brand_labels[seq_along(brand_colors)]
         } else if (any(!names(brand_colors) %in% brand_labels)) {
-            halt("If ", sQuote("brand_colors"), " is a named list, it must",
-                 " contain only ",
-                 serialPaste(dQuote(brand_labels), collapse = "and"))
+            halt(
+                "If ", sQuote("brand_colors"), " is a named list, it must",
+                " contain only ",
+                serialPaste(dQuote(brand_labels), collapse = "and")
+            )
         }
 
         payload$display_settings$palette$brand_colors <- brand_colors
@@ -125,7 +145,8 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
 
     ## Send it
     out <- crPOST(shojiURL(dataset, "catalogs", "boxdata"),
-        body=toJSON(do.call("wrapEntity", payload)))
+        body = toJSON(do.call("wrapEntity", payload))
+    )
     return(out)
 }
 
@@ -134,9 +155,9 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
 CrunchBox <- crunchBox
 
 ## Make this a function so tests can mock it
-.boxlimit <- function () 60000L
+.boxlimit <- function() 60000L
 
-boxTooBig <- function (nvars, nfilters) {
+boxTooBig <- function(nvars, nfilters) {
     ## Make sure that the number of cubes the box will contain is below a threshold
     nvars * (nvars - 1) * (nfilters + 1) > .boxlimit()
 }
@@ -151,7 +172,7 @@ boxTooBig <- function (nvars, nfilters) {
 #' @return Invisibly, the dataset. Called for side-effect of printing things.
 #' @seealso [`CrunchBox`]
 #' @export
-preCrunchBoxCheck <- function (dataset) {
+preCrunchBoxCheck <- function(dataset) {
     vm <- variableMetadata(dataset)[urls(variables(dataset))] ## [] for order of vars
     keeps <- aliases(vm)
 
@@ -160,10 +181,14 @@ preCrunchBoxCheck <- function (dataset) {
     if (!all(suggested_types)) {
         not_recommended_types <- !suggested_types
         num_types <- sum(not_recommended_types)
-        cat("We recommend using only categorical and multiple_response",
-            "variables.", demonstrativeCount(num_types), "an unsupported type:\n")
-        print(data.frame(alias=keeps[!suggested_types],
-            type=types(vm)[!suggested_types]))
+        cat(
+            "We recommend using only categorical and multiple_response",
+            "variables.", demonstrativeCount(num_types), "an unsupported type:\n"
+        )
+        print(data.frame(
+            alias = keeps[!suggested_types],
+            type = types(vm)[!suggested_types]
+        ))
     }
 
     ## 2. Shorter variable names will display in the menus better.
@@ -172,11 +197,15 @@ preCrunchBoxCheck <- function (dataset) {
     too_long_name <- name_length > 40
     if (any(too_long_name)) {
         num_too_long <- sum(too_long_name)
-        cat("Shorter variable names will display in the menus better.",
-            demonstrativeCount(num_too_long), "a name longer than 40 characters:\n")
-        print(data.frame(alias=keeps[too_long_name],
-            length=name_length[too_long_name],
-            name=names(vm)[too_long_name]))
+        cat(
+            "Shorter variable names will display in the menus better.",
+            demonstrativeCount(num_too_long), "a name longer than 40 characters:\n"
+        )
+        print(data.frame(
+            alias = keeps[too_long_name],
+            length = name_length[too_long_name],
+            name = names(vm)[too_long_name]
+        ))
     }
 
     ## 3. Categories
@@ -184,78 +213,94 @@ preCrunchBoxCheck <- function (dataset) {
     ## regions on a map.)
     ## Check threshold: 7 categories
     ## TODO: add checking for category color specifications?
-    num_cats <- vapply(vm, function (x) {
+    num_cats <- vapply(vm, function(x) {
         cats <- x$categories
         if (is.null(cats)) return(0)
         ## We care only about non-missing categories
-        return(sum(vapply(cats, function (ctg) !isTRUE(ctg$missing), logical(1))))
+        return(sum(vapply(cats, function(ctg) !isTRUE(ctg$missing), logical(1))))
     }, numeric(1))
     too_many_cats <- num_cats > 7
     if (any(too_many_cats)) {
         num_too_many <- sum(too_many_cats)
-        cat("Too many categories won't plot well.",
+        cat(
+            "Too many categories won't plot well.",
             demonstrativeCount(num_too_many),
-            "more than 7 non-missing categories:\n")
-        print(data.frame(alias=keeps[too_many_cats],
-            num_categories=num_cats[too_many_cats]))
+            "more than 7 non-missing categories:\n"
+        )
+        print(data.frame(
+            alias = keeps[too_many_cats],
+            num_categories = num_cats[too_many_cats]
+        ))
     }
 
     ## b. Long category names won't fit well in the table headers, as bar/group
     ## labels, or in the graph legend.
     ## Check threshold: 40
-    longest_cat <- vapply(vm, function (x) {
+    longest_cat <- vapply(vm, function(x) {
         cats <- x$categories
         if (is.null(cats)) return("")
-        catnames <- vapply(cats, function (ctg) ctg$name, character(1))
+        catnames <- vapply(cats, function(ctg) ctg$name, character(1))
         return(catnames[which.max(nchar(catnames))])
     }, character(1))
     cat_length <- nchar(longest_cat)
     too_long_cat <- cat_length > 40
     if (any(too_long_cat)) {
         num_too_long <- sum(too_long_cat)
-        cat("Shorter category names will fit in the tables and graphs better.",
+        cat(
+            "Shorter category names will fit in the tables and graphs better.",
             demonstrativeCount(num_too_long),
-            "at least one category longer than 40 characters:\n")
-        print(data.frame(alias=keeps[too_long_cat],
-            length=cat_length[too_long_cat],
-            category=longest_cat[too_long_cat]))
+            "at least one category longer than 40 characters:\n"
+        )
+        print(data.frame(
+            alias = keeps[too_long_cat],
+            length = cat_length[too_long_cat],
+            category = longest_cat[too_long_cat]
+        ))
     }
 
     ## 4. Subvariables. Because multiple_response look like categorical when
     ## plotted, we'll use the same size/length check thresholds
-    num_subvars <- vapply(vm, function (x) length(x$subvariables), numeric(1))
+    num_subvars <- vapply(vm, function(x) length(x$subvariables), numeric(1))
     too_many_subvars <- num_subvars > 7
     if (any(too_many_subvars)) {
         num_too_many <- sum(too_many_subvars)
-        cat("Too many subvariables won't plot well. ",
+        cat(
+            "Too many subvariables won't plot well. ",
             demonstrativeCount(num_too_many),
-            "more than 7 subvariables:\n")
-        print(data.frame(alias=keeps[too_many_subvars],
-            num_subvariables=num_subvars[too_many_subvars]))
+            "more than 7 subvariables:\n"
+        )
+        print(data.frame(
+            alias = keeps[too_many_subvars],
+            num_subvariables = num_subvars[too_many_subvars]
+        ))
     }
 
-    longest_subvar <- vapply(vm, function (x) {
+    longest_subvar <- vapply(vm, function(x) {
         cats <- x$subreferences
         if (is.null(cats)) return("")
-        catnames <- vapply(cats, function (ctg) ctg$name, character(1))
+        catnames <- vapply(cats, function(ctg) ctg$name, character(1))
         return(catnames[which.max(nchar(catnames))])
     }, character(1))
     subvar_length <- nchar(longest_subvar)
     too_long_subvar <- subvar_length > 40
     if (any(too_long_subvar)) {
         num_too_long <- sum(too_long_subvar)
-        cat("Shorter subvariable names will fit in the tables and graphs better.",
+        cat(
+            "Shorter subvariable names will fit in the tables and graphs better.",
             demonstrativeCount(num_too_long),
-            "at least one subvariable longer than 40 characters:\n")
-        print(data.frame(alias=keeps[too_long_subvar],
-            length=subvar_length[too_long_subvar],
-            subvariable=longest_subvar[too_long_subvar]))
+            "at least one subvariable longer than 40 characters:\n"
+        )
+        print(data.frame(
+            alias = keeps[too_long_subvar],
+            length = subvar_length[too_long_subvar],
+            subvariable = longest_subvar[too_long_subvar]
+        ))
     }
 
     invisible(dataset)
 }
 
-demonstrativeCount <- function (n, noun="variable") {
+demonstrativeCount <- function(n, noun = "variable") {
     return(ifelse(n > 1, paste("These", n, "variables have"), "This variable has"))
 }
 
@@ -282,50 +327,59 @@ demonstrativeCount <- function (n, noun="variable") {
 #' embedCrunchBox(box, logo="//myco.example/img/logo_200px.png")
 #' }
 #' @export
-embedCrunchBox <- function (box, title=NULL, logo=NULL, ...) {
-    iframe <- paste0('<iframe src="',
+embedCrunchBox <- function(box, title = NULL, logo = NULL, ...) {
+    iframe <- paste0(
+        '<iframe src="',
         boxdataToWidgetURL(box),
-        '" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>')
+        '" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>'
+    )
     if (!is.null(logo)) {
-        iframe <- boxfig(paste0('<img src="', logo,
-            '" style="height:auto; width:200px; margin-left:-4px"></img>'),
-            iframe)
+        iframe <- boxfig(
+            paste0(
+                '<img src="', logo,
+                '" style="height:auto; width:200px; margin-left:-4px"></img>'
+            ),
+            iframe
+        )
     } else if (!is.null(title)) {
         iframe <- boxfig(
             '<div style="padding-bottom: 12px">',
-            paste0('    <span style="font-size: 18px; color: #444444; line-height: 1;">',
-                title, '</span>'),
-            '</div>',
-            iframe)
+            paste0(
+                '    <span style="font-size: 18px; color: #444444; line-height: 1;">',
+                title, "</span>"
+            ),
+            "</div>",
+            iframe
+        )
     }
     cat(iframe, "\n")
     invisible(iframe)
 }
 
-boxdataToWidgetURL <- function (box) {
+boxdataToWidgetURL <- function(box) {
     ## Grab the box id hash from one URL and plug it into the public widget URL
     sub(".*([0-9a-f]{32}).*", "//s.crunch.io/widget/index.html#/ds/\\1/", box)
 }
 
-boxfig <- function (...) {
+boxfig <- function(...) {
     ## Wrap HTML in more HTML, a <figure> tag
     paste0(
         '<figure style="text-align: left;" class="content-list-component image">\n',
-        paste0("    ", c(...), "\n", collapse=""),
-        '</figure>'
+        paste0("    ", c(...), "\n", collapse = ""),
+        "</figure>"
     )
 }
 
-validHexColor <- function (color) {
+validHexColor <- function(color) {
     ## Given a color string, possibly an R color name, validate it and
     ## standardize its formatting like `#AABBCC`
     if (!is.character(color)) {
-        halt("A color must be a character, got ", class(color)," instead")
+        halt("A color must be a character, got ", class(color), " instead")
     }
 
     # if color is an R color name like "aliceblue" convert to hex
     if (color %in% colors()) {
-        color <- rgb(t(col2rgb(color)/255))
+        color <- rgb(t(col2rgb(color) / 255))
     } else {
         if (!startsWith(color, "#")) {
             color <- paste0("#", color)

@@ -1,7 +1,6 @@
 {
     "element": "shoji:catalog",
     "self": "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
-    "specification": "https://alpha.crunch.io/api/specifications/variables/",
     "description": "List of Subvariables of this Variable",
     "index": {
         "subvar1/": {

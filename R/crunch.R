@@ -10,26 +10,26 @@
 #' need to email files back and forth continually to share results.
 #'
 #' @seealso To learn more about using the package, see
-#' \code{vignette("getting-started", package="crunch")}. To sign up for a
+#' \code{vignette("crunch")}. To sign up for a
 #' Crunch.io account, visit \url{https://app.crunch.io/}.
 #' @docType package
 #' @name crunch
 NULL
 
 #' @importFrom httr config add_headers
-.onLoad <- function (lib, pkgname="crunch") {
+.onLoad <- function(lib, pkgname = "crunch") {
     setIfNotAlready(
-        crunch.api="https://app.crunch.io/api/",
-        httpcache.on=TRUE,
-        crunch.namekey.dataset="alias",
-        crunch.namekey.array="alias"
+        crunch.api = "https://app.crunch.io/api/",
+        httpcache.on = TRUE,
+        crunch.namekey.dataset = "alias",
+        crunch.namekey.array = "alias"
     )
     set_crunch_config()
     notifyIfNewVersion()
     invisible()
 }
 
-setIfNotAlready <- function (...) {
+setIfNotAlready <- function(...) {
     newopts <- list(...)
     oldopts <- options()
     oldopts <- oldopts[intersect(names(newopts), names(oldopts))]

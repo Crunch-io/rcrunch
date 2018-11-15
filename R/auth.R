@@ -1,29 +1,13 @@
-#' Stay authenticated.
-#'
-#' The auth store keeps the session token after authentication so that all
-#' API calls can use it. We can also store other things in it.
-#'
-#' @format An environment.
-#' @keywords internal
-session_store <- NULL
-makeSessionStore <- function () {
-    session_store <<- new.env(hash = TRUE, parent = emptyenv())
-    session_store$.globals <- list(prompt=getOption("prompt"))
-}
-makeSessionStore()
-
 #' Kill the active Crunch session
 #' @export
-logout <- function () {
-    if (is.authenticated()) try(crGET(rootURL("logout")), silent=TRUE)
-    deleteSessionInfo()
-    options(prompt = session_store$.globals$prompt)
-}
-
 #' @importFrom httpcache clearCache
-deleteSessionInfo <- function () {
-    rm(list=setdiff(ls(envir=session_store), ".globals"), envir=session_store)
+logout <- function() {
+    try(crGET(rootURL("logout")), silent = TRUE)
     clearCache()
+    old.prompt <- getOption("crunch.old.prompt")
+    if (!is.null(old.prompt)) {
+        options(prompt = old.prompt, crunch.old.prompt = NULL)
+    }
 }
 
 #' Authenticate with the Crunch API
@@ -50,15 +34,19 @@ deleteSessionInfo <- function () {
 #' @param ... additional parameters passed in the authentication. Not
 #' currently supported by the Crunch API.
 #' @export
-login <- function (email=envOrOption("crunch.email"),
-                   password=envOrOption("crunch.pw"), ...) {
-    logout()
-    auth <- crunchAuth(email=email, password=password, ...)
-
-    warmSessionCache()
-
+login <- function(email = envOrOption("crunch.email"),
+                  password = envOrOption("crunch.pw"), ...) {
+    old.prompt <- getOption("crunch.old.prompt")
+    if (!is.null(old.prompt)) {
+        ## We may already be logged in. Log out first.
+        logout()
+    }
+    auth <- crunchAuth(email = email, password = password, ...)
+    options(
+        prompt = paste("[crunch]", getOption("prompt")),
+        crunch.old.prompt = getOption("prompt")
+    )
     message("Logged into crunch.io as ", email)
-    options(prompt = paste("[crunch]", session_store$.globals$prompt))
     ## Return a Session object
     invisible(session())
 }
@@ -72,10 +60,10 @@ login <- function (email=envOrOption("crunch.email"),
 #' cr$projects
 #' }
 #' @export
-session <- function () new("Session")
+session <- function() new("Session")
 
 #' @importFrom utils installed.packages
-crunchAuth <- function (email, password=NULL, ...) {
+crunchAuth <- function(email, password = NULL, ...) {
     ## Validate authentication inputs and then POST to the API
     if (is.null(email)) {
         halt("Must supply the email address associated with your crunch.io account")
@@ -85,7 +73,6 @@ crunchAuth <- function (email, password=NULL, ...) {
             prompt <- paste0("Crunch.io password for ", email, ": ")
             if ("rstudioapi" %in% rownames(installed.packages()) &&
                 rstudioapi::hasFun("askForPassword")) {
-
                 password <- rstudioapi::askForPassword(prompt)
             } else {
                 cat(prompt)
@@ -97,29 +84,31 @@ crunchAuth <- function (email, password=NULL, ...) {
     }
 
     crPOST(absoluteURL("public/login/", getOption("crunch.api")),
-        body=toJSON(list(email=email, password=password, ...)),
-        status.handlers=list(`401`=function (response, user=email) {
+        body = toJSON(list(email = email, password = password, ...)),
+        status.handlers = list(`401` = function(response, user = email) {
             halt(paste("Unable to authenticate", user))
-        }))
+        })
+    )
 }
 
-without_echo <- function (expr) {
+without_echo <- function(expr) {
     if (.Platform$OS.type == "unix") {
         ## Don't print the password being typed
-        try(system("stty -echo", ignore.stdout=TRUE, ignore.stderr=TRUE),
-            silent=TRUE)
+        try(system("stty -echo", ignore.stdout = TRUE, ignore.stderr = TRUE),
+            silent = TRUE
+        )
         on.exit({
-            try(system("stty echo", ignore.stdout=TRUE, ignore.stderr=TRUE),
-                silent=TRUE)
+            try(system("stty echo", ignore.stdout = TRUE, ignore.stderr = TRUE),
+                silent = TRUE
+            )
             cat("\n")
         })
     }
     eval.parent(expr)
 }
 
-
 ## Pass through for test mocking
-read_input <- function (...) readline(...)
+read_input <- function(...) readline(...)
 
 #' Add an auth token as a cookie manually
 #'
@@ -131,20 +120,14 @@ read_input <- function (...) readline(...)
 #' @export
 #' @keywords internal
 #' @importFrom httr set_cookies
-tokenAuth <- function (token, ua="token") {
+tokenAuth <- function(token, ua = "token") {
     set_crunch_config(
         c(
-            set_cookies(token=token),
-            add_headers(`user-agent`=crunchUserAgent(ua))
+            set_cookies(token = token),
+            add_headers(`user-agent` = crunchUserAgent(ua))
         ),
-        update=TRUE)
-    warmSessionCache()
+        update = TRUE
+    )
 }
 
-jupyterLogin <- function (token) tokenAuth(token, ua="jupyter.crunch.io")
-
-warmSessionCache <- function () {
-    session_store$root <- getAPIRoot()
-}
-
-is.authenticated <- function () !is.null(session_store$root)
+jupyterLogin <- function(token) tokenAuth(token, ua = "jupyter.crunch.io")

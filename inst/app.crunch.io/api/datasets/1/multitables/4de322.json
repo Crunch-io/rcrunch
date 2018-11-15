@@ -4,7 +4,6 @@
 	"views": {
 		"tabbook": "https://app.crunch.io/api/datasets/1/multitables/4de322/tabbook/"
 	},
-	"specification": "https://app.crunch.io/api/specifications/multitables/",
 	"description": "Detail information for one multitable definition",
 	"body": {
 		"name": "Shared multitable",
@@ -20,6 +19,7 @@
 		}],
 		"is_public": true,
 		"display_settings": {},
-		"id": "4de322"
+		"id": "4de322",
+		"team": null
 	}
 }

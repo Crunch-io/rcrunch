@@ -1,0 +1,33 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/",
+    "catalogs": {
+        "datasets": "/api/datasets/",
+        "users": "/api/users/",
+        "roles": "/api/roles/",
+        "icons": "/api/icons/",
+        "snapshots": "/api/snapshots/",
+        "teams": "/api/teams/",
+        "sources": "/api/sources/",
+        "projects": "/api/projects/",
+        "geodata": "/api/geodata/",
+        "orgs": "/api/orgs/",
+        "public": "/api/public/",
+        "lobs": "/api/lobs/"
+    },
+    "views": {
+        "progress": "/api/progress//app.crunch.io/api/search/",
+        "feature_flag": "/api/feature_flag/",
+        "migration": "/api/migration/",
+        "account": "/api/account/",
+        "user": "/api/users/8e01e9/"
+    },
+    "urls": {
+        "user_url": "/api/users/8e01e9/",
+        "account_roles_url": "/api/roles/accounts/",
+        "notebook_url": "https://jupyter.crunch.io/",
+        "logout_url": "/api/logout/",
+        "account_url": "/api/account/"
+    },
+    "description": "The API root. GET user_url to access your Crunch resources. GET logout_url to sign out."
+}

@@ -1,0 +1,384 @@
+{
+  "element": "shoji:view",
+  "self": "/api/datasets/a86f57/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fa86f57%2Fvariables%2F0000bd%2F%22%7D%2C%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fa86f57%2Fvariables%2F000067%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3A%22%2Fapi%2Fdatasets%2Fa86f57%2Fvariables%2F0000d0%2F%22%7D&filter=%7B%7D",
+  "value": {
+    "query": {
+      "measures": {
+        "count": {
+          "function": "cube_count",
+          "args": []
+        }
+      },
+      "dimensions": [
+        {
+          "variable": "/api/datasets/a86f57/variables/0000bd/"
+        },
+        {
+          "variable": "/api/datasets/a86f57/variables/000067/"
+        }
+      ],
+      "weight": "/api/datasets/a86f57/variables/0000d0/"
+    },
+    "query_environment": {
+      "filter": []
+    },
+    "result": {
+      "dimensions": [
+        {
+          "references": {
+            "alias": "offal",
+            "notes": "A categorical variable where one of the categories has no responses",
+            "name": "Offal",
+            "description": "Mike's favorite food"
+          },
+          "derived": false,
+          "type": {
+            "ordinal": false,
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "missing": false,
+                "id": 1,
+                "name": "Liver"
+              },
+              {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "Kidney"
+              },
+              {
+                "numeric_value": 3,
+                "missing": false,
+                "id": 3,
+                "name": "Heart"
+              },
+              {
+                "numeric_value": 4,
+                "missing": false,
+                "id": 4,
+                "name": "Pancreas"
+              },
+              {
+                "numeric_value": 5,
+                "missing": false,
+                "id": 5,
+                "name": "Thymus"
+              },
+              {
+                "numeric_value": 6,
+                "missing": false,
+                "id": 6,
+                "name": "Snout"
+              },
+              {
+                "numeric_value": 7,
+                "missing": false,
+                "id": 7,
+                "name": "Lung"
+              },
+              {
+                "numeric_value": 8,
+                "missing": false,
+                "id": 8,
+                "name": "Tongue"
+              },
+              {
+                "numeric_value": 32766,
+                "missing": true,
+                "id": 32766,
+                "name": "Don't know"
+              },
+              {
+                "numeric_value": 32767,
+                "missing": true,
+                "id": 32767,
+                "name": "Not asked"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              }
+            ]
+          }
+        },
+        {
+          "references": {
+            "alias": "food_groups",
+            "notes": "A categorical variable where the missing categories are interspersed throughout the non-missing categories",
+            "view": {
+              "show_counts": false,
+              "show_numeric_values": false,
+              "transform": {
+                "insertions": [
+                  {
+                    "function": "subtotal",
+                    "args": [
+                      4
+                    ],
+                    "anchor": 4,
+                    "name": "animal-based"
+                  },
+                  {
+                    "function": "subtotal",
+                    "args": [
+                      2,
+                      0,
+                      5
+                    ],
+                    "anchor": 4,
+                    "name": "plant-based again, after animal-based"
+                  },
+                  {
+                    "function": "subtotal",
+                    "args": [
+                      2,
+                      0,
+                      5
+                    ],
+                    "anchor": 0,
+                    "name": "plant-based"
+                  }
+                ]
+              },
+              "include_missing": false,
+              "column_width": null
+            },
+            "description": "Four of the five USDA food groups",
+            "name": "Food groups"
+          },
+          "derived": false,
+          "type": {
+            "ordinal": false,
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Vegetables"
+              },
+              {
+                "numeric_value": 32766,
+                "missing": true,
+                "id": 32766,
+                "name": "Don't know"
+              },
+              {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "Fruit"
+              },
+              {
+                "numeric_value": 5,
+                "missing": false,
+                "id": 5,
+                "name": "Grain"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              },
+              {
+                "numeric_value": 4,
+                "missing": false,
+                "id": 4,
+                "name": "Meat"
+              },
+              {
+                "numeric_value": 32767,
+                "missing": true,
+                "id": 32767,
+                "name": "Not asked"
+              }
+            ]
+          }
+        }
+      ],
+      "missing": 109,
+      "measures": {
+        "count": {
+          "data": [
+            115.8319613154195,
+            2.62518864148393,
+            153.41753969503284,
+            94.9423669445809,
+            0,
+            136.2018418775848,
+            0,
+            37.57169374752416,
+            1.4714274948831,
+            48.61418165079888,
+            41.68379789492961,
+            0,
+            34.33723746190175,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            29.90550074593223,
+            2.35174001909233,
+            70.22376628596614,
+            29.54178966126364,
+            0,
+            47.01823429966309,
+            0,
+            66.57638862921793,
+            0.844129024876369,
+            73.05115948502466,
+            65.7194985610729,
+            0,
+            154.48789765358873,
+            0,
+            56.945151092463256,
+            0,
+            62.589746073575036,
+            34.293069578535366,
+            0,
+            43.75226021815835,
+            0,
+            33.84571928774898,
+            0,
+            32.5062091544317,
+            31.683238319732382,
+            0,
+            30.07020303135959,
+            0,
+            6.054924194581714,
+            0,
+            7.743467186654462,
+            5.48633228387126,
+            0,
+            11.448194011473745,
+            0,
+            0,
+            2.6472184211073,
+            0,
+            0,
+            0,
+            0,
+            0,
+            30.043879787250884,
+            0,
+            37.44314110395441,
+            14.824465490048272,
+            0,
+            14.205439675217072,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "n_missing": 109,
+          "metadata": {
+            "references": {},
+            "derived": true,
+            "type": {
+              "integer": false,
+              "missing_rules": {},
+              "missing_reasons": {
+                "No Data": -1
+              },
+              "class": "numeric"
+            }
+          }
+        }
+      },
+      "element": "crunch:cube",
+      "counts": [
+        146,
+        2,
+        168,
+        108,
+        0,
+        130,
+        0,
+        47,
+        1,
+        52,
+        36,
+        0,
+        34,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        32,
+        1,
+        56,
+        23,
+        0,
+        38,
+        0,
+        69,
+        1,
+        84,
+        54,
+        0,
+        139,
+        0,
+        64,
+        0,
+        55,
+        28,
+        0,
+        42,
+        0,
+        34,
+        0,
+        29,
+        26,
+        0,
+        28,
+        0,
+        6,
+        0,
+        10,
+        3,
+        0,
+        12,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        36,
+        0,
+        41,
+        16,
+        0,
+        10,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "n": 1662
+    }
+  }
+}

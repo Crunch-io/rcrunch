@@ -1,0 +1,9 @@
+Name: Crunch Datasets
+Description: Select Crunch Dataset
+Binding: listDatasets(shiny = TRUE)
+Interactive: true
+
+Name: Array Builder
+Description: Construct a categorical array or multiple response variable
+Binding: makeArrayGadget()
+Interactive: true

@@ -23,7 +23,7 @@
 #'     description="When creating variable definitions with 'values', you must
 #'     specify 'type', and categorical variables will require 'categories'.")
 #' @seealso `toVariable`
-VariableDefinition <- function (data, ...) {
+VariableDefinition <- function(data, ...) {
     out <- list(...)
     if (!missing(data)) {
         out <- modifyList(toVariable(data), out)

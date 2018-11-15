@@ -1,7 +1,6 @@
 {
     "element": "shoji:catalog",
     "self": "https://app.crunch.io/api/datasets/1/variables/",
-    "specification": "https://app.crunch.io/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
         "https://app.crunch.io/api/datasets/1/variables/gender/": {
@@ -41,6 +40,7 @@
             "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
             "description": "Please select all that apply",
             "notes": "",
+            "uniform_basis": false,
             "subvariables": [
                 "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/",
                 "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/",

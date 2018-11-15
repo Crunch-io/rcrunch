@@ -1,0 +1,69 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/mr_from_delim/",
+    "catalogs": {
+        "batches": "https://app.crunch.io/api/datasets/mr_from_delim/batches/",
+        "users": "https://app.crunch.io/api/datasets/mr_from_delim/users/",
+        "variables": "https://app.crunch.io/api/datasets/mr_from_delim/variables/",
+        "actions": "https://app.crunch.io/api/datasets/mr_from_delim/actions/",
+        "savepoints": "https://app.crunch.io/api/datasets/mr_from_delim/savepoints/",
+        "boxdata": "https://app.crunch.io/api/datasets/mr_from_delim/boxdata/",
+        "filters": "https://app.crunch.io/api/datasets/mr_from_delim/filters/",
+        "multitables": "https://app.crunch.io/api/datasets/mr_from_delim/multitables/",
+        "comparisons": "https://app.crunch.io/api/datasets/mr_from_delim/comparisons/",
+        "forks": "https://app.crunch.io/api/datasets/mr_from_delim/forks/",
+        "permissions": "https://app.crunch.io/api/datasets/mr_from_delim/permissions/",
+        "joins": "https://app.crunch.io/api/datasets/mr_from_delim/joins/",
+        "decks": "https://app.crunch.io/api/datasets/mr_from_delim/decks/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "weight_variables": "https://app.crunch.io/api/datasets/mr_from_delim/weight_variables/"
+    },
+    "fragments": {
+        "preferences": "https://app.crunch.io/api/datasets/mr_from_delim/preferences/",
+        "stream": "https://app.crunch.io/api/datasets/mr_from_delim/stream/",
+        "settings": "https://app.crunch.io/api/datasets/mr_from_delim/settings/",
+        "visit": "https://app.crunch.io/api/datasets/mr_from_delim/visit/",
+        "state": "https://app.crunch.io/api/datasets/mr_from_delim/state/",
+        "table": "https://app.crunch.io/api/datasets/mr_from_delim/table/",
+        "pk": "https://app.crunch.io/api/datasets/mr_from_delim/pk/",
+        "exclusion": "https://app.crunch.io/api/datasets/mr_from_delim/exclusion/"
+    },
+    "views": {
+        "cube": "https://app.crunch.io/api/datasets/mr_from_delim/cube/",
+        "export": "https://app.crunch.io/api/datasets/mr_from_delim/export/",
+        "summary": "https://app.crunch.io/api/datasets/mr_from_delim/summary/",
+        "applied_filters": "https://app.crunch.io/api/datasets/mr_from_delim/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "size": {
+            "rows": 4,
+            "columns": 1
+        },
+        "current_editor_name": "Me",
+        "owner_name": "Me",
+        "name": "for testing functionality of MR from delimited text",
+        "end_date": null,
+        "access_time": "2017-04-12T19:07:06.351000",
+        "notes": "",
+        "current_editor": "https://app.crunch.io/api/users/me/",
+        "creation_time": "2017-04-12T14:34:00.015000",
+        "archived": false,
+        "start_date": null,
+        "modification_time": "2017-04-12T14:34:03.239000",
+        "app_settings": {
+            "crunch": {
+                "deleted_rogue_vp": true
+            }
+        },
+        "owner": "https://app.crunch.io/api/users/me/",
+        "permissions": {
+            "edit": true,
+            "change_permissions": true,
+            "view": true
+        },
+        "is_published": true,
+        "id": "mr_from_delim",
+        "description": ""
+    }
+}

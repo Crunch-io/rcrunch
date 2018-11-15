@@ -1,5 +1,6 @@
 ---
 title: "Filtering Data"
+description: "With the crunch package, you can both filter the views of data you work with in your R session and manage the filters that you and your collaborators see in the web application."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Filtering Data}
@@ -9,8 +10,6 @@ vignette: >
 
 [Previous: analyzing data](analyze.md)
 
-
-# Working with Filters
 
 Sometimes you only want to work with a subset of your data. With the `crunch` package, you can both filter the views of data you work with in your R session and manage the filters that you and your collaborators see in the web application.
 
@@ -168,7 +167,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 1b94c602c6cf49759566082fde3662aa     FALSE
+## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6     FALSE
 ```
 
 You could also have made the filter with the `newFilter` function:
@@ -188,7 +187,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 1b94c602c6cf49759566082fde3662aa      TRUE
+## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6      TRUE
 ```
 
 You can also edit the filter expressions by assigning a new one in, like:

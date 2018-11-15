@@ -1,7 +1,6 @@
 {
 	"element": "shoji:catalog",
 	"self": "https://app.crunch.io/api/datasets/1/multitables/",
-	"specification": "https://app.crunch.io/api/specifications/multitables/",
 	"description": "List of multitable definitions for this dataset",
 	"index": {
         "4de322/": {
@@ -15,6 +14,12 @@
             "owner_id": "https://app.crunch.io/api/users/me/",
             "name": "My banner",
             "id": "ed30c4"
-        }
+        },
+		"f33123/": {
+			"is_public": false,
+			"owner_id": "https://app.crunch.io/api/users/me/",
+			"name": "My team multitable",
+			"id": "f33123"
+		}
     }
 }

@@ -10,16 +10,18 @@
 #' @param ... additional options provided to the search endpoint.
 #' @return If successful, an object of class SearchResults
 #' @export
-searchDatasets <- function (query, ...) {
+searchDatasets <- function(query, ...) {
+    if (!is.character(query)) {
+        halt("Search query must be a string, not ", class(query))
+    }
+    if (length(query) != 1) {
+        halt(
+            "Search query must be a single string, not a length-",
+            length(query), " character vector"
+        )
+    }
     search_url <- sessionURL("search", "views")
-    results <- SearchResults(crGET(search_url, query=list(q=query, grouping="datasets", ...)))
+    results <- SearchResults(crGET(search_url, query = list(q = query, grouping = "datasets", ...)))
     ## Grab useful things out of the (odd) API response
     return(SearchResults(results[["groups"]][[1]]))
 }
-
-#' @rdname dataset-variables
-#' @export
-setMethod("variables", "SearchResults", function (x) {
-    ## Close enough to a catalog object
-    VariableCatalog(structure(list(index=x$variables), class="shoji"))
-})

@@ -2,8 +2,34 @@ url: http://crunch.io/r/crunch/
 title: Crunch
 template:
   params:
-    bootswatch: flatly
+    bootswatch: simplex
     ganalytics: UA-50332119-2
+    docsearch:
+      api_key: 9fbcb3ae4d05600402e31f66b9b9501e
+      index_name: crunch
+articles:
+- title: Getting started
+  desc: How to find, import, and clean data in Crunch
+  contents:
+  - crunch
+  - variables
+  - array-variables
+  - variable-order
+  - projects
+- title: Exploring and analyzing
+  desc: ~
+  contents:
+  - derive
+  - analyze
+  - filters
+  - subtotals
+  - export
+  - fork-and-merge
+- title: Going deeper
+  desc: Details on the Crunch API and objects
+  contents:
+  - crunch-internals
+  - abstract-categories
 reference:
 - title: Upload
   contents:
@@ -32,20 +58,20 @@ reference:
   - dim-dataset
   - dropRows
   - exclusion
-  - ordering
   - restoreVersion
   - saveVersion
   - versions
   - weight
   - weightVariables
+  - modifyWeightVariables
   - settings
+  - population
   - lock
 - title: Multiple datasets
   contents:
   - appendDataset
   - compareDatasets
   - joinDatasets
-  - merge.CrunchDataFrame
   - forkDataset
   - mergeFork
   - searchDatasets
@@ -76,6 +102,7 @@ reference:
   - interactVariables
   - conditionalTransform
   - makeWeight
+  - variable-as-methods
 - title: Array variables
   contents:
   - Subvariables-class
@@ -84,10 +111,13 @@ reference:
   - flipArrays
   - importMultitable
   - makeArray
+  - makeMRFromText
+  - makeArrayGadget
   - is-selected-categories
   - unbind
 - title: Ordering
   contents:
+  - ordering
   - ShojiOrder-length
   - ShojiOrder-slots
   - copyOrder
@@ -97,12 +127,22 @@ reference:
   - locateEntity
   - moveToGroup
   - removeEmptyGroups
+  - folder
+  - mv
+  - cd
+  - rmdir
+  - setOrder
+  - setName
+  - setNames
 - title: Analysis
   contents:
   - crtabs
   - crunch-uni
   - cube-computing
   - cube-methods
+  - cube-residuals
+  - cube-missingness
+  - index.table
   - dashboard
   - duplicated
   - filter-catalog
@@ -113,12 +153,14 @@ reference:
   - newMultitable
   - table
   - 'as.vector,CrunchExpr-method'
-- title: Data presentation 
+- title: Data presentation
   contents:
   - Subtotal-class
   - 'subtotalArray,CrunchCube-method'
   - noTransforms
   - showTransforms
+  - addSummaryStat
+  - SummaryStat-class
   - Insertions-class
   - Transforms-class
 - title: Export
@@ -130,6 +172,9 @@ reference:
   - tabBook
   - write.csv.gz
   - writePreparedData
+  - pollProgress
+  - CrunchDataFrame
+  - merge.CrunchDataFrame
 - title: Geodata
   contents:
   - addGeoMetadata
@@ -148,6 +193,8 @@ reference:
   - login
   - logout
   - me
+  - users
+  - email
   - newProject
   - owners
   - permissions
@@ -161,7 +208,7 @@ reference:
 - title: Catalogs
   contents:
   - catalog-length
-  - catalogToDataFrame
+  - catalog-dataframes
   - 'names,BatchCatalog-method'
   - shoji-index
 - title: Crunch options
@@ -208,30 +255,42 @@ reference:
   - temp.options
   - which
   - with-context-manager
+- title: Data
+  contents:
+  - SO_schema
+  - SO_survey
 navbar:
   left:
     - text: Intro
-      href: articles/getting-started.html
+      href: articles/crunch.html
     - text: Reference
       href: reference/
     - text: Articles
       menu:
       -  text: Getting Started
-         href: articles/getting-started.html
+         href: articles/crunch.html
       -  text: Datasets
          href: articles/datasets.html
       -  text: Variables
          href: articles/variables.html
       -  text: Array Variables
          href: articles/array-variables.html
-      -  text: Reorder Variables
+      -  text: Organize Variables
          href: articles/variable-order.html
       -  text: Derive Variables
          href: articles/derive.html
+      -  text: Analyze Data
+         href: articles/analyze.html
       -  text: Filter Data
          href: articles/filters.html
       -  text: Export Data
          href: articles/export.html
+      -  text: Projects
+         href: articles/projects.html
+      -  text: Fork and Merge
+         href: articles/fork-and-merge.html
+      -  text: Subtotals and Headings
+         href: articles/subtotals.html
       -  text: Crunch Internals
          href: articles/crunch-internals.html
       -  text: Abstract Categories

@@ -13,18 +13,18 @@ NULL
 
 #' @rdname ordering
 #' @export
-setMethod("ordering", "CrunchDataset", function (x) ordering(allVariables(x)))
+setMethod("ordering", "CrunchDataset", function(x) ordering(allVariables(x)))
 
 #' @rdname ordering
 #' @export
-setMethod("ordering<-", "CrunchDataset", function (x, value) {
+setMethod("ordering<-", "CrunchDataset", function(x, value) {
     ordering(x@variables) <- value
     return(x)
 })
 
 #' @rdname ordering
 #' @export
-setMethod("ordering", "VariableCatalog", function (x) {
+setMethod("ordering", "VariableCatalog", function(x) {
     out <- x@order
     out@catalog_url <- self(x)
     return(out)
@@ -32,31 +32,48 @@ setMethod("ordering", "VariableCatalog", function (x) {
 
 #' @rdname ordering
 #' @export
-setMethod("ordering<-", "VariableCatalog", function (x, value) {
+setMethod("ordering<-", "VariableCatalog", function(x, value) {
     stopifnot(inherits(value, "VariableOrder"))
 
     if (!identical(ordering(x)@graph, value@graph)) {
+        ## Give deprecation warning (the first time only per session)
+        if (!isTRUE(getOption("crunch.already.shown.folders.msg", FALSE))) {
+            warning(paste(
+                "Hey! There's a new way to organize variables within",
+                "datasets: the 'folder' methods. They're easier to use and",
+                "more reliable. See `?mv`, `?cd`, and others for details, and",
+                "`vignettes('variable-order', package='crunch')` for examples.",
+                "You're seeing this message because you're still using the",
+                "ordering<- method, which is fine today, but it will be going",
+                "away in the future, so check out the new methods."
+            ))
+            options(crunch.already.shown.folders.msg = TRUE)
+        }
+
         ## Validate.
         bad.entities <- setdiff(urls(value), urls(x))
         if (length(bad.entities)) {
-            halt("Variable URL", ifelse(length(bad.entities) > 1, "s", ""),
+            halt(
+                "Variable URL", ifelse(length(bad.entities) > 1, "s", ""),
                 " referenced in Order not present in catalog: ",
-                serialPaste(bad.entities))
+                serialPaste(bad.entities)
+            )
         }
 
         order_url <- shojiURL(x, "orders", "hier")
         ## Update on server
-        crPUT(order_url, body=toJSON(value))
+        crPUT(order_url, body = toJSON(value))
+        ## Drop cache for dataset folders
+        dropCache(paste0(datasetReference(x), "folders/"))
         ## Refresh
         x@order <- VariableOrder(crGET(order_url))
     }
-    duplicates(x@order) <- duplicates(value)
     return(x)
 })
 
 #' @rdname ordering
 #' @export
-setMethod("ordering", "DatasetCatalog", function (x) {
+setMethod("ordering", "DatasetCatalog", function(x) {
     out <- DatasetOrder(crGET(shojiURL(x, "orders", "order")))
     out@catalog_url <- self(x)
     return(out)
@@ -64,47 +81,29 @@ setMethod("ordering", "DatasetCatalog", function (x) {
 
 #' @rdname ordering
 #' @export
-setMethod("ordering<-", "DatasetCatalog", function (x, value) {
-    stopifnot(inherits(value, "DatasetOrder"))
-
-    if (!identical(ordering(x)@graph, value@graph)) {
-        ## Validate.
-        bad.entities <- setdiff(urls(value), urls(x))
-        if (length(bad.entities)) {
-            halt("Dataset URL", ifelse(length(bad.entities) > 1, "s", ""),
-                " referenced in Order not present in catalog: ",
-                serialPaste(bad.entities))
-        }
-        ## Update on server
-        crPUT(shojiURL(x, "orders", "order"), body=toJSON(value))
-    }
-    return(x)
+setMethod("ordering", "ProjectFolder", function(x) {
+    return(ordering(datasets(x)))
 })
 
+#' @rdname ordering
+#' @export
+setMethod("ordering<-", "DatasetCatalog", function(x, value) {
+    halt(
+        "Hi there! `ordering<-` no longer works to organize datasets. ",
+        " There's a new way to organize datasets within ",
+        "projects: the 'folder' methods. They're easier to use and ",
+        "more reliable, just like the folder methods for organizing ",
+        "variables. See `vignettes('projects', package='crunch')` for ",
+        "details."
+    )
+})
 
-# #' Move a variable to after another variable
-# #'
-# #' @param x the variable group that `after` is in
-# #' @param value the variable or dataset subset you would like to move
-# #' @param after the variable you want to precede `value`
-# #' @return returns a variable group
-# #' @examples
-# #' \dontrun{
-# #' ordering(ds)[['Demographics']] <- moveToAfter(ordering(ds)[['Grp A']], ds['age'], ds$educ)
-# #' }
-# moveToAfter <- function (x, value, after) {
-#     if (!inherits(after, "OrderGroup")) {
-#         after <- urls(after)
-#     }
-#     if (!inherits(value, "OrderGroup")) {
-#         value <- urls(value)
-#     }
-#     whi <- ifelse(inherits(after, "OrderGroup"), which(names(x) %in% name(after)), which(entities(x) %in% after))
-#     if ((inherits(value, "OrderGroup") && !name(value) %in% names(x)) || (!inherits(value, "OrderGroup") && !value %in% entities(x))) entities(x) <- c(entities(x), value)
-#     whi2 <- ifelse(inherits(value, "OrderGroup"), which(names(x) %in% name(value)), which(entities(x) %in% value))
-#     entities(x) <- entities(x)[c(setdiff(1:whi, whi2), whi2, setdiff((whi+1):length(entities(x)), whi2))]
-#     return(x)
-# }
+#' @rdname ordering
+#' @export
+setMethod("ordering<-", "ProjectFolder", function(x, value) {
+    ordering(datasets(x)) <- value
+    return(x)
+})
 
 #' Copy the variable order from one dataset to another.
 #'
@@ -117,7 +116,7 @@ setMethod("ordering<-", "DatasetCatalog", function (x, value) {
 #' ordering(ds) <- copyOrder(ds1, ds)
 #' }
 #' @export
-copyOrder <- function (source, target) {
+copyOrder <- function(source, target) {
     if (!is.dataset(source) | !is.dataset(target)) {
         halt("Both source and target must be Crunch datasets.")
     }
@@ -125,12 +124,13 @@ copyOrder <- function (source, target) {
     ord <- entities(ordering(source))
 
     # make url and alias maps
-    url_to_alias_source <- as.list(structure(aliases(allVariables(source)), .Names=urls(allVariables(source))))
-    alias_to_url_target <- as.list(structure(urls(allVariables(target)), .Names=aliases(allVariables(target))))
+    url_to_alias_source <- as.list(structure(aliases(allVariables(source)), .Names = urls(allVariables(source))))
+    alias_to_url_target <- as.list(structure(urls(allVariables(target)), .Names = aliases(allVariables(target))))
 
     new_ord <- lapply(ord, copyOrderGroup,
-                      source_map = url_to_alias_source,
-                      target_map = alias_to_url_target)
+        source_map = url_to_alias_source,
+        target_map = alias_to_url_target
+    )
 
     # drop any null entities, those that were not found in target but in source
     new_ord <- removeMissingEntities(new_ord)
@@ -149,7 +149,7 @@ copyOrder <- function (source, target) {
 #' @param target_map alias to url map for target variables
 #' @return returns either a [`VariableGroup`] (if a group is supplied) or a URL (if just a variable URL is supplied)
 #' @keywords internal
-copyOrderGroup <- function (group, source_map, target_map) {
+copyOrderGroup <- function(group, source_map, target_map) {
     # if there is a single element in group, and it is a character,
     # just return the URL in the target.
     if (length(group) == 1 & is.character(group)) {
@@ -158,8 +158,8 @@ copyOrderGroup <- function (group, source_map, target_map) {
 
     # there are groups, so recurse
     ents <- lapply(entities(group), copyOrderGroup,
-                           source_map = source_map, target_map = target_map)
+        source_map = source_map, target_map = target_map
+    )
 
     return(VariableGroup(name(group), ents))
 }
-

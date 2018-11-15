@@ -1,5 +1,6 @@
 ---
 title: "Exporting Data"
+description: "For times when you need to take data off the server, Crunch provides several means for exporting data, whether to various file formats or to objects in your R session."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Exporting Data}
@@ -7,10 +8,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-[Previous: filtering data](filter.md)
+[Previous: filtering data](filters.md)
 
-
-# Downloading and exporting data
 
 Crunch is designed to facilitate collaboration on a common dataset, a single source of truth in the cloud. As the previous vignettes have shown, you can get a lot of work done in R without pulling the data itself off of the server. Indeed, whenever possible, you should strive to get your work done without pulling data across the network: shipping data across the wire can be slow and inefficient. However, in some cases, you may need to extract a subset of a dataset to do more extensive calculations or manipulations locally. This vignette shows you how to get a local `data.frame` from your Crunch dataset, as well as how to export a CSV or SPSS file of the dataset or subset of dataset.
 
@@ -139,4 +138,4 @@ As with the `as.data.frame` methods, you can subset what you export by indexing 
 write.csv(ds[ds$pid3 == "Democrat", c("age", "educ", "gender")], file="demo-demos.csv")
 ```
 
-[Next: Crunch internals](crunch-internals.md)
+[Next: subtotals](subtotals.md)

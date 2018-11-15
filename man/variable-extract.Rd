@@ -11,7 +11,8 @@
 \alias{[,CrunchVariable,logical,ANY-method}
 \title{"Subset" a Variable}
 \usage{
-\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ...,
+  drop = FALSE)
 
 \S4method{[}{CrunchExpr,logical,ANY}(x, i, j, ..., drop = TRUE)
 

@@ -18,15 +18,17 @@ variableMetadata <- function(dataset) {
     extra <- crGET(shojiURL(dataset, "fragments", "table"))$metadata
     ## It is keyed by "id". Embed the id in the tuples, and then make the keys
     ## be URLs so that it lines up with the variables catalog
-    extra <- mapply(function (x, i) {
+    extra <- mapply(function(x, i) {
         x$id <- i
         if (length(x$subvariables)) {
             ## table/ returns ids, not relative URLs, so make them appear to be
-            x$subvariables <- absoluteURL(paste0(i, "/subvariables/", unlist(x$subvariables), "/"),
-                self(varcat))
+            x$subvariables <- absoluteURL(
+                paste0(i, "/subvariables/", unlist(x$subvariables), "/"),
+                self(varcat)
+            )
         }
         return(x)
-    }, x=extra, i=names(extra), SIMPLIFY=FALSE)
+    }, x = extra, i = names(extra), SIMPLIFY = FALSE)
     names(extra) <- absoluteURL(paste0(names(extra), "/"), self(varcat))
 
     ## Merge the entries
@@ -36,7 +38,7 @@ variableMetadata <- function(dataset) {
     return(varcat)
 }
 
-flattenVariableMetadata <- function (vm) {
+flattenVariableMetadata <- function(vm) {
     ## Put subvar entries at the top level, and inject in them a "parent"
     ## indicator. Like how we used to represent metadata. Needed for
     ## compareSubvariables within a dataset because we need to look across
@@ -45,12 +47,12 @@ flattenVariableMetadata <- function (vm) {
     ## array definition.
 
     ind <- index(vm)
-    extra <- lapply(urls(vm), function (u) {
+    extra <- lapply(urls(vm), function(u) {
         this <- ind[[u]]
         these.subs <- this$subvariables
         if (!is.null(these.subs)) {
-            out <- structure(this$subreferences, .Names=these.subs)
-            out <- lapply(out, function (x) {
+            out <- structure(this$subreferences, .Names = these.subs)
+            out <- lapply(out, function(x) {
                 ## Add the parent ref
                 x$parent <- u
                 x$parent_alias <- this$alias
@@ -62,6 +64,6 @@ flattenVariableMetadata <- function (vm) {
         }
     })
 
-    index(vm) <- c(ind, unlist(extra, recursive=FALSE))
+    index(vm) <- c(ind, unlist(extra, recursive = FALSE))
     return(vm)
 }

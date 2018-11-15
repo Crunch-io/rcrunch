@@ -4,32 +4,40 @@ with_mock_crunch({
     ds1 <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
     test_that("If no filtering, 'where' and 'filter' are omitted", {
-        expect_POST(appendDataset(ds1, ds2),
-            'https://app.crunch.io/api/datasets/1/batches/',
+        expect_POST(
+            appendDataset(ds1, ds2),
+            "https://app.crunch.io/api/datasets/1/batches/",
             '{"element":"shoji:entity","body":',
-            '{"dataset":"https://app.crunch.io/api/datasets/3/"}}')
+            '{"dataset":"https://app.crunch.io/api/datasets/3/"}}'
+        )
     })
     test_that("Append with filter", {
-        expect_POST(appendDataset(ds1, ds2[ds2$gender == "Male",]),
-            'https://app.crunch.io/api/datasets/1/batches/',
+        expect_POST(
+            appendDataset(ds1, ds2[ds2$gender == "Male", ]),
+            "https://app.crunch.io/api/datasets/1/batches/",
             '{"element":"shoji:entity","body":',
             '{"dataset":"https://app.crunch.io/api/datasets/3/",',
-            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}')
+            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}'
+        )
     })
     test_that("Append with variable selection", {
-        expect_POST(appendDataset(ds1, ds2[c("gender", "birthyr")]),
-            'https://app.crunch.io/api/datasets/1/batches/',
+        expect_POST(
+            appendDataset(ds1, ds2[c("gender", "birthyr")]),
+            "https://app.crunch.io/api/datasets/1/batches/",
             '{"element":"shoji:entity","body":',
             '{"dataset":"https://app.crunch.io/api/datasets/3/",',
-            '"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}}}')
+            '"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}}}'
+        )
     })
     test_that("Append with variable selection and filter", {
-        expect_POST(appendDataset(ds1, ds2[ds2$gender == "Male", c("gender", "birthyr")]),
-            'https://app.crunch.io/api/datasets/1/batches/',
+        expect_POST(
+            appendDataset(ds1, ds2[ds2$gender == "Male", c("gender", "birthyr")]),
+            "https://app.crunch.io/api/datasets/1/batches/",
             '{"element":"shoji:entity","body":',
             '{"dataset":"https://app.crunch.io/api/datasets/3/",',
             '"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]},',
-            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}')
+            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}'
+        )
     })
 })
 
@@ -48,7 +56,7 @@ with_test_authentication({
     })
     ds1 <- restoreVersion(ds1, "initial import")
     test_that("We can select rows to append", {
-        ds1 <- appendDataset(ds1, ds2[ds2$v3 < 10,])
+        ds1 <- appendDataset(ds1, ds2[ds2$v3 < 10, ])
         expect_equal(ncol(ds1), 5)
         expect_identical(names(ds1), c("v1", "v2", "v3", "v4", "v5"))
         asdf <- as.data.frame(ds1)

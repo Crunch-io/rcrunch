@@ -13,6 +13,7 @@
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/1/variables/",
+        "folders": "https://app.crunch.io/api/datasets/1/folders/",
         "savepoints": "https://app.crunch.io/api/datasets/1/savepoints/",
         "batches": "https://app.crunch.io/api/datasets/1/batches/",
         "permissions": "https://app.crunch.io/api/datasets/1/permissions/",
@@ -21,7 +22,8 @@
         "filters": "https://app.crunch.io/api/datasets/1/filters/",
         "boxdata": "https://app.crunch.io/api/datasets/1/boxdata/",
         "multitables": "https://app.crunch.io/api/datasets/1/multitables/",
-        "actions": "https://app.crunch.io/api/datasets/1/actions/"
+        "actions": "https://app.crunch.io/api/datasets/1/actions/",
+        "decks": "https://app.crunch.io/api/datasets/1/decks/"
     },
     "views": {
         "summary": "https://app.crunch.io/api/datasets/1/summary/",

@@ -1,0 +1,239 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/123/cube/?filter=%5B%5D&query=%7B%22dimensions%22:%5B%7B%22each%22:%22/api/datasets/123%2Fvariables%2F3060052429504c5b8c71160a30585485%2F%22%7D,%7B%22function%22:%22as_selected%22,%22args%22:%5B%7B%22variable%22:%22/api/datasets/123%2Fvariables%2F3060052429504c5b8c71160a30585485%2F%22%7D%5D%7D,%7B%22variable%22:%22/api/datasets/123%2Fvariables%2F000009%2F%22%7D%5D,%22measures%22:%7B%22count%22:%7B%22function%22:%22cube_count%22,%22args%22:%5B%5D%7D%7D,%22weight%22:%22/api/datasets/123%2Fvariables%2Ff7e078235d7b412987ac97848a2877cf%2F%22%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": []
+                }
+            },
+            "dimensions": [{
+                "each": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
+            }, {
+                "function": "as_selected",
+                "args": [{
+                    "variable": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
+                }]
+            }, {
+                "variable": "/api/datasets/123/variables/000009/"
+            }],
+            "weight": "/api/datasets/123/variables/f7e078235d7b412987ac97848a2877cf/"
+        },
+        "query_environment": {
+            "filter": []
+        },
+        "result": {
+            "dimensions": [{
+                "references": {
+                    "subreferences": [{
+                        "alias": "alligator",
+                        "name": "alligator"
+                    }, {
+                        "alias": "oryx",
+                        "name": "oryx"
+                    }, {
+                        "alias": "capybara",
+                        "name": "capybara"
+                    }],
+                    "uniform_basis": false,
+                    "name": "zoo",
+                    "alias": "zoo"
+                },
+                "derived": true,
+                "type": {
+                    "subtype": {
+                        "class": "variable"
+                    },
+                    "elements": [{
+                        "id": 1,
+                        "value": {
+                            "references": {
+                                "alias": "alligator",
+                                "name": "alligator"
+                            },
+                            "derived": false,
+                            "id": "da1129bc216d48e9b8ee5229c1b26c79",
+                            "type": {
+                                "ordinal": false,
+                                "class": "categorical",
+                                "categories": [{
+                                    "numeric_value": 1,
+                                    "selected": true,
+                                    "id": 1,
+                                    "missing": false,
+                                    "name": "Selected"
+                                }, {
+                                    "numeric_value": 0,
+                                    "missing": false,
+                                    "id": 0,
+                                    "name": "Not Selected"
+                                }, {
+                                    "numeric_value": null,
+                                    "missing": true,
+                                    "id": -1,
+                                    "name": "No Data"
+                                }]
+                            }
+                        },
+                        "missing": false
+                    }, {
+                        "id": 2,
+                        "value": {
+                            "references": {
+                                "alias": "oryx",
+                                "name": "oryx"
+                            },
+                            "derived": false,
+                            "id": "8e6c724d95994da1a483b96f39fcd661",
+                            "type": {
+                                "ordinal": false,
+                                "class": "categorical",
+                                "categories": [{
+                                    "numeric_value": 1,
+                                    "selected": true,
+                                    "id": 1,
+                                    "missing": false,
+                                    "name": "Selected"
+                                }, {
+                                    "numeric_value": 0,
+                                    "missing": false,
+                                    "id": 0,
+                                    "name": "Not Selected"
+                                }, {
+                                    "numeric_value": null,
+                                    "missing": true,
+                                    "id": -1,
+                                    "name": "No Data"
+                                }]
+                            }
+                        },
+                        "missing": false
+                    }, {
+                        "id": 3,
+                        "value": {
+                            "references": {
+                                "alias": "capybara",
+                                "name": "capybara"
+                            },
+                            "derived": false,
+                            "id": "8190dd271bea45f8b2a4204780ce7168",
+                            "type": {
+                                "ordinal": false,
+                                "class": "categorical",
+                                "categories": [{
+                                    "numeric_value": 1,
+                                    "selected": true,
+                                    "id": 1,
+                                    "missing": false,
+                                    "name": "Selected"
+                                }, {
+                                    "numeric_value": 0,
+                                    "missing": false,
+                                    "id": 0,
+                                    "name": "Not Selected"
+                                }, {
+                                    "numeric_value": null,
+                                    "missing": true,
+                                    "id": -1,
+                                    "name": "No Data"
+                                }]
+                            }
+                        },
+                        "missing": false
+                    }],
+                    "class": "enum"
+                }
+            }, {
+                "references": {
+                    "subreferences": [{
+                        "alias": "alligator",
+                        "name": "alligator"
+                    }, {
+                        "alias": "oryx",
+                        "name": "oryx"
+                    }, {
+                        "alias": "capybara",
+                        "name": "capybara"
+                    }],
+                    "uniform_basis": false,
+                    "name": "zoo",
+                    "alias": "zoo"
+                },
+                "derived": true,
+                "type": {
+                    "ordinal": false,
+                    "subvariables": ["da1129bc216d48e9b8ee5229c1b26c79", "8e6c724d95994da1a483b96f39fcd661", "8190dd271bea45f8b2a4204780ce7168"],
+                    "class": "categorical",
+                    "categories": [{
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                    }, {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                    }, {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                    }]
+                }
+            }, {
+                "derived": false,
+                "references": {
+                    "alias": "fruit",
+                    "name": "fruit",
+                    "description": "Fruits"
+                },
+                "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [{
+                        "numeric_value": 1,
+                        "missing": false,
+                        "id": 1,
+                        "name": "rambutan"
+                    }, {
+                        "numeric_value": 2,
+                        "missing": false,
+                        "id": 2,
+                        "name": "satsuma"
+                    }, {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                    }]
+                }
+            }],
+            "missing": 4,
+            "measures": {
+                "count": {
+                    "data": [8.460150434597217, 14.507119980255588, 0.0, 40.909972382150265, 102.12494750187133, 0.0, 35.40303343665941, 52.38517656587996, 0.0, 17.23265649385687, 28.54626005104948, 0.0, 31.223544751933787, 64.86521938865748, 0.0, 36.31695500761625, 75.6057646082999, 0.0, 26.393419799421434, 60.5794089920108, 0.0, 30.53820178019752, 63.482581997565326, 0.0, 27.841534673787955, 44.95525305843074, 0.0],
+                    "n_missing": 4,
+                    "metadata": {
+                        "references": {},
+                        "derived": true,
+                        "type": {
+                            "integer": false,
+                            "missing_rules": {},
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [4, 8, 0, 18, 38, 0, 11, 21, 0, 11, 18, 0, 10, 21, 0, 12, 28, 0, 8, 26, 0, 15, 23, 0, 10, 18, 0],
+            "n": 100
+        }
+    }
+}

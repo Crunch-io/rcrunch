@@ -4,8 +4,8 @@
 \alias{loadDataset}
 \title{Load a Crunch Dataset}
 \usage{
-loadDataset(dataset, kind = c("active", "all", "archived"), project = NULL,
-  refresh = FALSE)
+loadDataset(dataset, kind = c("active", "all", "archived"),
+  project = NULL, refresh = FALSE)
 }
 \arguments{
 \item{dataset}{character, the name of a Crunch dataset that you have access
@@ -14,7 +14,7 @@ to, or a \code{DatasetTuple}.}
 \item{kind}{character specifying whether to look in active, archived, or all
 datasets. Default is "active", i.e. non-archived.}
 
-\item{project}{\code{CrunchProject} entity, character name of a project, or
+\item{project}{\code{ProjectFolder} entity, character name of a project, or
 \code{NULL}, the default. If a Project entity or reference is supplied, the
 function will display datasets from that Project's datasets. If \code{NULL},
 the primary dataset catalog for the user will be used.}

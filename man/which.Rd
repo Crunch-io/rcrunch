@@ -6,7 +6,8 @@
 \alias{which,CrunchLogicalExpr-method}
 \title{"which" method for CrunchLogicalExpr}
 \usage{
-\S4method{which}{CrunchLogicalExpr}(x, arr.ind = FALSE, useNames = TRUE)
+\S4method{which}{CrunchLogicalExpr}(x, arr.ind = FALSE,
+  useNames = TRUE)
 }
 \arguments{
 \item{x}{CrunchLogicalExpr}
@@ -21,5 +22,5 @@ return a Crunch expression. Use this when you need to translate to R values.
 For filtering a Crunch expression by \code{x}, don't use \code{which}.
 }
 \description{
-NOTE: this isn't correct. Don't use it yet.
+"which" method for CrunchLogicalExpr
 }

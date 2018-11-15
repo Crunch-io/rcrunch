@@ -1,7 +1,6 @@
 {
 	"element": "shoji:entity",
 	"self": "https://app.crunch.io/api/datasets/1/filters/filter1/",
-	"specification": "https://app.crunch.io/api/specifications/filters/",
 	"description": "Detail information for one filter",
 	"body": {
         "is_public": false,
@@ -19,6 +18,7 @@
 		},
 		"creation_time": "2015-02-12T10:27:15.225000+00:00",
 		"id": "filter1",
-		"last_update": null
+		"last_update": null,
+		"team": "https://app.crunch.io/api/teams/team1/"
 	}
 }

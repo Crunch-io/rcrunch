@@ -7,12 +7,12 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.19.1
+Version: 1.24.3
 Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
-    person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"),
-    person("Gordon", "Shotwell", role="ctb", email="gordon@crunch.io"))
-URL: http://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
+    person("Jonathan", "Keane", role="aut", email="jon.keane@crunch.io"),
+    person("Gordon", "Shotwell", role="aut", email="gordon@crunch.io"))
+URL: https://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
 Depends:
@@ -27,20 +27,30 @@ Imports:
     methods
 Suggests:
     covr,
+    crunchy,
     devtools,
-    httptest (>= 2.0.0),
+    haven,
+    httptest (>= 3.0.0),
     knitr,
+    magrittr,
     rmarkdown,
     rstudioapi,
-    spelling
+    spelling,
+    styler,
+    testthat (>= 2.0.0),
+    withr
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+Language: en-US
+Encoding: UTF-8
+RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
-Collate: 
+LazyData: true
+Collate:
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
     'R-to-variable.R'
+    'SO-survey.R'
     'abstract-categories.R'
     'abstract-category.R'
     'add-subvariable.R'
@@ -67,10 +77,13 @@ Collate:
     'crunch-data-frame.R'
     'crunch.R'
     'crunchbox.R'
+    'cube-collapse-dimensions.R'
     'cube-dims.R'
+    'cube-index-table.R'
     'cube-query.R'
     'cube-residuals.R'
     'cube-result.R'
+    'cube-subset.R'
     'cube-transforms.R'
     'cube-variables.R'
     'cut.R'
@@ -80,6 +93,7 @@ Collate:
     'dataset-stream.R'
     'dataset-update.R'
     'dataset.R'
+    'decks.R'
     'dichotomize.R'
     'drop-rows.R'
     'edit-lock.R'
@@ -89,6 +103,7 @@ Collate:
     'folders.R'
     'fork-and-merge.R'
     'formula.R'
+    'gadgets.R'
     'geo.R'
     'get-datasets.R'
     'github.R'
@@ -107,28 +122,35 @@ Collate:
     'permission-catalog.R'
     'pretty-print.R'
     'progress.R'
+    'project-folder.R'
     'projects.R'
     'search.R'
     'session.R'
     'share.R'
     'shoji-catalog.R'
     'shoji-entity.R'
+    'shoji-folder.R'
     'shoji-order-slots.R'
     'shoji-order.R'
     'shoji.R'
     'show.R'
+    'slides.R'
     'subtotals-and-headings.R'
     'subvariables.R'
+    'summary-insertions.R'
     'tab-book.R'
     'teams.R'
     'transform-calculate.R'
     'transform.R'
     'tuple.R'
     'univariate.R'
+    'user-info.R'
     'user.R'
+    'variable-as-methods.R'
     'variable-catalog.R'
     'variable-delete.R'
     'variable-derivation.R'
+    'variable-folder.R'
     'variable-metadata.R'
     'variable-order.R'
     'variable-summary.R'
@@ -136,6 +158,7 @@ Collate:
     'variable-type.R'
     'variable-update.R'
     'variable.R'
+    'variables.R'
     'versions.R'
     'weight.R'
     'zcl.R'

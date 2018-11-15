@@ -1,7 +1,7 @@
 # crunch
 
 [![Build Status](https://travis-ci.org/Crunch-io/rcrunch.png?branch=master)](https://travis-ci.org/Crunch-io/rcrunch) [![Build status](https://ci.appveyor.com/api/projects/status/iaydo4y3dfrqnqqu/branch/master?svg=true)](https://ci.appveyor.com/project/nealrichardson/rcrunch/branch/master)
-[![cran](https://www.r-pkg.org/badges/version-last-release/crunch)](https://cran.r-project.org/package=crunch) [![codecov](https://codecov.io/gh/Crunch-io/rcrunch/branch/master/graph/badge.svg)](https://codecov.io/gh/Crunch-io/rcrunch) (unit tests); 97% coverage with integration tests
+[![cran](https://www.r-pkg.org/badges/version-last-release/crunch)](https://cran.r-project.org/package=crunch) [![codecov](https://codecov.io/gh/Crunch-io/rcrunch/branch/master/graph/badge.svg)](https://codecov.io/gh/Crunch-io/rcrunch)
 
 [Cloud Collaboration with Crunch](http://crunch-io.github.io/rcrunch/)
 
@@ -18,11 +18,11 @@
 The pre-release version of the package can be pulled from GitHub using the [devtools](https://github.com/hadley/devtools) package:
 
     # install.packages("devtools")
-    devtools::install_github("Crunch-io/rcrunch", build_vignettes=TRUE)
+    devtools::install_github("Crunch-io/rcrunch")
 
 ## Getting started
 
-Connecting to Crunch and working with datasets is simple:
+Connecting to Crunch and working with datasets is simple: load the `crunch` package and then `login()`.
 
     $ R
     > library(crunch)
@@ -33,7 +33,9 @@ Connecting to Crunch and working with datasets is simple:
     [crunch] >
     ...
 
-Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame`, a .csv or .sav file, or a URL to a file with `newDataset()`. See the help for these functions or [`vignette("getting-started", package="crunch")`](inst/doc/getting-started.md) for more information.
+If you use OAuth to log into the web application, you'll need to create a Crunch password to use with the R package. To set one, load the package, call `resetPassword("your.email@example.com")`, and check your email for instructions. You may need to log out of your current web app session before you click the link in that email to set your Crunch password.
+
+Once you've logged in, check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame`, a .csv or .sav file, or a URL to a file with `newDataset()`. See the help for these functions or [`vignette("crunch")`](inst/doc/crunch.md) for more information.
 
 ## Additional configuration
 
@@ -55,6 +57,10 @@ If you prefer, you can set the environment variables `R_CRUNCH_EMAIL`, `R_CRUNCH
     # sudo apt-get install r-base r-base-dev
 
 See https://cran.r-project.org/bin/linux/ubuntu/README for more details.
+
+### Git hooks
+
+`crunch` uses a git pre-commit hook to ensure that the cube test fixtures in `inst/cubes.tgz` are always up to date. To enable this, you should either copy `hooks/pre-commit` to `.git/hooks/pre-commit` or sym-link the entire hooks directory with `ln -s ../hooks/ .git/hooks`.
 
 ### Contributing
 

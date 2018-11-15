@@ -1,0 +1,25 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/mr_from_delim/variables/?relative=on",
+    "catalogs": {
+        "private": "https://app.crunch.io/api/datasets/mr_from_delim/variables/private/"
+    },
+    "orders": {
+        "personal": "https://app.crunch.io/api/datasets/mr_from_delim/variables/personal/",
+        "weights": "https://app.crunch.io/api/datasets/mr_from_delim/variables/weights/",
+        "hier": "https://app.crunch.io/api/datasets/mr_from_delim/variables/hier/"
+    },
+    "description": "List of Variables of this dataset",
+    "index": {
+        "000003/": {
+            "discarded": false,
+            "alias": "delimed_text",
+            "name": "delimed_text",
+            "type": "text",
+            "notes": "",
+            "derived": false,
+            "id": "000001",
+            "description": ""
+        }
+    }
+}

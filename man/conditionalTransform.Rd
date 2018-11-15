@@ -5,11 +5,11 @@
 \title{Conditional transformation}
 \usage{
 conditionalTransform(..., data, else_condition = NA, type = NULL,
-  categories = NULL)
+  categories = NULL, formulas = NULL)
 }
 \arguments{
-\item{...}{a list of cases to evaluate as well as other
-properties to pass about the case variable (i.e. alias, description)}
+\item{...}{a list of conditions to evaluate (as formulas, see Details) as well as
+other properties to pass to the new conditional variable (i.e. alias, description)}
 
 \item{data}{a Crunch dataset object to use}
 
@@ -24,15 +24,18 @@ converted to this type if necessary.}
 \item{categories}{a vector of characters if \code{type="categorical"}, these are
 all of the categories that should be in the resulting variable, in the order
 they should be in the resulting variable or a set of Crunch categories.}
+
+\item{formulas}{a list of conditions to evaluate (as formulas, see Details). If
+specified, \code{...} must not contain other formulas specifying conditions.}
 }
 \value{
 a Crunch \code{VariableDefinition}
 }
 \description{
 Create a new variable that has values when specific conditions are met.
-Conditions are specified using a series of formulas: the right-hand side is
-the condition that must be true (a \code{CrunchLogicalExpr}) and the left-hand
-side is where to get the value if the condition on the right-hand side is
+Conditions are specified using a series of formulas: the left-hand side is
+the condition that must be true (a \code{CrunchLogicalExpr}) and the right-hand
+side is where to get the value if the condition on the left-hand side is
 true. This is commonly a Crunch variable but may be a string or numeric
 value, depending on the type of variable you're constructing.
 }

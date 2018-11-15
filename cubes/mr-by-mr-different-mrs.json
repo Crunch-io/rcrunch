@@ -1,0 +1,566 @@
+{
+  "element": "shoji:view",
+  "self": "api/datasets/123/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%5D%7D%2C%7B%22each%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar2%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar2%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+  "value": {
+    "query": {
+      "measures": {
+        "count": {
+          "function": "cube_count",
+          "args": []
+        }
+      },
+      "dimensions": [
+        {
+          "each": "api/datasets/123/variables/var1/"
+        },
+        {
+          "function": "as_selected",
+          "args": [
+            {
+              "variable": "api/datasets/123/variables/var1/"
+            }
+          ]
+        },
+        {
+          "each": "api/datasets/123/variables/var2/"
+        },
+        {
+          "function": "as_selected",
+          "args": [
+            {
+              "variable": "api/datasets/123/variables/var2/"
+            }
+          ]
+        }
+      ],
+      "weight": null
+    },
+    "query_environment": {
+      "filter": []
+    },
+    "result": {
+      "dimensions": [
+        {
+          "derived": true,
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "food_opinion#",
+                "name": "food_opinion"
+              },
+              {
+                "alias": "rest_opinion#",
+                "name": "rest_opinion"
+              },
+              {
+                "alias": "play_opinion#",
+                "name": "play_opinion"
+              }
+            ],
+            "notes": "",
+            "discarded": false,
+            "alias": "opinion_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            },
+            "name": "opinion MR"
+          },
+          "type": {
+            "subtype": {
+              "class": "variable"
+            },
+            "elements": [
+              {
+                "id": 1,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "food_opinion#",
+                    "name": "food_opinion"
+                  },
+                  "id": "000002",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 2,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "rest_opinion#",
+                    "name": "rest_opinion"
+                  },
+                  "id": "000000",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 3,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "play_opinion#",
+                    "name": "play_opinion"
+                  },
+                  "id": "000005",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              }
+            ],
+            "class": "enum"
+          }
+        },
+        {
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "food_opinion#",
+                "name": "food_opinion"
+              },
+              {
+                "alias": "rest_opinion#",
+                "name": "rest_opinion"
+              },
+              {
+                "alias": "play_opinion#",
+                "name": "play_opinion"
+              }
+            ],
+            "notes": "",
+            "name": "opinion MR",
+            "discarded": false,
+            "alias": "opinion_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            }
+          },
+          "derived": true,
+          "type": {
+            "ordinal": false,
+            "subvariables": [
+              "000002",
+              "000000",
+              "000005"
+            ],
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "Selected"
+              },
+              {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Not Selected"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              }
+            ]
+          }
+        },
+        {
+          "derived": true,
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "cat_feeling#",
+                "name": "cat_feeling"
+              },
+              {
+                "alias": "dog_feeling#",
+                "name": "dog_feeling"
+              }
+            ],
+            "notes": "",
+            "discarded": false,
+            "alias": "feeling_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            },
+            "name": "feeling MR"
+          },
+          "type": {
+            "subtype": {
+              "class": "variable"
+            },
+            "elements": [
+              {
+                "id": 1,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "cat_feeling#",
+                    "name": "cat_feeling"
+                  },
+                  "id": "000001",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 2,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "dog_feeling#",
+                    "name": "dog_feeling"
+                  },
+                  "id": "000004",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              }
+            ],
+            "class": "enum"
+          }
+        },
+        {
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "cat_feeling#",
+                "name": "cat_feeling"
+              },
+              {
+                "alias": "dog_feeling#",
+                "name": "dog_feeling"
+              }
+            ],
+            "notes": "",
+            "name": "feeling MR",
+            "discarded": false,
+            "alias": "feeling_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            }
+          },
+          "derived": true,
+          "type": {
+            "ordinal": false,
+            "subvariables": [
+              "000001",
+              "000004"
+            ],
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "Selected"
+              },
+              {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Not Selected"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              }
+            ]
+          }
+        }
+      ],
+      "missing": 0,
+      "measures": {
+        "count": {
+          "data": [
+            1374,
+            5617,
+            0,
+            3681,
+            3310,
+            0,
+            2570,
+            10439,
+            0,
+            3307,
+            9702,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1380,
+            5604,
+            0,
+            1183,
+            5801,
+            0,
+            2564,
+            10452,
+            0,
+            5805,
+            7211,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1367,
+            5601,
+            0,
+            1160,
+            5808,
+            0,
+            2577,
+            10455,
+            0,
+            5828,
+            7204,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "n_missing": 0,
+          "metadata": {
+            "references": {},
+            "derived": true,
+            "type": {
+              "integer": true,
+              "missing_rules": {},
+              "missing_reasons": {
+                "No Data": -1
+              },
+              "class": "numeric"
+            }
+          }
+        }
+      },
+      "element": "crunch:cube",
+      "counts": [
+        1374,
+        5617,
+        0,
+        3681,
+        3310,
+        0,
+        2570,
+        10439,
+        0,
+        3307,
+        9702,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1380,
+        5604,
+        0,
+        1183,
+        5801,
+        0,
+        2564,
+        10452,
+        0,
+        5805,
+        7211,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1367,
+        5601,
+        0,
+        1160,
+        5808,
+        0,
+        2577,
+        10455,
+        0,
+        5828,
+        7204,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "n": 20000
+    }
+  }
+}

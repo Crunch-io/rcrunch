@@ -23,22 +23,24 @@ NULL
 
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("entities", "OrderGroup", function (x, simplify=FALSE) {
-    entities(x@entities, simplify=simplify)
+setMethod("entities", "OrderGroup", function(x, simplify = FALSE) {
+    entities(x@entities, simplify = simplify)
 })
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("entities", "ShojiOrder", function (x, simplify=FALSE) {
+setMethod("entities", "ShojiOrder", function(x, simplify = FALSE) {
     ## To get a flattened view
-    entities(x@graph, simplify=simplify)
+    entities(x@graph, simplify = simplify)
 })
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("entities", "list", function (x, simplify=FALSE) {
+setMethod("entities", "list", function(x, simplify = FALSE) {
     if (simplify) {
-        nested.groups <- vapply(x, inherits, logical(1), what="OrderGroup")
-        x[nested.groups] <- lapply(x[nested.groups],
-            function (a) entities(a, simplify=TRUE))
+        nested.groups <- vapply(x, inherits, logical(1), what = "OrderGroup")
+        x[nested.groups] <- lapply(
+            x[nested.groups],
+            function(a) entities(a, simplify = TRUE)
+        )
         x <- unique(unlist(x)) %||% c() ## unique(unlist(list())) returns NULL
     }
     return(x)
@@ -46,42 +48,42 @@ setMethod("entities", "list", function (x, simplify=FALSE) {
 
 #' @rdname urls
 #' @export
-setMethod("urls", "ShojiOrder", function (x) entities(x@graph, simplify=TRUE))
+setMethod("urls", "ShojiOrder", function(x) entities(x@graph, simplify = TRUE))
 #' @rdname urls
 #' @export
-setMethod("urls", "OrderGroup", function (x) entities(x, simplify=TRUE))
+setMethod("urls", "OrderGroup", function(x) entities(x, simplify = TRUE))
 #' @rdname urls
 #' @export
-setMethod("urls", "CrunchVariable", function (x) self(x))
+setMethod("urls", "CrunchVariable", function(x) self(x))
 #' @rdname urls
 #' @export
-setMethod("urls", "CrunchDataset", function (x) urls(variables(x)))
+setMethod("urls", "CrunchDataset", function(x) urls(variables(x)))
 
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("entities<-", "OrderGroup", function (x, value) {
+setMethod("entities<-", "OrderGroup", function(x, value) {
     x@entities <- entitiesInitializer(x)(value)
     return(x)
 })
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("entities<-", "ShojiOrder", function (x, value) {
+setMethod("entities<-", "ShojiOrder", function(x, value) {
     x@graph <- entitiesInitializer(x)(value)
     return(x)
 })
 
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("name", "OrderGroup", function (x) x@group)
+setMethod("name", "OrderGroup", function(x) x@group)
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("name<-", "OrderGroup", function (x, value) {
+setMethod("name<-", "OrderGroup", function(x, value) {
     x@group <- validateNewName(value)
     return(x)
 })
 
-.ordernames <- function (x) {
-    vapply(x, function (a) {
+.ordernames <- function(x) {
+    vapply(x, function(a) {
         ifelse(inherits(a, "OrderGroup"), name(a), NA_character_)
     }, character(1))
 }
@@ -96,53 +98,29 @@ setMethod("names", "OrderGroup", .ordernames)
 
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("names<-", "ShojiOrder",
-    function (x, value) {
+setMethod(
+    "names<-", "ShojiOrder",
+    function(x, value) {
         x@graph <- mapply(
-            function (y, v) {
+            function(y, v) {
                 if (!is.na(v)) y@group <- v
                 return(y)
-            }, y=x@graph, v=value, SIMPLIFY=FALSE, USE.NAMES=FALSE)
+            },
+            y = x@graph, v = value, SIMPLIFY = FALSE, USE.NAMES = FALSE
+        )
         return(x)
-    })
+    }
+)
 
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("duplicates", "ShojiOrder", function (x) x@duplicates)
+duplicates <- function(x) {
+    .Deprecated(msg="'duplicates' is deprecated. Entities can exist in one and only one folder, so this function does nothing.")
+    return(FALSE)
+}
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("duplicates", "OrderGroup", function (x) x@duplicates)
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates", "VariableCatalog", function (x) duplicates(x@order))
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates<-", c("ShojiOrder", "logical"), function (x, value) {
-    value <- isTRUE(value) ## To purge NA_logical_
-    x@duplicates <- value
-    grps <- vapply(x@graph, inherits, logical(1), what="OrderGroup")
-    x@graph[grps] <- lapply(x@graph[grps], `duplicates<-`, value=value)
-    if (!value) {
-        ## We're setting duplicates: FALSE, so dedupe
-        x <- dedupeOrder(x)
-    }
+"duplicates<-" <- function(x, value) {
+    .Deprecated(msg="'duplicates<-' is deprecated. Entities can exist in one and only one folder, so this function does nothing")
     return(x)
-})
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates<-", c("OrderGroup", "logical"), function (x, value) {
-    value <- isTRUE(value) ## To purge NA_logical_
-    x@duplicates <- value
-    grps <- vapply(x@entities, inherits, logical(1), what="OrderGroup")
-    x@entities[grps] <- lapply(x@entities[grps], `duplicates<-`, value=value)
-    ## Note: not calling dedupeOrder here because it's most likely that this is
-    ## only called from within the duplicates<- method for ShojiOrder, which
-    ## does the deduping
-    return(x)
-})
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates<-", c("VariableCatalog", "logical"), function (x, value) {
-     duplicates(x@order) <- isTRUE(value) ## To purge NA_logical_
-     return(x)
-})
+}

@@ -31,55 +31,62 @@ NULL
 #' a team by assigning in with a new name.
 #' @seealso [`teams`]
 #' @export
-getTeams <- function () {
+getTeams <- function() {
     TeamCatalog(crGET(sessionURL("teams")))
 }
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("TeamCatalog", "numeric"), function (x, i, ...) {
+setMethod("[[", c("TeamCatalog", "numeric"), function(x, i, ...) {
     getEntity(x, i, CrunchTeam, ...)
 })
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("TeamCatalog", "character", "missing", "list"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("TeamCatalog", "character", "missing", "list"),
+    function(x, i, j, value) {
         if (i %in% names(x)) {
             ## TODO: update team attributes
             halt("Cannot (yet) modify team attributes")
         } else {
             ## Creating a new team
-            u <- crPOST(self(x), body=toJSON(list(name=i)))
+            u <- crPOST(self(x), body = toJSON(list(name = i)))
             x <- refresh(x)
             ## Add members to team, if given
-            if (!is.null(value[["members"]]))
-            members(x[[i]]) <- value[["members"]]
+            if (!is.null(value[["members"]])) {
+                members(x[[i]]) <- value[["members"]]
+            }
             return(x)
         }
-    })
+    }
+)
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
-    function (x, i, j, value) {
+setMethod(
+    "[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
+    function(x, i, j, value) {
         ## TODO: something
         ## For now, assuming that modifications have already been persisted
         ## by other operations on the team entity (like members<-)
         return(x)
-    })
+    }
+)
 
 #' @rdname teams
 #' @export
-setMethod("members", "CrunchTeam", function (x) {
+setMethod("members", "CrunchTeam", function(x) {
     MemberCatalog(crGET(shojiURL(x, "catalogs", "members")))
 })
 
 #' @rdname delete
 #' @export
-setMethod("delete", "CrunchTeam", function (x, ...) {
-    prompt <- paste0("Really delete team ", dQuote(name(x)), "? ",
-        "This cannot be undone.")
+setMethod("delete", "CrunchTeam", function(x, ...) {
+    prompt <- paste0(
+        "Really delete team ", dQuote(name(x)), "? ",
+        "This cannot be undone."
+    )
     if (!askForPermission(prompt)) {
         halt("Must confirm deleting team")
     }
@@ -87,4 +94,67 @@ setMethod("delete", "CrunchTeam", function (x, ...) {
     out <- crDELETE(u)
     dropCache(absoluteURL("../", u))
     invisible(out)
+})
+
+#' Share Crunch assets with a team
+#' 
+#' You can share filters and multitables with a team that you are on. This will 
+#' give all team members access to view and edit these filters. Use `getTeams()`
+#' to see what teams you are on.
+#' 
+#' @param x a `CrunchFilter` or `Multitable`
+#' @param value a `CrunchTeam` or url for a Crunch team
+#' 
+#' @return a `CrunchTeam` that the asset is shared with.
+#' 
+#' @rdname team-sharing
+#' @export
+setGeneric("team", function(x) standardGeneric("team"))
+
+.getTeam <- function(x) {
+    if (is.null(x@body$team)) {
+        return(NULL)
+    }
+    
+    return(CrunchTeam(crGET(x@body$team)))
+}
+
+.setTeam <- function(x, value) { return(setEntitySlot(x, "team", value)) }
+
+#' @rdname team-sharing
+#' @export
+setGeneric("team<-", function(x, value) standardGeneric("team<-"))
+
+#' @rdname team-sharing
+#' @export
+setMethod("team", "CrunchFilter", .getTeam)
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("CrunchFilter", "CrunchTeam"), function(x, value) {
+    return(.setTeam(x, self(value)))
+})
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("CrunchFilter", "ANY"), function(x, value) {
+    # TODO: check if value is at least something like a URL?
+    return(.setTeam(x, value))
+})
+
+#' @rdname team-sharing
+#' @export
+setMethod("team", "Multitable", .getTeam)
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("Multitable", "CrunchTeam"), function(x, value) {
+    return(.setTeam(x, self(value)))
+})
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("Multitable", "ANY"), function(x, value) {
+    # TODO: check if value is at least something like a URL?
+    return(.setTeam(x, value))
 })

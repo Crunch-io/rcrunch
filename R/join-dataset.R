@@ -1,37 +1,44 @@
 #' Add columns from one dataset to another, joining on a key
 #'
-#' As \code{\link[base]{merge}} does for \code{data.frame}s, this function
-#' takes two datasets, matches rows based on a specified key variable, and
-#' adds columns from one to the other.
+#' As [base::merge()] does for `data.frame`s, this function takes two datasets,
+#' matches rows based on a specified key variable, and adds columns from one to
+#' the other.
+#'
+#' Since joining two datasets can sometimes produce unexpected results if the
+#' keys differ between the two datasets, you may want to follow the
+#' fork-edit-merge workflow for this operation. To do this, fork the dataset
+#' with [forkDataset()], join the new data to the fork, ensure that
+#' the resulting dataset is correct, and merge it back to the original dataset
+#' with [mergeFork()]. For more, see
+#' `vignette("fork-and-merge", package = "crunch")`.
 #'
 #' @param x CrunchDataset to add data to
 #' @param y CrunchDataset to copy data from. May be filtered by rows and/or
 #' columns.
-#' @param by character, optional shortcut for specifying \code{by.x} and
-#' \code{by.y} by alias if the key variables have the same alias in both
+#' @param by character, optional shortcut for specifying `by.x` and
+#' `by.y` by alias if the key variables have the same alias in both
 #' datasets.
-#' @param by.x CrunchVariable in \code{x} on which to join, or the alias
-#' (following \code{crunch.namekey.dataset}) of a variable. Must be type
+#' @param by.x CrunchVariable in `x` on which to join, or the alias
+#' (following `crunch.namekey.dataset` of a variable. Must be type
 #' numeric or text and have all unique, non-missing values.
-#' @param by.y CrunchVariable in \code{y} on which to join, or the alias
-#' (following \code{crunch.namekey.dataset}) of a variable. Must be type
+#' @param by.y CrunchVariable in `y` on which to join, or the alias
+#' (following `crunch.namekey.dataset` of a variable. Must be type
 #' numeric or text and have all unique, non-missing values.
 #' @param all logical: should all rows in x and y be kept, i.e. a "full outer"
-#' join? Only \code{FALSE} is currently supported.
+#' join? Only `FALSE` is currently supported.
 #' @param all.x logical: should all rows in x be kept, i.e. a "left outer"
-#' join? Only \code{TRUE} is currently supported.
+#' join? Only `TRUE` is currently supported.
 #' @param all.y logical: should all rows in y be kept, i.e. a "right outer"
-#' join? Only \code{FALSE} is currently supported.
+#' join? Only `FALSE` is currently supported.
 #' @param copy logical: make a virtual or materialized join. Default is
-#' \code{TRUE}, which means materialized. Virtual joins are experimental and
+#' `TRUE`, which means materialized. Virtual joins are experimental and
 #' not advised.
 #' @param ... additional arguments, ignored
-#' @return \code{x} extended by the columns of \code{y}, matched on the "by"
+#' @return `x` extended by the columns of `y`, matched on the "by"
 #' variables.
 #' @export
-joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,
-                         by.y=by, all=FALSE, all.x=TRUE, all.y=FALSE, copy=TRUE) {
-
+joinDatasets <- function(x, y, by = intersect(names(x), names(y)), by.x = by,
+                         by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE, copy = TRUE) {
     if (copy) {
         ## Just another way to call extend/merge
         Call <- match.call()
@@ -41,7 +48,8 @@ joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,
 
     ## Else:
     warning("Virtual joins are experimental. Use with extreme caution.",
-        call.=FALSE)
+        call. = FALSE
+    )
     ## Validate inputs
     by.x <- getJoinByVariable(x, by.x, "x")
     by.y <- getJoinByVariable(y, by.y, "y")
@@ -51,16 +59,17 @@ joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,
     ## Get join catalog url
     join_url <- shojiURL(x, "catalogs", "joins")
 
-    payload <- structure(list(list(left_key=self(by.x), right_key=self(by.y))),
-        .Names=paste0(join_url, tuple(y)$id, "/"))
-    crPATCH(join_url, body=toJSON(payload))
+    payload <- structure(list(list(left_key = self(by.x), right_key = self(by.y))),
+        .Names = paste0(join_url, tuple(y)$id, "/")
+    )
+    crPATCH(join_url, body = toJSON(payload))
     invisible(refresh(x))
 }
 
 #' @rdname joinDatasets
 #' @export
-extendDataset <- function (x, y, by=intersect(names(x), names(y)), by.x=by, by.y=by,
-                           all=FALSE, all.x=TRUE, all.y=FALSE, ...) {
+extendDataset <- function(x, y, by = intersect(names(x), names(y)), by.x = by, by.y = by,
+                          all = FALSE, all.x = TRUE, all.y = FALSE, ...) {
 
     ## Validate inputs
     by.x <- getJoinByVariable(x, by.x, "x")
@@ -69,17 +78,17 @@ extendDataset <- function (x, y, by=intersect(names(x), names(y)), by.x=by, by.y
     if (!all.x) halt('Option "all.x=FALSE" not supported.')
     if (all.y) halt('Option "all.y" not supported.')
 
-    payload <- zfunc("adapt", list(dataset=self(y)), zcl(by.y), zcl(by.x))
+    payload <- zfunc("adapt", list(dataset = self(y)), zcl(by.y), zcl(by.x))
     vars <- variablesFilter(y)
     if (!is.null(vars)) {
-        payload <- modifyList(vars, list(frame=payload))
+        payload <- modifyList(vars, list(frame = payload))
     }
     payload$filter <- zcl(activeFilter(y)) ## Effectively not added if NULL
-    crPOST(shojiURL(x, "catalogs", "variables"), body=toJSON(payload))
+    crPOST(shojiURL(x, "catalogs", "variables"), body = toJSON(payload))
     invisible(refresh(x))
 }
 
-getJoinByVariable <- function (dataset, by, name) {
+getJoinByVariable <- function(dataset, by, name) {
     ## Do validations and return a proper, legal "by" variable, if possible
     if (!is.dataset(dataset)) halt(name, " must be a Crunch Dataset")
     if (is.character(by)) {

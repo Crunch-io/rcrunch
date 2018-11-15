@@ -12,6 +12,10 @@
 \alias{toVariable,AsIs-method}
 \alias{toVariable,VariableDefinition-method}
 \alias{toVariable,logical-method}
+\alias{toVariable,labelled-method}
+\alias{toVariable,haven_labelled-method}
+\alias{toVariable,labelled_spss-method}
+\alias{toVariable,haven_labelled_spss-method}
 \alias{toVariable,CrunchExpr-method}
 \title{Generic method for converting objects to Crunch representations}
 \usage{
@@ -33,16 +37,29 @@ toVariable(x, ...)
 
 \S4method{toVariable}{logical}(x, ...)
 
+\S4method{toVariable}{labelled}(x, ...)
+
+\S4method{toVariable}{haven_labelled}(x, ...)
+
+\S4method{toVariable}{labelled_spss}(x, ...)
+
+\S4method{toVariable}{haven_labelled_spss}(x, ...)
+
 \S4method{toVariable}{CrunchExpr}(x, ...)
 }
 \arguments{
-\item{x}{the object}
+\item{x}{An R vector you want to turn into a Crunch variable}
 
-\item{...}{additional arguments}
+\item{...}{Additional metadata fields for the variable, such as "name" and
+"description". See the \href{http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog}{API documentation}
+for a complete list of valid attributes.}
 }
 \value{
-a list object suitable for POSTing to the Crunch API. See the API
-documentation for specifications.
+A \code{VariableDefinition} object. To add this to a dataset, either
+assign it into the dataset (like \code{ds$newvar <- toVariable(...)}) or call
+\code{\link[=addVariables]{addVariables()}}. If you're adding a column of data to a dataset, it must be
+as long as the number of rows in the dataset, or it may be a single value to
+be recycled for all rows.
 }
 \description{
 R objects are converted to Crunch objects using the following rules:
@@ -54,10 +71,23 @@ R objects are converted to Crunch objects using the following rules:
 \item Factors are converted to categorical variables
 \item Date and POSIXt vectors are converted into Crunch datetime variables
 \item Logical vectors are converted to Crunch categorical variables
-\item \link{VariableDefinition}s are not converted, but the function can still append
-additional metadata
+\item \code{\link[=VariableDefinition]{VariableDefinition()}}s are not converted, but the function can still
+append additional metadata
 }
 
 If you have other object types you wish to convert to Crunch variables,
-you can declare methods for \code{toVariable}
+you can declare methods for \code{toVariable}.
+}
+\examples{
+var1 <- rnorm(10)
+toVariable(var1)
+toVariable(var1, name="Random", description="Generated in R")
+\dontrun{
+ds$random <- toVariable(var1, name="Random")
+# Or, this way:
+ds <- addVariables(ds, toVariable(var1, name="Random"))
+}
+}
+\seealso{
+\code{\link[=VariableDefinition]{VariableDefinition()}} \code{\link[=addVariables]{addVariables()}}
 }
