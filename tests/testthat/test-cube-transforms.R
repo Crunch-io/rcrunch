@@ -1182,11 +1182,11 @@ with_test_authentication({
             ))
         )
         trans_pets <- showTransforms(ds$pets)
-        
+
         expect_is(trans_pets, "array")
         expect_equal(dim(trans_pets), 10)
         expect_equivalent(trans_pets, cat_show_trans)
-        
+
         skip_on_local_env("Pretty formatting isn't exactly the same in many terminals")
         expect_prints(
             trans_pets <- showTransforms(ds$pets),
@@ -1203,8 +1203,10 @@ with_test_authentication({
                 "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
                 "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
                 "\033[30m\033[3mRocks+Birds (incl. missing) NA\033[23m\033[39m",
-                sep = "\n"),
-            fixed = TRUE)
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
 
     test_that("showTransforms works on a variable", {
@@ -1225,7 +1227,7 @@ with_test_authentication({
         expect_equal(dim(pets_cube), 4)
         expect_equal(dim(trans_cube), 10)
         expect_equivalent(trans_cube, cat_show_trans)
-        
+
         skip_on_local_env("Pretty formatting isn't exactly the same in many terminals")
         expect_prints(
             trans_cube <- showTransforms(pets_cube),
@@ -1242,7 +1244,9 @@ with_test_authentication({
                 "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
                 "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
                 "\033[30m\033[3mRocks+Birds (incl. missing) 35\033[23m\033[39m",
-                sep = "\n"),
-            fixed = TRUE)
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
 })
