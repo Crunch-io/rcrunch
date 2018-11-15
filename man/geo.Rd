@@ -8,7 +8,6 @@
 \alias{Geodata}
 \alias{geo}
 \alias{geo<-}
-\alias{CrunchGeography}
 \alias{geo,CrunchVariable-method}
 \alias{geo<-,CrunchVariable,CrunchGeography-method}
 \alias{geo<-,CrunchVariable,NULL-method}

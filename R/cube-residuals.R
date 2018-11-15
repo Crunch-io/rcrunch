@@ -116,15 +116,15 @@ compareDims <- function(cube, dim = c("cols", "rows"), baseline, x) {
     # convert to numeric indices
     # TODO: remove when we can accept either characters or indices and pass them
     # to subsetting unmolested
-    if (is.character(baseline)) {
+    if (is.character(baseline) && length(baseline) == 1) {
         baseline_ind <- which(names == baseline)
     } else {
-        stop("Currently, column comparison only accepts category names.")
+        stop("Currently, column comparison only accepts at most one category name.")
     }
-    if (is.character(x)) {
+    if (is.character(x) && length(x) == 1) {
         x_ind <- which(names == x)
     } else {
-        stop("Currently, column comparison only accepts category names.")
+        stop("Currently, column comparison only accepts at most one category name.")
     }
 
     # ensure that the extents given are in the cube
@@ -173,9 +173,10 @@ compareDims <- function(cube, dim = c("cols", "rows"), baseline, x) {
 #' *Warning* since there is more than one comparison being made against each
 #' baseline the z-scores, and especially the p-values derived from these
 #' z-scores should be interpreted with caution. Using standard p-value cutoffs
-#' will result in anti-conservative interpretations because of the multiple
-#' comparisons problem. Adjustments to p-value cut offs (e.g. Bonferonni
-#' correction) should be used when interpreting z-scores from the
+#' will result in anti-conservative interpretations because of the (multiple
+#' comparisons problem)[https://en.wikipedia.org/wiki/Multiple_comparisons_problem].
+#' Adjustments to p-value cut offs (e.g. (Bonferonni
+#' correction)[https://en.wikipedia.org/wiki/Bonferroni_correction]) should be used when interpreting z-scores from the
 #' `compare[Rows|Cols|Dims]Pairwise()` family of functions.
 #'
 #' @param cube a cube to calculate the comparison on

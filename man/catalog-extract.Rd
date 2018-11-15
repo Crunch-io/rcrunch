@@ -50,7 +50,8 @@
 \usage{
 \S4method{[[}{DatasetCatalog,numeric}(x, i, j, ...)
 
-\S4method{[[}{DatasetCatalog,character,missing,DatasetTuple}(x, i, j) <- value
+\S4method{[[}{DatasetCatalog,character,missing,DatasetTuple}(x, i,
+  j) <- value
 
 \S4method{[[}{FilterCatalog,numeric}(x, i, j, ...)
 
@@ -60,9 +61,11 @@
 \S4method{[[}{FilterCatalog,numeric,missing,CrunchLogicalExpr}(x, i,
   j) <- value
 
-\S4method{[[}{FilterCatalog,character,missing,CrunchFilter}(x, i, j) <- value
+\S4method{[[}{FilterCatalog,character,missing,CrunchFilter}(x, i,
+  j) <- value
 
-\S4method{[[}{FilterCatalog,numeric,missing,CrunchFilter}(x, i, j) <- value
+\S4method{[[}{FilterCatalog,numeric,missing,CrunchFilter}(x, i,
+  j) <- value
 
 \S4method{[[}{MemberCatalog,character}(x, i, j, ...)
 
@@ -72,9 +75,11 @@
 
 \S4method{[[}{MultitableCatalog,numeric}(x, i, j, ...)
 
-\S4method{[[}{MultitableCatalog,character,missing,formula}(x, i, j) <- value
+\S4method{[[}{MultitableCatalog,character,missing,formula}(x, i,
+  j) <- value
 
-\S4method{[[}{MultitableCatalog,numeric,missing,formula}(x, i, j) <- value
+\S4method{[[}{MultitableCatalog,numeric,missing,formula}(x, i,
+  j) <- value
 
 \S4method{[[}{MultitableCatalog,ANY,missing,`NULL`}(x, i, j) <- value
 
@@ -127,9 +132,11 @@
 \S4method{[[}{VariableCatalog,character,missing,CrunchVariable}(x, i,
   j) <- value
 
-\S4method{[}{VariableCatalog,VariableOrder,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{VariableCatalog,VariableOrder,ANY}(x, i, j, ...,
+  drop = TRUE)
 
-\S4method{[}{VariableCatalog,VariableGroup,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{VariableCatalog,VariableGroup,ANY}(x, i, j, ...,
+  drop = TRUE)
 
 \S4method{[}{VariableCatalog,VariableOrder,missing,VariableCatalog}(x, i,
   j) <- value

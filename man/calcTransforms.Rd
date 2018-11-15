@@ -4,11 +4,11 @@
 \alias{calcTransforms}
 \title{Calculate transforms for an array}
 \usage{
-calcTransforms(array, trans, var_cats, include = c("subtotals", "headings",
-  "cube_cells", "other_insertions"))
+calcTransforms(array, trans, var_cats, include = c("subtotals",
+  "headings", "cube_cells", "other_insertions"))
 }
 \arguments{
-\item{array}{the array to use (this is most likely from a \code{CrunchCube`` object). The cells from this array are the cube_cells referred to in}include`}
+\item{array}{the array to use (this is most likely from a \code{CrunchCube`` object). The cells from this array are the cube_cells referred to in }include`}
 
 \item{trans}{a \code{Transform} object to get the transformations to calculate}
 

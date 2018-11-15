@@ -32,7 +32,8 @@
 \S4method{[}{CrunchDataset,CrunchLogicalExpr,missing}(x, i, j, ...,
   drop = FALSE)
 
-\S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY}(x, i, j, ...,
+  drop = FALSE)
 
 \S4method{subset}{CrunchDataset}(x, ...)
 

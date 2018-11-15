@@ -3,7 +3,6 @@
 \name{subtypeInsertion}
 \alias{subtypeInsertion}
 \alias{subtypeInsertions}
-\alias{subtypeInsertion}
 \title{Convert from Insertion to Insertion subtypes}
 \usage{
 subtypeInsertions(inserts)

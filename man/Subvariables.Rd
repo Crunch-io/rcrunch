@@ -4,7 +4,6 @@
 \name{Subvariables-class}
 \alias{Subvariables-class}
 \alias{Subvariables}
-\alias{Subvariables}
 \alias{subvariables}
 \alias{subvariables<-}
 \alias{subvariables,CategoricalArrayVariable-method}
@@ -19,7 +18,8 @@
 
 \S4method{subvariables}{CategoricalArrayVariable,ANY}(x) <- value
 
-\S4method{subvariables}{CategoricalArrayVariable,Subvariables}(x) <- value
+
+  \S4method{subvariables}{CategoricalArrayVariable,Subvariables}(x) <- value
 }
 \arguments{
 \item{x}{A Variable or Subvariables object}

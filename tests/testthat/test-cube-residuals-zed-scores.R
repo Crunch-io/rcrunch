@@ -283,7 +283,17 @@ test_that("compareDims() dimension validation", {
             x = "extremely happy",
             dim = "rows"
         ),
-        "Currently, column comparison only accepts category names."
+        "Currently, column comparison only accepts at most one category name."
+    )
+
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = c("extremely happy", "somewhat happy"),
+            x = "extremely happy",
+            dim = "rows"
+        ),
+        "Currently, column comparison only accepts at most one category name."
     )
 
     expect_error(
@@ -293,7 +303,17 @@ test_that("compareDims() dimension validation", {
             x = 1,
             dim = "rows"
         ),
-        "Currently, column comparison only accepts category names."
+        "Currently, column comparison only accepts at most one category name."
+    )
+
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = "extremely happy",
+            x = c("extremely happy", "somewhat happy"),
+            dim = "rows"
+        ),
+        "Currently, column comparison only accepts at most one category name."
     )
 })
 

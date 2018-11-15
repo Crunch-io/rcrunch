@@ -3,7 +3,6 @@
 \name{crunchBox}
 \alias{crunchBox}
 \alias{CrunchBox}
-\alias{CrunchBox}
 \title{Make a CrunchBox}
 \usage{
 crunchBox(dataset, filters = crunch::filters(dataset), brand_colors,

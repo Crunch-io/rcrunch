@@ -6,9 +6,9 @@
 \alias{as.data.frame.CrunchDataFrame}
 \title{as.data.frame method for CrunchDataset}
 \usage{
-\method{as.data.frame}{CrunchDataset}(x, row.names = NULL, optional = FALSE,
-  force = FALSE, categorical.mode = "factor", include.hidden = FALSE,
-  row.order = NULL, ...)
+\method{as.data.frame}{CrunchDataset}(x, row.names = NULL,
+  optional = FALSE, force = FALSE, categorical.mode = "factor",
+  include.hidden = FALSE, row.order = NULL, ...)
 
 \method{as.data.frame}{CrunchDataFrame}(x, row.names = NULL,
   optional = FALSE, ...)
