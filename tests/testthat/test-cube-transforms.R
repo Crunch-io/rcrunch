@@ -1261,8 +1261,10 @@ with_test_authentication({
                 "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
                 "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
                 "\033[30m\033[3mRocks+Birds (incl. missing) NA\033[23m\033[39m",
-                sep = "\n"),
-            fixed = TRUE)
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
 
     test_that("showTransforms works on a variable", {
@@ -1299,8 +1301,10 @@ with_test_authentication({
                 "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
                 "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
                 "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
-                "\033[30m\033[3mRocks+Birds (incl. missing) 30\033[23m\033[39m",
-                sep = "\n"),
-            fixed = TRUE)
+                "\033[30m\033[3mRocks+Birds (incl. missing) 35\033[23m\033[39m",
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
 })

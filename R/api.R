@@ -134,9 +134,7 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             ## Server is busy and telling us to retry the request again after
             ## some period.
             wait <- get_header("Retry-After", response$headers)
-            message("This request is taking longer than expected. Please stand by...",
-                call. = FALSE
-            )
+            message("This request is taking longer than expected. Please stand by...")
             Sys.sleep(as.numeric(wait))
             ## TODO: resend request headers? Or, include the request to evaluate
             ## inside this function, do match.call at the beginning, and re-eval?

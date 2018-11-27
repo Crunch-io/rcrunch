@@ -214,7 +214,6 @@ setGeneric("dimnames")
 setGeneric("margin.table")
 setGeneric("prop.table")
 setGeneric("round")
-setGeneric("rstandard")
 
 setGeneric("bases", function(x, margin = NULL) standardGeneric("bases"))
 setGeneric("dimensions", function(x) standardGeneric("dimensions"))
