@@ -264,6 +264,7 @@ with_test_authentication({
     test_that("Get and set project icon", {
         ico <- icon(pj)
         # expect_true(nchar(ico) > 0) ## Unskip after #119305641 ships
+        skip_on_local_backend("unskip when #162257432 ships")
         icon(pj) <- "empty.png"
         expect_false(icon(pj) == "empty.png")
         expect_true(endsWith(icon(pj), ".png"))
