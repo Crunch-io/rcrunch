@@ -40,6 +40,8 @@
 #' in attributes via `...`
 #' @param x For the attribute getters and setters, an object of class
 #' Transforms
+#' @param i For `[`, the index of the Transforms to select (or insert for <- methods)
+#' @param j Not used
 #' @param value For `[<-`, the replacement Transforms to insert
 #' @name Transforms
 #' @aliases transforms transforms<-
@@ -110,7 +112,10 @@ setMethod("transforms<-", c("CrunchVariable", "NULL"), function(x, value) {
 setValidity("Transforms", function(object) {
     one_of_names <- c("insertions", "categories", "elements") %in% names(object)
     if (!any(one_of_names)) {
-        val <- paste("Transforms must have at least one of", serialPaste(dQuote(c("insertions", "categories", "elements")), "or"))
+        val <- paste(
+            "Transforms must have at least one of",
+            serialPaste(dQuote(c("insertions", "categories", "elements")), "or")
+        )
     } else {
         val <- TRUE
     }
@@ -159,9 +164,18 @@ NULL
 #' @export
 setMethod("showTransforms", "CategoricalVariable", function(x) {
     tab <- table(x)
-    tab <- as.array(calcTransforms(tab, transforms(x), categories(x)))
 
     remove_these <- names(categories(x)[is.na(categories(x))])
+
+    tab <- as.array(calcTransforms(
+        tab,
+        insert_funcs =  makeInsertionFunctions(
+            categories(x),
+            transforms(x),
+            cats_in_array = names(tab)
+        )
+    ))
+
     tab <- tab[!(names(tab) %in% remove_these)]
     styles <- transformStyles(transforms(x), categories(x)[!is.na(categories(x))])
 

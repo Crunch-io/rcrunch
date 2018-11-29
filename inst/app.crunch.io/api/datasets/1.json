@@ -18,7 +18,6 @@
         "batches": "https://app.crunch.io/api/datasets/1/batches/",
         "permissions": "https://app.crunch.io/api/datasets/1/permissions/",
         "parent": "https://app.crunch.io/api/datasets/",
-        "joins": "https://app.crunch.io/api/datasets/1/joins/",
         "filters": "https://app.crunch.io/api/datasets/1/filters/",
         "boxdata": "https://app.crunch.io/api/datasets/1/boxdata/",
         "multitables": "https://app.crunch.io/api/datasets/1/multitables/",

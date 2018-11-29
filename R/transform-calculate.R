@@ -16,18 +16,11 @@
 #'
 #' @return an array with transforms calculated and added or applied
 #' @keywords internal
-calcTransforms <- function(array, trans, var_cats,
-                           include = c("subtotals", "headings", "cube_cells", "other_insertions")) {
+calcTransforms <- function(array, insert_funcs, dim_names = names(insert_funcs)) {
     # TODO: other possible Transforms
 
-    ### Insertions
-    # collate insertions with categories for rearranging and calculation purposes
-    # we need the categories to know what order the the cube cells should be in
-    # and where to insert insertions (as they are `anchor`ed) to a category id.
-    cat_insert_map <- mapInsertions(trans$insertions, var_cats, include = include)
-
     # calculate the insertions based on cat_insert_map
-    array <- calcInsertions(array, cat_insert_map, var_cats)
+    array <- calcInsertions(array, insert_funcs, dim_names)
 
     return(array)
 }
@@ -91,7 +84,12 @@ collateCats <- function(inserts, var_cats) {
         halt("Can't collateCats with no categories.")
     }
 
-    last_category <- tail(ids(var_cats), 1)
+    # add a fake botom category to attach things that are bottom anchored below
+    # the last category
+    cats_out@.Data <- append(
+        cats_out@.Data,
+        list(AbstractCategory(name = "__fake__bottom__category__"))
+    )
 
     # for each insert, find the position for its anchor, and add the insertion
     # at that position we use a for loop, because as we insert, the positions of
@@ -105,15 +103,20 @@ collateCats <- function(inserts, var_cats) {
     # Desired result: A, first, second, B, C
     # Result if not `rev(inserts)`: A, second, first, B, C
     for (insert in rev(inserts)) {
-        pos <- findInsertPosition(insert, cats_out, last_category)
+        pos <- findInsertPosition(insert, cats_out)
         cats_out@.Data <- append(cats_out, list(insert), pos)
     }
+
+    # remove the fake bottom category
+    not_fake_bottom <- which(names(cats_out) !=  "__fake__bottom__category__")
+    cats_out@.Data <- cats_out@.Data[not_fake_bottom]
+
     return(cats_out)
 }
 
 # for a single Insertion, and a set of categories (or collated categories and
 # insertions) find the position to insert to
-findInsertPosition <- function(insert, cats, last_category) {
+findInsertPosition <- function(insert, cats) {
     anchr <- anchor(insert)
     # if the anchor is top, put at the beginning
     if (anchr == "top") {
@@ -128,22 +131,22 @@ findInsertPosition <- function(insert, cats, last_category) {
         }
     }
 
-    # all other situations, put after the last category
-    return(which(last_category == ids(cats)))
+    # all other situations, put after the bottom category
+    return(which("__fake__bottom__category__" == names(cats)))
 }
 
 #' Given a vector of values and elements, calculate the insertions
 #'
 #' @param vec values to transform (a single dimension of an array)
-#' @param elements AbstractCategories of both `Category`s and `Insertion`s to
-#' calculate. Generally derived from `mapInsertions()`
-#' @param var_cats the `Categories` object tat corresponds to the vector in
-#' `vec` of the transform
+#' @param trans_funcs a (named) list of functions that return the correct vector
+#'  of the array (with desired insertions and transformations included)
+#' @param dim_names the names of the dimensions (although this is calculable at
+#'   call-time, it's much more efficient to provide this to the call)
 #'
 #' @return the values given in `vec`, with any insertions specified in
 #' `trans` calculated and inserted
 #' @keywords internal
-calcInsertions <- function(vec, elements, var_cats) {
+calcInsertions <- function(vec, insert_funcs, dim_names = names(insert_funcs)) {
     # we always calculate insertions at the lowest dimension so warn if there is
     # more than one dimension.
     if (length(dim(vec)) > 1) {
@@ -154,48 +157,12 @@ calcInsertions <- function(vec, elements, var_cats) {
     }
 
     # make the actual calculations and insertions
-    vec_out <- vapply(elements, function(element) {
-        # if element is a category, simply return the value
-        if (is.category(element)) {
-            return(vec[name(element)])
-        }
-
-        # if element is a heading return NA (since there is no value to be
-        # calculated but we need a placeholder non-number)
-        if (is.Heading(element)) {
-            return(NA)
-        }
-
-        # if element is a subtotal, sum the things it corresponds to which are
-        # found with arguments()
-        if (is.Subtotal(element)) {
-            # grab category combinations, and then sum those categories.
-            combos <- unlist(arguments(element, var_cats))
-            which.cats <- names(var_cats[ids(var_cats) %in% combos])
-            return(sum(vec[which.cats]))
-        }
-
-        # if element is a summaryStat, grab the function from summaryStatInsertions
-        # to use.
-        if (is.SummaryStat(element)) {
-            statFunc <- summaryStatInsertions[[func(element)]]
-            return(statFunc(element, var_cats, vec))
-        }
-
-        # finally, check if there are other functions, if there are warn, and
-        # then return NA
-        unknown_funcs <- !(element[["function"]] %in% c("subtotal", names(summaryStatInsertions)))
-        if (unknown_funcs) {
-            warning(
-                "Transform functions other than subtotal are not supported.",
-                " Applying only subtotals and ignoring ", element[["function"]]
-            )
-        }
-        return(NA)
-    }, double(1), USE.NAMES = TRUE)
+    vec_out <- vapply(seq_along(insert_funcs), function(ind) {
+        return(insert_funcs[[ind]](vec))
+    }, double(1))
 
     # make sure that the vector is named appropriately
-    names(vec_out) <- names(elements)
+    names(vec_out) <- dim_names
 
     return(vec_out)
 }

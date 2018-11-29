@@ -97,6 +97,7 @@ with_test_authentication({
         user <- index(usercat)[[self(u)]]
         expect_false(user$account_permissions$create_datasets)
         expect_false(user$account_permissions$alter_users)
+        skip("Personal projects block deletes, unskip when 162253630 ships")
         crDELETE(self(u))
         usercat <- refresh(usercat)
         expect_false(u.email %in% emails(usercat))

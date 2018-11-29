@@ -1,11 +1,11 @@
 {
 	"element": "shoji:entity",
-	"self": "https://app.crunch.io/api/datasets/1/filters/filter1/",
+	"self": "https://app.crunch.io/api/datasets/1/filters/filter2/",
 	"description": "Detail information for one filter",
 	"body": {
-        "is_public": false,
+        "is_public": true,
         "owner_id": "https://app.crunch.io/api/users/user1/",
-        "name": "Occasional Political Interest",
+        "name": "Public filter",
         "id": "filter1",
 		"view": {},
 		"expression": {
@@ -19,6 +19,6 @@
 		"creation_time": "2015-02-12T10:27:15.225000+00:00",
 		"id": "filter1",
 		"last_update": null,
-		"team": "https://app.crunch.io/api/teams/team1/"
+		"team": null
 	}
 }

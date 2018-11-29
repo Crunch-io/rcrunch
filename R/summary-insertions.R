@@ -62,17 +62,13 @@ SummaryStat <- function(name,
 
 #' @importFrom stats weighted.mean
 # a list of possible summary statistics to use as an insertion
-meanInsert <- function(element, var_cats, vec, includeNA = FALSE) {
+meanInsert <- function(element, var_cats, includeNA = FALSE) {
     # grab category combinations, and then sum those categories.
     combos <- unlist(arguments(element, var_cats))
     which.cats <- names(var_cats[ids(var_cats) %in% combos])
     num_values <- values(var_cats[which.cats])
-    counts <- vec[which.cats]
 
-    # TODO: do something smarter about NA categories that have counts / have
-    # numeric values if a user cares
-    ok <- !is.na(counts)
-    return(weighted.mean(num_values[ok], counts[ok], includeNA = includeNA))
+    return(function(vec) weighted.mean(num_values, vec, includeNA = includeNA))
 }
 
 medianInsert <- function(element, var_cats, vec, includeNA = FALSE) {
@@ -80,33 +76,36 @@ medianInsert <- function(element, var_cats, vec, includeNA = FALSE) {
     combos <- unlist(arguments(element, var_cats))
     which.cats <- names(var_cats[ids(var_cats) %in% combos])
     num_values <- values(var_cats[which.cats])
-    counts <- vec[which.cats]
 
-    # TODO: do something smarter about NA categories that have counts / have
-    # numeric values if a user cares
-    ok <- !is.na(counts)
+    return(function(vec) {
+        counts <- vec
 
-    # weighted median function
-    num_values <- num_values[ok]
-    counts <- counts[ok]
-    o <- order(num_values)
-    num_values <- num_values[o]
-    counts <- counts[o]
-    perc <- cumsum(counts) / sum(counts)
-    # if any of the bins are 0.5, return the mean of that and the one above it.
-    if (any(!is.na(perc) & perc == 0.5)) {
-        n <- which(perc == 0.5)
-        return((num_values[n] + num_values[n + 1]) / 2)
-    }
+        # TODO: do something smarter about NA categories that have counts / have
+        # numeric values if a user cares
+        ok <- !is.na(counts)
 
-    # otherwise return the first bin that is more than 50%
-    over0.5 <- which(perc > 0.5)
-    if (length(over0.5 > 0)) {
-        out <- num_values[min(over0.5)]
-    } else {
-        out <- NA
-    }
-    return(out)
+        # weighted median function
+        num_values <- num_values[ok]
+        counts <- counts[ok]
+        o <- order(num_values)
+        num_values <- num_values[o]
+        counts <- counts[o]
+        perc <- cumsum(counts) / sum(counts)
+        # if any of the bins are 0.5, return the mean of that and the one above it.
+        if (any(!is.na(perc) & perc == 0.5)) {
+            n <- which(perc == 0.5)
+            return((num_values[n] + num_values[n + 1]) / 2)
+        }
+
+        # otherwise return the first bin that is more than 50%
+        over0.5 <- which(perc > 0.5)
+        if (length(over0.5 > 0)) {
+            out <- num_values[min(over0.5)]
+        } else {
+            out <- NA
+        }
+        return(out)
+    })
 }
 
 summaryStatInsertions <- list(
@@ -161,6 +160,9 @@ setMethod("makeInsertion", "SummaryStat", function(x, var_categories) {
 #' @param var a character with the name of the dimension variable to add the
 #' summary statistic for generally the alias of the variable in Crunch, but
 #' might include Crunch functions like `rollup()`, `bin()`, etc.
+#' @param margin which margin should the summary statistic be applied for (used
+#' in the cases of categorical arrays where a variable might contribute more
+#' than one margin)
 #' @param ... options to pass to `SummaryStat()` (e.g., position, after, etc.)
 #'
 #' @return a CrunchCube with the summary statistic Insertion added to the
@@ -249,10 +251,23 @@ setMethod("makeInsertion", "SummaryStat", function(x, var_categories) {
 #' }
 #'
 #' @export
-addSummaryStat <- function(cube, stat = c("mean", "median"), var, ...) {
+addSummaryStat <- function(cube, stat = c("mean", "median"), var, margin, ...) {
     stat <- match.arg(stat)
 
-    validateNamesInDims(var, cube, what = "variables")
+    if (!missing(var)) {
+        validateNamesInDims(var, cube, what = "variables")
+        margin <- which(names(cube) %in% var)
+    } else if (!missing(margin)) {
+        # TODO: use check_margin() when index-redux is mergedin
+        if (any(margin > length(dim(cube)))) {
+            halt(
+                "Margin ", max(margin),
+                " exceeds Cube's number of dimensions (",
+                length(dim(cube)), ")")
+        }
+    } else {
+        halt("Must supply either a `margin` or `var` argument.")
+    }
 
     # setup default options
     opts <- list(..., stat = stat)
@@ -263,14 +278,18 @@ addSummaryStat <- function(cube, stat = c("mean", "median"), var, ...) {
 
     summary_stat <- do.call(SummaryStat, opts)
 
-    if (is.null(transforms(cube)[[var]])) {
-        transes <- list(Transforms(insertions = Insertions(summary_stat)))
-        # add variable name
-        names(transes) <- var
-        transforms(cube) <- transes
-    } else {
-        inserts <- append(transforms(cube)[[var]]$insertions, list(summary_stat))
-        transforms(cube)[[var]]$insertions <- inserts
+    for (one_margin in margin) {
+        if (is.null(transforms(cube)[[one_margin]])) {
+            transes <- Transforms(insertions = Insertions(summary_stat))
+            transforms(cube)[[one_margin]] <- transes
+        } else {
+            inserts <- append(
+                transforms(cube)[[one_margin]]$insertions,
+                list(summary_stat)
+            )
+            transforms(cube)[[one_margin]]$insertions <- inserts
+        }
     }
+
     return(cube)
 }

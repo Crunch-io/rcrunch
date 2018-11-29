@@ -45,14 +45,13 @@ join? Only \code{TRUE} is currently supported.}
 join? Only \code{FALSE} is currently supported.}
 
 \item{copy}{logical: make a virtual or materialized join. Default is
-\code{TRUE}, which means materialized. Virtual joins are experimental and
-not advised.}
+\code{TRUE}, which means materialized. Virtual joins are in fact not currently
+implemented, so the default is the only valid value.}
 
 \item{...}{additional arguments, ignored}
 }
 \value{
-\code{x} extended by the columns of \code{y}, matched on the "by"
-variables.
+\code{x} extended by the columns of \code{y}, matched on the "by" variables.
 }
 \description{
 As \code{\link[base:merge]{base::merge()}} does for \code{data.frame}s, this function takes two datasets,

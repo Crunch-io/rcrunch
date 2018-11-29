@@ -4,16 +4,16 @@
 \alias{calcInsertions}
 \title{Given a vector of values and elements, calculate the insertions}
 \usage{
-calcInsertions(vec, elements, var_cats)
+calcInsertions(vec, insert_funcs, dim_names = names(insert_funcs))
 }
 \arguments{
 \item{vec}{values to transform (a single dimension of an array)}
 
-\item{elements}{AbstractCategories of both \code{Category}s and \code{Insertion}s to
-calculate. Generally derived from \code{mapInsertions()}}
+\item{dim_names}{the names of the dimensions (although this is calculable at
+call-time, it's much more efficient to provide this to the call)}
 
-\item{var_cats}{the \code{Categories} object tat corresponds to the vector in
-\code{vec} of the transform}
+\item{trans_funcs}{a (named) list of functions that return the correct vector
+of the array (with desired insertions and transformations included)}
 }
 \value{
 the values given in \code{vec}, with any insertions specified in

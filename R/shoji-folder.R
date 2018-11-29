@@ -123,8 +123,30 @@ setMethod("delete", "ShojiFolder", function(x, ...) {
     if (is.null(parentFolderURL(x))) {
         halt("Cannot delete root folder")
     }
+
+    # count the variable/folder objects, and warn the user that they will be
+    # summarily deleted as well. Projects must be empty to be deleted (which is
+    # enforced on the server, so we only need to check VariableFolders) send as
+    # a message before the prompt for test-ability, and so the prompt isn't lost
+    # at then end of a long line.
+    if (inherits(x, "VariableFolder")) {
+        obj_names <- names(x)
+        num_vars <- length(x)
+        obj_word <- ifelse(num_vars > 1, "objects", "object")
+
+        if (num_vars > 5) {
+            obj_string <- serialPaste(dQuote(head(obj_names, 5)), "...")
+        } else {
+            obj_string <- serialPaste(dQuote(obj_names))
+        }
+        message(
+            "This folder contains ", num_vars, " ", obj_word, ": ", obj_string, 
+            ". Deleting the folder will also delete these objects (including ",
+            "their contents)."
+        )
+    }
+
     if (!askForPermission(paste0("Really delete ", name(x), "?"))) {
-        ## TODO: prompt should tell you how many elements (variables) are contained in it
         halt("Must confirm deleting folder")
     }
     out <- crDELETE(self(x))
