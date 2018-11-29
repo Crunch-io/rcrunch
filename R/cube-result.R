@@ -142,8 +142,10 @@ takeSelectedDimensions <- function(x, dims) {
     selecteds <- is.selectedDimension(dims)
     if (any(selecteds)) {
         drops <- lapply(selecteds, function(s) {
-            ## For "Selected" dimensions, we only want to return "Selected", the 1st element
-            ## TODO: Don't assume "selected" is position 1; consider an is.selected attr/vector
+            ## For "Selected" dimensions, we only want to return "Selected",
+            ## the 1st element
+            ## TODO: Don't assume "selected" is position 1; consider an
+            ## is.selected attr/vector
             if (s) {
                 return(1L)
             } else {
@@ -183,11 +185,22 @@ evalUseNA <- function(data, dims, useNA) {
     ## Return dimnames-shaped list of logical vectors indicating which
     ## values should be kept, according to the @useNA parameter
 
+    if (length(dims) == 0) {
+        # we got no dimensions, return TRUE for compatilbity (keep everything)
+        return(TRUE)
+    }
+
+    if (is.vector(data)) {
+        # if we have a vector, turn it into an array for compatibility below
+        data <- as.array(data)
+    }
+
     ## Figure out which dims are non-zero
     margin.counts <- lapply(
         seq_along(dim(data)),
         function(i) margin.table(data, i)
     )
+
     keep.these <- mapply(keepWithNA,
         dimension = dims,
         marginal = margin.counts,
@@ -210,8 +223,12 @@ keepWithNA <- function(dimension, marginal, useNA) {
         if (useNA == "ifany") {
             ## Compare against "marginal", the counts, to know which missing
             ## elements have "any". We need to subset by name here because the
-            ## margin might include insertions
-            out <- out | marginal[names(out)] > 0
+            ## margin might include insertions.
+            ## Further: if any margin is NA, it means it wasn't passed in so we
+            ## we should assume it's false.
+            marg <- marginal[names(out)]
+            include_by_margin <- is.na(marg) | marg > 0
+            out <- out | include_by_margin
         }
     }
     # add names, so we know which categories are being kept
@@ -267,7 +284,8 @@ cubeMarginTable <- function(x, margin = NULL, measure = 1) {
             if ((i - 1) %in% mapped_margins) {
                 ## This is the "Selection" dimension that corresponds to the
                 ## previous "real" dim
-                ## TODO: Don't assume "selected" is position 1; consider an is.selected attr/vector
+                ## TODO: Don't assume "selected" is position 1; consider an
+                ## is.selected attr/vector
                 out <- 1 ## Just keep "Selected"
             } else if (drop_na) {
                 ## Otherwise, check if we're only keeping non-missing entries,
@@ -342,7 +360,10 @@ check_margins <- function(margin, selecteds) {
     }
 }
 
-mr_items_margins <- function(margin, dimTypes = getDimTypes(cube), cube, user_dims = FALSE) {
+mr_items_margins <- function(margin,
+                             dimTypes = getDimTypes(cube),
+                             cube,
+                             user_dims = FALSE) {
     margin_out <- user2realMargin(margin, dimTypes = dimTypes)
     # remove the selections dimension, if it was asked for
     margin_out <- margin_out[dimTypes[margin_out] != "mr_selections"]

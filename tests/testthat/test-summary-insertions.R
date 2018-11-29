@@ -29,6 +29,7 @@ test_that("SummaryStats accepts a variety of inputs", {
         name = "Approval3", stat = "median",
         categories = c(2, 3), after = 2
     )
+
     expect_true(is.SummaryStat(median1))
 
     expect_true(all(are.SummaryStats(Insertions(mean1, mean2, median1))))
@@ -93,8 +94,8 @@ test_that("SummaryStat setters", {
     expect_null(all_mean$after)
 })
 
-pet_feelings <- loadCube(test_path("./cubes/feelings-pets.json"))
-pet_feelings_w <- loadCube(test_path("./cubes/feelings-pets-weighted.json"))
+pet_feelings <- loadCube("./cubes/feelings-pets.json")
+pet_feelings_w <- loadCube("./cubes/feelings-pets-weighted.json")
 
 test_that("can set and calc a mean insertion", {
     # remove subtotals
@@ -102,7 +103,12 @@ test_that("can set and calc a mean insertion", {
     transforms(pet_feelings_w) <- NULL
 
     # there are no transforms (yet!)
-    expect_null(transforms(pet_feelings))
+    expect_equal(
+        transforms(pet_feelings),
+        TransformsList(feelings = NULL, animals = NULL))
+    expect_equal(
+        transforms(pet_feelings_w),
+        TransformsList(feelings = NULL, animals = NULL))
 
     # add transforms
     pet_feelings <- addSummaryStat(pet_feelings, stat = "mean", var = "feelings")
@@ -154,7 +160,9 @@ test_that("can set and calc a median insertion", {
     transforms(pet_feelings_w) <- NULL
 
     # there are no transforms (yet!)
-    expect_null(transforms(pet_feelings))
+    expect_equal(
+        transforms(pet_feelings),
+        TransformsList(feelings = NULL, animals = NULL))
 
     # add transforms
     pet_feelings <- addSummaryStat(pet_feelings, stat = "median", var = "feelings")
@@ -198,6 +206,113 @@ test_that("can set and calc a median insertion", {
         applyTransforms(pet_feelings_w),
         rbind(base_cube, "median" = c(10, 0))
     )
+})
+
+test_that("can set and calc a mean insertion that ignores missings", {
+    # hack the cube as if extremely unhappy was missing
+    pet_feelings@dims$feelings$missing <- c(rep(FALSE, 4), rep(TRUE, 2))
+    pet_feelings@dims$feelings$references$categories[[4]]$missing <- TRUE
+
+    # remove subtotals
+    transforms(pet_feelings) <- NULL
+
+    # add transforms
+    pet_feelings <- addSummaryStat(pet_feelings, stat = "mean", var = "feelings")
+
+    # check that they are calculated and added in the correct place.
+    base_cube <- as.array(pet_feelings)
+    calced_means <- apply(base_cube, 2, weighted.mean, x = c(10, 7.5, 5, 2.5))
+    expect_equivalent(
+        applyTransforms(pet_feelings),
+        rbind(base_cube, "mean" = calced_means)
+    )
+})
+
+cat_array <- loadCube("./cubes/cat-array.json")
+
+test_that("can set and calc a mean insertion with catarrays", {
+    # there are no transforms (yet!)
+    expect_equal(
+        transforms(cat_array),
+        TransformsList(feeling_ca = NULL, feeling_ca = NULL))
+
+    # add transforms
+    cat_array <- addSummaryStat(cat_array, stat = "mean", margin = 2)
+
+    feelings_trans <- Transforms(insertions = Insertions(
+        SummaryStat(name = "mean", stat = "mean", position = "bottom",
+                    categories = c(1L, 4L, 3L, 5L, 2L, -1L))),
+        elements = NULL,
+        categories = NULL)
+
+    expect_json_equivalent(transforms(cat_array),
+                           TransformsList(feeling_ca = NULL, feeling_ca = feelings_trans))
+
+    # check that they are calculated and added in the correct place.
+    base_cube <- as.array(cat_array)
+    calced_means <- apply(base_cube, 1, weighted.mean, x = c(1, 2, 3, 4, 5))
+    expect_equivalent(applyTransforms(cat_array),
+                      cbind(base_cube, "mean" = calced_means))
+})
+
+test_that("can set and calc a mean for two dimensions", {
+    # remove subtotals
+    transforms(pet_feelings) <- NULL
+
+    # there are no transforms (yet!)
+    expect_equal(
+        transforms(pet_feelings),
+        TransformsList(feelings = NULL, animals = NULL))
+
+    # add transforms
+    pet_feelings <- addSummaryStat(pet_feelings, stat = "mean", margin = c(1, 2))
+
+    feelings_trans <- Transforms(insertions = Insertions(
+        SummaryStat(name = "mean", stat = "mean", position = "bottom",
+                    categories = c(1L, 4L, 3L, 5L, 2L, -1L))),
+        elements = NULL,
+        categories = NULL)
+
+    animal_trans <- Transforms(insertions = Insertions(
+        SummaryStat(name = "mean", stat = "mean", position = "bottom",
+                    categories = c(1L, 2L, -1L))),
+        elements = NULL,
+        categories = NULL)
+
+    expect_json_equivalent(
+        transforms(pet_feelings),
+        list("feelings" = feelings_trans,"animals" = animal_trans)
+    )
+
+    # check that they are calculated and added in the correct place.
+    base_cube <- as.array(pet_feelings)
+    row_means <- c(apply(base_cube, 1, weighted.mean, x = c(1, 2)), NA)
+    col_means <- apply(base_cube, 2, weighted.mean, x = c(10, 7.5, 5, 2.5, 0))
+    expect_equivalent(applyTransforms(pet_feelings),
+                      cbind(rbind(base_cube, "mean" = col_means), "mean" = row_means))
+
+    # with a weighted cube
+    transforms(pet_feelings_w) <- NULL
+
+    # there are no transforms (yet!)
+    expect_equal(
+        transforms(pet_feelings_w),
+        TransformsList(feelings = NULL, animals = NULL))
+
+    # add transforms
+    pet_feelings_w <- addSummaryStat(pet_feelings_w, stat = "mean", margin = c(1, 2))
+
+    expect_json_equivalent(
+        transforms(pet_feelings_w),
+        list("feelings" = feelings_trans, "animals" = animal_trans)
+    )
+
+    # check that they are calculated and added in the correct place.
+    base_cube <- as.array(pet_feelings_w)
+    row_means <- c(apply(base_cube, 1, weighted.mean, x = c(1, 2)), NA)
+    col_means <- apply(base_cube, 2, weighted.mean, x = c(10, 7.5, 5, 2.5, 0))
+    expect_equivalent(applyTransforms(pet_feelings_w),
+                      cbind(rbind(base_cube, "mean" = col_means), "mean" = row_means))
 })
 
 test_that("can set and calc a mean insertion, and maintain subtotals", {
@@ -266,10 +381,7 @@ test_that("can set and calc a mean insertion, and maintain subtotals", {
 
 test_that("addSummaryStat validates", {
     expect_error(
-        addSummaryStat(pet_feelings,
-            stat = "not a stat",
-            var = "feelings"
-        ),
+        addSummaryStat(pet_feelings, stat = "not a stat", var = "feelings"),
         "'arg' should be one of .*mean.*, .*median.*"
     )
     expect_error(
@@ -280,14 +392,20 @@ test_that("addSummaryStat validates", {
             ".*animals.*)."
         )
     )
+    expect_error(
+        addSummaryStat(cat_array, stat = "mean", margin = 4),
+        "Margin 4 exceeds Cube's number of dimensions (2)",
+        fixed = TRUE
+    )
 })
 
 test_that("meanInsert function calculates weighted means", {
     insertion <- SummaryStat(name = "mean", stat = "mean", position = "bottom")
-    var_cats <- categories(variables(pet_feelings)[["feelings"]])
+    # remove nodata, which would be inside the cube calc functions
+    var_cats <- categories(variables(pet_feelings)[["feelings"]])[1:5]
     vector_from_cube <- as.array(pet_feelings)[, 1]
     expect_equal(
-        meanInsert(insertion, var_cats, vector_from_cube),
+        meanInsert(insertion, var_cats)(vector_from_cube),
         weighted.mean(c(10, 7.5, 5, 2.5, 0), c(9, 12, 12, 10, 11))
     )
 })
@@ -300,10 +418,10 @@ test_that("SummaryStat defaults to following the last category given (like subto
 
 test_that("medianInsert function calculates weighted medians", {
     insertion <- SummaryStat(name = "median", stat = "median", position = "top")
-    var_cats <- categories(variables(pet_feelings)[["feelings"]])
+    var_cats <- categories(variables(pet_feelings)[["feelings"]])[1:5]
     vector_from_cube <- as.array(pet_feelings)[, 1]
     expect_equal(
-        medianInsert(insertion, var_cats, vector_from_cube),
+        medianInsert(insertion, var_cats)(vector_from_cube),
         5
     )
 
@@ -312,7 +430,107 @@ test_that("medianInsert function calculates weighted medians", {
     var_cats <- categories(variables(pet_feelings)[["feelings"]])[c(2, 3)]
     vector_from_cube <- c("somewhat happy" = 12, "neutral" = 12)
     expect_equal(
-        medianInsert(insertion, var_cats, vector_from_cube),
+        medianInsert(insertion, var_cats)(vector_from_cube),
         6.25
     )
+})
+
+
+test_that("mean and median value redaction works with a 3-dimensional cube", {
+    three_d_cube <- loadCube("cubes/cat-x-cat-x-cat.json")
+
+    # dim one
+    three_d_cube_one <- addSummaryStat(three_d_cube, stat = "mean", margin = 1)
+
+    # values are unchanged
+    expect_equal(
+        applyTransforms(three_d_cube_one)[c(1:6), , ],
+        as.array(noTransforms(three_d_cube_one))
+    )
+
+    # the means are correct
+    expect_equal(
+        applyTransforms(three_d_cube_one)[7, , ],
+        apply(
+            as.array(noTransforms(three_d_cube_one)),
+            MARGIN = c(2, 3),
+            FUN = function (w) weighted.mean(c(1, 2, 0, 4, 5, 6), w = w)
+            )
+    )
+
+    # dim two
+    three_d_cube_two <- addSummaryStat(three_d_cube, stat = "mean", margin = 2)
+
+    # values are unchanged
+    expect_equal(
+        applyTransforms(three_d_cube_two)[, c(1:4), ],
+        as.array(noTransforms(three_d_cube_two))
+    )
+
+    # the means are correct
+    expect_equal(
+        applyTransforms(three_d_cube_two)[, 5, ],
+        apply(
+            as.array(noTransforms(three_d_cube_two)),
+            MARGIN = c(1, 3),
+            FUN = function (w) weighted.mean(c(0, 2, 5, 4), w = w)
+        )
+    )
+
+    # dim three
+    three_d_cube_three <- addSummaryStat(three_d_cube, stat = "mean", margin = 3)
+
+    # values are unchanged
+    expect_equal(
+        applyTransforms(three_d_cube_three)[, , c(1:8)],
+        as.array(noTransforms(three_d_cube_three))
+    )
+
+    # the means are correct
+    expect_equal(
+        applyTransforms(three_d_cube_three)[, , 9],
+        apply(
+            as.array(noTransforms(three_d_cube_three)),
+            MARGIN = c(1, 2),
+            FUN = function (w) weighted.mean(c(1, 2, 3, 4, 5, 6, 7, 8), w = w)
+        )
+    )
+
+    # dim one, two, and three
+    three_d_cube_123 <- addSummaryStat(three_d_cube, stat = "mean", margin = c(1, 2, 3))
+
+    # values are unchanged
+    expect_equal(
+        applyTransforms(three_d_cube_123)[c(1:6), c(1:4), c(1:8)],
+        as.array(noTransforms(three_d_cube_123))
+    )
+
+    # the means are correct
+    expect_equal(
+        applyTransforms(three_d_cube_123)[7, c(1:4), c(1:8)],
+        apply(
+            as.array(noTransforms(three_d_cube_123)),
+            MARGIN = c(2, 3),
+            FUN = function (w) weighted.mean(c(1, 2, 0, 4, 5, 6), w = w)
+        )
+    )
+
+    expect_equal(
+        applyTransforms(three_d_cube_123)[c(1:6), 5, c(1:8)],
+        apply(
+            as.array(noTransforms(three_d_cube_123)),
+            MARGIN = c(1, 3),
+            FUN = function (w) weighted.mean(c(0, 2, 5, 4), w = w)
+        )
+    )
+
+    expect_equal(
+        applyTransforms(three_d_cube_123)[c(1:6), c(1:4), 9],
+        apply(
+            as.array(noTransforms(three_d_cube_123)),
+            MARGIN = c(1, 2),
+            FUN = function (w) weighted.mean(c(1, 2, 3, 4, 5, 6, 7, 8), w = w)
+        )
+    )
+
 })
