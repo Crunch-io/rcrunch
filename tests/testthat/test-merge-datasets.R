@@ -72,6 +72,12 @@ with_mock_crunch({
             "Variable birthyr is hidden"
         )
     })
+    test_that("joinDatasets with copy=FALSE is (no longer/not yet) valid", {
+        expect_error(
+            joinDatasets(ds1, ds2, by.x = ds1$birthyr, ds2$birthyr, copy=FALSE),
+            "Virtual joins are not yet supported."
+        )
+    })
 
     test_that("merge a subset of variables", {
         expect_warning(

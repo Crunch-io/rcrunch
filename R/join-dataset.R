@@ -31,11 +31,10 @@
 #' @param all.y logical: should all rows in y be kept, i.e. a "right outer"
 #' join? Only `FALSE` is currently supported.
 #' @param copy logical: make a virtual or materialized join. Default is
-#' `TRUE`, which means materialized. Virtual joins are experimental and
-#' not advised.
+#' `TRUE`, which means materialized. Virtual joins are in fact not currently
+#' implemented, so the default is the only valid value.
 #' @param ... additional arguments, ignored
-#' @return `x` extended by the columns of `y`, matched on the "by"
-#' variables.
+#' @return `x` extended by the columns of `y`, matched on the "by" variables.
 #' @export
 joinDatasets <- function(x, y, by = intersect(names(x), names(y)), by.x = by,
                          by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE, copy = TRUE) {
@@ -47,23 +46,7 @@ joinDatasets <- function(x, y, by = intersect(names(x), names(y)), by.x = by,
     }
 
     ## Else:
-    warning("Virtual joins are experimental. Use with extreme caution.",
-        call. = FALSE
-    )
-    ## Validate inputs
-    by.x <- getJoinByVariable(x, by.x, "x")
-    by.y <- getJoinByVariable(y, by.y, "y")
-    if (all) halt('Option "all" not supported.')
-    if (!all.x) halt('Option "all.x=FALSE" not supported.')
-    if (all.y) halt('Option "all.y" not supported.')
-    ## Get join catalog url
-    join_url <- shojiURL(x, "catalogs", "joins")
-
-    payload <- structure(list(list(left_key = self(by.x), right_key = self(by.y))),
-        .Names = paste0(join_url, tuple(y)$id, "/")
-    )
-    crPATCH(join_url, body = toJSON(payload))
-    invisible(refresh(x))
+    halt("Virtual joins are not yet supported.") # But, someday...
 }
 
 #' @rdname joinDatasets
