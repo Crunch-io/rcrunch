@@ -1231,7 +1231,6 @@ with_test_authentication({
     })
 
     test_that("showTransforms works on a variable", {
-        skip("TODO: unskip")
         cat_show_trans <- cubify(c(75, 30, 45, 50, 95, 25, 55, 75, 75, NA),
             dims = list(pets = c(
                 "First one", "Birds", "Cats", "Dogs",
@@ -1302,7 +1301,7 @@ with_test_authentication({
                 "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
                 "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
                 "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
-                "\033[30m\033[3mRocks+Birds (incl. missing) 35\033[23m\033[39m",
+                "\033[30m\033[3mRocks+Birds (incl. missing) 30\033[23m\033[39m",
                 sep = "\n"
             ),
             fixed = TRUE
