@@ -145,6 +145,7 @@ magrittr
 makeWeight
 misaligning
 multitable
+multitables
 na
 nd
 pid
@@ -177,6 +178,7 @@ unhidden
 unhide
 unshare
 untransformed
+useNA
 varlabels
 vectorized
 votereg
