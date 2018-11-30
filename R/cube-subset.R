@@ -4,12 +4,24 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
     # Missing arguments to a subset method means "select all the items along this
     # dimension". In order to do this we need to capture the unevaluated arguments
     # and replace all the missing elements of that list with TRUE.
-    if (nargs() == 2) {
+    #
+    # The 3 - missing(drop) is to handle cases were drop is specified but only one
+    # index is used.
+    if (nargs() == (3 - missing(drop))) {
         index <- eval(substitute(alist(i)))
     } else {
         index <- eval(substitute(alist(i, j, ...)))
     }
     index <- replaceMissingWithTRUE(index)
+    useNA_list <- evalUseNA(x@arrays$count, dims = x@dims, useNA = x@useNA)
+    useNA_list <- useNA_list[!is.selectedDimension(x)]
+    index <- mapply(
+        replaceCharWithNumeric,
+        cat_names = dimnames(x),
+        idx = index,
+        visible = useNA_list,
+        SIMPLIFY = FALSE
+    )
 
     dims <- dim(x)
     # Check if the user has supplied the right number of dimensions
@@ -62,16 +74,27 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
         )
     }
 
+    # The index needs to be transformed to skip over missing categories.
+    # See the "Crunch Internals" vignette for more on this.
+    #
+    # In order to ensure that reording subsets like `cube[c(2,1), ]` preseve
+    # hidden categories we do the following:
+    # 1) Change the cube to useNA = "always"
+    # 2) Translate the provided index to one which accounts for hidden categories
+    # 3) Subset the cube using the index
+    # 4) Return the display setting to the original
+
+    NA_setting <- x@useNA
+    if (x@useNA != "always") {
+        index <- skipMissingCategories(x, index, drop)
+        x@useNA <- "always"
+    }
+
     # We then translate the index which the user supplied of the user cube to
     # the dimensionality of the real cube. See documentation to
     # translateCubeIndex
     translated_index <- translateCubeIndex(x, index, drop)
 
-    # The index needs to be further transformed to skip over missing categories.
-    # See the "Crunch Internals" vignette for more on this.
-    if (x@useNA != "always") {
-        translated_index <- skipMissingCategories(x, translated_index)
-    }
     # Finally we can use that translated subset on the real cube.
     out <- x
     out@arrays[] <- lapply(out@arrays, function(arr) {
@@ -100,8 +123,41 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
         }, FUN.VALUE = logical(1))
         out@dims <- out@dims[keep_args]
     }
+
+    out@useNA <- NA_setting
     return(out)
 })
+
+#' Transform character vectors into indices
+#'
+#' When a user supplies character strings to subset a cube, we need to translate it
+#' into a numeric index to subset the cube. This function does that as well as
+#' some error checking. It is broken out for testing.
+#'
+#' @param cat_names The category names for a given dimension
+#' @param idx The index
+#' @param visible whether or not a category is visible to the user
+#'
+#' @keywords internal
+replaceCharWithNumeric <- function(cat_names, idx, visible = TRUE) {
+    if (!is.logical(idx) &&
+        length(idx) != length(unique(idx))) {
+        halt("Index is not unique. Cube subetting is only supported for unique indices.")
+    }
+
+    if (is.character(idx)) {
+        if (length(cat_names) != length(unique(cat_names))) {
+            halt("Duplicate categories detected, please use a numeric or logical subset.")
+        }
+        visible_categories <- cat_names[visible]
+        not_categories <- !(idx %in% visible_categories)
+        if (any(not_categories)) {
+            halt("Invalid categories: ", serialPaste(idx[not_categories]))
+        }
+        return(match(idx, visible_categories))
+    }
+    return(idx)
+}
 
 #' Replace missing elements with TRUE
 #'
@@ -181,13 +237,7 @@ translateCubeIndex <- function(x, subset, drop) {
 
         # If we are dropping and MR response variable is a single number
         if (drop && length(out[[i - 1]]) == 1 && !isTRUE(out[[i - 1]])) {
-            if (x@useNA == "no") {
-                # This is used by skipMissingCategories below
-                return("mr_select_drop")
-            } else {
-                # assign index value to "Selected" along the mr_selection dimension
-                return(1)
-            }
+            return(1)
         }
         # return TRUE in all other circumstances
         return(TRUE)
@@ -199,39 +249,89 @@ translateCubeIndex <- function(x, subset, drop) {
 
 #' Handle missing categories in CrunchCube
 #'
-#' By default we don't display missing categories. The result is that when the
-#' user subsets a cube with a missing category, we need to translate that subset
-#' to only refer to the non-missing categories. This occurs if `cube@useNA` is
-#' set to `"no"`. It can also occur if `useNA = "ifAny"` and there are no non-0
-#' missing categories This function handles this behavior by translating the
-#' user supplied indices to logical vectors which accounts for the missing
-#' values.
+#' Missing categories are not displayed when `cube@useNA` is set to `"no"` or `ifANy`.
+#' The way we handle these cases is to change the `useNA` setting to `always`, subset
+#' the cube, and then change it back to the original value. For this to work we
+#' need to translate the indices that the user supplied to properly skip over hidden
+#' categories.
 #'
 #' @param cube a CrunchCube
-#' @param index a index of the real cube which was generated by
-#'   `translateCubeIndex()`
-#' @return A list of logical vectors
+#' @param index the user supplied index
+#' @param drop whether dimensions should be dropped
+#' @return A list translated indexes
 #' @keywords internal
-skipMissingCategories <- function(cube, index) {
-    visible_cats <- evalUseNA(cube@arrays$count, dims = cube@dims, useNA = cube@useNA)
-    mapply(
-        function(visible, sub) {
-            if (identical(sub, "mr_select_drop")) {
-                # select the "Selected" element of the selection dimension.
-                ## TODO: Don't assume "selected" is position 1; consider an is.selected attr/vector
-                return(c(TRUE, FALSE, FALSE))
-            }
-            if (isTRUE(sub)) {
-                out <- rep(TRUE, length(visible))
+skipMissingCategories <- function(cube, index, drop) {
+    not_slected_dim <- !is.selectedDimension(cube)
+    visible <- evalUseNA(cube@arrays$count, dims = cube@dims, useNA = cube@useNA)
+    visible <- visible[not_slected_dim]
+    missing_list <- lapply(cube@dims[not_slected_dim], function(x) x$missing)
+    out <- mapply(
+        function(missing, idx, vis) {
+            if (isTRUE(idx)) {
+                out <- rep(TRUE, length(missing))
             } else {
-                out <- rep(FALSE, length(visible))
-                out[visible][sub] <- rep(TRUE, length(sub))
+                out <- translateHidden(idx, missing, drop, vis)
             }
             return(out)
         },
-        visible = visible_cats, sub = index, SIMPLIFY = FALSE
+        missing = missing_list, idx = index, vis = visible, SIMPLIFY = FALSE
     )
+    return(out)
 }
+
+#' Translate provided index to an index which accounts for hidden categories.
+#'
+#' When the user subsets a cube in which "useNA" is either "no" or "ifAny" they
+#' are not interacting with hidden categories. This function takes the index which
+#' they provide and translates it to an index which includes hidden categories.
+#'
+#' For example, if `v` includes c("cat1", "hidden_cat", "cat2") and `useNA` is
+#' "no". The user will see `v` as c("cat1", "cat2") and might subset it with
+#' `v[c(2,1)]`. We need to skip over the hidden category and change the index
+#' to account for any hidden categories which might appear in the vector. Here
+#' the translated index would be `c(3,1`. This function does all of that.
+#'
+#' @param index The index to be translated
+#' @param not_hidden Logical, `TRUE` indicates a category is not hidden.
+#' @param drop Should dimensions with a single category be dropped
+#' @param vis Logical, is a category visible or not. Because of the `useNA` behavior,
+#' categories can be visible even if they are hidden.
+#'
+#' @return The translated index
+#' @keywords internal
+translateHidden <- function(index,
+                            not_hidden,
+                            drop = TRUE,
+                            # vis default is to simplify tests
+                            vis = not_hidden) {
+    if (length(index) > sum(vis)) {
+        halt("Incorrect number of dimensions")
+    }
+
+    # This data frame is not necessary, but does help keep track of how the
+    # various indices and visability statuses are related.
+    mapping <- data.frame(
+        is_hidden = !not_hidden,
+        visible = vis
+    )
+    mapping$true_index <- 1:nrow(mapping)
+    mapping$new_order <- NA
+
+    # The non-visible dimensions get their true index
+    mapping$new_order[!vis] <- mapping$true_index[!vis]
+
+    # This translate the provided index, to its true index accounting for hidden
+    # categories. It also handles reordering indexes like cube[(2,1), ]
+    mapping$new_order[vis][1:length(index)] <- mapping$true_index[vis][index]
+
+    out <- mapping$new_order
+    if (length(index) == 1 && !drop) {
+        return(out[!is.na(out)])
+    } else {
+        return(out[vis & !is.na(out)])
+    }
+}
+
 
 subsetArrayDimension <- function(dim, idx, dim_type) {
     dim$missing <- dim$missing[idx]
