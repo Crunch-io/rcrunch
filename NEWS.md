@@ -7,6 +7,7 @@
 * Improved speed for calculating insertions (subtotals, headers, etc.) on large cubes (speed ups of ~25x on large, realistic cubes).
 * First draft support for deck creation and manipulation.
 * Remove (for now) support for the experimental virtual join feature.
+* 404 Not Found HTTP responses now print the request URL to aid in debugging
 
 # crunch 1.24.2
 * The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
