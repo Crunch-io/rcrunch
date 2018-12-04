@@ -89,7 +89,7 @@ as.data.frame.CrunchDataFrame <- function(x,
     write.csv(ds, tmp, categorical = "id", include.hidden = include.hidden)
     # TODO: use variableMetadata to provide all `colClasses`?
     # meta <- variableMetadata(ds)
-    ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
+    ds_out <- read.csv(tmp, stringsAsFactors = FALSE, check.names = FALSE)
     return(csvToDataFrame(ds_out, x))
 }
 
