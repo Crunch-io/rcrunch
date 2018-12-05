@@ -12,8 +12,6 @@
 \usage{
 \S4method{is.na}{Categories}(x)
 
-\S4method{is.na}{Categories}(x)
-
 \S4method{is.na}{Categories,character}(x) <- value
 
 \S4method{is.na}{Categories,logical}(x) <- value

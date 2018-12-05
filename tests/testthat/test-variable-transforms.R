@@ -52,6 +52,9 @@ cats_list <- mapply(function(i, n, m) list(id = i, name = n, missing = m),
 )
 
 cats <- Categories(data = cats_list)
+abs_cats <- AbstractCategories()
+abs_cats@.Data <- c(cats@.Data, list(AbstractCategory(name = "__fake__bottom__category__")))
+
 
 insrts_list <- list(
     list(
@@ -82,12 +85,12 @@ insrts_list <- list(
 insrts <- Insertions(data = insrts_list)
 
 test_that("findInsertPosition", {
-    expect_equal(findInsertPosition(insrts[["First one"]], cats, last_category = 10), 0)
-    expect_equal(findInsertPosition(insrts[["Last one"]], cats, last_category = 10), 10)
-    expect_equal(findInsertPosition(insrts[["High"]], cats, last_category = 10), 10)
-    expect_equal(findInsertPosition(insrts[["Low"]], cats, last_category = 10), 2)
-    expect_equal(findInsertPosition(insrts[["missing anchor"]], cats, last_category = 10), 10)
-    expect_equal(findInsertPosition(insrts[["missing categories"]], cats, last_category = 10), 4)
+    expect_equal(findInsertPosition(insrts[["First one"]], abs_cats), 0)
+    expect_equal(findInsertPosition(insrts[["Last one"]], abs_cats), 11)
+    expect_equal(findInsertPosition(insrts[["High"]], abs_cats), 10)
+    expect_equal(findInsertPosition(insrts[["Low"]], abs_cats), 2)
+    expect_equal(findInsertPosition(insrts[["missing anchor"]], abs_cats), 11)
+    expect_equal(findInsertPosition(insrts[["missing categories"]], abs_cats), 4)
 })
 
 
@@ -131,14 +134,14 @@ test_that("collateCats works all together", {
     new_cats <- collateCats(insrts, cats)
     expect_length(new_cats, 16)
     expect_equivalent(new_cats[c(2, 3, 5, 6, 8, 9, 10, 11, 12, 13)], cats)
-    expect_equivalent(new_cats[c(1, 14, 15, 4, 16, 7)], insrts)
+    expect_equivalent(new_cats[c(1, 15, 14, 4, 16, 7)], insrts)
     # indices for new_cats to name map
     # 1  - First one
-    # 14 - Last one
-    # 15 - High
-    # 4  - Low
-    # 16 - missing anchor
+    # 14 - High
     # 7  - missing categories
+    # 4  - Low
+    # 15 - Last one
+    # 16 - missing anchor
 })
 
 test_that("collateCats errors when given bad input", {
@@ -304,7 +307,7 @@ with_mock_crunch({
         )
         loc_ary <- c(7, 10, NA)
         names(loc_ary) <- c("London", "Scotland", "London+Scotland")
-        
+
         expect_warning(
             insert_funcs <- makeInsertionFunctions(
                 categories(ds$location)[!is.na(categories(ds$location))],
@@ -316,7 +319,7 @@ with_mock_crunch({
                 "ignoring foobar"
             )
         )
-        
+
         expect_equivalent(calcTransforms(table(loc_var), insert_funcs),  loc_ary)
     })
 
@@ -325,12 +328,12 @@ with_mock_crunch({
         trns <- transforms(loc_var)
         trns[["insertions"]][[1]][["after"]] <- 1
 
-        
+
         insert_funcs <- makeInsertionFunctions(
             categories(ds$location)[!is.na(categories(ds$location))],
             trns
         )
-        
+
         # No Data is no longer here ??? what made it be here in the first place?
         loc_ary <- c(7, 17, 10)
         names(loc_ary) <- c("London", "London+Scotland", "Scotland")
@@ -346,7 +349,7 @@ with_mock_crunch({
             categories(ds$location)[!is.na(categories(ds$location))],
             trns
         )
-        
+
         # No Data is no longer here ??? what made it be here in the first place?
         loc_ary <- c(7, 10, NA)
         names(loc_ary) <- c("London", "Scotland", "London+Scotland")

@@ -4,7 +4,7 @@
 \alias{addSummaryStat}
 \title{Add summary statistics to a CrunchCube}
 \usage{
-addSummaryStat(cube, stat = c("mean", "median"), var, ...)
+addSummaryStat(cube, stat = c("mean", "median"), var, margin, ...)
 }
 \arguments{
 \item{cube}{a CrunchCube to add stats to}
@@ -14,6 +14,10 @@ addSummaryStat(cube, stat = c("mean", "median"), var, ...)
 \item{var}{a character with the name of the dimension variable to add the
 summary statistic for generally the alias of the variable in Crunch, but
 might include Crunch functions like \code{rollup()}, \code{bin()}, etc.}
+
+\item{margin}{which margin should the summary statistic be applied for (used
+in the cases of categorical arrays where a variable might contribute more
+than one margin)}
 
 \item{...}{options to pass to \code{SummaryStat()} (e.g., position, after, etc.)}
 }

@@ -125,7 +125,11 @@ replaceMissingWithTRUE <- function(l) {
                 }
             })
         }
-        return(eval(x))
+        # This frame means that the indices given are evaluated at the place
+        # where `[` was called, but is dependent on where this is in that
+        # method, so could be fragile. A better case might be to use rlang's
+        # ability to introspect dots to get around this.
+        return(eval(x, parent.frame(4)))
     })
     return(out)
 }

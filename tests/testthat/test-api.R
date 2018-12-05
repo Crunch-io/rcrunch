@@ -74,6 +74,13 @@ with_mock_crunch({
         )
         expect_identical(resp, crGET("https://app.crunch.io/api/"))
     })
+    test_that("404 error message includes the request URL", {
+        expect_error(
+            resp <- crGET("https://app.crunch.io/404/"),
+            "Client error: (404) Not Found: https://app.crunch.io/404/",
+            fixed = TRUE
+        )
+    })
 
     test_that("Checking feature flags", {
         expect_true(featureFlag("this_is_on"))

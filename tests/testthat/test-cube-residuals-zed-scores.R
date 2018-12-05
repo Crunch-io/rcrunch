@@ -54,11 +54,21 @@ catarray_by_mr_dims <- list(
 
 
 gender_x_ideology <- loadCube("cubes/econ-gender-x-ideology-weighted.json")
+gender_x_ideology_dims <- dimnames(gender_x_ideology)
+gender_x_ideology_dims <- lapply(gender_x_ideology_dims, function(x) {
+    return(x[!x %in% c("Skipped", "Not Asked", "No Data")])
+})
 
-test_that("rstandard for CrunchCube normal contingency table is chisq standardized residuals", {
+
+cat_by_cat <- loadCube("cubes/feelings-pets.json")
+
+cat_by_mr_NSS_alltypes <- loadCube("cubes/cat-mr-NSS-alltypes.json")
+
+
+test_that("zScores for CrunchCube normal contingency table is chisq standardized residuals", {
     # values from crunch-cube tests
     out <- chisq.test(as.array(gender_x_ideology))$stdres
-    expect_equal(rstandard(gender_x_ideology), out)
+    expect_equal(zScores(gender_x_ideology), out)
 })
 
 ##########################################
@@ -71,12 +81,19 @@ mr_by_cat_2 <- loadCube("cubes/selected-crosstab-array-first.json")
 
 test_that("z-scores for unweighted normal crosstab", {
     out <- chisq.test(as.array(admit_by_dept_unweighted))$stdres
-    expect_equal(rstandard(admit_by_dept_unweighted), out)
+    expect_equal(zScores(admit_by_dept_unweighted), out)
 })
 
 test_that("z-scores for weighted normal crosstab", {
     out <- chisq.test(as.array(admit_by_gender_weighted))$stdres
-    expect_equal(rstandard(admit_by_gender_weighted), out)
+    expect_equal(zScores(admit_by_gender_weighted), out)
+})
+
+test_that("rstandard backwards compatibility", {
+    expect_equal(
+        zScores(admit_by_gender_weighted),
+        rstandard(admit_by_gender_weighted)
+    )
 })
 
 ## multiple response fun times!
@@ -92,6 +109,7 @@ test_that("residuals for MR by categorical unweighted", {
     dims = mr_by_cat_dims
     )
     expect_equal(as.array(rstandard(mr_by_cat)), out)
+    expect_equal(zScores(mr_by_cat), out)
 })
 
 test_that("residuals for MR by cat from app", {
@@ -101,7 +119,7 @@ test_that("residuals for MR by cat from app", {
     ),
     dims = rev(cat_by_mr_dims)
     )
-    expect_equal(as.array(rstandard(mr_by_cat_2)), out)
+    expect_equal(zScores(mr_by_cat_2), out)
 })
 test_that("residuals for categorical by MR, should be transpose of above", {
     out <- cubify(c(
@@ -110,7 +128,7 @@ test_that("residuals for categorical by MR, should be transpose of above", {
     ),
     dims = cat_by_mr_dims
     )
-    expect_equal(as.array(rstandard(cat_by_mr)), out)
+    expect_equal(zScores(cat_by_mr), out)
 })
 
 
@@ -123,7 +141,7 @@ test_that("residuals for MR by MR", {
     ),
     dims = mr_by_mr_dims
     )
-    expect_equal(as.array(rstandard(mr_by_mr)), out)
+    expect_equal(zScores(mr_by_mr), out)
 })
 
 test_that("residuals for MR by MR (disparate MRs)", {
@@ -135,30 +153,263 @@ test_that("residuals for MR by MR (disparate MRs)", {
         ),
         dims = mr_by_mr_heterogeneous_dims
     )
-    expect_equal(as.array(rstandard(mr_by_mr_heterogeneous)), out)
+    expect_equal(zScores(mr_by_mr_heterogeneous), out)
 })
 
 mr_by_mr_by_too_many <- loadCube("cubes/cat-x-mr-x-mr.json")
 
 test_that("residuals for MR by MR by anything errors", {
-    expect_error(rstandard(mr_by_mr_by_too_many), paste0(
+    expect_error(zScores(mr_by_mr_by_too_many), paste0(
         "Cannot compute residuals with more than two dimensions. Pick ",
         "a slice to evaluate"
     ))
 })
 
 test_that("residuals for catarray by cat", {
-    expect_error(rstandard(catarray_by_cat), paste0(
+    expect_error(zScores(catarray_by_cat), paste0(
+        "Cannot compute residuals with more than two dimensions. Pick ",
+        "a slice to evaluate"
+    ))
+
+    # TODO: Implement [.CrunchCube. Then check a slice
+})
+
+test_that("residuals for catarray", {
+    expect_error(zScores(catarray_by_mr), paste0(
         "Cannot compute residuals with more than two dimensions. Pick ",
         "a slice to evaluate"
     ))
     # TODO: Implement [.CrunchCube. Then check a slice
 })
 
-test_that("residuals for catarray", {
-    expect_error(rstandard(catarray_by_mr), paste0(
-        "Cannot compute residuals with more than two dimensions. Pick ",
-        "a slice to evaluate"
+test_that("compareCols()", {
+    expected_zScores <- cubify(
+        2.54925480834223,
+        -2.54925480834223,
+        dims = list(
+            Gender = c("Male", "Female"),
+            RespondentIdeology = c("Very Conservative")
+        )
+    )
+    expect_equal(
+        compareCols(
+            gender_x_ideology,
+            baseline = "Very liberal",
+            x = "Very Conservative"
+        ),
+        expected_zScores
+    )
+
+    expected_zScores <- cubify(
+        -2.54925480834223,
+        2.54925480834223,
+        dims = list(
+            Gender = c("Male", "Female"),
+            RespondentIdeology = c("Very liberal")
+        )
+    )
+    expect_equal(
+        compareCols(
+            gender_x_ideology,
+            baseline = "Very Conservative",
+            x = "Very liberal"
+        ),
+        expected_zScores
+    )
+})
+
+test_that("compareRows()", {
+    cat_by_cat <- noTransforms(cat_by_cat)
+
+    expected_zScores <- cubify(
+        -0.97433731917929, 0.97433731917929,
+        dims = list(
+            feelings = c("extremely unhappy"),
+            animals = c("cats", "dogs")
+        )
+    )
+    expect_equal(
+        compareRows(
+            cat_by_cat,
+            baseline = "extremely happy",
+            x = "extremely unhappy"
+        ),
+        expected_zScores
+    )
+
+    expected_zScores <- cubify(
+        0.97433731917929, -0.97433731917929,
+        dims = list(
+            feelings = c("extremely happy"),
+            animals = c("cats", "dogs")
+        )
+    )
+    expect_equal(
+        compareRows(
+            cat_by_cat,
+            baseline = "extremely unhappy",
+            x = "extremely happy"
+        ),
+        expected_zScores
+    )
+})
+
+test_that("compareDims() dimension validation", {
+    cat_by_cat <- noTransforms(cat_by_cat)
+
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = "foo",
+            x = "extremely unhappy",
+            dim = "rows"
+        ),
+        "foo is not a column or row in the cube"
+    )
+
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = "extremely happy",
+            x = "foo",
+            dim = "rows"
+        ),
+        "foo is not a column or row in the cube"
+    )
+
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = 1,
+            x = "extremely happy",
+            dim = "rows"
+        ),
+        "Currently, column comparison only accepts at most one category name."
+    )
+
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = c("extremely happy", "somewhat happy"),
+            x = "extremely happy",
+            dim = "rows"
+        ),
+        "Currently, column comparison only accepts at most one category name."
+    )
+
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = "extremely happy",
+            x = 1,
+            dim = "rows"
+        ),
+        "Currently, column comparison only accepts at most one category name."
+    )
+
+    expect_error(
+        compareDims(
+            cat_by_cat,
+            baseline = "extremely happy",
+            x = c("extremely happy", "somewhat happy"),
+            dim = "rows"
+        ),
+        "Currently, column comparison only accepts at most one category name."
+    )
+})
+
+test_that("compareDims() with MRs", {
+    # if the dimension you are trying to compare amongst is an MR you get an
+    # error (for now)
+    expect_error(
+        compareCols(
+            cat_by_mr_NSS_alltypes,
+            baseline = "Denmark",
+            x = "Sweden"
+        ),
+        paste0(
+            "Column or row z-scores are not implemented for multiple ",
+            "response dimensions"
+        )
+    )
+
+    # But if the MR is not the dimension being compared amongst, we still
+    # calculate a score
+    expected_zScores <- cubify(
+        -1.34840705967846,
+        -0.319502930145056,
+        -2.44219465036739,
+        -3.14883276639645,
+        4.11744429667266,
+        dims = list(
+            food_groups = c("Vegetables"),
+            nordics = c("Denmark", "Finland", "Iceland", "Norway", "Sweden")
+        )
+    )
+
+    expect_equal(
+        compareRows(cat_by_mr_NSS_alltypes, baseline = "Fruit", x = "Vegetables"),
+        expected_zScores
+    )
+
+    expect_error(
+        compareRows(
+            mr_by_cat,
+            baseline = "Cupcakes are the best cakes",
+            x = "I always ride a penny-farthing"
+        ),
+        paste0(
+            "Column or row z-scores are not implemented for multiple ",
+            "response dimensions"
+        )
+    )
+})
+
+
+
+test_that("compareColsPairwise()", {
+    expected_zScores <- t(cubify(
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Very liberal"),
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Liberal"),
+        0, 0,
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Conservative"),
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Very Conservative"),
+        compareCols(gender_x_ideology, baseline = "Moderate", x = "Not sure"),
+        dims = list(
+            RespondentIdeology = c(
+                "Very liberal", "Liberal", "Moderate", "Conservative", "Very Conservative", "Not sure"
+            ),
+            Gender = c("Male", "Female")
+        )
     ))
-    # TODO: Implement [.CrunchCube. Then check a slice
+    expect_equal(
+        compareColsPairwise(
+            gender_x_ideology,
+            baseline = "Moderate"
+        ),
+        expected_zScores
+    )
+})
+
+test_that("compareRowsPairwise()", {
+    cat_by_cat <- noTransforms(cat_by_cat)
+
+    expected_zScores <- cubify(
+        compareRows(cat_by_cat, baseline = "neutral", x = "extremely happy"),
+        compareRows(cat_by_cat, baseline = "neutral", x = "somewhat happy"),
+        0, 0,
+        compareRows(cat_by_cat, baseline = "neutral", x = "somewhat unhappy"),
+        compareRows(cat_by_cat, baseline = "neutral", x = "extremely unhappy"),
+        dims = list(
+            feelings = c(
+                "extremely happy", "somewhat happy", "neutral",
+                "somewhat unhappy", "extremely unhappy"
+            ),
+            animals = c("cats", "dogs")
+        )
+    )
+    expect_equal(
+        compareRowsPairwise(cat_by_cat, baseline = "neutral"),
+        expected_zScores
+    )
 })
