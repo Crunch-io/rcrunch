@@ -178,8 +178,8 @@ with_mock_crunch({
         )
     })
 
-    do <- ordering(d)
     test_that("Project datasets order", {
+        expect_deprecated(do <- ordering(d))
         expect_is(do, "DatasetOrder")
         expect_identical(
             do@graph,

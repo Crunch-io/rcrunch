@@ -58,6 +58,7 @@ listDatasets <- function(kind = c("active", "all", "archived"),
                          refresh = FALSE,
                          shiny = FALSE) {
     if (shiny) {
+        ## TODO: update listDatasetGadget to use new dataset folder API
         listDatasetGadget(kind, refresh)
     } else {
         dscat <- selectDatasetCatalog(kind, project, refresh)
@@ -71,6 +72,8 @@ selectDatasetCatalog <- function(kind = c("active", "all", "archived"),
     Call <- match.call()
     if (is.null(project)) {
         ## Default: we'll get the dataset catalog from the API root
+        ## TODO: stop using datasets catalog. Default should be personal?
+        ## TODO: where should "shared with me" datasets appear?
         project <- datasets()
     } else if (!(is.shojiObject(project) || inherits(project, "ShojiTuple"))) {
         ## Project name, URL, or index
@@ -139,6 +142,9 @@ loadDataset <- function(dataset,
         dataset <- tail(dspath, 1)
         if (length(dspath) > 1) {
             project <- dspath[-length(dspath)]
+        } else if (is.null(project)) {
+            ## We have a dataset name and no project given, so use search by name
+            ## TODO
         }
     }
     dscat <- selectDatasetCatalog(kind, project, refresh)
@@ -192,8 +198,8 @@ deleteDataset <- function(x, ...) {
                 halt("subscript out of bounds")
             }
         }
+        ## TODO: replace this usage of the dataset catalog
         x <- datasets()[[x]]
     }
-    out <- delete(x, ...)
-    invisible(out)
+    invisible(delete(x, ...))
 }

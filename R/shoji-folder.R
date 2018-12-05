@@ -86,7 +86,8 @@ parentFolderURL <- function(x) {
     }
 }
 
-rootFolder <- function(x) {
+walkFoldersToRoot <- function(x) {
+    ## Walk the path up through the parents until you can go no farther
     this <- folder(x)
     ## If the parent of x is NULL, we're already at top level.
     while (!is.null(this)) {
@@ -95,6 +96,8 @@ rootFolder <- function(x) {
     }
     return(x)
 }
+
+setMethod("rootFolder", "ShojiFolder", walkFoldersToRoot)
 
 createFolder <- function(where, name, index, ...) {
     ## TODO: include index of variables/folders in a single request;
@@ -140,7 +143,7 @@ setMethod("delete", "ShojiFolder", function(x, ...) {
             obj_string <- serialPaste(dQuote(obj_names))
         }
         message(
-            "This folder contains ", num_vars, " ", obj_word, ": ", obj_string, 
+            "This folder contains ", num_vars, " ", obj_word, ": ", obj_string,
             ". Deleting the folder will also delete these objects (including ",
             "their contents)."
         )

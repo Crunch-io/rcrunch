@@ -29,6 +29,10 @@ with_mock_crunch({
         )
     })
 
+    test_that("cd personal", {
+        
+    })
+
     test_that("folder() and rootFolder() for projects", {
         expect_null(folder(projects()))
         expect_identical(folder(cd(projects(), "Project One")), projects())

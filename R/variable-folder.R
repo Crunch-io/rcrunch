@@ -20,6 +20,8 @@ setMethod("folderExtraction", "VariableFolder", function(x, tuple) {
     }
 })
 
+setMethod("rootFolder", "CrunchVariable", walkFoldersToRoot)
+
 ## Get variable by alias, name, or URL
 whichFolderEntry <- function(x, i) {
     ## First check URLs and names()

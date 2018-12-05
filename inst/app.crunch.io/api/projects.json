@@ -18,5 +18,24 @@
             "id": "project3",
             "type": "project"
         }
+    },
+    "catalogs": {
+        "personal": "https://app.crunch.io/api/projects/personal/",
+        "shared": "https://app.crunch.io/api/projects/shared/"
+    },
+    "orders": {
+        "order": "https://app.crunch.io/api/projects/order/"
+    },
+    "body": {
+        "name": "Projects catalog",
+        "icon": "",
+        "owner": "https://app.crunch.io/api/users/user1/",
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "owner_id": "https://app.crunch.io/api/users/user1/",
+        "user_icon": false,
+        "description": "Displays all the projects you have access to"
     }
 }
