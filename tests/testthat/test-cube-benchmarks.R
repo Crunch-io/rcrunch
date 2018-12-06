@@ -54,19 +54,24 @@ transforms(cube) <- TransformsList(
     )
 )
 
-with_trans <- system.time({applyTransforms(cube)})
-without_trans <- system.time({applyTransforms(noTransforms(cube))})
+# run 10 iterations so that some small hiccup doesn't falsly alarm
+with_trans <- sapply(seq_len(10), function(i) {
+    system.time({applyTransforms(cube)})
+})
+without_trans <-  sapply(seq_len(10), function(i) {
+    system.time({applyTransforms(noTransforms(cube))})
+})
 
 # We test both the ratio of no transforms to transforms as well as the absolute
 # processing time. If the ratio fails, this might be transient. If both the
 # ratio and the absolute time fail there is probably a regression to cube
 # computations
 test_that("applyTransforms is no slower than 10 times with noTransforms", {
-    expect_lt(with_trans[["elapsed"]]/without_trans[["elapsed"]], 10)
+    expect_lt(median(with_trans["elapsed",])/median(without_trans["elapsed",]), 10)
 })
 
 test_that("applying transforms takes no longer than 1 second", {
-    expect_lt(with_trans[["elapsed"]], 1)
+    expect_lt(median(with_trans["elapsed",]), 1)
 })
 
 # TODO: add a cube with a large number of categories benchmark as well
