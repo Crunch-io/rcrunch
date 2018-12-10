@@ -602,118 +602,19 @@ with_mock_crunch({
         )
     })
 
-    test_that("locateEntity", {
-        expect_deprecated(
-            expect_identical(
-                locateEntity(ds$mymrset, ord),
-                c("Arrays", "MR")
-            )
-        )
-        expect_deprecated(
-            expect_identical(
-                locateEntity(ds$gender, ord),
-                "Demos"
-            )
-        )
-        expect_deprecated(
-            expect_length(locateEntity(ds$starttime, ord), 0)
-        )
-        expect_deprecated(
-            expect_true(is.na(locateEntity(ds3$gender, ord)))
-        )
-    })
-
-    test_that("Composing a VariableOrder step by step: moveToGroup", {
-        expect_deprecated(moveToGroup(ord$Demos$Others) <<- ds$starttime)
-        expect_prints(ord,
-            paste("[+] Arrays",
-                "    Cat Array",
-                "    [+] MR",
-                "        mymrset",
-                "[+] Demos",
-                "    [+] Others",
-                "        Birth Year",
-                "        Text variable ftw",
-                "        starttime",
-                "    Gender",
+    test_that("flattenOrder on that composed order", {
+        expect_prints(flattenOrder(ord),
+            paste(
+                "Cat Array",
+                "mymrset",
+                "Birth Year",
+                "Text variable ftw",
+                "Gender",
+                "starttime",
                 "Categorical Location",
                 sep = "\n"
             ),
             fixed = TRUE
-        )
-    })
-
-    test_that("moveToGroup with groups", {
-        expect_deprecated(moveToGroup(ord$Demos) <<- ord$Arrays)
-        ord <- removeEmptyGroups(ord)
-        expect_prints(ord,
-            paste("[+] Demos",
-                "    [+] Others",
-                "        Birth Year",
-                "        Text variable ftw",
-                "        starttime",
-                "    Gender",
-                "    [+] Arrays",
-                "        Cat Array",
-                "        [+] MR",
-                "            mymrset",
-                sep = "\n"
-            ),
-            fixed = TRUE
-        )
-    })
-    test_that("moveToGroup with dataset subset", {
-        expect_deprecated(moveToGroup(ord$Demos$Arrays) <<- ds[c("birthyr", "gender")])
-        ord <- removeEmptyGroups(ord)
-        expect_prints(ord,
-            paste("[+] Demos",
-                "    [+] Others",
-                "        Text variable ftw",
-                "        starttime",
-                "    [+] Arrays",
-                "        Cat Array",
-                "        [+] MR",
-                "            mymrset",
-                "        Birth Year",
-                "        Gender",
-                sep = "\n"
-            ),
-            fixed = TRUE
-        )
-    })
-    ord <- removeEmptyGroups(ord)
-
-    test_that("flattenOrder on that composed order", {
-        expect_prints(flattenOrder(ord),
-            paste("Text variable ftw",
-                "starttime",
-                "Cat Array",
-                "mymrset",
-                "Birth Year",
-                "Gender",
-                sep = "\n"
-            ),
-            fixed = TRUE
-        )
-    })
-
-    test_that("dedupeOrder is deprecated", {
-        expect_deprecated(
-            expect_prints(dedupeOrder(ord),
-                paste("[+] Demos",
-                    "    [+] Others",
-                    "        Text variable ftw",
-                    "        starttime",
-                    "    [+] Arrays",
-                    "        Cat Array",
-                    "        [+] MR",
-                    "            mymrset",
-                    "        Birth Year",
-                    "        Gender",
-                    sep = "\n"
-                ),
-                fixed = TRUE
-            )
         )
     })
 
@@ -728,15 +629,6 @@ with_mock_crunch({
         expect_error(
             copyOrder(ds, "foo"),
             "Both source and target must be Crunch datasets."
-        )
-    })
-
-    test_that("duplicates is deprecated", {
-        expect_deprecated(
-            expect_false(duplicates(ordering(ds)))
-        )
-        expect_deprecated(
-            duplicates(ordering(ds)) <- FALSE
         )
     })
 })
