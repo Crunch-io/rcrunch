@@ -1,5 +1,4 @@
-setMethod("initialize", "ShojiOrder", function(.Object, ..., duplicates = FALSE,
-                                               catalog_url = "") {
+setMethod("initialize", "ShojiOrder", function(.Object, ..., catalog_url = "") {
     .Object <- callNextMethod(.Object, ...)
     dots <- list(...)
     ents <- entitiesInitializer(.Object)
@@ -13,8 +12,7 @@ setMethod("initialize", "ShojiOrder", function(.Object, ..., duplicates = FALSE,
 })
 
 setMethod("initialize", "OrderGroup", function(.Object, group, entities,
-                                               url.base = NULL, duplicates = FALSE,
-                                               ...) {
+                                               url.base = NULL, ...) {
     dots <- list(...)
     ents <- entitiesInitializer(.Object)
     if ("variables" %in% names(dots)) entities <- dots$variables
@@ -545,20 +543,6 @@ removeEmptyGroups <- function(x) {
     return(x)
 }
 
-#' Remove duplicated entities from an order/group
-#'
-#' This function no longer does anything because variables can no longer appear
-#' in more than one folder. It is deprecated and scheduled for removal.
-#'
-#' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup
-#' @return `x`
-#' @seealso [`duplicates`], which when set to `FALSE` also calls this function.
-#' @export
-dedupeOrder <- function(x) {
-    .Deprecated(msg="'dedupeOrder' is deprecated. Variables can only be in one folder, so duplicates are no longer possible")
-    return(x)
-}
-
 #' Remove nesting of groups within an order/group
 #'
 #' This function reduces a potentially nested order to its flattened
@@ -600,74 +584,4 @@ ungrouped <- function(order.obj) {
         name = "ungrouped",
         entities = entities(Filter(is.character, order.obj))
     )))
-}
-
-#' Move entities to a group
-#'
-#' Shoji entities can be placed into groups, this is mostly used for grouping
-#' variables for display in the app, but is technically possible for any of the
-#' order catalogs. This function moves an entity to one of these groups.
-#'
-#' The function has two versions: a regular function and a setter. They do the
-#' same thing, but the setter is probably more succinct.
-#'
-#' @param x VariableGroup
-#' @param value Variable, VariableCatalog subset, or Dataset subset
-#' @return `x` with the entities in `value` appended to it. If the
-#' containing order object has `duplicates=FALSE`, the entities will be "moved"
-#' to this group. Otherwise, their references will be copied to the group.
-#' @examples
-#' \dontrun{
-#' moveToGroup(ordering(ds)[["Demographics"]]) <- ds[c("gender", "age")]
-#' }
-#' @export
-moveToGroup <- function(x, value) {
-    .Deprecated("mv")
-
-    if (!inherits(value, "OrderGroup")) {
-        ## If it's a Group, let's move it as is. If not, get the URLs
-        ## TODO: this won't do the right thing for moving Dataset to DatasetGroup
-        value <- urls(value)
-    }
-    entities(x) <- c(entities(x), value)
-    return(x)
-}
-
-#' @rdname moveToGroup
-#' @export
-"moveToGroup<-" <- moveToGroup
-
-#' Find an entity in an order object
-#'
-#' @param x Variable or Dataset, depending on the type of order, or URL for it
-#' @param ord ShojiOrder (VariableOrder or DatasetOrder)
-#' @return If `x` is found in `ord`, a character vector of group names
-#' that provide the "path" to the entity. The length of the vector corresponds
-#' to the depth of nesting. If not found, `NA` is returned
-#' @export
-locateEntity <- function(x, ord) {
-    .Deprecated("folder")
-
-    if (!is.character(x)) x <- self(x)
-    out <- character(0)
-
-    .locateInGroups <- function(x, ord) {
-        allurls <- urls(ord)
-        if (x %in% allurls) {
-            us <- vapply(grouped(ord), function(g) x %in% urls(g), logical(1))
-            if (any(us)) {
-                ## Only looks for first match
-                ind <- which(us)[1]
-                out <<- c(out, name(grouped(ord)[[ind]]))
-                .locateInGroups(x, grouped(ord)[[ind]])
-            }
-        } else if (inherits(ord, "ShojiOrder")) {
-            ## We're at the top level and it wasn't found at all
-            out <<- NA_character_
-        }
-        invisible()
-    }
-
-    .locateInGroups(x, ord)
-    return(out)
 }
