@@ -9,6 +9,8 @@ setMethod("folderExtraction", "ProjectFolder", function(x, tuple) {
     }
 })
 
+#' @rdname describe
+#' @export
 setMethod("name", "ProjectFolder", function(x) {
     ## Warning: bad code smell
     if (identical(self(x), sessionURL("projects"))) {
