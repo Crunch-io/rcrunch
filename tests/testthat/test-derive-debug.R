@@ -145,4 +145,98 @@ with_test_authentication({
             as.vector(ds$petloc, mode = "id")
         )
     })
+    
+    # Test derive from categorical arrays that are stored as sparse categorical
+    # 
+    # Make a factor that is overwhelmingly NA, but with some combos we want to 
+    # collapse. Confirmed that this ratio is stored as sparse categorical, but 
+    # if the definitions for what counts as sparse change, this might need to be
+    # changed to maintain coverage
+    # fac <- factor(c(rep(c("A", "B", "C", "a", "b", "c", "foo"), 4), rep(NA, 972)))
+    # first <- sample(fac, 1000)
+    # second <- sample(fac, 1000)
+    # df <- data.frame(
+    #     first = first,
+    #     second = second, 
+    #     first_copy = first,
+    #     second_copy = second
+    # ) 
+    # # need to change categories to IDs, and then remove NAs
+    # write.csv(df, "tests/testthat/dataset-fixtures/sparse_ca.csv", row.names = FALSE)
+    
+    # we need to create with metadata to ensure that the categorical array is 
+    # stored as sparse categorical (if we use bind, then we have to figure out
+    # how to trigger a cleanup which is not exposed to the API)
+    ds <- createWithMetadataAndFile(
+        fromJSON(
+            file.path(test_path("dataset-fixtures", "sparse_ca.json")),
+            simplifyVector = FALSE
+        ),
+        test_path(file.path("dataset-fixtures", "sparse_ca.csv"))
+    )
+    
+    test_that("foobar", {
+        # the first categorical array is the same as the copies
+        first_copy_vals <- as.vector(ds$first_copy)
+        second_copy_vals <- as.vector(ds$second_copy)
+        expect_equal(as.vector(ds$cat_array$first), first_copy_vals)
+        expect_equal(as.vector(ds$cat_array$second), second_copy_vals)
+        
+        # make our combined variable
+        ds$ca_combined <- combine(
+            ds$cat_array, 
+            combinations = list(
+                list(
+                    name = "A",
+                    categories = c("A", "a", "foo")
+                ),
+                list(
+                    name = "B",
+                    categories = c("B", "b")
+                ),
+                list(
+                    name = "C",
+                    categories = c("C", "c")
+                )
+            )
+        )
+
+        # combine the values on the vector to compare with the combined variable
+        levels(first_copy_vals) <- c("A", "B", "C", "A", "B", "C", "A")
+        levels(second_copy_vals) <- c("A", "B", "C", "A", "B", "C", "A")
+        
+        expect_equal(as.vector(ds$ca_combined$`first#`), first_copy_vals)
+        expect_equal(as.vector(ds$ca_combined$`second#`), second_copy_vals)
+        
+        # and this might be clearer in a cube of the first subvar and the 
+        # first_copy, this test is testing the same thing as above, with a cube
+        # 
+        # we expect:
+        # first_copy
+        # first# A B C a b c foo
+        #      A 4 0 0 4 0 0   4
+        #      B 0 4 0 0 4 0   0
+        #      C 0 0 4 0 0 4   0
+        # 
+        # we get:
+        # first_copy
+        # first# A B C a b c foo
+        #      A 4 4 4 4 0 0   4
+        #      B 0 0 0 0 4 0   0
+        #      C 0 0 0 0 0 4   0
+        dims <- list(
+            `first#` = c("A", "B", "C"), 
+            first_copy = c("A", "B", "C", "a", "b", "c", "foo")
+        )
+        
+        expect_equivalent(
+            as.array(crtabs(~ca_combined[['first#']]+first_copy, ds)), 
+            cubify(
+                4, 0, 0, 4, 0, 0, 4,
+                0, 4, 0, 0, 4, 0, 0,
+                0, 0, 4, 0, 0, 4, 0,
+                dims = dims
+            )
+        )
+    })
 })
