@@ -1,0 +1,191 @@
+{
+    "element": "shoji:entity",
+    "body": {
+        "name": "Example sparse categorical array",
+        "description": "A dataset to illustrate the streaming capabilities & restrictions of the API",
+        "table": {
+            "element": "crunch:table",
+            "description": "A Crunch Table of data for this dataset.",
+            "metadata": {
+                "cat_array": {
+                    "name": "fancy CA",
+                    "subvariables": [
+                        {
+                            "alias": "second",
+                            "name": "second"
+                        },
+                        {
+                            "alias": "first",
+                            "name": "first"
+                        }
+                    ],
+                    "alias": "cat_array",
+                    "type": "categorical_array",
+                    "categories": [
+                        {
+                            "numeric_value": 1,
+                            "id": 1,
+                            "name": "A",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 2,
+                            "id": 2,
+                            "name": "B",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 3,
+                            "id": 3,
+                            "name": "C",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 4,
+                            "id": 4,
+                            "name": "a",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 5,
+                            "id": 5,
+                            "name": "b",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 6,
+                            "id": 6,
+                            "name": "c",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 7,
+                            "id": 7,
+                            "name": "foo",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": null,
+                            "id": -1,
+                            "name": "No Data",
+                            "missing": true
+                        }
+                    ],
+                    "description": ""
+                },
+                "second_copy": {
+                    "alias": "second_copy",
+                    "type": "categorical",
+                    "name": "second (copy)",
+                    "categories": [
+                        {
+                            "numeric_value": 1,
+                            "id": 1,
+                            "name": "A",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 2,
+                            "id": 2,
+                            "name": "B",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 3,
+                            "id": 3,
+                            "name": "C",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 4,
+                            "id": 4,
+                            "name": "a",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 5,
+                            "id": 5,
+                            "name": "b",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 6,
+                            "id": 6,
+                            "name": "c",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 7,
+                            "id": 7,
+                            "name": "foo",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": null,
+                            "id": -1,
+                            "name": "No Data",
+                            "missing": true
+                        }
+                    ],
+                    "description": ""
+                },
+                "first_copy": {
+                    "alias": "first_copy",
+                    "type": "categorical",
+                    "name": "first (copy)",
+                    "categories": [
+                        {
+                            "numeric_value": 1,
+                            "id": 1,
+                            "name": "A",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 2,
+                            "id": 2,
+                            "name": "B",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 3,
+                            "id": 3,
+                            "name": "C",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 4,
+                            "id": 4,
+                            "name": "a",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 5,
+                            "id": 5,
+                            "name": "b",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 6,
+                            "id": 6,
+                            "name": "c",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": 7,
+                            "id": 7,
+                            "name": "foo",
+                            "missing": false
+                        },
+                        {
+                            "numeric_value": null,
+                            "id": -1,
+                            "name": "No Data",
+                            "missing": true
+                        }
+                    ],
+                    "description": ""
+                }
+            }
+        }
+    }
+}
