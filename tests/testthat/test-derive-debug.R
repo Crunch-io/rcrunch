@@ -152,15 +152,18 @@ with_test_authentication({
     # collapse. Confirmed that this ratio is stored as sparse categorical, but 
     # if the definitions for what counts as sparse change, this might need to be
     # changed to maintain coverage
-    # fac <- factor(c(rep(c("A", "B", "C", "a", "b", "c", "foo"), 4), rep(NA, 972)))
+    # fac <- factor(
+    #     c(rep("A", 6), rep("B", 5), rep("C", 4),
+    #       rep("a", 3), rep("b", 2), rep("c", 1), rep(NA, 979))
+    # )
     # first <- sample(fac, 1000)
     # second <- sample(fac, 1000)
     # df <- data.frame(
     #     first = first,
-    #     second = second, 
+    #     second = second,
     #     first_copy = first,
     #     second_copy = second
-    # ) 
+    # )
     # # need to change categories to IDs, and then remove NAs
     # write.csv(df, "tests/testthat/dataset-fixtures/sparse_ca.csv", row.names = FALSE)
     
@@ -188,7 +191,7 @@ with_test_authentication({
             combinations = list(
                 list(
                     name = "A",
-                    categories = c("A", "a", "foo")
+                    categories = c("A", "a")
                 ),
                 list(
                     name = "B",
@@ -202,8 +205,8 @@ with_test_authentication({
         )
 
         # combine the values on the vector to compare with the combined variable
-        levels(first_copy_vals) <- c("A", "B", "C", "A", "B", "C", "A")
-        levels(second_copy_vals) <- c("A", "B", "C", "A", "B", "C", "A")
+        levels(first_copy_vals) <- c("A", "B", "C", "A", "B", "C")
+        levels(second_copy_vals) <- c("A", "B", "C", "A", "B", "C")
         
         expect_equal(as.vector(ds$ca_combined$`first#`), first_copy_vals)
         expect_equal(as.vector(ds$ca_combined$`second#`), second_copy_vals)
@@ -213,28 +216,28 @@ with_test_authentication({
         # 
         # we expect:
         # first_copy
-        # first# A B C a b c foo
-        #      A 4 0 0 4 0 0   4
-        #      B 0 4 0 0 4 0   0
-        #      C 0 0 4 0 0 4   0
+        # first# A B C a b c
+        #      A 6 0 0 3 0 0
+        #      B 0 5 0 0 2 0
+        #      C 0 0 4 0 0 1
         # 
         # we get:
         # first_copy
-        # first# A B C a b c foo
-        #      A 4 4 4 4 0 0   4
-        #      B 0 0 0 0 4 0   0
-        #      C 0 0 0 0 0 4   0
+        # first# A B C a b c
+        #      A 6 5 4 3 0 0
+        #      B 0 0 0 0 2 0
+        #      C 0 0 0 0 0 1
         dims <- list(
             `first#` = c("A", "B", "C"), 
-            first_copy = c("A", "B", "C", "a", "b", "c", "foo")
+            first_copy = c("A", "B", "C", "a", "b", "c")
         )
         
         expect_equivalent(
             as.array(crtabs(~ca_combined[['first#']]+first_copy, ds)), 
             cubify(
-                4, 0, 0, 4, 0, 0, 4,
-                0, 4, 0, 0, 4, 0, 0,
-                0, 0, 4, 0, 0, 4, 0,
+                6, 0, 0, 3, 0, 0,
+                0, 5, 0, 0, 2, 0,
+                0, 0, 4, 0, 0, 1,
                 dims = dims
             )
         )

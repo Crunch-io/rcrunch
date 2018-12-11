@@ -59,12 +59,6 @@
                             "missing": false
                         },
                         {
-                            "numeric_value": 7,
-                            "id": 7,
-                            "name": "foo",
-                            "missing": false
-                        },
-                        {
                             "numeric_value": null,
                             "id": -1,
                             "name": "No Data",
@@ -115,12 +109,6 @@
                             "missing": false
                         },
                         {
-                            "numeric_value": 7,
-                            "id": 7,
-                            "name": "foo",
-                            "missing": false
-                        },
-                        {
                             "numeric_value": null,
                             "id": -1,
                             "name": "No Data",
@@ -168,12 +156,6 @@
                             "numeric_value": 6,
                             "id": 6,
                             "name": "c",
-                            "missing": false
-                        },
-                        {
-                            "numeric_value": 7,
-                            "id": 7,
-                            "name": "foo",
                             "missing": false
                         },
                         {
