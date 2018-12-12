@@ -50,7 +50,7 @@ index.table <- function(x, margin, baseline) {
     other_margin <- 3 - margin ## Assumes 2-D
 
     # the numerators are the proportions by the margin axis
-    tab <- as.array(prop.table(x, margin))
+    tab <- prop.table(x, margin)
 
     # the denominators are the proportions of the uni-variate cube based on the
     # other margin. Because dimSums collapses the dimensions given
@@ -63,8 +63,10 @@ index.table <- function(x, margin, baseline) {
 
     if (identical(dim(tab), dim(baseline))) {
         # if the dimensions are the same, use direct division, needed for MRs
-        return(tab / baseline * 100)
+        out <- tab / baseline * 100
     } else {
-        return(sweep(tab, other_margin, baseline, "/") * 100)
+        out <- sweep(tab, other_margin, baseline, "/") * 100
     }
+    attr(out, "type") <- "index"
+    return(out)
 }

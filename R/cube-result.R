@@ -480,15 +480,20 @@ setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
     mt_margins <- mr_items_margins(margin, cube = x)
     out <- cubeMarginTable(x, margin)
     if (is.array(out)) {
-        class(out) <- c("CrunchCubeCalculation", "array")
-        attr(out, "dims") <- x@dims[mt_margins]
-        attr(out, "type") <- "margin"
+        out <- makeCrunchCubeCalculation(out,  x@dims[mt_margins], "margin")
     }
     return(out)
 })
 
+makeCrunchCubeCalculation <- function(x, dims,  type) {
+    class(x) <-  c("CrunchCubeCalculation", "array")
+    attr(x, "dims") <- dims
+    attr(x, "type") <- type
+    return(x)
+}
+
 #' @export
-as.array.CrunchCubeCalculation <- function(x) {
+as.array.CrunchCubeCalculation <- function(x, ...) {
     attr(x, "dims") <- NULL
     attr(x, "type") <- NULL
     class(x) <- "array"
@@ -496,7 +501,7 @@ as.array.CrunchCubeCalculation <- function(x) {
 }
 
 #' @export
-print.CrunchCubeCalculation <- function(x) print(as.array(x))
+print.CrunchCubeCalculation <- function(x, ...) print(as.array(x))
 
 #' Convert from user margins to real cube margins or vice versa
 #'

@@ -71,6 +71,13 @@ test_that("zScores for CrunchCube normal contingency table is chisq standardized
     expect_equal(zScores(gender_x_ideology), out)
 })
 
+test_that("zScores returns a CrunchCubeCalculation", {
+    zscore <- zScores(mr_by_cat)
+    expect_is(zscore, "CrunchCubeCalculation")
+    expect_equal(attr(zscore, "type"), "z_score")
+    expect_equal(attr(zscore, "dims"), mr_by_cat@dims)
+})
+
 ##########################################
 ## fixutres from whaam
 ##########################################
