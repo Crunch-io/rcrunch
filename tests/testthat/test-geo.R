@@ -62,6 +62,32 @@ with_mock_crunch({
             ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
     })
+    
+    test_that("availableGeodata returns geodata and displays as a dataframe", {
+        avail_geo <- availableGeodata()
+        avail_geo_df <- as.data.frame(avail_geo)
+        expect_is(avail_geo_df, "data.frame")
+        expect_identical(
+            avail_geo_df,
+            data.frame(
+                description = c(
+                    "Details for a type of geodata",
+                    "Details for a type of geodata",
+                    "This geo has duplicate properties"),
+                created = "2015-12-07T23:49:19.566000+00:00",
+                name = c("GB Regions", "new one", "Duplicate properties"),
+                location = c(
+                    "https://s.crunch.io/geodata/regions.geojson",
+                    "https://s.crunch.io/some/wrong/path.geojson",
+                    "https://s.crunch.io/some/wrong/duplicate_prop.topojson"),
+                owner_id = "8e01e9f7a8e944a7a2c88e50c2a2997d",
+                id = c("0003", "0001", "0002"),
+                format = c("geojson", "notjson", "topojson"),
+                metadata = NA,
+                stringsAsFactors = FALSE
+            )
+        )
+    })
 
     avail_features <- availableGeodataFeatures()
     # make up new features to simulate a situation where multiple
