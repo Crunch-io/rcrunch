@@ -142,13 +142,13 @@ with_test_authentication({
         univariate_country <- crtabs(~country, data = ds)
 
         expect_equal(
-            index.table(bivariate_cube, 2),
+            as.array(index.table(bivariate_cube, 2)),
             as.array(prop.table(bivariate_cube, 2)) /
                 broadcast(as.array(prop.table(univariate_allpets)), dim = dim(bivariate_cube)) * 100
         )
 
         expect_equal(
-            index.table(bivariate_cube, 1),
+            as.array(index.table(bivariate_cube, 1)),
             as.array(prop.table(bivariate_cube, 1)) /
                 broadcast(as.array(prop.table(univariate_country)), dim = dim(bivariate_cube)) * 100
         )
