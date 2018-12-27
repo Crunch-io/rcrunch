@@ -4,8 +4,8 @@
 \alias{crunchAPI}
 \title{Main Crunch API handling function}
 \usage{
-crunchAPI(http.verb, url, config = list(), status.handlers = list(),
-  ...)
+crunchAPI(http.verb, url, config = list(), body = NULL,
+  encode = "json", status.handlers = list(), ...)
 }
 \arguments{
 \item{http.verb}{character in GET, PUT, POST, PATCH, DELETE}
@@ -13,6 +13,11 @@ crunchAPI(http.verb, url, config = list(), status.handlers = list(),
 \item{url}{character URL to do the verb on}
 
 \item{config}{list of config parameters. See httr documentation.}
+
+\item{body}{request body. See httr documentation.}
+
+\item{encode}{How to encode \code{body} if it is a named list. Unlike in \code{httr},
+the default is \code{"json"}.}
 
 \item{status.handlers}{named list of specific HTTP statuses and a response
 function to call in the case where that status is returned. Passed to the

@@ -5,6 +5,7 @@
 * Fix bug in printing folders that contain entities with excessively long names.
 * Summary statistic (means and medians) can now be calculated for any direction of a CrunchCube.
 * Improved speed for calculating insertions (subtotals, headers, etc.) on large cubes (speed ups of ~25x on large, realistic cubes).
+* Use `gzip` compression of request bodies larger than 1MB for faster transmission over the network.
 * First draft support for deck creation and manipulation.
 * Remove (for now) support for the experimental virtual join feature.
 * 404 Not Found HTTP responses now print the request URL to aid in debugging

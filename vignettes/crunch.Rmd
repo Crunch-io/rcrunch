@@ -16,6 +16,7 @@ library(crunch)
 
 ```{r, results='hide', include = FALSE}
 library(httptest)
+options(crunch.min.gzip.bytes = 1e9) ## Don't gzip request bodies in tests (until httptest can handle))
 start_vignette("crunch")
 login()
 ```

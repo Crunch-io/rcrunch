@@ -82,7 +82,8 @@ icon <- function(x) {
 #' @export
 `icon<-` <- function(x, value) {
     crPUT(shojiURL(x, "views", "icon"),
-        body = list(icon = upload_file(value))
+        body = list(icon = upload_file(value)),
+        encode = "multipart"
     )
     dropOnly(absoluteURL("../", self(x))) ## Invalidate catalog
     return(refresh(x))

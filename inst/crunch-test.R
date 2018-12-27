@@ -79,6 +79,7 @@ cubify <- function(..., dims) {
 with_mock_crunch <- function(expr) {
     opts <- temp.options(
         crunch.api = "https://app.crunch.io/api/",
+        crunch.min.gzip.bytes = 1e9, ## Don't gzip request bodies in tests (until httptest can handle)
         httptest.mock.paths = c(".", "../inst/", system.file(package = "crunch"))
     )
     with(

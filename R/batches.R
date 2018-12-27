@@ -50,7 +50,9 @@ createSource <- function(file, url, ...) {
     if (!missing(file)) {
         if (file.exists(file)) {
             u <- crPOST(sources_url,
-                body = list(uploaded_file = upload_file(file)), ...
+                body = list(uploaded_file = upload_file(file)),
+                encode = "multipart",
+                ...
             )
         } else {
             halt("File not found")
