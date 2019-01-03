@@ -18,7 +18,7 @@ for the p-value of the test of the pair of columns/rows.}
 }
 \value{
 A symmetric square matrix of all column-comparison or row-comparison
-\eqn{\Chi^2} statistics. Typical element \eqn{i,j} is the test statistic equivalent
+\eqn{\chi^2} statistics. Typical element \eqn{i,j} is the test statistic equivalent
 to \code{chisq.test} subsetting to just columns i and j (for dim="cols").
 }
 \description{

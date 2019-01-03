@@ -1,7 +1,7 @@
 #' Column and row comparison
 #'
 #' Comparing a column or row with a baseline column or row. This calculates the
-#' test statistic \eqn{\Chi^2} of independence for each pair of columns/rows.
+#' test statistic \eqn{\chi^2} of independence for each pair of columns/rows.
 #'
 #' @param cube a CrunchCube to calculate the comparison on
 #' @param dim which dimension is being compared (`cols` or `rows`, only valid
@@ -182,7 +182,7 @@ compareDimsPairwise <- function(cube, dim = c("cols", "rows"), baseline, value=c
 #' for the p-value of the test of the pair of columns/rows.
 #'
 #' @return A symmetric square matrix of all column-comparison or row-comparison
-#' \eqn{\Chi^2} statistics. Typical element \eqn{i,j} is the test statistic equivalent
+#' \eqn{\chi^2} statistics. Typical element \eqn{i,j} is the test statistic equivalent
 #' to \code{chisq.test} subsetting to just columns i and j (for dim="cols").
 #' @export
 #'

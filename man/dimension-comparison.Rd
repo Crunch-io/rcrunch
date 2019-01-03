@@ -36,5 +36,5 @@ the value for the column or row given in \code{x}, default is Chi-squared
 }
 \description{
 Comparing a column or row with a baseline column or row. This calculates the
-test statistic \eqn{\Chi^2} of independence for each pair of columns/rows.
+test statistic \eqn{\chi^2} of independence for each pair of columns/rows.
 }
