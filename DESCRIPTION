@@ -34,6 +34,7 @@ Suggests:
     knitr,
     magrittr,
     rmarkdown,
+    rootWishart,
     rstudioapi,
     spelling,
     styler,
@@ -80,6 +81,7 @@ Collate:
     'crunch.R'
     'crunchbox.R'
     'cube-collapse-dimensions.R'
+    'cube-comparisons.R'
     'cube-dims.R'
     'cube-index-table.R'
     'cube-query.R'

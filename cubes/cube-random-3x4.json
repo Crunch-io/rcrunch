@@ -1,0 +1,190 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/4bb830/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F4bb830%2Fvariables%2F000000%2F%22%7D%2C%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F4bb830%2Fvariables%2F000001%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/4bb830/variables/000000/"
+                },
+                {
+                    "variable": "/api/datasets/4bb830/variables/000001/"
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "I",
+                        "name": "I"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "one"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "two"
+                            },
+                            {
+                                "numeric_value": 3,
+                                "missing": false,
+                                "id": 3,
+                                "name": "three"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "J",
+                        "name": "J"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "A"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "B"
+                            },
+                            {
+                                "numeric_value": 3,
+                                "missing": false,
+                                "id": 3,
+                                "name": "C"
+                            },
+                            {
+                                "numeric_value": 4,
+                                "missing": false,
+                                "id": 4,
+                                "name": "D"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 0,
+            "measures": {
+                "count": {
+                    "data": [
+                        12,
+                        23,
+                        10,
+                        20,
+                        0,
+                        23,
+                        28,
+                        14,
+                        24,
+                        0,
+                        22,
+                        23,
+                        23,
+                        21,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "n_missing": 0,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "n": 243,
+            "unfiltered": {
+                "unweighted_n": 243,
+                "weighted_n": 243
+            },
+            "filtered": {
+                "unweighted_n": 243,
+                "weighted_n": 243
+            },
+            "counts": [
+                12,
+                23,
+                10,
+                20,
+                0,
+                23,
+                28,
+                14,
+                24,
+                0,
+                22,
+                23,
+                23,
+                21,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "element": "crunch:cube"
+        }
+    }
+}
