@@ -18,13 +18,16 @@ compareDimsPairwise(cube, dim = c("cols", "rows"), baseline,
 \item{cube}{a CrunchCube to calculate the comparison on}
 
 \item{...}{arguments passed from \code{compareRowsPairwise()} or
-\code{compareColsPairwise()} to \code{compareDimsPairwise()} (e.g., \code{baseline}; \code{value})}
+\code{compareColsPairwise()} to \code{compareDimsPairwise()} (e.g., \code{baseline})}
 
 \item{dim}{which dimension is being compared (\code{rows} or \code{cols}, only valid
 for \code{compareDims()})}
 
 \item{baseline}{a character, the name of a column or row to compare
 against each of the others in turn}
+
+\item{value}{Value of the test to return. Defaults to \code{statistic}; use \code{p.value}
+for the p-value of the test of the pair of columns/rows.}
 }
 \value{
 a vector of representing the baseline column’s test statistic

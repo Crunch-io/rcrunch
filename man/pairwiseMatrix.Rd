@@ -8,9 +8,13 @@ pairwiseMatrix(cube, dim = c("cols", "rows"), value = c("statistic",
   "p.value"))
 }
 \arguments{
-\item{cube}{}
+\item{cube}{a CrunchCube representing counts of a categorical by categorical
+contingency table.}
 
 \item{dim}{which dimension along which to compare (\code{cols} or \code{rows})}
+
+\item{value}{Value of the test to return. Defaults to \code{statistic}; use \code{p.value}
+for the p-value of the test of the pair of columns/rows.}
 }
 \value{
 A symmetric square matrix of all column-comparison or row-comparison
@@ -18,7 +22,7 @@ A symmetric square matrix of all column-comparison or row-comparison
 to \code{chisq.test} subsetting to just columns i and j (for dim="cols").
 }
 \description{
-Genearte a matrix of pairwise comparisons of rows or columns, each against
+Generate a matrix of pairwise comparisons of rows or columns, each against
 the others.
 }
 \examples{

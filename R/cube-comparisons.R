@@ -9,6 +9,8 @@
 #' @param baseline a character, the column/row to use as a baseline to compare `x`
 #'   against
 #' @param x a character, the column/row to compare against the baseline
+#' @param value Value of the test to return. Defaults to `statistic`; use `p.value`
+#' for the p-value of the test of the pair of columns/rows.
 #' @param ... arguments passed from `compareRows()` or `compareCols()` to
 #'   `compareDims()` (i.e. `baseline` and `x`)
 #'
@@ -108,8 +110,10 @@ compareDims <- function(cube, dim = c("cols", "rows"), baseline, x, value=c("sta
 #'   for `compareDims()`)
 #' @param baseline a character, the name of a column or row to compare
 #'   against each of the others in turn
+#' @param value Value of the test to return. Defaults to `statistic`; use `p.value`
+#' for the p-value of the test of the pair of columns/rows.
 #' @param ... arguments passed from `compareRowsPairwise()` or
-#'   `compareColsPairwise()` to `compareDimsPairwise()` (e.g., `baseline`; `value`)
+#'   `compareColsPairwise()` to `compareDimsPairwise()` (e.g., `baseline`)
 #'
 #' @return a vector of representing the baseline column’s test statistic
 #' with respect to each of the others.
@@ -171,8 +175,11 @@ compareDimsPairwise <- function(cube, dim = c("cols", "rows"), baseline, value=c
 #' Generate a matrix of pairwise comparisons of rows or columns, each against 
 #' the others.
 #'
-#' @param cube 
+#' @param cube a CrunchCube representing counts of a categorical by categorical
+#' contingency table.
 #' @param dim which dimension along which to compare (`cols` or `rows`)
+#' @param value Value of the test to return. Defaults to `statistic`; use `p.value`
+#' for the p-value of the test of the pair of columns/rows.
 #'
 #' @return A symmetric square matrix of all column-comparison or row-comparison
 #' \eqn{\Chi^2} statistics. Typical element \eqn{i,j} is the test statistic equivalent

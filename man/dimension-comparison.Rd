@@ -27,6 +27,9 @@ for \code{compareDims()})}
 against}
 
 \item{x}{a character, the column/row to compare against the baseline}
+
+\item{value}{Value of the test to return. Defaults to \code{statistic}; use \code{p.value}
+for the p-value of the test of the pair of columns/rows.}
 }
 \value{
 the value for the column or row given in \code{x}, default is Chi-squared
