@@ -307,7 +307,6 @@ test_that("compareDims() dimension validation", {
 })
 
 test_that("compareDims() with MRs", {
-    skip("Revive after specifying what expected MR behavior actually is")
     # if the dimension you are trying to compare amongst is an MR you get an
     # error (for now)
     expect_error(
@@ -320,25 +319,6 @@ test_that("compareDims() with MRs", {
             "Column or row z-scores are not implemented for multiple ",
             "response dimensions"
         )
-    )
-
-    # But if the MR is not the dimension being compared amongst, we still
-    # calculate a score
-    expected_zScores <- cubify(
-        -1.34840705967846,
-        -0.319502930145056,
-        -2.44219465036739,
-        -3.14883276639645,
-        4.11744429667266,
-        dims = list(
-            food_groups = c("Vegetables"),
-            nordics = c("Denmark", "Finland", "Iceland", "Norway", "Sweden")
-        )
-    )
-
-    expect_equal(
-        compareRows(cat_by_mr_NSS_alltypes, baseline = "Fruit", x = "Vegetables"),
-        expected_zScores
     )
 
     expect_error(
