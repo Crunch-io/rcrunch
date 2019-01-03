@@ -61,7 +61,7 @@ compareDims <- function(cube, dim = c("cols", "rows"), baseline, x, value=c("sta
     }
     
     # ensure that there are not MRs on the comparison direction
-    dim_types <- crunch:::getDimTypes(cube)
+    dim_types <- getDimTypes(cube)
     if ((dim == "cols" & startsWith(dim_types[2], "mr_")) |
         (dim == "rows" & startsWith(dim_types[1], "mr_"))) {
         stop(
@@ -275,7 +275,6 @@ wishartMatrix <- function(cube, dim=c("cols","rows")){
 #' \eqn{i,j} is the P-value associated with the hypothesis that proportions in
 #' row or column \eqn{i} are equal to those in row or column \eqn{j}.
 #' 
-#' @importFrom rootWishart singleWishart
 #' @export
 #'
 #' @examples
@@ -288,12 +287,13 @@ wishartMatrix <- function(cube, dim=c("cols","rows")){
 #' wishartPvalues(illness_occupation)
 #' }
 wishartPvalues <- function(cube, dim=c("cols", "rows")){
+    checkInstalledPackages("rootWishart")
     X2 <- wishartMatrix(cube, dim)
     a <- as.array(cube)
     I <- nrow(a)
     J <- ncol(a)
     p <- max(c(I,J)) - 1
     n <- min(c(I,J)) - 1
-    upper.tail <- function(x) 1.0 - singleWishart(x, p, n, type = "double")
+    upper.tail <- function(x) 1.0 - rootWishart:::singleWishart(x, p, n, type = "double")
     apply(X2, c(1,2), upper.tail)    
 }
