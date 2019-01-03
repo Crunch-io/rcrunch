@@ -1,11 +1,11 @@
-context("Cube multiple comparisons")
+context("Cube pairwise multiple comparisons")
 
 ##########################################
 ## fixutres from crunch cube
 ##########################################
-hirotsu <- loadCube(("cubes/pairwise-hirotsu-illness-x-occupation.json"))
-hirotsuTranspose <- loadCube(("cubes/pairwise-hirotsu-occupatin-x-illness.json"))
-sampled <- loadCube(('cubes/cube-random-3x4.json'))
+hirotsu <- loadCube("cubes/pairwise-hirotsu-illness-x-occupation.json")
+hirotsuTranspose <- loadCube("cubes/pairwise-hirotsu-occupation-x-illness.json")
+sampled <- loadCube("cubes/cube-random-3x4.json")
 
 test_that("Reference Chi-square from Z-tests.Rmd, 2017-10-26", {
     reference <- structure(c(NA, 1.79366044505363, 1.44505144460352, 1.52650609891684, 

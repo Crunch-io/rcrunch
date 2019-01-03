@@ -29,6 +29,7 @@ compareRows <- function(cube, ...) compareDims(cube = cube, dim = "rows", ...)
 #' @export
 compareDims <- function(cube, dim = c("cols", "rows"), baseline, x, value=c("statistic", "p.value")) {
     dim <- match.arg(dim)
+    value <- match.arg(value)
     # grab the names of extents for each dimensions
     # TODO: we shouldn't need to do this if we can just pass baseline/x into the
     # subsetting function when we can subset by name _or_ index natively
@@ -51,12 +52,6 @@ compareDims <- function(cube, dim = c("cols", "rows"), baseline, x, value=c("sta
     } else {
         stop("Currently, column comparison only accepts at most one category name.")
     }
-
-    # return NA for the diagonal (comparison is self)
-    # note: this is duplicated work in compareCols
-    if (x_ind == baseline_ind) {
-        return(NA)
-    }
     
     # ensure that the extents given are in the cube
     # TODO: remove when we can defer this check to the subsetting methods
@@ -73,6 +68,12 @@ compareDims <- function(cube, dim = c("cols", "rows"), baseline, x, value=c("sta
             "Column or row z-scores are not implemented for multiple response ",
             "dimensions"
         )
+    }
+    
+    # return NA for the diagonal (comparison is self)
+    # note: this is duplicated work in compareCols
+    if (x_ind == baseline_ind) {
+        return(NA)
     }
     
     # generate the 2xm or nx2 table tfor testing
@@ -193,7 +194,8 @@ compareDimsPairwise <- function(cube, dim = c("cols", "rows"), baseline, value=c
 #' pairwiseMatrix(some_cube, value="p.value")
 #' }
 pairwiseMatrix <- function(cube, dim=c("cols", "rows"), value=c('statistic', 'p.value')){
-    value = match.arg(value)
+    dim <- match.arg(dim)
+    value <- match.arg(value)
     a <- as.array(cube)
     if (dim == "cols") {
         names <- colnames(a)
