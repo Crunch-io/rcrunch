@@ -168,7 +168,7 @@ compareDimsPairwise <- function(cube, dim = c("cols", "rows"), baseline, value=c
 
 #' Matrix of Chi-Squared Statistics for all rows or columns
 #' 
-#' Genearte a matrix of pairwise comparisons of rows or columns, each against 
+#' Generate a matrix of pairwise comparisons of rows or columns, each against 
 #' the others.
 #'
 #' @param cube 
@@ -294,6 +294,6 @@ wishartPvalues <- function(cube, dim=c("cols", "rows")){
     J <- ncol(a)
     p <- max(c(I,J)) - 1
     n <- min(c(I,J)) - 1
-    upper.tail <- function(x) 1.0 - rootWishart:::singleWishart(x, p, n, type = "double")
+    upper.tail <- function(x) 1.0 - rootWishart::singleWishart(x, p, n, type = "double")
     apply(X2, c(1,2), upper.tail)    
 }
