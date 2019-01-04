@@ -70,32 +70,7 @@
                                         "name": "alligator"
                                     },
                                     "derived": false,
-                                    "id": "da1129bc216d48e9b8ee5229c1b26c79",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "da1129bc216d48e9b8ee5229c1b26c79"
                                 },
                                 "missing": false
                             },
@@ -107,32 +82,7 @@
                                         "name": "oryx"
                                     },
                                     "derived": false,
-                                    "id": "8e6c724d95994da1a483b96f39fcd661",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "8e6c724d95994da1a483b96f39fcd661"
                                 },
                                 "missing": false
                             },
@@ -144,32 +94,7 @@
                                         "name": "capybara"
                                     },
                                     "derived": false,
-                                    "id": "8190dd271bea45f8b2a4204780ce7168",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "8190dd271bea45f8b2a4204780ce7168"
                                 },
                                 "missing": false
                             }

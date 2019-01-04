@@ -57,49 +57,7 @@
                                         "alias": "cat_feeling",
                                         "name": "cat_feeling"
                                     },
-                                    "id": "000001",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "id": 1,
-                                                "name": "Extremely Happy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 2,
-                                                "id": 2,
-                                                "name": "Somewhat Happy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 3,
-                                                "id": 3,
-                                                "name": "Neutral",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 4,
-                                                "id": 4,
-                                                "name": "Somewhat Unhappy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 5,
-                                                "id": 5,
-                                                "name": "Extremely Unhappy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "id": -1,
-                                                "name": "No Data",
-                                                "missing": true
-                                            }
-                                        ]
-                                    }
+                                    "id": "000001"
                                 },
                                 "missing": false
                             },
@@ -111,49 +69,7 @@
                                         "alias": "dog_feeling",
                                         "name": "dog_feeling"
                                     },
-                                    "id": "000004",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "id": 1,
-                                                "name": "Extremely Happy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 2,
-                                                "id": 2,
-                                                "name": "Somewhat Happy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 3,
-                                                "id": 3,
-                                                "name": "Neutral",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 4,
-                                                "id": 4,
-                                                "name": "Somewhat Unhappy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 5,
-                                                "id": 5,
-                                                "name": "Extremely Unhappy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "id": -1,
-                                                "name": "No Data",
-                                                "missing": true
-                                            }
-                                        ]
-                                    }
+                                    "id": "000004"
                                 },
                                 "missing": false
                             }

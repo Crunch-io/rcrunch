@@ -92,32 +92,7 @@
                                         "alias": "offal_1",
                                         "name": "liver"
                                     },
-                                    "id": "0001",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "0001"
                                 },
                                 "missing": false
                             },
@@ -129,32 +104,7 @@
                                         "alias": "offal_2",
                                         "name": "thalmus"
                                     },
-                                    "id": "0002",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "0002"
                                 },
                                 "missing": false
                             },
@@ -166,32 +116,7 @@
                                         "alias": "offal_3",
                                         "name": "heart"
                                     },
-                                    "id": "0003",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "0003"
                                 },
                                 "missing": false
                             },
@@ -203,32 +128,7 @@
                                         "alias": "offal_4",
                                         "name": "tripe"
                                     },
-                                    "id": "0004",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "0004"
                                 },
                                 "missing": false
                             },
@@ -240,32 +140,7 @@
                                         "alias": "offal_6",
                                         "name": "kidney"
                                     },
-                                    "id": "0005",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "0005"
                                 },
                                 "missing": false
                             },
@@ -277,32 +152,7 @@
                                         "alias": "offal_5",
                                         "name": "lungs"
                                     },
-                                    "id": "0006",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "0006"
                                 },
                                 "missing": false
                             },
@@ -314,32 +164,7 @@
                                         "alias": "offal_95",
                                         "name": "other"
                                     },
-                                    "id": "0007",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "0007"
                                 },
                                 "missing": false
                             },
@@ -351,32 +176,7 @@
                                         "alias": "offal_96",
                                         "name": "Don't know"
                                     },
-                                    "id": "0008",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "0008"
                                 },
                                 "missing": false
                             },
@@ -388,32 +188,7 @@
                                         "alias": "offal_97",
                                         "name": "None of these"
                                     },
-                                    "id": "0009",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "0009"
                                 },
                                 "missing": false
                             }

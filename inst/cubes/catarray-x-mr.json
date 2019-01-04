@@ -68,49 +68,7 @@
                                         "alias": "cat_feeling",
                                         "name": "cat_feeling"
                                     },
-                                    "id": "000001",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "id": 1,
-                                                "name": "Extremely Happy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 2,
-                                                "id": 2,
-                                                "name": "Somewhat Happy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 3,
-                                                "id": 3,
-                                                "name": "Neutral",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 4,
-                                                "id": 4,
-                                                "name": "Somewhat Unhappy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 5,
-                                                "id": 5,
-                                                "name": "Extremely Unhappy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "id": -1,
-                                                "name": "No Data",
-                                                "missing": true
-                                            }
-                                        ]
-                                    }
+                                    "id": "000001"
                                 },
                                 "missing": false
                             },
@@ -122,49 +80,7 @@
                                         "alias": "dog_feeling",
                                         "name": "dog_feeling"
                                     },
-                                    "id": "000004",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "id": 1,
-                                                "name": "Extremely Happy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 2,
-                                                "id": 2,
-                                                "name": "Somewhat Happy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 3,
-                                                "id": 3,
-                                                "name": "Neutral",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 4,
-                                                "id": 4,
-                                                "name": "Somewhat Unhappy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": 5,
-                                                "id": 5,
-                                                "name": "Extremely Unhappy",
-                                                "missing": false
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "id": -1,
-                                                "name": "No Data",
-                                                "missing": true
-                                            }
-                                        ]
-                                    }
+                                    "id": "000004"
                                 },
                                 "missing": false
                             }
@@ -281,32 +197,7 @@
                                         "alias": "food_opinion#",
                                         "name": "food_opinion"
                                     },
-                                    "id": "000002",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "000002"
                                 },
                                 "missing": false
                             },
@@ -318,32 +209,7 @@
                                         "alias": "rest_opinion#",
                                         "name": "rest_opinion"
                                     },
-                                    "id": "000000",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "000000"
                                 },
                                 "missing": false
                             },
@@ -355,32 +221,7 @@
                                         "alias": "play_opinion#",
                                         "name": "play_opinion"
                                     },
-                                    "id": "000005",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Not Selected"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "000005"
                                 },
                                 "missing": false
                             }

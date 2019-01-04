@@ -103,34 +103,7 @@
                                             "show_numeric_values": false
                                         }
                                     },
-                                    "id": "000001",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 0,
-                                                "selected": false,
-                                                "id": 2,
-                                                "missing": false,
-                                                "name": "A"
-                                            },
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": false,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "B"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "selected": false,
-                                                "id": -1,
-                                                "missing": true,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "000001"
                                 },
                                 "missing": false
                             },
@@ -148,34 +121,7 @@
                                             "column_width": null
                                         }
                                     },
-                                    "id": "000002",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 0,
-                                                "selected": false,
-                                                "id": 2,
-                                                "missing": false,
-                                                "name": "A"
-                                            },
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": false,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "B"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "selected": false,
-                                                "id": -1,
-                                                "missing": true,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "000002"
                                 },
                                 "missing": false
                             },
@@ -193,34 +139,7 @@
                                             "column_width": null
                                         }
                                     },
-                                    "id": "000003",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 0,
-                                                "selected": false,
-                                                "id": 2,
-                                                "missing": false,
-                                                "name": "A"
-                                            },
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": false,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "B"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "selected": false,
-                                                "id": -1,
-                                                "missing": true,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "000003"
                                 },
                                 "missing": false
                             }
