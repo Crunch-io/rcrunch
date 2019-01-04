@@ -3,7 +3,9 @@
         "measures": {
             "count": {
                 "function": "cube_count",
-                "args": []
+                "args": [
+
+                ]
             }
         },
         "weight": null,
@@ -15,7 +17,9 @@
                 "variable": "/api/datasets/2d23c8/variables/16d81a/"
             }
         ],
-        "filters": []
+        "filters": [
+
+        ]
     },
     "result": {
         "dimensions": [
@@ -240,7 +244,9 @@
                 ],
                 "n_missing": 0,
                 "metadata": {
-                    "references": {},
+                    "references": {
+
+                    },
                     "derived": true,
                     "type": {
                         "integer": true,
@@ -248,7 +254,9 @@
                         "missing_reasons": {
                             "No Data": -1
                         },
-                        "missing_rules": {}
+                        "missing_rules": {
+
+                        }
                     }
                 }
             }

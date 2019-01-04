@@ -1,224 +1,250 @@
 {
-  "element": "shoji:view",
-  "self": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fstable.crunch.io%2Fapi%2Fdatasets%2Fab64eee04efb43d4ae9c13e0e71468c4%2Fvariables%2F000006%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
-  "value": {
-    "query": {
-      "measures": {
-        "count": {
-          "function": "cube_count",
-          "args": []
-        }
-      },
-      "dimensions": [
-        {
-          "variable": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/variables/000006/"
-        }
-      ],
-      "weight": null
-    },
-    "query_environment": {
-      "filter": []
-    },
-    "result": {
-      "dimensions": [
-        {
-          "references": {
-            "alias": "v7",
-            "name": "v7",
-            "view": {
-              "transform": {
-                "insertions": [
-                  {
-                    "anchor": "top",
-                    "name": "First!",
-                    "function": "subtotal",
+    "element": "shoji:view",
+    "self": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fstable.crunch.io%2Fapi%2Fdatasets%2Fab64eee04efb43d4ae9c13e0e71468c4%2Fvariables%2F000006%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
                     "args": [
-                      1,
-                      3
+
                     ]
-                  },
-                  {
-                    "anchor": 2,
-                    "name": "Top 2",
-                    "function": "subtotal",
-                    "args": [
-                      1,
-                      2
-                    ]
-                  },
-                  {
-                    "anchor": 10,
-                    "name": "Bottom 8",
-                    "function": "subtotal",
-                    "args": [
-                      3, 4, 5, 6, 7, 8, 9, 10
-                    ]
-                  },
-                  {
-                    "anchor": 7,
-                    "name": "middle 5",
-                    "function": "subtotal",
-                    "args": [
-                      3, 4, 5, 6, 7
-                    ]
-                  },
-                  {
-                    "anchor": 7,
-                    "name": "middle 5 (again)",
-                    "function": "subtotal",
-                    "args": [
-                      3, 4, 5, 6, 7
-                    ]
-                  },
-                  {
-                    "anchor": 11,
-                    "name": "Middle 3 (missing anchor)",
-                    "function": "subtotal",
-                    "args": [
-                      4, 5, 6
-                    ]
-                  },
-                  {
-                    "anchor": "bottom",
-                    "name": "J and can't see",
-                    "function": "subtotal",
-                    "args": [
-                      10, 11
-                    ]
-                  }
-                ]
-              }
-            }
-          },
-          "derived": false,
-          "type": {
-            "ordinal": false,
-            "class": "categorical",
-            "categories": [
-              {
-                "numeric_value": 1,
-                "missing": false,
-                "id": 1,
-                "name": "A"
-              },
-              {
-                "numeric_value": 2,
-                "missing": false,
-                "id": 2,
-                "name": "B"
-              },
-              {
-                "numeric_value": 3,
-                "missing": false,
-                "id": 3,
-                "name": "C"
-              },
-              {
-                "numeric_value": 4,
-                "missing": false,
-                "id": 4,
-                "name": "D"
-              },
-              {
-                "numeric_value": 11,
-                "missing": true,
-                "id": 11,
-                "name": "Can't see me"
-              },
-              {
-                "numeric_value": 5,
-                "missing": false,
-                "id": 5,
-                "name": "E"
-              },
-              {
-                "numeric_value": 6,
-                "missing": false,
-                "id": 6,
-                "name": "F"
-              },
-              {
-                "numeric_value": 7,
-                "missing": false,
-                "id": 7,
-                "name": "G"
-              },
-              {
-                "numeric_value": 8,
-                "missing": false,
-                "id": 8,
-                "name": "H"
-              },
-              {
-                "numeric_value": 9,
-                "missing": false,
-                "id": 9,
-                "name": "I"
-              },
-              {
-                "numeric_value": 10,
-                "missing": false,
-                "id": 10,
-                "name": "J"
-              },
-              {
-                "numeric_value": null,
-                "missing": true,
-                "id": -1,
-                "name": "No Data"
-              }
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/variables/000006/"
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
             ]
-          }
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "alias": "v7",
+                        "name": "v7",
+                        "view": {
+                            "transform": {
+                                "insertions": [
+                                    {
+                                        "anchor": "top",
+                                        "name": "First!",
+                                        "function": "subtotal",
+                                        "args": [
+                                            1,
+                                            3
+                                        ]
+                                    },
+                                    {
+                                        "anchor": 2,
+                                        "name": "Top 2",
+                                        "function": "subtotal",
+                                        "args": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    {
+                                        "anchor": 10,
+                                        "name": "Bottom 8",
+                                        "function": "subtotal",
+                                        "args": [
+                                            3,
+                                            4,
+                                            5,
+                                            6,
+                                            7,
+                                            8,
+                                            9,
+                                            10
+                                        ]
+                                    },
+                                    {
+                                        "anchor": 7,
+                                        "name": "middle 5",
+                                        "function": "subtotal",
+                                        "args": [
+                                            3,
+                                            4,
+                                            5,
+                                            6,
+                                            7
+                                        ]
+                                    },
+                                    {
+                                        "anchor": 7,
+                                        "name": "middle 5 (again)",
+                                        "function": "subtotal",
+                                        "args": [
+                                            3,
+                                            4,
+                                            5,
+                                            6,
+                                            7
+                                        ]
+                                    },
+                                    {
+                                        "anchor": 11,
+                                        "name": "Middle 3 (missing anchor)",
+                                        "function": "subtotal",
+                                        "args": [
+                                            4,
+                                            5,
+                                            6
+                                        ]
+                                    },
+                                    {
+                                        "anchor": "bottom",
+                                        "name": "J and can't see",
+                                        "function": "subtotal",
+                                        "args": [
+                                            10,
+                                            11
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "A"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "B"
+                            },
+                            {
+                                "numeric_value": 3,
+                                "missing": false,
+                                "id": 3,
+                                "name": "C"
+                            },
+                            {
+                                "numeric_value": 4,
+                                "missing": false,
+                                "id": 4,
+                                "name": "D"
+                            },
+                            {
+                                "numeric_value": 11,
+                                "missing": true,
+                                "id": 11,
+                                "name": "Can't see me"
+                            },
+                            {
+                                "numeric_value": 5,
+                                "missing": false,
+                                "id": 5,
+                                "name": "E"
+                            },
+                            {
+                                "numeric_value": 6,
+                                "missing": false,
+                                "id": 6,
+                                "name": "F"
+                            },
+                            {
+                                "numeric_value": 7,
+                                "missing": false,
+                                "id": 7,
+                                "name": "G"
+                            },
+                            {
+                                "numeric_value": 8,
+                                "missing": false,
+                                "id": 8,
+                                "name": "H"
+                            },
+                            {
+                                "numeric_value": 9,
+                                "missing": false,
+                                "id": 9,
+                                "name": "I"
+                            },
+                            {
+                                "numeric_value": 10,
+                                "missing": false,
+                                "id": 10,
+                                "name": "J"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 50,
+            "measures": {
+                "count": {
+                    "data": [
+                        10,
+                        20,
+                        30,
+                        40,
+                        45,
+                        50,
+                        60,
+                        70,
+                        80,
+                        90,
+                        100,
+                        5
+                    ],
+                    "n_missing": 50,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                10,
+                20,
+                30,
+                40,
+                45,
+                50,
+                60,
+                70,
+                80,
+                90,
+                100,
+                5
+            ],
+            "n": 600
         }
-      ],
-      "missing": 50,
-      "measures": {
-        "count": {
-          "data": [
-            10,
-            20,
-            30,
-            40,
-            45,
-            50,
-            60,
-            70,
-            80,
-            90,
-            100,
-            5
-          ],
-          "n_missing": 50,
-          "metadata": {
-            "references": {},
-            "derived": true,
-            "type": {
-              "integer": true,
-              "missing_rules": {},
-              "missing_reasons": {
-                "No Data": -1
-              },
-              "class": "numeric"
-            }
-          }
-        }
-      },
-      "element": "crunch:cube",
-      "counts": [
-        10,
-        20,
-        30,
-        40,
-        45,
-        50,
-        60,
-        70,
-        80,
-        90,
-        100,
-        5
-      ],
-      "n": 600
     }
-  }
 }

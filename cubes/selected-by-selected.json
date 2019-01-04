@@ -6,436 +6,683 @@
             "measures": {
                 "count": {
                     "function": "cube_count",
-                    "args": []
+                    "args": [
+
+                    ]
                 }
             },
-            "dimensions": [{
-                "each": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
-            }, {
-                "function": "selections",
-                "args": [{
-                    "variable": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
-                }]
-            }, {
-                "each": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
-            }, {
-                "function": "selections",
-                "args": [{
-                    "variable": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
-                }]
-            }],
+            "dimensions": [
+                {
+                    "each": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
+                },
+                {
+                    "function": "selections",
+                    "args": [
+                        {
+                            "variable": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
+                        }
+                    ]
+                },
+                {
+                    "each": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
+                },
+                {
+                    "function": "selections",
+                    "args": [
+                        {
+                            "variable": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
+                        }
+                    ]
+                }
+            ],
             "weight": "/api/datasets/123/variables/f7e078235d7b412987ac97848a2877cf/"
         },
         "query_environment": {
-            "filter": []
+            "filter": [
+
+            ]
         },
         "result": {
-            "dimensions": [{
-                "references": {
-                    "subreferences": [{
-                        "alias": "alligator",
-                        "name": "alligator"
-                    }, {
-                        "alias": "oryx",
-                        "name": "oryx"
-                    }, {
-                        "alias": "capybara",
-                        "name": "capybara"
-                    }, {
-                        "alias": "Any",
-                        "name": "Any"
-                    }],
-                    "uniform_basis": false,
-                    "name": "zoo",
-                    "alias": "zoo"
-                },
-                "derived": true,
-                "type": {
-                    "subtype": {
-                        "class": "variable"
-                    },
-                    "elements": [{
-                        "id": 1,
-                        "value": {
-                            "references": {
+            "dimensions": [
+                {
+                    "references": {
+                        "subreferences": [
+                            {
                                 "alias": "alligator",
                                 "name": "alligator"
                             },
-                            "derived": false,
-                            "id": "da1129bc216d48e9b8ee5229c1b26c79",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 2,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "oryx",
                                 "name": "oryx"
                             },
-                            "derived": false,
-                            "id": "8e6c724d95994da1a483b96f39fcd661",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 3,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "capybara",
                                 "name": "capybara"
                             },
-                            "derived": false,
-                            "id": "8190dd271bea45f8b2a4204780ce7168",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 0,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "Any",
                                 "name": "Any"
-                            },
-                            "derived": false,
-                            "id": "Any",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
                             }
-                        },
-                        "missing": false
-                    }],
-                    "class": "enum"
-                }
-            }, {
-                "references": {
-                    "subreferences": [{
-                        "alias": "alligator",
-                        "name": "alligator"
-                    }, {
-                        "alias": "oryx",
-                        "name": "oryx"
-                    }, {
-                        "alias": "capybara",
-                        "name": "capybara"
-                    }, {
-                        "alias": "Any",
-                        "name": "Any"
-                    }],
-                    "uniform_basis": false,
-                    "name": "zoo",
-                    "alias": "zoo"
-                },
-                "derived": true,
-                "type": {
-                    "ordinal": false,
-                    "subvariables": ["da1129bc216d48e9b8ee5229c1b26c79", "8e6c724d95994da1a483b96f39fcd661", "8190dd271bea45f8b2a4204780ce7168", "Any"],
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                    }, {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Not Selected"
-                    }, {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                    }]
-                }
-            }, {
-                "references": {
-                    "subreferences": [{
-                        "alias": "alligator",
-                        "name": "alligator"
-                    }, {
-                        "alias": "oryx",
-                        "name": "oryx"
-                    }, {
-                        "alias": "capybara",
-                        "name": "capybara"
-                    }, {
-                        "alias": "Any",
-                        "name": "Any"
-                    }],
-                    "uniform_basis": false,
-                    "name": "zoo",
-                    "alias": "zoo"
-                },
-                "derived": true,
-                "type": {
-                    "subtype": {
-                        "class": "variable"
+                        ],
+                        "uniform_basis": false,
+                        "name": "zoo",
+                        "alias": "zoo"
                     },
-                    "elements": [{
-                        "id": 1,
-                        "value": {
-                            "references": {
+                    "derived": true,
+                    "type": {
+                        "subtype": {
+                            "class": "variable"
+                        },
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": {
+                                    "references": {
+                                        "alias": "alligator",
+                                        "name": "alligator"
+                                    },
+                                    "derived": false,
+                                    "id": "da1129bc216d48e9b8ee5229c1b26c79",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": {
+                                    "references": {
+                                        "alias": "oryx",
+                                        "name": "oryx"
+                                    },
+                                    "derived": false,
+                                    "id": "8e6c724d95994da1a483b96f39fcd661",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": {
+                                    "references": {
+                                        "alias": "capybara",
+                                        "name": "capybara"
+                                    },
+                                    "derived": false,
+                                    "id": "8190dd271bea45f8b2a4204780ce7168",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 0,
+                                "value": {
+                                    "references": {
+                                        "alias": "Any",
+                                        "name": "Any"
+                                    },
+                                    "derived": false,
+                                    "id": "Any",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
+                },
+                {
+                    "references": {
+                        "subreferences": [
+                            {
                                 "alias": "alligator",
                                 "name": "alligator"
                             },
-                            "derived": false,
-                            "id": "da1129bc216d48e9b8ee5229c1b26c79",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 2,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "oryx",
                                 "name": "oryx"
                             },
-                            "derived": false,
-                            "id": "8e6c724d95994da1a483b96f39fcd661",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 3,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "capybara",
                                 "name": "capybara"
                             },
-                            "derived": false,
-                            "id": "8190dd271bea45f8b2a4204780ce7168",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 0,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "Any",
                                 "name": "Any"
-                            },
-                            "derived": false,
-                            "id": "Any",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
                             }
-                        },
-                        "missing": false
-                    }],
-                    "class": "enum"
-                }
-            }, {
-                "references": {
-                    "subreferences": [{
-                        "alias": "alligator",
-                        "name": "alligator"
-                    }, {
-                        "alias": "oryx",
-                        "name": "oryx"
-                    }, {
-                        "alias": "capybara",
-                        "name": "capybara"
-                    }, {
-                        "alias": "Any",
-                        "name": "Any"
-                    }],
-                    "uniform_basis": false,
-                    "name": "zoo",
-                    "alias": "zoo"
+                        ],
+                        "uniform_basis": false,
+                        "name": "zoo",
+                        "alias": "zoo"
+                    },
+                    "derived": true,
+                    "type": {
+                        "ordinal": false,
+                        "subvariables": [
+                            "da1129bc216d48e9b8ee5229c1b26c79",
+                            "8e6c724d95994da1a483b96f39fcd661",
+                            "8190dd271bea45f8b2a4204780ce7168",
+                            "Any"
+                        ],
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "selected": true,
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 0,
+                                "name": "Not Selected"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
                 },
-                "derived": true,
-                "type": {
-                    "ordinal": false,
-                    "subvariables": ["da1129bc216d48e9b8ee5229c1b26c79", "8e6c724d95994da1a483b96f39fcd661", "8190dd271bea45f8b2a4204780ce7168", "Any"],
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                    }, {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Not Selected"
-                    }, {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                    }]
+                {
+                    "references": {
+                        "subreferences": [
+                            {
+                                "alias": "alligator",
+                                "name": "alligator"
+                            },
+                            {
+                                "alias": "oryx",
+                                "name": "oryx"
+                            },
+                            {
+                                "alias": "capybara",
+                                "name": "capybara"
+                            },
+                            {
+                                "alias": "Any",
+                                "name": "Any"
+                            }
+                        ],
+                        "uniform_basis": false,
+                        "name": "zoo",
+                        "alias": "zoo"
+                    },
+                    "derived": true,
+                    "type": {
+                        "subtype": {
+                            "class": "variable"
+                        },
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": {
+                                    "references": {
+                                        "alias": "alligator",
+                                        "name": "alligator"
+                                    },
+                                    "derived": false,
+                                    "id": "da1129bc216d48e9b8ee5229c1b26c79",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": {
+                                    "references": {
+                                        "alias": "oryx",
+                                        "name": "oryx"
+                                    },
+                                    "derived": false,
+                                    "id": "8e6c724d95994da1a483b96f39fcd661",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": {
+                                    "references": {
+                                        "alias": "capybara",
+                                        "name": "capybara"
+                                    },
+                                    "derived": false,
+                                    "id": "8190dd271bea45f8b2a4204780ce7168",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 0,
+                                "value": {
+                                    "references": {
+                                        "alias": "Any",
+                                        "name": "Any"
+                                    },
+                                    "derived": false,
+                                    "id": "Any",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
+                },
+                {
+                    "references": {
+                        "subreferences": [
+                            {
+                                "alias": "alligator",
+                                "name": "alligator"
+                            },
+                            {
+                                "alias": "oryx",
+                                "name": "oryx"
+                            },
+                            {
+                                "alias": "capybara",
+                                "name": "capybara"
+                            },
+                            {
+                                "alias": "Any",
+                                "name": "Any"
+                            }
+                        ],
+                        "uniform_basis": false,
+                        "name": "zoo",
+                        "alias": "zoo"
+                    },
+                    "derived": true,
+                    "type": {
+                        "ordinal": false,
+                        "subvariables": [
+                            "da1129bc216d48e9b8ee5229c1b26c79",
+                            "8e6c724d95994da1a483b96f39fcd661",
+                            "8190dd271bea45f8b2a4204780ce7168",
+                            "Any"
+                        ],
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "selected": true,
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 0,
+                                "name": "Not Selected"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
                 }
-            }],
+            ],
             "missing": 4,
             "measures": {
                 "count": {
-                    "data": [22.96727041485281, 0.0, 0.0, 3.797863985715239, 9.496750166889008, 9.672656262248559, 8.773852706931141, 11.416021780663538, 2.77739592725813, 22.96727041485281, 0.0, 0.0, 0.0, 143.0349198840216, 0.0, 24.752345209538955, 69.49747983677408, 48.78509483770855, 62.03301858693836, 44.6458916701275, 36.35600962695575, 77.74695356182286, 65.28796632219871, 0.0, 0.0, 0.0, 87.7882100025394, 17.228707349652154, 17.094534136928168, 53.46496851595906, 16.16595749756274, 37.95887032697183, 33.66338217800482, 29.96424474203032, 40.57238416085481, 17.25158109965425, 3.797863985715239, 24.752345209538955, 17.228707349652154, 45.77891654490636, 0.0, 0.0, 12.468830339839016, 23.19762349972018, 10.112462705347154, 45.77891654490636, 0.0, 0.0, 9.496750166889008, 69.49747983677408, 17.094534136928168, 0.0, 96.0887641405913, 0.0, 40.59272139222109, 23.745430540093366, 31.75061220827682, 50.0894715591101, 45.99929258148118, 0.0, 9.672656262248559, 48.78509483770855, 53.46496851595906, 0.0, 0.0, 111.92271961591617, 33.91127705937213, 47.077729737949305, 30.933712818594728, 34.810080614689554, 59.86105790157236, 17.25158109965425, 8.773852706931141, 62.03301858693836, 16.16595749756274, 12.468830339839016, 40.59272139222109, 33.91127705937213, 86.97282879143224, 0.0, 0.0, 86.97282879143224, 0.0, 0.0, 11.416021780663538, 44.6458916701275, 37.95887032697183, 23.19762349972018, 23.745430540093366, 47.077729737949305, 0.0, 94.02078377776283, 0.0, 32.43158166550334, 61.589202112259514, 0.0, 2.77739592725813, 36.35600962695575, 33.66338217800482, 10.112462705347154, 31.75061220827682, 30.933712818594728, 0.0, 0.0, 72.79678773221869, 11.274058261770424, 44.27114837079402, 17.25158109965425, 22.96727041485281, 77.74695356182286, 29.96424474203032, 45.77891654490636, 50.0894715591101, 34.810080614689554, 86.97282879143224, 32.43158166550334, 11.274058261770424, 130.67846871870597, 0.0, 0.0, 0.0, 65.28796632219871, 40.57238416085481, 0.0, 45.99929258148118, 59.86105790157236, 0.0, 61.589202112259514, 44.27114837079402, 0.0, 105.86035048305355, 0.0, 0.0, 0.0, 17.25158109965425, 0.0, 0.0, 17.25158109965425, 0.0, 0.0, 17.25158109965425, 0.0, 0.0, 17.25158109965425],
+                    "data": [
+                        22.9672704148528,
+                        0,
+                        0,
+                        3.79786398571524,
+                        9.49675016688901,
+                        9.67265626224856,
+                        8.77385270693114,
+                        11.4160217806635,
+                        2.77739592725813,
+                        22.9672704148528,
+                        0,
+                        0,
+                        0,
+                        143.034919884022,
+                        0,
+                        24.752345209539,
+                        69.4974798367741,
+                        48.7850948377085,
+                        62.0330185869384,
+                        44.6458916701275,
+                        36.3560096269558,
+                        77.7469535618229,
+                        65.2879663221987,
+                        0,
+                        0,
+                        0,
+                        87.7882100025394,
+                        17.2287073496522,
+                        17.0945341369282,
+                        53.4649685159591,
+                        16.1659574975627,
+                        37.9588703269718,
+                        33.6633821780048,
+                        29.9642447420303,
+                        40.5723841608548,
+                        17.2515810996542,
+                        3.79786398571524,
+                        24.752345209539,
+                        17.2287073496522,
+                        45.7789165449064,
+                        0,
+                        0,
+                        12.468830339839,
+                        23.1976234997202,
+                        10.1124627053472,
+                        45.7789165449064,
+                        0,
+                        0,
+                        9.49675016688901,
+                        69.4974798367741,
+                        17.0945341369282,
+                        0,
+                        96.0887641405913,
+                        0,
+                        40.5927213922211,
+                        23.7454305400934,
+                        31.7506122082768,
+                        50.0894715591101,
+                        45.9992925814812,
+                        0,
+                        9.67265626224856,
+                        48.7850948377085,
+                        53.4649685159591,
+                        0,
+                        0,
+                        111.922719615916,
+                        33.9112770593721,
+                        47.0777297379493,
+                        30.9337128185947,
+                        34.8100806146896,
+                        59.8610579015724,
+                        17.2515810996542,
+                        8.77385270693114,
+                        62.0330185869384,
+                        16.1659574975627,
+                        12.468830339839,
+                        40.5927213922211,
+                        33.9112770593721,
+                        86.9728287914322,
+                        0,
+                        0,
+                        86.9728287914322,
+                        0,
+                        0,
+                        11.4160217806635,
+                        44.6458916701275,
+                        37.9588703269718,
+                        23.1976234997202,
+                        23.7454305400934,
+                        47.0777297379493,
+                        0,
+                        94.0207837777628,
+                        0,
+                        32.4315816655033,
+                        61.5892021122595,
+                        0,
+                        2.77739592725813,
+                        36.3560096269558,
+                        33.6633821780048,
+                        10.1124627053472,
+                        31.7506122082768,
+                        30.9337128185947,
+                        0,
+                        0,
+                        72.7967877322187,
+                        11.2740582617704,
+                        44.271148370794,
+                        17.2515810996542,
+                        22.9672704148528,
+                        77.7469535618229,
+                        29.9642447420303,
+                        45.7789165449064,
+                        50.0894715591101,
+                        34.8100806146896,
+                        86.9728287914322,
+                        32.4315816655033,
+                        11.2740582617704,
+                        130.678468718706,
+                        0,
+                        0,
+                        0,
+                        65.2879663221987,
+                        40.5723841608548,
+                        0,
+                        45.9992925814812,
+                        59.8610579015724,
+                        0,
+                        61.5892021122595,
+                        44.271148370794,
+                        0,
+                        105.860350483054,
+                        0,
+                        0,
+                        0,
+                        17.2515810996542,
+                        0,
+                        0,
+                        17.2515810996542,
+                        0,
+                        0,
+                        17.2515810996542,
+                        0,
+                        0,
+                        17.2515810996542
+                    ],
                     "n_missing": 4,
                     "metadata": {
-                        "references": {},
+                        "references": {
+
+                        },
                         "derived": true,
                         "type": {
                             "integer": false,
-                            "missing_rules": {},
+                            "missing_rules": {
+
+                            },
                             "missing_reasons": {
                                 "No Data": -1
                             },
@@ -445,7 +692,152 @@
                 }
             },
             "element": "crunch:cube",
-            "counts": [12, 0, 0, 3, 4, 5, 3, 7, 2, 12, 0, 0, 0, 56, 0, 15, 21, 20, 23, 18, 15, 32, 24, 0, 0, 0, 32, 11, 6, 15, 8, 13, 11, 17, 11, 4, 3, 15, 11, 29, 0, 0, 8, 14, 7, 29, 0, 0, 4, 21, 6, 0, 31, 0, 12, 8, 11, 16, 15, 0, 5, 20, 15, 0, 0, 40, 14, 16, 10, 16, 20, 4, 3, 23, 8, 8, 12, 14, 34, 0, 0, 34, 0, 0, 7, 18, 13, 14, 8, 16, 0, 38, 0, 19, 19, 0, 2, 15, 11, 7, 11, 10, 0, 0, 28, 8, 16, 4, 12, 32, 17, 29, 16, 16, 34, 19, 8, 61, 0, 0, 0, 24, 11, 0, 15, 20, 0, 19, 16, 0, 35, 0, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4],
+            "counts": [
+                12,
+                0,
+                0,
+                3,
+                4,
+                5,
+                3,
+                7,
+                2,
+                12,
+                0,
+                0,
+                0,
+                56,
+                0,
+                15,
+                21,
+                20,
+                23,
+                18,
+                15,
+                32,
+                24,
+                0,
+                0,
+                0,
+                32,
+                11,
+                6,
+                15,
+                8,
+                13,
+                11,
+                17,
+                11,
+                4,
+                3,
+                15,
+                11,
+                29,
+                0,
+                0,
+                8,
+                14,
+                7,
+                29,
+                0,
+                0,
+                4,
+                21,
+                6,
+                0,
+                31,
+                0,
+                12,
+                8,
+                11,
+                16,
+                15,
+                0,
+                5,
+                20,
+                15,
+                0,
+                0,
+                40,
+                14,
+                16,
+                10,
+                16,
+                20,
+                4,
+                3,
+                23,
+                8,
+                8,
+                12,
+                14,
+                34,
+                0,
+                0,
+                34,
+                0,
+                0,
+                7,
+                18,
+                13,
+                14,
+                8,
+                16,
+                0,
+                38,
+                0,
+                19,
+                19,
+                0,
+                2,
+                15,
+                11,
+                7,
+                11,
+                10,
+                0,
+                0,
+                28,
+                8,
+                16,
+                4,
+                12,
+                32,
+                17,
+                29,
+                16,
+                16,
+                34,
+                19,
+                8,
+                61,
+                0,
+                0,
+                0,
+                24,
+                11,
+                0,
+                15,
+                20,
+                0,
+                19,
+                16,
+                0,
+                35,
+                0,
+                0,
+                0,
+                4,
+                0,
+                0,
+                4,
+                0,
+                0,
+                4,
+                0,
+                0,
+                4
+            ],
             "n": 100
         }
     }

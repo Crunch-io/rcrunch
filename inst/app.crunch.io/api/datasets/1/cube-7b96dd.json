@@ -4,64 +4,105 @@
     "value": {
         "query": {
             "measures": {
-                "count": {"function": "cube_count", "args": []}
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
             },
-            "dimensions": [{
-                "function": ">",
-                "args": [
-                    {"variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"},
-                    {"value": 1980}
-                ],
-                "references": {"alias": "birthyr > 1980", "name": "birthyr > 1980"}
-            }],
+            "dimensions": [
+                {
+                    "function": ">",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
+                        },
+                        {
+                            "value": 1980
+                        }
+                    ],
+                    "references": {
+                        "alias": "birthyr > 1980",
+                        "name": "birthyr > 1980"
+                    }
+                }
+            ],
             "weight": null
         },
-        "query_environment": {"filter": []},
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
         "result": {
-            "dimensions": [{
-                "derived": false,
-                "references": {"alias": "birthyr > 1980", "name": "birthyr > 1980"},
-                "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                    }, {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Other"
-                    }, {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                    }]
+            "dimensions": [
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "birthyr > 1980",
+                        "name": "birthyr > 1980"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "selected": true,
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 0,
+                                "name": "Other"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
                 }
-            }],
+            ],
             "missing": 0,
             "measures": {
                 "count": {
-                    "data": [14, 6, 0],
+                    "data": [
+                        14,
+                        6,
+                        0
+                    ],
                     "n_missing": 0,
                     "metadata": {
-                        "references": {},
+                        "references": {
+
+                        },
                         "derived": true,
                         "type": {
                             "integer": true,
-                            "missing_rules": {},
-                            "missing_reasons": {"No Data": -1},
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
                             "class": "numeric"
                         }
                     }
                 }
             },
             "element": "crunch:cube",
-            "counts": [14, 6, 0],
+            "counts": [
+                14,
+                6,
+                0
+            ],
             "n": 20
         }
     }

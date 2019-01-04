@@ -6,223 +6,305 @@
             "measures": {
                 "count": {
                     "function": "cube_count",
-                    "args": []
+                    "args": [
+
+                    ]
                 }
             },
-            "dimensions": [{
-                "variable": "/api/datasets/123/variables/000009/"
-            }, {
-                "each": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
-            }, {
-                "function": "as_selected",
-                "args": [{
-                    "variable": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
-                }]
-            }],
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/123/variables/000009/"
+                },
+                {
+                    "each": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
+                },
+                {
+                    "function": "as_selected",
+                    "args": [
+                        {
+                            "variable": "/api/datasets/123/variables/3060052429504c5b8c71160a30585485/"
+                        }
+                    ]
+                }
+            ],
             "weight": "/api/datasets/123/variables/f7e078235d7b412987ac97848a2877cf/"
         },
         "query_environment": {
-            "filter": []
+            "filter": [
+
+            ]
         },
         "result": {
-            "dimensions": [{
-                "derived": false,
-                "references": {
-                    "alias": "fruit",
-                    "name": "fruit",
-                    "description": "Fruits"
-                },
-                "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": 1,
-                        "missing": false,
-                        "id": 1,
-                        "name": "rambutan"
-                    }, {
-                        "numeric_value": 2,
-                        "missing": false,
-                        "id": 2,
-                        "name": "satsuma"
-                    }, {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                    }]
-                }
-            }, {
-                "references": {
-                    "subreferences": [{
-                        "alias": "alligator",
-                        "name": "alligator"
-                    }, {
-                        "alias": "oryx",
-                        "name": "oryx"
-                    }, {
-                        "alias": "capybara",
-                        "name": "capybara"
-                    }],
-                    "uniform_basis": false,
-                    "name": "zoo",
-                    "alias": "zoo"
-                },
-                "derived": true,
-                "type": {
-                    "subtype": {
-                        "class": "variable"
+            "dimensions": [
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "fruit",
+                        "name": "fruit",
+                        "description": "Fruits"
                     },
-                    "elements": [{
-                        "id": 1,
-                        "value": {
-                            "references": {
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "rambutan"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "satsuma"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "references": {
+                        "subreferences": [
+                            {
                                 "alias": "alligator",
                                 "name": "alligator"
                             },
-                            "derived": false,
-                            "id": "da1129bc216d48e9b8ee5229c1b26c79",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 2,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "oryx",
                                 "name": "oryx"
                             },
-                            "derived": false,
-                            "id": "8e6c724d95994da1a483b96f39fcd661",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 3,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "capybara",
                                 "name": "capybara"
-                            },
-                            "derived": false,
-                            "id": "8190dd271bea45f8b2a4204780ce7168",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
                             }
+                        ],
+                        "uniform_basis": false,
+                        "name": "zoo",
+                        "alias": "zoo"
+                    },
+                    "derived": true,
+                    "type": {
+                        "subtype": {
+                            "class": "variable"
                         },
-                        "missing": false
-                    }],
-                    "class": "enum"
-                }
-            }, {
-                "references": {
-                    "subreferences": [{
-                        "alias": "alligator",
-                        "name": "alligator"
-                    }, {
-                        "alias": "oryx",
-                        "name": "oryx"
-                    }, {
-                        "alias": "capybara",
-                        "name": "capybara"
-                    }],
-                    "uniform_basis": false,
-                    "name": "zoo",
-                    "alias": "zoo"
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": {
+                                    "references": {
+                                        "alias": "alligator",
+                                        "name": "alligator"
+                                    },
+                                    "derived": false,
+                                    "id": "da1129bc216d48e9b8ee5229c1b26c79",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": {
+                                    "references": {
+                                        "alias": "oryx",
+                                        "name": "oryx"
+                                    },
+                                    "derived": false,
+                                    "id": "8e6c724d95994da1a483b96f39fcd661",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": {
+                                    "references": {
+                                        "alias": "capybara",
+                                        "name": "capybara"
+                                    },
+                                    "derived": false,
+                                    "id": "8190dd271bea45f8b2a4204780ce7168",
+                                    "type": {
+                                        "ordinal": false,
+                                        "class": "categorical",
+                                        "categories": [
+                                            {
+                                                "numeric_value": 1,
+                                                "selected": true,
+                                                "id": 1,
+                                                "missing": false,
+                                                "name": "Selected"
+                                            },
+                                            {
+                                                "numeric_value": 0,
+                                                "missing": false,
+                                                "id": 0,
+                                                "name": "Not Selected"
+                                            },
+                                            {
+                                                "numeric_value": null,
+                                                "missing": true,
+                                                "id": -1,
+                                                "name": "No Data"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
                 },
-                "derived": true,
-                "type": {
-                    "ordinal": false,
-                    "subvariables": ["da1129bc216d48e9b8ee5229c1b26c79", "8e6c724d95994da1a483b96f39fcd661", "8190dd271bea45f8b2a4204780ce7168"],
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                    }, {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Not Selected"
-                    }, {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                    }]
+                {
+                    "references": {
+                        "subreferences": [
+                            {
+                                "alias": "alligator",
+                                "name": "alligator"
+                            },
+                            {
+                                "alias": "oryx",
+                                "name": "oryx"
+                            },
+                            {
+                                "alias": "capybara",
+                                "name": "capybara"
+                            }
+                        ],
+                        "uniform_basis": false,
+                        "name": "zoo",
+                        "alias": "zoo"
+                    },
+                    "derived": true,
+                    "type": {
+                        "ordinal": false,
+                        "subvariables": [
+                            "da1129bc216d48e9b8ee5229c1b26c79",
+                            "8e6c724d95994da1a483b96f39fcd661",
+                            "8190dd271bea45f8b2a4204780ce7168"
+                        ],
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "selected": true,
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 0,
+                                "name": "Not Selected"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
                 }
-            }],
+            ],
             "missing": 4,
             "measures": {
                 "count": {
-                    "data": [8.460150434597217, 40.909972382150265, 35.40303343665941, 17.23265649385687, 31.223544751933787, 36.31695500761625, 26.393419799421434, 30.53820178019752, 27.841534673787955, 14.507119980255588, 102.12494750187133, 52.38517656587996, 28.54626005104948, 64.86521938865748, 75.6057646082999, 60.5794089920108, 63.482581997565326, 44.95525305843074, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    "data": [
+                        8.46015043459722,
+                        40.9099723821503,
+                        35.4030334366594,
+                        17.2326564938569,
+                        31.2235447519338,
+                        36.3169550076163,
+                        26.3934197994214,
+                        30.5382017801975,
+                        27.841534673788,
+                        14.5071199802556,
+                        102.124947501871,
+                        52.38517656588,
+                        28.5462600510495,
+                        64.8652193886575,
+                        75.6057646082999,
+                        60.5794089920108,
+                        63.4825819975653,
+                        44.9552530584307,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
                     "n_missing": 4,
                     "metadata": {
-                        "references": {},
+                        "references": {
+
+                        },
                         "derived": true,
                         "type": {
                             "integer": false,
-                            "missing_rules": {},
+                            "missing_rules": {
+
+                            },
                             "missing_reasons": {
                                 "No Data": -1
                             },
@@ -232,7 +314,35 @@
                 }
             },
             "element": "crunch:cube",
-            "counts": [4, 18, 11, 11, 10, 12, 8, 15, 10, 8, 38, 21, 18, 21, 28, 26, 23, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "counts": [
+                4,
+                18,
+                11,
+                11,
+                10,
+                12,
+                8,
+                15,
+                10,
+                8,
+                38,
+                21,
+                18,
+                21,
+                28,
+                26,
+                23,
+                18,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
             "n": 100
         }
     }
