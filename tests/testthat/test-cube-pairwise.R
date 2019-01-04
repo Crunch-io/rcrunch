@@ -6,6 +6,7 @@ context("Cube pairwise multiple comparisons")
 hirotsu <- loadCube("cubes/pairwise-hirotsu-illness-x-occupation.json")
 hirotsuTranspose <- loadCube("cubes/pairwise-hirotsu-occupation-x-illness.json")
 sampled <- loadCube("cubes/cube-random-3x4.json")
+samecounts <- loadCube("cubes/same-counts-3x4.json")
 
 test_that("Reference Chi-square from Z-tests.Rmd, 2017-10-26", {
     reference <- structure(c(NA, 1.79366044505363, 1.44505144460352, 1.52650609891684, 
@@ -149,4 +150,17 @@ test_that("Wishart P-values from reference in Hirotsu paper", {
     
     out_t <- wishartPvalues(hirotsuTranspose, dim="row")
     expect_equal(out, out_t)
+})
+
+test_that("a matrix where each row and column is the same", {
+    referenceChisq <- structure(rep(0, 16),
+                           .Dim = c(4L, 4L),
+                           .Dimnames = list(c("a", "b", "c", "d"), c("a", "b", "c", "d")))
+    referencePvals <- structure(rep(1, 16),
+                                .Dim = c(4L, 4L),
+                                .Dimnames = list(c("a", "b", "c", "d"), c("a", "b", "c", "d")))
+    out1 <- wishartMatrix(samecounts)
+    expect_equal(out1, referenceChisq)
+    out2 <- wishartPvalues(samecounts)
+    expect_equal(out2, referencePvals)
 })
