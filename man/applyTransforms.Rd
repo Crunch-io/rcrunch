@@ -9,7 +9,7 @@
 \usage{
 \S4method{subtotalArray}{CrunchCube}(x, headings = FALSE)
 
-applyTransforms(x, array = cubeToArray(showMissing(x)),
+applyTransforms(x, array = cubeToArray(x),
   transforms_list = transforms(x), dims_list = dimensions(x),
   useNA = x@useNA, ...)
 }

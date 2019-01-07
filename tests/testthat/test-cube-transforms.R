@@ -7,7 +7,7 @@ context("Cube transformations")
 unicat_trans_cube <- loadCube("cubes/univariate-categorical-with-trans.json")
 
 test_that("Can show a simple cube with transform", {
-    loc_array <- cubify(c(10, 5, 15, 10),
+    loc_array <- cubify(c(10, 5, 15, 5),
         dims = list("v7" = c("C", "E", "C, E", "D, E"))
     )
     expect_prints(expect_equivalent(showTransforms(unicat_trans_cube), loc_array))
@@ -21,7 +21,7 @@ test_that("Can show a complex cube with transform", {
     loc_array <- cubify(
         c(
             40, 10, 20, 30, 30, 40, 50, 60, 70, 250, 250, 80, 90,
-            100, 520, 150, 145
+            100, 520, 150, 100
         ),
         dims = list("v7" = c(
             "First!", "A", "B", "Top 2", "C",
@@ -183,14 +183,14 @@ test_that("applyTransforms can return what is asked for", {
     )
 
     expect_equivalent(applyTransforms(pet_feelings_headers), all)
-    
+
     pet_array <- cubeToArray(pet_feelings_headers)
     insert_funcs <-  makeInsertionFunctions(
         Categories(data = index(variables(pet_feelings_headers))[[1]]$categories),
         transforms(pet_feelings_headers)[[1]],
         include = c("subtotals", "headings")
     )
-    
+
     tst <- apply(pet_array, 2, calcInsertions, insert_funcs)
 
     expect_equivalent(tst, all[c(1, 4, 8), ])
@@ -882,13 +882,13 @@ test_that("subtotals after cube subsetting", {
 
     one_col <- cubify(
         c(
-            5, 0, 5,
-            12, 0, 12,
-            17, 0, 17,
-            7, 0, 7,
-            10, 0, 10,
-            12, 0, 12,
-            22, 0, 22
+            5,  5,  0,
+            12, 12, 0,
+            17, 17, 0,
+            7,  7,  0,
+            10, 10, 0,
+            12, 12, 0,
+            22, 22, 0
         ),
         dims = list(
             "feelings" =
@@ -896,12 +896,13 @@ test_that("subtotals after cube subsetting", {
                     "extremely happy", "somewhat happy", "happy", "neutral",
                     "somewhat unhappy", "extremely unhappy", "unhappy"
                 ),
-            "animals" = c("dogs", "felines", "both")
+            "animals" = c("dogs", "both", "felines")
         )
     )
 
     # need drop = FALSE to maintain the columns dimension since selection 1
     # usually removes the dimension
+    subset <- pet_feeling_both[, c(2), drop = FALSE]
     expect_equivalent(
         applyTransforms(pet_feeling_both[, c(2), drop = FALSE]),
         one_col
@@ -1005,30 +1006,39 @@ test_that("can retrieve transformations from a cube", {
 })
 
 test_that("can remove transformations from a cube", {
-    transforms(unicat_trans_cube) <- NULL
-    expect_null(transforms(unicat_trans_cube))
+    # without changing the cube
+    expect_equal(
+        transforms(noTransforms(unicat_trans_cube)),
+        TransformsList("v7" = NULL))
 
-    # alternatively
-    expect_null(transforms(noTransforms(unicat_trans_cube)))
+    # with changing the cube
+    transforms(unicat_trans_cube) <- NULL
+    expect_equal(transforms(unicat_trans_cube), TransformsList("v7" = NULL))
 })
 
-test_that("can set transforms on a cube", {
-    transforms(pet_feelings) <- NULL
-    expect_null(transforms(pet_feelings))
-    feelings_trans <- Transforms(
-        insertions = Insertions(
-            Heading(name = "Fabulous new header", position = "top"),
-            Subtotal(
-                name = "moderately happy",
-                after = "somewhat unhappy",
-                categories = c(
-                    "somewhat happy", "neutral",
-                    "somewhat unhappy"
-                )
-            )
-        )
+
+transforms(pet_feelings) <- NULL
+feelings_trans <- Transforms(
+    insertions = Insertions(
+        Heading(name = "Fabulous new header", position = "top"),
+        Subtotal(name = "moderately happy",
+                 after = "somewhat unhappy",
+                 categories = c("somewhat happy", "neutral",
+                                "somewhat unhappy"))
+    ))
+animals_trans <- Transforms(
+    insertions = Insertions(
+        Subtotal("felines", categories = "cats", after = "cats"),
+        Subtotal("both", categories = c("cats", "dogs"), after = "dogs")
     )
-    transforms(pet_feelings) <- list("feelings" = feelings_trans)
+)
+
+test_that("can set transforms on a cube", {
+    expect_equal(
+        transforms(pet_feelings),
+        TransformsList(feelings = NULL, animals = NULL))
+
+    transforms(pet_feelings)[["feelings"]] <- feelings_trans
 
     # add empty elements/categories
     feelings_trans["elements"] <- feelings_trans["categories"] <- list(NULL)
@@ -1040,10 +1050,7 @@ test_that("can set transforms on a cube", {
     # ensure the transforms were set appropriately
     expect_equal(
         transforms(pet_feelings),
-        list(
-            feelings = feelings_trans,
-            animals = NULL
-        )
+        TransformsList(feelings = feelings_trans, animals = NULL)
     )
 
     all <- cubify(
@@ -1083,6 +1090,57 @@ test_that("can set transforms on a cube", {
     )
 })
 
+test_that("can remove individual dimensions transforms", {
+    transforms(pet_feelings)[["feelings"]] <- feelings_trans
+    transforms(pet_feelings)[["animals"]] <- animals_trans
+
+    # add empty elements/categories
+    feelings_trans["elements"] <- feelings_trans["categories"] <- list(NULL)
+    animals_trans["elements"] <- animals_trans["categories"] <- list(NULL)
+
+    # convert to category ids
+    feelings_trans$insertions[["moderately happy"]]$categories <- c(4L, 3L, 5L)
+    feelings_trans$insertions[["moderately happy"]]$after <- 5L
+
+    animals_trans$insertions[["felines"]]$categories <- 1L
+    animals_trans$insertions[["felines"]]$after <- 1L
+    animals_trans$insertions[["both"]]$categories <- c(1L, 2L)
+    animals_trans$insertions[["both"]]$after <- 2L
+
+    # ensure the transforms were set appropriately
+    expect_equal(
+        transforms(pet_feelings),
+        TransformsList(feelings = feelings_trans, animals = animals_trans)
+    )
+
+    transforms(pet_feelings)[["feelings"]] <- NULL
+    # ensure the transforms were removed from feelings
+    expect_equal(
+        transforms(pet_feelings),
+        TransformsList(feelings = NULL, animals = animals_trans)
+    )
+})
+
+test_that("can set transforms on a cube indexed by numerics", {
+    expect_equal(
+        transforms(pet_feelings),
+        TransformsList(feelings = NULL, animals = NULL))
+    transforms(pet_feelings)[[1]] <- feelings_trans
+
+    # add empty elements/categories
+    feelings_trans["elements"] <- feelings_trans["categories"] <- list(NULL)
+
+    # convert to category ids
+    feelings_trans$insertions[["moderately happy"]]$categories <- c(4L, 3L, 5L)
+    feelings_trans$insertions[["moderately happy"]]$after <- 5L
+
+    # ensure the transforms were set appropriately
+    expect_equal(
+        transforms(pet_feelings),
+        TransformsList(feelings = feelings_trans, animals = NULL)
+    )
+})
+
 test_that("subtotals with 0 anchor attach to 0 and not top", {
     all <- cubify(
         376.775218800139,
@@ -1096,6 +1154,7 @@ test_that("subtotals with 0 anchor attach to 0 and not top", {
     )
     expect_equivalent(applyTransforms(cat), all)
 })
+
 
 ##############################################################
 ### Integration tests
@@ -1182,11 +1241,11 @@ with_test_authentication({
             ))
         )
         trans_pets <- showTransforms(ds$pets)
-        
+
         expect_is(trans_pets, "array")
         expect_equal(dim(trans_pets), 10)
         expect_equivalent(trans_pets, cat_show_trans)
-        
+
         skip_on_local_env("Pretty formatting isn't exactly the same in many terminals")
         expect_prints(
             trans_pets <- showTransforms(ds$pets),
@@ -1203,12 +1262,14 @@ with_test_authentication({
                 "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
                 "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
                 "\033[30m\033[3mRocks+Birds (incl. missing) NA\033[23m\033[39m",
-                sep = "\n"),
-            fixed = TRUE)
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
 
     test_that("showTransforms works on a variable", {
-        cat_show_trans <- cubify(c(75, 30, 45, 50, 95, 25, 55, 75, 75, 35),
+        cat_show_trans <- cubify(c(75, 30, 45, 50, 95, 25, 55, 75, 75, 30),
             dims = list(pets = c(
                 "First one", "Birds", "Cats", "Dogs",
                 "Dogs+Cats", "Lizards", "Birds+Lizards",
@@ -1225,7 +1286,7 @@ with_test_authentication({
         expect_equal(dim(pets_cube), 4)
         expect_equal(dim(trans_cube), 10)
         expect_equivalent(trans_cube, cat_show_trans)
-        
+
         skip_on_local_env("Pretty formatting isn't exactly the same in many terminals")
         expect_prints(
             trans_cube <- showTransforms(pets_cube),
@@ -1241,8 +1302,10 @@ with_test_authentication({
                 "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
                 "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
                 "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
-                "\033[30m\033[3mRocks+Birds (incl. missing) 35\033[23m\033[39m",
-                sep = "\n"),
-            fixed = TRUE)
+                "\033[30m\033[3mRocks+Birds (incl. missing) 30\033[23m\033[39m",
+                sep = "\n"
+            ),
+            fixed = TRUE
+        )
     })
 })

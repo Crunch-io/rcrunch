@@ -4,23 +4,34 @@
 \name{cube-residuals}
 \alias{cube-residuals}
 \alias{rstandard,CrunchCube-method}
+\alias{zScores}
+\alias{zScores,CrunchCube-method}
+\alias{rstandard}
 \title{Calculate standardized residuals from a CrunchCube}
 \usage{
-\S4method{rstandard}{CrunchCube}(model)
+zScores(x)
+
+\S4method{zScores}{CrunchCube}(x)
+
+rstandard(model)
 }
 \arguments{
-\item{model}{A CrunchCube representing a contingency table}
+\item{x}{A CrunchCube representing a contingency table}
+
+\item{model}{A CrunchCube representing a contingency table (for \code{rstandard()}
+only)}
 }
 \value{
-an array of standardized residuals or Z-scores from the hypothesis being tested.
-The default method is that the joint distributions of (weighted) counts are equal to the
-marginal distributions of the table.
+an array of standardized residuals or Z-scores from the hypothesis
+being tested. The default method is that the joint distributions of
+(weighted) counts are equal to the marginal distributions of the table.
 }
 \description{
-Standardized residuals, \code{(observed - expected) / sqrt(V)}, where \code{V}
-is the residual cell variance (Agresti, 2007, section 2.4.5). Special care is taken
-for multiple-response variables which are in effect a series of separate tables where
-\sQuote{not selected} cells for each item are are hidden.
+Standardized residuals, \code{(observed - expected) / sqrt(V)}, where
+\code{V} is the residual cell variance (Agresti, 2007, section 2.4.5).
+Special care is taken for multiple-response variables which are in effect a
+series of separate tables where \sQuote{not selected} cells for each item are
+are hidden.
 }
 \references{
 Agresti, A. (2007)

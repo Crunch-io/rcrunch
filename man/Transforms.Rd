@@ -5,9 +5,13 @@
 \name{Transforms-class}
 \alias{Transforms-class}
 \alias{Transforms}
+\alias{TransformsList-class}
+\alias{TransformsList}
 \alias{transforms,CrunchCube-method}
 \alias{transforms,VariableCatalog-method}
-\alias{transforms<-,CrunchCube,list-method}
+\alias{transforms<-,CrunchCube,ANY-method}
+\alias{[[<-,TransformsList,ANY,missing,NULL-method}
+\alias{transforms<-,CrunchCube,TransformsList-method}
 \alias{transforms<-,CrunchCube,NULL-method}
 \alias{transforms}
 \alias{transforms<-}
@@ -19,11 +23,17 @@
 \usage{
 Transforms(..., data = NULL)
 
+TransformsList(..., data = NULL)
+
 \S4method{transforms}{CrunchCube}(x)
 
 \S4method{transforms}{VariableCatalog}(x)
 
-\S4method{transforms}{CrunchCube,list}(x) <- value
+\S4method{transforms}{CrunchCube,ANY}(x) <- value
+
+\S4method{[[}{TransformsList,ANY,missing,`NULL`}(x, i, j) <- value
+
+\S4method{transforms}{CrunchCube,TransformsList}(x) <- value
 
 \S4method{transforms}{CrunchCube,`NULL`}(x) <- value
 
@@ -47,6 +57,10 @@ attributes via \code{...} or you can create the objects with a fully defined
 Transforms}
 
 \item{value}{For \code{[<-}, the replacement Transforms to insert}
+
+\item{i}{For \code{[}, the index of the Transforms to select (or insert for <- methods)}
+
+\item{j}{Not used}
 }
 \description{
 Transformations allow you to change how a variable or cube is displayed

@@ -69,7 +69,6 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             msg <- c("The API resource at ", response$url, " returned a warning.")
         }
 
-
         warning(
             msg,
             " Details: ",
@@ -141,7 +140,13 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             return(crGET(response$url))
         }
         msg <- http_status(response)$message
-        msg2 <- try(content(response)$message, silent = TRUE)
+        if (code == 404) {
+            # Add the URL that was "not found" (there isn't going to be any
+            # useful response content message)
+            msg2 <- response$url
+        } else {
+            msg2 <- try(content(response)$message, silent = TRUE)
+        }
         if (!is.error(msg2)) {
             msg <- paste(msg, msg2, sep = ": ")
         }

@@ -4,6 +4,7 @@ AbstractCategory
 Agresti
 AnalysisCatalog
 BatchCatalog
+Bonferonni
 CategoricalVariable
 CategoricalVariables
 Categoricals
@@ -131,6 +132,7 @@ gzipped
 hispanic
 http
 httr
+ifAny
 iframe
 imiss
 impl
@@ -143,6 +145,7 @@ magrittr
 makeWeight
 misaligning
 multitable
+multitables
 na
 nd
 pid
@@ -175,6 +178,7 @@ unhidden
 unhide
 unshare
 untransformed
+useNA
 varlabels
 vectorized
 votereg

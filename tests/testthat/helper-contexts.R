@@ -6,6 +6,23 @@ with_fake_input <- function(input, expr) {
     )
 }
 
+with_interactive <- function(expr) {
+    # Tell code that we're in an interactive session for testing
+    with_mock(
+        `crunch:::is.interactive` = function() return(TRUE),
+        eval.parent(expr)
+    )
+}
+
+without_interactive <- function(expr) {
+    # Be explicit that this is not interactive; also in case someone is running
+    # tests in an interactive session
+    with_mock(
+        `crunch:::is.interactive` = function() return(FALSE),
+        eval.parent(expr)
+    )
+}
+
 uniqueDatasetName <- now
 
 ## Create a test dataset and then destroy it after tests

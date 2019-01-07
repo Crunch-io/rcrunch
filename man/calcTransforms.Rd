@@ -7,7 +7,7 @@
 calcTransforms(array, insert_funcs, dim_names = names(insert_funcs))
 }
 \arguments{
-\item{array}{the array to use (this is most likely from a \code{CrunchCube`` object). The cells from this array are the cube_cells referred to in}include`}
+\item{array}{the array to use (this is most likely from a \code{CrunchCube`` object). The cells from this array are the cube_cells referred to in }include`}
 
 \item{trans}{a \code{Transform} object to get the transformations to calculate}
 
