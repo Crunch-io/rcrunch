@@ -266,6 +266,19 @@ test_that("hasFunction", {
     expect_false(hasFunction("Totally_not_a_function", "crunch"))
 })
 
+test_that("is.url", {
+    expect_true(is.url("https://crunch.io"))
+    print(getOption("httptest.requester"))
+    expect_false(is.url("/api/datasets"))
+    
+    with(temp.options(httptest.requester = function(request) {
+        request %>%
+            gsub_request("https.//app.crunch.io", "") ## Shorten URL
+    }), {
+        expect_true(is.url("/api/datasets"))
+    })
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
