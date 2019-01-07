@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{add_to_crunch_useragent}
 \alias{add_to_crunch_useragent}
-\title{Add a string to the crunch useragent}
+\title{Add a string to the crunch user-agent}
 \usage{
 add_to_crunch_useragent(string)
 }
@@ -12,6 +12,6 @@ package name and version number)}
 }
 \description{
 Adds a string onto the user-agent that crunch sends to the server. Useful for
-tracking requests from packages that depeond on \code{\link{crunch}}
+tracking requests from packages that depend on \code{\link{crunch}}
 }
 \keyword{internal}

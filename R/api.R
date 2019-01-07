@@ -199,10 +199,10 @@ crunchUserAgent <- function(x) {
     return(ua)
 }
 
-#' Add a string to the crunch useragent
+#' Add a string to the crunch user-agent
 #' 
 #' Adds a string onto the user-agent that crunch sends to the server. Useful for
-#' tracking requests from packages that depeond on [`crunch`]
+#' tracking requests from packages that depend on [`crunch`]
 #' 
 #' @param string the string to add to the end of the user-agent (typically a 
 #' package name and version number)
