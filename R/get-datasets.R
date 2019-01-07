@@ -125,7 +125,7 @@ loadDataset <- function(dataset,
                         project = NULL,
                         refresh = FALSE) {
 
-    if (is.character(dataset) && is.url(dataset)) {
+    if (is.url(dataset)) {
         return(loadDatasetFromURL(dataset))
     }
 

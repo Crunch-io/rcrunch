@@ -81,9 +81,14 @@ with_mock_crunch <- function(expr) {
         crunch.api = "https://app.crunch.io/api/",
         httptest.mock.paths = c(".", "../inst/", system.file(package = "crunch"))
     )
-    with(
-        opts,
-        with_mock_API(expr)
+    with(opts,
+        with_mock(
+            `crunch::is.url` = function(x) {
+                # Allow URLs to have been shortened by the httptest redactor
+                is.character(x) && grepl("^http|^/api/", x)
+            },
+            with_mock_API(expr)
+        )
     )
 }
 

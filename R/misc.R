@@ -325,30 +325,4 @@ escapeRegex <- function(string) {
     return(gsub("(\\[|\\])", "\\\\\\1", out))
 }
 
-
-#' Detect a URL regardless of the redactor status using httptest
-#'
-#' This function detects if a character is URL, in normal execution it does this
-#' by checking it the character starts with `http`. However, if there is a 
-#' redactor being used, it uses different diagnostic crieteria.
-#'
-#' @param string A character to detect
-#' @return Logical, if the character is a URL
-#' @keywords internal
-#' @examples
-#' \dontrun{
-#' is.url("https://google.com")
-#' is.url("/api/datasets")
-#' }
-is.url <- function(string) {
-    if (is.null(getOption("httptest.requester")) ||
-        !is.function(getOption("httptest.requester"))) {
-        # there is no requester, return quickly
-        return(startsWith(string, "http"))
-    }
-
-    # get the minimal url (in almost all cases this will be /api/, but if the 
-    # requester is changed in inst/httptest/satrt-vignette, this will reflect that)
-    min_url <- getOption("httptest.requester")(list(url="https://app.crunch.io/api/"))$url
-    return(startsWith(string, "http") || startsWith(string, min_url))
-}
+is.url <- function(x) is.character(x) && startsWith(x, "http")
