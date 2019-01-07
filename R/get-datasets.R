@@ -125,9 +125,7 @@ loadDataset <- function(dataset,
                         project = NULL,
                         refresh = FALSE) {
 
-    if (is.character(dataset) && grepl("^http|^/api/", dataset)) {
-        # either /api/ is needed for detecting URLs from redacted mocks.
-        # TDOO: a more robust detection method that works with other redactions?
+    if (is.character(dataset) && is.url(dataset)) {
         return(loadDatasetFromURL(dataset))
     }
 
