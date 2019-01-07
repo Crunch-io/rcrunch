@@ -199,6 +199,23 @@ crunchUserAgent <- function(x) {
     return(ua)
 }
 
+#' Add a string to the crunch useragent
+#' 
+#' Adds a string onto the user-agent that crunch sends to the server. Useful for
+#' tracking requests from packages that depeond on [`crunch`]
+#' 
+#' @param string the string to add to the end of the user-agent (typically a 
+#' package name and version number)
+#'
+#' @export
+#' @keywords internal
+add_to_crunch_useragent <- function(string) {
+    set_crunch_config(
+        cfg = c(add_headers(`user-agent` = crunchUserAgent(string))),
+        update = TRUE
+    )
+}
+
 handleShoji <- function(x) {
     if (is.shoji.like(x)) {
         class(x) <- c("shoji", x$element)

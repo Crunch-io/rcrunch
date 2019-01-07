@@ -103,6 +103,14 @@ test_that("retry", {
     )
 })
 
+with_mock_crunch({
+    test_that("Can add to the user-agent", {
+        expect_false(grepl("new_package", get_crunch_config()$headers[["user-agent"]]))
+        add_to_crunch_useragent("new_package/0.0.9000")
+        expect_true(grepl("new_package", get_crunch_config()$headers[["user-agent"]]))
+    })
+})
+
 if (run.integration.tests) {
     test_that("Request headers", {
         skip_if_disconnected()
