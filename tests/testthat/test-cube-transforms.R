@@ -881,10 +881,10 @@ test_that("subtotals after cube subsetting", {
 
     one_col <- cubify(
         c(
-            5, 5, 0,
+            5,  5,  0,
             12, 12, 0,
             17, 17, 0,
-            7, 7, 0,
+            7,  7,  0,
             10, 10, 0,
             12, 12, 0,
             22, 22, 0
@@ -901,6 +901,7 @@ test_that("subtotals after cube subsetting", {
 
     # need drop = FALSE to maintain the columns dimension since selection 1
     # usually removes the dimension
+    subset <- pet_feeling_both[, c(2), drop = FALSE]
     expect_equivalent(
         applyTransforms(pet_feeling_both[, c(2), drop = FALSE]),
         one_col

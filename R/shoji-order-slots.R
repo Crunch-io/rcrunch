@@ -8,17 +8,14 @@
 #' combination of variable URLs and VariableGroups. Note that group names must
 #' be unique, should be greater than 0 characters long, and "ungrouped" is a
 #' reserved group name.
-#' 1. For duplicates, logical for whether duplicate
-#' variable entries should be allowed in the VariableOrder.
 #' @param simplify logical: should variable URLs inside of groups be flattened
 #' or preserved in their nested lists? Default is`FALSE`.
 #' @return
 #' * `entities` returns Variable references and VariableGroups;
 #' * `names` returns group names;
-#' * `duplicates` returns logical for whether duplicate variable entries should be allowed
 #' @name ShojiOrder-slots
 #' @seealso [`VariableOrder`] [`grouped`]
-#' @aliases entities entities<- duplicates duplicates<-
+#' @aliases entities entities<-
 NULL
 
 #' @rdname ShojiOrder-slots
@@ -111,16 +108,3 @@ setMethod(
         return(x)
     }
 )
-
-#' @rdname ShojiOrder-slots
-#' @export
-duplicates <- function(x) {
-    .Deprecated(msg="'duplicates' is deprecated. Entities can exist in one and only one folder, so this function does nothing.")
-    return(FALSE)
-}
-#' @rdname ShojiOrder-slots
-#' @export
-"duplicates<-" <- function(x, value) {
-    .Deprecated(msg="'duplicates<-' is deprecated. Entities can exist in one and only one folder, so this function does nothing")
-    return(x)
-}

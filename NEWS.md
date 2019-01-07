@@ -1,13 +1,24 @@
 # crunch 1.24.3 (under development)
-* Filters and Multitables can now be shared with teams with `teams()<-` and can be checked with `teams()`.
+
+## Shared Crunch assets
+* Initial support for deck creation and manipulation.
+* Filters and multitables can now be shared with teams by assigning `teams()<-` on them. View which teams can access them by calling `teams()` on them.
+
+## Folder enhancements
 * Improved robustness of API usage for moving datasets in projects.
 * Support for `"."` as a folder path/segment, referencing the current folder. `cd(project, ".")` returns `project`; `mv(project, ds, ".")` moves `ds` into `project`.
 * Fix bug in printing folders that contain entities with excessively long names.
+
+## Cube computation
 * Summary statistic (means and medians) can now be calculated for any direction of a CrunchCube.
 * Improved speed for calculating insertions (subtotals, headers, etc.) on large cubes (speed ups of ~25x on large, realistic cubes).
-* First draft support for deck creation and manipulation.
+
+## Internal
 * Remove (for now) support for the experimental virtual join feature.
-* 404 Not Found HTTP responses now print the request URL to aid in debugging
+* Remove previously deprecated variable order functions.
+* 404 Not Found HTTP responses now print the request URL to aid in debugging.
+* Fix a duplicated vignette title.
+* Suppress check for new GitHub release of the package in non-interactive sessions.
 
 # crunch 1.24.2
 * The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.

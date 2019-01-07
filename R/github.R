@@ -38,7 +38,8 @@ notifyIfNewVersion <- function(
 #' @keywords internal
 #' @importFrom utils compareVersion
 checkForNewVersion <- function(github, installed.version) {
-    if (getOption("crunch.check.updates", TRUE)) {
+    # Only check if this option isn't set *and* if the session is interactive
+    if (getOption("crunch.check.updates", is.interactive())) {
         github.url <- paste0("https://api.github.com/repos/", github, "/tags")
         ## Get the names of the tagged versions on GitHub
         gh.tags <- vapply(crGET(github.url), vget("name"), character(1))
