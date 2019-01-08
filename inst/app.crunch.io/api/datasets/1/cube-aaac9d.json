@@ -11,14 +11,20 @@
                     }
                 }
             },
-            "dimensions": [],
+            "dimensions": [
+
+            ],
             "weight": null
         },
         "query_environment": {
-            "filter": []
+            "filter": [
+
+            ]
         },
         "result": {
-            "dimensions": [],
+            "dimensions": [
+
+            ],
             "missing": 0,
             "measures": {
                 "q": {
@@ -32,7 +38,9 @@
                         "derived": false,
                         "type": {
                             "class": "numeric",
-                            "missing_rules": {},
+                            "missing_rules": {
+
+                            },
                             "missing_reasons": {
                                 "No Data": -1
                             }

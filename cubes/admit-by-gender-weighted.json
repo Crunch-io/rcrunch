@@ -6,76 +6,101 @@
             "measures": {
                 "count": {
                     "function": "cube_count",
-                    "args": []
+                    "args": [
+
+                    ]
                 }
             },
-            "dimensions": [{
-                "variable": "/api/datasets/123/variables/000000/"
-            }, {
-                "variable": "/api/datasets/123/variables/000001/"
-            }],
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/123/variables/000000/"
+                },
+                {
+                    "variable": "/api/datasets/123/variables/000001/"
+                }
+            ],
             "weight": "/api/datasets/123/variables/000003/"
         },
         "query_environment": {
-            "filter": []
+            "filter": [
+
+            ]
         },
         "result": {
-            "dimensions": [{
-                "derived": false,
-                "references": {
-                    "alias": "Admit",
-                    "name": "Admit",
-                    "description": null
+            "dimensions": [
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "Admit",
+                        "name": "Admit",
+                        "description": null
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": null,
+                                "id": 1,
+                                "name": "Admitted",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Rejected"
+                            }
+                        ]
+                    }
                 },
-                "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": null,
-                        "id": 1,
-                        "name": "Admitted",
-                        "missing": false
-                    }, {
-                        "numeric_value": null,
-                        "missing": false,
-                        "id": 2,
-                        "name": "Rejected"
-                    }]
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "Gender",
+                        "name": "Gender",
+                        "description": null
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": null,
+                                "id": 1,
+                                "name": "Male",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Female"
+                            }
+                        ]
+                    }
                 }
-            }, {
-                "derived": false,
-                "references": {
-                    "alias": "Gender",
-                    "name": "Gender",
-                    "description": null
-                },
-                "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": null,
-                        "id": 1,
-                        "name": "Male",
-                        "missing": false
-                    }, {
-                        "numeric_value": null,
-                        "missing": false,
-                        "id": 2,
-                        "name": "Female"
-                    }]
-                }
-            }],
+            ],
             "missing": 45,
             "measures": {
                 "count": {
-                    "data": [1169.7863186983059, 547.0152580585578, 1473.809547706473, 1261.3443143399054],
+                    "data": [
+                        1169.78631869831,
+                        547.015258058558,
+                        1473.80954770647,
+                        1261.34431433991
+                    ],
                     "n_missing": 45,
                     "metadata": {
-                        "references": {},
+                        "references": {
+
+                        },
                         "derived": true,
                         "type": {
                             "integer": false,
-                            "missing_rules": {},
+                            "missing_rules": {
+
+                            },
                             "missing_reasons": {
                                 "No Data": -1
                             },
@@ -85,7 +110,12 @@
                 }
             },
             "element": "crunch:cube",
-            "counts": [1198, 557, 1493, 1278],
+            "counts": [
+                1198,
+                557,
+                1493,
+                1278
+            ],
             "n": 4526
         }
     }
