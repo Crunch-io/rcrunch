@@ -63,8 +63,10 @@ index.table <- function(x, margin, baseline) {
 
     if (identical(dim(tab), dim(baseline))) {
         # if the dimensions are the same, use direct division, needed for MRs
-        return(tab / baseline * 100)
+        out <- tab / baseline * 100
     } else {
-        return(sweep(tab, other_margin, baseline, "/") * 100)
+        out <- sweep(tab, other_margin, baseline, "/") * 100
     }
+    attr(out, "type") <- "index"
+    return(out)
 }

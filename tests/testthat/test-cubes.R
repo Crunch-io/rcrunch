@@ -180,13 +180,13 @@ arrayify <- function(data, dims) {
 }
 
 test_that("simple margin.table", {
-    expect_equivalent(margin.table(a1, 1), margin.table(a1@arrays[[1]], 1))
+    expect_equivalent(as.array(margin.table(a1, 1)), margin.table(a1@arrays[[1]], 1))
     expect_identical(
-        margin.table(a1, 1),
+        as.array(margin.table(a1, 1)),
         cubify(13, 11, dims = df.dims["v4"])
     )
     expect_identical(
-        margin.table(a1, 2),
+        as.array(margin.table(a1, 2)),
         cubify(14, 5, 5, dims = df.dims["v7"])
     )
     expect_equivalent(margin.table(a1), margin.table(a1@arrays[[1]]))
@@ -198,11 +198,11 @@ test_that("margin.table with missing", {
     a2@dims[[2]]$missing[2] <- TRUE ## "D"
     expect_identical(a2@useNA, "no") ## The default.
     expect_identical(
-        margin.table(a2, 1),
+         as.array(margin.table(a2, 1)),
         cubify(10, 9, dims = df.dims["v4"])
     )
     expect_identical(
-        margin.table(a2, 2),
+         as.array(margin.table(a2, 2)),
         cubify(14, 5, dims = list(v7 = c("C", "E")))
     )
     expect_identical(margin.table(a2), 19)
@@ -210,22 +210,22 @@ test_that("margin.table with missing", {
     a2@useNA <- "ifany"
     ## Should be the same as first tests
     expect_identical(
-        margin.table(a2, 1),
+         as.array(margin.table(a2, 1)),
         cubify(13, 11, dims = df.dims["v4"])
     )
     expect_identical(
-        margin.table(a2, 2),
+         as.array(margin.table(a2, 2)),
         cubify(14, 5, 5, dims = df.dims["v7"])
     )
     expect_identical(margin.table(a2), 24)
 
     a2@useNA <- "always"
     expect_identical(
-        margin.table(a2, 1),
+         as.array(margin.table(a2, 1)),
         cubify(13, 11, dims = df.dims["v4"])
     )
     expect_identical(
-        margin.table(a2, 2),
+         as.array(margin.table(a2, 2)),
         cubify(14, 5, 5, 0, dims = list(v7 = c(LETTERS[3:5], "No Data")))
     )
     expect_identical(margin.table(a2), 24)
@@ -494,14 +494,14 @@ with_test_authentication({
             ) / 15, c("v3", "v7"))
         )
         expect_equivalent(
-            prop.table(crtabs(~bin(v3) + v7, data = ds), margin = 1),
+            as.array(prop.table(crtabs(~bin(v3) + v7, data = ds), margin = 1)),
             arrayify(c(
                 1, 1, 1, 0, 0,
                 0, 0, 0, 1, 1
             ), c("v3", "v7"))
         )
         expect_equivalent(
-            prop.table(crtabs(~bin(v3) + v7, data = ds), margin = 2),
+            as.array(prop.table(crtabs(~bin(v3) + v7, data = ds), margin = 2)),
             arrayify(c(
                 .2, .5, .3, 0, 0,
                 0, 0, 0, .4, .6

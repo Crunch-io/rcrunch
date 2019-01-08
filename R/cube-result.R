@@ -401,7 +401,9 @@ setMethod("prop.table", "CrunchCube", function(x, margin = NULL) {
         ## cubeMarginTable handles missingness, any/none, etc.
         out <- out / marg
     }
-
+    class(out) <- class(marg)
+    attr(out, "dims") <- x@dims[!is.selectedDimension(x)]
+    attr(out, "type") <- "proportion"
     return(out)
 })
 
@@ -473,8 +475,33 @@ NULL
 #' @rdname cube-computing
 #' @export
 setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
-    cubeMarginTable(x, margin)
+    # This selects the margins while skipping over the MR selected dimension
+    # See comments in cubeToArray for more detail.
+    mt_margins <- mr_items_margins(margin, cube = x)
+    out <- cubeMarginTable(x, margin)
+    if (is.array(out)) {
+        out <- makeCrunchCubeCalculation(out,  x@dims[mt_margins], "margin")
+    }
+    return(out)
 })
+
+makeCrunchCubeCalculation <- function(x, dims,  type) {
+    class(x) <-  c("CrunchCubeCalculation", "array")
+    attr(x, "dims") <- dims
+    attr(x, "type") <- type
+    return(x)
+}
+
+#' @export
+as.array.CrunchCubeCalculation <- function(x, ...) {
+    attr(x, "dims") <- NULL
+    attr(x, "type") <- NULL
+    class(x) <- "array"
+    return(x)
+}
+
+#' @export
+print.CrunchCubeCalculation <- function(x, ...) print(as.array(x))
 
 #' Convert from user margins to real cube margins or vice versa
 #'
