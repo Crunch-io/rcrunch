@@ -87,6 +87,7 @@ setMethod(
 #' @param idx The index to move the last element to.
 #'
 #' @return a vector
+#' @keywords internal
 moveLastElement <- function(v, idx) {
     v[idx] <- v[length(v)]
     out <- v[1:(length(v) - 1)]

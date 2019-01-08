@@ -21,3 +21,4 @@ Move and delete last element of a vector
 This moves the last element of a vector to an index, then deletes the last
 element, it is broken out for testing purposes
 }
+\keyword{internal}
