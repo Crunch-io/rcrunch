@@ -10,4 +10,5 @@ after_success:
 - bash pkgdown.sh
 env:
   global:
-    secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
+    - _R_CHECK_LENGTH_1_LOGIC2_=true
+    - secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
