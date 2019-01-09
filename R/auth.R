@@ -124,7 +124,7 @@ tokenAuth <- function(token, ua = "token") {
     set_crunch_config(
         c(
             set_cookies(token = token),
-            add_headers(`user-agent` = crunchUserAgent(ua))
+            add_headers(`user-agent` = crunch_user_agent(ua))
         ),
         update = TRUE
     )
