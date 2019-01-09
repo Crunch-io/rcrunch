@@ -15,13 +15,11 @@ library(crunch)
 options(width=120)
 ```
 
-> This is the new variable folder API, which replaces the old "ordering" API. It is currently in a beta testing phase. Feedback on your experience working with it is greatly appreciated. During this beta period, both old and new APIs are available. For details on the old methods, see [the old vignette](variable-order-old.html).
-
 In the web application, variables in a dataset are displayed in a list on the left side of the screen.
 
 <!-- screenshot -->
 
-Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The [variable organizer in the Crunch GUI](http://support.crunch.io/crunch/crunch_organizing-variables.html) allows you to organize your variables visually, but you can also manage this metadata from R using the `crunch` package.
+Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The variable organizer in the Crunch GUI allows you to organize your variables visually, but you can also manage this metadata from R using the `crunch` package.
 
 ## File-system like
 
@@ -155,10 +153,10 @@ Folders themselves have names, which we can set with `setName()`:
 ```r
 ds %>%
     cd("Demos") %>%
-    setNames(c("Birth Year", "Gender", "Political Ideo. (3 category)", 
+    setNames(c("Birth Year", "Gender", "Political Ideo. (3 category)",
     "Political Ideo. (7 category)",  "Political Ideo. (7 category; other)",  
-    "Race", "Education", "Marital Status", "Phone", "Family Income", "Region", 
-    "State", "Weight", "Voter Registration (new)", "Is a voter?", 
+    "Race", "Education", "Marital Status", "Phone", "Family Income", "Region",
+    "State", "Weight", "Voter Registration (new)", "Is a voter?",
     "Voter Registration (old)", "Voter Registration"))
 ```
 

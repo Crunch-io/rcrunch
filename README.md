@@ -15,7 +15,7 @@
 
     install.packages("crunch")
 
-The pre-release version of the package can be pulled from GitHub using the [devtools](https://github.com/hadley/devtools) package:
+The pre-release version of the package can be pulled from GitHub using the [`devtools`](https://github.com/hadley/devtools) package:
 
     # install.packages("devtools")
     devtools::install_github("Crunch-io/rcrunch")
@@ -71,11 +71,11 @@ See the [contribution guidelines](CONTRIBUTING.md).
     # make deps
     # make test
 
-This installs dependencies and then runs the tests, which installs `crunch` from your local checkout in the process. If the dependencies fail to install, check the error message. You may need to install libcurl on your system before installing the R packages.
+This installs dependencies and then runs the tests, which installs `crunch` from your local checkout in the process. If the dependencies fail to install, check the error message. You may need to install `libcurl` on your system before installing the R packages.
 
 ### Running tests
 
-`$ make test` is all you need. Requires the [httptest](https://github.com/nealrichardson/httptest) package for R. You can also specify a specific test file or files to run by adding a "file=" argument, like `$ make test file=auth`. `test_package` will do a regular-expression pattern match within the file names. See its documentation in the [testthat](http://testthat.r-lib.org/) package.
+`$ make test` is all you need. Requires the [`httptest`](https://github.com/nealrichardson/httptest) package for R. You can also specify a specific test file or files to run by adding a "file=" argument, like `$ make test file=auth`. `test_package` will do a regular-expression pattern match within the file names. See its documentation in the [`testthat`](http://testthat.r-lib.org/) package.
 
 Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `INTEGRATION`, which is false by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ make test INTEGRATION=TRUE`.
 

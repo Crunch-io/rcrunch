@@ -20,7 +20,7 @@
 * Fix a duplicated vignette title.
 * Suppress check for new GitHub release of the package in non-interactive sessions.
 * Fixed a bug that wouldn't allow vignette mocks to use `datasetReference()`
-* Removed excess metadata in some cube fixtures in anticipation of Crunch not sending that informatoin any more (no code changes were necesary).
+* Removed excess metadata in some cube fixtures in anticipation of Crunch not sending that information any more (no code changes were necessary).
 
 # crunch 1.24.2
 * The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
@@ -258,7 +258,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * `tabBook` to compute a tab book with a multitable. If `format="json"` (the default), returns a `TabBookResult` containing `CrunchCube` objects with which further analysis or formatting can be done.
 * `bases` method for cubes and tab book responses to access unweighted counts and margin tables.
 * Handle case of attempting to `saveVersion` when there are no changes since the last saved version.
-* Update to work with [roxygen2 6.0.0 release](https://github.com/klutometis/roxygen/issues/568)
+* Update to work with [`roxygen2` 6.0.0 release](https://github.com/klutometis/roxygen/issues/568)
 
 # crunch 1.14.4
 * `newFilter` and `newProject` functions to create those objects more directly, rather than by assigning into their respective catalogs.
@@ -266,7 +266,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Add `with_consent` as an alternative to `with(consent(), ...)`
 * Deprecate the "confirm" argument to destructive functions and methods such as `delete` in favor of the `consent` context manager.
 * Add deprecation warning that destructive actions will soon also require consent when running in a non-interactive R session.
-* Use [httptest](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API.
+* Use [`httptest`](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API.
 
 # crunch 1.14.2
 * Trivial change to DESCRIPTION to meet new, hidden CRAN requirement
@@ -299,7 +299,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 
 # crunch 1.13.4
 * `flipArrays` function to generate derived views of array subvariables
-* Add "autorollback" argument to `appendDataset`, defaulted to `TRUE`, which ensures that a failed append leaves the dataset in a clean state.
+* Add `autorollback` argument to `appendDataset`, defaulted to `TRUE`, which ensures that a failed append leaves the dataset in a clean state.
 * `allVariables` is now ordered by the variable catalog's order, just as `variables` has always been.
 * Add "force" argument to `mergeFork`.
 * Support an `as_array` (pseudo-)function in `crtabs` that allows crosstabbing a multiple-response variable as if it were a categorical array.
@@ -364,7 +364,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 # crunch 1.10.4
 * Fix `as.data.frame`/`as.environment` for `CrunchDataset` when a variable alias contained an apostrophe.
 * Better print method for project `MemberCatalog`.
-* Fix for [change in 'jsonlite' API](https://github.com/jeroenooms/jsonlite/issues/130#issuecomment-225971209) in its v0.9.22
+* Fix for [change in `jsonlite` API](https://github.com/jeroenooms/jsonlite/issues/130#issuecomment-225971209) in its v0.9.22
 * Progress polling now returns the error message, if given, if a job fails.
 
 # crunch 1.10.2
@@ -591,7 +591,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 # rcrunch 0.11.1
 * `newDataset2` renamed to `newDatasetByCSV` and made to be the default strategy in `newDataset`. The old `newDataset` has been moved to `newDatasetByColumn`.
 
-* Support for NA and NaN in `crtabs` response.
+* Support for `NA` and `NaN` in `crtabs` response.
 
 # rcrunch 0.11.0
 * `getCube` is now `crtabs`. Ready for more extensive beta testing. Has prop.table and margin.table methods. Vignette forthcoming.
