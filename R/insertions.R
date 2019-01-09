@@ -64,7 +64,7 @@ insertionValidity <- function(object) {
         )
     }
 
-    if (!is.na(func(object)) && is.na(arguments(object))) {
+    if (!is.na(func(object)) && all(is.na(arguments(object)))) {
         # add checking so that args is either a vectorOrList of numerics
         val <- paste0(
             "If an Insertion has a ", dQuote("function"),

@@ -129,7 +129,6 @@ test_that("residuals for MR by cat from app", {
     expect_equal(as.array(zScores(mr_by_cat_2)), out)
 })
 test_that("residuals for categorical by MR, should be transpose of above", {
-    browser()
     out <- cubify(c(
         0.8013419145312314, 0.604556055828044, -0.3088424703459705,
         -0.8013419145312314, -0.6045560558280446, 0.30884247034596934
