@@ -280,8 +280,6 @@ navbar:
       menu:
       -  text: Getting Started
          href: articles/crunch.html
-      -  text: Datasets
-         href: articles/datasets.html
       -  text: Variables
          href: articles/variables.html
       -  text: Array Variables
