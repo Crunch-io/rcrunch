@@ -67,6 +67,7 @@ reference:
   - settings
   - population
   - lock
+  - streaming
 - title: Multiple datasets
   contents:
   - appendDataset
@@ -121,11 +122,8 @@ reference:
   - ShojiOrder-length
   - ShojiOrder-slots
   - copyOrder
-  - dedupeOrder
   - flattenOrder
   - grouped
-  - locateEntity
-  - moveToGroup
   - removeEmptyGroups
   - folder
   - mv
@@ -153,6 +151,19 @@ reference:
   - newMultitable
   - table
   - 'as.vector,CrunchExpr-method'
+  - dimension-comparison
+  - dimension-comparison-pairwise
+- title: Decks
+  contents:
+  - decks
+  - newDeck
+  - analyses
+  - slides
+  - newSlide
+  - titles
+  - reorderSlides
+  - displaySettings
+  - exportDeck
 - title: Data presentation
   contents:
   - Subtotal-class
@@ -205,6 +216,7 @@ reference:
   - 'members<-,CrunchTeam,MemberCatalog-method'
   - unshare
   - expropriateUser
+  - team
 - title: Catalogs
   contents:
   - catalog-length
@@ -245,7 +257,6 @@ reference:
   - session-extract
   - subvars-extract
   - tabbook-methods
-  - 'entity,CrunchProject-method'
   - '[,CrunchExpr,CrunchLogicalExpr,ANY-method'
   - variable-update
 - title: Internal

@@ -6,346 +6,341 @@
             "measures": {
                 "count": {
                     "function": "cube_count",
-                    "args": []
+                    "args": [
+
+                    ]
                 }
             },
-            "dimensions": [{
-                "each": "/api/datasets/123/variables/012509/"
-            }, {
-                "function": "as_selected",
-                "args": [{
-                    "variable": "/api/datasets/123/variables/012509/"
-                }]
-            }, {
-                "variable": "/api/datasets/123/variables/003571/"
-            }],
+            "dimensions": [
+                {
+                    "each": "/api/datasets/123/variables/012509/"
+                },
+                {
+                    "function": "as_selected",
+                    "args": [
+                        {
+                            "variable": "/api/datasets/123/variables/012509/"
+                        }
+                    ]
+                },
+                {
+                    "variable": "/api/datasets/123/variables/003571/"
+                }
+            ],
             "weight": "/api/datasets/123/variables/001090/"
         },
         "query_environment": {
-            "filter": []
+            "filter": [
+
+            ]
         },
         "result": {
-            "dimensions": [{
-                "references": {
-                    "alias": "shower_thoughts_klima_2",
-                    "uniform_basis": false,
-                    "subreferences": [{
-                        "alias": "shower_thoughts_65f",
-                        "name": "Cupcakes are the best cakes"
-                    }, {
-                        "alias": "shower_thoughts_6b4",
-                        "name": "Corgis are the future of dog shows"
-                    }, {
-                        "alias": "shower_thoughts_704",
-                        "name": "I always ride a penny-farthing"
-                    }, {
-                        "alias": "shower_thoughts_20e",
-                        "name": "I never look at eclipses"
-                    }, {
-                        "alias": "shower_thoughts_9c0",
-                        "name": "I never mess with Texas"
-                    }, {
-                        "alias": "shower_thoughts_a37",
-                        "name": "I don't mind pickles on my burger"
-                    }],
-                    "name": "Statements agreed with about Corgis",
-                    "view": {
-                        "roles": ["Role 1", "Role 2", "Role 3"]
-                    }
-                },
-                "derived": true,
-                "type": {
-                    "subtype": {
-                        "class": "variable"
-                    },
-                    "elements": [{
-                        "id": 1,
-                        "value": {
-                            "references": {
+            "dimensions": [
+                {
+                    "references": {
+                        "alias": "shower_thoughts_klima_2",
+                        "uniform_basis": false,
+                        "subreferences": [
+                            {
                                 "alias": "shower_thoughts_65f",
                                 "name": "Cupcakes are the best cakes"
                             },
-                            "derived": false,
-                            "id": "0001",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 2,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "shower_thoughts_6b4",
                                 "name": "Corgis are the future of dog shows"
                             },
-                            "derived": false,
-                            "id": "0002",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 3,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "shower_thoughts_704",
                                 "name": "I always ride a penny-farthing"
                             },
-                            "derived": false,
-                            "id": "0003",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 4,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "shower_thoughts_20e",
                                 "name": "I never look at eclipses"
                             },
-                            "derived": false,
-                            "id": "0004",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 5,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "shower_thoughts_9c0",
                                 "name": "I never mess with Texas"
                             },
-                            "derived": false,
-                            "id": "0005",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
-                            }
-                        },
-                        "missing": false
-                    }, {
-                        "id": 6,
-                        "value": {
-                            "references": {
+                            {
                                 "alias": "shower_thoughts_a37",
                                 "name": "I don't mind pickles on my burger"
-                            },
-                            "derived": false,
-                            "id": "0006",
-                            "type": {
-                                "ordinal": false,
-                                "class": "categorical",
-                                "categories": [{
-                                    "numeric_value": 1,
-                                    "selected": true,
-                                    "id": 1,
-                                    "missing": false,
-                                    "name": "Selected"
-                                }, {
-                                    "numeric_value": 0,
-                                    "missing": false,
-                                    "id": 0,
-                                    "name": "Not Selected"
-                                }, {
-                                    "numeric_value": null,
-                                    "missing": true,
-                                    "id": -1,
-                                    "name": "No Data"
-                                }]
                             }
+                        ],
+                        "name": "Statements agreed with about Corgis",
+                        "view": {
+                            "roles": [
+                                "Role 1",
+                                "Role 2",
+                                "Role 3"
+                            ]
+                        }
+                    },
+                    "derived": true,
+                    "type": {
+                        "subtype": {
+                            "class": "variable"
                         },
-                        "missing": false
-                    }],
-                    "class": "enum"
-                }
-            }, {
-                "references": {
-                    "alias": "shower_thoughts_klima_2",
-                    "uniform_basis": false,
-                    "view": {
-                        "roles": ["Role 1", "Role 2", "Role 3"]
-                    },
-                    "name": "Statements agreed with about Corgis",
-                    "subreferences": [{
-                        "alias": "shower_thoughts_65f",
-                        "name": "Cupcakes are the best cakes"
-                    }, {
-                        "alias": "shower_thoughts_6b4",
-                        "name": "Corgis are the future of dog shows"
-                    }, {
-                        "alias": "shower_thoughts_704",
-                        "name": "I always ride a penny-farthing"
-                    }, {
-                        "alias": "shower_thoughts_20e",
-                        "name": "I never look at eclipses"
-                    }, {
-                        "alias": "shower_thoughts_9c0",
-                        "name": "I never mess with Texas"
-                    }, {
-                        "alias": "shower_thoughts_a37",
-                        "name": "I don't mind pickles on my burger"
-                    }]
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": {
+                                    "references": {
+                                        "alias": "shower_thoughts_65f",
+                                        "name": "Cupcakes are the best cakes"
+                                    },
+                                    "derived": false,
+                                    "id": "0001"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": {
+                                    "references": {
+                                        "alias": "shower_thoughts_6b4",
+                                        "name": "Corgis are the future of dog shows"
+                                    },
+                                    "derived": false,
+                                    "id": "0002"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": {
+                                    "references": {
+                                        "alias": "shower_thoughts_704",
+                                        "name": "I always ride a penny-farthing"
+                                    },
+                                    "derived": false,
+                                    "id": "0003"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 4,
+                                "value": {
+                                    "references": {
+                                        "alias": "shower_thoughts_20e",
+                                        "name": "I never look at eclipses"
+                                    },
+                                    "derived": false,
+                                    "id": "0004"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 5,
+                                "value": {
+                                    "references": {
+                                        "alias": "shower_thoughts_9c0",
+                                        "name": "I never mess with Texas"
+                                    },
+                                    "derived": false,
+                                    "id": "0005"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 6,
+                                "value": {
+                                    "references": {
+                                        "alias": "shower_thoughts_a37",
+                                        "name": "I don't mind pickles on my burger"
+                                    },
+                                    "derived": false,
+                                    "id": "0006"
+                                },
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
                 },
-                "derived": true,
-                "type": {
-                    "ordinal": false,
-                    "subvariables": ["0001", "0002", "0003", "0004", "0005", "0006"],
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                    }, {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Other"
-                    }, {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                    }]
-                }
-            }, {
-                "references": {
-                    "alias": "pdl_gender",
-                    "view": {
-                        "roles": ["Role 1", "Role 2", "Role 3"]
+                {
+                    "references": {
+                        "alias": "shower_thoughts_klima_2",
+                        "uniform_basis": false,
+                        "view": {
+                            "roles": [
+                                "Role 1",
+                                "Role 2",
+                                "Role 3"
+                            ]
+                        },
+                        "name": "Statements agreed with about Corgis",
+                        "subreferences": [
+                            {
+                                "alias": "shower_thoughts_65f",
+                                "name": "Cupcakes are the best cakes"
+                            },
+                            {
+                                "alias": "shower_thoughts_6b4",
+                                "name": "Corgis are the future of dog shows"
+                            },
+                            {
+                                "alias": "shower_thoughts_704",
+                                "name": "I always ride a penny-farthing"
+                            },
+                            {
+                                "alias": "shower_thoughts_20e",
+                                "name": "I never look at eclipses"
+                            },
+                            {
+                                "alias": "shower_thoughts_9c0",
+                                "name": "I never mess with Texas"
+                            },
+                            {
+                                "alias": "shower_thoughts_a37",
+                                "name": "I don't mind pickles on my burger"
+                            }
+                        ]
                     },
-                    "description": "Gender",
-                    "name": "Gender"
+                    "derived": true,
+                    "type": {
+                        "ordinal": false,
+                        "subvariables": [
+                            "0001",
+                            "0002",
+                            "0003",
+                            "0004",
+                            "0005",
+                            "0006"
+                        ],
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "selected": true,
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 0,
+                                "name": "Other"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
                 },
-                "derived": false,
-                "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": null,
-                        "missing": false,
-                        "id": 1,
-                        "name": "Male"
-                    }, {
-                        "numeric_value": null,
-                        "missing": false,
-                        "id": 2,
-                        "name": "Female"
-                    }, {
-                        "numeric_value": null,
-                        "id": -1,
-                        "name": "No Data",
-                        "missing": true
-                    }]
+                {
+                    "references": {
+                        "alias": "pdl_gender",
+                        "view": {
+                            "roles": [
+                                "Role 1",
+                                "Role 2",
+                                "Role 3"
+                            ]
+                        },
+                        "description": "Gender",
+                        "name": "Gender"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": null,
+                                "missing": false,
+                                "id": 1,
+                                "name": "Male"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Female"
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            }
+                        ]
+                    }
                 }
-            }],
+            ],
             "missing": 45690,
             "measures": {
                 "count": {
-                    "data": [9928.20954289002, 11524.821237084192, 0.0, 4638.052025017543, 4082.4799968384714, 0.0, 20942.20463208863, 22037.232566079987, 0.0, 9588.843313998908, 9801.254016136965, 0.0, 4867.670011489108, 5649.355887696092, 0.0, 21051.95287450818, 22193.92389616964, 0.0, 11697.435357575358, 13095.670425525452, 0.0, 2717.7011181577736, 2310.2282525446412, 0.0, 21093.329724263043, 22238.63512193253, 0.0, 9782.8995547749, 10531.918128023966, 0.0, 1702.7616498890036, 1380.6707584672065, 0.0, 24022.804995331622, 25731.944913511692, 0.0, 4417.596222134318, 3448.380316269752, 0.0, 7247.103116018152, 8661.816031016271, 0.0, 23843.766861843127, 25534.337452716918, 0.0, 6179.175512581436, 6490.427474934746, 0.0, 5368.238040970301, 5471.148108062673, 0.0, 23961.052646443855, 25682.95821700546, 0.0],
+                    "data": [
+                        9928.20954289002,
+                        11524.8212370842,
+                        0,
+                        4638.05202501754,
+                        4082.47999683847,
+                        0,
+                        20942.2046320886,
+                        22037.23256608,
+                        0,
+                        9588.84331399891,
+                        9801.25401613697,
+                        0,
+                        4867.67001148911,
+                        5649.35588769609,
+                        0,
+                        21051.9528745082,
+                        22193.9238961696,
+                        0,
+                        11697.4353575754,
+                        13095.6704255255,
+                        0,
+                        2717.70111815777,
+                        2310.22825254464,
+                        0,
+                        21093.329724263,
+                        22238.6351219325,
+                        0,
+                        9782.8995547749,
+                        10531.918128024,
+                        0,
+                        1702.761649889,
+                        1380.67075846721,
+                        0,
+                        24022.8049953316,
+                        25731.9449135117,
+                        0,
+                        4417.59622213432,
+                        3448.38031626975,
+                        0,
+                        7247.10311601815,
+                        8661.81603101627,
+                        0,
+                        23843.7668618431,
+                        25534.3374527169,
+                        0,
+                        6179.17551258144,
+                        6490.42747493475,
+                        0,
+                        5368.2380409703,
+                        5471.14810806267,
+                        0,
+                        23961.0526464439,
+                        25682.9582170055,
+                        0
+                    ],
                     "n_missing": 45690,
                     "metadata": {
-                        "references": {},
+                        "references": {
+
+                        },
                         "derived": true,
                         "type": {
                             "integer": false,
-                            "missing_rules": {},
+                            "missing_rules": {
+
+                            },
                             "missing_reasons": {
                                 "No Data": -1
                             },
@@ -355,7 +350,62 @@
                 }
             },
             "element": "crunch:cube",
-            "counts": [8533, 9478, 0, 3703, 3234, 0, 25204, 23001, 0, 8136, 8185, 0, 3986, 4387, 0, 25318, 23141, 0, 10028, 10602, 0, 2046, 1926, 0, 25366, 23185, 0, 7683, 8168, 0, 1252, 1055, 0, 28505, 26490, 0, 3572, 2604, 0, 5554, 6798, 0, 28314, 26311, 0, 4822, 5127, 0, 4172, 4146, 0, 28446, 26440, 0],
+            "counts": [
+                8533,
+                9478,
+                0,
+                3703,
+                3234,
+                0,
+                25204,
+                23001,
+                0,
+                8136,
+                8185,
+                0,
+                3986,
+                4387,
+                0,
+                25318,
+                23141,
+                0,
+                10028,
+                10602,
+                0,
+                2046,
+                1926,
+                0,
+                25366,
+                23185,
+                0,
+                7683,
+                8168,
+                0,
+                1252,
+                1055,
+                0,
+                28505,
+                26490,
+                0,
+                3572,
+                2604,
+                0,
+                5554,
+                6798,
+                0,
+                28314,
+                26311,
+                0,
+                4822,
+                5127,
+                0,
+                4172,
+                4146,
+                0,
+                28446,
+                26440,
+                0
+            ],
             "n": 73153
         }
     }

@@ -1,145 +1,256 @@
 {
-  "element": "shoji:view",
-  "self": "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fgender%2F%22%7D%2C%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2FtextVar%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2F0001f2%2F%22%7D&filter=%7B%7D",
-  "value": {
-    "query": {
-      "measures": {
-        "count": {
-          "function": "cube_count",
-          "args": []
-        }
-      },
-      "dimensions": [{
-        "variable": "https://app.crunch.io/api/datasets/1/variables/gender/"
-      }, {
-        "variable": "https://app.crunch.io/api/datasets/1/variables/textVar/"
-      }],
-      "weight": "https://app.crunch.io/api/datasets/1/variables/0001f2/"
-    },
-    "query_environment": {
-      "filter": []
-    },
-    "result": {
-      "dimensions": [{
-        "references": {
-          "discarded": false,
-          "alias": "gender",
-          "view": {
-            "show_counts": false,
-            "column_width": null,
-            "include_missing": false,
-            "show_numeric_values": false
-          },
-          "description": "",
-          "name": "Gender"
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fgender%2F%22%7D%2C%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2FtextVar%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2F0001f2%2F%22%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "https://app.crunch.io/api/datasets/1/variables/gender/"
+                },
+                {
+                    "variable": "https://app.crunch.io/api/datasets/1/variables/textVar/"
+                }
+            ],
+            "weight": "https://app.crunch.io/api/datasets/1/variables/0001f2/"
         },
-        "derived": false,
-        "type": {
-          "ordinal": false,
-          "class": "categorical",
-          "categories": [{
-            "numeric_value": 1,
-            "missing": false,
-            "id": 1,
-            "name": "Male"
-          }, {
-            "numeric_value": 2,
-            "missing": false,
-            "id": 2,
-            "name": "Female"
-          }, {
-            "numeric_value": 8,
-            "missing": true,
-            "id": 8,
-            "name": "Skipped"
-          }, {
-            "numeric_value": 9,
-            "missing": true,
-            "id": 9,
-            "name": "Not Asked"
-          }, {
-            "numeric_value": null,
-            "missing": true,
-            "id": -1,
-            "name": "No Data"
-          }]
-        }
-      }, {
-        "references": {
-          "discarded": false,
-          "alias": "textVar",
-          "name": "Text variable ftw",
-          "description": ""
+        "query_environment": {
+            "filter": [
+
+            ]
         },
-        "derived": false,
-        "type": {
-          "ordinal": false,
-          "class": "categorical",
-          "categories": [{
-            "numeric_value": 1,
-            "missing": false,
-            "id": 1,
-            "name": "Strongly Approve"
-          }, {
-            "numeric_value": 2,
-            "missing": false,
-            "id": 2,
-            "name": "Somewhat Approve"
-          }, {
-            "numeric_value": 3,
-            "missing": false,
-            "id": 3,
-            "name": "Somewhat Disapprove"
-          }, {
-            "numeric_value": 4,
-            "missing": false,
-            "id": 4,
-            "name": "Strongly Disapprove"
-          }, {
-            "numeric_value": 5,
-            "missing": false,
-            "id": 5,
-            "name": "Not Sure"
-          }, {
-            "numeric_value": 8,
-            "missing": true,
-            "id": 8,
-            "name": "Skipped"
-          }, {
-            "numeric_value": 9,
-            "missing": true,
-            "id": 9,
-            "name": "Not Asked"
-          }, {
-            "numeric_value": null,
-            "missing": true,
-            "id": -1,
-            "name": "No Data"
-          }]
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "discarded": false,
+                        "alias": "gender",
+                        "view": {
+                            "show_counts": false,
+                            "column_width": null,
+                            "include_missing": false,
+                            "show_numeric_values": false
+                        },
+                        "description": "",
+                        "name": "Gender"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "Male"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Female"
+                            },
+                            {
+                                "numeric_value": 8,
+                                "missing": true,
+                                "id": 8,
+                                "name": "Skipped"
+                            },
+                            {
+                                "numeric_value": 9,
+                                "missing": true,
+                                "id": 9,
+                                "name": "Not Asked"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "references": {
+                        "discarded": false,
+                        "alias": "textVar",
+                        "name": "Text variable ftw",
+                        "description": ""
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "Strongly Approve"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Somewhat Approve"
+                            },
+                            {
+                                "numeric_value": 3,
+                                "missing": false,
+                                "id": 3,
+                                "name": "Somewhat Disapprove"
+                            },
+                            {
+                                "numeric_value": 4,
+                                "missing": false,
+                                "id": 4,
+                                "name": "Strongly Disapprove"
+                            },
+                            {
+                                "numeric_value": 5,
+                                "missing": false,
+                                "id": 5,
+                                "name": "Not Sure"
+                            },
+                            {
+                                "numeric_value": 8,
+                                "missing": true,
+                                "id": 8,
+                                "name": "Skipped"
+                            },
+                            {
+                                "numeric_value": 9,
+                                "missing": true,
+                                "id": 9,
+                                "name": "Not Asked"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 2,
+            "measures": {
+                "count": {
+                    "data": [
+                        51.7327361022208,
+                        137.348167960048,
+                        47.3003090939371,
+                        219.591088447811,
+                        30.5865311506666,
+                        1.22732540416513,
+                        0,
+                        0,
+                        78.3382766159168,
+                        139.75085668732,
+                        79.3363864763547,
+                        170.116756915827,
+                        44.6715651457326,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "n_missing": 2,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": false,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                65,
+                130,
+                46,
+                212,
+                12,
+                2,
+                0,
+                0,
+                93,
+                163,
+                78,
+                172,
+                27,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "n": 1000
         }
-      }],
-      "missing": 2,
-      "measures": {
-        "count": {
-          "data": [51.73273610222083, 137.34816796004824, 47.30030909393714, 219.59108844781125, 30.586531150666556, 1.227325404165129, 0.0, 0.0, 78.33827661591683, 139.75085668732018, 79.3363864763547, 170.11675691582673, 44.671565145732565, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-          "n_missing": 2,
-          "metadata": {
-            "references": {},
-            "derived": true,
-            "type": {
-              "integer": false,
-              "missing_rules": {},
-              "missing_reasons": {
-                "No Data": -1
-              },
-              "class": "numeric"
-            }
-          }
-        }
-      },
-      "element": "crunch:cube",
-      "counts": [65, 130, 46, 212, 12, 2, 0, 0, 93, 163, 78, 172, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      "n": 1000
     }
-  }
 }

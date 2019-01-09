@@ -63,8 +63,11 @@ standardizedMRResiduals <- function(cube) {
     E <- r * c / n
     # calculate variance
     V <- r * c * (n - r) * (n - c) / n^3
-
-    return((cube_array - E) / sqrt(V))
+    out <- (cube_array - E) / sqrt(V)
+    if (is.array(out)) {
+        out <- makeCrunchCubeCalculation(out, cube@dims, "z_score")
+    }
+    return(out)
 }
 
 # for bacwards compatibility
@@ -279,6 +282,11 @@ compareDimsPairwise <- function(cube, dim = c("cols", "rows"), baseline) {
 # [1,]    1    2    3
 # [2,]    1    2    3
 broadcast <- function(values, dims = c(NULL, NULL), nrow = dims[1], ncol = dims[2]) {
+    # Strip CrunchCubeCalculation from
+    if (inherits(values, "CrunchCubeCalculation")) {
+        values <- as.array(values)
+    }
+
     # if values is already the correct shape, then return values immediately
     if (!is.null(dim(values)) & identical(dim(values), as.integer(c(nrow, ncol)))) {
         return(values)

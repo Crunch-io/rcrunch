@@ -51,14 +51,14 @@
                                 "id": 1,
                                 "value": [
                                     -1.5,
-                                    -1.0
+                                    -1
                                 ],
                                 "missing": false
                             },
                             {
                                 "id": 2,
                                 "value": [
-                                    -1.0,
+                                    -1,
                                     -0.5
                                 ],
                                 "missing": false
@@ -67,14 +67,14 @@
                                 "id": 3,
                                 "value": [
                                     -0.5,
-                                    0.0
+                                    0
                                 ],
                                 "missing": false
                             },
                             {
                                 "id": 4,
                                 "value": [
-                                    0.0,
+                                    0,
                                     0.5
                                 ],
                                 "missing": false
@@ -83,14 +83,14 @@
                                 "id": 5,
                                 "value": [
                                     0.5,
-                                    1.0
+                                    1
                                 ],
                                 "missing": false
                             },
                             {
                                 "id": 6,
                                 "value": [
-                                    1.0,
+                                    1,
                                     1.5
                                 ],
                                 "missing": false
@@ -99,7 +99,7 @@
                                 "id": 7,
                                 "value": [
                                     1.5,
-                                    2.0
+                                    2
                                 ],
                                 "missing": false
                             }

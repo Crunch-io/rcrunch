@@ -74,32 +74,7 @@
                                         "alias": "subvar2",
                                         "name": "subvar2"
                                     },
-                                    "id": "8d04878e51aa4f41b687469ff3f6ed86",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Other"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "8d04878e51aa4f41b687469ff3f6ed86"
                                 },
                                 "missing": false
                             },
@@ -111,32 +86,7 @@
                                         "alias": "subvar1",
                                         "name": "subvar1"
                                     },
-                                    "id": "010474a0a5d04010b638c30e125463f7",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Other"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "010474a0a5d04010b638c30e125463f7"
                                 },
                                 "missing": false
                             },
@@ -148,32 +98,7 @@
                                         "alias": "subvar3",
                                         "name": "subvar3"
                                     },
-                                    "id": "976b5112e37544c9b195c6a9144f2002",
-                                    "type": {
-                                        "ordinal": false,
-                                        "class": "categorical",
-                                        "categories": [
-                                            {
-                                                "numeric_value": 1,
-                                                "selected": true,
-                                                "id": 1,
-                                                "missing": false,
-                                                "name": "Selected"
-                                            },
-                                            {
-                                                "numeric_value": 0,
-                                                "missing": false,
-                                                "id": 0,
-                                                "name": "Other"
-                                            },
-                                            {
-                                                "numeric_value": null,
-                                                "missing": true,
-                                                "id": -1,
-                                                "name": "No Data"
-                                            }
-                                        ]
-                                    }
+                                    "id": "976b5112e37544c9b195c6a9144f2002"
                                 },
                                 "missing": false
                             }
@@ -252,7 +177,7 @@
                             {
                                 "id": 1,
                                 "value": [
-                                    2013.0,
+                                    2013,
                                     2013.5
                                 ],
                                 "missing": false
@@ -261,14 +186,14 @@
                                 "id": 2,
                                 "value": [
                                     2013.5,
-                                    2014.0
+                                    2014
                                 ],
                                 "missing": false
                             },
                             {
                                 "id": 3,
                                 "value": [
-                                    2014.0,
+                                    2014,
                                     2014.5
                                 ],
                                 "missing": false
@@ -277,14 +202,14 @@
                                 "id": 4,
                                 "value": [
                                     2014.5,
-                                    2015.0
+                                    2015
                                 ],
                                 "missing": false
                             },
                             {
                                 "id": 5,
                                 "value": [
-                                    2015.0,
+                                    2015,
                                     2015.5
                                 ],
                                 "missing": false
@@ -293,14 +218,14 @@
                                 "id": 6,
                                 "value": [
                                     2015.5,
-                                    2016.0
+                                    2016
                                 ],
                                 "missing": false
                             },
                             {
                                 "id": 7,
                                 "value": [
-                                    2016.0,
+                                    2016,
                                     2016.5
                                 ],
                                 "missing": false

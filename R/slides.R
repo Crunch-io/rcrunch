@@ -87,6 +87,7 @@ setMethod(
 #' @param idx The index to move the last element to.
 #'
 #' @return a vector
+#' @keywords internal
 moveLastElement <- function(v, idx) {
     v[idx] <- v[length(v)]
     out <- v[1:(length(v) - 1)]
@@ -168,10 +169,12 @@ newSlide <- function(deck,
                      title = "",
                      subtitle = "",
                      ...) {
+    # TODO allow newSlide to accept list of formulas. In order for this to work
+    # we need to send the analysis order. The only current use case for multiple
+    # analyses is Profiles, and those probably shouldn't be set from R anyway.
+    stopifnot(inherits(query, "formula"))
     ds <- loadDataset(datasetReference(deck))
-    if (inherits(query, "formula")) {
-        query <- list(query)
-    }
+    query <- list(query)
 
     settings <- modifyList(DEFAULT_DISPLAY_SETTINGS, display_settings)
     settings <- wrapDisplaySettings(settings)
@@ -272,6 +275,16 @@ setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
 })
 
 # AnalysisCatalog --------------------------------------------------------------
+
+setMethod("initialize", "AnalysisCatalog", function(.Object, ...) {
+    .Object <- callNextMethod()
+    if (length(.Object@index) > 1) {
+        order <- crGET(.Object@orders$order)
+        order <- unlist(order$graph)
+        .Object@index <- .Object@index[match(order, names(.Object@index))]
+    }
+    return(.Object)
+})
 
 #' @rdname catalog-extract
 #' @export

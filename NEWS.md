@@ -19,6 +19,8 @@
 * 404 Not Found HTTP responses now print the request URL to aid in debugging.
 * Fix a duplicated vignette title.
 * Suppress check for new GitHub release of the package in non-interactive sessions.
+* Fixed a bug that wouldn't allow vignette mocks to use `datasetReference()`
+* Removed excess metadata in some cube fixtures in anticipation of Crunch not sending that informatoin any more (no code changes were necesary).
 
 # crunch 1.24.2
 * The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
