@@ -1,4 +1,4 @@
-# crunch 1.24.3 (under development)
+# crunch 1.25.0
 
 ## Shared Crunch assets
 * Initial support for deck creation and manipulation.
