@@ -48,7 +48,7 @@ To get started, we're going to import a dataset from R to Crunch. If you already
 
 There are multiple ways to create a new dataset. In the web application, you can upload files to create datasets using the file loader. From **crunch**, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats.
 
-We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/) which is filtered on those respondents who reported having been R users and selecting 25 variables.
+We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/) which is filtered on those respondents who reported having been R users and selecting a handful of variables.
 
 ```{r dimensions}
 dim(SO_survey)
