@@ -15,10 +15,12 @@
 
     install.packages("crunch")
 
-The pre-release version of the package can be pulled from GitHub using the [`devtools`](https://github.com/hadley/devtools) package:
+The pre-release version of the package can be pulled from GitHub using the [`remotes`](https://github.com/r-lib/remotes) package (part of `devtools`):
 
-    # install.packages("devtools")
-    devtools::install_github("Crunch-io/rcrunch")
+```r
+# install.packages("remotes")
+remotes::install_github("Crunch-io/rcrunch")
+```
 
 ## Getting started
 
