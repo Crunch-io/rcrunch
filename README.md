@@ -75,15 +75,19 @@ This installs dependencies and then runs the tests, which installs `crunch` from
 
 ### Running tests
 
-`$ make test` is all you need. Requires the [`httptest`](https://github.com/nealrichardson/httptest) package for R. You can also specify a specific test file or files to run by adding a "file=" argument, like `$ make test file=auth`. `test_package` will do a regular-expression pattern match within the file names. See its documentation in the [`testthat`](http://testthat.r-lib.org/) package.
+You can run tests in an interactive session, or from the command line, `$ make test` is all you need. Requires the [`httptest`](https://github.com/nealrichardson/httptest) package for R. You can also specify a specific test file or files to run by adding a "file=" argument, like `$ make test file=auth`. `test_package` will do a regular-expression pattern match within the file names. See its documentation in the [`testthat`](http://testthat.r-lib.org/) package.
 
 Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `INTEGRATION`, which is false by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ make test INTEGRATION=TRUE`.
 
 To run integration tests, you will need to specify a test user, password, and API server to communicate with, either by setting `test.user`, `test.pw`, and `test.api` in your `.Rprofile`, as in:
 
-    options(test.user="magic.testuser@crunch.io",
-            test.pw="t0pSecretP@ssw0rD",
-            test.api="https://app.crunch.io/api/")
+```r
+options(
+    test.user="magic.testuser@crunch.io",
+    test.pw="t0pSecretP@ssw0rD",
+    test.api="https://app.crunch.io/api/"
+)
+```
 
 or by setting the environment variables `R_TEST_USER`, `R_TEST_PW`, and `R_TEST_API`.
 
