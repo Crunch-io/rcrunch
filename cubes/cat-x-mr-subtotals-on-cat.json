@@ -1,663 +1,546 @@
 {
-  "element": "shoji:view",
-  "self": "/api/datasets/d028c5/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F000067%2F%22%7D%2C%7B%22each%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F0000dc%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F0000dc%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F0000d0%2F%22%7D&filter=%7B%7D",
-  "value": {
-    "query": {
-      "measures": {
-        "count": {
-          "function": "cube_count",
-          "args": []
-        }
-      },
-      "dimensions": [
-        {
-          "variable": "/api/datasets/d028c5/variables/000067/"
-        },
-        {
-          "each": "/api/datasets/d028c5/variables/0000dc/"
-        },
-        {
-          "function": "as_selected",
-          "args": [
-            {
-              "variable": "/api/datasets/d028c5/variables/0000dc/"
-            }
-          ]
-        }
-      ],
-      "weight": "/api/datasets/d028c5/variables/0000d0/"
-    },
-    "query_environment": {
-      "filter": []
-    },
-    "result": {
-      "dimensions": [
-        {
-          "references": {
-            "alias": "food_groups",
-            "notes": "A categorical variable where the missing categories are interspersed throughout the non-missing categories",
-            "view": {
-              "show_counts": false,
-              "show_numeric_values": false,
-              "transform": {
-                "insertions": [
-                  {
-                    "function": "subtotal",
+    "element": "shoji:view",
+    "self": "/api/datasets/d028c5/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F000067%2F%22%7D%2C%7B%22each%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F0000dc%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F0000dc%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F0000d0%2F%22%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
                     "args": [
-                      4
-                    ],
-                    "anchor": 4,
-                    "name": "animal-based"
-                  },
-                  {
-                    "function": "subtotal",
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/d028c5/variables/000067/"
+                },
+                {
+                    "each": "/api/datasets/d028c5/variables/0000dc/"
+                },
+                {
+                    "function": "as_selected",
                     "args": [
-                      2,
-                      0,
-                      5
+                        {
+                            "variable": "/api/datasets/d028c5/variables/0000dc/"
+                        }
+                    ]
+                }
+            ],
+            "weight": "/api/datasets/d028c5/variables/0000d0/"
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "alias": "food_groups",
+                        "notes": "A categorical variable where the missing categories are interspersed throughout the non-missing categories",
+                        "view": {
+                            "show_counts": false,
+                            "show_numeric_values": false,
+                            "transform": {
+                                "insertions": [
+                                    {
+                                        "function": "subtotal",
+                                        "args": [
+                                            4
+                                        ],
+                                        "anchor": 4,
+                                        "name": "animal-based"
+                                    },
+                                    {
+                                        "function": "subtotal",
+                                        "args": [
+                                            2,
+                                            0,
+                                            5
+                                        ],
+                                        "anchor": 0,
+                                        "name": "plant-based"
+                                    }
+                                ]
+                            },
+                            "include_missing": false,
+                            "column_width": null
+                        },
+                        "description": "Four of the five USDA food groups",
+                        "name": "Food groups"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 0,
+                                "name": "Vegetables"
+                            },
+                            {
+                                "numeric_value": 32766,
+                                "missing": true,
+                                "id": 32766,
+                                "name": "Don't know"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Fruit"
+                            },
+                            {
+                                "numeric_value": 5,
+                                "missing": false,
+                                "id": 5,
+                                "name": "Grain"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            },
+                            {
+                                "numeric_value": 4,
+                                "missing": false,
+                                "id": 4,
+                                "name": "Meat"
+                            },
+                            {
+                                "numeric_value": 32767,
+                                "missing": true,
+                                "id": 32767,
+                                "name": "Not asked"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "derived": true,
+                    "references": {
+                        "uniform_basis": false,
+                        "description": "Which of the following Nordic countries have you visited? (select all that apply)",
+                        "subreferences": [
+                            {
+                                "alias": "dk",
+                                "name": "Denmark",
+                                "description": "milstat_1"
+                            },
+                            {
+                                "alias": "fi",
+                                "name": "Finland",
+                                "description": "milstat_2"
+                            },
+                            {
+                                "alias": "is",
+                                "name": "Iceland",
+                                "description": "milstat_3"
+                            },
+                            {
+                                "alias": "no",
+                                "name": "Norway",
+                                "description": "milstat_4"
+                            },
+                            {
+                                "alias": "se",
+                                "name": "Sweden",
+                                "description": "milstat_5"
+                            }
+                        ],
+                        "notes": "A multiple response variable",
+                        "alias": "nordics",
+                        "is_dichotomous": true,
+                        "name": "Nordic countries"
+                    },
+                    "type": {
+                        "subtype": {
+                            "class": "variable"
+                        },
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "dk",
+                                        "name": "Denmark",
+                                        "description": "milstat_1"
+                                    },
+                                    "id": "00c0"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "fi",
+                                        "name": "Finland",
+                                        "description": "milstat_2"
+                                    },
+                                    "id": "00c1"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "is",
+                                        "name": "Iceland",
+                                        "description": "milstat_3"
+                                    },
+                                    "id": "00c2"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 4,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "no",
+                                        "name": "Norway",
+                                        "description": "milstat_4"
+                                    },
+                                    "id": "00c3"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 5,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "se",
+                                        "name": "Sweden",
+                                        "description": "milstat_5"
+                                    },
+                                    "id": "00c4"
+                                },
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
+                },
+                {
+                    "references": {
+                        "uniform_basis": false,
+                        "description": "Which of the following Nordic countries have you visited? (select all that apply)",
+                        "subreferences": [
+                            {
+                                "alias": "dk",
+                                "name": "Denmark",
+                                "description": "milstat_1"
+                            },
+                            {
+                                "alias": "fi",
+                                "name": "Finland",
+                                "description": "milstat_2"
+                            },
+                            {
+                                "alias": "is",
+                                "name": "Iceland",
+                                "description": "milstat_3"
+                            },
+                            {
+                                "alias": "no",
+                                "name": "Norway",
+                                "description": "milstat_4"
+                            },
+                            {
+                                "alias": "se",
+                                "name": "Sweden",
+                                "description": "milstat_5"
+                            }
+                        ],
+                        "notes": "A multiple response variable",
+                        "alias": "nordics",
+                        "is_dichotomous": true,
+                        "name": "Nordic countries"
+                    },
+                    "derived": true,
+                    "type": {
+                        "ordinal": false,
+                        "subvariables": [
+                            "00c0",
+                            "00c1",
+                            "00c2",
+                            "00c3",
+                            "00c4"
+                        ],
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "selected": true,
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "missing": false,
+                                "id": 0,
+                                "name": "Not Selected"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 6,
+            "measures": {
+                "count": {
+                    "data": [
+                        7.09439811221956,
+                        44.8169683806184,
+                        324.863852307301,
+                        29.943091432266,
+                        39.0875146823505,
+                        307.744612685522,
+                        26.594536972556,
+                        44.0712283996133,
+                        306.10945342797,
+                        104.244359622909,
+                        37.798006864762,
+                        234.732852312468,
+                        235.256710642724,
+                        18.346166637244,
+                        123.172341520171,
+                        0,
+                        2.6472184211073,
+                        7.29248518033573,
+                        0,
+                        2.6472184211073,
+                        7.29248518033573,
+                        0,
+                        2.6472184211073,
+                        7.29248518033573,
+                        2.18058285127904,
+                        2.6472184211073,
+                        5.11190232905669,
+                        5.11190232905669,
+                        2.6472184211073,
+                        2.18058285127904,
+                        16.4723263871271,
+                        77.3067667606595,
+                        391.810117487652,
+                        41.5273628588211,
+                        79.5910453902344,
+                        364.470802386383,
+                        58.5641962784524,
+                        71.5012956244079,
+                        355.523718732578,
+                        183.864543659439,
+                        47.8661020525241,
+                        253.858564923475,
+                        234.846288302351,
+                        45.145583224773,
+                        205.597339108314,
+                        4.82634063477261,
+                        47.2338444768371,
+                        266.114373622425,
+                        28.4366794845409,
+                        45.235257544041,
+                        244.502621705452,
+                        36.3291555208591,
+                        39.1559574195035,
+                        242.689445793672,
+                        111.488747465324,
+                        23.980973803226,
+                        182.704837465484,
+                        156.829479772395,
+                        36.1329649589093,
+                        125.21211400273,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        12.217223612475,
+                        58.0677421130466,
+                        401.236342503426,
+                        42.1476791820657,
+                        52.2202123473837,
+                        377.153416699498,
+                        89.3309048228944,
+                        46.1443215982894,
+                        336.046081807763,
+                        218.631137785724,
+                        32.5693101914715,
+                        220.320860251752,
+                        171.129707467715,
+                        43.9952165117143,
+                        256.396384249518,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
                     ],
-                    "anchor": 0,
-                    "name": "plant-based"
-                  }
-                ]
-              },
-              "include_missing": false,
-              "column_width": null
+                    "n_missing": 6,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": false,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
             },
-            "description": "Four of the five USDA food groups",
-            "name": "Food groups"
-          },
-          "derived": false,
-          "type": {
-            "ordinal": false,
-            "class": "categorical",
-            "categories": [
-              {
-                "numeric_value": 0,
-                "missing": false,
-                "id": 0,
-                "name": "Vegetables"
-              },
-              {
-                "numeric_value": 32766,
-                "missing": true,
-                "id": 32766,
-                "name": "Don't know"
-              },
-              {
-                "numeric_value": 2,
-                "missing": false,
-                "id": 2,
-                "name": "Fruit"
-              },
-              {
-                "numeric_value": 5,
-                "missing": false,
-                "id": 5,
-                "name": "Grain"
-              },
-              {
-                "numeric_value": null,
-                "missing": true,
-                "id": -1,
-                "name": "No Data"
-              },
-              {
-                "numeric_value": 4,
-                "missing": false,
-                "id": 4,
-                "name": "Meat"
-              },
-              {
-                "numeric_value": 32767,
-                "missing": true,
-                "id": 32767,
-                "name": "Not asked"
-              }
-            ]
-          }
-        },
-        {
-          "derived": true,
-          "references": {
-            "uniform_basis": false,
-            "description": "Which of the following Nordic countries have you visited? (select all that apply)",
-            "subreferences": [
-              {
-                "alias": "dk",
-                "name": "Denmark",
-                "description": "milstat_1"
-              },
-              {
-                "alias": "fi",
-                "name": "Finland",
-                "description": "milstat_2"
-              },
-              {
-                "alias": "is",
-                "name": "Iceland",
-                "description": "milstat_3"
-              },
-              {
-                "alias": "no",
-                "name": "Norway",
-                "description": "milstat_4"
-              },
-              {
-                "alias": "se",
-                "name": "Sweden",
-                "description": "milstat_5"
-              }
+            "element": "crunch:cube",
+            "counts": [
+                8,
+                54,
+                372,
+                32,
+                49,
+                353,
+                31,
+                54,
+                349,
+                139,
+                43,
+                252,
+                251,
+                23,
+                160,
+                0,
+                1,
+                5,
+                0,
+                1,
+                5,
+                0,
+                1,
+                5,
+                2,
+                1,
+                3,
+                3,
+                1,
+                2,
+                13,
+                74,
+                408,
+                43,
+                76,
+                376,
+                59,
+                69,
+                367,
+                188,
+                42,
+                265,
+                235,
+                47,
+                213,
+                4,
+                42,
+                248,
+                30,
+                40,
+                224,
+                29,
+                38,
+                227,
+                108,
+                21,
+                165,
+                143,
+                31,
+                120,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                8,
+                51,
+                374,
+                38,
+                45,
+                350,
+                81,
+                40,
+                312,
+                200,
+                27,
+                206,
+                163,
+                36,
+                234,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
             ],
-            "notes": "A multiple response variable",
-            "alias": "nordics",
-            "is_dichotomous": true,
-            "name": "Nordic countries"
-          },
-          "type": {
-            "subtype": {
-              "class": "variable"
-            },
-            "elements": [
-              {
-                "id": 1,
-                "value": {
-                  "derived": false,
-                  "references": {
-                    "alias": "dk",
-                    "name": "Denmark",
-                    "description": "milstat_1"
-                  },
-                  "id": "00c0",
-                  "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [
-                      {
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                      },
-                      {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Not Selected"
-                      },
-                      {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                      }
-                    ]
-                  }
-                },
-                "missing": false
-              },
-              {
-                "id": 2,
-                "value": {
-                  "derived": false,
-                  "references": {
-                    "alias": "fi",
-                    "name": "Finland",
-                    "description": "milstat_2"
-                  },
-                  "id": "00c1",
-                  "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [
-                      {
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                      },
-                      {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Not Selected"
-                      },
-                      {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                      }
-                    ]
-                  }
-                },
-                "missing": false
-              },
-              {
-                "id": 3,
-                "value": {
-                  "derived": false,
-                  "references": {
-                    "alias": "is",
-                    "name": "Iceland",
-                    "description": "milstat_3"
-                  },
-                  "id": "00c2",
-                  "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [
-                      {
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                      },
-                      {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Not Selected"
-                      },
-                      {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                      }
-                    ]
-                  }
-                },
-                "missing": false
-              },
-              {
-                "id": 4,
-                "value": {
-                  "derived": false,
-                  "references": {
-                    "alias": "no",
-                    "name": "Norway",
-                    "description": "milstat_4"
-                  },
-                  "id": "00c3",
-                  "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [
-                      {
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                      },
-                      {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Not Selected"
-                      },
-                      {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                      }
-                    ]
-                  }
-                },
-                "missing": false
-              },
-              {
-                "id": 5,
-                "value": {
-                  "derived": false,
-                  "references": {
-                    "alias": "se",
-                    "name": "Sweden",
-                    "description": "milstat_5"
-                  },
-                  "id": "00c4",
-                  "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [
-                      {
-                        "numeric_value": 1,
-                        "selected": true,
-                        "id": 1,
-                        "missing": false,
-                        "name": "Selected"
-                      },
-                      {
-                        "numeric_value": 0,
-                        "missing": false,
-                        "id": 0,
-                        "name": "Not Selected"
-                      },
-                      {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                      }
-                    ]
-                  }
-                },
-                "missing": false
-              }
-            ],
-            "class": "enum"
-          }
-        },
-        {
-          "references": {
-            "uniform_basis": false,
-            "description": "Which of the following Nordic countries have you visited? (select all that apply)",
-            "subreferences": [
-              {
-                "alias": "dk",
-                "name": "Denmark",
-                "description": "milstat_1"
-              },
-              {
-                "alias": "fi",
-                "name": "Finland",
-                "description": "milstat_2"
-              },
-              {
-                "alias": "is",
-                "name": "Iceland",
-                "description": "milstat_3"
-              },
-              {
-                "alias": "no",
-                "name": "Norway",
-                "description": "milstat_4"
-              },
-              {
-                "alias": "se",
-                "name": "Sweden",
-                "description": "milstat_5"
-              }
-            ],
-            "notes": "A multiple response variable",
-            "alias": "nordics",
-            "is_dichotomous": true,
-            "name": "Nordic countries"
-          },
-          "derived": true,
-          "type": {
-            "ordinal": false,
-            "subvariables": [
-              "00c0",
-              "00c1",
-              "00c2",
-              "00c3",
-              "00c4"
-            ],
-            "class": "categorical",
-            "categories": [
-              {
-                "numeric_value": 1,
-                "selected": true,
-                "id": 1,
-                "missing": false,
-                "name": "Selected"
-              },
-              {
-                "numeric_value": 0,
-                "missing": false,
-                "id": 0,
-                "name": "Not Selected"
-              },
-              {
-                "numeric_value": null,
-                "missing": true,
-                "id": -1,
-                "name": "No Data"
-              }
-            ]
-          }
+            "n": 1662
         }
-      ],
-      "missing": 6,
-      "measures": {
-        "count": {
-          "data": [
-            7.094398112219564,
-            44.81696838061841,
-            324.863852307301,
-            29.94309143226602,
-            39.08751468235051,
-            307.7446126855225,
-            26.59453697255602,
-            44.071228399613275,
-            306.1094534279697,
-            104.24435962290883,
-            37.79800686476203,
-            234.7328523124678,
-            235.25671064272385,
-            18.346166637244014,
-            123.17234152017073,
-            0,
-            2.6472184211073,
-            7.292485180335729,
-            0,
-            2.6472184211073,
-            7.292485180335729,
-            0,
-            2.6472184211073,
-            7.292485180335729,
-            2.180582851279039,
-            2.6472184211073,
-            5.11190232905669,
-            5.11190232905669,
-            2.6472184211073,
-            2.180582851279039,
-            16.472326387127094,
-            77.30676676065947,
-            391.81011748765206,
-            41.52736285882107,
-            79.59104539023444,
-            364.47080238638296,
-            58.5641962784524,
-            71.50129562440789,
-            355.5237187325782,
-            183.86454365943916,
-            47.86610205252415,
-            253.858564923475,
-            234.8462883023515,
-            45.14558322477296,
-            205.5973391083137,
-            4.826340634772605,
-            47.233844476837064,
-            266.11437362242464,
-            28.436679484540946,
-            45.23525754404098,
-            244.50262170545247,
-            36.329155520859075,
-            39.15595741950347,
-            242.6894457936718,
-            111.48874746532407,
-            23.980973803225968,
-            182.7048374654843,
-            156.82947977239482,
-            36.13296495890933,
-            125.21211400273015,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            12.217223612475001,
-            58.067742113046556,
-            401.23634250342593,
-            42.14767918206568,
-            52.22021234738367,
-            377.153416699498,
-            89.33090482289442,
-            46.14432159828942,
-            336.04608180776336,
-            218.63113778572378,
-            32.56931019147152,
-            220.32086025175158,
-            171.12970746771506,
-            43.99521651171435,
-            256.39638424951755,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-          ],
-          "n_missing": 6,
-          "metadata": {
-            "references": {},
-            "derived": true,
-            "type": {
-              "integer": false,
-              "missing_rules": {},
-              "missing_reasons": {
-                "No Data": -1
-              },
-              "class": "numeric"
-            }
-          }
-        }
-      },
-      "element": "crunch:cube",
-      "counts": [
-        8,
-        54,
-        372,
-        32,
-        49,
-        353,
-        31,
-        54,
-        349,
-        139,
-        43,
-        252,
-        251,
-        23,
-        160,
-        0,
-        1,
-        5,
-        0,
-        1,
-        5,
-        0,
-        1,
-        5,
-        2,
-        1,
-        3,
-        3,
-        1,
-        2,
-        13,
-        74,
-        408,
-        43,
-        76,
-        376,
-        59,
-        69,
-        367,
-        188,
-        42,
-        265,
-        235,
-        47,
-        213,
-        4,
-        42,
-        248,
-        30,
-        40,
-        224,
-        29,
-        38,
-        227,
-        108,
-        21,
-        165,
-        143,
-        31,
-        120,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        8,
-        51,
-        374,
-        38,
-        45,
-        350,
-        81,
-        40,
-        312,
-        200,
-        27,
-        206,
-        163,
-        36,
-        234,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "n": 1662
     }
-  }
 }

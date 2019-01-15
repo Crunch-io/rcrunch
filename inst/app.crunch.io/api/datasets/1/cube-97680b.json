@@ -1,292 +1,448 @@
 {
-  "element": "shoji:view",
-  "self": "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fgender%2F%22%7D%2C%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2FtextVar%2F%22%7D%5D%2C%22measures%22%3A%7B%22mean%22%3A%7B%22function%22%3A%22cube_mean%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fbirthyr%2F%22%7D%5D%7D%2C%22max%22%3A%7B%22function%22%3A%22cube_max%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fbirthyr%2F%22%7D%5D%7D%7D%2C%22weight%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2F0001f2%2F%22%7D&filter=%7B%7D",
-  "value": {
-    "query": {
-      "measures": {
-        "max": {
-          "function": "cube_max",
-          "args": [{
-            "variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
-          }]
-        },
-        "mean": {
-          "function": "cube_mean",
-          "args": [{
-            "variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
-          }]
-        }
-      },
-      "dimensions": [{
-        "variable": "https://app.crunch.io/api/datasets/1/variables/gender/"
-      }, {
-        "variable": "https://app.crunch.io/api/datasets/1/variables/textVar/"
-      }],
-      "weight": "https://app.crunch.io/api/datasets/1/variables/0001f2/"
-    },
-    "query_environment": {
-      "filter": []
-    },
-    "result": {
-      "dimensions": [{
-        "references": {
-          "discarded": false,
-          "alias": "gender",
-          "view": {
-            "show_counts": false,
-            "column_width": null,
-            "include_missing": false,
-            "show_numeric_values": false
-          },
-          "description": "",
-          "name": "Gender"
-        },
-        "derived": false,
-        "type": {
-          "ordinal": false,
-          "class": "categorical",
-          "categories": [{
-            "numeric_value": 1,
-            "missing": false,
-            "id": 1,
-            "name": "Male"
-          }, {
-            "numeric_value": 2,
-            "missing": false,
-            "id": 2,
-            "name": "Female"
-          }, {
-            "numeric_value": 8,
-            "missing": true,
-            "id": 8,
-            "name": "Skipped"
-          }, {
-            "numeric_value": 9,
-            "missing": true,
-            "id": 9,
-            "name": "Not Asked"
-          }, {
-            "numeric_value": null,
-            "missing": true,
-            "id": -1,
-            "name": "No Data"
-          }]
-        }
-      }, {
-        "references": {
-          "discarded": false,
-          "alias": "textVar",
-          "name": "Text variable ftw",
-          "description": ""
-        },
-        "derived": false,
-        "type": {
-          "ordinal": false,
-          "class": "categorical",
-          "categories": [{
-            "numeric_value": 1,
-            "missing": false,
-            "id": 1,
-            "name": "Strongly Approve"
-          }, {
-            "numeric_value": 2,
-            "missing": false,
-            "id": 2,
-            "name": "Somewhat Approve"
-          }, {
-            "numeric_value": 3,
-            "missing": false,
-            "id": 3,
-            "name": "Somewhat Disapprove"
-          }, {
-            "numeric_value": 4,
-            "missing": false,
-            "id": 4,
-            "name": "Strongly Disapprove"
-          }, {
-            "numeric_value": 5,
-            "missing": false,
-            "id": 5,
-            "name": "Not Sure"
-          }, {
-            "numeric_value": 8,
-            "missing": true,
-            "id": 8,
-            "name": "Skipped"
-          }, {
-            "numeric_value": 9,
-            "missing": true,
-            "id": 9,
-            "name": "Not Asked"
-          }, {
-            "numeric_value": null,
-            "missing": true,
-            "id": -1,
-            "name": "No Data"
-          }]
-        }
-      }],
-      "missing": 2,
-      "measures": {
-        "max": {
-          "data": [1989.0, 1993.0, 1991.0, 1993.0, 1992.0, 1980.0, {
-            "?": -1
-          }, {
-            "?": -1
-          }, 1991.0, 1994.0, 1990.0, 1993.0, 1989.0, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }, {
-            "?": -1
-          }],
-          "n_missing": 2,
-          "metadata": {
-            "derived": false,
-            "references": {
-              "discarded": false,
-              "alias": "birthyr",
-              "name": "Birth Year",
-              "description": ""
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fgender%2F%22%7D%2C%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2FtextVar%2F%22%7D%5D%2C%22measures%22%3A%7B%22mean%22%3A%7B%22function%22%3A%22cube_mean%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fbirthyr%2F%22%7D%5D%7D%2C%22max%22%3A%7B%22function%22%3A%22cube_max%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fbirthyr%2F%22%7D%5D%7D%7D%2C%22weight%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2F0001f2%2F%22%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "max": {
+                    "function": "cube_max",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
+                        }
+                    ]
+                },
+                "mean": {
+                    "function": "cube_mean",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
+                        }
+                    ]
+                }
             },
-            "type": {
-              "class": "numeric",
-              "missing_reasons": {
-                "No Data": -1,
-                "Skipped": 1,
-                "Not Asked": 2
-              },
-              "missing_rules": {}
-            }
-          }
+            "dimensions": [
+                {
+                    "variable": "https://app.crunch.io/api/datasets/1/variables/gender/"
+                },
+                {
+                    "variable": "https://app.crunch.io/api/datasets/1/variables/textVar/"
+                }
+            ],
+            "weight": "https://app.crunch.io/api/datasets/1/variables/0001f2/"
         },
-        "mean": {
-          "data": [1967.6490522177871, 1971.3467224502538, 1968.7892553211107, 1963.1548100908244, 1981.2770228166314, 1976.3747475182413, {
-            "?": -8
-          }, {
-            "?": -8
-          }, 1966.1334247880734, 1972.6658745517657, 1972.9266945199975, 1963.482436195442, 1978.0975835651025, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }, {
-            "?": -8
-          }],
-          "n_missing": 2,
-          "metadata": {
-            "references": {},
-            "derived": true,
-            "type": {
-              "integer": false,
-              "missing_rules": {},
-              "missing_reasons": {
-                "No Data": -1,
-                "NaN": -8
-              },
-              "class": "numeric"
-            }
-          }
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "discarded": false,
+                        "alias": "gender",
+                        "view": {
+                            "show_counts": false,
+                            "column_width": null,
+                            "include_missing": false,
+                            "show_numeric_values": false
+                        },
+                        "description": "",
+                        "name": "Gender"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "Male"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Female"
+                            },
+                            {
+                                "numeric_value": 8,
+                                "missing": true,
+                                "id": 8,
+                                "name": "Skipped"
+                            },
+                            {
+                                "numeric_value": 9,
+                                "missing": true,
+                                "id": 9,
+                                "name": "Not Asked"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "references": {
+                        "discarded": false,
+                        "alias": "textVar",
+                        "name": "Text variable ftw",
+                        "description": ""
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "Strongly Approve"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Somewhat Approve"
+                            },
+                            {
+                                "numeric_value": 3,
+                                "missing": false,
+                                "id": 3,
+                                "name": "Somewhat Disapprove"
+                            },
+                            {
+                                "numeric_value": 4,
+                                "missing": false,
+                                "id": 4,
+                                "name": "Strongly Disapprove"
+                            },
+                            {
+                                "numeric_value": 5,
+                                "missing": false,
+                                "id": 5,
+                                "name": "Not Sure"
+                            },
+                            {
+                                "numeric_value": 8,
+                                "missing": true,
+                                "id": 8,
+                                "name": "Skipped"
+                            },
+                            {
+                                "numeric_value": 9,
+                                "missing": true,
+                                "id": 9,
+                                "name": "Not Asked"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 2,
+            "measures": {
+                "max": {
+                    "data": [
+                        1989,
+                        1993,
+                        1991,
+                        1993,
+                        1992,
+                        1980,
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        1991,
+                        1994,
+                        1990,
+                        1993,
+                        1989,
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        },
+                        {
+                            "?": -1
+                        }
+                    ],
+                    "n_missing": 2,
+                    "metadata": {
+                        "derived": false,
+                        "references": {
+                            "discarded": false,
+                            "alias": "birthyr",
+                            "name": "Birth Year",
+                            "description": ""
+                        },
+                        "type": {
+                            "class": "numeric",
+                            "missing_reasons": {
+                                "No Data": -1,
+                                "Skipped": 1,
+                                "Not Asked": 2
+                            },
+                            "missing_rules": {
+
+                            }
+                        }
+                    }
+                },
+                "mean": {
+                    "data": [
+                        1967.64905221779,
+                        1971.34672245025,
+                        1968.78925532111,
+                        1963.15481009082,
+                        1981.27702281663,
+                        1976.37474751824,
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        1966.13342478807,
+                        1972.66587455177,
+                        1972.92669452,
+                        1963.48243619544,
+                        1978.0975835651,
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        },
+                        {
+                            "?": -8
+                        }
+                    ],
+                    "n_missing": 2,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": false,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1,
+                                "NaN": -8
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                65,
+                130,
+                46,
+                212,
+                12,
+                2,
+                0,
+                0,
+                93,
+                163,
+                78,
+                172,
+                27,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "n": 1000
         }
-      },
-      "element": "crunch:cube",
-      "counts": [65, 130, 46, 212, 12, 2, 0, 0, 93, 163, 78, 172, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      "n": 1000
     }
-  }
 }

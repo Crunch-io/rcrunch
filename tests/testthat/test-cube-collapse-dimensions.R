@@ -69,7 +69,7 @@ test_that("dimSums(mr_x_mr)", {
 test_that("dimSums(mr_x_mr) proportions", {
     first_univariate <- dimSums(mr_x_mr, 2)
     expect_equal(
-        prop.table(first_univariate),
+        as.array(prop.table(first_univariate)),
         # note this is a 1-d output, condensed here for space
         cubify(
             0.343005652705866, 0.526457708906739,
@@ -91,13 +91,13 @@ test_that("dimSums(mr_x_mr) proportions", {
     )
 
     expect_equal(
-        prop.table(first_univariate, 1),
+        as.array(prop.table(first_univariate, 1)),
         cubify(1, dims = mr_x_mr_dims["letters"])
     )
 
     second_univariate <- dimSums(mr_x_mr, 1)
     expect_equal(
-        prop.table(second_univariate),
+        as.array(prop.table(second_univariate)),
         cubify(
             0.463523266541455,
             0.204955939573381,
@@ -112,7 +112,7 @@ test_that("dimSums(mr_x_mr) proportions", {
         )
     )
     expect_equal(
-        prop.table(second_univariate, 1),
+        as.array(prop.table(second_univariate, 1)),
         cubify(1, dims = mr_x_mr_dims["offal"])
     )
 
@@ -139,7 +139,7 @@ test_that("dimSums(cat_x_mr)", {
         )
     )
     expect_equivalent(
-        prop.table(dimSums(cat_x_mr, 2)),
+        as.array(prop.table(dimSums(cat_x_mr, 2))),
         cubify(
             0.138355225153969, 0.322687424815186, 0.480529823991341,
             dims = cat_x_mr_dims["zoo"]
@@ -147,7 +147,7 @@ test_that("dimSums(cat_x_mr)", {
     )
 
     expect_equivalent(
-        prop.table(dimSums(cat_x_mr, 1)),
+        as.array(prop.table(dimSums(cat_x_mr, 1))),
         cubify(
             0.334028222315447, 0.665971777684553,
             dims = list(fruit = list("rambutan", "satsuma"))

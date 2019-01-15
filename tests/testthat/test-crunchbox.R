@@ -328,7 +328,6 @@ with_test_authentication({
     hiddenVariables(ds) <- "num"
     filters(ds)[["A filter"]] <- ds$cat == "d"
     test_that("We can make a box", {
-        skip_on_local_backend("unskip when #162257432 ships")
         expect_true(is.character(crunchBox(ds)))
     })
 })

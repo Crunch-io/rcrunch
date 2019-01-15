@@ -154,7 +154,11 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
 #' @export
 setMethod("show", "DeckCatalog", function(object) {
     out <- as.data.frame(object)
-    print(out[, c("name", "team", "is_public", "owner_name")])
+    if (length(object) > 0) {
+        print(out[, c("name", "team", "is_public", "owner_name")])
+    } else {
+        print(out)
+    }
 })
 
 # CrunchDeck --------------------------------------------------------------

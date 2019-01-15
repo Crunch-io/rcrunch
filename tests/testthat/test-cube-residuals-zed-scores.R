@@ -71,6 +71,13 @@ test_that("zScores for CrunchCube normal contingency table is chisq standardized
     expect_equal(zScores(gender_x_ideology), out)
 })
 
+test_that("zScores returns a CrunchCubeCalculation", {
+    zscore <- zScores(mr_by_cat)
+    expect_is(zscore, "CrunchCubeCalculation")
+    expect_equal(attr(zscore, "type"), "z_score")
+    expect_equal(attr(zscore, "dims"), mr_by_cat@dims)
+})
+
 ##########################################
 ## fixutres from whaam
 ##########################################
@@ -108,7 +115,8 @@ test_that("residuals for MR by categorical unweighted", {
     ),
     dims = mr_by_cat_dims
     )
-    expect_equal(zScores(mr_by_cat), out)
+    expect_equal(as.array(rstandard(mr_by_cat)), out)
+    expect_equal(as.array(zScores(mr_by_cat)), out)
 })
 
 test_that("residuals for MR by cat from app", {
@@ -118,7 +126,7 @@ test_that("residuals for MR by cat from app", {
     ),
     dims = rev(cat_by_mr_dims)
     )
-    expect_equal(zScores(mr_by_cat_2), out)
+    expect_equal(as.array(zScores(mr_by_cat_2)), out)
 })
 test_that("residuals for categorical by MR, should be transpose of above", {
     out <- cubify(c(
@@ -127,7 +135,7 @@ test_that("residuals for categorical by MR, should be transpose of above", {
     ),
     dims = cat_by_mr_dims
     )
-    expect_equal(zScores(cat_by_mr), out)
+    expect_equal(as.array(zScores(cat_by_mr)), out)
 })
 
 
@@ -140,7 +148,7 @@ test_that("residuals for MR by MR", {
     ),
     dims = mr_by_mr_dims
     )
-    expect_equal(zScores(mr_by_mr), out)
+    expect_equal(as.array(zScores(mr_by_mr)), out)
 })
 
 test_that("residuals for MR by MR (disparate MRs)", {
@@ -152,7 +160,7 @@ test_that("residuals for MR by MR (disparate MRs)", {
         ),
         dims = mr_by_mr_heterogeneous_dims
     )
-    expect_equal(zScores(mr_by_mr_heterogeneous), out)
+    expect_equal(as.array(zScores(mr_by_mr_heterogeneous)), out)
 })
 
 mr_by_mr_by_too_many <- loadCube("cubes/cat-x-mr-x-mr.json")

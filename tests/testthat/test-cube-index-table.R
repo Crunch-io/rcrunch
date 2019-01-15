@@ -2,6 +2,14 @@ context("Index tables")
 
 uni_cube <- loadCube(test_path("cubes/univariate-categorical.json"))
 catXmrXmr_cube <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
+catXcat_cube <- loadCube(test_path("cubes/cat-x-cat.json"))
+
+test_that("index table returns a CrunchCubeCalculation", {
+    idx_tbl <- index.table(catXcat_cube, 1)
+    expect_is(idx_tbl, "CrunchCubeCalculation")
+    expect_equal(attr(idx_tbl, "type"), "index")
+    expect_equal(length(attr(idx_tbl, "dims")), length(dim(idx_tbl)))
+})
 
 test_that("index table validation", {
     expect_error(
@@ -14,14 +22,14 @@ test_that("index table validation", {
     )
 })
 
-catXcat_cube <- loadCube(test_path("cubes/cat-x-cat.json"))
+
 catXcat_names <- dimnames(catXcat_cube)
 catXcat_names$v4 <- catXcat_names$v4[catXcat_names$v4 != "No Data"]
 catXcat_names$v7 <- catXcat_names$v7[!catXcat_names$v7 %in% c("D", "No Data")]
 
 test_that("index table on a bivariate cube", {
     expect_equal(
-        index.table(catXcat_cube, 1),
+        as.array(index.table(catXcat_cube, 1)),
         cubify(
             107.142857142857, 85.7142857142857,
             93.75, 112.5,
@@ -30,7 +38,7 @@ test_that("index table on a bivariate cube", {
     )
 
     expect_equal(
-        index.table(catXcat_cube, 2),
+        as.array(index.table(catXcat_cube, 2)),
         cubify(
             100, 80,
             100, 120,
@@ -41,7 +49,7 @@ test_that("index table on a bivariate cube", {
 
 test_that("index table with baseline", {
     expect_equal(
-        index.table(catXcat_cube, 1, c(0.6, 0.4)),
+        as.array(index.table(catXcat_cube, 1, c(0.6, 0.4))),
         cubify(
             119.047619047619, 71.4285714285714,
             104.16666666666667, 93.75,
@@ -50,7 +58,7 @@ test_that("index table with baseline", {
     )
 
     expect_equal(
-        index.table(catXcat_cube, 2, c(0.6, 0.4)),
+        as.array(index.table(catXcat_cube, 2, c(0.6, 0.4))),
         cubify(
             83.3333333333333, 66.6666666666667,
             125, 150,
@@ -59,10 +67,10 @@ test_that("index table with baseline", {
     )
 
     expect_equal(
-        index.table(
+        as.array(index.table(
             catXcat_cube, 2,
             array(c(0.6, 0.4, 0.4, 0.6), dim = c(2, 2))
-        ),
+        )),
         cubify(
             83.3333333333333, 100,
             125, 100,
@@ -77,7 +85,7 @@ mrXcat_names$pdl_gender <- mrXcat_names$pdl_gender[mrXcat_names$pdl_gender != "N
 
 test_that("index table on a bivariate cube with mr", {
     expect_equal(
-        index.table(mrXcat_cube, 1),
+        as.array(index.table(mrXcat_cube, 1)),
         cubify(
             95.3416155822363, 104.394053238208,
             101.879419344372, 98.2272247381305,
@@ -90,7 +98,7 @@ test_that("index table on a bivariate cube with mr", {
     )
 
     expect_equal(
-        index.table(mrXcat_cube, 2),
+        as.array(index.table(mrXcat_cube, 2)),
         cubify(
             95.8651525855387, 103.859044435659,
             102.305106635277, 97.8432045727022,
@@ -108,8 +116,8 @@ test_that("index table on an mr x mr compared to calculation with mr cube", {
     mr_alone <- loadCube(test_path("cubes/natrep-cube.json"))
 
     expect_equal(
-        index.table(mr_x_mr, 2),
-        prop.table(mr_x_mr, 2) /
+        as.array(index.table(mr_x_mr, 2)),
+        as.array(prop.table(mr_x_mr, 2)) /
             broadcast(prop.table(mr_alone), dim = dim(mr_x_mr)) * 100
     )
 })
@@ -134,15 +142,15 @@ with_test_authentication({
         univariate_country <- crtabs(~country, data = ds)
 
         expect_equal(
-            index.table(bivariate_cube, 2),
-            prop.table(bivariate_cube, 2) /
-                broadcast(prop.table(univariate_allpets), dim = dim(bivariate_cube)) * 100
+            as.array(index.table(bivariate_cube, 2)),
+            as.array(prop.table(bivariate_cube, 2)) /
+                broadcast(as.array(prop.table(univariate_allpets)), dim = dim(bivariate_cube)) * 100
         )
 
         expect_equal(
-            index.table(bivariate_cube, 1),
-            prop.table(bivariate_cube, 1) /
-                broadcast(prop.table(univariate_country), dim = dim(bivariate_cube)) * 100
+            as.array(index.table(bivariate_cube, 1)),
+            as.array(prop.table(bivariate_cube, 1)) /
+                broadcast(as.array(prop.table(univariate_country)), dim = dim(bivariate_cube)) * 100
         )
     })
 })

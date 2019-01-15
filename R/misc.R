@@ -272,7 +272,7 @@ datetimeFormater <- function(resolution) {
 #'
 #' @keywords internal
 is.TRUEorFALSE <- function(value) {
-    return(is.logical(value) && !is.na(value) && length(value) == 1)
+    return(is.logical(value) && length(value) == 1 && !is.na(value))
 }
 is.singleCharacter <- function(value){
     return(is.character(value) && length(value) == 1)

@@ -80,7 +80,7 @@ makeCaseVariable <- function(..., cases, data = NULL, name) {
                 "one or the other."
             )
         }
-    } else if (missing(cases) || substitute(cases) == "") {
+    } else if (missing(cases) || all(substitute(cases) == "")) {
         # check substitute(cases) == "" in case the cases need to be
         # evaluated, length 1 means no cases are present.
         halt(

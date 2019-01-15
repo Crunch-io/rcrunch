@@ -6,56 +6,76 @@
             "measures": {
                 "count": {
                     "function": "cube_count",
-                    "args": []
+                    "args": [
+
+                    ]
                 }
             },
-            "dimensions": [{
-                "variable": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/variables/000006/"
-            }],
+            "dimensions": [
+                {
+                    "variable": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/variables/000006/"
+                }
+            ],
             "weight": null
         },
         "query_environment": {
-            "filter": []
+            "filter": [
+
+            ]
         },
         "result": {
-            "dimensions": [{
-                "references": {
-                    "alias": "selected_like",
-                    "name": "selected_like"
-                },
-                "derived": false,
-                "type": {
-                    "ordinal": false,
-                    "class": "categorical",
-                    "categories": [{
-                        "numeric_value": 1,
-                        "missing": false,
-                        "id": 1,
-                        "name": "Selected"
-                    }, {
-                        "numeric_value": 2,
-                        "missing": false,
-                        "id": 2,
-                        "name": "Not selected"
-                    }, {
-                        "numeric_value": null,
-                        "missing": true,
-                        "id": -1,
-                        "name": "No Data"
-                    }]
+            "dimensions": [
+                {
+                    "references": {
+                        "alias": "selected_like",
+                        "name": "selected_like"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Not selected"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
                 }
-            }],
+            ],
             "missing": 5,
             "measures": {
                 "count": {
-                    "data": [10, 5, 0],
+                    "data": [
+                        10,
+                        5,
+                        0
+                    ],
                     "n_missing": 5,
                     "metadata": {
-                        "references": {},
+                        "references": {
+
+                        },
                         "derived": true,
                         "type": {
                             "integer": true,
-                            "missing_rules": {},
+                            "missing_rules": {
+
+                            },
                             "missing_reasons": {
                                 "No Data": -1
                             },
@@ -65,7 +85,11 @@
                 }
             },
             "element": "crunch:cube",
-            "counts": [10, 5, 0],
+            "counts": [
+                10,
+                5,
+                0
+            ],
             "n": 15
         }
     }
