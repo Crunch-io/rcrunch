@@ -101,7 +101,9 @@ setMethod("delete", "DatasetTuple", function(x, ...) {
     if (!askForPermission(prompt)) {
         halt("Must confirm deleting dataset")
     }
-    out <- callNextMethod()
+    out <- crDELETE(self(x))
+    dropCache(sessionURL("projects"))
+    dropOnly(sessionURL("datasets"))
     invisible(out)
 })
 

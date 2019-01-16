@@ -28,6 +28,10 @@ datasets <- function(x = getAPIRoot()) {
     if (inherits(x, "SearchResults")) {
         ## This is close enough to a dataset catalog
         out <- structure(list(index = x$datasets), class = "shoji")
+    } else if (is.project(x)) {
+        ## This is a ProjectFolder, so filter it to only datasets
+        ## TODO: explicit test, though this is called in loadDataset
+        return(x[types(x) %in% "dataset"])
     } else {
         out <- crGET(shojiURL(x, "catalogs", "datasets"))
     }
@@ -61,11 +65,13 @@ listDatasets <- function(kind = c("active", "all", "archived"),
         ## TODO: update listDatasetGadget to use new dataset folder API
         listDatasetGadget(kind, refresh)
     } else {
+        ## TODO: figure out what listDatasets should show
         dscat <- selectDatasetCatalog(kind, project, refresh)
         return(names(dscat))
     }
 }
 
+## TODO: kill this function
 selectDatasetCatalog <- function(kind = c("active", "all", "archived"),
                                  project = NULL,
                                  refresh = FALSE) {
@@ -128,36 +134,59 @@ loadDataset <- function(dataset,
                         project = NULL,
                         refresh = FALSE) {
 
-    if (is.character(dataset) && grepl("^http|^/api/", dataset)) {
-        # either /api/ is needed for detecting URLs from redacted mocks.
-        # TDOO: a more robust detection method that works with other redactions?
-        return(loadDatasetFromURL(dataset))
-    }
-
     if (inherits(dataset, "DatasetTuple")) {
         return(entity(dataset))
     }
 
+    if (refresh) {
+        ## TODO: drop relevant caches; see deleteDataset
+    }
     if (is.character(dataset)) {
-        ## See if "dataset" is a path
-        dspath <- parseFolderPath(dataset)
-        dataset <- tail(dspath, 1)
-        if (length(dspath) > 1) {
-            project <- dspath[-length(dspath)]
-        } else if (is.null(project)) {
-            ## We have a dataset name and no project given, so use search by name
-            ## TODO
+        if (is.datasetURL(dataset)) {
+            ## Just load it, no other querying needed
+            return(loadDatasetFromURL(dataset))
         }
+        ## See if "dataset" is a path or name
+        found <- lookupDataset(dataset)
+        ## Subset as indicated.
+        found <- switch(match.arg(kind),
+            active = active(found),
+            all = found,
+            archived = archived(found)
+        )
+        if (length(found) == 0) {
+            halt(dQuote(dataset), " not found")
+        }
+        ## This odd selecting behavior handles the multiple matches case
+        out <- found[[names(found)[1]]]
+        if (!is.dataset(out)) {
+            ## There is inconsistency btw DatasetCatalog and ProjectFolder
+            out <- entity(out)
+        }
+        return(out)
+    } else if (is.whole(dataset)) {
+        warning("TODO write a nice warning that you shouldn't do this anymore")
+        dsname <- listDatasets(kind = kind, project = project)[dataset]
+        if (is.na(dsname)) {
+            halt("subscript out of bounds")
+        }
+        return(loadDataset(
+            dsname,
+            kind = kind,
+            project = project
+        ))
+    } else {
+        halt("TODO write a nice error that this is a bad input")
     }
-    dscat <- selectDatasetCatalog(kind, project, refresh)
-    dsname <- dataset
-    dataset <- dscat[[dataset]]
-    if (is.null(dataset)) {
-        halt(dQuote(dsname), " not found")
-    } else if (inherits(dataset, "DatasetTuple")) {
-        dataset <- entity(dataset)
-    }
-    return(dataset)
+}
+
+is.datasetURL <- function (x) {
+    # /api/ check is for redacted mocks that prune the scheme://host
+    # We don't only use that check because web app URLs don't include /api/
+    # Note that this does pass through URLs that are to resources inside a
+    # dataset, such as /api/datasets/123/variables/.
+    # Call `datasetReference()` on the return to get a dataset URL
+    is.character(x) && length(x) == 1L && grepl("^http|^/api/", x)
 }
 
 loadDatasetFromURL <- function(url) {
@@ -193,15 +222,52 @@ loadDatasetFromURL <- function(url) {
 #' @seealso [delete()]
 #' @export
 deleteDataset <- function(x, ...) {
-    if (!is.dataset(x)) {
-        if (is.numeric(x)) {
-            x <- listDatasets()[x]
-            if (is.na(x)) {
-                halt("subscript out of bounds")
-            }
-        }
-        ## TODO: replace this usage of the dataset catalog
-        x <- datasets()[[x]]
+    if (is.dataset(x)) {
+        return(delete(x, ...))
     }
-    invisible(delete(x, ...))
+
+    if (is.character(x)) {
+        if (is.datasetURL(x) && identical(x, datasetReference(x))) {
+            url <- x
+        } else {
+            # Assume it is a path or name
+            found <- lookupDataset(x)
+            if (length(found) != 1) {
+                halt(x, " identifies ", length(found),
+                    " datasets. To delete, please identify the dataset uniquely by URL or path.")
+            }
+            ## We know there is just one now
+            url <- urls(found)
+        }
+        ## Now, delete it
+        if (!askForPermission(paste0("Really delete dataset ", x, "?"))) {
+            halt("Must confirm deleting dataset")
+        }
+        crDELETE(url)
+        dropCache(sessionURL("projects"))
+        dropOnly(sessionURL("datasets"))
+    } else {
+        halt("deleteDataset requires either a Dataset, a unique dataset name, or a URL")
+    }
+}
+
+lookupDataset <- function(x, project = NULL) {
+    # x is assumed to be either a dataset name or a path to a dataset by name
+    # return is a dataset catalog with dataset tuples matching that name,
+    # potentially scoped to a specified project
+
+    # First, see if there is a path, and if so, walk it, possibly relative to
+    # `project`
+    dspath <- parseFolderPath(x)
+    x <- tail(dspath, 1)
+    if (length(dspath) > 1) {
+        project <- cd(project %||% projects(), dspath[-length(dspath)])
+    }
+    # If don't have a project, query by name
+    if (is.null(project)) {
+        return(findDatasetsByName(x))
+    } else {
+        # Filter the project folder to be only datasets matching this name
+        return(datasets(project[names(project) == x]))
+    }
 }

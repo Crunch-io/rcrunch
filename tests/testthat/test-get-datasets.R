@@ -97,9 +97,6 @@ with_mock_crunch({
         test_that("deleteDataset by name", {
             expect_DELETE(deleteDataset("test ds"), self(ds))
         })
-        test_that("deleteDataset by index", {
-            expect_DELETE(deleteDataset(4), self(ds))
-        })
         test_that("deleteDataset on Dataset object", {
             expect_DELETE(deleteDataset(ds), self(ds))
         })
@@ -110,10 +107,10 @@ with_mock_crunch({
             "this is totally not a dataset",
             paste(dQuote("this is totally not a dataset"), "not found")
         ))
-        expect_error(
-            deleteDataset(9999),
-            "subscript out of bounds"
-        )
+        test_that("deleteDataset by index (is no longer supported)", {
+            expect_error(deleteDataset(4),
+                "deleteDataset requires either a Dataset, a unique dataset name, or a URL")
+        })
         expect_error(deleteDataset(ds), "Must confirm")
     })
 })

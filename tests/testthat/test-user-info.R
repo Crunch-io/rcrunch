@@ -10,7 +10,7 @@ with_mock_crunch({
     ds_cat <- selectDatasetCatalog()[[1]]
     ds <- loadDataset("ECON.sav")
 
-    test_that("users() works with dataset entities from catalogs", {
+    test_that("users() works with dataset tuples from catalogs", {
         user_cat <- users(ds_cat)
 
         expect_is(user_cat, "UserCatalog")
