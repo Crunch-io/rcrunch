@@ -30,7 +30,15 @@ with_mock_crunch({
     })
 
     test_that("cd personal", {
-        
+        expect_identical(self(cd(projects(), "~")),
+            "https://app.crunch.io/api/projects/personal/")
+        expect_identical(
+            projects() %>%
+                cd("Project One/Project Two") %>%
+                cd("~") %>%
+                self(),
+            "https://app.crunch.io/api/projects/personal/"
+        )
     })
 
     test_that("folder() and rootFolder() for projects", {

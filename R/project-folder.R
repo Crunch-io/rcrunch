@@ -22,9 +22,6 @@ setMethod("name", "ProjectFolder", function(x) {
 })
 
 setMethod("personalFolder", "ProjectFolder", function(x) {
-    # TODO: implement the real personal project. This is legacy behavior, and hacky
-    return(ProjectFolder(crGET(sessionURL("datasets"))))
-
     root <- projects()
     return(ProjectFolder(crGET(shojiURL(root, "catalogs", "personal"))))
 })
