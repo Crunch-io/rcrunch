@@ -39,17 +39,20 @@ with_mock_crunch({
     })
 
     test_that("loadDataset loads", {
-        ## NOTE: implementing the active dataset loading only first
         ds <- loadDataset("test ds")
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
-        ds <- loadDataset(4)
+    })
+
+    test_that("loadDataset by index is deprecated", {
+        expect_deprecated(ds <- loadDataset(4))
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
-        expect_error(loadDataset(666), "subscript out of bounds")
         expect_error(
-            loadDataset("not a dataset"),
-            paste(dQuote("not a dataset"), "not found")
+            expect_deprecated(
+                loadDataset(666)
+            ),
+            "subscript out of bounds"
         )
     })
 
@@ -90,6 +93,26 @@ with_mock_crunch({
         ds1 <- loadDataset("~/test ds")
         expect_is(ds1, "CrunchDataset")
         expect_identical(name(ds1), "test ds")
+    })
+
+    test_that("loadDataset error handling", {
+        expect_error(
+            loadDataset("not a dataset"),
+            paste(dQuote("not a dataset"), "not found")
+        )
+        expect_error(
+            loadDataset(c("test ds", "ECON.sav")),
+            # Not the clearest error message, but does signal something wrong with input
+            '"test ds" is not a folder'
+        )
+        expect_error(
+            loadDataset(NULL),
+            "'dataset' should be a character dataset name, path, or URL, not an object of class NULL"
+        )
+        expect_error(
+            loadDataset(list(5)),
+            "'dataset' should be a character dataset name, path, or URL, not an object of class list"
+        )
     })
 
     ds <- loadDataset("test ds")

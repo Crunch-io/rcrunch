@@ -83,7 +83,8 @@ setMethod("ordering", "DatasetCatalog", function(x) {
 #' @rdname ordering
 #' @export
 setMethod("ordering", "ProjectFolder", function(x) {
-    return(ordering(datasets(x)))
+    out <- DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets")))
+    return(ordering(out))
 })
 
 .stopDatasetOrderSetter <- function(x, value) {

@@ -147,7 +147,7 @@ loadDataset <- function(dataset,
             return(loadDatasetFromURL(dataset))
         }
         ## See if "dataset" is a path or name
-        found <- lookupDataset(dataset)
+        found <- lookupDataset(dataset, project = project)
         ## Subset as indicated.
         found <- switch(match.arg(kind),
             active = active(found),
@@ -165,7 +165,7 @@ loadDataset <- function(dataset,
         }
         return(out)
     } else if (is.whole(dataset)) {
-        warning("TODO write a nice warning that you shouldn't do this anymore")
+        warning("'dataset' should be a character dataset name, path, or URL. Loading by numeric index is deprecated.")
         dsname <- listDatasets(kind = kind, project = project)[dataset]
         if (is.na(dsname)) {
             halt("subscript out of bounds")
@@ -176,7 +176,7 @@ loadDataset <- function(dataset,
             project = project
         ))
     } else {
-        halt("TODO write a nice error that this is a bad input")
+        halt("'dataset' should be a character dataset name, path, or URL, not an object of class ", class(dataset))
     }
 }
 
@@ -255,19 +255,37 @@ lookupDataset <- function(x, project = NULL) {
     # x is assumed to be either a dataset name or a path to a dataset by name
     # return is a dataset catalog with dataset tuples matching that name,
     # potentially scoped to a specified project
+    Call <- match.call()
 
     # First, see if there is a path, and if so, walk it, possibly relative to
     # `project`
     dspath <- parseFolderPath(x)
     x <- tail(dspath, 1)
-    if (length(dspath) > 1) {
-        project <- cd(project %||% projects(), dspath[-length(dspath)])
-    }
-    # If don't have a project, query by name
-    if (is.null(project)) {
+    if (length(dspath) == 1 && is.null(project)) {
+        # If don't have a project, query by name
         return(findDatasetsByName(x))
-    } else {
-        # Filter the project folder to be only datasets matching this name
-        return(datasets(project[names(project) == x]))
     }
+
+    # Resolve `project`
+    if (is.null(project)) {
+        project <- projects()
+    } else if (!is.project(project)) {
+        ## Project name, URL, or index
+        project <- projects()[[project]]
+    }
+    if (is.null(project)) {
+        ## Means a project was specified (like by name) but it didn't exist
+        halt(
+            "Project ", deparseAndFlatten(eval.parent(Call$project)),
+            " is not valid"
+        )
+    }
+
+    # If there is a path in `x`, walk it within `project`
+    if (length(dspath) > 1) {
+        project <- cd(project, dspath[-length(dspath)])
+    }
+
+    # Filter the project folder to be only datasets matching this name
+    return(datasets(project[names(project) == x]))
 }

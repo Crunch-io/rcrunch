@@ -152,9 +152,9 @@ with_mock_crunch({
     })
 
     d <- datasets(aproject)
-    test_that("Project datasets catalog", {
-        expect_is(d, "DatasetCatalog")
-        expect_identical(names(d), "ECON.sav")
+    test_that("datasets() filters a project folder", {
+        expect_identical(names(d),
+            c("an archived dataset", "test ds", "streaming no messages"))
     })
 
     test_that("Can loadDataset from a project dataset catalog", {
