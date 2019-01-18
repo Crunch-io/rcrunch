@@ -1,11 +1,10 @@
 #' Open dataset selector
 #'
 #' @inheritParams listDatasets
-#' @return A `loadDataset()` call is pasted into your RStudio session`
+#' @return A `loadDataset()` call is pasted into your RStudio session
 #' @keywords internal
 listDatasetGadget <- function(kind = c("active", "all", "archived"),
                               refresh = FALSE) {
-    rstudioapi::verifyAvailable("0.99.878")
     call <- match.call()
     callFromOtherPackage(call, "crunchy")
 }
@@ -37,7 +36,8 @@ callFromOtherPackage <- function (call, pkg) {
         halt(
             "Please install the latest version of ",
             pkg,
-            " to access this function."
+            " to access ",
+            function_name
         )
     }
     eval.parent(call)
