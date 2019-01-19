@@ -62,51 +62,39 @@ listDatasets <- function(kind = c("active", "all", "archived"),
                          refresh = FALSE,
                          shiny = FALSE) {
     if (shiny) {
-        ## TODO: update listDatasetGadget to use new dataset folder API
         listDatasetGadget(kind, refresh)
     } else {
-        ## TODO: figure out what listDatasets should show
-        dscat <- selectDatasetCatalog(kind, project, refresh)
+        Call <- match.call()
+        if (refresh) {
+            ## TODO drop dataset folder caches
+        }
+        if (is.null(project)) {
+            warn_once("TODO message that this is a behavior change, only personal datasets; do x instead", option="crunch.list.personal.msg")
+            ## TODO: make this a once-per-session warning
+            ## TODO: factor out a once-per-session warning function
+            project <- "~"
+        }
+        if (is.character(project)) {
+            project <- cd(projects(), project)
+        }
+        if (!is.project(project)) {
+            ## TODO check this validation behavior
+            halt(
+                "Project ", deparseAndFlatten(eval.parent(Call$project)),
+                " is not valid"
+            )
+        }
+        ## Grab just the datasets
+        dscat <- datasets(project)
+        ## Subset as indicated
+        kind <- match.arg(kind)
+        if (kind == "active") {
+            dscat <- active(dscat)
+        } else if (kind == "archived") {
+            dscat <- archived(dscat)
+        }
         return(names(dscat))
     }
-}
-
-## TODO: kill this function
-selectDatasetCatalog <- function(kind = c("active", "all", "archived"),
-                                 project = NULL,
-                                 refresh = FALSE) {
-    Call <- match.call()
-    if (is.null(project)) {
-        ## Default: we'll get the dataset catalog from the API root
-        ## TODO: stop using datasets catalog. Default should be personal?
-        ## TODO: where should "shared with me" datasets appear?
-        project <- datasets()
-    } else if (!(is.shojiObject(project) || inherits(project, "ShojiTuple"))) {
-        ## Project name, URL, or index
-        project <- projects()[[project]]
-    }
-    if (is.null(project)) {
-        ## Means a project was specified (like by name) but it didn't exist
-        halt(
-            "Project ", deparseAndFlatten(eval.parent(Call$project)),
-            " is not valid"
-        )
-    }
-
-    if (refresh) {
-        project <- refresh(project)
-    }
-
-    if (is.project(project)) {
-        # Keep only datasets if ProjectFolder
-        project <- project[types(project) %in% "dataset"]
-    }
-    ## Subset as indicated
-    return(switch(match.arg(kind),
-        active = active(project),
-        all = project,
-        archived = archived(project)
-    ))
 }
 
 #' Load a Crunch Dataset

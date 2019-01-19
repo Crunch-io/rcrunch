@@ -2,18 +2,26 @@ context("Retrieving dataset list and single datasets")
 
 with_mock_crunch({
     cr <- session()
-    test_that("listDatasets lists", {
-        expect_identical(listDatasets(), c(
-            "ECON.sav", "streaming no messages",
-            "streaming test ds", "test ds"
-        ))
-        expect_identical(listDatasets("archived"), "an archived dataset")
+    test_that("listDatasets lists datasets in your personal project (and warns once)", {
+        options(crunch.list.personal.msg=NULL)
+        expect_warning(
+            expect_identical(listDatasets(), c(
+                "test ds",
+                "streaming no messages"
+            )),
+            "The right warning message here"
+        )
+        # Also test that this only warns the first time
+        expect_warning(
+            expect_identical(listDatasets("archived"),
+                "an archived dataset"
+            ),
+            NA
+        )
         expect_identical(listDatasets("all"), c(
-            "ECON.sav",
             "an archived dataset",
-            "streaming no messages",
-            "streaming test ds",
-            "test ds"
+            "test ds",
+            "streaming no messages"
         ))
     })
     test_that("listDatasets in project", {
@@ -45,7 +53,7 @@ with_mock_crunch({
     })
 
     test_that("loadDataset by index is deprecated", {
-        expect_deprecated(ds <- loadDataset(4))
+        expect_deprecated(ds <- loadDataset(1))
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
         expect_error(

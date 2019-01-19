@@ -7,11 +7,8 @@ user_cat_output <- get_output(data.frame(
     collaborator = c(FALSE, TRUE)))
 
 with_mock_crunch({
-    ds_cat <- selectDatasetCatalog()[[1]]
-    ds <- loadDataset("ECON.sav")
-
     test_that("users() works with dataset tuples from catalogs", {
-        user_cat <- users(ds_cat)
+        user_cat <- users(datasets()[[1]])
 
         expect_is(user_cat, "UserCatalog")
         expect_length(user_cat, 2)
@@ -19,7 +16,8 @@ with_mock_crunch({
         expect_prints(user_cat, user_cat_output)
     })
 
-    test_that("users() works with dataset entities from catalogs", {
+    test_that("users() works with dataset entities", {
+        ds <- loadDataset("ECON.sav")
         user_cat <- users(ds)
 
         expect_is(user_cat, "UserCatalog")

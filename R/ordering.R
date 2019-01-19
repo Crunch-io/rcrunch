@@ -37,18 +37,16 @@ setMethod("ordering<-", "VariableCatalog", function(x, value) {
 
     if (!identical(ordering(x)@graph, value@graph)) {
         ## Give deprecation warning (the first time only per session)
-        if (!isTRUE(getOption("crunch.already.shown.folders.msg", FALSE))) {
-            warning(paste(
-                "Hey! There's a new way to organize variables within",
-                "datasets: the 'folder' methods. They're easier to use and",
-                "more reliable. See `?mv`, `?cd`, and others for details, and",
-                "`vignettes('variable-order', package='crunch')` for examples.",
-                "You're seeing this message because you're still using the",
-                "ordering<- method, which is fine today, but it will be going",
-                "away in the future, so check out the new methods."
-            ))
-            options(crunch.already.shown.folders.msg = TRUE)
-        }
+        warn_once(
+            "Hey! There's a new way to organize variables within ",
+            "datasets: the 'folder' methods. They're easier to use and ",
+            "more reliable. See `?mv`, `?cd`, and others for details, and ",
+            "`vignettes('variable-order', package='crunch')` for examples. ",
+            "You're seeing this message because you're still using the ",
+            "ordering<- method, which is fine today, but it will be going ",
+            "away in the future, so check out the new methods. ",
+            option="crunch.already.shown.folders.msg"
+        )
 
         ## Validate.
         bad.entities <- setdiff(urls(value), urls(x))

@@ -4,6 +4,16 @@ rethrow <- function(x) halt(errorMessage(x))
 
 errorMessage <- function(e) attr(e, "condition")$message
 
+warn_once <- function(..., call.=FALSE, option) {
+    # Warn the first time, then set an option so we know not to warn again in
+    # the current session
+    if (!isTRUE(getOption(option, FALSE))) {
+        warning(..., call.=call.)
+        opts <- structure(list(TRUE), .Names=option)
+        do.call(options, opts)
+    }
+}
+
 vget <- function(name) {
     ## Return a function you can lapply/vapply to select an attribute
     ## Usage: lapply(list.of.stuff, vget("name"))
