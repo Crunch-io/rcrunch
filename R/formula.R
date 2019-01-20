@@ -163,8 +163,8 @@ registerCubeFunctions <- function(varnames = c()) {
     overlap <- intersect(varnames, names(funcs))
     if (length(overlap)) {
         halt(
-            "Cannot evaluate a cube with reserved name",
-            ifelse(length(overlap) > 1, "s", ""), ": ",
+            "Cannot evaluate a cube with reserved ",
+            pluralize("name", length(overlap)), ": ",
             serialPaste(dQuote(overlap))
         )
     }

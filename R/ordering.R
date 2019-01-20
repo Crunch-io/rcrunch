@@ -52,7 +52,7 @@ setMethod("ordering<-", "VariableCatalog", function(x, value) {
         bad.entities <- setdiff(urls(value), urls(x))
         if (length(bad.entities)) {
             halt(
-                "Variable URL", ifelse(length(bad.entities) > 1, "s", ""),
+                pluralize("Variable URL", length(bad.entities)),
                 " referenced in Order not present in catalog: ",
                 serialPaste(bad.entities)
             )

@@ -83,8 +83,7 @@ variablesFilter <- function (dataset, include.hidden = FALSE) {
         if (any(dupes)) {
             dup.aliases <- unique(aliases(allvars[dupes]))
             halt(
-                "Duplicate variable reference",
-                ifelse(length(dup.aliases) > 1, "s", ""), ": ",
+                pluralize("Duplicate variable reference", length(dup.aliases)), ": ",
                 serialPaste(dup.aliases)
             )
         }

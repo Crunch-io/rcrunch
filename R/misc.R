@@ -334,3 +334,8 @@ escapeRegex <- function(string) {
     out <- gsub("([.|()\\^{}+$*?])", "\\\\\\1", string)
     return(gsub("(\\[|\\])", "\\\\\\1", out))
 }
+
+pluralize <- function (string, count) {
+    # Naive conditional pluralization
+    ifelse(count == 1, string, paste0(string, "s"))
+}
