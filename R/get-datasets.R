@@ -66,7 +66,7 @@ listDatasets <- function(kind = c("active", "all", "archived"),
     } else {
         Call <- match.call()
         if (refresh) {
-            ## TODO drop dataset folder caches
+            dropDatasetsCache()
         }
         if (is.null(project)) {
             warn_once(
@@ -130,7 +130,7 @@ loadDataset <- function(dataset,
     }
 
     if (refresh) {
-        ## TODO: drop relevant caches; see deleteDataset
+        dropDatasetsCache()
     }
     if (is.character(dataset)) {
         if (is.datasetURL(dataset)) {

@@ -21,7 +21,13 @@ searchDatasets <- function(query, ...) {
         )
     }
     search_url <- sessionURL("search", "views")
-    results <- SearchResults(crGET(search_url, query = list(q = query, grouping = "datasets", ...)))
+    ## TODO: should this GET be uncached()? Every edit anywhere is going to
+    ## require dropping cache
+    results <- SearchResults(crGET(search_url, query = list(
+        q = query,
+        grouping = "datasets",
+        ...
+    )))
     ## Grab useful things out of the (odd) API response
     return(SearchResults(results[["groups"]][[1]]))
 }

@@ -28,6 +28,35 @@ setMethod("delete", "CrunchDataset", function(x, ...) {
 
 #' @rdname delete
 #' @export
+setMethod("delete", "DatasetTuple", function(x, ...) {
+    prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
+    if (!askForPermission(prompt)) {
+        halt("Must confirm deleting dataset")
+    }
+    out <- crDELETE(self(x))
+    dropDatasetsCache()
+    invisible(out)
+})
+
+dropDatasetsCache <- function() {
+    # A dataset or project has been deleted, and rather than guessing where it
+    # appeared in the HTTP query cache, just drop wherever it could have been:
+    # 1) All projects/folders
+    dropCache(sessionURL("projects"))
+    # 2) The datasets catalog
+    dropOnly(sessionURL("datasets"))
+    # 3) Search endpoints
+    dropSearchCache()
+}
+
+dropSearchCache <- function() {
+    # TODO: We should drop cache everywhere datasets or variables are modified?
+    dropCache(paste0(sessionURL("datasets"), "by_name/"))
+    dropCache(sessionURL("search", "views"))
+}
+
+#' @rdname delete
+#' @export
 setMethod("delete", "CrunchDeck", function(x, ...) {
     if (!askForPermission(paste0("Really delete deck ", dQuote(name(x)), "?"))) {
         halt("Must confirm deleting a deck")
@@ -130,18 +159,6 @@ setMethod("delete", "ShojiFolder", function(x, ...) {
 #' @export
 setMethod("delete", "ShojiTuple", function(x, ...) {
     crDELETE(x@entity_url, drop = dropCache(x@index_url))
-})
-#' @rdname delete
-#' @export
-setMethod("delete", "DatasetTuple", function(x, ...) {
-    prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
-    if (!askForPermission(prompt)) {
-        halt("Must confirm deleting dataset")
-    }
-    out <- crDELETE(self(x))
-    dropCache(sessionURL("projects"))
-    dropOnly(sessionURL("datasets"))
-    invisible(out)
 })
 
 #' @rdname delete
