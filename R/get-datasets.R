@@ -69,9 +69,12 @@ listDatasets <- function(kind = c("active", "all", "archived"),
             ## TODO drop dataset folder caches
         }
         if (is.null(project)) {
-            warn_once("TODO message that this is a behavior change, only personal datasets; do x instead", option="crunch.list.personal.msg")
-            ## TODO: make this a once-per-session warning
-            ## TODO: factor out a once-per-session warning function
+            warn_once(
+                "As of crunch 1.26.0, listDatasets() with no project specified ",
+                "only lists your 'personal' datasets (those that you created) ",
+                "and not those that were shared with you.",
+                option="crunch.list.personal.msg"
+            )
             project <- "~"
         }
         if (is.character(project)) {

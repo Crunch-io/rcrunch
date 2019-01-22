@@ -3,13 +3,18 @@ context("Retrieving dataset list and single datasets")
 with_mock_crunch({
     cr <- session()
     test_that("listDatasets lists datasets in your personal project (and warns once)", {
-        options(crunch.list.personal.msg=NULL)
+        options(crunch.list.personal.msg = NULL)
         expect_warning(
             expect_identical(listDatasets(), c(
                 "test ds",
                 "streaming no messages"
             )),
-            "The right warning message here"
+            paste(
+                "As of crunch 1.26.0, listDatasets() with no project specified",
+                "only lists your 'personal' datasets (those that you created)",
+                "and not those that were shared with you."
+            ),
+            fixed = TRUE
         )
         # Also test that this only warns the first time
         expect_warning(
