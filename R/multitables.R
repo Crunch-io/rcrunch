@@ -123,16 +123,6 @@ setMethod("is.public<-", "Multitable", function(x, value) {
     setEntitySlot(x, "is_public", value)
 })
 
-#' @rdname delete
-#' @export
-setMethod("delete", "Multitable", function(x, ...) {
-    if (!askForPermission(paste0("Really delete multitable ", dQuote(name(x)), "?"))) {
-        halt("Must confirm deleting multitable")
-    }
-    out <- crDELETE(self(x))
-    invisible(out)
-})
-
 #' @rdname dataset-reference
 setMethod("datasetReference", "Multitable", function(x) {
     datasetReference(self(x))

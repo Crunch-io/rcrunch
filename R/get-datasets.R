@@ -195,53 +195,6 @@ loadDatasetFromURL <- function(url) {
     return(dataset)
 }
 
-#' Delete a dataset from the dataset list
-#'
-#' This function lets you delete a dataset without first loading it. If you
-#' have a dataset that somehow is corrupted and won't load, you can delete it
-#' this way.
-#'
-#' The function also works on CrunchDataset objects, just like
-#' [delete()], which may be useful if you have loaded another
-#' package that masks the [delete()] method.
-#' @param x The name (character) of a dataset, its (numeric) position in the
-#' return of [listDatasets()], or an object of class
-#' `CrunchDataset`. x can only be of length 1--this function is not
-#' vectorized (for your protection).
-#' @param ... additional parameters passed to `delete`
-#' @return (Invisibly) the API response from deleting the dataset
-#' @seealso [delete()]
-#' @export
-deleteDataset <- function(x, ...) {
-    if (is.dataset(x)) {
-        return(delete(x, ...))
-    }
-
-    if (is.character(x)) {
-        if (is.datasetURL(x) && identical(x, datasetReference(x))) {
-            url <- x
-        } else {
-            # Assume it is a path or name
-            found <- lookupDataset(x)
-            if (length(found) != 1) {
-                halt(x, " identifies ", length(found),
-                    " datasets. To delete, please identify the dataset uniquely by URL or path.")
-            }
-            ## We know there is just one now
-            url <- urls(found)
-        }
-        ## Now, delete it
-        if (!askForPermission(paste0("Really delete dataset ", x, "?"))) {
-            halt("Must confirm deleting dataset")
-        }
-        crDELETE(url)
-        dropCache(sessionURL("projects"))
-        dropOnly(sessionURL("datasets"))
-    } else {
-        halt("deleteDataset requires either a Dataset, a unique dataset name, or a URL")
-    }
-}
-
 lookupDataset <- function(x, project = NULL) {
     # x is assumed to be either a dataset name or a path to a dataset by name
     # return is a dataset catalog with dataset tuples matching that name,

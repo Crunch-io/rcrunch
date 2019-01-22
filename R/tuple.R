@@ -91,24 +91,6 @@ setMethod("id", "DatasetTuple", function(x) x$id)
 
 #' @rdname tuple-methods
 #' @export
-setMethod("delete", "ShojiTuple", function(x, ...) {
-    crDELETE(x@entity_url, drop = dropCache(x@index_url))
-})
-#' @rdname tuple-methods
-#' @export
-setMethod("delete", "DatasetTuple", function(x, ...) {
-    prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
-    if (!askForPermission(prompt)) {
-        halt("Must confirm deleting dataset")
-    }
-    out <- crDELETE(self(x))
-    dropCache(sessionURL("projects"))
-    dropOnly(sessionURL("datasets"))
-    invisible(out)
-})
-
-#' @rdname tuple-methods
-#' @export
 setMethod("name", "ShojiTuple", vget("name"))
 
 #' @rdname tuple-methods

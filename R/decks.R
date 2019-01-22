@@ -175,16 +175,6 @@ setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
     invisible(refresh(x))
 })
 
-#' @rdname delete
-#' @export
-setMethod("delete", "CrunchDeck", function(x, ...) {
-    if (!askForPermission(paste0("Really delete deck ", dQuote(name(x)), "?"))) {
-        halt("Must confirm deleting a deck")
-    }
-    out <- crDELETE(self(x))
-    invisible(out)
-})
-
 #' Access the slides of a CrunchDeck
 #'
 #' Return a SlideCatalog from a CrunchDeck. All slide catalog methods should be

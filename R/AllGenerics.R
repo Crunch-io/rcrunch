@@ -120,9 +120,6 @@ setGeneric("derivation<-", function(x, value) standardGeneric("derivation<-"))
 setGeneric("urls", function(x) standardGeneric("urls"))
 setGeneric("self", function(x) standardGeneric("self"))
 setGeneric("refresh", function(x) standardGeneric("refresh"))
-setGeneric("delete", function(x, ...) standardGeneric("delete"),
-    signature = "x"
-)
 setGeneric("entities", function(x, ...) standardGeneric("entities"))
 setGeneric("entities<-", function(x, value) standardGeneric("entities<-"))
 setGeneric("tuple", function(x) standardGeneric("tuple"))

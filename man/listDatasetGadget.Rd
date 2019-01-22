@@ -15,7 +15,7 @@ datasets. Default is "active", i.e. non-archived.}
 datasets? Default is FALSE.}
 }
 \value{
-A \code{loadDataset()} call is pasted into your RStudio session`
+A \code{loadDataset()} call is pasted into your RStudio session
 }
 \description{
 Open dataset selector

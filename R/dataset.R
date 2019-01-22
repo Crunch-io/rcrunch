@@ -318,35 +318,6 @@ setMethod("refresh", "CrunchDataset", function(x) {
     return(out)
 })
 
-#' Delete a Crunch object from the server
-#'
-#' These methods delete entities, notably Datasets and Variables within them,
-#' from the server. This action is permanent and cannot be undone, so it
-#' should not be done lightly. Consider instead using `archive`
-#' for datasets and `hide` for variables.
-#'
-#' Deleting requires confirmation. In an interactive session, you will be asked
-#' to confirm. To avoid that prompt, or to delete objects from a
-#' non-interactive session, wrap the call in [with_consent()] to give
-#' your permission to delete.
-#'
-#' @param x a Crunch object
-#' @param ... additional arguments, in the generic
-#' @seealso [hide] [deleteDataset]
-#' @name delete
-#' @aliases delete
-NULL
-
-#' @rdname delete
-#' @export
-setMethod(
-    "delete", "CrunchDataset",
-    function(x, ...) {
-        out <- delete(tuple(x), ...)
-        invisible(out)
-    }
-)
-
 #' @export
 as.list.CrunchDataset <- function(x, ...) {
     lapply(seq_along(variables(x)), function(i) x[[i]])

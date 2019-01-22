@@ -1,7 +1,6 @@
 context("Retrieving dataset list and single datasets")
 
 with_mock_crunch({
-    cr <- session()
     test_that("listDatasets lists datasets in your personal project (and warns once)", {
         options(crunch.list.personal.msg = NULL)
         expect_warning(
@@ -70,6 +69,8 @@ with_mock_crunch({
     })
 
     test_that("loadDataset loads with DatasetTuple", {
+        # Is this a use case we need to support?
+        cr <- session()
         ds <- loadDataset(cr$datasets[["test ds"]])
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")

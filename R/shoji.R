@@ -63,14 +63,6 @@ setMethod("refresh", "ShojiObject", function(x) {
     return(do.call(Class, crGET(self(x))))
 })
 
-#' @rdname delete
-#' @export
-setMethod("delete", "ShojiObject", function(x, ...) invisible(crDELETE(self(x))))
-
-#' @rdname delete
-#' @export
-setMethod("delete", "ANY", function(x, ...) halt("'delete' only valid for Crunch objects"))
-
 #' Base setter for Crunch objects
 #' @param x a ShojiObject or subclass thereof
 #' @param i character the slot name to update
