@@ -4,6 +4,7 @@
 \name{delete}
 \alias{delete}
 \alias{delete,CrunchDataset-method}
+\alias{delete,DatasetTuple-method}
 \alias{delete,CrunchDeck-method}
 \alias{delete,CrunchSlide-method}
 \alias{delete,Multitable-method}
@@ -12,7 +13,6 @@
 \alias{delete,VariableTuple-method}
 \alias{delete,ShojiFolder-method}
 \alias{delete,ShojiTuple-method}
-\alias{delete,DatasetTuple-method}
 \alias{delete,ShojiObject-method}
 \alias{delete,ANY-method}
 \title{Delete a Crunch object from the server}
@@ -20,6 +20,8 @@
 delete(x, ...)
 
 \S4method{delete}{CrunchDataset}(x, ...)
+
+\S4method{delete}{DatasetTuple}(x, ...)
 
 \S4method{delete}{CrunchDeck}(x, ...)
 
@@ -36,8 +38,6 @@ delete(x, ...)
 \S4method{delete}{ShojiFolder}(x, ...)
 
 \S4method{delete}{ShojiTuple}(x, ...)
-
-\S4method{delete}{DatasetTuple}(x, ...)
 
 \S4method{delete}{ShojiObject}(x, ...)
 
