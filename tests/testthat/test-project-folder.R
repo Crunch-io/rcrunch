@@ -120,6 +120,14 @@ with_mock_crunch({
             move_testds
         )
     })
+    test_that("mv to ~", {
+        expect_PATCH(
+            projects() %>%
+                mv(loadDataset("ECON.sav"), "~"),
+            "https://app.crunch.io/api/projects/personal/"
+        )
+    })
+
     test_that("Legacy methods: datasets<-", {
         expect_PATCH(
             datasets(proj[["Project Two"]]) <- ds,
