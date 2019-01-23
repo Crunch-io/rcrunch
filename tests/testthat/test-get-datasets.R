@@ -61,6 +61,13 @@ with_mock_crunch({
         expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/datasets/by_name/", logs))
     })
 
+    test_that("listDatasets error handling", {
+        expect_error(
+            listDatasets(project=42),
+            "Project 42 is not valid"
+        )
+    })
+
     test_that("loadDataset loads", {
         ds <- loadDataset("test ds")
         expect_true(is.dataset(ds))
