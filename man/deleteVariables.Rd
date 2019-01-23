@@ -19,8 +19,7 @@ of variables to delete.}
 (invisibly) \code{dataset} with the specified variables deleted
 }
 \description{
-This function permanently deletes a variable from a dataset. For a non-destructive
-alternative see \code{\link[=hide]{hide()}}.
+This function permanently deletes a variable from a dataset.
 }
 \details{
 In an interactive session, you will be prompted to confirm that you
@@ -29,5 +28,6 @@ non-interactive session, wrap the call in \code{\link[=with_consent]{with_consen
 your permission to delete.
 }
 \seealso{
-\code{\link[=hide]{hide()}} \code{\link[=delete]{delete()}} \code{\link[=deleteSubvariable]{deleteSubvariable()}}
+\code{\link[=delete]{delete()}}; \code{\link[=deleteSubvariable]{deleteSubvariable()}}; For a non-destructive
+alternative, see \code{\link[=hide]{hide()}}.
 }

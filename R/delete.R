@@ -97,6 +97,7 @@ setMethod("delete", "CrunchVariable", function(x, ...) delete(tuple(x), ...))
 setMethod("delete", "VariableTuple", function(x, ...) {
     confirmDeleteEntity(name(x), "variable")
     u <- self(x)
+    drop_where <- absoluteURL("../", u)
     invisible(crDELETE(u, drop = dropCache(drop_where)))
 })
 
@@ -148,20 +149,19 @@ setMethod("delete", "ANY", function(x, ...) halt("'delete' only valid for Crunch
 
 #' Delete a dataset from the dataset list
 #'
-#' This function lets you delete a dataset without first loading it. If you
-#' have a dataset that somehow is corrupted and won't load, you can delete it
-#' this way.
+#' This function lets you delete a dataset without first loading it, which is
+#' faster and more failsafe.
 #'
-#' The function also works on CrunchDataset objects, just like
+#' The function also works on `CrunchDataset` objects, just like
 #' [delete()], which may be useful if you have loaded another
-#' package that masks the [delete()] method.
-#' @param x The name (character) of a dataset, its (numeric) position in the
-#' return of [listDatasets()], or an object of class
-#' `CrunchDataset`. x can only be of length 1--this function is not
-#' vectorized (for your protection).
-#' @param ... additional parameters passed to `delete`
+#' package that masks the `crunch::delete()` method.
+#' @param x The name (character) of a dataset, a path to a dataset, or a
+#' `CrunchDataset`. Unless `x` is a parsed folder path, it can only be of
+#' length 1--for your protection, this function is not vectorized.
+#' @param ... additional parameters passed to [delete()]
 #' @return (Invisibly) the API response from deleting the dataset
-#' @seealso [delete()]
+#' @seealso [delete()]; cd()] for details of parsing and walking dataset
+#' folder/project paths.
 #' @export
 deleteDataset <- function(x, ...) {
     if (is.dataset(x)) {
@@ -191,8 +191,7 @@ deleteDataset <- function(x, ...) {
 
 #' Delete Variables Within a Dataset
 #'
-#' This function permanently deletes a variable from a dataset. For a non-destructive
-#' alternative see [hide()].
+#' This function permanently deletes a variable from a dataset.
 #'
 #' In an interactive session, you will be prompted to confirm that you
 #' wish to delete the variable. To avoid that prompt, or to delete variables from a
@@ -202,7 +201,8 @@ deleteDataset <- function(x, ...) {
 #' @param variables aliases (following `crunch.namekey.dataset`) or indices
 #' of variables to delete.
 #' @return (invisibly) `dataset` with the specified variables deleted
-#' @seealso [hide()] [delete()] [deleteSubvariable()]
+#' @seealso [delete()]; [deleteSubvariable()]; For a non-destructive
+#' alternative, see [hide()].
 #' @export
 deleteVariables <- function(dataset, variables) {
     to.delete <- allVariables(dataset[variables])

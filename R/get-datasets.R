@@ -1,30 +1,35 @@
-#' Get the dataset catalog
+#' Get a catalog of datasets
 #'
-#' Crunch datasets are associated with catalogs. A project catalog will
-#' have a set of datasets associated with it, as will a user or team. This
-#' function allows you to get or modify the datasets associated with a catalog.
-#' @param x a `ShojiObject`, such as a `ProjectFolder`. If omitted,
-#' the function will load the user's primary dataset catalog. #'
-#' @param value `CrunchDataset` for the setter
-#' @return An object of class `DatasetCatalog`. The setter returns the
-#' project (or other object that contains a dataset catalog with the given
-#' dataset added to it (via changing its owner to be
-#' the specified object, `x`).
+#' Crunch datasets are collected in folders called "projects". `datasets()` can
+#' be used to filter a project's contents to see only datasets (and not other
+#' projects). You can also use it to pull a catalog of datasets from search
+#' results.
+#'
+#' The `datasets()<-` assignment function provides an alternative method for
+#' moving a dataset into a project. This may be more convenient in some cases
+#' than using [mv()].
+#' @param x a `ProjectFolder` or `SearchResults` that may contain datasets
+#' @param value For assignment, a `CrunchDataset` to move
+#' @return When `x` is a `ProjectFolder`, `datasets()` returns the folder with
+#' its "index" filtered to contain only datasets; otherwise, it returns an
+#' object of class `DatasetCatalog`. The assignment function returns the
+#' project `x` with the given dataset added to it.
 #' @name datasets
 #' @export
 #' @examples
 #' \dontrun{
-#' # Get the primary dataset catalog
-#' mydatasets <- datasets()
-#' # Can load a dataset from that
-#' ds <- loadDataset(mydatasets[["Dataset name"]])
-#' # Can use the same function to get the dataset catalog for a project
-#' proj <- projects()[["Project name"]]
-#' projdatasets <- datasets(proj)
+#' # Get the names of the datasets contained in a project
+#' projects() %>%
+#'     cd("Important Clients") %>%
+#'     datasets() %>%
+#'     names()
 #' # The assignment method lets you move a dataset to a project
+#' proj <- cd(projects(), "Important Clients")
+#' ds <- loadDataset("New important client survey")
 #' datasets(proj) <- ds
 #' }
 datasets <- function(x = getAPIRoot()) {
+    # TODO: deprecate the dataset catalog, i.e. `datasets()`
     if (inherits(x, "SearchResults")) {
         ## This is close enough to a dataset catalog
         out <- structure(list(index = x$datasets), class = "shoji")
@@ -38,23 +43,28 @@ datasets <- function(x = getAPIRoot()) {
     DatasetCatalog(out)
 }
 
-#' Show the names of all Crunch datasets associated with a catalog
+#' Get the names of datasets in a project
 #'
-#' If `shiny` is TRUE the function launches a shiny gadget which allows you to
-#' navigate your Crunch projects and datasets. This is useful if you can't
-#' remember a dataset's project and also saves typing long dataset names.
+#' `listDatasets()` is a convenience function for quickly seeing what datasets
+#' are in a project. It is equivalent to `names(datasets(proj))`, with some
+#' additional optional arguments.
+#'
+#' Specifying `listDatasets(shiny = TRUE)` will, instead of printing dataset
+#' names, load a Shiny gadget that provides a GUI for navigating the project
+#' tree to find a dataset, if you're running in RStudio.
 #'
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
 #' @param project `ProjectFolder` entity, character name of a project, or
-#' NULL, the default. If a Project entity or reference is supplied, the
-#' function will display datasets from that Project's datasets. If NULL,
-#' the primary dataset catalog for the user will be used.
+#' `NULL`, the default. If a Project entity or reference is supplied, the
+#' function will display datasets from that Project's datasets. If `NULL`,
+#' your personal folder will be used.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is FALSE.
-#' @param shiny logical: launch a shiny gadget to help select the right dataset. The
-#' gadget will return a valid `loadDataset()` call which loads the selected dataset.
-#' @return Character vector of dataset names, each of which would be a valid
+#' @param shiny logical: launch a Shiny gadget to help select the right dataset.
+#' The gadget will return a valid `loadDataset()` call which loads the selected
+#' dataset. The gadget requires RStudio, as well as the `crunchy` package.
+#' @return A character vector of dataset names, each of which would be a valid
 #' input for [loadDataset()]
 #' @export
 listDatasets <- function(kind = c("active", "all", "archived"),
@@ -101,24 +111,44 @@ listDatasets <- function(kind = c("active", "all", "archived"),
 
 #' Load a Crunch Dataset
 #'
-#' @param dataset character, the name of a Crunch dataset that you have access
-#' to, or a `DatasetTuple`.
+#' This function gives you a Dataset object, which refers to a dataset hosted on
+#' the Crunch platform. With this Dataset, you can perform lots of data cleaning
+#' and analysis as if the dataset were fully resident on your computer, without
+#' having to pull data locally.
+#'
+#' You can specify a dataset to load by its human-friendly "name", possibly also
+#' by indicating a project (folder) to find it in. This makes code more
+#' readable, but it does mean that if the dataset is renamed or moved to a
+#' different folder, your code may no longer work. The fastest, most reliable
+#' way to use `loadDataset()` is to provide a URL to the dataset--the dataset's
+#' URL will never change.
+#'
+#' @param dataset character, the name or path to a Crunch dataset to load, or a
+#' dataset URL. If `dataset` is a path to a dataset in a project, the path will
+#' be be parsed and walked, relative to `project` if specified, and the
+#' function will look for the dataset inside that project. If no path is
+#' specified and no `project` provided, the function will call a search API to
+#' do an exact string match on dataset names.
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
-#' @param project `ProjectFolder` entity, character name of a project, or
-#' `NULL`, the default. If a Project entity or reference is supplied, the
-#' function will display datasets from that Project's datasets. If `NULL`,
-#' the primary dataset catalog for the user will be used.
+#' @param project `ProjectFolder` entity, character name (path) to a project, or
+#' `NULL`, the default. If a Project entity or reference is supplied, either
+#' here or as a path in `dataset`, the dataset lookup will be limited to that
+#' project only.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is `FALSE`.
-#' @return An object of class `CrunchDataset`
+#' @return An object of class `CrunchDataset`.
 #'
 #' @examples
 #' \dontrun{
-#' dsName <- listDatasets()[1]
-#' ds <- loadDatasets(dsName)
+#' ds <- loadDatasets("A special dataset")
+#' ds2 <- loadDatasets("~/My dataset")
+#' ds3 <- loadDataset("My dataset", project="~") # Same as ds2
+#' ds4 <- loadDataset("https://app.crunch.io/api/datasets/bd3ad2/")
 #' }
 #' @export
+#' @seealso See [cd()] for details of parsing and walking dataset folder/project
+#' paths.
 loadDataset <- function(dataset,
                         kind = c("active", "all", "archived"),
                         project = NULL,
