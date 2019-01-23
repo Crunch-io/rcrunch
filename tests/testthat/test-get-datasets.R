@@ -128,28 +128,6 @@ with_mock_crunch({
             "'dataset' should be a character dataset name, path, or URL, not an object of class list"
         )
     })
-
-    ds <- loadDataset("test ds")
-    with_consent({
-        test_that("deleteDataset by name", {
-            expect_DELETE(deleteDataset("test ds"), self(ds))
-        })
-        test_that("deleteDataset on Dataset object", {
-            expect_DELETE(deleteDataset(ds), self(ds))
-        })
-    })
-
-    test_that("deleteDataset error handling", {
-        expect_error(deleteDataset(
-            "this is totally not a dataset",
-            paste(dQuote("this is totally not a dataset"), "not found")
-        ))
-        test_that("deleteDataset by index (is no longer supported)", {
-            expect_error(deleteDataset(4),
-                "deleteDataset requires either a Dataset, a unique dataset name, or a URL")
-        })
-        expect_error(deleteDataset(ds), "Must confirm")
-    })
 })
 
 with_test_authentication({

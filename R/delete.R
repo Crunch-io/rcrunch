@@ -26,13 +26,17 @@ setMethod("delete", "CrunchDataset", function(x, ...) {
     invisible(out)
 })
 
+confirmDeleteEntity <- function(entity_name, entity_type=NULL) {
+    prompt <- paste("Really delete", entity_type, dQuote(entity_name))
+    if (!askForPermission(paste0(prompt, "?"))) {
+        halt("Must confirm deleting ", entity_type)
+    }
+}
+
 #' @rdname delete
 #' @export
 setMethod("delete", "DatasetTuple", function(x, ...) {
-    prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
-    if (!askForPermission(prompt)) {
-        halt("Must confirm deleting dataset")
-    }
+    confirmDeleteEntity(name(x), "dataset")
     out <- crDELETE(self(x))
     dropDatasetsCache()
     invisible(out)
@@ -58,9 +62,7 @@ dropSearchCache <- function() {
 #' @rdname delete
 #' @export
 setMethod("delete", "CrunchDeck", function(x, ...) {
-    if (!askForPermission(paste0("Really delete deck ", dQuote(name(x)), "?"))) {
-        halt("Must confirm deleting a deck")
-    }
+    confirmDeleteEntity(name(x), "deck")
     out <- crDELETE(self(x))
     invisible(out)
 })
@@ -68,9 +70,7 @@ setMethod("delete", "CrunchDeck", function(x, ...) {
 #' @rdname delete
 #' @export
 setMethod("delete", "CrunchSlide", function(x, ...) {
-    if (!askForPermission(paste0("Really delete slide ", dQuote(title(x)), "?"))) {
-        halt("Must confirm deleting CrunchSlide")
-    }
+    confirmDeleteEntity(title(x), "slide")
     out <- crDELETE(self(x), drop = dropCache(absoluteURL("../", self(x))))
     return(invisible(out))
 })
@@ -78,9 +78,7 @@ setMethod("delete", "CrunchSlide", function(x, ...) {
 #' @rdname delete
 #' @export
 setMethod("delete", "Multitable", function(x, ...) {
-    if (!askForPermission(paste0("Really delete multitable ", dQuote(name(x)), "?"))) {
-        halt("Must confirm deleting multitable")
-    }
+    confirmDeleteEntity(name(x), "multitable")
     out <- crDELETE(self(x))
     invisible(out)
 })
@@ -88,13 +86,7 @@ setMethod("delete", "Multitable", function(x, ...) {
 #' @rdname delete
 #' @export
 setMethod("delete", "CrunchTeam", function(x, ...) {
-    prompt <- paste0(
-        "Really delete team ", dQuote(name(x)), "? ",
-        "This cannot be undone."
-    )
-    if (!askForPermission(prompt)) {
-        halt("Must confirm deleting team")
-    }
+    confirmDeleteEntity(name(x), "team")
     u <- self(x)
     out <- crDELETE(u)
     dropCache(absoluteURL("../", u))
@@ -112,9 +104,7 @@ setMethod("delete", "CrunchVariable", function(x, ...) {
 #' @rdname delete
 #' @export
 setMethod("delete", "VariableTuple", function(x, ...) {
-    if (!askForPermission(paste0("Really delete ", name(x), "?"))) {
-        halt("Must confirm deleting variable")
-    }
+    confirmDeleteEntity(name(x), "variable")
     out <- crDELETE(self(x))
     invisible(out)
 })
@@ -147,10 +137,7 @@ setMethod("delete", "ShojiFolder", function(x, ...) {
             "their contents)."
         )
     }
-
-    if (!askForPermission(paste0("Really delete ", name(x), "?"))) {
-        halt("Must confirm deleting folder")
-    }
+    confirmDeleteEntity(name(x), "folder")
     out <- crDELETE(self(x))
     invisible(out)
 })
@@ -205,12 +192,9 @@ deleteDataset <- function(x, ...) {
             url <- urls(found)
         }
         ## Now, delete it
-        if (!askForPermission(paste0("Really delete dataset ", x, "?"))) {
-            halt("Must confirm deleting dataset")
-        }
+        confirmDeleteEntity(x, "dataset")
         crDELETE(url)
-        dropCache(sessionURL("projects"))
-        dropOnly(sessionURL("datasets"))
+        dropDatasetsCache()
     } else {
         halt("deleteDataset requires either a Dataset, a unique dataset name, or a URL")
     }
