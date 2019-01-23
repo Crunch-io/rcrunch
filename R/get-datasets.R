@@ -81,7 +81,6 @@ listDatasets <- function(kind = c("active", "all", "archived"),
             project <- cd(projects(), project)
         }
         if (!is.project(project)) {
-            ## TODO check this validation behavior
             halt(
                 "Project ", deparseAndFlatten(eval.parent(Call$project)),
                 " is not valid"

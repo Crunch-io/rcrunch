@@ -67,8 +67,9 @@ setMethod("delete", "CrunchDeck", function(x, ...) {
 #' @export
 setMethod("delete", "CrunchSlide", function(x, ...) {
     confirmDeleteEntity(title(x), "slide")
-    drop_where <- absoluteURL("../", self(x))
-    invisible(crDELETE(self(x), drop = dropCache(drop_where)))
+    u <- self(x)
+    drop_where <- absoluteURL("../", u)
+    invisible(crDELETE(u, drop = dropCache(drop_where)))
 })
 
 #' @rdname delete
@@ -83,22 +84,20 @@ setMethod("delete", "Multitable", function(x, ...) {
 setMethod("delete", "CrunchTeam", function(x, ...) {
     confirmDeleteEntity(name(x), "team")
     u <- self(x)
-    invisible(crDELETE(u, drop = dropCache(absoluteURL("../", u))))
+    drop_where <- absoluteURL("../", u)
+    invisible(crDELETE(u, drop = dropCache(drop_where)))
 })
 
 #' @rdname delete
 #' @export
-setMethod("delete", "CrunchVariable", function(x, ...) {
-    out <- delete(tuple(x), ...)
-    dropCache(absoluteURL("../", self(x)))
-    invisible(out)
-})
+setMethod("delete", "CrunchVariable", function(x, ...) delete(tuple(x), ...))
 
 #' @rdname delete
 #' @export
 setMethod("delete", "VariableTuple", function(x, ...) {
     confirmDeleteEntity(name(x), "variable")
-    invisible(crDELETE(self(x)))
+    u <- self(x)
+    invisible(crDELETE(u, drop = dropCache(drop_where)))
 })
 
 #' @rdname delete

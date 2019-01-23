@@ -49,6 +49,17 @@ with_mock_crunch({
             )
         )
     })
+    test_that("listDatasets(refresh=TRUE) drops caches", {
+        with(temp.option(httpcache.log = ""), {
+            logs <- capture.output({
+                listDatasets(refresh=TRUE)
+            })
+        })
+        in_logs <- function(str, loglines) {
+            any(grepl(str, loglines, fixed = TRUE))
+        }
+        expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/datasets/by_name/", logs))
+    })
 
     test_that("loadDataset loads", {
         ds <- loadDataset("test ds")
@@ -109,10 +120,26 @@ with_mock_crunch({
         expect_identical(name(ds1), "test ds")
     })
 
+    test_that("loadDataset(refresh=TRUE) drops caches", {
+        with(temp.option(httpcache.log = ""), {
+            logs <- capture.output({
+                loadDataset("test ds", refresh=TRUE)
+            })
+        })
+        in_logs <- function(str, loglines) {
+            any(grepl(str, loglines, fixed = TRUE))
+        }
+        expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/datasets/by_name/", logs))
+    })
+
     test_that("loadDataset error handling", {
         expect_error(
             loadDataset("not a dataset"),
             paste(dQuote("not a dataset"), "not found")
+        )
+        expect_error(
+            loadDataset("not a dataset", project=42),
+            "Project 42 is not valid"
         )
         expect_error(
             loadDataset(c("test ds", "ECON.sav")),
