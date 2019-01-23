@@ -459,6 +459,13 @@ with_mock_crunch({
                 "deleteDataset requires either a Dataset, a unique dataset name, or a URL")
         })
         expect_error(deleteDataset(ds), "Must confirm")
+        expect_error(
+            deleteDataset("duplicated dataset"),
+            paste(
+                dQuote("duplicated dataset"), "identifies 2 datasets.",
+                "To delete, please identify the dataset uniquely by URL or path."
+            )
+        )
     })
 
     test_that("Dashboard URL", {

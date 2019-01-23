@@ -22,8 +22,7 @@ setGeneric("delete", function(x, ...) standardGeneric("delete"),
 #' @rdname delete
 #' @export
 setMethod("delete", "CrunchDataset", function(x, ...) {
-    out <- delete(tuple(x), ...)
-    invisible(out)
+    invisible(delete(tuple(x), ...))
 })
 
 confirmDeleteEntity <- function(entity_name, entity_type=NULL) {
@@ -37,9 +36,7 @@ confirmDeleteEntity <- function(entity_name, entity_type=NULL) {
 #' @export
 setMethod("delete", "DatasetTuple", function(x, ...) {
     confirmDeleteEntity(name(x), "dataset")
-    out <- crDELETE(self(x))
-    dropDatasetsCache()
-    invisible(out)
+    invisible(crDELETE(self(x), drop = dropDatasetsCache()))
 })
 
 dropDatasetsCache <- function() {
@@ -63,24 +60,22 @@ dropSearchCache <- function() {
 #' @export
 setMethod("delete", "CrunchDeck", function(x, ...) {
     confirmDeleteEntity(name(x), "deck")
-    out <- crDELETE(self(x))
-    invisible(out)
+    invisible(crDELETE(self(x)))
 })
 
 #' @rdname delete
 #' @export
 setMethod("delete", "CrunchSlide", function(x, ...) {
     confirmDeleteEntity(title(x), "slide")
-    out <- crDELETE(self(x), drop = dropCache(absoluteURL("../", self(x))))
-    return(invisible(out))
+    drop_where <- absoluteURL("../", self(x))
+    invisible(crDELETE(self(x), drop = dropCache(drop_where)))
 })
 
 #' @rdname delete
 #' @export
 setMethod("delete", "Multitable", function(x, ...) {
     confirmDeleteEntity(name(x), "multitable")
-    out <- crDELETE(self(x))
-    invisible(out)
+    invisible(crDELETE(self(x)))
 })
 
 #' @rdname delete
@@ -88,9 +83,7 @@ setMethod("delete", "Multitable", function(x, ...) {
 setMethod("delete", "CrunchTeam", function(x, ...) {
     confirmDeleteEntity(name(x), "team")
     u <- self(x)
-    out <- crDELETE(u)
-    dropCache(absoluteURL("../", u))
-    invisible(out)
+    invisible(crDELETE(u, drop = dropCache(absoluteURL("../", u))))
 })
 
 #' @rdname delete
@@ -105,8 +98,7 @@ setMethod("delete", "CrunchVariable", function(x, ...) {
 #' @export
 setMethod("delete", "VariableTuple", function(x, ...) {
     confirmDeleteEntity(name(x), "variable")
-    out <- crDELETE(self(x))
-    invisible(out)
+    invisible(crDELETE(self(x)))
 })
 
 #' @rdname delete
@@ -138,14 +130,13 @@ setMethod("delete", "ShojiFolder", function(x, ...) {
         )
     }
     confirmDeleteEntity(name(x), "folder")
-    out <- crDELETE(self(x))
-    invisible(out)
+    invisible(crDELETE(self(x)))
 })
 
 #' @rdname delete
 #' @export
 setMethod("delete", "ShojiTuple", function(x, ...) {
-    crDELETE(x@entity_url, drop = dropCache(x@index_url))
+    invisible(crDELETE(x@entity_url, drop = dropCache(x@index_url)))
 })
 
 #' @rdname delete
@@ -185,7 +176,7 @@ deleteDataset <- function(x, ...) {
             # Assume it is a path or name
             found <- lookupDataset(x)
             if (length(found) != 1) {
-                halt(x, " identifies ", length(found),
+                halt(dQuote(x), " identifies ", length(found),
                     " datasets. To delete, please identify the dataset uniquely by URL or path.")
             }
             ## We know there is just one now
@@ -193,8 +184,7 @@ deleteDataset <- function(x, ...) {
         }
         ## Now, delete it
         confirmDeleteEntity(x, "dataset")
-        crDELETE(url)
-        dropDatasetsCache()
+        invisible(crDELETE(url, drop = dropDatasetsCache()))
     } else {
         halt("deleteDataset requires either a Dataset, a unique dataset name, or a URL")
     }

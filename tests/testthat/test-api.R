@@ -86,6 +86,18 @@ with_mock_crunch({
         expect_true(featureFlag("this_is_on"))
         expect_false(featureFlag("this_is_off"))
     })
+
+    test_that("crDELETE passes on and calls drop= args", {
+        msg <- "Drop and roll"
+        expect_DELETE(
+            crDELETE("https://app.crunch.io/", drop=stop(msg)),
+            "https://app.crunch.io/"
+        )
+        expect_error(
+            crDELETE("https://app.crunch.io/delete-me", drop=stop(msg)),
+            "Drop and roll"
+        )
+    })
 })
 
 test_that("retry", {
