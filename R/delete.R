@@ -150,7 +150,7 @@ setMethod("delete", "ANY", function(x, ...) halt("'delete' only valid for Crunch
 #' Delete a dataset from the dataset list
 #'
 #' This function lets you delete a dataset without first loading it, which is
-#' faster and more failsafe.
+#' faster.
 #'
 #' The function also works on `CrunchDataset` objects, just like
 #' [delete()], which may be useful if you have loaded another
@@ -160,7 +160,7 @@ setMethod("delete", "ANY", function(x, ...) halt("'delete' only valid for Crunch
 #' length 1--for your protection, this function is not vectorized.
 #' @param ... additional parameters passed to [delete()]
 #' @return (Invisibly) the API response from deleting the dataset
-#' @seealso [delete()]; cd()] for details of parsing and walking dataset
+#' @seealso [delete()]; [cd()] for details of parsing and walking dataset
 #' folder/project paths.
 #' @export
 deleteDataset <- function(x, ...) {

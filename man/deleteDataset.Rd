@@ -18,7 +18,7 @@ length 1--for your protection, this function is not vectorized.}
 }
 \description{
 This function lets you delete a dataset without first loading it, which is
-faster and more failsafe.
+faster.
 }
 \details{
 The function also works on \code{CrunchDataset} objects, just like
@@ -26,6 +26,6 @@ The function also works on \code{CrunchDataset} objects, just like
 package that masks the \code{crunch::delete()} method.
 }
 \seealso{
-\code{\link[=delete]{delete()}}; cd()] for details of parsing and walking dataset
+\code{\link[=delete]{delete()}}; \code{\link[=cd]{cd()}} for details of parsing and walking dataset
 folder/project paths.
 }
