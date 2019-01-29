@@ -41,13 +41,20 @@ is.dataset <- function(x) inherits(x, "CrunchDataset")
 #' @seealso [`Categories`] [`describe-catalog`]
 NULL
 
+setDatasetTupleSlot <- function (x, ...) {
+    x <- setTupleSlot(x, ...)
+    # Also drop cache for the dataset's containing project index
+    dropOnly(shojiURL(x, "catalogs", "project"))
+    invisible(x)
+}
+
 #' @rdname describe
 #' @export
 setMethod("name", "CrunchDataset", function(x) tuple(x)$name)
 #' @rdname describe
 #' @export
 setMethod("name<-", "CrunchDataset", function(x, value) {
-    invisible(setTupleSlot(x, "name", validateNewName(value)))
+    setDatasetTupleSlot(x, "name", validateNewName(value))
 })
 #' @rdname describe
 #' @export
@@ -55,7 +62,7 @@ setMethod("description", "CrunchDataset", function(x) tuple(x)$description)
 #' @rdname describe
 #' @export
 setMethod("description<-", "CrunchDataset", function(x, value) {
-    setTupleSlot(x, "description", value)
+    setDatasetTupleSlot(x, "description", value)
 })
 #' @rdname describe
 #' @export
@@ -66,7 +73,7 @@ setMethod(
 #' @rdname describe
 #' @export
 setMethod("startDate<-", "CrunchDataset", function(x, value) {
-    setTupleSlot(x, "start_date", value)
+    setDatasetTupleSlot(x, "start_date", value)
 })
 #' @rdname describe
 #' @export
@@ -77,7 +84,7 @@ setMethod(
 #' @rdname describe
 #' @export
 setMethod("endDate<-", "CrunchDataset", function(x, value) {
-    setTupleSlot(x, "end_date", value)
+    setDatasetTupleSlot(x, "end_date", value)
 })
 #' @rdname describe
 #' @export
@@ -484,7 +491,7 @@ setMethod("is.published", "CrunchDataset", function(x) tuple(x)$is_published %||
 #' @export
 setMethod("is.archived<-", c("CrunchDataset", "logical"), function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
-    setTupleSlot(x, "archived", value)
+    setDatasetTupleSlot(x, "archived", value)
 })
 #' @rdname archive-and-publish
 #' @export
@@ -496,13 +503,13 @@ archive <- function(x) {
 #' @export
 setMethod("is.draft<-", c("CrunchDataset", "logical"), function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
-    setTupleSlot(x, "is_published", !value)
+    setDatasetTupleSlot(x, "is_published", !value)
 })
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.published<-", c("CrunchDataset", "logical"), function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
-    setTupleSlot(x, "is_published", value)
+    setDatasetTupleSlot(x, "is_published", value)
 })
 #' @rdname archive-and-publish
 #' @export

@@ -165,15 +165,11 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    dscat0 <- datasets()
-    test_that("datasets() gets the dataset catalog", {
-        expect_is(dscat0, "DatasetCatalog")
-    })
-
+    personal <- cd(projects(), "~")
     ds <- createDataset(name = now())
     dsname <- name(ds)
-    test_that("Adding a dataset refreshes the list", {
-        expect_equal(length(datasets()), length(dscat0) + 1)
+    test_that("When a dataset is created, it goes to the personal project", {
+        expect_equal(length(cd(projects(), "~")), length(personal) + 1)
     })
 
     test_that("Dataset list can be retrieved if authenticated", {
@@ -186,13 +182,12 @@ with_test_authentication({
 
     test_that("A dataset object can be retrieved, if it exists", {
         expect_true(is.dataset(loadDataset(dsname)))
-        dsnum <- which(listDatasets() %in% dsname)
-        expect_true(is.numeric(dsnum))
-        expect_true(is.dataset(loadDataset(dsnum)))
     })
 
     newname <- paste0("New name ", now())
     test_that("renaming a dataset refreshes the dataset list", {
+        options(httpcache.log="/Users/npr/c/rcrunch/patch.log")
+        on.exit(options(httpcache.log=NULL))
         name(ds) <- newname
         expect_false(dsname %in% listDatasets())
         expect_true(newname %in% listDatasets())
