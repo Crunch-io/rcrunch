@@ -9,7 +9,11 @@
         "id": "511a7c49778030653aab5963",
         "name": "test ds",
         "description": "",
-        "streaming": "no"
+        "streaming": "no",
+        "start_date":"2016-01-01",
+        "end_date":"2016-01-01",
+        "archived": false,
+        "is_published": true
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/1/variables/",

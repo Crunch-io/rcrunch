@@ -21,8 +21,8 @@ with_mock_crunch({
     test_that("Dataset attribute setting", {
         expect_PATCH(
             name(ds) <- "New name",
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"name":"New name"}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"name":"New name"}'
         )
         expect_PATCH(
             notes(ds) <- "Ancillary information",
@@ -142,13 +142,13 @@ with_mock_crunch({
     test_that("archive setting", {
         expect_PATCH(
             is.archived(ds2) <- TRUE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"archived":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"archived":true}'
         )
         expect_PATCH(
             archive(ds2),
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"archived":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"archived":true}'
         )
     })
 
@@ -162,28 +162,28 @@ with_mock_crunch({
     test_that("draft/publish setting", {
         expect_PATCH(
             is.published(ds2) <- TRUE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"is_published":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"is_published":true}'
         )
         expect_PATCH(
             is.published(ds) <- FALSE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"is_published":false}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"is_published":false}'
         )
         expect_PATCH(
             is.draft(ds2) <- FALSE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"is_published":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"is_published":true}'
         )
         expect_PATCH(
             is.draft(ds) <- TRUE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"is_published":false}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"is_published":false}'
         )
         expect_PATCH(
             publish(ds2),
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"is_published":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"is_published":true}'
         )
         expect_no_request(publish(ds))
         expect_no_request(is.draft(ds) <- FALSE)
@@ -200,25 +200,25 @@ with_mock_crunch({
     test_that("startDate<- makes correct request", {
         expect_PATCH(
             startDate(ds2) <- today,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"start_date":"2016-02-11"}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"start_date":"2016-02-11"}'
         )
         expect_PATCH(
             startDate(ds) <- NULL,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"start_date":null}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"start_date":null}'
         )
     })
     test_that("endDate<- makes correct request", {
         expect_PATCH(
             endDate(ds2) <- today,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"end_date":"2016-02-11"}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"end_date":"2016-02-11"}'
         )
         expect_PATCH(
             endDate(ds) <- NULL,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"end_date":null}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"end_date":null}'
         )
     })
 
