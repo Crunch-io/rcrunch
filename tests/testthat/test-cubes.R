@@ -480,14 +480,14 @@ with_test_authentication({
 
     test_that("prop.table on univariate cube", {
         expect_equivalent(
-            prop.table(crtabs(~bin(v3 + 5), data = ds)),
+            as.array(prop.table(crtabs(~bin(v3 + 5), data = ds))),
             arrayify(c(2, 5, 5, 5, 3) / 20, "v3")
         )
     })
 
     test_that("prop.table on crosstab", {
         expect_equivalent(
-            prop.table(crtabs(~bin(v3) + v7, data = ds)),
+            as.array(prop.table(crtabs(~bin(v3) + v7, data = ds))),
             arrayify(c(
                 2, 5, 3, 0, 0,
                 0, 0, 0, 2, 3

@@ -1,4 +1,5 @@
 # crunch 1.25.1 (under development)
+* Fixed a bug with the display of univariate cube `prop.table`s  
 
 # crunch 1.25.0
 
