@@ -401,7 +401,7 @@ setMethod("prop.table", "CrunchCube", function(x, margin = NULL) {
         ## cubeMarginTable handles missingness, any/none, etc.
         out <- out / marg
     }
-    class(out) <- class(marg)
+    class(out) <- c("CrunchCubeCalculation", "array")
     attr(out, "dims") <- x@dims[!is.selectedDimension(x)]
     attr(out, "type") <- "proportion"
     return(out)
