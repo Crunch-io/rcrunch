@@ -78,6 +78,11 @@ setEntitySlot <- function(x, i, value) {
         payload <- toJSON(body)
         crPATCH(self(x), body = payload)
         if (is.dataset(x)) {
+            # Update the tuple in place too
+            # This is hacky; we should probably make datasets not involve tuples
+            if (i %in% names(tuple(x)@body)) {
+                tuple(x)[[i]] <- value
+            }
             # Also drop cache for the dataset's containing project index
             dropOnly(shojiURL(x, "catalogs", "project"))
         }

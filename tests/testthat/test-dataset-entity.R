@@ -31,6 +31,16 @@ with_mock_crunch({
         )
     })
 
+    test_that("Dataset attribute setters update in place too", {
+        with_PATCH(NULL, {
+            name(ds) <- "New name"
+            expect_identical(name(ds), "New name")
+            notes(ds) <- "Ancillary information"
+            expect_identical(notes(ds), "Ancillary information")
+        })
+    })
+
+
     test_that("Population setting", {
         expect_equal(popSize(ds), 90000000)
         expect_equal(popMagnitude(ds), 3)

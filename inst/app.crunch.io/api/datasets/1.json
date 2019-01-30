@@ -26,6 +26,7 @@
         "boxdata": "https://app.crunch.io/api/datasets/1/boxdata/",
         "multitables": "https://app.crunch.io/api/datasets/1/multitables/",
         "actions": "https://app.crunch.io/api/datasets/1/actions/",
+        "project": "https://app.crunch.io/api/projects/personal/",
         "decks": "https://app.crunch.io/api/datasets/1/decks/"
     },
     "views": {
