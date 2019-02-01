@@ -169,11 +169,13 @@ with_test_authentication({
     ds <- createDataset(name = now())
     dsname <- name(ds)
     test_that("When a dataset is created, it goes to the personal project", {
+        skip_on_jenkins("#163665209")
         expect_equal(length(cd(projects(), "~")), length(personal) + 1)
     })
 
     test_that("Dataset list can be retrieved if authenticated", {
         expect_true(is.character(listDatasets()))
+        skip_on_jenkins("#163665209")
         expect_true(length(listDatasets()) > 0)
         expect_true(is.character(dsname))
         expect_true(nchar(dsname) > 0)
@@ -188,6 +190,7 @@ with_test_authentication({
     test_that("renaming a dataset refreshes the dataset list", {
         name(ds) <- newname
         expect_false(dsname %in% listDatasets())
+        skip_on_jenkins("#163665209")
         expect_true(newname %in% listDatasets())
     })
 
