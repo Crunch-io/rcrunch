@@ -4,7 +4,7 @@
 \alias{newDatasetFromFile}
 \title{Upload a file to Crunch to make a new dataset}
 \usage{
-newDatasetFromFile(x, name = basename(x), ...)
+newDatasetFromFile(x, name = basename(x), metadata, ...)
 }
 \arguments{
 \item{name}{character, the name to give the new Crunch dataset. By default the

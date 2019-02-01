@@ -273,8 +273,20 @@ newDatasetByColumn <- function(x, name = deparseAndFlatten(substitute(x), max_le
 #' @export
 #' @seealso [newDataset()]
 #' @keywords internal
-newDatasetFromFile <- function(x, name = basename(x), ...) {
-    ds <- createDataset(name = name, ...)
+newDatasetFromFile <- function(x, name = basename(x), metadata, ...) {
+    # TODO: check file extensions of the files to not return "Error: An error 
+    # occurred processing your request. We have been notified"
+    if (!missing(metadata)) {
+        # add source for metadata, for now return immediately
+        return(createSource(metadata))
+        
+        # this will work in the future
+        body_payload = list(table = list(source = createSource(metadata)))
+        ds <- createDataset(name = name, body = body_payload, ...)
+    } else {
+        ds <- createDataset(name = name, ...)
+    }
+    
     ds <- addBatchFile(ds, x, first_batch = TRUE)
     invisible(ds)
 }
