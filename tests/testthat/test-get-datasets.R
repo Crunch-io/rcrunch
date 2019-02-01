@@ -186,8 +186,6 @@ with_test_authentication({
 
     newname <- paste0("New name ", now())
     test_that("renaming a dataset refreshes the dataset list", {
-        options(httpcache.log="/Users/npr/c/rcrunch/patch.log")
-        on.exit(options(httpcache.log=NULL))
         name(ds) <- newname
         expect_false(dsname %in% listDatasets())
         expect_true(newname %in% listDatasets())
