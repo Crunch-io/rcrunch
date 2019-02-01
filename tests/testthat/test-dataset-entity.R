@@ -21,8 +21,8 @@ with_mock_crunch({
     test_that("Dataset attribute setting", {
         expect_PATCH(
             name(ds) <- "New name",
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"name":"New name"}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"name":"New name"}'
         )
         expect_PATCH(
             notes(ds) <- "Ancillary information",
@@ -30,6 +30,16 @@ with_mock_crunch({
             '{"notes":"Ancillary information"}'
         )
     })
+
+    test_that("Dataset attribute setters update in place too", {
+        with_PATCH(NULL, {
+            name(ds) <- "New name"
+            expect_identical(name(ds), "New name")
+            notes(ds) <- "Ancillary information"
+            expect_identical(notes(ds), "Ancillary information")
+        })
+    })
+
 
     test_that("Population setting", {
         expect_equal(popSize(ds), 90000000)
@@ -142,13 +152,13 @@ with_mock_crunch({
     test_that("archive setting", {
         expect_PATCH(
             is.archived(ds2) <- TRUE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"archived":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"archived":true}'
         )
         expect_PATCH(
             archive(ds2),
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"archived":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"archived":true}'
         )
     })
 
@@ -162,28 +172,28 @@ with_mock_crunch({
     test_that("draft/publish setting", {
         expect_PATCH(
             is.published(ds2) <- TRUE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"is_published":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"is_published":true}'
         )
         expect_PATCH(
             is.published(ds) <- FALSE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"is_published":false}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"is_published":false}'
         )
         expect_PATCH(
             is.draft(ds2) <- FALSE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"is_published":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"is_published":true}'
         )
         expect_PATCH(
             is.draft(ds) <- TRUE,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"is_published":false}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"is_published":false}'
         )
         expect_PATCH(
             publish(ds2),
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"is_published":true}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"is_published":true}'
         )
         expect_no_request(publish(ds))
         expect_no_request(is.draft(ds) <- FALSE)
@@ -200,25 +210,25 @@ with_mock_crunch({
     test_that("startDate<- makes correct request", {
         expect_PATCH(
             startDate(ds2) <- today,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"start_date":"2016-02-11"}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"start_date":"2016-02-11"}'
         )
         expect_PATCH(
             startDate(ds) <- NULL,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"start_date":null}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"start_date":null}'
         )
     })
     test_that("endDate<- makes correct request", {
         expect_PATCH(
             endDate(ds2) <- today,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/3/":{"end_date":"2016-02-11"}}'
+            "https://app.crunch.io/api/datasets/3/",
+            '{"end_date":"2016-02-11"}'
         )
         expect_PATCH(
             endDate(ds) <- NULL,
-            "https://app.crunch.io/api/datasets/",
-            '{"https://app.crunch.io/api/datasets/1/":{"end_date":null}}'
+            "https://app.crunch.io/api/datasets/1/",
+            '{"end_date":null}'
         )
     })
 
@@ -433,8 +443,39 @@ with_mock_crunch({
         )
     })
     test_that("Dataset deleting", {
-        expect_error(delete(ds), "Must confirm") ## New non-interactive behavior
+        expect_error(delete(ds), "Must confirm")
         with_consent(expect_DELETE(delete(ds), self(ds))) ## No warning
+    })
+
+    with_consent({
+        test_that("deleteDataset by name", {
+            expect_DELETE(deleteDataset("test ds"), self(ds))
+        })
+        test_that("deleteDataset by URL", {
+            expect_DELETE(deleteDataset(self(ds)), self(ds))
+        })
+        test_that("deleteDataset on Dataset object", {
+            expect_DELETE(deleteDataset(ds), self(ds))
+        })
+    })
+
+    test_that("deleteDataset error handling", {
+        expect_error(deleteDataset(
+            "this is totally not a dataset",
+            paste(dQuote("this is totally not a dataset"), "not found")
+        ))
+        test_that("deleteDataset by index (is no longer supported)", {
+            expect_error(deleteDataset(4),
+                "deleteDataset requires either a Dataset, a unique dataset name, or a URL")
+        })
+        expect_error(deleteDataset(ds), "Must confirm")
+        expect_error(
+            deleteDataset("duplicated dataset"),
+            paste(
+                dQuote("duplicated dataset"), "identifies 2 datasets.",
+                "To delete, please identify the dataset uniquely by URL or path."
+            )
+        )
     })
 
     test_that("Dashboard URL", {

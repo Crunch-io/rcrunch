@@ -152,9 +152,9 @@ with_mock_crunch({
     })
 
     d <- datasets(aproject)
-    test_that("Project datasets catalog", {
-        expect_is(d, "DatasetCatalog")
-        expect_identical(names(d), "ECON.sav")
+    test_that("datasets() filters a project folder", {
+        expect_identical(names(d),
+            c("an archived dataset", "test ds", "streaming no messages"))
     })
 
     test_that("Can loadDataset from a project dataset catalog", {
@@ -178,8 +178,8 @@ with_mock_crunch({
         )
     })
 
-    do <- ordering(d)
     test_that("Project datasets order", {
+        expect_deprecated(do <- ordering(d))
         expect_is(do, "DatasetOrder")
         expect_identical(
             do@graph,
@@ -336,7 +336,7 @@ with_test_authentication({
         expect_identical(names(datasets(tp)), name(ds))
         expect_identical(owner(refresh(ds)), self(tp))
     })
-    ds2 <- loadDataset(datasets(tp)[[1]])
+    ds2 <- loadDataset(name(ds), project=name(tp))
     test_that("Can load a dataset from a project", {
         expect_true(is.dataset(ds2))
         expect_identical(self(ds2), self(ds))

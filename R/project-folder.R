@@ -9,10 +9,24 @@ setMethod("folderExtraction", "ProjectFolder", function(x, tuple) {
     }
 })
 
-setMethod("personalFolder", "ProjectFolder", function (x) {
-    # TODO: implement the real personal project. This is legacy behavior
-    datasets()
+#' @rdname describe
+#' @export
+setMethod("name", "ProjectFolder", function(x) {
+    ## Warning: bad code smell
+    if (identical(self(x), sessionURL("projects"))) {
+        ## Root, so return no name
+        return("")
+    } else {
+        callNextMethod(x)
+    }
 })
+
+setMethod("personalFolder", "ProjectFolder", function(x) {
+    root <- projects()
+    return(ProjectFolder(crGET(shojiURL(root, "catalogs", "personal"))))
+})
+
+setMethod("rootFolder", "ProjectFolder", function(x) projects())
 
 #' @rdname teams
 #' @export

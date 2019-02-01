@@ -80,33 +80,17 @@ setMethod("members", "CrunchTeam", function(x) {
     MemberCatalog(crGET(shojiURL(x, "catalogs", "members")))
 })
 
-#' @rdname delete
-#' @export
-setMethod("delete", "CrunchTeam", function(x, ...) {
-    prompt <- paste0(
-        "Really delete team ", dQuote(name(x)), "? ",
-        "This cannot be undone."
-    )
-    if (!askForPermission(prompt)) {
-        halt("Must confirm deleting team")
-    }
-    u <- self(x)
-    out <- crDELETE(u)
-    dropCache(absoluteURL("../", u))
-    invisible(out)
-})
-
 #' Share Crunch assets with a team
-#' 
-#' You can share filters and multitables with a team that you are on. This will 
+#'
+#' You can share filters and multitables with a team that you are on. This will
 #' give all team members access to view and edit these filters. Use `getTeams()`
 #' to see what teams you are on.
-#' 
+#'
 #' @param x a `CrunchFilter` or `Multitable`
 #' @param value a `CrunchTeam` or url for a Crunch team
-#' 
+#'
 #' @return a `CrunchTeam` that the asset is shared with.
-#' 
+#'
 #' @rdname team-sharing
 #' @export
 setGeneric("team", function(x) standardGeneric("team"))
@@ -115,7 +99,7 @@ setGeneric("team", function(x) standardGeneric("team"))
     if (is.null(x@body$team)) {
         return(NULL)
     }
-    
+
     return(CrunchTeam(crGET(x@body$team)))
 }
 

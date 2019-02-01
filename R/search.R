@@ -21,7 +21,23 @@ searchDatasets <- function(query, ...) {
         )
     }
     search_url <- sessionURL("search", "views")
-    results <- SearchResults(crGET(search_url, query = list(q = query, grouping = "datasets", ...)))
+    ## TODO: should this GET be uncached()? Every edit anywhere is going to
+    ## require dropping cache
+    results <- SearchResults(crGET(search_url, query = list(
+        q = query,
+        grouping = "datasets",
+        ...
+    )))
     ## Grab useful things out of the (odd) API response
     return(SearchResults(results[["groups"]][[1]]))
+}
+
+#' @importFrom curl curl_escape
+findDatasetsByName <- function (x) {
+    u <- paste0(sessionURL("datasets"), "by_name/", curl_escape(x), "/")
+    out <- DatasetCatalog(crGET(u))
+    ## HACK: set the self to be the datasets root catalog so we don't try to
+    ## PATCH the wrong thing off of this
+    out@self <- sessionURL("datasets")
+    return(out)
 }

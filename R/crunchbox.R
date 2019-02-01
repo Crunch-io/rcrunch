@@ -82,8 +82,8 @@ crunchBox <- function(dataset,
     nfilt <- length(filters)
     if (boxTooBig(nvars, nfilt)) {
         halt(
-            nvars, " variable", ifelse(nvars == 1, "", "s"),
-            " and ", nfilt, " filter", ifelse(nfilt == 1, "", "s"),
+            nvars, pluralize(" variable", nvars), 
+            " and ", nfilt, pluralize(" filter", nfilt),
             " results in too many cubes to fit in the box. ",
             "Please try again with fewer of either."
         )

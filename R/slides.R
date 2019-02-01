@@ -108,16 +108,6 @@ reorderSlides <- function(x, order) {
     return(refresh(x))
 }
 
-#' @rdname delete
-#' @export
-setMethod("delete", "CrunchSlide", function(x, ...) {
-    if (!askForPermission(paste0("Really delete slide ", dQuote(title(x)), "?"))) {
-        halt("Must confirm deleting CrunchSlide")
-    }
-    out <- crDELETE(self(x), drop = dropCache(absoluteURL("../", self(x))))
-    return(invisible(out))
-})
-
 # CrunchSlide -------------------------------------------------------------------
 
 #' @rdname show-crunch

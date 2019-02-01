@@ -1,0 +1,26 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/duplicated%20dataset/",
+    "index": {
+        "https://app.crunch.io/api/datasets/ac6248/": {
+            "owner_display_name": "Fake User",
+            "name": "duplicated dataset",
+            "description": "This dataset does not exist",
+            "archived": false,
+            "id": "ac6248",
+            "start_date": null,
+            "end_date": null,
+            "owner_id": "https://app.crunch.io/api/users/user1/"
+        },
+        "https://app.crunch.io/api/datasets/6ea9ed/": {
+            "owner_display_name": "Fake User",
+            "name": "duplicated datset",
+            "description": "This dataset also does not exist",
+            "archived": false,
+            "id": "6ea9ed",
+            "start_date": null,
+            "end_date": null,
+            "owner_id": "https://app.crunch.io/api/users/user1/"
+        }
+    }
+}

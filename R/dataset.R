@@ -47,7 +47,7 @@ setMethod("name", "CrunchDataset", function(x) tuple(x)$name)
 #' @rdname describe
 #' @export
 setMethod("name<-", "CrunchDataset", function(x, value) {
-    invisible(setTupleSlot(x, "name", validateNewName(value)))
+    setEntitySlot(x, "name", validateNewName(value))
 })
 #' @rdname describe
 #' @export
@@ -55,7 +55,7 @@ setMethod("description", "CrunchDataset", function(x) tuple(x)$description)
 #' @rdname describe
 #' @export
 setMethod("description<-", "CrunchDataset", function(x, value) {
-    setTupleSlot(x, "description", value)
+    setEntitySlot(x, "description", value)
 })
 #' @rdname describe
 #' @export
@@ -66,7 +66,7 @@ setMethod(
 #' @rdname describe
 #' @export
 setMethod("startDate<-", "CrunchDataset", function(x, value) {
-    setTupleSlot(x, "start_date", value)
+    setEntitySlot(x, "start_date", value)
 })
 #' @rdname describe
 #' @export
@@ -77,7 +77,7 @@ setMethod(
 #' @rdname describe
 #' @export
 setMethod("endDate<-", "CrunchDataset", function(x, value) {
-    setTupleSlot(x, "end_date", value)
+    setEntitySlot(x, "end_date", value)
 })
 #' @rdname describe
 #' @export
@@ -318,35 +318,6 @@ setMethod("refresh", "CrunchDataset", function(x) {
     return(out)
 })
 
-#' Delete a Crunch object from the server
-#'
-#' These methods delete entities, notably Datasets and Variables within them,
-#' from the server. This action is permanent and cannot be undone, so it
-#' should not be done lightly. Consider instead using `archive`
-#' for datasets and `hide` for variables.
-#'
-#' Deleting requires confirmation. In an interactive session, you will be asked
-#' to confirm. To avoid that prompt, or to delete objects from a
-#' non-interactive session, wrap the call in [with_consent()] to give
-#' your permission to delete.
-#'
-#' @param x a Crunch object
-#' @param ... additional arguments, in the generic
-#' @seealso [hide] [deleteDataset]
-#' @name delete
-#' @aliases delete
-NULL
-
-#' @rdname delete
-#' @export
-setMethod(
-    "delete", "CrunchDataset",
-    function(x, ...) {
-        out <- delete(tuple(x), ...)
-        invisible(out)
-    }
-)
-
 #' @export
 as.list.CrunchDataset <- function(x, ...) {
     lapply(seq_along(variables(x)), function(i) x[[i]])
@@ -513,7 +484,7 @@ setMethod("is.published", "CrunchDataset", function(x) tuple(x)$is_published %||
 #' @export
 setMethod("is.archived<-", c("CrunchDataset", "logical"), function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
-    setTupleSlot(x, "archived", value)
+    setEntitySlot(x, "archived", value)
 })
 #' @rdname archive-and-publish
 #' @export
@@ -525,13 +496,13 @@ archive <- function(x) {
 #' @export
 setMethod("is.draft<-", c("CrunchDataset", "logical"), function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
-    setTupleSlot(x, "is_published", !value)
+    setEntitySlot(x, "is_published", !value)
 })
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.published<-", c("CrunchDataset", "logical"), function(x, value) {
     stopifnot(is.TRUEorFALSE(value))
-    setTupleSlot(x, "is_published", value)
+    setEntitySlot(x, "is_published", value)
 })
 #' @rdname archive-and-publish
 #' @export

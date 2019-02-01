@@ -18,8 +18,6 @@
 \alias{entity,CrunchVariable-method}
 \alias{entity,DatasetTuple-method}
 \alias{id,DatasetTuple-method}
-\alias{delete,ShojiTuple-method}
-\alias{delete,DatasetTuple-method}
 \alias{name,ShojiTuple-method}
 \alias{name<-,ShojiTuple-method}
 \alias{type,ShojiTuple-method}
@@ -53,10 +51,6 @@
 
 \S4method{id}{DatasetTuple}(x)
 
-\S4method{delete}{ShojiTuple}(x, ...)
-
-\S4method{delete}{DatasetTuple}(x, ...)
-
 \S4method{name}{ShojiTuple}(x)
 
 \S4method{name}{ShojiTuple}(x) <- value
@@ -72,10 +66,10 @@
 
 \item{i}{In [[, a Tuple slot to get}
 
-\item{...}{additional arguments to [[, ignored}
-
 \item{object}{Same as \code{x} but for the \code{alias} method, in order to
 match the generic from another package.}
+
+\item{...}{additional arguments to [[, ignored}
 }
 \description{
 ShojiTuples are objects extracted from ShojiCatalogs. They are internally

@@ -1,0 +1,16 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/an%20archived%20dataset/",
+    "index": {
+        "https://app.crunch.io/api/datasets/2/": {
+            "owner_display_name": "Fake User",
+            "name": "an archived dataset",
+            "description": "This dataset does not exist",
+            "archived": true,
+            "id": "aa80d2e969b34e6ea9ededaa528c6248",
+            "start_date": null,
+            "end_date": null,
+            "owner_id": "https://app.crunch.io/api/users/user1/"
+        }
+    }
+}

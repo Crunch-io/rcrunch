@@ -1,0 +1,17 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/streaming%20test%20ds/",
+    "index": {
+        "https://app.crunch.io/api/datasets/1streaming/": {
+            "owner_display_name": "Fake User",
+            "name": "streaming test ds",
+            "description": "",
+            "start_date":"2016-01-01",
+            "end_date":"2016-01-01",
+            "archived": false,
+            "id": "5405313ab82d4d753bcf42f01d2e28f8",
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "is_published": true
+        }
+    }
+}

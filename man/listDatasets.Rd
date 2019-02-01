@@ -2,7 +2,7 @@
 % Please edit documentation in R/get-datasets.R
 \name{listDatasets}
 \alias{listDatasets}
-\title{Show the names of all Crunch datasets associated with a catalog}
+\title{Get the names of datasets in a project}
 \usage{
 listDatasets(kind = c("active", "all", "archived"), project = NULL,
   refresh = FALSE, shiny = FALSE)
@@ -12,22 +12,28 @@ listDatasets(kind = c("active", "all", "archived"), project = NULL,
 datasets. Default is "active", i.e. non-archived.}
 
 \item{project}{\code{ProjectFolder} entity, character name of a project, or
-NULL, the default. If a Project entity or reference is supplied, the
-function will display datasets from that Project's datasets. If NULL,
-the primary dataset catalog for the user will be used.}
+\code{NULL}, the default. If a Project entity or reference is supplied, the
+function will display datasets from that Project's datasets. If \code{NULL},
+your personal folder will be used.}
 
 \item{refresh}{logical: should the function check the Crunch API for new
 datasets? Default is FALSE.}
 
-\item{shiny}{logical: launch a shiny gadget to help select the right dataset. The
-gadget will return a valid \code{loadDataset()} call which loads the selected dataset.}
+\item{shiny}{logical: launch a Shiny gadget to help select the right dataset.
+The gadget will return a valid \code{loadDataset()} call which loads the selected
+dataset. The gadget requires RStudio, as well as the \code{crunchy} package.}
 }
 \value{
-Character vector of dataset names, each of which would be a valid
+A character vector of dataset names, each of which would be a valid
 input for \code{\link[=loadDataset]{loadDataset()}}
 }
 \description{
-If \code{shiny} is TRUE the function launches a shiny gadget which allows you to
-navigate your Crunch projects and datasets. This is useful if you can't
-remember a dataset's project and also saves typing long dataset names.
+\code{listDatasets()} is a convenience function for quickly seeing what datasets
+are in a project. It is equivalent to \code{names(datasets(proj))}, with some
+additional optional arguments.
+}
+\details{
+Specifying \code{listDatasets(shiny = TRUE)} will, instead of printing dataset
+names, load a Shiny gadget that provides a GUI for navigating the project
+tree to find a dataset, if you're running in RStudio.
 }
