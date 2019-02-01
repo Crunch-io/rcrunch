@@ -1,19 +1,31 @@
 context("Retrieving dataset list and single datasets")
 
 with_mock_crunch({
-    cr <- session()
-    test_that("listDatasets lists", {
-        expect_identical(listDatasets(), c(
-            "ECON.sav", "streaming no messages",
-            "streaming test ds", "test ds"
-        ))
-        expect_identical(listDatasets("archived"), "an archived dataset")
+    test_that("listDatasets lists datasets in your personal project (and warns once)", {
+        options(crunch.list.personal.msg = NULL)
+        expect_warning(
+            expect_identical(listDatasets(), c(
+                "test ds",
+                "streaming no messages"
+            )),
+            paste(
+                "As of crunch 1.26.0, listDatasets() with no project specified",
+                "only lists your 'personal' datasets (those that you created)",
+                "and not those that were shared with you."
+            ),
+            fixed = TRUE
+        )
+        # Also test that this only warns the first time
+        expect_warning(
+            expect_identical(listDatasets("archived"),
+                "an archived dataset"
+            ),
+            NA
+        )
         expect_identical(listDatasets("all"), c(
-            "ECON.sav",
             "an archived dataset",
-            "streaming no messages",
-            "streaming test ds",
-            "test ds"
+            "test ds",
+            "streaming no messages"
         ))
     })
     test_that("listDatasets in project", {
@@ -37,23 +49,46 @@ with_mock_crunch({
             )
         )
     })
+    test_that("listDatasets(refresh=TRUE) drops caches", {
+        with(temp.option(httpcache.log = ""), {
+            logs <- capture.output({
+                listDatasets(refresh=TRUE)
+            })
+        })
+        in_logs <- function(str, loglines) {
+            any(grepl(str, loglines, fixed = TRUE))
+        }
+        expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/datasets/by_name/", logs))
+    })
+
+    test_that("listDatasets error handling", {
+        expect_error(
+            listDatasets(project=42),
+            "Project 42 is not valid"
+        )
+    })
 
     test_that("loadDataset loads", {
-        ## NOTE: implementing the active dataset loading only first
         ds <- loadDataset("test ds")
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
-        ds <- loadDataset(4)
+    })
+
+    test_that("loadDataset by index is deprecated", {
+        expect_deprecated(ds <- loadDataset(1))
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
-        expect_error(loadDataset(666), "subscript out of bounds")
         expect_error(
-            loadDataset("not a dataset"),
-            paste(dQuote("not a dataset"), "not found")
+            expect_deprecated(
+                loadDataset(666)
+            ),
+            "subscript out of bounds"
         )
     })
 
     test_that("loadDataset loads with DatasetTuple", {
+        # Is this a use case we need to support?
+        cr <- session()
         ds <- loadDataset(cr$datasets[["test ds"]])
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
@@ -92,46 +127,55 @@ with_mock_crunch({
         expect_identical(name(ds1), "test ds")
     })
 
-    ds <- loadDataset("test ds")
-    with_consent({
-        test_that("deleteDataset by name", {
-            expect_DELETE(deleteDataset("test ds"), self(ds))
+    test_that("loadDataset(refresh=TRUE) drops caches", {
+        with(temp.option(httpcache.log = ""), {
+            logs <- capture.output({
+                loadDataset("test ds", refresh=TRUE)
+            })
         })
-        test_that("deleteDataset by index", {
-            expect_DELETE(deleteDataset(4), self(ds))
-        })
-        test_that("deleteDataset on Dataset object", {
-            expect_DELETE(deleteDataset(ds), self(ds))
-        })
+        in_logs <- function(str, loglines) {
+            any(grepl(str, loglines, fixed = TRUE))
+        }
+        expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/datasets/by_name/", logs))
     })
 
-    test_that("deleteDataset error handling", {
-        expect_error(deleteDataset(
-            "this is totally not a dataset",
-            paste(dQuote("this is totally not a dataset"), "not found")
-        ))
+    test_that("loadDataset error handling", {
         expect_error(
-            deleteDataset(9999),
-            "subscript out of bounds"
+            loadDataset("not a dataset"),
+            paste(dQuote("not a dataset"), "not found")
         )
-        expect_error(deleteDataset(ds), "Must confirm")
+        expect_error(
+            loadDataset("not a dataset", project=42),
+            "Project 42 is not valid"
+        )
+        expect_error(
+            loadDataset(c("test ds", "ECON.sav")),
+            # Not the clearest error message, but does signal something wrong with input
+            '"test ds" is not a folder'
+        )
+        expect_error(
+            loadDataset(NULL),
+            "'dataset' should be a character dataset name, path, or URL, not an object of class NULL"
+        )
+        expect_error(
+            loadDataset(list(5)),
+            "'dataset' should be a character dataset name, path, or URL, not an object of class list"
+        )
     })
 })
 
 with_test_authentication({
-    dscat0 <- datasets()
-    test_that("datasets() gets the dataset catalog", {
-        expect_is(dscat0, "DatasetCatalog")
-    })
-
+    personal <- cd(projects(), "~")
     ds <- createDataset(name = now())
     dsname <- name(ds)
-    test_that("Adding a dataset refreshes the list", {
-        expect_equal(length(datasets()), length(dscat0) + 1)
+    test_that("When a dataset is created, it goes to the personal project", {
+        skip_on_jenkins("#163665209")
+        expect_equal(length(cd(projects(), "~")), length(personal) + 1)
     })
 
     test_that("Dataset list can be retrieved if authenticated", {
         expect_true(is.character(listDatasets()))
+        skip_on_jenkins("#163665209")
         expect_true(length(listDatasets()) > 0)
         expect_true(is.character(dsname))
         expect_true(nchar(dsname) > 0)
@@ -140,15 +184,13 @@ with_test_authentication({
 
     test_that("A dataset object can be retrieved, if it exists", {
         expect_true(is.dataset(loadDataset(dsname)))
-        dsnum <- which(listDatasets() %in% dsname)
-        expect_true(is.numeric(dsnum))
-        expect_true(is.dataset(loadDataset(dsnum)))
     })
 
     newname <- paste0("New name ", now())
     test_that("renaming a dataset refreshes the dataset list", {
         name(ds) <- newname
         expect_false(dsname %in% listDatasets())
+        skip_on_jenkins("#163665209")
         expect_true(newname %in% listDatasets())
     })
 

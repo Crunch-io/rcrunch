@@ -1,15 +1,12 @@
 {
     "element": "shoji:entity",
-    "self": "https://app.crunch.io/api/projects/project1/",
+    "self": "https://app.crunch.io/api/projects/personal/",
     "catalogs": {
         "datasets": "https://app.crunch.io/api/projects/project1/datasets/",
-        "users": "https://app.crunch.io/api/projects/project1/users/",
-        "members": "https://app.crunch.io/api/projects/project1/members/",
         "project": "https://app.crunch.io/api/projects/"
     },
-    "description": "Details for a specific project",
     "body": {
-        "name": "Project One",
+        "name": "Personal Project",
         "description": "Long description text",
         "icon": ""
     },

@@ -71,6 +71,7 @@ createDataset <- function(name, body, ...) {
         body <- wrapEntity(name = name, ...)
     }
     dataset_url <- crPOST(sessionURL("datasets"), body = toJSON(body))
+    dropDatasetsCache()
     return(invisible(loadDatasetFromURL(dataset_url)))
 }
 

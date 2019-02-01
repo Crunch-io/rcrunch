@@ -63,20 +63,11 @@ setMethod("refresh", "ShojiObject", function(x) {
     return(do.call(Class, crGET(self(x))))
 })
 
-#' @rdname delete
-#' @export
-setMethod("delete", "ShojiObject", function(x, ...) invisible(crDELETE(self(x))))
-
-#' @rdname delete
-#' @export
-setMethod("delete", "ANY", function(x, ...) halt("'delete' only valid for Crunch objects"))
-
 #' Base setter for Crunch objects
 #' @param x a ShojiObject or subclass thereof
 #' @param i character the slot name to update
 #' @param value whatever the new value of that slot should be
-#' @return x modified accordingly. If \code{x} isn't read-only, it will also
-#' post the edit to the Crunch server.
+#' @return x modified accordingly.
 #' @keywords internal
 setEntitySlot <- function(x, i, value) {
     ## Check if we have actual changes to send. Wrap both sides in I()
@@ -86,6 +77,15 @@ setEntitySlot <- function(x, i, value) {
         body <- structure(list(value), .Names = i)
         payload <- toJSON(body)
         crPATCH(self(x), body = payload)
+        if (is.dataset(x)) {
+            # Update the tuple in place too
+            # This is hacky; we should probably make datasets not involve tuples
+            if (i %in% names(tuple(x)@body)) {
+                tuple(x)[[i]] <- value
+            }
+            # Also drop cache for the dataset's containing project index
+            dropOnly(shojiURL(x, "catalogs", "project"))
+        }
     }
     return(x)
 }

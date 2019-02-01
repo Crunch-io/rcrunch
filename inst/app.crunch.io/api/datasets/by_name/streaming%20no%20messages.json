@@ -1,0 +1,17 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/streaming%20no%20messages/",
+    "index": {
+        "https://app.crunch.io/api/datasets/streaming-no-msg/": {
+            "owner_display_name": "Fake User",
+            "name": "streaming no messages",
+            "description": "",
+            "start_date":"2016-01-01",
+            "end_date":"2016-01-01",
+            "archived": false,
+            "id": "5367caab4292e7ce4b8994bdce9dbb11",
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "is_published": true
+        }
+    }
+}

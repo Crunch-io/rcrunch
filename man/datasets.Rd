@@ -3,39 +3,44 @@
 \name{datasets}
 \alias{datasets}
 \alias{datasets<-}
-\title{Get the dataset catalog}
+\title{Get a catalog of datasets}
 \usage{
 datasets(x = getAPIRoot())
 
 datasets(x) <- value
 }
 \arguments{
-\item{x}{a \code{ShojiObject}, such as a \code{ProjectFolder}. If omitted,
-the function will load the user's primary dataset catalog. #'}
+\item{x}{a \code{ProjectFolder} or \code{SearchResults} that may contain datasets}
 
-\item{value}{\code{CrunchDataset} for the setter}
+\item{value}{For assignment, a \code{CrunchDataset} to move}
 }
 \value{
-An object of class \code{DatasetCatalog}. The setter returns the
-project (or other object that contains a dataset catalog with the given
-dataset added to it (via changing its owner to be
-the specified object, \code{x}).
+When \code{x} is a \code{ProjectFolder}, \code{datasets()} returns the folder with
+its "index" filtered to contain only datasets; otherwise, it returns an
+object of class \code{DatasetCatalog}. The assignment function returns the
+project \code{x} with the given dataset added to it.
 }
 \description{
-Crunch datasets are associated with catalogs. A project catalog will
-have a set of datasets associated with it, as will a user or team. This
-function allows you to get or modify the datasets associated with a catalog.
+Crunch datasets are collected in folders called "projects". \code{datasets()} can
+be used to filter a project's contents to see only datasets (and not other
+projects). You can also use it to pull a catalog of datasets from search
+results.
+}
+\details{
+The \code{datasets()<-} assignment function provides an alternative method for
+moving a dataset into a project. This may be more convenient in some cases
+than using \code{\link[=mv]{mv()}}.
 }
 \examples{
 \dontrun{
-# Get the primary dataset catalog
-mydatasets <- datasets()
-# Can load a dataset from that
-ds <- loadDataset(mydatasets[["Dataset name"]])
-# Can use the same function to get the dataset catalog for a project
-proj <- projects()[["Project name"]]
-projdatasets <- datasets(proj)
+# Get the names of the datasets contained in a project
+projects() \%>\%
+    cd("Important Clients") \%>\%
+    datasets() \%>\%
+    names()
 # The assignment method lets you move a dataset to a project
+proj <- cd(projects(), "Important Clients")
+ds <- loadDataset("New important client survey")
 datasets(proj) <- ds
 }
 }
