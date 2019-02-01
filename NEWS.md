@@ -1,4 +1,5 @@
 # crunch 1.25.1 (under development)
+* Fixed a bug with the display of univariate cube `prop.table`s  
 
 ## Personal folder
 * You can now access your "personal folder" of datasets, which contains only those datasets you imported and that haven't been moved into another project. This dataset folder is denoted in paths by `~`, as in a `*nix` file system. `cd(projects(), "~")` takes you there; `mv(projects(), ds, "~")` moves `ds` into your personal folder.
