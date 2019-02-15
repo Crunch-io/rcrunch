@@ -9,13 +9,19 @@
 #' than first reading it into R. Uploading SPSS files directly to Crunch will
 #' preserve metadata that is stripped by the R import, regardless of the library
 #' used to read it into R.
+#' 
+#' If you have Triple-S files, you can import those directly to Crunch like you
+#' can with SPSS files. You should use the filename to the data file (ending in
+#' `.asc` or `.dat`) as the `x` argument and use the metdata file (ending in
+#' `.sss` or `.xml`) as the `schema` argument.
 #'
 #' @param x a `data.frame` or other rectangular R data object, or a string
 #' file name or URL to upload to create a dataset. The file may be a compressed
 #' Zip file containing a single file in CSV or SPSS format.
 #' @param name character name to give the new Crunch dataset. By default the
 #' function uses the name of the R object, or, if passing a file, the file name.
-#' @param ... additional arguments passed to [createDataset()]
+#' @param ... additional arguments passed to [createDataset()], or `schema` if 
+#'  you're upload Triple-S
 #' @return If successful, an object of class CrunchDataset.
 #' @examples
 #' \dontrun{
@@ -265,28 +271,31 @@ newDatasetByColumn <- function(x, name = deparseAndFlatten(substitute(x), max_le
 #' thereby saving you eight keystrokes.
 #'
 #' @param file character, the path to a local file to upload, or a URL. This
-#' should either be a `.csv` or `.sav` (SPSS) file
-#' @param name character, the name to give the new Crunch dataset. By default the
-#' name of the dataset will be the filename
+#'   should either be a `.csv`, `.sav` (SPSS), `.asc` (Triple-S data), or `.dat`
+#'   (Triple-S data) file
+#' @param name character, the name to give the new Crunch dataset. By default
+#'   the name of the dataset will be the filename
+#' @param schema character, the path to a local file to upload, or a URL. The
+#'   file specifies the dataset schema (variable types, categories, etc.) to
+#'   use. Currently only implemented for Triple-S files. This should either be a
+#'   `.xml` or `.sss` file (both are possible for Triple-S metadata files)
 #' @param ... additional arguments passed to [createDataset]
 #' @return On success, an object of class [CrunchDataset]
 #' @export
 #' @seealso [newDataset()]
 #' @keywords internal
-newDatasetFromFile <- function(x, name = basename(x), metadata, ...) {
+newDatasetFromFile <- function(x, name = basename(x), schema, ...) {
     # TODO: check file extensions of the files to not return "Error: An error 
     # occurred processing your request. We have been notified"
-    if (!missing(metadata)) {
-        # add source for metadata, for now return immediately
-        return(createSource(metadata))
-        
-        # this will work in the future
-        body_payload = list(table = list(source = createSource(metadata)))
-        ds <- createDataset(name = name, body = body_payload, ...)
+    if (!missing(schema)) {
+        schema_source = createSource(schema)
+        body_payload = list(name = name, table = list(source = schema_source))
+        ds <- createDataset(body = body_payload, ...)
+        ds <- addBatchFile(ds, x, first_batch = TRUE, schema = schema_source)
     } else {
         ds <- createDataset(name = name, ...)
+        ds <- addBatchFile(ds, x, first_batch = TRUE)
     }
     
-    ds <- addBatchFile(ds, x, first_batch = TRUE)
-    invisible(ds)
+    return(invisible(ds))
 }

@@ -98,6 +98,26 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{"name":"helper.R"}}'
         )
     })
+    test_that("newDataset with a schema posts to sources", {
+        expect_POST(
+            newDataset(x = "helper.R", schema = "helper.R"),
+            "https://app.crunch.io/api/sources/",
+            'list\\(uploaded_file = list\\(path = .*helper.R',
+            fixed = FALSE
+        )
+    })
+    test_that("After the schema source, newDataset with a schema posts to datasets", {
+        expect_POST(
+            newDataset(x = "helper.R", schema = "setup.R"),
+            "https://app.crunch.io/api/datasets/",
+            '{"name":"helper.R","table":{"source":"https://app.crunch.io/api/sources/35c340/"}'
+        )
+    })
+    test_that("newDataset with schema and data posts, adds to batches and appends", {
+        # the batch had to be mocked in tests/testthat/app.crunch.io/... because
+        # we supressMessages which makes detecting it harder
+        ds <- newDataset(x = "teardown.R", schema = "setup.R")
+    })
     test_that("newDataset(FromFile) cleans up the dataset entity if the file is invalid", {
         with_POST("https://app.crunch.io/api/datasets/1/", {
             expect_DELETE(
