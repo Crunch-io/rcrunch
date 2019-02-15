@@ -34,7 +34,7 @@ used to read it into R.
 
 If you have Triple-S files, you can import those directly to Crunch like you
 can with SPSS files. You should use the filename to the data file (ending in
-\code{.asc} or \code{.dat}) as the \code{x} argument and use the metdata file (ending in
+\code{.asc} or \code{.dat}) as the \code{x} argument and use the metadata file (ending in
 \code{.sss} or \code{.xml}) as the \code{schema} argument.
 }
 \examples{

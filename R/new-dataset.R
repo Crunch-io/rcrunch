@@ -12,7 +12,7 @@
 #' 
 #' If you have Triple-S files, you can import those directly to Crunch like you
 #' can with SPSS files. You should use the filename to the data file (ending in
-#' `.asc` or `.dat`) as the `x` argument and use the metdata file (ending in
+#' `.asc` or `.dat`) as the `x` argument and use the metadata file (ending in
 #' `.sss` or `.xml`) as the `schema` argument.
 #'
 #' @param x a `data.frame` or other rectangular R data object, or a string
