@@ -105,13 +105,26 @@ with_mock_crunch({
         expect_identical(cube, cube_list[[1]])
     })
     test_that("export decks generates correct POST", {
-        expect_POST(
-            exportDeck(main_deck, format = "json"),
-            "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+        expect_header(
+            expect_POST(
+                exportDeck(main_deck, format = "json"),
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+            ),
+            "Accept: application/json"
         )
-        expect_POST(
-            exportDeck(main_deck, format = "xlsx"),
-            "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+        expect_header(
+            expect_POST(
+                exportDeck(main_deck, format = "xlsx"),
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+            ),
+            "Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        expect_header(
+            expect_POST(
+                exportDeck(main_deck, format = "pptx"),
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+            ),
+            "Accept: application/vnd.openxmlformats-officedocument.presentationml.presentation"
         )
     })
 
