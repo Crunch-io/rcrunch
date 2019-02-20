@@ -1,4 +1,5 @@
 # crunch 1.25.1 (under development)
+* Added support for exporting decks to powerpoint with `format = "pptx"`
 * Fixed a bug with the display of univariate cube `prop.table`s  
 
 ## Personal folder
