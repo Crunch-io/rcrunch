@@ -85,7 +85,8 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
 extToContentType <- function(ext){
     mapping <- list(
         json = "application/json",
-        xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        pptx = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
     )
     return(mapping[[ext]])
 }
