@@ -14,8 +14,7 @@ setEntitySlot(x, i, value)
 \item{value}{whatever the new value of that slot should be}
 }
 \value{
-x modified accordingly. If \code{x} isn't read-only, it will also
-post the edit to the Crunch server.
+x modified accordingly.
 }
 \description{
 Base setter for Crunch objects

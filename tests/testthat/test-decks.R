@@ -113,6 +113,10 @@ with_mock_crunch({
             exportDeck(main_deck, format = "xlsx"),
             "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
         )
+        expect_POST(
+            exportDeck(main_deck, format = "pptx"),
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+        )
     })
 
     test_that("deck assignment", {
