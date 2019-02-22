@@ -3,21 +3,29 @@ cache: packages
 after_success:
 - Rscript -e 'covr::codecov()'
 - bash pkgdown.sh
-env:
-  global:
-    - _R_CHECK_LENGTH_1_LOGIC2_=true
-    - secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
 
 matrix:
   include:
   - os: linux
     r: 3.3
+    env:
+      global: _R_CHECK_LENGTH_1_LOGIC2_=true
+      secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
   - os: linux
     r: oldrel
+    env:
+      global: _R_CHECK_LENGTH_1_LOGIC2_=true
+      secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
   - os: linux
     r: release
+    env:
+      global: _R_CHECK_LENGTH_1_LOGIC2_=true
+      secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
   - os: linux
     r: devel
+    env:
+      global: _R_CHECK_LENGTH_1_LOGIC2_=true
+      secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
   - os: windows
     language: shell
     env:
