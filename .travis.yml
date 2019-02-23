@@ -48,5 +48,5 @@ matrix:
       - Rscript -e 'deps <- devtools::dev_package_deps(dependencies = NA);devtools::install_deps(dependencies = TRUE)'
       - export PKG_TARBALL="$(perl -ne '$version = $1 if (/^Version:\s(\S+)/); $package = $1 if (/^Package:\s*(\S+)/); END { print "${package}_$version.tar.gz" }' DESCRIPTION)"
       - echo $PKG_TARBALL
-      - R.exe CMD check "${PKG_TARBALL}" --as-cran
+      - R.exe CMD check $PKG_TARBALL --as-cran
     after_success: echo 'Done!'
