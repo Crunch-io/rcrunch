@@ -83,7 +83,7 @@ changeCategoryID <- function(variable, from, to) {
             msg <- conditionMessage(e)
             if (grepl("Cannot delete categories", msg)) {
                 # If dropping the to-be-dropped category failed, it could
-                # be because there's an exlcusion. If so unset it, or else
+                # be because there's an exclusion. If so unset it, or else
                 # the updated values below will not include all rows
                 ds <- loadDataset(datasetReference(variable))
                 if (!is.null(exclusion(ds))) {
