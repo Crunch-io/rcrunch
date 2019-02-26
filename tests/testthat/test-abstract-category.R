@@ -35,7 +35,6 @@ test_that("modifyCats works like modifyList", {
             list(anchor = 1, name = "New one")
         ))
     )
-    expect_true(FALSE)
 })
 
 test_that("abstract category is.* functions", {
