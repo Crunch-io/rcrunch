@@ -49,8 +49,8 @@ matrix:
       - Rscript.exe -e 'install.packages(c("devtools"));if (!all(c("devtools") %in% installed.packages())) { q(status = 1, save = "no")}'
       - Rscript.exe -e 'devtools::session_info(installed.packages()[, "Package"])'
       - Rscript -e 'deps <- devtools::dev_package_deps(dependencies = NA);devtools::install_deps(dependencies = TRUE)'
-      - R.exe CMD build . --no-build-vignettes
+      - R.exe CMD build . --no-manual
       - export PKG_TARBALL="$(perl -ne '$version = $1 if (/^Version:\s(\S+)/); $package = $1 if (/^Package:\s*(\S+)/); END { print "${package}_$version.tar.gz" }' DESCRIPTION)"
       - echo $PKG_TARBALL
-      - R.exe CMD check $PKG_TARBALL --as-cran --no-build-vignettes
+      - R.exe CMD check $PKG_TARBALL --no-manual --as-cran --install-args=--build
     after_success: echo 'Done!'
