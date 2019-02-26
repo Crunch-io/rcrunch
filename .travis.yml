@@ -52,5 +52,7 @@ matrix:
       - R.exe CMD build . --no-manual
       - export PKG_TARBALL="$(perl -ne '$version = $1 if (/^Version:\s(\S+)/); $package = $1 if (/^Package:\s*(\S+)/); END { print "${package}_$version.tar.gz" }' DESCRIPTION)"
       - echo $PKG_TARBALL
+      - export _R_CHECK_CRAN_INCOMING_=FALSE
+      - export R_QPDF=true
       - R.exe CMD check $PKG_TARBALL --no-manual --as-cran --install-args=--build
     after_success: echo 'Done!'
