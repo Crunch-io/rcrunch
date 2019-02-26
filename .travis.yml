@@ -40,7 +40,6 @@ matrix:
       global: _R_CHECK_LENGTH_1_LOGIC2_=true
     before_install:
       - choco install -y r.project
-      - choco install -y miktex
       - export R_VERSION=`ls 'C:\Program Files\R\'`
       - export PATH=$PATH:';C:\Program Files\R\'$R_VERSION'\bin\x64'
       - echo 'options(repos = c("https://cloud.r-project.org"))' > ~/.Rprofile.site
@@ -50,8 +49,8 @@ matrix:
       - Rscript.exe -e 'install.packages(c("devtools"));if (!all(c("devtools") %in% installed.packages())) { q(status = 1, save = "no")}'
       - Rscript.exe -e 'devtools::session_info(installed.packages()[, "Package"])'
       - Rscript -e 'deps <- devtools::dev_package_deps(dependencies = NA);devtools::install_deps(dependencies = TRUE)'
-      - R.exe CMD build .
+      - R.exe CMD build . --no-build-vignettes
       - export PKG_TARBALL="$(perl -ne '$version = $1 if (/^Version:\s(\S+)/); $package = $1 if (/^Package:\s*(\S+)/); END { print "${package}_$version.tar.gz" }' DESCRIPTION)"
       - echo $PKG_TARBALL
-      - R.exe CMD check $PKG_TARBALL --as-cran
+      - R.exe CMD check $PKG_TARBALL --as-cran --no-build-vignettes
     after_success: echo 'Done!'
