@@ -158,22 +158,38 @@ with_test_authentication <- function(expr) {
     }
 }
 
+with_timing <- function (global.varname, expr) {
+    rightnow <- Sys.time()
+    totaltime <- get0(global.varname, envir = globalenv(), ifnotfound=0)
+    on.exit(assign(
+        global.varname,
+        totaltime + difftime(Sys.time(), rightnow, "seconds"),
+        envir = globalenv()
+    ))
+    eval.parent(expr)
+}
+
 purgeEntitiesCreated <- function() {
-    seen <- get("entities.created", envir = globalenv())
-    ds.urls <- grep("/datasets/(.*?)/$", seen, value = TRUE)
-    if (length(ds.urls)) {
-        ignore <- Reduce("|", lapply(ds.urls, function(x) {
-            substr(seen, 1, nchar(x)) == x & seen != x
-        }))
-        seen <- seen[!ignore]
-    }
-    for (u in seen) {
-        ## We could filter out variables, batches, anything under a dataset
-        ## since we're going to delete the datasets
-        try(crDELETE(u), silent = TRUE)
-    }
-    assign("entities.created", c(), envir = globalenv())
-    invisible()
+    with_timing("cleanup.runtime", {
+        seen <- get("entities.created", envir = globalenv())
+        ds.urls <- grep("/datasets/(.*?)/$", seen, value = TRUE)
+        if (length(ds.urls)) {
+            ## Filter out variables, batches, anything under a dataset
+            ## since we're going to delete the datasets
+            ignore <- Reduce("|", lapply(ds.urls, function(x) {
+                substr(seen, 1, nchar(x)) == x & seen != x
+            }))
+            seen <- seen[!ignore]
+        }
+        for (u in seen) {
+            ## TODO: use curl::curl_fetch_multi to background/parallelize these?
+            ## If so, might need to wait for them to complete (just in parallel)
+            ## rather than fire-and-forget so that other synchronous code doesn't fail
+            try(crDELETE(u), silent = TRUE)
+        }
+        assign("entities.created", c(), envir = globalenv())
+        invisible()
+    })
 }
 
 ## Substitute for testthat::describe or similar, just a wrapper around a context
@@ -192,33 +208,37 @@ with_test_authentication({
 })
 
 crunch_test_teardown_check <- function() {
-    with_test_authentication({
-        datasets.end <- urls(datasets())
-        leftovers <- setdiff(datasets.end, datasets.start)
-        if (length(leftovers)) {
-            message(
-                length(leftovers),
-                " dataset(s) created and not destroyed: ",
-                crunch:::serialPaste(dQuote(names(datasets()[leftovers])))
-            )
-        }
-        users.end <- urls(crunch:::getUserCatalog())
-        leftovers <- setdiff(users.end, users.start)
-        if (length(leftovers)) {
-            message(
-                length(leftovers),
-                " users(s) created and not destroyed: ",
-                crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers])))
-            )
-        }
-        projects.end <- urls(projects())
-        leftovers <- setdiff(projects.end, projects.start)
-        if (length(leftovers)) {
-            message(
-                length(leftovers),
-                " projects(s) created and not destroyed: ",
-                crunch:::serialPaste(dQuote(names(projects()[leftovers])))
-            )
-        }
+    with_timing("cleanup.runtime", {
+        with_test_authentication({
+            datasets.end <- urls(datasets())
+            leftovers <- setdiff(datasets.end, datasets.start)
+            if (length(leftovers)) {
+                message(
+                    length(leftovers),
+                    " dataset(s) created and not destroyed: ",
+                    crunch:::serialPaste(dQuote(names(datasets()[leftovers])))
+                )
+            }
+            users.end <- urls(crunch:::getUserCatalog())
+            leftovers <- setdiff(users.end, users.start)
+            if (length(leftovers)) {
+                message(
+                    length(leftovers),
+                    " users(s) created and not destroyed: ",
+                    crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers])))
+                )
+            }
+            projects.end <- urls(projects())
+            leftovers <- setdiff(projects.end, projects.start)
+            if (length(leftovers)) {
+                message(
+                    length(leftovers),
+                    " projects(s) created and not destroyed: ",
+                    crunch:::serialPaste(dQuote(names(projects()[leftovers])))
+                )
+            }
+        })
     })
+    cat("Total teardown: ")
+    print(get("cleanup.runtime", envir = globalenv()))
 }
