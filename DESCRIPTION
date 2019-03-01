@@ -64,6 +64,7 @@ Collate:
     'categories.R'
     'category.R'
     'change-category-id.R'
+    'clean-array.R'
     'combine-categories.R'
     'compare-categories.R'
     'compare-datasets.R'
