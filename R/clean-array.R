@@ -1,3 +1,19 @@
+#' Clean up an array variable imported from a lossy file format 
+#' 
+#' Array and multiple-response variables coming in from SPSS or other file
+#' formats generally need some work to reconstruct the "right" metadata because
+#' they have to shove both parent and subvariable metadata into the "varlabels"
+#' of the subvariables. This often follows a pattern of having varlabels with a
+#' prefix containing the parent question wording (description) and a suffix that
+#' is the actual response label.
+#'
+#' This function detects this prefix and reconstructs what may have been the 
+#' original array definition.
+#'
+#' @param variable An array Variable
+#' @return `variable` with edits pushed to the API. A common prefix on 
+#' subvariable names is extracted and set as the variable's description.
+#' @export
 cleanImportedArray <- function (variable) {
     if (length(subvariables(variable)) > 1) {
         MIN_PREFIX_LENGTH <- 20 # TODO: tune/make configurable
