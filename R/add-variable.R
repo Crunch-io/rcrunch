@@ -81,6 +81,7 @@ validateVarDefRows <- function(vardef, numrows) {
 POSTNewVariable <- function(catalog_url, variable) {
     do.POST <- function(x) crPOST(catalog_url, body = toJSON(x, digits = 15))
 
+    is_binddef <- FALSE
     if (!any(c("expr", "derivation") %in% names(variable))) {
         ## If deriving a variable, skip this and go straight to POSTing
         if (variable$type %in% c("multiple_response", "categorical_array")) {
@@ -102,6 +103,12 @@ POSTNewVariable <- function(catalog_url, variable) {
             }
             is_binddef <- is.character(variable$subvariables) &&
                 !("categories" %in% names(variable))
+            if (is_binddef) {
+                # Pop the magic flag off
+                # TODO: allow setting this magic flag in makeArray()
+                do_post_bind_magic <- variable$autonames %||% FALSE
+                variable$autonames <- NULL
+            }
             is_arraydef <- is_catvardef(variable) &&
                 !any(vapply(variable$subvariables, is_catvardef, logical(1)))
             case3 <- !(is_binddef | is_arraydef)
@@ -131,6 +138,11 @@ POSTNewVariable <- function(catalog_url, variable) {
         }
     }
     out <- do.POST(variable)
+    if (is_binddef && do_post_bind_magic) {
+        # Look for common variable name stems and clean that
+        var <- VariableEntity(crGET(out))
+        cleanImportedArray(var)
+    }
     invisible(out)
 }
 
@@ -146,5 +158,50 @@ checkVarDefErrors <- function(new_var_urls) {
             "The following variable definitions errored on upload: ",
             paste(which(errs), collapse = ", ")
         )
+    }
+}
+
+cleanImportedArray <- function (variable) {
+    MIN_PREFIX_LENGTH <- 20 # TODO: tune/make configurable
+    prefix <- findCommonPrefix(names(subvariales(variable)))
+    # If length of the common stem is enough, extract it,
+    # remove it from the subvar names,
+    # remove trailing whitespace/punctuation,
+    # and set it as variable description.
+    if (nchar(prefix) >= MIN_PREFIX_LENGTH) {
+        # Use wildcard regexp with length just in case there are special chars in prefix.
+        # We already know that the prefix matches.
+        re <- paste0("^.{", nchar(prefix), "}")
+        names(subvariables(variable)) <- sub(re, "", names(subvariables(variable)))
+        # Now, remove whitespace and some punctuation from end of prefix, but
+        # don't remove a question mark or other reasonable punctuation
+        prefix <- sub("[[:space:]\\-\\:;]*$", "", prefix)
+        description(variable) <- prefix
+    }
+    return(variable)
+}
+
+findCommonPrefix <- function (x) {
+    # Find the shortest one and start with that
+    nchars <- nchar(x)
+    shortest <- which.min(nchars)
+    step_size <- prefix_length <- min(nchars)
+    while (step_size > 0 and prefix_length > 0) {
+        step_size <- round(step_size / 2)
+        # Bisect to find the common stem
+        stems <- substr(1, prefix_length, x)
+        if (length(unique(stems)) == 1) {
+            # Go longer
+            prefix_length <- prefix_length + step_size
+        } else {
+            # Go shorter
+            prefix_length <- prefix_length - step_size
+        }
+    }
+
+    if (prefix_length > 0) {
+        return(substr(1, prefix_length, shortest))
+    } else {
+        return("")
     }
 }
