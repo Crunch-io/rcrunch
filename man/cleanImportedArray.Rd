@@ -4,10 +4,14 @@
 \alias{cleanImportedArray}
 \title{Clean up an array variable imported from a lossy file format}
 \usage{
-cleanImportedArray(variable)
+cleanImportedArray(variable, min.prefix.length = 20)
 }
 \arguments{
 \item{variable}{An array Variable}
+
+\item{min.prefix.length}{Integer: how many characters long does the common
+string need to be in order to consider it significant enough to use? Default
+is 20.}
 }
 \value{
 \code{variable} with edits pushed to the API. A common prefix on
