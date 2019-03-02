@@ -151,6 +151,13 @@ with_mock_crunch({
             "Must provide a file or url to createSource"
         )
     })
+
+    test_that("newExampleDataset", {
+        expect_POST(newExampleDataset(),
+            'https://app.crunch.io/api/datasets/',
+            '{"element":"shoji:entity","body":{"name":"Example dataset",'
+        )
+    })
 })
 
 with_test_authentication({

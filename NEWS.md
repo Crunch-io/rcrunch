@@ -1,12 +1,16 @@
 # crunch 1.25.1 (under development)
-* Added support for exporting decks to powerpoint with `format = "pptx"`
-* Fixed a bug with the display of univariate cube `prop.table`s  
 
 ## Personal folder
 * You can now access your "personal folder" of datasets, which contains only those datasets you imported and that haven't been moved into another project. This dataset folder is denoted in paths by `~`, as in a `*nix` file system. `cd(projects(), "~")` takes you there; `mv(projects(), ds, "~")` moves `ds` into your personal folder.
 * `listDatasets()` now by default only prints datasets in your personal folder, not a combination of your personal datasets and some of the datasets that have been shared with you.
 * When you give a dataset name to `loadDataset()`, it now searches to find datasets exactly matching that name unless you specify a project to load from. If you have multiple datasets with the same name in different locations, `loadDataset("your dataset name")` may return a different one than it did previously. If you want to identify a dataset precisely in `loadDataset()`, either specify the dataset URL (most effective but not as human friendly) or provide `project = "path/to/folder"`.
 * Calling `loadDataset(<integer>)` no longer is supported.
+
+## Other enhancements
+
+* `newExampleDataset()` creates a sample dataset for you to explore
+* `exportDeck()` can now write to PowerPoint with `format = "pptx"`
+* Fixed a bug with the display of univariate cube `prop.table`s  
 
 # crunch 1.25.0
 
