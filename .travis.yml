@@ -15,13 +15,11 @@ matrix:
     env:
       global: 
         - _R_CHECK_LENGTH_1_LOGIC2_=true
-        - secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
   - os: linux
     r: oldrel
     env:
       global: 
         - _R_CHECK_LENGTH_1_LOGIC2_=true
-        - secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
   - os: linux
     r: release
     env:
@@ -33,7 +31,6 @@ matrix:
     env:
       global: 
         - _R_CHECK_LENGTH_1_LOGIC2_=true
-        - secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=
   - os: windows
     language: shell
     env:
@@ -42,11 +39,11 @@ matrix:
       - choco install -y r.project
       - export R_VERSION=`ls 'C:\Program Files\R\'`
       - export PATH=$PATH:';C:\Program Files\R\'$R_VERSION'\bin\x64'
-      - echo 'options(repos = c("https://cloud.r-project.org"))' > ~/.Rprofile.site
+      - echo 'options(repos = "https://cloud.r-project.org")' > ~/.Rprofile.site
       - export R_PROFILE=~/.Rprofile.site
     script:
       - Rscript.exe -e 'sessionInfo()'
-      - Rscript.exe -e 'install.packages(c("devtools"));if (!all(c("devtools") %in% installed.packages())) { q(status = 1, save = "no")}'
+      - Rscript.exe -e 'install.packages("devtools");if (!all("devtools" %in% installed.packages())) { q(status = 1, save = "no")}'
       - Rscript.exe -e 'devtools::session_info(installed.packages()[, "Package"])'
       - Rscript -e 'deps <- devtools::dev_package_deps(dependencies = NA);devtools::install_deps(dependencies = TRUE)'
       - R.exe CMD build . --no-manual
