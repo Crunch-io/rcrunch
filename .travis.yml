@@ -36,7 +36,7 @@ matrix:
     env:
       global: _R_CHECK_LENGTH_1_LOGIC2_=true
     before_install:
-      - . .travis.win.install.bat
+      - sh .travis.win.install.sh
     script:
       - make install-ci
       - R CMD build . --no-manual
