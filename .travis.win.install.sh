@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
-choco install -y r.project && 
+choco install -y r.project &&
+choco install -y make && 
 export R_VERSION=`ls 'C:\Program Files\R\'` &&
 export PATH=$PATH:';C:\Program Files\R\'$R_VERSION'\bin\x64' &&
 echo 'options(repos = "https://cloud.r-project.org")' > ~/.Rprofile.site &&
