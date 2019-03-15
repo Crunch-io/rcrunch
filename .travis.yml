@@ -36,7 +36,7 @@ matrix:
     env:
       global: _R_CHECK_LENGTH_1_LOGIC2_=true
     before_install:
-      - sh .travis.win.install.sh
+      - source .travis.win.install.sh
       - R -e 'sessionInfo(installed.packages()[, "Package"])'
       - R.exe -e 'sessionInfo(installed.packages()[, "Package"])'
     script:
