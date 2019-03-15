@@ -41,15 +41,17 @@ matrix:
       - export PATH=$PATH:';C:\Program Files\R\'$R_VERSION'\bin\x64'
       - echo 'options(repos = "https://cloud.r-project.org")' > ~/.Rprofile.site
       - export R_PROFILE=~/.Rprofile.site
+      - doskey R=R.exe
+      - doskey Rscript=Rscript.exe
     script:
-      - Rscript.exe -e 'sessionInfo()'
-      - Rscript.exe -e 'install.packages("devtools");if (!all("devtools" %in% installed.packages())) { q(status = 1, save = "no")}'
-      - Rscript.exe -e 'devtools::session_info(installed.packages()[, "Package"])'
+      - Rscript -e 'sessionInfo()'
+      - Rscript -e 'install.packages("devtools");if (!all("devtools" %in% installed.packages())) { q(status = 1, save = "no")}'
+      - Rscript -e 'devtools::session_info(installed.packages()[, "Package"])'
       - Rscript -e 'deps <- devtools::dev_package_deps(dependencies = NA);devtools::install_deps(dependencies = TRUE)'
-      - R.exe CMD build . --no-manual
+      - R CMD build . --no-manual
       - export PKG_TARBALL="$(perl -ne '$version = $1 if (/^Version:\s(\S+)/); $package = $1 if (/^Package:\s*(\S+)/); END { print "${package}_$version.tar.gz" }' DESCRIPTION)"
       - echo $PKG_TARBALL
       - export _R_CHECK_CRAN_INCOMING_=FALSE
       - export R_QPDF=true
-      - R.exe CMD check $PKG_TARBALL --no-manual --as-cran --install-args=--build
+      - R CMD check $PKG_TARBALL --no-manual --as-cran --install-args=--build
     after_success: echo 'Done!'
