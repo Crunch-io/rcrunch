@@ -8,4 +8,5 @@ export R_PROFILE=~/.Rprofile.site &&
 
 Rscript.exe -e 'sessionInfo()' &&
 Rscript.exe -e 'install.packages("devtools");if (!all("devtools" %in% installed.packages())) { q(status = 1, save = "no")}' &&
+Rscript.exe -e 'deps <- devtools::dev_package_deps(dependencies = NA);devtools::install_deps(dependencies = TRUE)'
 Rscript.exe -e 'devtools::session_info(installed.packages()[, "Package"])'

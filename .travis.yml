@@ -37,6 +37,7 @@ matrix:
       global: _R_CHECK_LENGTH_1_LOGIC2_=true
     before_install:
       - source .travis.win.install.sh
+      - echo $R_PROFILE
     script:
       - R.exe CMD build . --no-manual
       - export PKG_TARBALL="$(perl -ne '$version = $1 if (/^Version:\s(\S+)/); $package = $1 if (/^Package:\s*(\S+)/); END { print "${package}_$version.tar.gz" }' DESCRIPTION)"
