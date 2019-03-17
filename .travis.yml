@@ -38,5 +38,7 @@ matrix:
     before_install:
       - source .travis.win.install.sh
     script:
+      - R.exe CMD build . --no-manual
+      - echo $PKG_TARBALL
       - R.exe CMD check $PKG_TARBALL --no-manual --as-cran --install-args=--build
     after_success: echo 'Done!'
