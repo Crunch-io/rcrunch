@@ -21,3 +21,4 @@
 ^\.lintr$
 ^cubes$
 ^hooks$
+^.travis.win.install.sh$
