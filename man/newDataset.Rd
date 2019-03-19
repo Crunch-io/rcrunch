@@ -14,7 +14,8 @@ Zip file containing a single file in CSV or SPSS format.}
 \item{name}{character name to give the new Crunch dataset. By default the
 function uses the name of the R object, or, if passing a file, the file name.}
 
-\item{...}{additional arguments passed to \code{\link[=createDataset]{createDataset()}}}
+\item{...}{additional arguments passed to \code{\link[=createDataset]{createDataset()}}, or \code{schema} if
+you're upload Triple-S}
 }
 \value{
 If successful, an object of class CrunchDataset.
@@ -30,6 +31,11 @@ If you have an SPSS file, it is better specify the file name directly rather
 than first reading it into R. Uploading SPSS files directly to Crunch will
 preserve metadata that is stripped by the R import, regardless of the library
 used to read it into R.
+
+If you have Triple-S files, you can import those directly to Crunch like you
+can with SPSS files. You should use the filename to the data file (ending in
+\code{.asc} or \code{.dat}) as the \code{x} argument and use the metadata file (ending in
+\code{.sss} or \code{.xml}) as the \code{schema} argument.
 }
 \examples{
 \dontrun{
