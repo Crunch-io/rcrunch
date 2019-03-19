@@ -45,12 +45,20 @@ addBatchFile <- function(dataset, file, ...) {
 }
 
 #' @importFrom httr upload_file
+#' @importFrom tools file_ext
 createSource <- function(file, url, ...) {
     sources_url <- sessionURL("sources")
     if (!missing(file)) {
         if (file.exists(file)) {
+            # TODO: remove this special casing for Triple-S metadata files when
+            # the backend does the needful
+            type <- NULL
+            if (file_ext(file) %in% c("sss", "xml")) {
+                type <- "text/xml"
+            }
+
             u <- crPOST(sources_url,
-                body = list(uploaded_file = upload_file(file)), ...
+                body = list(uploaded_file = upload_file(file, type = type)), ...
             )
         } else {
             halt("File not found")
