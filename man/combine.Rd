@@ -33,6 +33,14 @@ the categories of another variable. For instance, you might want to
 recode a categorical variable with three categories small, medium, and large
 to one that has just small and large.
 }
+\details{
+Categorical and categorical array variables can have their
+categories combined (by specifying \code{categories} in the \code{combinations}
+argument). Multiple response variables can only have their responses (or
+items) combined (by specifying \code{responses} in the \code{combinations} argument).
+Categorical array items are not able to be combined together (even by
+specifying \code{responses}).
+}
 \examples{
 \dontrun{
 ds$fav_pet2 <- combine(ds$fav_pet, name="Pets (combined)",
