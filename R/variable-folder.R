@@ -1,6 +1,9 @@
 folders <- function(x) {
-    # TODO: make this function more useful? General? Exported?
-    stopifnot(is.dataset(x))
+    # This is for Dataset entities; other entities don't have such a shojiURL
+    # so that will error.
+    # This function exists because the generic rootFolder() for a dataset will
+    # get the root project folder. So maybe it should be called `rootVariableFolder`?
+    # TODO: make this function more useful? General? Specific? Exported?
     return(VariableFolder(crGET(shojiURL(x, "catalogs", "folders"))))
 }
 

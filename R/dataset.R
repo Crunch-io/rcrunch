@@ -348,8 +348,6 @@ cubeURL <- function(x) {
     }
 }
 
-setMethod("hidden", "CrunchDataset", function(x) hidden(allVariables(x)))
-
 setMethod("APIToWebURL", "ANY", function(x) {
     halt("Web URL is not available for objects of class ", class(x))
 })

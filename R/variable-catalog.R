@@ -23,11 +23,6 @@ setMethod("active", "VariableCatalog", function(x) {
     return(x)
 })
 
-setMethod("hidden", "VariableCatalog", function(x) {
-    index(x) <- Filter(.discardedTuple, index(x))
-    return(x)
-})
-
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("VariableCatalog", "numeric"), function(x, i, ...) {
