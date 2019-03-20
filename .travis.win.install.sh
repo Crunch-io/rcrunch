@@ -7,6 +7,7 @@ echo 'options(repos = "https://cloud.r-project.org", install.packages.compile.fr
 export R_PROFILE=~/.Rprofile.site &&
 
 Rscript.exe -e 'sessionInfo()' &&
+Rscript.exe -e 'getOption("install.packages.compile.from.source")' &&
 Rscript.exe -e 'install.packages("devtools", type = "both");if (!all("devtools" %in% installed.packages())) { q(status = 1, save = "no")}' &&
 echo 'one' &&
 Rscript.exe -e 'deps <- devtools::dev_package_deps(dependencies = TRUE); install.packages(deps$package, type = "both")' &&
