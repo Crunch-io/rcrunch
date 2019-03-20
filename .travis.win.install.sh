@@ -4,7 +4,7 @@ choco install -y r.project &&
 choco install -y make &&
 export R_VERSION=`ls 'C:\Program Files\R\'` &&
 export PATH=$PATH:';C:\Program Files\R\'$R_VERSION'\bin\x64' &&
-echo 'options(repos = "https://cloud.r-project.org", install.packages.compile.from.source = "always")' > ~/.Rprofile.site &&
+echo 'options(repos = "https://cloud.r-project.org", install.packages.compile.from.source = "never")' > ~/.Rprofile.site &&
 export R_PROFILE=~/.Rprofile.site &&
 
 echo which make &&
