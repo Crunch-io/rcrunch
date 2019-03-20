@@ -13,7 +13,7 @@ Rscript.exe -e 'sessionInfo()' &&
 Rscript.exe -e '!nzchar(Sys.which(Sys.getenv("MAKE", "make")))' &&
 Rscript.exe -e 'install.packages("devtools", dependencies = TRUE);if (!all("devtools" %in% installed.packages())) { q(status = 1, save = "no")}' &&
 echo 'one' &&
-Rscript.exe -e 'deps <- devtools::dev_package_deps(dependencies = TRUE); install.packages(deps$package, dependencies = TRUE)' &&
+Rscript.exe -e 'deps <- devtools::dev_package_deps(dependencies = TRUE); inst <- installed.packages(); install.packages(deps$package[!deps$package %in% inst[,"Package"]])' &&
 echo 'two' &&
 Rscript.exe -e 'devtools::session_info(installed.packages()[, "Package"])' &&
 echo 'three' &&
