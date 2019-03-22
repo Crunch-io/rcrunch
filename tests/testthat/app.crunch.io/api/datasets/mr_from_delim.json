@@ -9,6 +9,7 @@
         "savepoints": "https://app.crunch.io/api/datasets/mr_from_delim/savepoints/",
         "boxdata": "https://app.crunch.io/api/datasets/mr_from_delim/boxdata/",
         "filters": "https://app.crunch.io/api/datasets/mr_from_delim/filters/",
+        "folders": "https://app.crunch.io/api/datasets/mr_from_delim/folders/",
         "multitables": "https://app.crunch.io/api/datasets/mr_from_delim/multitables/",
         "comparisons": "https://app.crunch.io/api/datasets/mr_from_delim/comparisons/",
         "forks": "https://app.crunch.io/api/datasets/mr_from_delim/forks/",

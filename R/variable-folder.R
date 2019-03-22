@@ -1,9 +1,12 @@
 folders <- function(x) {
-    # This is for Dataset entities; other entities don't have such a shojiURL
-    # so that will error.
     # This function exists because the generic rootFolder() for a dataset will
-    # get the root project folder. So maybe it should be called `rootVariableFolder`?
-    # TODO: make this function more useful? General? Specific? Exported?
+    # get the root project folder, i.e. the root for moving it.
+    # This function gives you the root variable folder for a dataset or thing
+    # contained in a dataset.
+    # So maybe it should be called `rootVariableFolder`?
+    if (!is.dataset(x)) {
+        x <- ShojiEntity(crGET(datasetReference(x)))
+    }
     return(VariableFolder(crGET(shojiURL(x, "catalogs", "folders"))))
 }
 
@@ -23,7 +26,7 @@ setMethod("folderExtraction", "VariableFolder", function(x, tuple) {
     }
 })
 
-setMethod("rootFolder", "CrunchVariable", walkFoldersToRoot)
+setMethod("rootFolder", "CrunchVariable", folders)
 
 ## Get variable by alias, name, or URL
 whichFolderEntry <- function(x, i) {

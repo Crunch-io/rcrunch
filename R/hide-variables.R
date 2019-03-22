@@ -1,9 +1,6 @@
 setMethod("hidden", "CrunchDataset", function(x) hidden(folders(x)))
 
-setMethod("hidden", "VariableCatalog", function(x) {
-    ds <- crGET(datasetReference(x))
-    return(hidden(folders(ds)))
-})
+setMethod("hidden", "VariableCatalog", function(x) hidden(folders(x)))
 
 setMethod("hidden", "VariableFolder", function (x) {
     return(VariableFolder(crGET(shojiURL(rootFolder(x), "catalogs", "hidden"))))
@@ -46,7 +43,9 @@ setMethod("unhide", "VariableCatalog", function(x) {
 
 #' Hide and unhide variables within a dataset
 #' @param dataset the Dataset to modify
+#' @param x `dataset`, for `hiddenVariables<-`
 #' @param variables names or indices of variables to (un)hide
+#' @param value `variables`, for `hiddenVariables<-`
 #' @return (invisibly) `dataset` with the specified variables (un)hidden
 #' @seealso [`hide`]
 #' @export
@@ -56,12 +55,12 @@ hideVariables <- function(dataset, variables) {
 
 #' @rdname hideVariables
 #' @export
-`hiddenVariables<-` <- hideVariables
+`hiddenVariables<-` <- function(x, value) hideVariables(x, value)
 
 #' @rdname hideVariables
 #' @export
 unhideVariables <- function(dataset, variables) {
-    mv(dataset, variables, rootFolder(dataset))
+    mv(dataset, variables, folders(dataset))
 }
 
 #' Show the names of a dataset's hidden variables

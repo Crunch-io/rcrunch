@@ -47,6 +47,9 @@
         "summary": "https://app.crunch.io/api/datasets/3/variables/gender/summary/",
         "values": "https://app.crunch.io/api/datasets/3/variables/gender/values/"
     },
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/3/folders/"
+    },
     "urls": {
         "dataset_url": "https://app.crunch.io/api/datasets/3/"
     },
