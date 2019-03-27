@@ -11,6 +11,17 @@ with_mock_crunch({
         expect_true(is.dataset(ds))
     })
 
+    test_that("CrunchDataset class (re-)init preserves object state", {
+        expect_identical(CrunchDataset(ds), ds)
+        expect_identical(CrunchDataset(ds[, "gender"]), ds[, "gender"])
+        expect_identical(CrunchDataset(ds[ds$gender == "Female",]),
+            ds[ds$gender == "Female",])
+        # Now confirm the same with subclasses
+        SubDataset <- setClass("SubDataset", contains="CrunchDataset")
+        expect_is(SubDataset(ds), "SubDataset")
+        expect_identical(names(SubDataset(ds[, "gender"])), "gender")
+    })
+
     test_that("Dataset attributes", {
         expect_identical(name(ds), "test ds")
         expect_identical(description(ds), "")

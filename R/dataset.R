@@ -1,10 +1,20 @@
-init.CrunchDataset <- function(.Object, ...) {
+setMethod("initialize", "CrunchDataset", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    .Object@variables <- getDatasetVariables(.Object)
-    activeFilter(.Object) <- NULL
+    if (is.null(.Object@variables@self)) {
+        # This is only NULL when instantiating a fresh dataset object. If
+        # subclassing an existing dataset object, the variable catalog will
+        # already be populated (and due to subsetting, may not be identical
+        # to a fresh pull from the API)
+        #
+        # TODO: you could use this check to make lazy the fetching of variables
+        .Object@variables <- getDatasetVariables(.Object)
+    }
+    if (length(.Object@filter@expression) == 0) {
+        # Likewise for preserving filters
+        activeFilter(.Object) <- NULL
+    }
     return(.Object)
-}
-setMethod("initialize", "CrunchDataset", init.CrunchDataset)
+})
 
 getDatasetVariables <- function(x) {
     varcat_url <- variableCatalogURL(x)
