@@ -50,7 +50,8 @@ setMethod("unhide", "VariableCatalog", function(x) {
 #' @seealso [`hide`]
 #' @export
 hideVariables <- function(dataset, variables) {
-    mv(dataset, variables, hidden(dataset))
+    dataset <- mv(dataset, variables, hidden(dataset))
+    return(invisible(refresh(dataset)))
 }
 
 #' @rdname hideVariables
@@ -60,7 +61,8 @@ hideVariables <- function(dataset, variables) {
 #' @rdname hideVariables
 #' @export
 unhideVariables <- function(dataset, variables) {
-    mv(dataset, variables, folders(dataset))
+    dataset <- mv(dataset, variables, folders(dataset))
+    return(invisible(refresh(dataset)))
 }
 
 #' Show the names of a dataset's hidden variables
