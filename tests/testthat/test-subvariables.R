@@ -17,6 +17,10 @@ with_mock_crunch({
         )
     })
 
+    test_that("subvariables() on non-arrays", {
+        expect_null(subvariables(ds$birthyr))
+    })
+
     test_that("subvariable name setter error checking", {
         expect_error(names(subvariables(mr)) <- 1:3)
         expect_error(names(subvariables(mr)) <- c("First", "Second"))

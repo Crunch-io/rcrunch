@@ -1,3 +1,6 @@
+# Well, not exactly _all_ generics. Some are moved into files with their methods
+# because pkgdown prefers documentation that way.
+
 #' @export
 setGeneric("values", function(x) standardGeneric("values"))
 setGeneric("values<-", function(x, value) standardGeneric("values<-"))
@@ -97,11 +100,6 @@ setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
 setGeneric("categories", function(x) standardGeneric("categories"))
 setGeneric("categories<-", function(x, value) standardGeneric("categories<-"))
-setGeneric("subvariables", function(x) standardGeneric("subvariables"))
-setGeneric(
-    "subvariables<-",
-    function(x, value) standardGeneric("subvariables<-")
-)
 
 #' Get a Crunch object's dataset
 #'

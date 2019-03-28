@@ -1,7 +1,8 @@
 # crunch 1.25.1 (under development)
 * Added support for importing data in Triple-S format
 * Added support for exporting decks to powerpoint with `format = "pptx"`
-* Fixed a bug with the display of univariate cube `prop.table`s  
+* Fixed a bug with the display of univariate cube `prop.table`s
+* `subvariables()` on non-array variables returns `NULL` instead of an error (#237)
 
 ## Personal folder
 * You can now access your "personal folder" of datasets, which contains only those datasets you imported and that haven't been moved into another project. This dataset folder is denoted in paths by `~`, as in a `*nix` file system. `cd(projects(), "~")` takes you there; `mv(projects(), ds, "~")` moves `ds` into your personal folder.
