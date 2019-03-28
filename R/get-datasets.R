@@ -162,7 +162,7 @@ loadDataset <- function(dataset,
         dropDatasetsCache()
     }
     if (is.character(dataset)) {
-        if (is.datasetURL(dataset)) {
+        if (is.crunchURL(dataset)) {
             ## Just load it, no other querying needed
             return(loadDatasetFromURL(dataset))
         }
@@ -200,7 +200,7 @@ loadDataset <- function(dataset,
     }
 }
 
-is.datasetURL <- function (x) {
+is.crunchURL <- function (x) {
     # /api/ check is for redacted mocks that prune the scheme://host
     # We don't only use that check because web app URLs don't include /api/
     # Note that this does pass through URLs that are to resources inside a
@@ -213,7 +213,7 @@ loadDatasetFromURL <- function(url) {
     ## Load dataset without touching a dataset catalog
     if (!grepl("/api/", url)) {
         ## It's a web app URL, probably. Turn it into an API URL
-        url <- webToAPIURL(url)
+        url <- datasetReference(url)
     }
     dataset <- CrunchDataset(crGET(url))
     tuple(dataset) <- DatasetTuple(

@@ -64,7 +64,7 @@ with_mock_crunch({
                 '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
                 '{"edit":true,"view":true}},"send_notification":true,',
                 '"url_base":"https://fake.crunch.io/password/change/${token}/",',
-                '"dataset_url":"https://fake.crunch.io/dataset/511a7c49778030653aab5963"}'
+                '"dataset_url":"https://fake.crunch.io/dataset/1"}'
             )
             expect_PATCH(
                 share(ds, "lauren.ipsum@crunch.io",
@@ -75,7 +75,7 @@ with_mock_crunch({
                 '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
                 '{"edit":true,"view":true}},"send_notification":true,"message":"testing",',
                 '"url_base":"https://fake.crunch.io/password/change/${token}/",',
-                '"dataset_url":"https://fake.crunch.io/dataset/511a7c49778030653aab5963"}'
+                '"dataset_url":"https://fake.crunch.io/dataset/1"}'
             )
             expect_error(share(ds, "lauren.ipsum@crunch.io",
                 edit = TRUE,

@@ -25,7 +25,7 @@ with_mock_crunch({
     test_that("Dataset attributes", {
         expect_identical(name(ds), "test ds")
         expect_identical(description(ds), "")
-        expect_identical(id(ds), "511a7c49778030653aab5963")
+        expect_identical(id(ds), "1")
         expect_null(notes(ds))
     })
 
@@ -465,6 +465,9 @@ with_mock_crunch({
         test_that("deleteDataset by URL", {
             expect_DELETE(deleteDataset(self(ds)), self(ds))
         })
+        test_that("deleteDataset by web URL", {
+            expect_DELETE(deleteDataset(APIToWebURL(ds)), self(ds))
+        })
         test_that("deleteDataset on Dataset object", {
             expect_DELETE(deleteDataset(ds), self(ds))
         })
@@ -487,6 +490,8 @@ with_mock_crunch({
                 "To delete, please identify the dataset uniquely by URL or path."
             )
         )
+        expect_error(deleteDataset("http://app.crunch.io/api/"),
+            "http://app.crunch.io/api/ is not a valid dataset URL")
     })
 
     test_that("Dashboard URL", {

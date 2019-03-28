@@ -241,12 +241,18 @@ setMethod("datasetReference", "CrunchVariable", function(x) {
 })
 #' @rdname dataset-reference
 setMethod("datasetReference", "character", function(x) {
-    # check if the url has /datasets/.*/ in it.
-    if (grepl("(.*/datasets/.*?/).*", x)) {
-        sub("(.*/datasets/.*?/).*", "\\1", x)
-    } else {
-        NULL
+    if (length(x) != 1) {
+        return(NULL)
     }
+    # check if the URL has /datasets/.*/, or for web app URLs, /dataset/.*
+    # regexp is a little liberal, could be [0-9a-f]+, but relaxed for tests
+    id <- sub(".*/datasets?/([0-9a-z_]+)/?.*$", "\\1", x)
+    if (identical(id, x)) {
+        # Not a URL with a dataset id
+        return(NULL)
+    }
+    path <- paste0("datasets/", id, "/")
+    return(absoluteURL(path, getOption("crunch.api")))
 })
 
 #' @rdname dataset-reference

@@ -367,15 +367,6 @@ setMethod("APIToWebURL", "CrunchDataset", function(x) {
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
 })
 
-webToAPIURL <- function(url) {
-    id <- sub("^https.*?/dataset/([0-9a-f]+)/?.*$", "\\1", url)
-    if (identical(id, url)) {
-        halt("Not a valid web app URL")
-    }
-    path <- paste0("datasets/", id, "/")
-    return(absoluteURL(path, getOption("crunch.api")))
-}
-
 #' View a Crunch Object in the Web Application
 #'
 #' Convenience function that will use your system's "open" command to open
