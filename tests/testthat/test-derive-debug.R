@@ -64,7 +64,7 @@ with_test_authentication({
     test_that("changing category names in metadata carries", {
         names(categories(ds$petloc)) <- c(
             "Kat", "Dogz", "Bird",
-            "Skipped", "Not Asked"
+            "Skipped", "Not Asked", "No Data"
         )
         ds <- refresh(ds) # must refresh to update the derived variable's metadata
 

@@ -495,11 +495,11 @@ with_test_authentication({
         test_that("Editing array categories affects the subvariables too", {
             expect_identical(
                 names(categories(ds$petloc)),
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
             )
             expect_identical(
                 names(categories(ds$petloc$petloc_home)),
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
             )
             expect_identical(
                 names(table(ds$petloc$petloc_home)),
@@ -508,7 +508,7 @@ with_test_authentication({
             names(categories(ds$petloc))[2] <- "Canine"
             expect_identical(
                 names(categories(ds$petloc)),
-                c("Cat", "Canine", "Bird", "Skipped", "Not Asked")
+                c("Cat", "Canine", "Bird", "Skipped", "Not Asked", "No Data")
             )
             expect_identical(
                 names(table(ds$petloc$petloc_home)),
@@ -516,23 +516,23 @@ with_test_authentication({
             )
             expect_identical(
                 names(categories(ds$petloc$petloc_home)),
-                c("Cat", "Canine", "Bird", "Skipped", "Not Asked")
+                c("Cat", "Canine", "Bird", "Skipped", "Not Asked", "No Data")
             )
         })
 
         test_that("Reordering array categories", {
             expect_identical(
                 names(categories(ds$petloc)),
-                c("Cat", "Canine", "Bird", "Skipped", "Not Asked")
+                c("Cat", "Canine", "Bird", "Skipped", "Not Asked", "No Data")
             )
             categories(ds$petloc) <- rev(categories(ds$petloc))
             expect_identical(
                 names(categories(ds$petloc)),
-                c("Not Asked", "Skipped", "Bird", "Canine", "Cat")
+                c("No Data", "Not Asked", "Skipped", "Bird", "Canine", "Cat")
             )
             expect_identical(
                 names(categories(ds$petloc$petloc_home)),
-                c("Not Asked", "Skipped", "Bird", "Canine", "Cat")
+                c("No Data", "Not Asked", "Skipped", "Bird", "Canine", "Cat")
             )
         })
         test_that("is.selected method gets and set selection value", {

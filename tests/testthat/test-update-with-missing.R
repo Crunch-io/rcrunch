@@ -142,10 +142,8 @@ with_test_authentication({
             ),
             name = "All B"
         )
-        expect_equal(ids(categories(ds$cat)), 1)
-        ds$cat[5] <- NA
         expect_equal(ids(categories(ds$cat)), c(1, -1))
-        expect_equal(as.vector(ds$cat[3:7], mode = "id"), c(1, 1, -1, 1, 1))
+        expect_equal(as.vector(ds$cat[3:7], mode = "id"), c(1, 1, 1, 1, 1))
     })
     test_that("If No Data isn't a category, it is added automatically to array", {
         ## Set up for next tests. Deep copy array, purge its missings,
@@ -158,10 +156,8 @@ with_test_authentication({
         ds$sub1 <- generate_categorical()
         ds$sub2 <- generate_categorical()
         ds$array <- makeArray(ds[, c("sub1", "sub2")], name = "array")
-        expect_equal(ids(categories(ds$array)), c(1, 2))
-        ds$array[[1]][5] <- NA
         expect_equal(ids(categories(ds$array)), c(1, 2, -1))
-        expect_equal(as.vector(ds$array[[1]][5], mode = "id"), -1)
+        expect_equal(as.vector(ds$array[[1]][5], mode = "id"), 2)
     })
 
     ## Roll it back, do some more updating

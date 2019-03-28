@@ -45,7 +45,7 @@ with_test_authentication({
         expect_identical(names(subvariables(ds$derivedarray)), c("Pet", "Home"))
         expect_identical(
             names(categories(ds$derivedarray)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
         expect_identical(as.vector(ds$derivedarray[[1]]), q1.values)
     })
@@ -56,7 +56,7 @@ with_test_authentication({
         expect_identical(names(subvariables(ds$derivedmr)), c("Pet", "Home"))
         expect_identical(
             names(categories(ds$derivedmr)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
         expect_identical(as.vector(ds$derivedmr[[1]]), q1.values)
         expect_true(is.selected(categories(ds$derivedmr)[[2]]))
@@ -71,7 +71,7 @@ with_test_authentication({
         names(categories(ds$derivedarray))[1:2] <- c("one", "two")
         expect_identical(
             names(categories(ds$derivedarray)),
-            c("one", "two", "Bird", "Skipped", "Not Asked")
+            c("one", "two", "Bird", "Skipped", "Not Asked", "No Data")
         )
         ds <- refresh(ds)
         expect_identical(
@@ -80,7 +80,7 @@ with_test_authentication({
         )
         expect_identical(
             names(categories(ds$derivedarray)),
-            c("one", "two", "Bird", "Skipped", "Not Asked")
+            c("one", "two", "Bird", "Skipped", "Not Asked", "No Data")
         )
         expect_equivalent(
             table(ds$derivedarray$dsub2),
@@ -94,7 +94,7 @@ with_test_authentication({
         expect_true(is.Categorical(ds$q1))
         expect_identical(
             names(categories(ds$q1)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
     })
 
@@ -141,7 +141,7 @@ with_test_authentication({
         )
         expect_identical(
             names(categories(ds$metapetloc)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "one", "two")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "one", "two")
         )
 
         t1 <- table(ds$metapetloc[[1]])
@@ -167,7 +167,7 @@ with_test_authentication({
         )
         expect_identical(
             names(categories(ds$metapet_combined)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
 
         t1 <- table(ds$metapet_combined[[1]])
@@ -185,7 +185,7 @@ with_test_authentication({
         ## No Data is added to the categories here
         expect_identical(
             names(categories(ds$metapetloc)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "one", "two", "No Data")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "one", "two")
         )
         ## metapetloc: subvar 1 is derived from petloc$petloc_home
         expect_identical(
@@ -244,7 +244,7 @@ with_test_authentication({
         )
         expect_identical(
             names(categories(ds$derivedarray)),
-            c("one", "two", "Bird", "Skipped", "Not Asked")
+            c("one", "two", "Bird", "Skipped", "Not Asked", "No Data")
         )
         ## This is the data we should see in metapetloc[[4]]. It's correct here.
         expect_equivalent(
@@ -272,7 +272,7 @@ with_test_authentication({
         ## No Data comes in after appending because petloc_work and petloc_school have data gaps
         expect_identical(
             names(categories(ds$petloc)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "Beaver", "No Data")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "Beaver")
         )
     })
 

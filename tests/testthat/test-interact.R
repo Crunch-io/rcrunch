@@ -80,7 +80,7 @@ with_test_authentication({
             )
         )
         expect_json_equivalent(
-            test_cases[[10]],
+            test_cases[[11]],
             list(
                 expression = ds$q1 == "Not Asked" & ds$country == "Australia",
                 name = "Not Asked:Australia",
@@ -91,12 +91,16 @@ with_test_authentication({
         ds$interaction <- interactVariables(ds$q1, ds$country, name = "Pet.Country")
         expect_equal(
             names(categories(ds$interaction)),
-            apply(expand.grid(
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                c("Argentina", "Australia", "Austria", "Belgium", "Brazil")
-            ),
-            1, paste,
-            collapse = ":"
+            c(
+                apply(
+                    expand.grid(
+                        c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data"),
+                        c("Argentina", "Australia", "Austria", "Belgium", "Brazil", "No Data")
+                    ),
+                    1, paste,
+                    collapse = ":"
+                ),
+                "No Data"
             )
         )
     })
@@ -108,12 +112,16 @@ with_test_authentication({
         )
         expect_equal(
             names(categories(ds$interaction)),
-            apply(expand.grid(
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                c("Argentina", "Australia", "Austria", "Belgium", "Brazil")
-            ),
-            1, paste,
-            collapse = ":"
+            c(
+                apply(
+                    expand.grid(
+                        c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data"),
+                        c("Argentina", "Australia", "Austria", "Belgium", "Brazil", "No Data")
+                    ),
+                    1, paste,
+                    collapse = ":"
+                ),
+                "No Data"
             )
         )
         expect_equal(description(ds$interaction2), "This is a description")

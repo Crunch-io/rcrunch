@@ -254,7 +254,7 @@ with_test_authentication({
     test_that("We can create a new categorical by combining", {
         expect_identical(
             names(categories(ds$combined_pets)),
-            c("Mammals", "Bird", "Skipped", "Not Asked")
+            c("Mammals", "Bird", "Skipped", "Not Asked", "No Data")
         )
         expect_equivalent(
             as.array(crtabs(~q1, data = ds)),
@@ -317,7 +317,7 @@ with_test_authentication({
         )
         expect_identical(
             names(categories(ds$combined_petloc)),
-            c("Mammals", "Bird", "Skipped", "Not Asked")
+            c("Mammals", "Bird", "Skipped", "Not Asked", "No Data")
         )
     })
 
@@ -335,6 +335,6 @@ with_test_authentication({
     test_that("collapseCategories renames variable", {
         # when length(from) == 1 and to is not present in the categories, the categories are just renamed
         ds$q1 <- collapseCategories(ds$q1, "Bird", "Tucan")
-        expect_identical(names(categories(ds$q1)), c("Cat", "Dog", "Tucan", "Skipped", "Not Asked"))
+        expect_identical(names(categories(ds$q1)), c("Cat", "Dog", "Tucan", "Skipped", "Not Asked", "No Data"))
     })
 })

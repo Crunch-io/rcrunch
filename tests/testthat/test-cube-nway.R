@@ -2,7 +2,7 @@ context("Cubes with >2 dimensions")
 
 with_test_authentication({
     with(test.dataset(newDatasetFromFixture("apidocs")), {
-        names(categories(ds$q1)) <- LETTERS[1:5] ## To distinguish from other vars
+        names(categories(ds$q1)) <- c(LETTERS[1:5], "No Data") ## To distinguish from other vars
         test_that("Cat x datetime x subvar", {
             kube <- crtabs(~q1 + wave + petloc$petloc_home, data = ds)
             expect_equivalent(
@@ -70,12 +70,13 @@ with_test_authentication({
                     3, 4,
                     3, 6,
                     4, 3,
-                    5, 1
+                    5, 1,
+                    0, 0
                 ),
-                dim = c(2L, 5L),
+                dim = c(2L, 6L),
                 dimnames = list(
                     petloc = c("Home", "Work"),
-                    petloc = c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+                    petloc = c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
                 )
                 )
             )
