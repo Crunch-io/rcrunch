@@ -223,19 +223,6 @@ with_mock_crunch({
         print(3 * (ds$birthyr + 5))
     })
 
-    test_that("rollupResolution functions generate expected requests", {
-        expect_identical(rollupResolution(ds$starttime), "s")
-        expect_PATCH(
-            rollupResolution(ds$starttime) <- "M",
-            "https://app.crunch.io/api/datasets/1/variables/starttime/",
-            '{"view":{"rollup_resolution":"M"}}'
-        )
-        expect_error(
-            rollupResolution(ds$starttime) <- "invalid_rollup",
-            paste0(dQuote("resolution"), " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms")
-        )
-    })
-
     test_that("as.vector for 3VL CrunchLogicalExpr returns R logical", {
         vals <- as.vector(ds$birthyr == 1945 | ds$birthyr < 1941)
         expect_true(is.logical(vals))

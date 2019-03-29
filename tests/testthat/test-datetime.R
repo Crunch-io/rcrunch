@@ -72,3 +72,89 @@ test_that("default date formater", {
     expect_equal(datetimeFormater("ms"), "%Y-%m-%d %H:%M:%S.%f")
     expect_equal(datetimeFormater(NULL), "%Y-%m-%d %H:%M:%S")
 })
+
+test_that("rollup CrunchExpr from zcl variable", {
+    x <- list(variable = "test") ## "ZCL"
+    expect_is(rollup(x), "CrunchExpr")
+    expect_identical(
+        zcl(rollup(x)),
+        list(`function` = "rollup", args = list(
+            list(variable = "test"),
+            list(value = NULL)
+        ))
+    )
+
+    expect_is(rollup(x, resolution = "Y"), "CrunchExpr")
+    expect_identical(
+        zcl(rollup(x, resolution = "Y")),
+        list(`function` = "rollup", args = list(
+            list(variable = "test"),
+            list(value = "Y")
+        ))
+    )
+})
+
+test_that("rollup resolution validation", {
+    expect_error(
+        rollup("a", resolution = "Invalid"),
+        " is invalid. Valid values are "
+    )
+    expect_error(
+        rollup("a", resolution = 42),
+        " is invalid. Valid values are "
+    )
+})
+
+with_mock_crunch({
+    ds <- loadDataset("test ds")
+    v <- ds$starttime
+
+    test_that("rollup CrunchExpr from DatetimeVariable", {
+        expect_is(rollup(v), "CrunchExpr")
+        expect_identical(
+            zcl(rollup(v)),
+            list(
+                `function` = "rollup",
+                args = list(
+                    list(variable = "https://app.crunch.io/api/datasets/1/variables/starttime/"),
+                    list(value = "s")
+                )
+            )
+        )
+        expect_is(rollup(v, resolution = "Y"), "CrunchExpr")
+        expect_identical(
+            zcl(rollup(v, resolution = "Y")),
+            list(
+                `function` = "rollup",
+                args = list(
+                    list(variable = "https://app.crunch.io/api/datasets/1/variables/starttime/"),
+                    list(value = "Y")
+                )
+            )
+        )
+        expect_is(rollup(v, resolution = NULL), "CrunchExpr")
+        expect_identical(
+            zcl(rollup(v, resolution = NULL)),
+            list(
+                `function` = "rollup",
+                args = list(
+                    list(variable = "https://app.crunch.io/api/datasets/1/variables/starttime/"),
+                    list(value = NULL)
+                )
+            )
+        )
+    })
+
+    test_that("rollupResolution functions generate expected requests", {
+        expect_identical(rollupResolution(ds$starttime), "s")
+        expect_PATCH(
+            rollupResolution(ds$starttime) <- "M",
+            "https://app.crunch.io/api/datasets/1/variables/starttime/",
+            '{"view":{"rollup_resolution":"M"}}'
+        )
+        expect_error(
+            rollupResolution(ds$starttime) <- "invalid_rollup",
+            paste0(dQuote("resolution"), " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms")
+        )
+    })
+})
