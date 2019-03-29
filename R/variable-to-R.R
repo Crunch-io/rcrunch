@@ -194,23 +194,3 @@ setMethod("as.vector", "CrunchVariable", function(x, mode) {
     # see CrunchDataFrame for one way this could be accomplished
     columnParser(type(x))(getValues(x, filter = toJSON(f)), x, mode)
 })
-
-from8601 <- function(x) {
-    ## Crunch timestamps look like "2015-02-12T10:28:05.632000+00:00"
-
-    if (all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", na.omit(x)))) {
-        ## return Date if resolution == D
-        return(as.Date(x))
-    }
-
-    ## Check for timezone
-    if (any(grepl("+", x, fixed = TRUE))) {
-        ## First, strip out the : in the time zone
-        x <- sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x)
-        pattern <- "%Y-%m-%dT%H:%M:%OS%z"
-    } else {
-        pattern <- "%Y-%m-%dT%H:%M:%OS"
-    }
-    ## Then parse
-    return(strptime(x, pattern, tz = "UTC"))
-}

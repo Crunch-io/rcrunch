@@ -314,35 +314,6 @@ setMethod("is.na", "CrunchVariable", function(x) zfuncExpr("is_missing", x))
 #' @export
 bin <- function(x) zfuncExpr("bin", x)
 
-#' @rdname expressions
-#' @export
-rollup <- function(x, resolution = rollupResolution(x)) {
-    validateResolution(force(resolution))
-    if (is.variable(x) && !is.Datetime(x)) {
-        halt("Cannot rollup a variable of type ", dQuote(type(x)))
-    }
-    return(zfuncExpr("rollup", x, list(value = resolution)))
-}
-
-#' @rdname expressions
-#' @export
-rollupResolution <- function(x) {
-    if (is.Datetime(x)) {
-        return(tuple(x)$rollup_resolution)
-    } else {
-        return(NULL)
-    }
-}
-
-#' @rdname expressions
-#' @export
-setMethod("rollupResolution<-", "DatetimeVariable", function(x, value) {
-    validateResolution(force(value))
-    setEntitySlot(entity(x), "view", list(rollup_resolution = value))
-    return(refresh(x))
-})
-
-
 #' @rdname variable-extract
 #' @export
 setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)

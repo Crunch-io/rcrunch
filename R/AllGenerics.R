@@ -161,7 +161,6 @@ setGeneric("as.Datetime", function(x,
                                    offset) {
     standardGeneric("as.Datetime")
 })
-setGeneric("rollupResolution<-", function(x, value) standardGeneric("rollupResolution<-"))
 setGeneric("groupClass", function(x) standardGeneric("groupClass"))
 setGeneric("entityClass", function(x) standardGeneric("entityClass"))
 setGeneric("entitiesInitializer", function(x) standardGeneric("entitiesInitializer"))

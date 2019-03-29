@@ -108,8 +108,7 @@ setMethod("as.Categorical", "CrunchVariable", function(x, format) {
 
 #' @rdname variable-as-methods
 #' @export
-setMethod(
-    "as.Datetime", "CrunchVariable",
+setMethod("as.Datetime", "CrunchVariable",
     function(x, format, resolution, offset) {
         haltIfArray(x, callingFunc = "as.Datetime()")
 

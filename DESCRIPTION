@@ -94,6 +94,7 @@ Collate:
     'dataset-stream.R'
     'dataset-update.R'
     'dataset.R'
+    'datetime.R'
     'shoji-catalog.R'
     'decks.R'
     'delete.R'
