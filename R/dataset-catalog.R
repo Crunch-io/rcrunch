@@ -82,8 +82,7 @@ setMethod("[[", c("DatasetCatalog", "numeric"), function(x, i, ...) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
+setMethod("[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
     function(x, i, j, value) {
         index(x)[[i]] <- value@body
         return(x)

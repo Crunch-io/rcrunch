@@ -23,8 +23,7 @@ setMethod("[[<-", c("MemberCatalog", "ANY", "missing", "ANY"), .backstopUpdate)
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("MemberCatalog", "character", "missing", "NULL"),
+setMethod("[[<-", c("MemberCatalog", "character", "missing", "NULL"),
     function(x, i, j, value) {
         ## Remove the specified user from the catalog
         payload <- sapply(i, null, simplify = FALSE)

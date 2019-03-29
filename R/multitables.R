@@ -28,8 +28,7 @@ setMethod("[[", c("MultitableCatalog", "numeric"), function(x, i, ...) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("MultitableCatalog", "character", "missing", "formula"),
+setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         w <- match(i, names(x))
@@ -48,8 +47,7 @@ setMethod(
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
+setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
 
@@ -66,6 +64,25 @@ setMethod(
     }
 )
 
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "Multitable"),
+    function(x, i, j, value) {
+        if (self(value) != urls(x)[i]) {
+            # Unlikely to happen but should check for
+            # Could refresh(x) first, or just:
+            halt("This multitable does not belong to this catalog")
+        }
+        # Assume any PATCHing has already happened and we just don't want to
+        # error assigning the object back; plus it's good to keep the object
+        # in sync.
+        old <- index(x)[[self(value)]]
+        new <- value@body[intersect(names(old), names(value@body))]
+        index(x)[[self(value)]] <- modifyList(old, new)
+        return(x)
+    }
+)
+
 makeMultitablePayload <- function(template, ...) {
     template <- lapply(template$dimensions, function(x) list(query = x))
 
@@ -74,8 +91,7 @@ makeMultitablePayload <- function(template, ...) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
+setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (is.character(i) && !i %in% names(x)) {
