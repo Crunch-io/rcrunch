@@ -51,6 +51,17 @@ with_mock_crunch({
         )
         expect_json_equivalent(combine.ids, both)
     })
+    test_that("combineCategories() is an alias for combine()", {
+        combine.names <- combineCategories(ds$gender,
+            name = "Gender 1 cat",
+            list(list(name = "Both", categories = c("Male", "Female")))
+        )
+        expect_json_equivalent(combine.names, both)
+    })
+    test_that("combineResponses() is only for MR", {
+        expect_error(combineResponses(ds$gender),
+            "combineResponses.. is only available for Multiple Response variables")
+    })
 
     test_that("Default variable name for combine()", {
         expect_identical(

@@ -15,12 +15,13 @@
 
 * `newExampleDataset()` creates a sample dataset for you to explore
 * `exportDeck()` can now write to PowerPoint with `format = "pptx"`
-* Added support for importing data in Triple-S format
+* `newDataset()` now supports importing data in Triple-S format, providing a `schema` file in addition to the row data.
 * `resolution()` lets you see the data units of a datetime variable ("Y", "M", "D", "ms", etc.); `resolution<-` lets you set it (#234)
 * `deleteDataset()` accepts web app URLs, just as `loadDataset()` already did (#279)
 * Set `options(crunch.warn.hidden=FALSE)` to suppress the "Variable x is hidden" messages when accessing hidden variables (#172)
 * Support sharing decks with a team via `team(deck) <-`
 * Added `upsert` argument to `appendDataset()` to allow datasets to be updated based on the primary-key variable; see `pk()` for details on primary keys (#49)
+* `combineCategories()` and `combineResponses()` are aliases for `combine()`, providing a way to avoid accidental clashes with `dplyr::combine()` (#359)
 
 # crunch 1.25.0
 
