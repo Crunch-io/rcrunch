@@ -58,13 +58,6 @@ with_mock_crunch({
         )
     })
 
-    test_that("createWithMetadataAndFile when metadata is file too", {
-        expect_POST(
-            newDatasetFromFixture("apidocs"),
-            "https://app.crunch.io/api/datasets/",
-            toJSON(fromJSON(file.path("dataset-fixtures", "apidocs.json"), simplifyVector = FALSE))
-        )
-    })
     test_that("uploadData writes out a gzipped file", {
         ds <- loadDataset("test ds")
         with_DELETE(NULL, {
