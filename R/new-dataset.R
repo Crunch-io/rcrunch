@@ -300,3 +300,24 @@ newDatasetFromFile <- function(x, name = basename(x), schema, ...) {
     
     return(invisible(ds))
 }
+
+#' Import a fixture dataset for testing
+#'
+#' The `crunch` package includes some data for you to explore the features of
+#' the platform. Use this function to upload one to create a demo dataset.
+#'
+#' @param name string name of the fixture dataset. Currently "pets" is the only
+#' one available.
+#' @return A new `CrunchDataset` entity.
+#' @export
+newExampleDataset <- function(name = "pets") {
+    name <- match.arg(name)
+    m <- fromJSON(
+        system.file("example-datasets", paste0(name, ".json"), package = "crunch"),
+        simplifyVector = FALSE
+    )
+    return(createWithMetadataAndFile(
+        m,
+        system.file("example-datasets", paste0(name, ".csv"), package = "crunch")
+    ))
+}
