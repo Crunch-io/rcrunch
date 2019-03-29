@@ -89,7 +89,7 @@ setMethod("members", "CrunchTeam", function(x) {
 #'
 #' @return a `CrunchTeam` that the asset is shared with.
 #'
-#' @name team-sharing
+#' @rdname team-sharing
 #' @export
 setGeneric("team", function(x) standardGeneric("team"))
 
