@@ -306,9 +306,6 @@ setMethod(
     function(e1, e2) e1 != as.character(e2)
 )
 
-#' @rdname dataset-reference
-setMethod("datasetReference", "CrunchExpr", function(x) x@dataset_url)
-
 #' @rdname expressions
 #' @export
 setMethod("is.na", "CrunchVariable", function(x) zfuncExpr("is_missing", x))

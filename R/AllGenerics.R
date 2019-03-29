@@ -99,14 +99,6 @@ setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 setGeneric("categories", function(x) standardGeneric("categories"))
 setGeneric("categories<-", function(x, value) standardGeneric("categories<-"))
 
-#' Get a Crunch object's dataset
-#'
-#' @param x a Crunch object
-#' @return The url of the dataset which contains that object
-#' @keywords internal
-#' @rdname dataset-reference
-#' @export
-setGeneric("datasetReference", function(x) standardGeneric("datasetReference"))
 setGeneric("hide", function(x) standardGeneric("hide"))
 setGeneric("unhide", function(x) standardGeneric("unhide"))
 setGeneric("derivation", function(x) standardGeneric("derivation"))
@@ -181,7 +173,6 @@ setGeneric("weightVariables<-", function(x, value) standardGeneric("weightVariab
 setGeneric("is.weightVariable<-", function(x, value) standardGeneric("is.weightVariable<-"))
 setGeneric("is.weight<-", function(x, value) standardGeneric("is.weight<-"))
 setGeneric("whichCatalogEntry", function(x, i, ...) standardGeneric("whichCatalogEntry"))
-setGeneric("APIToWebURL", function(x) standardGeneric("APIToWebURL"))
 
 setGeneric("owner", function(x) standardGeneric("owner"))
 setGeneric("owner<-", function(x, value) standardGeneric("owner<-"))

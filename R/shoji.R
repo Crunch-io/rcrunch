@@ -26,9 +26,6 @@ init.Shoji <- function(.Object, ...) {
 }
 setMethod("initialize", "ShojiObject", init.Shoji)
 
-#' @rdname dataset-reference
-setMethod("datasetReference", "ShojiObject", function(x) datasetReference(self(x)))
-
 is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && startsWith(as.character(x$element), "shoji")
 }

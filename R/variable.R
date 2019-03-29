@@ -120,28 +120,24 @@ setMethod("categories", "VariableTuple", function(x) {
 setMethod("categories", "CrunchVariable", function(x) categories(tuple(x)))
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories", "CategoricalVariable",
+setMethod("categories", "CategoricalVariable",
     function(x) callNextMethod(x) %||% categories(entity(x))
 )
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories", "CategoricalArrayVariable",
+setMethod("categories", "CategoricalArrayVariable",
     function(x) callNextMethod(x) %||% categories(entity(x))
 )
 
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories", "VariableEntity",
+setMethod("categories", "VariableEntity",
     function(x) Categories(data = x@body$categories)
 )
 
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories<-", c("CategoricalVariable", "Categories"),
+setMethod("categories<-", c("CategoricalVariable", "Categories"),
     function(x, value) {
         ent <- setEntitySlot(entity(x), "categories", value)
         dropCache(cubeURL(x))
@@ -150,8 +146,7 @@ setMethod(
 )
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories<-", c("CategoricalArrayVariable", "Categories"),
+setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     function(x, value) {
         ent <- setEntitySlot(entity(x), "categories", value)
         lapply(subvariableURLs(tuple(x)), dropCache) ## Subvariables will update too
@@ -161,8 +156,7 @@ setMethod(
 )
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories<-", c("CategoricalVariable", "numeric"),
+setMethod("categories<-", c("CategoricalVariable", "numeric"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not numeric. ",
@@ -172,8 +166,7 @@ setMethod(
 )
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories<-", c("CategoricalVariable", "character"),
+setMethod("categories<-", c("CategoricalVariable", "character"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not ",
@@ -183,8 +176,7 @@ setMethod(
 )
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories<-", c("CategoricalVariable", "ANY"),
+setMethod("categories<-", c("CategoricalVariable", "ANY"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not ",
@@ -194,8 +186,7 @@ setMethod(
 )
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories<-", c("CategoricalArrayVariable", "numeric"),
+setMethod("categories<-", c("CategoricalArrayVariable", "numeric"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not numeric. ",
@@ -205,8 +196,7 @@ setMethod(
 )
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories<-", c("CategoricalArrayVariable", "character"),
+setMethod("categories<-", c("CategoricalArrayVariable", "character"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not ",
@@ -216,8 +206,7 @@ setMethod(
 )
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories<-", c("CategoricalArrayVariable", "ANY"),
+setMethod("categories<-", c("CategoricalArrayVariable", "ANY"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not ",
@@ -227,36 +216,11 @@ setMethod(
 )
 #' @rdname var-categories
 #' @export
-setMethod(
-    "categories<-", c("CrunchVariable", "ANY"),
+setMethod("categories<-", c("CrunchVariable", "ANY"),
     function(x, value) {
         halt("category assignment not defined for ", class(x))
     }
 )
-
-#' @rdname dataset-reference
-setMethod("datasetReference", "CrunchVariable", function(x) {
-    # x@urls$dataset_url
-    rootURL(x, "dataset") %||% datasetReference(self(x))
-})
-#' @rdname dataset-reference
-setMethod("datasetReference", "character", function(x) {
-    if (length(x) != 1) {
-        return(NULL)
-    }
-    # check if the URL has /datasets/.*/, or for web app URLs, /dataset/.*
-    # regexp is a little liberal, could be [0-9a-f]+, but relaxed for tests
-    id <- sub(".*/datasets?/([0-9a-z_]+)/?.*$", "\\1", x)
-    if (identical(id, x)) {
-        # Not a URL with a dataset id
-        return(NULL)
-    }
-    path <- paste0("datasets/", id, "/")
-    return(absoluteURL(path, getOption("crunch.api")))
-})
-
-#' @rdname dataset-reference
-setMethod("datasetReference", "ANY", function(x) NULL)
 
 #' Split an array or multiple-response variable into its CategoricalVariables
 #'
@@ -274,11 +238,6 @@ unbind <- function(x) {
     dropCache(datasetReference(u))
     invisible(out)
 }
-
-setMethod("APIToWebURL", "CrunchVariable", function(x) {
-    ds_url <- gsub("/api/datasets", "/dataset", datasetReference(x))
-    return(paste0(ds_url, "browse?variableId=", id(x)))
-})
 
 #' "Subset" a Variable
 #'

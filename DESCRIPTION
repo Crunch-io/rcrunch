@@ -90,6 +90,7 @@ Collate:
     'dataset-catalog.R'
     'dataset-extract.R'
     'dataset-order.R'
+    'dataset-reference.R'
     'dataset-stream.R'
     'dataset-update.R'
     'dataset.R'

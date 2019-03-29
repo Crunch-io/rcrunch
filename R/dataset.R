@@ -328,9 +328,6 @@ as.list.CrunchDataset <- function(x, ...) {
 
 joins <- function(x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
 
-#' @rdname dataset-reference
-setMethod("datasetReference", "CrunchDataset", function(x) self(x))
-
 variableCatalogURL <- function(dataset) {
     ## Get the variable catalog URL that corresponds to an object
     if (class(dataset) == "VariableCatalog") return(self(dataset))
@@ -352,13 +349,6 @@ cubeURL <- function(x) {
 }
 
 setMethod("hidden", "CrunchDataset", function(x) hidden(allVariables(x)))
-
-setMethod("APIToWebURL", "ANY", function(x) {
-    halt("Web URL is not available for objects of class ", class(x))
-})
-setMethod("APIToWebURL", "CrunchDataset", function(x) {
-    return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
-})
 
 #' View a Crunch Object in the Web Application
 #'
