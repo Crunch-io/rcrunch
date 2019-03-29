@@ -76,48 +76,36 @@ NULL
 
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "CrunchVariable"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchVariable"),
     .updateVariableMetadata
 )
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "ANY", "missing", "CrunchVariable"),
+setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchVariable"),
     function(x, i, value) .updateVariableMetadata(x, names(x)[i], value)
 )
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "ANY"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "ANY"),
     .addVariableSetter
 )
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"),
     function(x, i, value) {
         halt("Cannot currently derive a logical variable")
     }
 )
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "ANY"),
+setMethod("[[<-", c("CrunchDataset", "ANY"),
     function(x, i, value) {
         halt("Only character (name) indexing supported for [[<-")
     }
 )
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "NULL"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "NULL"),
     function(x, i, value) {
         allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
         if (!(i %in% allnames)) {
@@ -129,9 +117,7 @@ setMethod(
 )
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "ANY", "missing", "NULL"),
+setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "NULL"),
     function(x, i, value) deleteVariables(x, names(x)[i])
 )
 #' @rdname dataset-update
@@ -143,9 +129,7 @@ setMethod("$<-", c("CrunchDataset"), function(x, name, value) {
 
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "CrunchGeography"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchGeography"),
     function(x, i, value) {
         geo(x[[i]]) <- value
         return(x)
@@ -153,9 +137,7 @@ setMethod(
 )
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
+setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
     function(x, i, value) {
         geo(x[[i]]) <- value
         return(x)
@@ -164,8 +146,7 @@ setMethod(
 
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[<-", c("CrunchDataset", "ANY", "missing", "list"),
+setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
     function(x, i, j, value) {
         ## For lapplying over variables to edit metadata
         stopifnot(
@@ -179,12 +160,21 @@ setMethod(
     }
 )
 
-## TODO: add similar [<-.CrunchDataset, CrunchDataset/VariableCatalog
+#' @rdname dataset-update
+#' @export
+setMethod("[<-", c("CrunchDataset", "ANY", "missing", "CrunchDataset"),
+    function(x, i, j, value) {
+        ## This is where you do e.g. names(variables(ds[subset])) <-
+        ## So assume the updates have already happened.
+        stopifnot(identical(self(x), self(value)))
+        allVariables(x) <- allVariables(value)
+        return(x)
+    }
+)
 
 #' @rdname dataset-update
 #' @export
-setMethod(
-    "[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
+setMethod("[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
     function(x, i, j, value) {
         if (j %in% names(x)) {
             return(.updateValues(x, j, value, filter = i))

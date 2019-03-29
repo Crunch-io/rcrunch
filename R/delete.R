@@ -169,8 +169,11 @@ deleteDataset <- function(x, ...) {
     }
 
     if (is.character(x)) {
-        if (is.datasetURL(x) && identical(x, datasetReference(x))) {
-            url <- x
+        if (is.crunchURL(x)) {
+            url <- datasetReference(x)
+            if (is.null(url)) {
+                halt(x, " is not a valid dataset URL")
+            }
         } else {
             # Assume it is a path or name
             found <- lookupDataset(x)

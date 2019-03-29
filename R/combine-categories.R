@@ -5,6 +5,13 @@
 #' recode a categorical variable with three categories small, medium, and large
 #' to one that has just small and large.
 #'
+#' Categorical and categorical array variables can have their 
+#' categories combined (by specifying `categories` in the `combinations` 
+#' argument). Multiple response variables can only have their responses (or 
+#' items) combined (by specifying `responses` in the `combinations` argument). 
+#' Categorical array items are not able to be combined together (even by 
+#' specifying `responses`).
+#'
 #' @param variable Categorical, Categorical Array, or Multiple Response
 #' variable
 #' @param combinations list of named lists containing

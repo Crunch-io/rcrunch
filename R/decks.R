@@ -1,3 +1,5 @@
+#' @include shoji-catalog.R
+NULL
 
 # Generics ----------------------------------------------------------------
 
@@ -149,6 +151,11 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     }
     getEntity(x, index, CrunchDeck, ...)
 })
+
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
+    modifyCatalogInPlace)
 
 #' @rdname show-crunch
 #' @export

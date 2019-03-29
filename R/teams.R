@@ -43,8 +43,7 @@ setMethod("[[", c("TeamCatalog", "numeric"), function(x, i, ...) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("TeamCatalog", "character", "missing", "list"),
+setMethod("[[<-", c("TeamCatalog", "character", "missing", "list"),
     function(x, i, j, value) {
         if (i %in% names(x)) {
             ## TODO: update team attributes
@@ -64,8 +63,7 @@ setMethod(
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
+setMethod("[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
     function(x, i, j, value) {
         ## TODO: something
         ## For now, assuming that modifications have already been persisted
@@ -99,15 +97,8 @@ setGeneric("team", function(x) standardGeneric("team"))
     if (is.null(x@body$team)) {
         return(NULL)
     }
-
     return(CrunchTeam(crGET(x@body$team)))
 }
-
-.setTeam <- function(x, value) { return(setEntitySlot(x, "team", value)) }
-
-#' @rdname team-sharing
-#' @export
-setGeneric("team<-", function(x, value) standardGeneric("team<-"))
 
 #' @rdname team-sharing
 #' @export
@@ -115,30 +106,33 @@ setMethod("team", "CrunchFilter", .getTeam)
 
 #' @rdname team-sharing
 #' @export
-setMethod("team<-", c("CrunchFilter", "CrunchTeam"), function(x, value) {
-    return(.setTeam(x, self(value)))
-})
-
-#' @rdname team-sharing
-#' @export
-setMethod("team<-", c("CrunchFilter", "ANY"), function(x, value) {
-    # TODO: check if value is at least something like a URL?
-    return(.setTeam(x, value))
-})
-
-#' @rdname team-sharing
-#' @export
 setMethod("team", "Multitable", .getTeam)
 
 #' @rdname team-sharing
 #' @export
-setMethod("team<-", c("Multitable", "CrunchTeam"), function(x, value) {
-    return(.setTeam(x, self(value)))
-})
+setMethod("team", "CrunchDeck", .getTeam)
 
 #' @rdname team-sharing
 #' @export
-setMethod("team<-", c("Multitable", "ANY"), function(x, value) {
-    # TODO: check if value is at least something like a URL?
-    return(.setTeam(x, value))
-})
+setGeneric("team<-", function(x, value) standardGeneric("team<-"))
+
+.setTeam <- function(x, value) {
+    if (inherits(value, "CrunchTeam")) {
+        value <- self(value)
+    }
+    if (!(is.crunchURL(value) || is.null(value))) {
+        halt("Team setting requires either a CrunchTeam entity, URL, or NULL")
+    }
+    return(setEntitySlot(x, "team", value))
+}
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("CrunchFilter", "ANY"), .setTeam)
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("Multitable", "ANY"), .setTeam)
+
+#' @rdname team-sharing
+#' @export
+setMethod("team<-", c("CrunchDeck", "ANY"), .setTeam)

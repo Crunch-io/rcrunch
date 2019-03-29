@@ -7,12 +7,19 @@
 \alias{subvariables}
 \alias{subvariables<-}
 \alias{subvariables,CategoricalArrayVariable-method}
+\alias{subvariables,CrunchVariable-method}
 \alias{subvariables,VariableTuple-method}
 \alias{subvariables<-,CategoricalArrayVariable,ANY-method}
 \alias{subvariables<-,CategoricalArrayVariable,Subvariables-method}
 \title{Subvariables in Array Variables}
 \usage{
+subvariables(x)
+
+subvariables(x) <- value
+
 \S4method{subvariables}{CategoricalArrayVariable}(x)
+
+\S4method{subvariables}{CrunchVariable}(x)
 
 \S4method{subvariables}{VariableTuple}(x)
 

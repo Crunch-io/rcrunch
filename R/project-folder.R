@@ -56,8 +56,7 @@ setMethod("members<-", c("ProjectFolder", "character"), function(x, value) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("ProjectFolder", "character", "missing", "list"),
+setMethod("[[<-", c("ProjectFolder", "character", "missing", "list"),
     function(x, i, j, value) {
         # This is for backwards compatibility with the old project API
         if (i %in% names(x)) {
@@ -76,8 +75,7 @@ setMethod(
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("ProjectFolder", "character", "missing", "ProjectFolder"),
+setMethod("[[<-", c("ProjectFolder", "character", "missing", "ProjectFolder"),
     function(x, i, j, value) {
         # This is for backwards compatibility with the old project API
 

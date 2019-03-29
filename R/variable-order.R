@@ -23,14 +23,12 @@ setMethod("entitiesInitializer", "VariableGroup", variableGroupEntitiesInit)
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"),
+setMethod("[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"),
     .setNestedGroupByName
 )
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("VariableGroup", "character", "missing", "CrunchDataset"),
+setMethod("[[<-", c("VariableGroup", "character", "missing", "CrunchDataset"),
     .setNestedGroupByName
 )

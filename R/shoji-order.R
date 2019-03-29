@@ -237,8 +237,7 @@ setMethod("$", "ShojiOrder", function(x, name) x[[name]])
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
+setMethod("[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
         w <- match(i, names(x))
@@ -250,8 +249,7 @@ setMethod(
 )
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
+setMethod("[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
         x@graph[i] <- value@graph
@@ -261,30 +259,26 @@ setMethod(
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "list"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "list"),
     .setNestedGroupByName
 )
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "character"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "character"),
     .setNestedGroupByName
 )
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
     .setNestedGroupByName
 )
 
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
     function(x, i, j, value) {
         if (length(entities(value))) {
             x <- setdiff_entities(x, value)
@@ -296,8 +290,7 @@ setMethod(
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
     function(x, i, j, value) {
         halt(
             "Cannot assign an object of class ", dQuote(class(value)),
@@ -308,8 +301,7 @@ setMethod(
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
     function(x, i, j, value) {
         x@graph[[i]] <- value
         return(x)
@@ -317,8 +309,7 @@ setMethod(
 )
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "NULL"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "NULL"),
     function(x, i, j, value) {
         w <- match(i, names(x))
         if (any(is.na(w))) {
@@ -330,8 +321,7 @@ setMethod(
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     }
@@ -391,22 +381,19 @@ setMethod("$", "OrderGroup", function(x, name) x[[name]])
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "list"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "list"),
     .setNestedGroupByName
 )
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "character"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "character"),
     .setNestedGroupByName
 )
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     }
@@ -414,8 +401,7 @@ setMethod(
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
     function(x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     }
@@ -423,8 +409,7 @@ setMethod(
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
+setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
     function(x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
         entities(x)[[i]] <- value
@@ -434,8 +419,7 @@ setMethod(
 
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
+setMethod("[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
     function(x, i, j, value) {
         if (length(i) > 1 || i < 0) {
             halt("Illegal subscript")
@@ -446,8 +430,7 @@ setMethod(
 )
 #' @rdname ShojiOrder-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "NULL"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "NULL"),
     function(x, i, j, value) {
         w <- match(i, names(x))
         if (any(is.na(w))) {

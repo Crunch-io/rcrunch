@@ -28,8 +28,7 @@ setMethod("[[", c("MultitableCatalog", "numeric"), function(x, i, ...) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("MultitableCatalog", "character", "missing", "formula"),
+setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         w <- match(i, names(x))
@@ -48,8 +47,7 @@ setMethod(
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
+setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
 
@@ -66,6 +64,11 @@ setMethod(
     }
 )
 
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "Multitable"),
+    modifyCatalogInPlace)
+
 makeMultitablePayload <- function(template, ...) {
     template <- lapply(template$dimensions, function(x) list(query = x))
 
@@ -74,8 +77,7 @@ makeMultitablePayload <- function(template, ...) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
+setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (is.character(i) && !i %in% names(x)) {

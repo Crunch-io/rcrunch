@@ -11,6 +11,12 @@
 * `newExampleDataset()` creates a sample dataset for you to explore
 * `exportDeck()` can now write to PowerPoint with `format = "pptx"`
 * Fixed a bug with the display of univariate cube `prop.table`s  
+* Added support for importing data in Triple-S format
+* `subvariables()` on non-array variables returns `NULL` instead of an error (#237)
+* `deleteDataset()` accepts web app URLs, just as `loadDataset()` already did (#279)
+* Set `options(crunch.warn.hidden=FALSE)` to suppress the "Variable x is hidden" messages when accessing hidden variables (#172)
+* Support sharing decks with a team via `team(deck) <-`
+* Fix `is.public(multitables[[i]]) <- TRUE` and several other similar assignments of attributes on an element of a catalog, which previously successfully updated the value on the server but errored when returning to R (#303, #367)
 
 # crunch 1.25.0
 

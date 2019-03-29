@@ -4,16 +4,22 @@
 \alias{newDatasetFromFile}
 \title{Upload a file to Crunch to make a new dataset}
 \usage{
-newDatasetFromFile(x, name = basename(x), ...)
+newDatasetFromFile(x, name = basename(x), schema, ...)
 }
 \arguments{
-\item{name}{character, the name to give the new Crunch dataset. By default the
-name of the dataset will be the filename}
+\item{name}{character, the name to give the new Crunch dataset. By default
+the name of the dataset will be the filename}
+
+\item{schema}{character, the path to a local file to upload, or a URL. The
+file specifies the dataset schema (variable types, categories, etc.) to
+use. Currently only implemented for Triple-S files. This should either be a
+\code{.xml} or \code{.sss} file (both are possible for Triple-S metadata files)}
 
 \item{...}{additional arguments passed to \link{createDataset}}
 
 \item{file}{character, the path to a local file to upload, or a URL. This
-should either be a \code{.csv} or \code{.sav} (SPSS) file}
+should either be a \code{.csv}, \code{.sav} (SPSS), \code{.asc} (Triple-S data), or \code{.dat}
+(Triple-S data) file}
 }
 \value{
 On success, an object of class \link{CrunchDataset}
