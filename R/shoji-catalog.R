@@ -80,6 +80,22 @@ setIndexSlotOnEntity <- function(x, i, value, ...) {
     return(refresh(x))
 }
 
+modifyCatalogInPlace <- function(x, i, j, value) {
+    # Use in [[<- catalog methods where the server modification happens
+    # elsewhere (e.g. is.public(multitables[[1]])) <- TRUE)
+    if (self(value) %in% urls(x)) {
+        ## Assume server update of the entity already happened in a
+        ## separate request. So just update entity in place.
+        old <- index(x)[[self(value)]]
+        new <- value@body[intersect(names(old), names(value@body))]
+        index(x)[[self(value)]] <- modifyList(old, new)
+        return(x)
+    } else {
+        ## Unlikely to be here
+        halt("Unsupported")
+    }
+}
+
 dirtyElements <- function(x, y) {
     !mapply(identical, x, y, USE.NAMES = FALSE, SIMPLIFY = TRUE)
 }
@@ -171,8 +187,7 @@ setMethod("$<-", "ShojiCatalog", function(x, name, value) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod(
-    "[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
+setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
     function(x, i, j, value) {
         index(x)[i] <- index(value)[i]
         ## Assume that PATCHing has happened outside this function

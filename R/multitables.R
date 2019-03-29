@@ -67,21 +67,7 @@ setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
 #' @rdname catalog-extract
 #' @export
 setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "Multitable"),
-    function(x, i, j, value) {
-        if (self(value) != urls(x)[i]) {
-            # Unlikely to happen but should check for
-            # Could refresh(x) first, or just:
-            halt("This multitable does not belong to this catalog")
-        }
-        # Assume any PATCHing has already happened and we just don't want to
-        # error assigning the object back; plus it's good to keep the object
-        # in sync.
-        old <- index(x)[[self(value)]]
-        new <- value@body[intersect(names(old), names(value@body))]
-        index(x)[[self(value)]] <- modifyList(old, new)
-        return(x)
-    }
-)
+    modifyCatalogInPlace)
 
 makeMultitablePayload <- function(template, ...) {
     template <- lapply(template$dimensions, function(x) list(query = x))
