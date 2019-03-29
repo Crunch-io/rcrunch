@@ -321,18 +321,16 @@ with_mock_crunch({
         expect_identical(ds[url], ds["birthyr"])
     })
 
-    ## This is a start on a test that getting variables doesn't hit server.
-    ## It doesn't now, but if variable catalogs are lazily fetched, assert that
-    ## we're hitting cache
-    # with(temp.option(httpcache.log=""), {
-    #     dlog <- capture.output({
-    #         v1 <- ds$birthyr
-    #         d2 <- ds[names(ds)=="gender"]
-    #     })
-    # })
-    # print(dlog)
-    # logdf <- loadLogfile(textConnection(dlog))
-    # print(logdf)
+    test_that("Setting variable metadata on the dataset", {
+        # See other tests in test-variable-catalog.R; this tests the [<- methods
+        # on the dataset entity
+        expect_PATCH(names(variables(ds[1])) <- "year of birth",
+            'https://app.crunch.io/api/datasets/1/variables/', '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{',
+            '"name":"year of birth"}}}'
+        )
+        expect_no_request(names(variables(ds[1])) <- "Birth Year")
+    })
 
     test_that("Dataset extract error handling", {
         expect_error(ds[[999]], "subscript out of bounds")

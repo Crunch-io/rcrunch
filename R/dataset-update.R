@@ -160,7 +160,17 @@ setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
     }
 )
 
-## TODO: add similar [<-.CrunchDataset, CrunchDataset/VariableCatalog
+#' @rdname dataset-update
+#' @export
+setMethod("[<-", c("CrunchDataset", "ANY", "missing", "CrunchDataset"),
+    function(x, i, j, value) {
+        ## This is where you do e.g. names(variables(ds[subset])) <-
+        ## So assume the updates have already happened.
+        stopifnot(identical(self(x), self(value)))
+        allVariables(x) <- allVariables(value)
+        return(x)
+    }
+)
 
 #' @rdname dataset-update
 #' @export
