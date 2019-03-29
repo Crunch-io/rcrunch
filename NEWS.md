@@ -16,6 +16,7 @@
 * `newExampleDataset()` creates a sample dataset for you to explore
 * `exportDeck()` can now write to PowerPoint with `format = "pptx"`
 * Added support for importing data in Triple-S format
+* `resolution()` lets you see the data units of a datetime variable ("Y", "M", "D", "ms", etc.); `resolution<-` lets you set it (#234)
 * `deleteDataset()` accepts web app URLs, just as `loadDataset()` already did (#279)
 * Set `options(crunch.warn.hidden=FALSE)` to suppress the "Variable x is hidden" messages when accessing hidden variables (#172)
 * Support sharing decks with a team via `team(deck) <-`

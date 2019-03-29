@@ -193,7 +193,7 @@ with_test_authentication({
         })
     })
 
-    m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
+    m <- fromJSON(system.file("example-datasets", "pets.json", package="crunch"),
         simplifyVector = FALSE
     )
 
@@ -230,7 +230,7 @@ with_test_authentication({
         m2$body$table$metadata$allpets$subvariables[[4]] <- list(name = "Another", alias = "allpets_1")
         expect_error(createWithMetadataAndFile(
             m2,
-            file.path("dataset-fixtures", "apidocs.csv")
+            system.file("example-datasets", "pets.csv", package="crunch")
         ))
     })
 

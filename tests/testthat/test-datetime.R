@@ -145,6 +145,26 @@ with_mock_crunch({
         )
     })
 
+    test_that("resolution functions generate expected requests", {
+        expect_identical(resolution(ds$starttime), "D")
+        expect_PATCH(
+            resolution(ds$starttime) <- "M",
+            "https://app.crunch.io/api/datasets/1/variables/starttime/",
+            '{"resolution":"M"}'
+        )
+        expect_error(
+            resolution(ds$starttime) <- "invalid_rollup",
+            paste0(dQuote("resolution"), " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms")
+        )
+        expect_no_request(resolution(ds$starttime) <- "D")
+    })
+    test_that("Can't set a NULL resolution", {
+        expect_error(
+            resolution(ds$starttime) <- NULL,
+            "resolution cannot be NULL"
+        )
+    })
+
     test_that("rollupResolution functions generate expected requests", {
         expect_identical(rollupResolution(ds$starttime), "s")
         expect_PATCH(

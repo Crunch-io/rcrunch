@@ -9,16 +9,9 @@
 #' @param e1 an input
 #' @param e2 an input
 #' @param table For \code{\%in\%}. See [base::match()]
-#' @param resolution For `rollup`. Either `NULL` or a character in
-#' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
-#' time at which a Datetime variable should be aggregated. If `NULL`,
-#' the server will determine an appropriate resolution based on the range of
-#' the data.
-#' @param value for the `rollupResolution()` setter, the default resolution for
-#' this variable.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
 #' `as.vector` returns an R vector.
-#' @aliases expressions rollupResolution<-
+#' @aliases expressions
 #' @name expressions
 NULL
 

@@ -18,9 +18,64 @@ from8601 <- function(x) {
     return(strptime(x, pattern, tz = "UTC"))
 }
 
-setGeneric("rollupResolution<-", function(x, value) standardGeneric("rollupResolution<-"))
+#' Methods for Datetime variable resolutions
+#'
+#' Datetime data has a "resolution", the units of the values.
+#' `resolution()` exposes that property and `resolution<-` lets you set it.
+#' "Rollups" are a way of binning datetime data into meaningful units.
+#' `rollup()` lets you create an expression that you can query with. Datetime
+#' variables also have a `rollupResolution()` attribute that is the default
+#' resolution they will roll-up to, if not specified in `rollup()`;
+#' `rollupResolution<-` lets you set that.
+#'
+#' Note that `resolution` is a property of the data while `rollupResolution` is
+#' metadata. Setting `resolution` alters the column data, and if setting a more
+#' coarse resolution (e.g. going from "s" to "m"), it cannot be reversed.
+#' Setting `rollupResolution` is non-destructive.
+#' @param x a Datetime variable
+#' @param value a resolution string. Valid resolutions in Crunch are
+#' `c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")`. `NULL` is also valid for
+#' `rollupResolution<-` but not for `resolution<-`.
+#' @param resolution Same as `value`, in `rollup()`. This may be `NULL`, in
+#' which case the server will determine an appropriate resolution based on the
+#' range of the data.
+#' @return `resolution()` and `rollupResolution()` return the resolution string
+#' for datetime variables, `NULL` otherwise. The setters return the variable
+#' entity after modifying the state on the server. `rollup()` returns a
+#' `CrunchExpr` expression.
+#' @export
+#' @examples
+#' \dontrun{
+#' resolution(ds$starttime)
+#' ## [1] "ms"
+#' resolution(ds$starttime) <- "s"
+#' rollup(ds$starttime)
+#' rollup(ds$starttime, "D")
+#' rollupResolution(ds$starttime) <- "D"
+#' crtabs(~ rollup(starttime), data=ds)
+#' }
+resolution <- function (x) {
+    if (is.Datetime(x)) {
+        return(tuple(x)$resolution)
+    } else {
+        return(NULL)
+    }
+}
 
-#' @rdname expressions
+#' @rdname resolution
+#' @export
+`resolution<-` <- function (x, value) {
+    stopifnot(is.Datetime(x))
+    validateResolution(force(value))
+    # and one more validation
+    if (is.null(value)) {
+        halt("resolution cannot be NULL")
+    }
+    setEntitySlot(entity(x), "resolution", value)
+    return(refresh(x))
+}
+
+#' @rdname resolution
 #' @export
 rollup <- function(x, resolution = rollupResolution(x)) {
     validateResolution(force(resolution))
@@ -30,7 +85,7 @@ rollup <- function(x, resolution = rollupResolution(x)) {
     return(zfuncExpr("rollup", x, list(value = resolution)))
 }
 
-#' @rdname expressions
+#' @rdname resolution
 #' @export
 rollupResolution <- function(x) {
     if (is.Datetime(x)) {
@@ -40,7 +95,7 @@ rollupResolution <- function(x) {
     }
 }
 
-#' @rdname expressions
+#' @rdname resolution
 #' @export
 `rollupResolution<-` <- function(x, value) {
     stopifnot(is.Datetime(x))
