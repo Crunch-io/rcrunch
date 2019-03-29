@@ -32,19 +32,11 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/3/pk/"
         )
     })
-
-    test_that("appendDataset shows deprecation warnings", {
-        expect_warning(
-            expect_POST(
-                appendDataset(ds1, ds2, autorollback = TRUE),
-                "https://app.crunch.io/api/datasets/1/batches/",
-                '{"element":"shoji:entity","body":{"dataset":',
-                '"https://app.crunch.io/api/datasets/3/"}}'
-            ),
-            paste(
-                "The", sQuote("autorollback"),
-                "argument is deprecated and has no effect"
-            )
+    test_that("append doesn't DELETE the pk if upsert=TRUE", {
+        expect_POST(appendDataset(ds2, ds1, upsert=TRUE),
+            "https://app.crunch.io/api/datasets/3/batches/",
+            '{"element":"shoji:entity","body":{"dataset":',
+            '"https://app.crunch.io/api/datasets/1/"}}'
         )
     })
 })

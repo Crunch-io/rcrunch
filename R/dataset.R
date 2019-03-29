@@ -191,7 +191,7 @@ setMethod("setPopulation", "CrunchDataset", function(x, size, magnitude) {
 #'
 #' A primary key is a variable in a dataset that has a unique value for every
 #' row. A variable must be either numeric or text type and have no duplicate or
-#' missing values. A primary key on a dataset causes updates to that dataset
+#' missing values. A primary key on a dataset causes appends to that dataset
 #' that have the rows with the same primary key value(s) as the first dataset
 #' to update the existing rows rather than inserting new ones.
 #'
@@ -200,33 +200,29 @@ setMethod("setPopulation", "CrunchDataset", function(x, size, magnitude) {
 #' `NULL` to remove the primary key.
 #' @return Getter returns the Variable object that is used as the primary key
 #' (`NULL` if there is no primary key); setter returns `x` duly modified.
-#' @name pk
-#' @aliases pk pk<-
-NULL
-
-#' @rdname pk
 #' @export
-setMethod("pk", "CrunchDataset", function(x) {
-    pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
-    if (length(pk)) {
-        return(x[[pk[[1]]]])
+pk <- function(x) {
+    stopifnot(is.dataset(x))
+    pk_var <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
+    if (length(pk_var)) {
+        return(x[[pk_var[[1]]]])
     } else {
         return(NULL)
     }
-})
+}
+
 #' @rdname pk
 #' @export
-setMethod("pk<-", "CrunchDataset", function(x, value) {
+`pk<-` <- function(x, value) {
+    stopifnot(is.dataset(x))
+    pk_url <- shojiURL(x, "fragments", "pk")
     if (is.null(value)) {
-        crDELETE(shojiURL(x, "fragments", "pk"))
+        crDELETE(pk_url)
     } else {
-        payload <- toJSON(list(pk = I(self(value))))
-        crPOST(shojiURL(x, "fragments", "pk"), body = payload)
+        crPOST(pk_url, body = toJSON(list(pk = I(self(value)))))
     }
-
     invisible(x)
-})
-
+}
 
 trimISODate <- function(x) {
     ## Drop time from datestring if it's only a date
@@ -254,10 +250,7 @@ NULL
 
 #' @rdname dim-dataset
 #' @export
-setMethod(
-    "dim", "CrunchDataset",
-    function(x) c(getNrow(x), ncol(x))
-)
+setMethod("dim", "CrunchDataset", function(x) c(getNrow(x), ncol(x)))
 
 #' @rdname dim-dataset
 #' @export

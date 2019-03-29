@@ -4,7 +4,7 @@
 \alias{appendDataset}
 \title{Append one Crunch dataset to another}
 \usage{
-appendDataset(dataset1, dataset2, autorollback)
+appendDataset(dataset1, dataset2, upsert = FALSE)
 }
 \arguments{
 \item{dataset1}{a CrunchDataset}
@@ -14,7 +14,10 @@ appendDataset(dataset1, dataset2, autorollback)
 dataset before appending. If it is a CrunchDataset, it may be subsetted with
 a filter expression on the rows and a selection of variables on the columns.}
 
-\item{autorollback}{Deprecated. This option no longer does anything.}
+\item{upsert}{Logical: should the append instead "update" rows based on the
+primary key variable and "insert" (append) where the primary key values are
+new? Default is \code{FALSE}. Note that this upserting behavior requires a primary
+key variable to have been set previously; see \code{\link[=pk]{pk()}}.}
 }
 \value{
 \code{dataset1}, updated with \code{dataset2}, potentially filtered on rows and

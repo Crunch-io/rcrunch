@@ -6,17 +6,20 @@
 * When you give a dataset name to `loadDataset()`, it now searches to find datasets exactly matching that name unless you specify a project to load from. If you have multiple datasets with the same name in different locations, `loadDataset("your dataset name")` may return a different one than it did previously. If you want to identify a dataset precisely in `loadDataset()`, either specify the dataset URL (most effective but not as human friendly) or provide `project = "path/to/folder"`.
 * Calling `loadDataset(<integer>)` no longer is supported.
 
+## Bug fixes
+* Fix `is.public(multitables[[i]]) <- TRUE` and several other similar assignments of attributes on an element of a catalog, which previously successfully updated the value on the server but errored when returning to R (#303, #367)
+* `subvariables()` on non-array variables returns `NULL` instead of an error (#237)
+* Fixed a bug with the display of univariate cube `prop.table`s  
+
 ## Other enhancements
 
 * `newExampleDataset()` creates a sample dataset for you to explore
 * `exportDeck()` can now write to PowerPoint with `format = "pptx"`
-* Fixed a bug with the display of univariate cube `prop.table`s  
 * Added support for importing data in Triple-S format
-* `subvariables()` on non-array variables returns `NULL` instead of an error (#237)
 * `deleteDataset()` accepts web app URLs, just as `loadDataset()` already did (#279)
 * Set `options(crunch.warn.hidden=FALSE)` to suppress the "Variable x is hidden" messages when accessing hidden variables (#172)
 * Support sharing decks with a team via `team(deck) <-`
-* Fix `is.public(multitables[[i]]) <- TRUE` and several other similar assignments of attributes on an element of a catalog, which previously successfully updated the value on the server but errored when returning to R (#303, #367)
+* Added `upsert` argument to `appendDataset()` to allow datasets to be updated based on the primary-key variable; see `pk()` for details on primary keys (#49)
 
 # crunch 1.25.0
 
