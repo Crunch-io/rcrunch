@@ -48,13 +48,13 @@ setMethod("is.public<-", "CrunchFilter", function(x, value) {
     setEntitySlot(x, "is_public", value)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("FilterCatalog", "numeric"), function(x, i, ...) {
     getEntity(x, i, CrunchFilter, ...)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"),
     function(x, i, j, value) {
@@ -113,7 +113,7 @@ newFilter <- function(name, expression, catalog = NULL, ...) {
     )))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
     function(x, i, j, value) {
@@ -130,7 +130,7 @@ setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
     function(x, i, j, value) {
@@ -146,7 +146,7 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
     function(x, i, j, value) {

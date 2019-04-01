@@ -149,51 +149,17 @@ as.list.ShojiOrder <- function(x, ...) x@graph
 #' @export
 as.list.OrderGroup <- function(x, ...) x@entities
 
-#' Length of an Order
-#' @param x a ShojiOrder
-#' @return Integer: the number of elements in the Order
-#' @name ShojiOrder-length
-NULL
-
-#' @rdname ShojiOrder-length
-#' @export
-setMethod("length", "ShojiOrder", function(x) length(entities(x)))
-
-#' @rdname ShojiOrder-length
-#' @export
-setMethod("length", "OrderGroup", function(x) length(entities(x)))
-
-#' Extract and update in VariableOrders and VariableGroups
-#'
-#' @param x a VariableOrder or VariableGroup
-#' @param i an index. Numeric and logical indexing supported for both classes;
-#' character indexing supported for VariableOrder, matching on VariableGroup
-#' names
-#' @param name Same as i but for \code{$}
-#' @param j Invalid
-#' @param value For update methods, an object equivalent in class to what is
-#' being updated
-#' @param ... additional arguments
-#' @param drop Ignored
-#' @return `[[` and `$` on a VariableOrder return the VariableGroup.
-#' `[[` on VariableGroup returns the entity within, either a character
-#' (URL) or nested VariableGroup. `[` and assignment methods return
-#' objects of the same class as `x`
-#' @name ShojiOrder-extract
-#' @aliases ShojiOrder-extract
-NULL
-
 ###############################
 # 1. Extract from ShojiOrder
 ###############################
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiOrder", "ANY"), function(x, i, ..., drop = FALSE) {
     x@graph <- x@graph[i]
     return(x)
 })
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiOrder", "character"), function(x, i, ..., drop = FALSE) {
     w <- match(i, names(x))
@@ -203,13 +169,13 @@ setMethod("[", c("ShojiOrder", "character"), function(x, i, ..., drop = FALSE) {
     callNextMethod(x, w, ..., drop = drop)
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiOrder", "ANY"), function(x, i, ...) {
     x@graph[[i]]
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiOrder", "character"), function(x, i, ...) {
     ## i may be a path string, so split on the delimiter (default is "/")
@@ -227,7 +193,7 @@ setMethod("[[", c("ShojiOrder", "character"), function(x, i, ...) {
     return(x)
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "ShojiOrder", function(x, name) x[[name]])
 
@@ -235,7 +201,7 @@ setMethod("$", "ShojiOrder", function(x, name) x[[name]])
 # 2. Assign into ShojiOrder
 ###############################
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
@@ -247,7 +213,7 @@ setMethod("[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
         callNextMethod(x, w, value = value)
     }
 )
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
     function(x, i, j, value) {
@@ -257,26 +223,26 @@ setMethod("[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "list"),
     .setNestedGroupByName
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "character"),
     .setNestedGroupByName
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
     .setNestedGroupByName
 )
 
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
     function(x, i, j, value) {
@@ -288,7 +254,7 @@ setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
     function(x, i, j, value) {
@@ -299,7 +265,7 @@ setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
     function(x, i, j, value) {
@@ -307,7 +273,7 @@ setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
         return(x)
     }
 )
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "NULL"),
     function(x, i, j, value) {
@@ -319,7 +285,7 @@ setMethod("[[<-", c("ShojiOrder", "character", "missing", "NULL"),
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
@@ -327,7 +293,7 @@ setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", "ShojiOrder", function(x, name, value) {
     x[[name]] <- value
@@ -339,13 +305,13 @@ setMethod("$<-", "ShojiOrder", function(x, name, value) {
 # 3. Extract from OrderGroup
 ###############################
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("OrderGroup", "ANY"), function(x, i, ..., drop = FALSE) {
     x@entities <- x@entities[i]
     return(x)
 })
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("OrderGroup", "character"), function(x, i, ..., drop = FALSE) {
     w <- match(i, names(x))
@@ -355,7 +321,7 @@ setMethod("[", c("OrderGroup", "character"), function(x, i, ..., drop = FALSE) {
     callNextMethod(x, w, ..., drop = drop)
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("OrderGroup", "character"), function(x, i, ...) {
     w <- match(i, names(x))
@@ -365,13 +331,13 @@ setMethod("[[", c("OrderGroup", "character"), function(x, i, ...) {
     callNextMethod(x, w, ..., drop = drop)
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("OrderGroup", "ANY"), function(x, i, ...) {
     x@entities[[i]]
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "OrderGroup", function(x, name) x[[name]])
 
@@ -379,19 +345,19 @@ setMethod("$", "OrderGroup", function(x, name) x[[name]])
 # 4. Assign into ShojiGroup
 ###############################
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "list"),
     .setNestedGroupByName
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "character"),
     .setNestedGroupByName
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
@@ -399,7 +365,7 @@ setMethod("[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
     function(x, i, j, value) {
@@ -407,7 +373,7 @@ setMethod("[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
     function(x, i, j, value) {
@@ -417,7 +383,7 @@ setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
     function(x, i, j, value) {
@@ -428,7 +394,7 @@ setMethod("[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
         return(x)
     }
 )
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "NULL"),
     function(x, i, j, value) {
@@ -440,7 +406,7 @@ setMethod("[[<-", c("OrderGroup", "character", "missing", "NULL"),
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", "OrderGroup", function(x, name, value) {
     x[[name]] <- value

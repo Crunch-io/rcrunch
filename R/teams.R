@@ -35,13 +35,13 @@ getTeams <- function() {
     TeamCatalog(crGET(sessionURL("teams")))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("TeamCatalog", "numeric"), function(x, i, ...) {
     getEntity(x, i, CrunchTeam, ...)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("TeamCatalog", "character", "missing", "list"),
     function(x, i, j, value) {
@@ -61,7 +61,7 @@ setMethod("[[<-", c("TeamCatalog", "character", "missing", "list"),
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
     function(x, i, j, value) {

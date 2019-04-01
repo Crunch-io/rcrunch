@@ -8,6 +8,8 @@
 \alias{users,ProjectFolder-method}
 \title{Get information about users who have access to a dataset}
 \usage{
+users(x)
+
 \S4method{users}{CrunchDataset}(x)
 
 \S4method{users}{DatasetTuple}(x)

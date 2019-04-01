@@ -20,6 +20,16 @@
 \alias{max,DatetimeVariable-method}
 \title{Univariate statistics on Crunch objects}
 \usage{
+mean(x, ...)
+
+sd(x, na.rm = FALSE)
+
+median(x, na.rm = FALSE, ...)
+
+min(x, ..., na.rm = FALSE)
+
+max(x, ..., na.rm = FALSE)
+
 \S4method{mean}{CrunchVariable}(x, ...)
 
 \S4method{mean}{NumericVariable}(x, ...)

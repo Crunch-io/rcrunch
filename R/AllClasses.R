@@ -257,10 +257,6 @@ GenericConstructor <- function(class) {
 #' the objects via the `data` argument. See the examples.
 #' @param x For the attribute getters and setters, an object of class
 #' AbstractCategory or AbstractCategories
-#' @param i For the `[` methods, just as with list extract methods
-#' @param j Invalid argument to `[`, but in the generic's signature
-#' @param ... additional arguments to `[`, ignored
-#' @param drop Invalid argument to `[`, but in the generic's signature
 #' @param value For `[<-`, the replacement AbstractCategory to insert
 #' @rdname AbstractCategory
 #' @aliases AbstractCategory
@@ -298,10 +294,6 @@ AbstractCategory <- GenericConstructor("AbstractCategory")
 #' the objects via the `data` argument. See the examples.
 #' @param x For the attribute getters and setters, an object of class
 #' Category or Categories
-#' @param i For the `[` methods, just as with list extract methods
-#' @param j Invalid argument to `[`, but in the generic's signature
-#' @param ... additional arguments to `[`, ignored
-#' @param drop Invalid argument to `[`, but in the generic's signature
 #' @param value For `[<-`, the replacement Category to insert
 #' @rdname Categories
 #' @aliases Categories ids ids<- values values<- id.AbstractCategory ids.AbstractCategories
@@ -457,12 +449,15 @@ Multitable <- setClass("Multitable", contains = "ShojiObject")
 #' DatasetGroups. DatasetGroup objects contain a group name and an set of
 #' "entities", which can be dataset references or other nested DatasetGroups.
 #'
+#' This API is deprecated. Use folders instead.
+#'
 #' @slot group character, the name of the DatasetGroup. In the constructor and
 #' more generally, this field can be referenced as "name" as well.
 #' @slot entities a character vector of dataset URLs, or a list containing a
 #' combination of dataset URLs and DatasetGroup objects.
 #' @rdname DatasetOrder
 #' @export DatasetOrder
+#' @keywords internal
 DatasetOrder <- setClass("DatasetOrder", contains = "ShojiOrder")
 
 #' @rdname DatasetOrder

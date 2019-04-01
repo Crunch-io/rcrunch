@@ -14,7 +14,7 @@ is.folder <- function(x) inherits(x, "ShojiFolder")
 #' @rdname describe-catalog
 setMethod("types", "ShojiFolder", function(x) getIndexSlot(x, "type"))
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiFolder", "numeric"), function(x, i, ..., drop = FALSE) {
     out <- index(x)[i]
@@ -24,7 +24,7 @@ setMethod("[[", c("ShojiFolder", "numeric"), function(x, i, ..., drop = FALSE) {
     return(folderExtraction(x, out))
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiFolder", "character"), function(x, i, ..., drop = FALSE) {
     path <- parseFolderPath(i)

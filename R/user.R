@@ -78,7 +78,7 @@ resetPassword <- function(email) {
     ))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("UserCatalog", "character"), function(x, i, ...) {
     dots <- list(x = x, i = i, secondary = emails(x))
@@ -86,7 +86,7 @@ setMethod("[", c("UserCatalog", "character"), function(x, i, ...) {
     do.call("callNextMethod", dots)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("UserCatalog", "character"), function(x, i, ...) {
     dots <- list(x = x, i = i, secondary = emails(x))

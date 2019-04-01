@@ -56,5 +56,5 @@ with the \code{$} and \code{[[} extract methods.
 See the vignette on array variables for further details and examples.
 }
 \seealso{
-\code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
+\code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
 }

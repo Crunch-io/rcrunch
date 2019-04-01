@@ -3,7 +3,6 @@
 \docType{methods}
 \name{tojson-crunch}
 \alias{tojson-crunch}
-\alias{jsonprep}
 \alias{jsonprep,AbstractCategories-method}
 \alias{jsonprep,ANY-method}
 \alias{jsonprep,ShojiOrder-method}

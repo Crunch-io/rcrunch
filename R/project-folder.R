@@ -54,7 +54,7 @@ setMethod("members<-", c("ProjectFolder", "character"), function(x, value) {
     return(x)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ProjectFolder", "character", "missing", "list"),
     function(x, i, j, value) {
@@ -73,7 +73,7 @@ setMethod("[[<-", c("ProjectFolder", "character", "missing", "list"),
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ProjectFolder", "character", "missing", "ProjectFolder"),
     function(x, i, j, value) {

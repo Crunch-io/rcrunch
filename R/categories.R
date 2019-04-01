@@ -167,7 +167,7 @@ setMethod("is.selected<-", "Categories", function(x, value) {
         is.selected(x) <- value
         return(x)
     }, x = x@.Data, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
-    return(x) 
+    return(x)
 })
 
 #' @rdname is-na-categories
@@ -292,3 +292,134 @@ is.3vl <- function(cats) {
             sum(is.na(cats)) == 1
     )
 }
+
+#' Get and set Categories on Variables
+#'
+#' @param x a Variable
+#' @param value for the setters, an object of class Categories to set.
+#' @return Getters return Categories; setters return \code{x} duly modified.
+#' @name var-categories
+#' @aliases var-categories categories categories<-
+setGeneric("categories", function(x) standardGeneric("categories"))
+#' @rdname var-categories
+setGeneric("categories<-", function(x, value) standardGeneric("categories<-"))
+
+#' @rdname var-categories
+#' @export
+setMethod("categories", "VariableTuple", function(x) {
+    ## VariableTuples from a regular VariableCatalog don't have categories.
+    ## But, from variableMetadata() and from variables(cube), they do. And
+    ## if they do, return them instead of making an entity() request.
+    cats <- x$categories
+    if (!is.null(cats)) {
+        cats <- Categories(data = cats)
+    }
+    return(cats)
+})
+
+#' @rdname var-categories
+#' @export
+setMethod("categories", "CrunchVariable", function(x) categories(tuple(x)))
+#' @rdname var-categories
+#' @export
+setMethod("categories", "CategoricalVariable",
+    function(x) callNextMethod(x) %||% categories(entity(x))
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories", "CategoricalArrayVariable",
+    function(x) callNextMethod(x) %||% categories(entity(x))
+)
+
+#' @rdname var-categories
+#' @export
+setMethod("categories", "VariableEntity",
+    function(x) Categories(data = x@body$categories)
+)
+
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalVariable", "Categories"),
+    function(x, value) {
+        ent <- setEntitySlot(entity(x), "categories", value)
+        dropCache(cubeURL(x))
+        return(x)
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
+    function(x, value) {
+        ent <- setEntitySlot(entity(x), "categories", value)
+        lapply(subvariableURLs(tuple(x)), dropCache) ## Subvariables will update too
+        dropCache(cubeURL(x))
+        return(x)
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalVariable", "numeric"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not numeric. ",
+            "Did you mean `values(categories(x)) <- value`?"
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalVariable", "character"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not ",
+            "character. Did you mean `names(categories(x)) <- value`?"
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalVariable", "ANY"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not ",
+            class(value), "."
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalArrayVariable", "numeric"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not numeric. ",
+            "Did you mean `values(categories(x)) <- value`?"
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalArrayVariable", "character"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not ",
+            "character. Did you mean `names(categories(x)) <- value`?"
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalArrayVariable", "ANY"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not ",
+            class(value), "."
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CrunchVariable", "ANY"),
+    function(x, value) {
+        halt("category assignment not defined for ", class(x))
+    }
+)

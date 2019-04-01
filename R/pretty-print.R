@@ -1,3 +1,6 @@
+#' @include show.R
+NULL
+
 #' @importFrom crayon col_nchar has_style col_align
 prettyPrint2d <- function(array, row_styles = NULL, col_styles = NULL) {
     # TODO: warn if bold is used, since it messes up alignment?

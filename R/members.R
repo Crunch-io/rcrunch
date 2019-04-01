@@ -1,4 +1,4 @@
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("MemberCatalog", "character"), function(x, i, ...) {
     ## TODO: eliminate duplication with PermissionCatalog
@@ -17,11 +17,11 @@ setMethod(
     function(x, i, ...) whichNameOrURL(x, i, emails(x))
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("MemberCatalog", "ANY", "missing", "ANY"), .backstopUpdate)
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("MemberCatalog", "character", "missing", "NULL"),
     function(x, i, j, value) {

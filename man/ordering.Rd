@@ -14,6 +14,10 @@
 \alias{ordering<-,ProjectFolder-method}
 \title{Get and set VariableOrder}
 \usage{
+ordering(x)
+
+ordering(x) <- value
+
 \S4method{ordering}{CrunchDataset}(x)
 
 \S4method{ordering}{CrunchDataset}(x) <- value

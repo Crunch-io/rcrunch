@@ -1,4 +1,4 @@
-# crunch 1.25.1 (under development)
+# crunch 1.26.0
 
 ## Personal folder
 * You can now access your "personal folder" of datasets, which contains only those datasets you imported and that haven't been moved into another project. This dataset folder is denoted in paths by `~`, as in a `*nix` file system. `cd(projects(), "~")` takes you there; `mv(projects(), ds, "~")` moves `ds` into your personal folder.

@@ -20,13 +20,13 @@ setMethod("multitables", "CrunchDataset", function(x) {
 #' @export
 setMethod("multitables<-", "CrunchDataset", function(x, value) x)
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("MultitableCatalog", "numeric"), function(x, i, ...) {
     getEntity(x, i, Multitable, ...)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
     function(x, i, j, value) {
@@ -45,7 +45,7 @@ setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
     function(x, i, j, value) {
@@ -64,7 +64,7 @@ setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "Multitable"),
     modifyCatalogInPlace)
@@ -75,7 +75,7 @@ makeMultitablePayload <- function(template, ...) {
     return(wrapEntity(template = template, ...))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
     function(x, i, j, value) {

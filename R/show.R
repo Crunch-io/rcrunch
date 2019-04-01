@@ -5,7 +5,7 @@
 #' @seealso [`methods::show`]
 #' @importFrom methods show
 #' @name show-crunch
-NULL
+setGeneric("show")
 
 
 # Boilerplate
@@ -421,6 +421,37 @@ setMethod("show", "CrunchGeography", function(object) {
         sep = ""
     )
     invisible(object)
+})
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "DeckCatalog", function(object) {
+    out <- as.data.frame(object)
+    if (length(object) > 0) {
+        print(out[, c("name", "team", "is_public", "owner_name")])
+    } else {
+        print(out)
+    }
+})
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "CrunchDeck", function(object) {
+    print(cubes(object))
+})
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "CrunchSlide", function(object) {
+    out <- cubes(object)
+    names(out) <- title(object)
+    print(out)
+})
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "MultitableResult", function(object) {
+    show(do.call("cbind", lapply(object, cubeToArray)))
 })
 
 setMethod("getShowContent", "ShojiFolder", function(x) {

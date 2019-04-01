@@ -22,19 +22,6 @@ init.Category <- function(.Object, ...) {
 }
 setMethod("initialize", "Category", init.Category)
 
-#' Access Category fields directly
-#'
-#' Don't do this. Instead, use the category setters.
-#'
-#' @param x a Category
-#' @param name a field within \code{x}
-#' @param value a value for that field to update
-#' @return \code{$} returns the value of the desired field. Setter
-#' returns \code{x} duly modified.
-#' @seealso \code{\link{describe-category}}
-#' @name category-extract
-NULL
-
 #' Category attributes
 #'
 #' Functions to access and set category attributes.

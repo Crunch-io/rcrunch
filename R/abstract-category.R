@@ -1,9 +1,9 @@
 is.AbstractCategory <- function(x) inherits(x, "AbstractCategory")
 
-#' @rdname category-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "AbstractCategory", function(x, name) x[[name]])
-#' @rdname category-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", "AbstractCategory", function(x, name, value) {
     x[[name]] <- value

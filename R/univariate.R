@@ -7,7 +7,15 @@
 #' @seealso [base::mean()] [stats::sd()] [stats::median()] [base::min()] [base::max()]
 #' @name crunch-uni
 #' @aliases mean sd median min max
-NULL
+setGeneric("mean")
+#' @rdname crunch-uni
+setGeneric("sd")
+#' @rdname crunch-uni
+setGeneric("median")
+#' @rdname crunch-uni
+setGeneric("min")
+#' @rdname crunch-uni
+setGeneric("max")
 
 .summary.stat <- function(x, stat, na.rm = FALSE, ...) {
     query <- list(

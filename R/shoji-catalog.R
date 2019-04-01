@@ -105,7 +105,7 @@ setMethod(
     function(x, i, ...) whichNameOrURL(x, i, ...)
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "character"), function(x, i, ...) {
     w <- whichCatalogEntry(x, i, ...)
@@ -114,7 +114,7 @@ setMethod("[", c("ShojiCatalog", "character"), function(x, i, ...) {
     }
     return(x[w])
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "numeric"), function(x, i, ...) {
     bad <- abs(as.integer(i)) > length(x)
@@ -123,7 +123,7 @@ setMethod("[", c("ShojiCatalog", "numeric"), function(x, i, ...) {
     }
     callNextMethod(x, i, value)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "logical"), function(x, i, ...) {
     if (length(i) > length(x)) {
@@ -135,13 +135,13 @@ setMethod("[", c("ShojiCatalog", "logical"), function(x, i, ...) {
     index(x) <- index(x)[i]
     return(x)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "ANY"), function(x, i, ...) {
     index(x) <- index(x)[i]
     return(x)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiCatalog", "ANY"), function(x, i, ...) {
     ## Note that this returns a bare list, not an IndexTuple
@@ -163,7 +163,7 @@ getEntity <- function(x, i, Constructor = ShojiEntity, ...) {
     return(Constructor(crGET(url)))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiCatalog", "character"), function(x, i, ...) {
     stopifnot(length(i) == 1L)
@@ -174,18 +174,18 @@ setMethod("[[", c("ShojiCatalog", "character"), function(x, i, ...) {
     return(x[[w]])
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "ShojiCatalog", function(x, name) x[[name]])
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", "ShojiCatalog", function(x, name, value) {
     x[[name]] <- value
     return(x)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
     function(x, i, j, value) {
@@ -223,9 +223,6 @@ whichNameOrURL <- function(x, i, secondary = names(x), ...) {
     return(var_matches)
 }
 
-#' @rdname catalog-length
-#' @export
-setMethod("length", "ShojiCatalog", function(x) length(index(x)))
 setMethod("lapply", "ShojiCatalog", function(X, FUN, ...) lapply(index(X), FUN, ...))
 
 #' Get the body of a Catalog

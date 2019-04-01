@@ -40,12 +40,12 @@
 #' in attributes via `...`
 #' @param x For the attribute getters and setters, an object of class
 #' Transforms
-#' @param i For `[`, the index of the Transforms to select (or insert for <- methods)
-#' @param j Not used
-#' @param value For `[<-`, the replacement Transforms to insert
+#' @param value For the setter, the replacement Transforms to insert
 #' @name Transforms
 #' @aliases transforms transforms<-
-NULL
+setGeneric("transforms", function(x) standardGeneric("transforms"))
+#' @rdname Transforms
+setGeneric("transforms<-", function(x, value) standardGeneric("transforms<-"))
 
 getTransforms <- function(x) {
     var_entity <- entity(x)
@@ -158,7 +158,7 @@ setValidity("Transforms", function(object) {
 #' \dontrun{
 #' showTransforms(ds$variable)
 #' }
-NULL
+setGeneric("showTransforms", function(x) standardGeneric("showTransforms"))
 
 #' @rdname showTransforms
 #' @export

@@ -128,13 +128,13 @@ newDeck <- function(dataset, name, ...) {
 
 setMethod("initialize", "DeckCatalog", init.sortCatalog)
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "DeckCatalog", function(x, i, ...) {
     getEntity(x, i, CrunchDeck, ...)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     if (length(i) > 1) {
@@ -152,29 +152,18 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     getEntity(x, index, CrunchDeck, ...)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
     modifyCatalogInPlace)
 
-#' @rdname show-crunch
-#' @export
-setMethod("show", "DeckCatalog", function(object) {
-    out <- as.data.frame(object)
-    if (length(object) > 0) {
-        print(out[, c("name", "team", "is_public", "owner_name")])
-    } else {
-        print(out)
-    }
-})
-
 # CrunchDeck --------------------------------------------------------------
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "CrunchDeck", function(x, i, ...) slides(x)[[i]])
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
     slideCat <- slides(x)
@@ -281,10 +270,6 @@ exportDeck <- function(deck, file, format = c("xlsx", "pptx", "json")) {
     crDownload(dl_link, file)
 }
 
-#' @rdname catalog-length
-#' @export
-setMethod("length", "CrunchDeck", function(x) return(length(slides(x))))
-
 #' @rdname display-settings
 #' @export
 setMethod("cubes", "CrunchDeck", function(x) {
@@ -300,10 +285,4 @@ setMethod("cubes", "CrunchDeck", function(x) {
     })
     names(out) <- titles(x)
     return(out)
-})
-
-#' @rdname show-crunch
-#' @export
-setMethod("show", "CrunchDeck", function(object) {
-    print(cubes(object))
 })

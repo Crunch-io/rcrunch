@@ -73,9 +73,6 @@ setGeneric("notes<-", function(x, value) standardGeneric("notes<-"),
 )
 setGeneric("digits", function(x) standardGeneric("digits"))
 setGeneric("digits<-", function(x, value) standardGeneric("digits<-"))
-setGeneric("transforms", function(x) standardGeneric("transforms"))
-setGeneric("transforms<-", function(x, value) standardGeneric("transforms<-"))
-setGeneric("showTransforms", function(x) standardGeneric("showTransforms"))
 setGeneric("geo", function(x) standardGeneric("geo"))
 setGeneric("geo<-", function(x, value) standardGeneric("geo<-"))
 setGeneric("fetchGeoFile", function(x) standardGeneric("fetchGeoFile"))
@@ -96,9 +93,6 @@ setGeneric("timestamps", function(x) standardGeneric("timestamps"))
 setGeneric("type", function(x) standardGeneric("type"))
 setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
-setGeneric("categories", function(x) standardGeneric("categories"))
-setGeneric("categories<-", function(x, value) standardGeneric("categories<-"))
-
 setGeneric("hide", function(x) standardGeneric("hide"))
 setGeneric("unhide", function(x) standardGeneric("unhide"))
 setGeneric("derivation", function(x) standardGeneric("derivation"))
@@ -112,8 +106,6 @@ setGeneric("entities", function(x, ...) standardGeneric("entities"))
 setGeneric("entities<-", function(x, value) standardGeneric("entities<-"))
 setGeneric("tuple", function(x) standardGeneric("tuple"))
 setGeneric("tuple<-", function(x, value) standardGeneric("tuple<-"))
-setGeneric("ordering", function(x) standardGeneric("ordering"))
-setGeneric("ordering<-", function(x, value) standardGeneric("ordering<-"))
 setGeneric("entity", function(x) standardGeneric("entity"))
 setGeneric("index", function(x) standardGeneric("index"))
 setGeneric("index<-", function(x, value) standardGeneric("index<-"))
@@ -175,7 +167,6 @@ setGeneric("whichCatalogEntry", function(x, i, ...) standardGeneric("whichCatalo
 
 setGeneric("owner", function(x) standardGeneric("owner"))
 setGeneric("owner<-", function(x, value) standardGeneric("owner<-"))
-setGeneric("users", function(x) standardGeneric("users"))
 
 setGeneric("showMissing", function(cube) standardGeneric("showMissing"))
 setGeneric("hideMissing", function(cube) standardGeneric("hideMissing"))
@@ -183,12 +174,6 @@ setGeneric("showIfAny", function(cube) standardGeneric("showIfAny"))
 
 setGeneric("dim")
 setGeneric("ncol")
-setGeneric("mean")
-setGeneric("length")
-setGeneric("sd")
-setGeneric("median")
-setGeneric("min")
-setGeneric("max")
 setGeneric("na.omit")
 setGeneric("as.vector")
 setGeneric("as.environment")
@@ -204,6 +189,46 @@ setGeneric("measures", function(x) standardGeneric("measures"))
 
 setGeneric("subset")
 setGeneric("which", signature = "x")
+
+#' Extract and modify Crunch objects
+#'
+#'
+#'
+#' @param x a Crunch object (Dataset, Variable, `CrunchExpr`, Catalog,
+#' `CrunchCube`, etc.)
+#' @param i The elements to extract; as with R, this can generally be (1) a
+#' logical vector of length matching `x`; (2) a character vector of appropriate
+#' length, which can generally be URLs or also names, aliases, or other
+#' identifier; (3) integer indices, potentially negative, to select. Datasets
+#' and Variables can also be subset by `CrunchExpr`. Note that when subsetting
+#' Datasets and variables by R vectors, the input `i` is turned into a
+#' `CrunchExpr` so that it can be used in API queries.
+#' @param name for `$`, the same as `i` for `[[`
+#' @param j For two-dimensional objects, elements to take from the columnar
+#' dimension.
+#' @param drop Ignored
+#' @param ... additional arguments supported by some methods. For example, some
+#' catalogs support a `secondary` vector of elements to match
+#' against like `emails(x)` or `owners(x)`; by default this is `names(x)`. This
+#' lets (for example) you to look up variables by URL but fall back to name.
+#' @param value For updating, an object of the appropriate class and size to
+#' insert. This is generally the same class of object you would get from the
+#' extract method; i.e. for `x[[i]] <- value`, `value` must be the same class
+#' as `x[[i]]`. Exceptions include `ds$var <- VariableDefinition(...)`.
+#' @return `[` generally returns a subset of `x`, same class and "self" URL;
+#' when subsetting with a `CrunchExpr`, the expression is recorded in an
+#' attribute of the object. `[[` and `$`
+#' return appropriate extractions from `x`, wherever possible without making an
+#' additional API request. The assignment methods return `x` appropriately
+#' updated. Most assignment methods do not make an API request except where
+#' they clearly are used to create a new entity (as in assigning a variable
+#' definition to a Dataset); for editing metadata attributes, these methods
+#' generally assume that the API request to set the changes on the server
+#' happens in a different method (e.g. in `names(variables(ds)[1:5]) <- value`,
+#' assignment happens in the `names<-` method).
+#' @name crunch-extract
+#' @keywords internal
+NULL
 
 #' Generic method for converting objects to Crunch representations
 #'
@@ -269,9 +294,6 @@ setGeneric("zcl", function(x) standardGeneric("zcl"))
 #' can handle. `toJSON` returns the JSON-serialized character object.
 #' @name tojson-crunch
 #' @seealso [jsonlite::toJSON()]
-NULL
-
-#' @rdname tojson-crunch
 #' @export
 setGeneric("jsonprep", function(x, ...) standardGeneric("jsonprep"))
 

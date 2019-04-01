@@ -7,11 +7,11 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.25.1
+Version: 1.26.0
 Authors@R: c(
-    person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
-    person("Jonathan", "Keane", role="aut", email="jon.keane@crunch.io"),
-    person("Gordon", "Shotwell", role="aut", email="gordon@crunch.io"))
+    person("Neal", "Richardson", role="aut", email="neal.p.richardson@gmail.com"),
+    person("Jonathan", "Keane", role=c("aut", "cre"), email="jon.keane@crunch.io"),
+    person("Gordon", "Shotwell", role="aut", email="gordon.shotwell@gmail.com"))
 URL: https://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
@@ -84,6 +84,7 @@ Collate:
     'cube-residuals.R'
     'cube-result.R'
     'cube-subset.R'
+    'transform.R'
     'cube-transforms.R'
     'cube-variables.R'
     'cut.R'
@@ -116,6 +117,7 @@ Collate:
     'interact.R'
     'join-dataset.R'
     'json.R'
+    'length.R'
     'make-array.R'
     'members.R'
     'merge-crunch-data-frame.R'
@@ -124,6 +126,7 @@ Collate:
     'new-dataset.R'
     'ordering.R'
     'permission-catalog.R'
+    'show.R'
     'pretty-print.R'
     'progress.R'
     'project-folder.R'
@@ -136,7 +139,6 @@ Collate:
     'shoji-order-slots.R'
     'shoji-order.R'
     'shoji.R'
-    'show.R'
     'slides.R'
     'subtotals-and-headings.R'
     'subvariables.R'
@@ -144,7 +146,6 @@ Collate:
     'tab-book.R'
     'teams.R'
     'transform-calculate.R'
-    'transform.R'
     'tuple.R'
     'univariate.R'
     'user-info.R'

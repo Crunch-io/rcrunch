@@ -36,13 +36,13 @@ setMethod("subtitles<-", "SlideCatalog", function(x, value) {
     setIndexSlot(x, "subtitle", value)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "SlideCatalog", function(x, i, ...) {
     getEntity(x, i, CrunchSlide)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
     function(x, i, j, value) {
@@ -109,14 +109,6 @@ reorderSlides <- function(x, order) {
 
 # CrunchSlide -------------------------------------------------------------------
 
-#' @rdname show-crunch
-#' @export
-setMethod("show", "CrunchSlide", function(object) {
-    out <- cubes(object)
-    names(out) <- title(object)
-    print(out)
-})
-
 # TODO: Find out what the mandatory display settings should be for the app then
 # change this list to reflect those settings.
 DEFAULT_DISPLAY_SETTINGS <- list(
@@ -180,13 +172,13 @@ newSlide <- function(deck,
     return(CrunchSlide(crGET(url)))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "CrunchSlide", function(x, i, ...) {
     an_cat <- analyses(x)
     return(an_cat[[i]])
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", "CrunchSlide", function(x, i, j, value) {
     an_cat <- analyses(x)
@@ -275,12 +267,12 @@ setMethod("initialize", "AnalysisCatalog", function(.Object, ...) {
     return(.Object)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "AnalysisCatalog", function(x, i, ...) {
     getEntity(x, i, Analysis)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"),
     function(x, i, j, value) {
@@ -292,7 +284,7 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"),
         invisible(refresh(x))
     }
 )
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
     function(x, i, j, value) {
@@ -314,7 +306,7 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
         invisible(refresh(x))
     }
 )
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"),
     function(x, i, j, value) {

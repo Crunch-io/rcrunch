@@ -59,28 +59,13 @@ setMethod("is.published<-", c("DatasetCatalog", "logical"), function(x, value) {
     setIndexSlot(x, "is_published", value)
 })
 
-#' Extract and modify subsets of Catalog-type objects
-#'
-#' @param x a Catalog object
-#' @param i which catalog elements to extract
-#' @param name for `$`, the same as `i` for `[[`
-#' @param j Invalid
-#' @param drop Invalid
-#' @param ... additional arguments (for example `secondary` a vector of elements to match
-#' against like `emails(x)` or `owners(x)` by default this is `names(x)`)
-#' @param value For updating, an object of the appropriate class and size to
-#' insert
-#' @return A subset of `x` if extracting, otherwise `x` duly modified
-#' @name catalog-extract
-NULL
-
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("DatasetCatalog", "numeric"), function(x, i, ...) {
     getTuple(x, i, DatasetTuple)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
     function(x, i, j, value) {

@@ -25,7 +25,7 @@
 #'
 #' @name Subvariables
 #' @aliases Subvariables subvariables subvariables<-
-#' @seealso [`subvars-extract`] [`describe-catalog`] [`deleteSubvariable`] `vignette("array-variables", package="crunch")`
+#' @seealso [`describe-catalog`] [`deleteSubvariable`] `vignette("array-variables", package="crunch")`
 setGeneric("subvariables", function(x) standardGeneric("subvariables"))
 
 #' @rdname Subvariables
@@ -99,21 +99,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
     }
 )
 
-#' Extract and modify subsets of subvariables
-#'
-#' @param x Subvariables or an array Variable which contains subvariables
-#' @param i which subvariables to extract
-#' @param name For `$`, the name (not alias) of the subvariable to
-#' extract
-#' @param j Invalid
-#' @param drop Invalid
-#' @param ... additional arguments
-#' @param value For updating, a CrunchExpr
-#' @return A subset of `x` if extracting, otherwise `x` duly modified
-#' @name subvars-extract
-NULL
-
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("Subvariables", "character"), function(x, i, ...) {
     ## TODO: drop this in favor of ShojiCatalog method (have to pass in namekey)
@@ -121,7 +107,7 @@ setMethod("[[", c("Subvariables", "character"), function(x, i, ...) {
     if (is.na(i)) return(NULL)
     return(x[[i, ...]])
 })
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("Subvariables", "numeric"), function(x, i, ...) {
     out <- callNextMethod(x, i, ...)
@@ -131,7 +117,7 @@ setMethod("[[", c("Subvariables", "numeric"), function(x, i, ...) {
     return(out)
 })
 
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("Subvariables", "character"), function(x, i, ...) {
     w <- match(i, names(x))
@@ -141,7 +127,7 @@ setMethod("[", c("Subvariables", "character"), function(x, i, ...) {
     return(x[w])
 })
 
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("Subvariables", "character", "missing", "CrunchVariable"),
     function(x, i, value) {
@@ -158,7 +144,7 @@ setMethod("[[<-", c("Subvariables", "character", "missing", "CrunchVariable"),
         return(x)
     }
 )
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("Subvariables", "ANY", "missing", "CrunchVariable"),
     function(x, i, value) {
@@ -169,14 +155,14 @@ setMethod("[[<-", c("Subvariables", "ANY", "missing", "CrunchVariable"),
         return(x)
     }
 )
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("Subvariables", "ANY", "missing", "NULL"),
     function(x, i, value) {
         halt("Cannot add or remove subvariables")
     }
 )
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("Subvariables", "ANY", "missing", "ANY"),
     function(x, i, value) {
@@ -184,7 +170,7 @@ setMethod("[[<-", c("Subvariables", "ANY", "missing", "ANY"),
     }
 )
 
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"),
     function(x, i, value) {
@@ -195,7 +181,7 @@ setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"),
         callNextMethod(x, w, value)
     }
 )
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"),
     function(x, i, value) {
@@ -208,7 +194,7 @@ setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"),
         return(x)
     }
 )
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"),
     function(x, i, value) {
@@ -231,7 +217,7 @@ setMethod("names", "CategoricalArrayVariable", function(x) {
 ## (2) As a result, you cannot filter and select subvariables
 ## (e.g. ds$array[ds$gender == "Male", c("subvar1", "subvar3")])
 
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CategoricalArrayVariable", "character"), function(x, i, ...) {
     w <- match(i, names(x)) ## TODO: use whichNameOrURL
@@ -240,23 +226,23 @@ setMethod("[", c("CategoricalArrayVariable", "character"), function(x, i, ...) {
     }
     return(subvariables(x)[w, ...])
 })
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CategoricalArrayVariable", "missing", "ANY"), function(x, i, j, ...) {
     return(subvariables(x)[j, ...])
 })
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CategoricalArrayVariable", "missing", "character"), function(x, i, j, ...) {
     return(x[j])
 })
 
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("CategoricalArrayVariable", "ANY"), function(x, i, ...) {
     return(subvariables(x)[[i, ...]])
 })
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("CategoricalArrayVariable", "character"), function(x, i, ...) {
     i <- match(i, names(x))
@@ -264,12 +250,12 @@ setMethod("[[", c("CategoricalArrayVariable", "character"), function(x, i, ...) 
     return(x[[i, ...]])
 })
 
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "CategoricalArrayVariable", function(x, name) x[[name]])
 
 
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("CategoricalArrayVariable", "ANY", "missing", "ANY"),
     function(x, i, value) {
@@ -277,7 +263,7 @@ setMethod("[[<-", c("CategoricalArrayVariable", "ANY", "missing", "ANY"),
         return(x)
     }
 )
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("CategoricalArrayVariable", "character", "missing", "ANY"),
     function(x, i, value) {
@@ -294,7 +280,7 @@ setMethod("[[<-", c("CategoricalArrayVariable", "character", "missing", "ANY"),
         return(x)
     }
 )
-#' @rdname subvars-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", "CategoricalArrayVariable", function(x, name, value) {
     x[[name]] <- value

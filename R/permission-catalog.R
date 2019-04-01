@@ -1,4 +1,4 @@
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("PermissionCatalog", "character"), function(x, i, ...) {
     ## TODO: eliminate duplication with MemberCatalog

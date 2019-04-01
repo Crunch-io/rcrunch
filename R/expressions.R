@@ -307,7 +307,7 @@ setMethod("is.na", "CrunchVariable", function(x) zfuncExpr("is_missing", x))
 #' @export
 bin <- function(x) zfuncExpr("bin", x)
 
-#' @rdname variable-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
 
@@ -326,11 +326,11 @@ setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
     }
 }
 
-#' @rdname variable-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchExpr", "logical"), .updateActiveFilterLogical)
 
-#' @rdname variable-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchExpr", "numeric"), function(x, i, ...) {
     i <- CrunchLogicalExpr(
