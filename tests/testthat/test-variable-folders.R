@@ -166,7 +166,6 @@ with_mock_crunch({
         test_that("If there are names longer than 'width', it still prints", {
             skip("unskip when testthat 2.1.0 is released (testthat#805)")
             alphabet <- paste(letters, collapse="")
-            expect_true(nchar(alphabet) > getOption("width"))
             expect_output(
                 colored_print(alphabet),
                 '[1] "abcdefghijklmnopqrstuvwxyz"',
