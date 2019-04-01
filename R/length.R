@@ -4,11 +4,11 @@
 #' @name crunch-length
 setGeneric("length")
 
-#' @rdname catalog-length
+#' @rdname crunch-length
 #' @export
 setMethod("length", "CrunchDeck", function(x) return(length(slides(x))))
 
-#' @rdname catalog-length
+#' @rdname crunch-length
 #' @export
 setMethod("length", "ShojiCatalog", function(x) length(index(x)))
 

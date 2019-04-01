@@ -29,36 +29,6 @@ owners <- function(x) getIndexSlot(x, "owner_id")
 #' @export
 ownerNames <- function(x) getIndexSlot(x, "owner_display_name")
 
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.archived", "DatasetCatalog",
-    function(x) getIndexSlot(x, "archived", logical(1))
-)
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.draft", "DatasetCatalog", function(x) !is.published(x))
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.published", "DatasetCatalog",
-    function(x) getIndexSlot(x, "is_published", logical(1), ifnot = TRUE)
-)
-
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.archived<-", c("DatasetCatalog", "logical"), function(x, value) {
-    setIndexSlot(x, "archived", value)
-})
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.draft<-", c("DatasetCatalog", "logical"), function(x, value) {
-    setIndexSlot(x, "is_published", !value)
-})
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.published<-", c("DatasetCatalog", "logical"), function(x, value) {
-    setIndexSlot(x, "is_published", value)
-})
-
 #' @rdname crunch-extract
 #' @export
 setMethod("[[", c("DatasetCatalog", "numeric"), function(x, i, ...) {
@@ -73,25 +43,3 @@ setMethod("[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
         return(x)
     }
 )
-
-#' Get and set names, aliases on Catalog-type objects
-#'
-#' These methods let you get and set names and aliases for variables in a
-#' Dataset's catalog, or within [`Subvariables`] in an array
-#' variable. They work like the base R names methods.
-#'
-#' Note that the Dataset `names` method returns the aliases of its
-#' variables by default. This behavior is controlled by
-#' `getOption("crunch.namekey.dataset")`.
-#' Set `options(crunch.namekey.dataset="name")` if you wish to use
-#' variable names. See the variables vignette for more information.
-#'
-#' @param x a `VariableCatalog`, `Subvariables`, or similar object
-#' @param value For the setters, an appropriate-length character vector to
-#' assign
-#' @return Getters return the character object in the specified slot; setters
-#' return `x` duly modified.
-#' @aliases describe-catalog aliases aliases<- descriptions descriptions<- types emails timestamps
-#' @seealso [`Subvariables`] [`Categories`] [base::names()] `vignette("variables", package="crunch")`
-#' @name describe-catalog
-NULL

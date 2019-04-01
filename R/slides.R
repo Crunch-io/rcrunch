@@ -11,10 +11,10 @@ setMethod("initialize", "SlideCatalog", function(.Object, ...) {
     return(.Object)
 })
 
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "SlideCatalog", function(x) titles(x))
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names<-", "SlideCatalog", function(x, value) titles(x) <- value)
 

@@ -47,3 +47,4 @@ ordering(x) <- value
 The \code{ordering} methods allow you to get and set a \code{\link{VariableOrder}} on a
 \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that the dataset contains.
 }
+\keyword{internal}

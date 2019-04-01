@@ -86,7 +86,6 @@ reference:
   - dataset-variables
   - deleteVariables
   - derivations
-  - describe-category
   - dichotomize
   - hiddenVariables
   - hide
@@ -118,15 +117,8 @@ reference:
   - makeArrayGadget
   - is-selected-categories
   - unbind
-- title: Ordering
+- title: Folders and organization
   contents:
-  - ordering
-  - ShojiOrder-length
-  - ShojiOrder-slots
-  - copyOrder
-  - flattenOrder
-  - grouped
-  - removeEmptyGroups
   - folder
   - mv
   - cd
@@ -134,6 +126,7 @@ reference:
   - setOrder
   - setName
   - setNames
+  - copyOrder
 - title: Analysis
   contents:
   - crtabs
@@ -188,6 +181,7 @@ reference:
   - pollProgress
   - CrunchDataFrame
   - merge.CrunchDataFrame
+  - tabbook-dim
 - title: Geodata
   contents:
   - addGeoMetadata
@@ -197,7 +191,7 @@ reference:
   - scoreCatToFeat
 - title: Admin
   contents:
-  - 'is.archived,DatasetCatalog-method'
+  - archive-and-publish
   - dataset-owner
   - getAccountUserCatalog
   - getTeams
@@ -219,21 +213,17 @@ reference:
   - unshare
   - expropriateUser
   - team
-- title: Catalogs
-  contents:
-  - catalog-length
-  - catalog-dataframes
-  - 'names,BatchCatalog-method'
-  - shoji-index
-- title: Crunch options
-  contents:
-  - consent
 - title: Utility
   contents:
   - is.dataset
-  - describe
+  - describe-entity
+  - describe-catalog
   - refresh
   - webApp
+  - crunch-length
+  - catalog-dataframes
+  - shoji-index
+  - consent
 - title: API
   contents:
   - http-methods
@@ -250,11 +240,7 @@ reference:
   - VariableCatalog-class
   - VariableOrder-class
   - crunch
-  - dataset-extract
-  - dataset-update
   - expressions
-  - tabbook-methods
-  - variable-update
 - title: Internal
   contents:
   - ContextManager

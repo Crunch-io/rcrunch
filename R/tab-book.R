@@ -104,12 +104,12 @@ setMethod("initialize", "TabBookResult", function(.Object, ...) {
     return(.Object)
 })
 
-#' @rdname crunch-length
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("TabBookResult", "numeric"), function(x, i, ...) {
     x$sheets[[i]]
 })
-#' @rdname crunch-length
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("TabBookResult", "character"), function(x, i, ...) {
     x$sheets[[match(i, names(x))]]
@@ -122,17 +122,17 @@ setMethod("dim", "TabBookResult", function(x) {
     ncols <- ifelse(nrows, length(x[[1]]), 0L)
     return(c(nrows, ncols))
 })
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "TabBookResult", function(x) {
     unlist(lapply(x$meta$sheets, function(sheet) sheet$name))
 })
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("aliases", "TabBookResult", function(x) {
     unlist(lapply(x, function(mt) aliases(mt[[1]])[1]), use.names = FALSE)
 })
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("descriptions", "TabBookResult", function(x) {
     unlist(lapply(x, function(mt) descriptions(mt[[1]])[1]), use.names = FALSE)
@@ -193,7 +193,7 @@ setMethod("initialize", "MultitableResult", function(.Object, ...) {
     return(.Object)
 })
 
-#' @rdname crunch-length
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "MultitableResult", function(x, i, ...) {
     x$result[[i]]
@@ -201,17 +201,17 @@ setMethod("[[", "MultitableResult", function(x, i, ...) {
 setMethod("lapply", "MultitableResult", function(X, FUN, ...) {
     lapply(X$result, FUN, ...)
 })
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "MultitableResult", function(x) {
     unlist(lapply(x, function(cube) names(cube)[2]), use.names = FALSE)
 })
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("aliases", "MultitableResult", function(x) {
     unlist(lapply(x, function(cube) aliases(cube)[2]), use.names = FALSE)
 })
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("descriptions", "MultitableResult", function(x) {
     unlist(lapply(x, function(cube) descriptions(cube)[2]), use.names = FALSE)

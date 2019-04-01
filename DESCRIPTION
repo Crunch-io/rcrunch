@@ -57,6 +57,7 @@ Collate:
     'add-variable.R'
     'api.R'
     'append-dataset.R'
+    'archive-and-publish.R'
     'as-data-frame.R'
     'auth.R'
     'batches.R'

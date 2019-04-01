@@ -184,7 +184,7 @@ slides <- function(x) {
     SlideCatalog(crGET(shojiURL(x, "catalogs", "slides")))
 }
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "CrunchDeck", function(x, value) {
     stopifnot(is.singleCharacter(value))
@@ -192,10 +192,10 @@ setMethod("name<-", "CrunchDeck", function(x, value) {
     return(invisible(out))
 })
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description", "CrunchDeck", function(x) x@body$description)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description<-", "CrunchDeck", function(x, value) {
     stopifnot(is.singleCharacter(value))
@@ -213,10 +213,10 @@ setMethod("is.public<-", "CrunchDeck", function(x, value) {
     setEntitySlot(x, "is_public", value)
 })
 
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "CrunchDeck", function(x) titles(slides(x)))
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names<-", "CrunchDeck", function(x, value) {
     slide_cat <- slides(x)

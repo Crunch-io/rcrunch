@@ -48,7 +48,7 @@ NULL
 #' @export
 setMethod("self", "ShojiObject", function(x) x@self)
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name", "ShojiObject", function(x) x@body$name)
 

@@ -195,12 +195,6 @@ setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
     }
 )
 
-#' Length of Catalog
-#' @param x a Catalog
-#' @return Integer: the number of elements in the index list
-#' @name catalog-length
-NULL
-
 whichNameOrURL <- function(x, i, secondary = names(x), ...) {
     var_matches <- match(i, secondary)
     if (any(is.na(var_matches))) {

@@ -114,7 +114,7 @@ createFolder <- function(where, name, index, ...) {
     crPOST(self(where), body = toJSON(bod))
 }
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "ShojiFolder",
     function(x, value) setEntitySlot(x, "name", value)

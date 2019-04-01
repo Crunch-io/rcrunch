@@ -18,3 +18,4 @@ This function reduces a potentially nested order to its flattened
 representation, containing no nested groups. Entities are ordered in the
 result by their first appearance in the order object.
 }
+\keyword{internal}

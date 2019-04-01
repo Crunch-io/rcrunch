@@ -1,4 +1,4 @@
-#' @rdname cube-methods
+#' @rdname crunch-extract
 #' @export
 setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
     # Missing arguments to a subset method means "select all the items along this

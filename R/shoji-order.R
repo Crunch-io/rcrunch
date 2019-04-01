@@ -467,6 +467,7 @@ removeMissingEntities <- function(x) {
 #' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup
 #' @return \code{x} with empty groups removed.
 #' @export
+#' @keywords internal
 removeEmptyGroups <- function(x) {
     if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {
         entities(x) <- removeEmptyGroups(entities(x))
@@ -502,6 +503,7 @@ removeEmptyGroups <- function(x) {
 #' CrunchDataset or catalog that has an `ordering` property.
 #' @return `x`, or its order resource, flattened.
 #' @export
+#' @keywords internal
 flattenOrder <- function(x) {
     if (!(inherits(x, "ShojiOrder") || inherits(x, "OrderGroup"))) {
         ## Perhaps it's a dataset or catalog. Get its "ordering"
@@ -520,6 +522,7 @@ flattenOrder <- function(x) {
 #' omitted. For `ungrouped()`, an OrderGroup subclass.
 #' @seealso [`VariableOrder`]
 #' @export
+#' @keywords internal
 grouped <- function(order.obj) {
     # TODO: deprecate and suggest a folder method
     Filter(Negate(is.character), order.obj)

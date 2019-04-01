@@ -9,7 +9,7 @@ setMethod("folderExtraction", "ProjectFolder", function(x, tuple) {
     }
 })
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name", "ProjectFolder", function(x) {
     ## Warning: bad code smell

@@ -14,65 +14,65 @@ setMethod("refresh", "CrunchVariable", function(x) {
     return(CrunchVariable(refresh(tuple(x)), filter = activeFilter(x)))
 })
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("alias", "VariableTuple", function(object) object$alias)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description", "VariableTuple", function(x) x$description %||% "")
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("notes", "VariableTuple", function(x) x$notes %||% "")
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name", "CrunchVariable", function(x) name(tuple(x)))
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod(
     "name<-", "CrunchVariable",
     function(x, value) setTupleSlot(x, "name", validateNewName(value))
 )
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("id", "CrunchVariable", function(x) {
     return(tuple(x)$id)
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description", "CrunchVariable", function(x) description(tuple(x)))
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod(
     "description<-", "CrunchVariable",
     function(x, value) setTupleSlot(x, "description", value %||% "")
 )
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("alias", "CrunchVariable", function(object) alias(tuple(object)))
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod(
     "alias<-", "CrunchVariable",
     function(x, value) setTupleSlot(x, "alias", validateNewName(value))
 )
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("notes", "CrunchVariable", function(x) notes(tuple(x)))
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod(
     "notes<-", "CrunchVariable",
     function(x, value) setTupleSlot(x, "notes", value %||% "")
 )
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("digits", "CrunchVariable", function(x) {
     var_entity <- entity(x)
     return(var_entity@body$format$data$digits)
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("digits<-", "NumericVariable", function(x, value) {
     if (!is.numeric(value) || !is.whole(value)) {
@@ -86,7 +86,7 @@ setMethod("digits<-", "NumericVariable", function(x, value) {
     crPATCH(self(x), body = toJSON(frmt))
     invisible(x)
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("digits<-", "CrunchVariable", function(x, value) {
     halt("digit specifications can only be set for numeric variables")
@@ -128,10 +128,10 @@ setMethod("[", c("CrunchVariable", "logical"), .updateActiveFilterLogical)
 
 
 # for getting and setting the uniform_basis property of multiple response variables.
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("uniformBasis", "MultipleResponseVariable", function(x) tuple(x)$uniform_basis)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("uniformBasis<-", "MultipleResponseVariable", function(x, value) {
     stopifnot(is.TRUEorFALSE(value))

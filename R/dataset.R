@@ -37,66 +37,52 @@ getNrow <- function(dataset) {
 #' @export
 is.dataset <- function(x) inherits(x, "CrunchDataset")
 
-#' Name, alias, and description for Crunch objects
-#'
-#' @param x a Dataset or Variable.
-#' @param object Same as `x` but for the `alias` method, in order to
-#' match the generic from another package. Note that `alias` and `digits` are
-#' only defined for Variables.
-#' @param value For the setters, a length-1 character vector to assign
-#' @return Getters return the character object in the specified slot; setters
-#' return `x` duly modified.
-#' @name describe
-#' @aliases describe name name<- description description<- alias alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<- uniformBasis uniformBasis<-
-#' @seealso [`Categories`] [`describe-catalog`]
-NULL
-
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name", "CrunchDataset", function(x) tuple(x)$name)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "CrunchDataset", function(x, value) {
     setEntitySlot(x, "name", validateNewName(value))
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description", "CrunchDataset", function(x) tuple(x)$description)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description<-", "CrunchDataset", function(x, value) {
     setEntitySlot(x, "description", value)
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod(
     "startDate", "CrunchDataset",
     function(x) trimISODate(tuple(x)$start_date)
 )
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("startDate<-", "CrunchDataset", function(x, value) {
     setEntitySlot(x, "start_date", value)
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod(
     "endDate", "CrunchDataset",
     function(x) trimISODate(tuple(x)$end_date)
 )
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("endDate<-", "CrunchDataset", function(x, value) {
     setEntitySlot(x, "end_date", value)
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("id", "CrunchDataset", function(x) tuple(x)$id)
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("notes", "CrunchDataset", function(x) x@body$notes)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("notes<-", "CrunchDataset", function(x, value) {
     invisible(setEntitySlot(x, "notes", value))
@@ -414,86 +400,6 @@ setMethod("owner<-", "CrunchDataset", function(x, value) {
     x <- setEntitySlot(x, "owner", value)
     return(x)
 })
-
-
-#' Get and set "archived" and "published" status of a dataset
-#'
-#' "Archived" datasets are excluded from some views. "Draft" datasets are
-#' visible only to editors, while published datasets are available to all viewers.
-#' A dataset can either be published or in draft, but not both.
-#' These properties are accessed and set with the "is" methods. You can also
-#' set the properties by assigning into the function. The verb functions
-#' `archive` and `publish` are alternate versions of the setters.
-#'
-#' @param x CrunchDataset
-#' @param value logical
-#' @return For the getters, the logical value of whether the dataset is
-#' archived, in draft mode, or published, where draft and published are
-#' inverses. The setters return the dataset.
-#' @name archive-and-publish
-#' @aliases archive is.archived is.draft is.published is.archived<- is.draft<- is.published<- publish
-#' @examples
-#' \dontrun{
-#' ds <- loadDataset("mtcars")
-#' is.draft(ds)     # FALSE
-#' is.published(ds) # TRUE
-#' identical(is.draft(ds), !is.published(ds))
-#' # Can make a dataset a "draft" by:
-#' is.draft(ds) <- TRUE
-#' is.published(ds) # FALSE
-#' # Could also have set is.published(ds) <- FALSE
-#' # Now, can go the other way by setting is.draft, is.published, or:
-#' ds <- publish(ds)
-#' is.published(ds) # TRUE
-#'
-#' is.archived(ds)  # FALSE
-#' is.archived(ds) <- TRUE
-#' is.archived(ds)  # TRUE
-#' # Could have achieved the same effect by:
-#' ds <- archive(ds)
-#' }
-NULL
-
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.archived", "CrunchDataset", function(x) tuple(x)$archived)
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.draft", "CrunchDataset", function(x) !is.published(x))
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.published", "CrunchDataset", function(x) tuple(x)$is_published %||% TRUE)
-
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.archived<-", c("CrunchDataset", "logical"), function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "archived", value)
-})
-#' @rdname archive-and-publish
-#' @export
-archive <- function(x) {
-    is.archived(x) <- TRUE
-    return(x)
-}
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.draft<-", c("CrunchDataset", "logical"), function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_published", !value)
-})
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.published<-", c("CrunchDataset", "logical"), function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_published", value)
-})
-#' @rdname archive-and-publish
-#' @export
-publish <- function(x) {
-    is.published(x) <- TRUE
-    return(x)
-}
 
 #' View and modify dataset-level settings
 #'

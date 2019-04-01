@@ -55,5 +55,5 @@ or more categories are set as "selected". These methods allow you set that state
 a Categorical Array to a Multiple Response, and undichotomize does the reverse.
 }
 \seealso{
-\code{\link{describe-category}}
+\code{\link{describe-entity}}
 }

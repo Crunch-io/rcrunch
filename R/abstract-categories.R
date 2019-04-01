@@ -114,14 +114,14 @@ modifyCats <- function(x, val) {
 ## Abstract Categories named get/set methods
 ###############################################################
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "AbstractCategories", function(x) {
     n <- vapply(x, name, character(1))
     return(n)
 })
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("names<-", "AbstractCategories", function(x, value) {
     if (is.null(value) || !is.character(value)) {
@@ -141,7 +141,7 @@ setMethod("names<-", "AbstractCategories", function(x, value) {
 })
 
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("ids", "AbstractCategories", function(x) vapply(x, id, integer(1)))
 

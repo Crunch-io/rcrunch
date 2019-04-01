@@ -15,7 +15,7 @@
 #' @return Categories or the Variable, (un)dichotomized accordingly
 #' @name dichotomize
 #' @aliases dichotomize is.dichotomized undichotomize
-#' @seealso [`describe-category`]
+#' @seealso [`describe-entity`]
 NULL
 
 #' @rdname dichotomize

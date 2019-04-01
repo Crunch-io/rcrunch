@@ -1,25 +1,128 @@
 # Well, not exactly _all_ generics. Some are moved into files with their methods
 # because pkgdown prefers documentation that way.
 
+
+#' Get and set names, aliases on Catalog-type objects
+#'
+#' These methods let you get and set names and aliases for variables in a
+#' Dataset's catalog, or within [`Subvariables`] in an array
+#' variable. They work like the base R names methods.
+#'
+#' Note that the Dataset `names` method returns the aliases of its
+#' variables by default. This behavior is controlled by
+#' `getOption("crunch.namekey.dataset")`.
+#' Set `options(crunch.namekey.dataset="name")` if you wish to use
+#' variable names. See the variables vignette for more information.
+#'
+#' @param x a `VariableCatalog`, `Subvariables`, or similar object
+#' @param value For the setters, an appropriate-length character vector to
+#' assign
+#' @return Getters return the character object in the specified slot; setters
+#' return `x` duly modified.
+#' @aliases describe-catalog aliases aliases<- descriptions descriptions<- types emails timestamps
+#' @seealso [`Subvariables`] [`Categories`] [base::names()] `vignette("variables", package="crunch")`
+#' @name describe-catalog
+setGeneric("names")
+#' @rdname describe-catalog
+setGeneric("names<-")
+#' @rdname describe-catalog
+setGeneric("aliases", function(x) standardGeneric("aliases"))
+#' @rdname describe-catalog
+setGeneric("aliases<-", function(x, value) standardGeneric("aliases<-"),
+    signature = "x"
+)
+#' @rdname describe-catalog
+setGeneric("descriptions", function(x) standardGeneric("descriptions"))
+#' @rdname describe-catalog
+setGeneric("descriptions<-",
+    function(x, value) standardGeneric("descriptions<-"),
+    signature = "x"
+)
+#' @rdname describe-catalog
+setGeneric("emails", function(x) standardGeneric("emails"))
+#' @rdname describe-catalog
+setGeneric("types", function(x) standardGeneric("types"))
+#' @rdname describe-catalog
+setGeneric("timestamps", function(x) standardGeneric("timestamps"))
+#' @rdname describe-catalog
+setGeneric("ids", function(x) standardGeneric("ids"))
+#' @rdname describe-catalog
+setGeneric("ids<-", function(x, value) standardGeneric("ids<-"))
+
+
+
+#' Name, alias, and description for Crunch objects
+#'
+#' @param x a Dataset or Variable.
+#' @param object Same as `x` but for the `alias` method, in order to
+#' match the generic from another package. Note that `alias` and `digits` are
+#' only defined for Variables.
+#' @param value For the setters, a length-1 character vector to assign
+#' @return Getters return the character object in the specified slot; setters
+#' return `x` duly modified.
+#' @name describe-entity
+#' @aliases describe name name<- description description<- alias alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<- uniformBasis uniformBasis<-
+#' @seealso [`Categories`] [`describe-catalog`]
+setGeneric("name", function(x) standardGeneric("name"))
+#' @rdname describe-entity
+setGeneric("name<-", function(x, value) standardGeneric("name<-"))
+#' @rdname describe-entity
+setGeneric("id", function(x) standardGeneric("id"))
+#' @rdname describe-entity
+setGeneric("value", function(x) standardGeneric("value"))
+#' @rdname describe-entity
+setGeneric("value<-", function(x, value) standardGeneric("value<-"))
+#' @rdname describe-entity
+setGeneric("description", function(x) standardGeneric("description"))
+#' @rdname describe-entity
+setGeneric("description<-",
+    function(x, value) standardGeneric("description<-"),
+    signature = "x"
+)
+#' @rdname describe-entity
+setGeneric("startDate", function(x) standardGeneric("startDate"))
+#' @rdname describe-entity
+setGeneric("startDate<-",
+    function(x, value) standardGeneric("startDate<-"),
+    signature = "x"
+)
+#' @rdname describe-entity
+setGeneric("endDate", function(x) standardGeneric("endDate"))
+#' @rdname describe-entity
+setGeneric("endDate<-",
+    function(x, value) standardGeneric("endDate<-"),
+    signature = "x"
+)
+#' @rdname describe-entity
+setGeneric("alias")
+#' @rdname describe-entity
+setGeneric("alias<-", function(x, value) standardGeneric("alias<-"),
+    signature = "x"
+)
+#' @rdname describe-entity
+setGeneric("digits", function(x) standardGeneric("digits"))
+#' @rdname describe-entity
+setGeneric("digits<-", function(x, value) standardGeneric("digits<-"))
+#' @rdname describe-entity
+setGeneric("uniformBasis", function(x) standardGeneric("uniformBasis"))
+#' @rdname describe-entity
+setGeneric("uniformBasis<-", function(x, value) standardGeneric("uniformBasis<-"))
+#' @rdname describe-entity
+setGeneric("notes", function(x) standardGeneric("notes"))
+#' @rdname describe-entity
+setGeneric("notes<-", function(x, value) standardGeneric("notes<-"),
+    signature = "x"
+)
+
 #' @export
 setGeneric("values", function(x) standardGeneric("values"))
 setGeneric("values<-", function(x, value) standardGeneric("values<-"))
 
-setGeneric("id", function(x) standardGeneric("id"))
 setGeneric("is.selected", function(x) standardGeneric("is.selected"))
 setGeneric("is.selected<-", function(x, value) standardGeneric("is.selected<-"))
-
-setGeneric("ids", function(x) standardGeneric("ids"))
-setGeneric("ids<-", function(x, value) standardGeneric("ids<-"))
 setGeneric("is.dichotomized", function(x) standardGeneric("is.dichotomized"))
 setGeneric("dichotomize", function(x, i) standardGeneric("dichotomize"))
 setGeneric("undichotomize", function(x) standardGeneric("undichotomize"))
-setGeneric("value", function(x) standardGeneric("value"))
-setGeneric("value<-", function(x, value) standardGeneric("value<-"))
-setGeneric("name", function(x) standardGeneric("name"))
-setGeneric("name<-", function(x, value) standardGeneric("name<-"))
-setGeneric("uniformBasis", function(x) standardGeneric("uniformBasis"))
-setGeneric("uniformBasis<-", function(x, value) standardGeneric("uniformBasis<-"))
 setGeneric("popSize", function(x) standardGeneric("popSize"))
 setGeneric("popMagnitude", function(x) standardGeneric("popMagnitude"))
 setGeneric("popSize<-", function(x, value) standardGeneric("popSize<-"))
@@ -30,35 +133,6 @@ setGeneric("expr", function(x) standardGeneric("expr"))
 setGeneric("expr<-", function(x, value) standardGeneric("expr<-"),
     signature = "x"
 )
-setGeneric("description", function(x) standardGeneric("description"))
-setGeneric("description<-",
-    function(x, value) standardGeneric("description<-"),
-    signature = "x"
-)
-setGeneric("startDate", function(x) standardGeneric("startDate"))
-setGeneric("startDate<-",
-    function(x, value) standardGeneric("startDate<-"),
-    signature = "x"
-)
-setGeneric("endDate", function(x) standardGeneric("endDate"))
-setGeneric("endDate<-",
-    function(x, value) standardGeneric("endDate<-"),
-    signature = "x"
-)
-setGeneric("alias")
-setGeneric("alias<-", function(x, value) standardGeneric("alias<-"),
-    signature = "x"
-)
-setGeneric("aliases", function(x) standardGeneric("aliases"))
-setGeneric("aliases<-", function(x, value) standardGeneric("aliases<-"),
-    signature = "x"
-)
-setGeneric("descriptions", function(x) standardGeneric("descriptions"))
-setGeneric("descriptions<-",
-    function(x, value) standardGeneric("descriptions<-"),
-    signature = "x"
-)
-setGeneric("emails", function(x) standardGeneric("emails"))
 
 #' Extract the email from a User Entity
 #'
@@ -66,13 +140,6 @@ setGeneric("emails", function(x) standardGeneric("emails"))
 #' @return a character string of the user's email
 #' @rdname user-email
 setGeneric("email", function(x) standardGeneric("email"))
-
-setGeneric("notes", function(x) standardGeneric("notes"))
-setGeneric("notes<-", function(x, value) standardGeneric("notes<-"),
-    signature = "x"
-)
-setGeneric("digits", function(x) standardGeneric("digits"))
-setGeneric("digits<-", function(x, value) standardGeneric("digits<-"))
 setGeneric("geo", function(x) standardGeneric("geo"))
 setGeneric("geo<-", function(x, value) standardGeneric("geo<-"))
 setGeneric("fetchGeoFile", function(x) standardGeneric("fetchGeoFile"))
@@ -88,8 +155,6 @@ setGeneric("subtotals<-", function(x, value) standardGeneric("subtotals<-"))
 setGeneric("makeInsertion", function(x, var_categories) standardGeneric("makeInsertion"))
 setGeneric("subtotalArray", function(x, ...) standardGeneric("subtotalArray"))
 
-setGeneric("types", function(x) standardGeneric("types"))
-setGeneric("timestamps", function(x) standardGeneric("timestamps"))
 setGeneric("type", function(x) standardGeneric("type"))
 setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
@@ -136,12 +201,6 @@ setGeneric("is.public", function(x) standardGeneric("is.public"))
 setGeneric("is.public<-", function(x, value) standardGeneric("is.public<-"))
 setGeneric("is.editor", function(x) standardGeneric("is.editor"))
 setGeneric("is.editor<-", function(x, value) standardGeneric("is.editor<-"))
-setGeneric("is.archived", function(x) standardGeneric("is.archived"))
-setGeneric("is.archived<-", function(x, value) standardGeneric("is.archived<-"))
-setGeneric("is.draft", function(x) standardGeneric("is.draft"))
-setGeneric("is.draft<-", function(x, value) standardGeneric("is.draft<-"))
-setGeneric("is.published", function(x) standardGeneric("is.published"))
-setGeneric("is.published<-", function(x, value) standardGeneric("is.published<-"))
 setGeneric("is.derived", function(x) standardGeneric("is.derived"))
 setGeneric("is.derived<-", function(x, value) standardGeneric("is.derived<-"))
 setGeneric("as.Text", function(x, ...) standardGeneric("as.Text"))
@@ -205,8 +264,9 @@ setGeneric("which", signature = "x")
 #' `CrunchExpr` so that it can be used in API queries.
 #' @param name for `$`, the same as `i` for `[[`
 #' @param j For two-dimensional objects, elements to take from the columnar
-#' dimension.
-#' @param drop Ignored
+#' dimension. Note that Datasets work like `data.frame`s in that you can extract
+#' columns either by `ds[, j]` or by the list-like `ds[i]` (with no comma).
+#' @param drop Ignored and always assumed `FALSE`
 #' @param ... additional arguments supported by some methods. For example, some
 #' catalogs support a `secondary` vector of elements to match
 #' against like `emails(x)` or `owners(x)`; by default this is `names(x)`. This
@@ -214,7 +274,9 @@ setGeneric("which", signature = "x")
 #' @param value For updating, an object of the appropriate class and size to
 #' insert. This is generally the same class of object you would get from the
 #' extract method; i.e. for `x[[i]] <- value`, `value` must be the same class
-#' as `x[[i]]`. Exceptions include `ds$var <- VariableDefinition(...)`.
+#' as `x[[i]]`. Exceptions include `ds$var <- VariableDefinition(...)` to create
+#' a new variable, and `ds$var[i] <- value`, which can take R vectors and
+#' `CrunchExpr`.
 #' @return `[` generally returns a subset of `x`, same class and "self" URL;
 #' when subsetting with a `CrunchExpr`, the expression is recorded in an
 #' attribute of the object. `[[` and `$`

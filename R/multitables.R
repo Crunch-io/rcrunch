@@ -90,7 +90,7 @@ setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
     }
 )
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "Multitable", function(x, value) {
     setEntitySlot(x, "name", value)

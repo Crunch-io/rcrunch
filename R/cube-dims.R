@@ -136,7 +136,7 @@ setMethod("dimensions<-", c("CrunchCube", "CubeDims"), function(x, value) {
     return(invisible(x))
 })
 
-#' @rdname cube-methods
+#' @rdname crunch-extract
 #' @export
 setMethod("[", "CubeDims", function(x, i, ...) {
     return(CubeDims(x@.Data[i], names = x@names[i]))
