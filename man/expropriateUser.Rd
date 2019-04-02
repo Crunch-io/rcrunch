@@ -13,16 +13,20 @@ expropriateUser(from, to)
 owner}
 }
 \value{
-None
+\code{NULL} if successful
 }
 \description{
 If you want to transfer all teams, projects, and datasets owned by one user
-to another you can with \code{expropriateUser}. To use \code{expropriateUser} you must
-be an account admin and be from the same account as the user who is being
-expropriated. This is useful if a user leaves your organization and you want
-to transfer all of the teams, projects, and datasets they own to someone else.
+to another you can with \code{expropriateUser}. To have permission to use
+\code{expropriateUser} you must be an account admin and be from the same account
+as the user who is being expropriated. This is useful if a user leaves your
+organization and you want to transfer all of the teams, projects, and
+datasets they own to someone else.
 }
 \details{
+The user given in \code{to} will become the owner of all of the teams, projects,
+and datsets that were previously owned by the user given in \code{from}.
+
 Expropriating requires confirmation. In an interactive session, you will be
 asked to confirm. To avoid that prompt, or to expropriate datasets from a
 non-interactive session, wrap the call in \code{\link[=with_consent]{with_consent()}} to give your
