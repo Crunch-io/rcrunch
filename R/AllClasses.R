@@ -292,11 +292,9 @@ AbstractCategory <- GenericConstructor("AbstractCategory")
 #' `Categories`, you can either pass in attributes via `...` or you
 #' can create the objects with a fully defined `list` representation of
 #' the objects via the `data` argument. See the examples.
-#' @param x For the attribute getters and setters, an object of class
-#' Category or Categories
-#' @param value For `[<-`, the replacement Category to insert
+#' @param ... Category attributes
 #' @rdname Categories
-#' @aliases Categories ids ids<- values values<- id.AbstractCategory ids.AbstractCategories
+#' @aliases Categories
 #' @export
 #' @examples
 #' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)

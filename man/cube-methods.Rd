@@ -15,8 +15,6 @@
 \alias{dim,CrunchCube-method}
 \alias{dimnames,CrunchCube-method}
 \alias{measures,CrunchCube-method}
-\alias{types,CrunchCube-method}
-\alias{notes,CrunchCube-method}
 \title{Methods on Cube objects}
 \usage{
 \S4method{dimnames}{CubeDims}(x)
@@ -34,24 +32,12 @@
 \S4method{dimnames}{CrunchCube}(x)
 
 \S4method{measures}{CrunchCube}(x)
-
-\S4method{types}{CrunchCube}(x)
-
-\S4method{notes}{CrunchCube}(x)
 }
 \arguments{
 \item{x}{a CrunchCube or its CubeDims component.}
 
 \item{value}{for \code{dimensions<-} a \code{CubeDims} object to overwrite a CrunchCube
 dimensions}
-
-\item{i}{used with \code{[} to extract a dimension}
-
-\item{j}{not used}
-
-\item{...}{not used}
-
-\item{drop}{not used}
 }
 \value{
 Generally, the same shape of result that each of these functions

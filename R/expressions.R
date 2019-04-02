@@ -11,34 +11,21 @@
 #' @param table For \code{\%in\%}. See [base::match()]
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
 #' `as.vector` returns an R vector.
-#' @aliases expressions
+#' @aliases expressions %in% == != !
 #' @name expressions
-NULL
-
-#' @rdname variable-to-R
-#' @export
-setMethod("as.vector", "CrunchExpr", function(x, mode) {
-    payload <- list(query = toJSON(list(out = zcl(x))))
-    if (length(x@filter)) {
-        payload[["filter"]] <- toJSON(x@filter)
-    } else {
-        payload$filter <- "{}"
-    }
-    out <- paginatedGET(paste0(x@dataset_url, "table/"),
-        query = payload, table = TRUE, limit = .crunchPageSize(x)
-    )
-    ## pass in the variable metadata to the column parser
-    variable <- VariableEntity(structure(list(body = out$metadata$out),
-        class = "shoji"
-    ))
-    return(columnParser(out$metadata$out$type)(out$data$out, variable, mode))
-})
-
-#' @rdname toVariable
-#' @export
-setMethod("toVariable", "CrunchExpr", function(x, ...) {
-    structure(list(derivation = zcl(x), ...), class = "VariableDefinition")
-})
+setGeneric("%in%")
+# TODO: figure this out.
+# Can't "roxygen" these because check says
+# Functions or methods with usage in documentation object 'expressions' but not in code:
+#   == != !
+#
+# but if you try standardGeneric, it fails to build with
+# Error in setGeneric("==", function(e1, e2) standardGeneric("==")) :
+#   ‘==’ dispatches internally;  methods can be defined, but the generic
+#   function is implicit, and cannot be changed.
+setGeneric("==")
+setGeneric("!=")
+setGeneric("!")
 
 ## "Ops" for Crunch Variables
 ##

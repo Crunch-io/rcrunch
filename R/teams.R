@@ -1,35 +1,21 @@
-#' Teams
-#'
-#' Teams contain users and datasets. You can share a dataset with a group of
-#' users by sharing the dataset with a team. You can also share a set of
-#' datasets with a user all at once by adding the user to a team that contains those
-#' datasets.
-#'
-#' These methods allow you to work with teams. Find your teams with the
-#' [getTeams()] function, which returns your `TeamCatalog`. You can extract an individual team by name,
-#' or create a team by assigning into the function. To create a team by assignment, assign a list
-#' to `teams("myteam") <- value_list`, the `value_list` can either empty (to just create a team
-#' with that name), or can contain a "members" element with the emails or URLs of
-#' users to add to the team. Users can be also be added later with the `members<-`
-#' method.
-#'
-#' @param x a `CrunchTeam`
-#' @param value for `members<-`, a character vector of emails or URLs of
-#' users to add to the team.
-#' @return `members` returns a
-#' `MemberCatalog`, which has references to the users that are members
-#' of the team. `members<-` returns `x` with the given users added
-#' to the members catalog.
-#' @aliases members members<-
-#' @seealso [`getTeams`]
-#' @name teams
-NULL
-
 #' Retrieve your teams
+#'
+#' Teams contain a list of users. You can grant access to a group of
+#' users by inviting the team. You can also share a set of
+#' datasets with a user all at once by adding the user to a team that contains
+#' those datasets.
+#'
+#' `getTeams()` returns your `TeamCatalog`. You can extract an individual team
+#' by name, or create a team by assigning into the function.
+#' To create a team by  assignment, assign a list to
+#' `teams("myteam") <- value_list`. The `value_list` can either empty
+#' (to just create a team with that name), or can contain a "members" element
+#' with the emails or URLs of users to add to the team. Users can be also be
+#' added later with the `members<-`  method.
 #'
 #' @return A `TeamCatalog`. Extract an individual team by name. Create
 #' a team by assigning in with a new name.
-#' @seealso [`teams`]
+#' @seealso [`members`]
 #' @export
 getTeams <- function() {
     TeamCatalog(crGET(sessionURL("teams")))
@@ -71,12 +57,6 @@ setMethod("[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
         return(x)
     }
 )
-
-#' @rdname teams
-#' @export
-setMethod("members", "CrunchTeam", function(x) {
-    MemberCatalog(crGET(shojiURL(x, "catalogs", "members")))
-})
 
 #' Share Crunch assets with a team
 #'

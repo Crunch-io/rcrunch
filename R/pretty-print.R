@@ -181,7 +181,7 @@ print_tree <- function(x, prefix = "", depth = 100, current_depth = 0) {
     return(unlist(tree))
 }
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "ShojiFolder", function(object) {
     cat(formatFolderTitle(object), "\n")

@@ -3,6 +3,10 @@
 \docType{methods}
 \name{expressions}
 \alias{expressions}
+\alias{\%in\%}
+\alias{==}
+\alias{!=}
+\alias{!}
 \alias{!,CrunchExpr-method}
 \alias{\%in\%,CategoricalVariable,character-method}
 \alias{\%in\%,CategoricalVariable,factor-method}
@@ -22,6 +26,8 @@
 \alias{bin}
 \title{Construct Crunch Expressions}
 \usage{
+x \%in\% table
+
 \S4method{!}{CrunchExpr}(x)
 
 \S4method{\%in\%}{CategoricalVariable,character}(x, table)

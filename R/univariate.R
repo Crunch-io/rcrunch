@@ -12,9 +12,8 @@ setGeneric("mean")
 setGeneric("sd")
 #' @rdname crunch-uni
 setGeneric("median")
-#' @rdname crunch-uni
+
 setGeneric("min")
-#' @rdname crunch-uni
 setGeneric("max")
 
 .summary.stat <- function(x, stat, na.rm = FALSE, ...) {

@@ -31,7 +31,6 @@
 \alias{id,AbstractCategory-method}
 \alias{value,Category-method}
 \alias{value<-,Category-method}
-\alias{is.selected,Category-method}
 \alias{name,CrunchDataset-method}
 \alias{name<-,CrunchDataset-method}
 \alias{description,CrunchDataset-method}
@@ -120,8 +119,6 @@ notes(x) <- value
 
 \S4method{value}{Category}(x) <- value
 
-\S4method{is.selected}{Category}(x)
-
 \S4method{name}{CrunchDataset}(x)
 
 \S4method{name}{CrunchDataset}(x) <- value
@@ -202,6 +199,8 @@ notes(x) <- value
 \item{object}{Same as \code{x} but for the \code{alias} method, in order to
 match the generic from another package. Note that \code{alias} and \code{digits} are
 only defined for Variables.}
+
+\item{...}{additional arguments in the \code{alias} generic, ignored.}
 }
 \value{
 Getters return the character object in the specified slot; setters

@@ -88,10 +88,6 @@ elementName <- function(el) {
 #' object.
 #'
 #' @param x a CrunchCube or its CubeDims component.
-#' @param i used with `[` to extract a dimension
-#' @param j not used
-#' @param ... not used
-#' @param drop not used
 #' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube
 #' dimensions
 #'

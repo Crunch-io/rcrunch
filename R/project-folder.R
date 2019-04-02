@@ -28,32 +28,6 @@ setMethod("personalFolder", "ProjectFolder", function(x) {
 
 setMethod("rootFolder", "ProjectFolder", function(x) projects())
 
-#' @rdname teams
-#' @export
-setMethod("members", "ProjectFolder", function(x) {
-    MemberCatalog(crGET(shojiURL(x, "catalogs", "members")))
-})
-
-#' @rdname teams
-#' @export
-setMethod("members<-", c("ProjectFolder", "MemberCatalog"), function(x, value) {
-    ## TODO: something
-    ## For now, assume action already done in other methods, like NULL
-    ## assignment above.
-    return(x)
-})
-
-#' @rdname teams
-#' @export
-setMethod("members<-", c("ProjectFolder", "character"), function(x, value) {
-    value <- setdiff(value, emails(members(x)))
-    if (length(value)) {
-        payload <- sapply(value, emptyObject, simplify = FALSE)
-        crPATCH(self(members(x)), body = toJSON(payload))
-    }
-    return(x)
-})
-
 #' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("ProjectFolder", "character", "missing", "list"),

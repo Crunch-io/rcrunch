@@ -203,16 +203,6 @@ setMethod("description<-", "CrunchDeck", function(x, value) {
     return(invisible(out))
 })
 
-#' @rdname is-public
-#' @export
-setMethod("is.public", "CrunchDeck", function(x) x@body$is_public)
-#' @rdname is-public
-#' @export
-setMethod("is.public<-", "CrunchDeck", function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_public", value)
-})
-
 #' @rdname describe-catalog
 #' @export
 setMethod("names", "CrunchDeck", function(x) titles(slides(x)))

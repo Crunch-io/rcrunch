@@ -102,28 +102,6 @@ setMethod("names<-", "MultitableCatalog", function(x, value) {
     setIndexSlotOnEntity(x, "name", value)
 })
 
-#' @rdname is-public
-#' @export
-setMethod("is.public", "MultitableCatalog", function(x) {
-    getIndexSlot(x, "is_public", what = logical(1))
-})
-
-#' @rdname is-public
-#' @export
-setMethod("is.public<-", "MultitableCatalog", function(x, value) {
-    setIndexSlotOnEntity(x, "is_public", value, what = logical(1))
-})
-
-#' @rdname is-public
-#' @export
-setMethod("is.public", "Multitable", function(x) x@body$is_public)
-
-#' @rdname is-public
-#' @export
-setMethod("is.public<-", "Multitable", function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_public", value)
-})
 
 #' Create a new Multitable
 #'

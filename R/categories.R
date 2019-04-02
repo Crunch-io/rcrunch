@@ -53,7 +53,7 @@ c.Categories <- concatenateCategories
 #' @export
 c.Category <- concatenateCategories
 
-#' @rdname Categories
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("Categories", "ANY"), function(x, i, ..., value) {
     x@.Data[i] <- Categories(data = value)
@@ -61,7 +61,7 @@ setMethod("[<-", c("Categories", "ANY"), function(x, i, ..., value) {
 })
 
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("ids<-", "Categories", function(x, value) {
     if (!identical(ids(x), value)) {
@@ -115,60 +115,18 @@ setMethod("na.omit", "Categories", function(object, ...) {
 #' @name is-na-categories
 NULL
 
-#' is.selected for Categories
-#'
-#' Crunch Multiple Response variables identify one or more categories as "selected".
-#' These methods allow you to get or set which categories should indicate a selection.
-#'
-#' @param x Categories or a single Category
-#' @param value A logical vector indicating whether the category should be selected.
-#' For a single category the value should be either `TRUE` or `FALSE` to change the
-#' selection status for a `Categories` object, supply a logical vector which is the
-#' same length as the number of categories.
-#' @return Getters return a logical vector indicating selection status. Setters return
-#' the `Categories` or `Category` object, duly modified.
-#' @name is-selected-categories
-#' @aliases is.selected<-
-NULL
-
 setValues <- function(x, value) {
     x[] <- mapply(setValue, x[], value = value, SIMPLIFY = FALSE)
     return(x)
 }
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("values", "Categories", function(x) vapply(x, value, numeric(1)))
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("values<-", "Categories", setValues)
-
-#' @rdname is-selected-categories
-#' @export
-setMethod("is.selected", "Categories", function(x) {
-    structure(vapply(x, is.selected, logical(1), USE.NAMES = FALSE), .Names = names(x))
-})
-
-#' @rdname is-selected-categories
-#' @export
-setMethod("is.selected<-", "Categories", function(x, value) {
-    if (is.TRUEorFALSE(value)) {
-        value <- rep(value, length(x))
-    }
-    if (length(value) != length(x)) {
-        halt(
-            "You supplied ", length(value), " logical values for ", length(x),
-            " Categories."
-        )
-    }
-
-    x@.Data <- mapply(function(x, value) {
-        is.selected(x) <- value
-        return(x)
-    }, x = x@.Data, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
-    return(x)
-})
 
 #' @rdname is-na-categories
 #' @aliases is-na-categories

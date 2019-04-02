@@ -27,10 +27,10 @@ setMethod("aliases", "CrunchCube", function(x) aliases(variables(x)))
 #' @export
 setMethod("descriptions", "CrunchCube", function(x) descriptions(variables(x)))
 
-#' @rdname cube-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("types", "CrunchCube", function(x) types(variables(x)))
 
-#' @rdname cube-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("notes", "CrunchCube", function(x) notes(variables(x)))

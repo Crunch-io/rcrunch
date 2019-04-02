@@ -86,7 +86,6 @@ reference:
   - dataset-variables
   - deleteVariables
   - derivations
-  - dichotomize
   - hiddenVariables
   - hide
   - hideVariables
@@ -94,9 +93,11 @@ reference:
   - resolution
   - type
   - var-categories
+  - Categories-class
   - variableMetadata
 - title: Deriving variables
   contents:
+  - expressions
   - combine
   - copyVariable
   - makeCaseVariable
@@ -105,17 +106,17 @@ reference:
   - conditionalTransform
   - makeWeight
   - variable-as-methods
+  - which
 - title: Array variables
   contents:
   - Subvariables-class
   - addSubvariable
   - deleteSubvariables
   - flipArrays
-  - importMultitable
   - makeArray
   - makeMRFromText
   - makeArrayGadget
-  - is-selected-categories
+  - dichotomize
   - unbind
 - title: Folders and organization
   contents:
@@ -139,11 +140,11 @@ reference:
   - dashboard
   - duplicated
   - filter-catalog
-  - fortify
   - is-na-categories
   - multitable-catalog
   - newFilter
   - newMultitable
+  - importMultitable
   - table
   - 'as.vector,CrunchExpr-method'
   - dimension-comparison
@@ -232,7 +233,6 @@ reference:
   - tojson-crunch
 - title: Other
   contents:
-  - Categories-class
   - CrunchDataset-class
   - CrunchVariable-class
   - DatasetOrder-class
@@ -240,13 +240,11 @@ reference:
   - VariableCatalog-class
   - VariableOrder-class
   - crunch
-  - expressions
 - title: Internal
   contents:
   - ContextManager
   - show-crunch
   - temp.options
-  - which
   - with-context-manager
 - title: Data
   contents:

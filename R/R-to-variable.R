@@ -1,6 +1,50 @@
 #' @include variable-definition.R
 NULL
 
+#' Generic method for converting objects to Crunch representations
+#'
+#' R objects are converted to Crunch objects using the following rules:
+#'
+#' - Character vectors are converted into Crunch text variables
+#' - Numeric vectors are converted into Crunch numeric variables
+#' - Factors are converted to categorical variables
+#' - Date and POSIXt vectors are converted into Crunch datetime variables
+#' - Logical vectors are converted to Crunch categorical variables
+#' - [VariableDefinition()]s are not converted, but the function can still
+#' append additional metadata
+#'
+#' If you have other object types you wish to convert to Crunch variables,
+#' you can declare methods for `toVariable`.
+#' @param x An R vector you want to turn into a Crunch variable
+#' @param ... Additional metadata fields for the variable, such as "name" and
+#' "description". See the [API documentation](http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog)
+#' for a complete list of valid attributes.
+#' @return A `VariableDefinition` object. To add this to a dataset, either
+#' assign it into the dataset (like `ds$newvar <- toVariable(...)`) or call
+#' [addVariables()]. If you're adding a column of data to a dataset, it must be
+#' as long as the number of rows in the dataset, or it may be a single value to
+#' be recycled for all rows.
+#' @rdname toVariable
+#' @aliases toVariable
+#' @seealso [VariableDefinition()] [addVariables()]
+#' @examples
+#' var1 <- rnorm(10)
+#' toVariable(var1)
+#' toVariable(var1, name="Random", description="Generated in R")
+#' \dontrun{
+#' ds$random <- toVariable(var1, name="Random")
+#' # Or, this way:
+#' ds <- addVariables(ds, toVariable(var1, name="Random"))
+#' }
+#' @export
+setGeneric("toVariable", function(x, ...) standardGeneric("toVariable"))
+
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "CrunchExpr", function(x, ...) {
+    structure(list(derivation = zcl(x), ...), class = "VariableDefinition")
+})
+
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "character", function(x, ...) {
@@ -93,7 +137,7 @@ setOldClass("haven_labelled_spss")
 haven_labelled_spss_func <- function(x, ...) {
     # TODO: what if the values are numeric? Is it possible to tell these apart
     # from the labelled object?
-    
+
     # convert to factor quickly (the recommended workflow for labelled objects
     # from haven, since there are few methods for labelled objects)
     x_factor <- as.factor(x)
@@ -108,7 +152,7 @@ haven_labelled_spss_func <- function(x, ...) {
         }
         return(cat)
     })
-    
+
     return(VariableDefinition(
         values = as.categorical.values(x_factor),
         type = "categorical",
