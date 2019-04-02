@@ -32,7 +32,7 @@ permissions(x)
 \S4method{members}{CrunchTeam,character}(x) <- value
 }
 \arguments{
-\item{x}{CrunchDataset, ProjectFolder, or CrunchTeam}
+\item{x}{\code{CrunchDataset}, \code{ProjectFolder}, or \code{CrunchTeam}}
 
 \item{value}{for \code{members<-}, a character vector of emails or URLs of
 users to add to the team.}

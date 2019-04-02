@@ -2,7 +2,7 @@
 #'
 #' These methods allow you to work with teams.
 #'
-#' @param x CrunchDataset, ProjectFolder, or CrunchTeam
+#' @param x `CrunchDataset`, `ProjectFolder`, or `CrunchTeam`
 #' @param value for `members<-`, a character vector of emails or URLs of
 #' users to add to the team.
 #' @return `members()` returns a
