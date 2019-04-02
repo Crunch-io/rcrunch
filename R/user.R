@@ -104,7 +104,7 @@ setMethod("[[", c("UserCatalog", "character"), function(x, i, ...) {
 #' datasets they own to someone else.
 #'
 #' The user given in `to` will become the owner of all of the teams, projects,
-#' and datsets that were previously owned by the user given in `from`.
+#' and datasets that were previously owned by the user given in `from`.
 #'
 #' Expropriating requires confirmation. In an interactive session, you will be
 #' asked to confirm. To avoid that prompt, or to expropriate datasets from a
