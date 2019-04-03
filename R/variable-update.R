@@ -277,11 +277,11 @@ setMethod(
 
 .no.data.value <- function(x, add.type = FALSE) {
     if (has.categories(x)) {
-        return(-1L)
+        return(NA)
     } else {
-        out <- list(`?` = -1L)
+        out <- NA
         if (add.type) {
-            out <- list(value = out, type = list(class = x))
+            out <- list(value = NA, type = list(class = x))
         }
         return(out)
     }
