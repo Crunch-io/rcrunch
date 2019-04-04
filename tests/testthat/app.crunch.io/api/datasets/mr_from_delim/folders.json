@@ -1,0 +1,24 @@
+{
+    "self": "https://app.crunch.io/api/datasets/mr_from_delim/folders/",
+    "element": "shoji:catalog",
+    "catalogs": {
+        "hidden": "https://app.crunch.io/api/datasets/mr_from_delim/folders/hidden/"
+    },
+    "size": 1,
+    "body": {
+        "name": ""
+    },
+    "index": {
+        "../variables/000003/": {
+            "discarded": false,
+            "alias": "delimed_text",
+            "name": "delimed_text",
+            "type": "text",
+            "notes": "",
+            "derived": false,
+            "id": "000001",
+            "description": ""
+        }
+    },
+    "graph": ["../variables/000003/"]
+}

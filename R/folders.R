@@ -262,6 +262,8 @@ folder <- function(x) {
             ## If moving a "dataset" into a variable folder, it's a variable
             ## catalog subset. So get the catalog.
             what <- allVariables(what)
+        } else if (is.variable(what)) {
+            what <- self(what)
         }
     }
     if (inherits(what, "ShojiCatalog")) {

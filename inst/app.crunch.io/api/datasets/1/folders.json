@@ -1,6 +1,9 @@
 {
     "self": "https://app.crunch.io/api/datasets/1/folders/",
     "element": "shoji:catalog",
+    "catalogs": {
+        "hidden": "https://app.crunch.io/api/datasets/1/folders/hidden/"
+    },
     "size": 7,
     "body": {
         "name": ""

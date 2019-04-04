@@ -318,8 +318,6 @@ cubeURL <- function(x) {
     }
 }
 
-setMethod("hidden", "CrunchDataset", function(x) hidden(allVariables(x)))
-
 #' View a Crunch Object in the Web Application
 #'
 #' Convenience function that will use your system's "open" command to open

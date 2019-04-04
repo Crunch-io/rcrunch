@@ -1,3 +1,11 @@
+setMethod("hidden", "CrunchDataset", function(x) hidden(folders(x)))
+
+setMethod("hidden", "VariableCatalog", function(x) hidden(folders(x)))
+
+setMethod("hidden", "VariableFolder", function (x) {
+    return(VariableFolder(crGET(shojiURL(rootFolder(x), "catalogs", "hidden"))))
+})
+
 #' Hide and Unhide Variables
 #' @param x a Variable or subset of a VariableCatalog to hide or unhide
 #' @return (invisibly) the Variable or VariableCatalog, hidden or unhidden
@@ -9,58 +17,52 @@ NULL
 #' @rdname hide
 #' @export
 setMethod("hide", "CrunchVariable", function(x) {
-    invisible(setTupleSlot(x, "discarded", TRUE))
+    .moveToFolder(hidden(rootFolder(x)), x)
+    # TODO: should these refresh?
+    invisible(x)
 })
 #' @rdname hide
 #' @export
 setMethod("hide", "VariableCatalog", function(x) {
-    invisible(setIndexSlot(x, "discarded", TRUE))
+    .moveToFolder(hidden(rootFolder(x)), x)
+    invisible(x)
 })
 
 #' @rdname hide
 #' @export
 setMethod("unhide", "CrunchVariable", function(x) {
-    invisible(setTupleSlot(x, "discarded", FALSE))
+    .moveToFolder(rootFolder(x), x)
+    invisible(x)
 })
 #' @rdname hide
 #' @export
 setMethod("unhide", "VariableCatalog", function(x) {
-    invisible(setIndexSlot(x, "discarded", FALSE))
+    .moveToFolder(rootFolder(x), x)
+    invisible(x)
 })
 
 #' Hide and unhide variables within a dataset
 #' @param dataset the Dataset to modify
-#' @param x same as `dataset`, for `hiddenVariables<-`
+#' @param x `dataset`, for `hiddenVariables<-`
 #' @param variables names or indices of variables to (un)hide
-#' @param value same as `variables`, for `hiddenVariables<-`
+#' @param value `variables`, for `hiddenVariables<-`
 #' @return (invisibly) `dataset` with the specified variables (un)hidden
 #' @seealso [`hide`]
 #' @export
 hideVariables <- function(dataset, variables) {
-    var.urls <- urls(allVariables(dataset[variables]))
-    allVariables(dataset)[var.urls] <- hide(allVariables(dataset)[var.urls])
-    invisible(dataset)
+    dataset <- mv(dataset, variables, hidden(dataset))
+    return(invisible(refresh(dataset)))
 }
 
 #' @rdname hideVariables
 #' @export
-`hiddenVariables<-` <- function(x, value) {
-    if (is.character(value)) {
-        value <- na.omit(match(value, names(x)))
-    }
-    if (length(value)) {
-        return(hideVariables(x, value))
-    } else {
-        return(x)
-    }
-}
+`hiddenVariables<-` <- function(x, value) hideVariables(x, value)
 
 #' @rdname hideVariables
 #' @export
 unhideVariables <- function(dataset, variables) {
-    var.urls <- suppressWarnings(urls(allVariables(dataset[variables])))
-    allVariables(dataset)[var.urls] <- unhide(allVariables(dataset)[var.urls])
-    invisible(dataset)
+    dataset <- mv(dataset, variables, folders(dataset))
+    return(invisible(refresh(dataset)))
 }
 
 #' Show the names of a dataset's hidden variables
