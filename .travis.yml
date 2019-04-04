@@ -29,8 +29,9 @@ matrix:
     env:
       - _R_CHECK_CRAN_INCOMING_=false
       - R_QPDF=true
-      - GH_TOKEN=
     before_install:
+      - set -x
+      - unset GH_TOKEN
       - source .travis.win.install.sh
     script:
       - R.exe CMD build . --no-manual
