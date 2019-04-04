@@ -36,14 +36,14 @@ setMethod("lapply", "AbstractCategories", function(X, FUN, ...) {
     return(X)
 })
 
-#' @rdname Categories
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("AbstractCategories", "ANY"), function(x, i, ...) {
     x@.Data <- x@.Data[i]
     return(x)
 })
 
-#' @rdname Categories
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("AbstractCategories", "character"), function(x, i, ...) {
     indices <- match(i, names(x))
@@ -53,7 +53,7 @@ setMethod("[", c("AbstractCategories", "character"), function(x, i, ...) {
     callNextMethod(x, i = indices)
 })
 
-#' @rdname Categories
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("AbstractCategories", "numeric"), function(x, i, ...) {
     invalid.indices <- setdiff(abs(i), seq_along(x@.Data))
@@ -64,7 +64,7 @@ setMethod("[", c("AbstractCategories", "numeric"), function(x, i, ...) {
     return(x)
 })
 
-#' @rdname Categories
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("AbstractCategories", "character"), function(x, i, ..., value) {
     indices <- match(i, names(x))
@@ -76,7 +76,7 @@ setMethod("[<-", c("AbstractCategories", "character"), function(x, i, ..., value
     return(x)
 })
 
-#' @rdname Categories
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("AbstractCategories", "character"), function(x, i, ...) {
     indices <- match(i, names(x))
@@ -86,7 +86,7 @@ setMethod("[[", c("AbstractCategories", "character"), function(x, i, ...) {
     callNextMethod(x, i = indices)
 })
 
-#' @rdname Categories
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", c("AbstractCategories", "character"), function(x, i, ..., value) {
     indices <- match(i, names(x))
@@ -114,14 +114,14 @@ modifyCats <- function(x, val) {
 ## Abstract Categories named get/set methods
 ###############################################################
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "AbstractCategories", function(x) {
     n <- vapply(x, name, character(1))
     return(n)
 })
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("names<-", "AbstractCategories", function(x, value) {
     if (is.null(value) || !is.character(value)) {
@@ -141,7 +141,7 @@ setMethod("names<-", "AbstractCategories", function(x, value) {
 })
 
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("ids", "AbstractCategories", function(x) vapply(x, id, integer(1)))
 

@@ -78,7 +78,7 @@ resetPassword <- function(email) {
     ))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("UserCatalog", "character"), function(x, i, ...) {
     dots <- list(x = x, i = i, secondary = emails(x))
@@ -86,7 +86,7 @@ setMethod("[", c("UserCatalog", "character"), function(x, i, ...) {
     do.call("callNextMethod", dots)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("UserCatalog", "character"), function(x, i, ...) {
     dots <- list(x = x, i = i, secondary = emails(x))
@@ -97,10 +97,14 @@ setMethod("[[", c("UserCatalog", "character"), function(x, i, ...) {
 #' Expropriate all Crunch objects from a user
 #'
 #' If you want to transfer all teams, projects, and datasets owned by one user
-#' to another you can with `expropriateUser`. To use `expropriateUser` you must
-#' be an account admin and be from the same account as the user who is being
-#' expropriated. This is useful if a user leaves your organization and you want
-#' to transfer all of the teams, projects, and datasets they own to someone else.
+#' to another you can with `expropriateUser`. To have permission to use
+#' `expropriateUser` you must be an account admin and be from the same account
+#' as the user who is being expropriated. This is useful if a user leaves your
+#' organization and you want to transfer all of the teams, projects, and
+#' datasets they own to someone else.
+#'
+#' The user given in `to` will become the owner of all of the teams, projects,
+#' and datasets that were previously owned by the user given in `from`.
 #'
 #' Expropriating requires confirmation. In an interactive session, you will be
 #' asked to confirm. To avoid that prompt, or to expropriate datasets from a
@@ -111,7 +115,7 @@ setMethod("[[", c("UserCatalog", "character"), function(x, i, ...) {
 #' @param to a character of the email address of the user who should be the new
 #' owner
 #'
-#' @return None
+#' @return `NULL` if successful
 #' @export
 expropriateUser <- function(from, to) {
     if (!askForPermission(paste0(

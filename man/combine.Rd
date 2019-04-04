@@ -2,9 +2,15 @@
 % Please edit documentation in R/combine-categories.R
 \name{combine}
 \alias{combine}
+\alias{combineCategories}
+\alias{combineResponses}
 \title{Combine categories or responses}
 \usage{
 combine(variable, combinations = list(), ...)
+
+combineCategories(variable, combinations = list(), ...)
+
+combineResponses(variable, combinations = list(), ...)
 }
 \arguments{
 \item{variable}{Categorical, Categorical Array, or Multiple Response
@@ -32,6 +38,19 @@ Crunch allows you to create a new categorical variable by combining
 the categories of another variable. For instance, you might want to
 recode a categorical variable with three categories small, medium, and large
 to one that has just small and large.
+}
+\details{
+Categorical and categorical array variables can have their
+categories combined (by specifying \code{categories} in the \code{combinations}
+argument). Multiple response variables can only have their responses (or
+items) combined (by specifying \code{responses} in the \code{combinations} argument).
+Categorical array items are not able to be combined together (even by
+specifying \code{responses}).
+
+\code{dplyr} users may experience a name conflict between \code{crunch::combine()} and
+\code{dplyr:: combine()}. To avoid this, you can either explicitly use the
+\code{crunch::} prefix, or you can call \code{combineCategories()} and
+\code{combineResponses()}, provided for disambiguation.
 }
 \examples{
 \dontrun{

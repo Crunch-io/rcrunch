@@ -1,12 +1,29 @@
-# crunch 1.25.1 (under development)
-* Added support for exporting decks to powerpoint with `format = "pptx"`
-* Fixed a bug with the display of univariate cube `prop.table`s  
+# crunch 1.26.1 (under development)
+
+# crunch 1.26.0
 
 ## Personal folder
 * You can now access your "personal folder" of datasets, which contains only those datasets you imported and that haven't been moved into another project. This dataset folder is denoted in paths by `~`, as in a `*nix` file system. `cd(projects(), "~")` takes you there; `mv(projects(), ds, "~")` moves `ds` into your personal folder.
 * `listDatasets()` now by default only prints datasets in your personal folder, not a combination of your personal datasets and some of the datasets that have been shared with you.
 * When you give a dataset name to `loadDataset()`, it now searches to find datasets exactly matching that name unless you specify a project to load from. If you have multiple datasets with the same name in different locations, `loadDataset("your dataset name")` may return a different one than it did previously. If you want to identify a dataset precisely in `loadDataset()`, either specify the dataset URL (most effective but not as human friendly) or provide `project = "path/to/folder"`.
 * Calling `loadDataset(<integer>)` no longer is supported.
+
+## Bug fixes
+* Fix `is.public(multitables[[i]]) <- TRUE` and several other similar assignments of attributes on an element of a catalog, which previously successfully updated the value on the server but errored when returning to R (#303, #367)
+* `subvariables()` on non-array variables returns `NULL` instead of an error (#237)
+* Fixed a bug with the display of univariate cube `prop.table`s  
+
+## Other enhancements
+
+* `newExampleDataset()` creates a sample dataset for you to explore
+* `exportDeck()` can now write to PowerPoint with `format = "pptx"`
+* `newDataset()` now supports importing data in Triple-S format, providing a `schema` file in addition to the row data.
+* `resolution()` lets you see the data units of a datetime variable ("Y", "M", "D", "ms", etc.); `resolution<-` lets you set it (#234)
+* `deleteDataset()` accepts web app URLs, just as `loadDataset()` already did (#279)
+* Set `options(crunch.warn.hidden=FALSE)` to suppress the "Variable x is hidden" messages when accessing hidden variables (#172)
+* Support sharing decks with a team via `team(deck) <-`
+* Added `upsert` argument to `appendDataset()` to allow datasets to be updated based on the primary-key variable; see `pk()` for details on primary keys (#49)
+* `combineCategories()` and `combineResponses()` are aliases for `combine()`, providing a way to avoid accidental clashes with `dplyr::combine()` (#359)
 
 # crunch 1.25.0
 
@@ -33,7 +50,7 @@
 * Removed excess metadata in some cube fixtures in anticipation of Crunch not sending that information any more (no code changes were necessary).
 
 # crunch 1.24.2
-* The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://github.com/Crunch-io/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
+* The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://crunch.io/r/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
 * Minor fixes for backwards compatibility with the old projects API
 * Remove code paths that modify the project dataset order, which was removed from the Crunch API.
 * List as deprecated many functions that modify variable order, suggesting `mv()` and the other folder operations. These functions will be removed in December 2018.
@@ -276,7 +293,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Add `with_consent` as an alternative to `with(consent(), ...)`
 * Deprecate the "confirm" argument to destructive functions and methods such as `delete` in favor of the `consent` context manager.
 * Add deprecation warning that destructive actions will soon also require consent when running in a non-interactive R session.
-* Use [`httptest`](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API.
+* Use [`httptest`](https://enpiar.com/r/httptest) for mocking HTTP and the Crunch API.
 
 # crunch 1.14.2
 * Trivial change to DESCRIPTION to meet new, hidden CRAN requirement
@@ -577,11 +594,11 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Add `types` method to VariableCatalog.
 
 # crunch 1.2.1
-* Additional methods for working with VariableOrder and VariableGroup. You can create new Groups by assigning into an Order or Group with a new name. And, with the new `duplicates` parameter, which is `FALSE` by default, adding new Groups to an Order "moves" the variable references to the new Group, rather than creating copies. See the [variable order vignette](inst/doc/variable-order.md) for more details.
+* Additional methods for working with VariableOrder and VariableGroup. You can create new Groups by assigning into an Order or Group with a new name. And, with the new `duplicates` parameter, which is `FALSE` by default, adding new Groups to an Order "moves" the variable references to the new Group, rather than creating copies. See the [variable order vignette](https://crunch.io/r/crunch/articles/variable-order.html) for more details.
 * Add `share` function for sharing a dataset with other users.
 
 # crunch 1.2.0
-* New vignettes for [deriving variables](inst/doc/derive.md) and [analyzing datasets](inst/doc/analyze.md).
+* New vignettes for [deriving variables](https://crunch.io/r/crunch/articles/derive.html) and [analyzing datasets](https://crunch.io/r/crunch/articles/analyze.html).
 
 * Update appending workflow to support new API.
 

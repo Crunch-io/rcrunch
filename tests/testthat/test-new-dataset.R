@@ -58,13 +58,6 @@ with_mock_crunch({
         )
     })
 
-    test_that("createWithMetadataAndFile when metadata is file too", {
-        expect_POST(
-            newDatasetFromFixture("apidocs"),
-            "https://app.crunch.io/api/datasets/",
-            toJSON(fromJSON(file.path("dataset-fixtures", "apidocs.json"), simplifyVector = FALSE))
-        )
-    })
     test_that("uploadData writes out a gzipped file", {
         ds <- loadDataset("test ds")
         with_DELETE(NULL, {
@@ -97,6 +90,21 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"helper.R"}}'
         )
+    })
+    test_that("newDataset with a schema posts to sources", {
+        expect_POST(
+            newDataset(x = "helper.R", schema = "helper.R"),
+            "https://app.crunch.io/api/sources/",
+            'list\\(uploaded_file = list\\(path = .*helper.R',
+            fixed = FALSE
+        )
+    })
+    test_that("newDataset with schema and data posts, adds to batches and appends", {
+        with_POST("https://app.crunch.io/api/datasets/1/", {
+            # the batch had to be mocked in tests/testthat/app.crunch.io/... because
+            # we supressMessages which makes detecting it harder
+            ds <- newDataset(x = "teardown.R", schema = "setup.R")
+        })
     })
     test_that("newDataset(FromFile) cleans up the dataset entity if the file is invalid", {
         with_POST("https://app.crunch.io/api/datasets/1/", {
@@ -151,6 +159,13 @@ with_mock_crunch({
             "Must provide a file or url to createSource"
         )
     })
+
+    test_that("newExampleDataset", {
+        expect_POST(newExampleDataset(),
+            'https://app.crunch.io/api/datasets/',
+            '{"element":"shoji:entity","body":{"name":"Example dataset",'
+        )
+    })
 })
 
 with_test_authentication({
@@ -178,7 +193,7 @@ with_test_authentication({
         })
     })
 
-    m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
+    m <- fromJSON(system.file("example-datasets", "pets.json", package="crunch"),
         simplifyVector = FALSE
     )
 
@@ -215,7 +230,7 @@ with_test_authentication({
         m2$body$table$metadata$allpets$subvariables[[4]] <- list(name = "Another", alias = "allpets_1")
         expect_error(createWithMetadataAndFile(
             m2,
-            file.path("dataset-fixtures", "apidocs.csv")
+            system.file("example-datasets", "pets.csv", package="crunch")
         ))
     })
 

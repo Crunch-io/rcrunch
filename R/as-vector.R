@@ -1,3 +1,70 @@
+#' Convert Variables to local R objects
+#'
+#' Crunch Variables reside on the server, allowing you to work with
+#' datasets that are too big to bring into memory on your machine. Many
+#' functions, such as `max`, `mean`, and [crtabs()], translate your commands
+#' into API queries and return only the result. But, not every operation you'll
+#' want to perform has been implemented on the Crunch servers. If you need to do
+#' something beyond what is currently supported, you can bring a variable's
+#' data into R with `as.vector(ds$var)` and work with it like any
+#' other R vector.
+#'
+#' `as.vector` transfers data from Crunch to a local R session. Note:
+#' `as.vector` returns the vector in the row order of the dataset. If filters
+#' are set that specify an order that is different from the row order of the
+#' dataset, the results will ignore that order. If you need the vector ordered
+#' in that way, use syntax like `as.vector(ds$var)[c(10, 5, 2)]` instead.
+#'
+#' @param x a CrunchVariable
+#' @param mode for Categorical variables, one of either "factor" (default,
+#' which returns the values as factor); "numeric" (which returns the numeric
+#' values); or "id" (which returns the category ids). If "id", values
+#' corresponding to missing categories will return as the underlying integer
+#' codes; i.e., the R representation will not have any `NA` elements. Otherwise,
+#' missing categories will all be returned `NA`. For non-Categorical
+#' variables, the `mode` argument is ignored.
+#' @return an R vector of the type corresponding to the Variable. E.g.
+#' CategoricalVariable yields type factor by default, NumericVariable yields
+#' numeric, etc.
+#' @seealso [as.data.frame][as.data.frame.CrunchDataset] for another interface
+#' for (lazily) fetching data from the server as needed; [exportDataset()] for
+#' pulling all of the data from a dataset.
+#' @name as-vector
+#' @aliases as.vector
+NULL
+
+setGeneric("as.vector")
+
+#' @rdname as-vector
+#' @export
+setMethod("as.vector", "CrunchVariable", function(x, mode) {
+    f <- zcl(activeFilter(x))
+    # TODO: this will return in dataset order even if there is a filter is
+    # specified that is not in the same order as rows
+    # (eg as.vector(ds$v1[c(10:1)])) as.vector should re-order by default
+    # see CrunchDataFrame for one way this could be accomplished
+    columnParser(type(x))(getValues(x, filter = toJSON(f)), x, mode)
+})
+
+#' @rdname as-vector
+#' @export
+setMethod("as.vector", "CrunchExpr", function(x, mode) {
+    payload <- list(query = toJSON(list(out = zcl(x))))
+    if (length(x@filter)) {
+        payload[["filter"]] <- toJSON(x@filter)
+    } else {
+        payload$filter <- "{}"
+    }
+    out <- paginatedGET(paste0(x@dataset_url, "table/"),
+        query = payload, table = TRUE, limit = .crunchPageSize(x)
+    )
+    ## pass in the variable metadata to the column parser
+    variable <- VariableEntity(structure(list(body = out$metadata$out),
+        class = "shoji"
+    ))
+    return(columnParser(out$metadata$out$type)(out$data$out, variable, mode))
+})
+
 parse_column <- list(
     numeric = function(col, variable, mode) {
         missings <- vapply(col, Negate(is.numeric), logical(1))
@@ -148,69 +215,4 @@ paginatedGET <- function(url, query, offset = 0, limit = 1000, table = FALSE) {
         out <- unlist(out, recursive = FALSE)
     }
     return(out)
-}
-
-#' Convert Variables to local R objects
-#'
-#' Crunch Variables reside on the server, allowing you to work with
-#' datasets that are too big to bring into memory on your machine. Many
-#' functions, such as `max`, `mean`, and [crtabs()], translate your commands
-#' into API queries and return only the result. But, not every operation you'll
-#' want to perform has been implemented on the Crunch servers. If you need to do
-#' something beyond what is currently supported, you can bring a variable's
-#' data into R with `as.vector(ds$var)` and work with it like any
-#' other R vector.
-#'
-#' `as.vector` transfers data from Crunch to a local R session. Note:
-#' `as.vector` returns the vector in the row order of the dataset. If filters
-#' are set that specify an order that is different from the row order of the
-#' dataset, the results will ignore that order. If you need the vector ordered
-#' in that way, use syntax like `as.vector(ds$var)[c(10, 5, 2)]` instead.
-#'
-#' @param x a CrunchVariable
-#' @param mode for Categorical variables, one of either "factor" (default,
-#' which returns the values as factor); "numeric" (which returns the numeric
-#' values); or "id" (which returns the category ids). If "id", values
-#' corresponding to missing categories will return as the underlying integer
-#' codes; i.e., the R representation will not have any `NA` elements. Otherwise,
-#' missing categories will all be returned `NA`. For non-Categorical
-#' variables, the `mode` argument is ignored.
-#' @return an R vector of the type corresponding to the Variable. E.g.
-#' CategoricalVariable yields type factor by default, NumericVariable yields
-#' numeric, etc.
-#' @seealso [as.data.frame][as.data.frame.CrunchDataset] for another interface
-#' for (lazily) fetching data from the server as needed; [exportDataset()] for
-#' pulling all of the data from a dataset.
-#' @name variable-to-R
-NULL
-
-#' @rdname variable-to-R
-#' @export
-setMethod("as.vector", "CrunchVariable", function(x, mode) {
-    f <- zcl(activeFilter(x))
-    # TODO: this will return in dataset order even if there is a filter is
-    # specified that is not in the same order as rows
-    # (eg as.vector(ds$v1[c(10:1)])) as.vector should re-order by default
-    # see CrunchDataFrame for one way this could be accomplished
-    columnParser(type(x))(getValues(x, filter = toJSON(f)), x, mode)
-})
-
-from8601 <- function(x) {
-    ## Crunch timestamps look like "2015-02-12T10:28:05.632000+00:00"
-
-    if (all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", na.omit(x)))) {
-        ## return Date if resolution == D
-        return(as.Date(x))
-    }
-
-    ## Check for timezone
-    if (any(grepl("+", x, fixed = TRUE))) {
-        ## First, strip out the : in the time zone
-        x <- sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x)
-        pattern <- "%Y-%m-%dT%H:%M:%OS%z"
-    } else {
-        pattern <- "%Y-%m-%dT%H:%M:%OS"
-    }
-    ## Then parse
-    return(strptime(x, pattern, tz = "UTC"))
 }

@@ -22,42 +22,15 @@ setMethod("filters", "CrunchDataset", function(x) {
 #' @export
 setMethod("filters<-", "CrunchDataset", function(x, value) x)
 
-#' View and modify "public" attribute
-#'
-#' View and modify whether all dataset viewers have access to the dataset. This
-#' will return `FALSE` if the dataset is in draft.
-#'
-#' @param x a Crunch object
-#' @param value an attribute to set
-#' @return For `is.public`, a logical value for whether the object is
-#' flagged as shared with all dataset viewers. (Its setter thus takes a
-#' logical value as well.) Catalogs of datasets return a vector of logicals
-#' corresponding to the length of the catalog, while entities return a single value.
-#' @name is-public
-#' @aliases is.public<- is.public
-NULL
-
-#' @rdname is-public
-#' @export
-setMethod("is.public", "CrunchFilter", function(x) x@body$is_public)
-
-#' @rdname is-public
-#' @export
-setMethod("is.public<-", "CrunchFilter", function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_public", value)
-})
-
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("FilterCatalog", "numeric"), function(x, i, ...) {
     getEntity(x, i, CrunchFilter, ...)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"),
+setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (i %in% names(x)) {
@@ -114,10 +87,9 @@ newFilter <- function(name, expression, catalog = NULL, ...) {
     )))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
+setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (i %in% seq_along(urls(x))) {
@@ -132,10 +104,9 @@ setMethod(
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
+setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
     function(x, i, j, value) {
         if (i %in% names(x)) {
             ## Assume server update of the entity already happened in a
@@ -149,10 +120,9 @@ setMethod(
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
+setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
     function(x, i, j, value) {
         if (i %in% seq_len(length(x))) {
             ## See above.

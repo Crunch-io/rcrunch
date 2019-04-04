@@ -12,8 +12,6 @@
 \alias{entities<-,ShojiOrder-method}
 \alias{name,OrderGroup-method}
 \alias{name<-,OrderGroup-method}
-\alias{names,ShojiOrder-method}
-\alias{names,OrderGroup-method}
 \alias{names<-,ShojiOrder-method}
 \title{Manipulate VariableGroup and VariableOrder}
 \usage{
@@ -30,10 +28,6 @@
 \S4method{name}{OrderGroup}(x)
 
 \S4method{name}{OrderGroup}(x) <- value
-
-\S4method{names}{ShojiOrder}(x)
-
-\S4method{names}{OrderGroup}(x)
 
 \S4method{names}{ShojiOrder}(x) <- value
 }
@@ -64,3 +58,4 @@ Manipulate VariableGroup and VariableOrder
 \seealso{
 \code{\link{VariableOrder}} \code{\link{grouped}}
 }
+\keyword{internal}

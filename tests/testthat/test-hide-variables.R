@@ -23,6 +23,11 @@ with_mock_crunch({
         )
         expect_true(is.Numeric(z))
     })
+    test_that("Option not to warn when accessing hidden variables", {
+        with(temp.option(crunch.warn.hidden=FALSE), {
+            expect_warning(ds$birthyr, NA)
+        })
+    })
 
     test_that("Can delete a hidden variable", {
         skip_on_jenkins("No idea why this fails to catch the warning on Jenkins but not on Travis or locally")

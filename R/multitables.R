@@ -20,16 +20,15 @@ setMethod("multitables", "CrunchDataset", function(x) {
 #' @export
 setMethod("multitables<-", "CrunchDataset", function(x, value) x)
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("MultitableCatalog", "numeric"), function(x, i, ...) {
     getEntity(x, i, Multitable, ...)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("MultitableCatalog", "character", "missing", "formula"),
+setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         w <- match(i, names(x))
@@ -46,10 +45,9 @@ setMethod(
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
+setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
 
@@ -66,16 +64,20 @@ setMethod(
     }
 )
 
+#' @rdname crunch-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "Multitable"),
+    modifyCatalogInPlace)
+
 makeMultitablePayload <- function(template, ...) {
     template <- lapply(template$dimensions, function(x) list(query = x))
 
     return(wrapEntity(template = template, ...))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
+setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (is.character(i) && !i %in% names(x)) {
@@ -88,7 +90,7 @@ setMethod(
     }
 )
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "Multitable", function(x, value) {
     setEntitySlot(x, "name", value)
@@ -100,38 +102,6 @@ setMethod("names<-", "MultitableCatalog", function(x, value) {
     setIndexSlotOnEntity(x, "name", value)
 })
 
-#' @rdname is-public
-#' @export
-setMethod("is.public", "MultitableCatalog", function(x) {
-    getIndexSlot(x, "is_public", what = logical(1))
-})
-
-#' @rdname is-public
-#' @export
-setMethod("is.public<-", "MultitableCatalog", function(x, value) {
-    setIndexSlotOnEntity(x, "is_public", value, what = logical(1))
-})
-
-#' @rdname is-public
-#' @export
-setMethod("is.public", "Multitable", function(x) x@body$is_public)
-
-#' @rdname is-public
-#' @export
-setMethod("is.public<-", "Multitable", function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_public", value)
-})
-
-#' @rdname dataset-reference
-setMethod("datasetReference", "Multitable", function(x) {
-    datasetReference(self(x))
-})
-
-#' @rdname dataset-reference
-setMethod("datasetReference", "MultitableCatalog", function(x) {
-    datasetReference(self(x))
-})
 
 #' Create a new Multitable
 #'

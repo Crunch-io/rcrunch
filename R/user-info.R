@@ -12,7 +12,7 @@
 #' dataset
 #'
 #' @name users
-NULL
+setGeneric("users", function(x) standardGeneric("users"))
 
 .getUsers <- function(x) UserCatalog(crGET(shojiURL(x, "catalogs", "users")))
 

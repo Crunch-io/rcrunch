@@ -9,7 +9,7 @@ setMethod("folderExtraction", "ProjectFolder", function(x, tuple) {
     }
 })
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name", "ProjectFolder", function(x) {
     ## Warning: bad code smell
@@ -28,36 +28,9 @@ setMethod("personalFolder", "ProjectFolder", function(x) {
 
 setMethod("rootFolder", "ProjectFolder", function(x) projects())
 
-#' @rdname teams
+#' @rdname crunch-extract
 #' @export
-setMethod("members", "ProjectFolder", function(x) {
-    MemberCatalog(crGET(shojiURL(x, "catalogs", "members")))
-})
-
-#' @rdname teams
-#' @export
-setMethod("members<-", c("ProjectFolder", "MemberCatalog"), function(x, value) {
-    ## TODO: something
-    ## For now, assume action already done in other methods, like NULL
-    ## assignment above.
-    return(x)
-})
-
-#' @rdname teams
-#' @export
-setMethod("members<-", c("ProjectFolder", "character"), function(x, value) {
-    value <- setdiff(value, emails(members(x)))
-    if (length(value)) {
-        payload <- sapply(value, emptyObject, simplify = FALSE)
-        crPATCH(self(members(x)), body = toJSON(payload))
-    }
-    return(x)
-})
-
-#' @rdname catalog-extract
-#' @export
-setMethod(
-    "[[<-", c("ProjectFolder", "character", "missing", "list"),
+setMethod("[[<-", c("ProjectFolder", "character", "missing", "list"),
     function(x, i, j, value) {
         # This is for backwards compatibility with the old project API
         if (i %in% names(x)) {
@@ -74,10 +47,9 @@ setMethod(
     }
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("ProjectFolder", "character", "missing", "ProjectFolder"),
+setMethod("[[<-", c("ProjectFolder", "character", "missing", "ProjectFolder"),
     function(x, i, j, value) {
         # This is for backwards compatibility with the old project API
 

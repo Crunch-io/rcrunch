@@ -16,6 +16,7 @@
 #' @name ShojiOrder-slots
 #' @seealso [`VariableOrder`] [`grouped`]
 #' @aliases entities entities<-
+#' @keywords internal
 NULL
 
 #' @rdname ShojiOrder-slots
@@ -84,12 +85,12 @@ setMethod("name<-", "OrderGroup", function(x, value) {
         ifelse(inherits(a, "OrderGroup"), name(a), NA_character_)
     }, character(1))
 }
-#' @rdname ShojiOrder-slots
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "ShojiOrder", .ordernames)
 
 
-#' @rdname ShojiOrder-slots
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "OrderGroup", .ordernames)
 

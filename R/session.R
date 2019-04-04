@@ -11,6 +11,7 @@
 #' methods.
 #' @return The requested catalog when extracting; a Session object if assigning.
 #' @seealso `session`
+#' @keywords internal
 #' @name session-extract
 NULL
 

@@ -26,7 +26,7 @@ with_mock_crunch({
     mults <- multitables(ds)
     test_that("Multitable catalog names", {
         expect_identical(
-            names(mults), 
+            names(mults),
             c("My banner", "My team multitable", "Shared multitable")
         )
         ## Note that this PATCHes the entity, not the catalog
@@ -46,6 +46,9 @@ with_mock_crunch({
             is.public(mults)[3] <- FALSE,
             "https://app.crunch.io/api/datasets/1/multitables/4de322/",
             '{"is_public":false}'
+        )
+        with_PATCH(NULL,
+            is.public(mults)[3] <- FALSE
         )
         expect_no_request(is.public(mults)[3] <- TRUE)
     })
@@ -81,20 +84,19 @@ with_mock_crunch({
         })
     })
 
-    m <- mults[[1]]
     test_that("Multitable object methods", {
-        expect_identical(name(m), "My banner")
+        expect_identical(name(mults[[1]]), "My banner")
         expect_PATCH(
-            name(m) <- "Another name",
+            name(mults[[1]]) <- "Another name",
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/",
             '{"name":"Another name"}'
         )
         expect_PATCH(
-            is.public(m) <- TRUE,
+            is.public(mults[[1]]) <- TRUE,
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/",
             '{"is_public":true}'
         )
-        expect_no_request(is.public(m) <- FALSE)
+        expect_no_request(is.public(mults[[1]]) <- FALSE)
     })
 
     test_that("newMultitable", {
@@ -220,22 +222,22 @@ with_mock_crunch({
         team_mult <- multitables(ds)[["My team multitable"]]
         private_mult <- multitables(ds)[["My banner"]]
         expect_identical(team(team_mult), getTeams()[["Alpha Team"]])
-        expect_no_request(team(team_mult) <- getTeams()[["Alpha Team"]])    
-        
+        expect_no_request(team(team_mult) <- getTeams()[["Alpha Team"]])
+
         expect_PATCH(
             team(team_mult) <- NULL,
             "https://app.crunch.io/api/datasets/1/multitables/f33123/",
             '{"team":null}'
         )
-        
+
         expect_null(team(private_mult))
-        
+
         expect_PATCH(
             team(private_mult) <- getTeams()[["Alpha Team"]],
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/",
             '{"team":"https://app.crunch.io/api/teams/team1/"}'
         )
-        
+
         # can also just use a url
         expect_PATCH(
             team(private_mult) <- "https://app.crunch.io/api/teams/team1/",
@@ -243,21 +245,21 @@ with_mock_crunch({
             '{"team":"https://app.crunch.io/api/teams/team1/"}'
         )
     })
-    
+
     test_that("cache priming (so that requests don't cloud tests below)", {
         expect_null(weight(ds))
     })
     test_that("tabBook sets the right request header", {
         expect_header(
             expect_POST(
-                tabBook(m, data = ds, format = "xlsx"),
+                tabBook(mults[[1]], data = ds, format = "xlsx"),
                 "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/"
             ),
             "Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
         expect_header(
             expect_POST(
-                tabBook(m, data = ds, format = "json"),
+                tabBook(mults[[1]], data = ds, format = "json"),
                 "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/"
             ),
             "Accept: application/json"
@@ -275,11 +277,11 @@ with_mock_crunch({
             "Accept: application/json"
         )
     })
-    
+
     ## TODO: test the query shape
 
     with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
-        book <- tabBook(m, data = ds, format = "json")
+        book <- tabBook(mults[[1]], data = ds, format = "json")
         test_that("tabBook JSON returns TabBookResult", {
             expect_is(book, "TabBookResult")
         })
@@ -328,7 +330,7 @@ with_mock_crunch({
 
         with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-mr-ca-tabbook/", {
             ## This mock was taken from the integration test below
-            book <- tabBook(m, data = ds, format = "json")
+            book <- tabBook(mults[[1]], data = ds, format = "json")
             test_that("tabBook JSON returns TabBookResult", {
                 expect_is(book, "TabBookResult")
             })
@@ -363,7 +365,7 @@ with_mock_crunch({
 
         with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-ca-mr-tabbook/", {
             ## This mock was taken from the integration test below
-            book <- tabBook(m, data = ds, format = "json")
+            book <- tabBook(mults[[1]], data = ds, format = "json")
             test_that("tabBook JSON returns TabBookResult", {
                 expect_is(book, "TabBookResult")
             })
@@ -398,7 +400,7 @@ with_mock_crunch({
 
     with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
         ## This mock was taken from the integration test below
-        book <- tabBook(m, data = ds)
+        book <- tabBook(mults[[1]], data = ds)
         test_that("tabBook from apidocs dataset (mock)", {
             expect_is(book, "TabBookResult")
             expect_identical(dim(book), c(9L, 3L))
@@ -567,32 +569,32 @@ with_test_authentication({
         expect_identical(dim(book), c(ncol(ds), 3L))
         expect_identical(names(book), names(variables(ds)))
     })
-    
+
     test_that("team-sharing of multitables", {
         multitables(ds)[["team multitable"]] <- ~allpets + q1
         team_multitab <- multitables(ds)[["team multitable"]]
         expect_null(team(team_multitab))
-        
+
         # set teams to use
         teams <- getTeams()
         teams[["A new team for filters"]] <- list()
         teams[["A different team for filters"]] <- list()
-        
+
         # can set a team
         team(team_multitab) <- getTeams()[["A new team for filters"]]
         expect_identical(
-            team(team_multitab), 
+            team(team_multitab),
             getTeams()[["A new team for filters"]]
         )
-        
+
         # can change a team (with a URL this time)
         team_url <- self(getTeams()[["A different team for filters"]])
         team(team_multitab) <- team_url
         expect_identical(
-            team(team_multitab), 
+            team(team_multitab),
             getTeams()[["A different team for filters"]]
         )
-        
+
         # can remove the team
         team(team_multitab) <- NULL
         expect_null(team(team_multitab))

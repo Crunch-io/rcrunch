@@ -80,6 +80,22 @@ setIndexSlotOnEntity <- function(x, i, value, ...) {
     return(refresh(x))
 }
 
+modifyCatalogInPlace <- function(x, i, j, value) {
+    # Use in [[<- catalog methods where the server modification happens
+    # elsewhere (e.g. is.public(multitables[[1]])) <- TRUE)
+    if (self(value) %in% urls(x)) {
+        ## Assume server update of the entity already happened in a
+        ## separate request. So just update entity in place.
+        old <- index(x)[[self(value)]]
+        new <- value@body[intersect(names(old), names(value@body))]
+        index(x)[[self(value)]] <- modifyList(old, new)
+        return(x)
+    } else {
+        ## Unlikely to be here
+        halt("Unsupported")
+    }
+}
+
 dirtyElements <- function(x, y) {
     !mapply(identical, x, y, USE.NAMES = FALSE, SIMPLIFY = TRUE)
 }
@@ -89,7 +105,7 @@ setMethod(
     function(x, i, ...) whichNameOrURL(x, i, ...)
 )
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "character"), function(x, i, ...) {
     w <- whichCatalogEntry(x, i, ...)
@@ -98,7 +114,7 @@ setMethod("[", c("ShojiCatalog", "character"), function(x, i, ...) {
     }
     return(x[w])
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "numeric"), function(x, i, ...) {
     bad <- abs(as.integer(i)) > length(x)
@@ -107,7 +123,7 @@ setMethod("[", c("ShojiCatalog", "numeric"), function(x, i, ...) {
     }
     callNextMethod(x, i, value)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "logical"), function(x, i, ...) {
     if (length(i) > length(x)) {
@@ -119,13 +135,13 @@ setMethod("[", c("ShojiCatalog", "logical"), function(x, i, ...) {
     index(x) <- index(x)[i]
     return(x)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "ANY"), function(x, i, ...) {
     index(x) <- index(x)[i]
     return(x)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiCatalog", "ANY"), function(x, i, ...) {
     ## Note that this returns a bare list, not an IndexTuple
@@ -147,7 +163,7 @@ getEntity <- function(x, i, Constructor = ShojiEntity, ...) {
     return(Constructor(crGET(url)))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiCatalog", "character"), function(x, i, ...) {
     stopifnot(length(i) == 1L)
@@ -158,33 +174,26 @@ setMethod("[[", c("ShojiCatalog", "character"), function(x, i, ...) {
     return(x[[w]])
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "ShojiCatalog", function(x, name) x[[name]])
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", "ShojiCatalog", function(x, name, value) {
     x[[name]] <- value
     return(x)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
+setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
     function(x, i, j, value) {
         index(x)[i] <- index(value)[i]
         ## Assume that PATCHing has happened outside this function
         return(x)
     }
 )
-
-#' Length of Catalog
-#' @param x a Catalog
-#' @return Integer: the number of elements in the index list
-#' @name catalog-length
-NULL
 
 whichNameOrURL <- function(x, i, secondary = names(x), ...) {
     var_matches <- match(i, secondary)
@@ -208,9 +217,6 @@ whichNameOrURL <- function(x, i, secondary = names(x), ...) {
     return(var_matches)
 }
 
-#' @rdname catalog-length
-#' @export
-setMethod("length", "ShojiCatalog", function(x) length(index(x)))
 setMethod("lapply", "ShojiCatalog", function(X, FUN, ...) lapply(index(X), FUN, ...))
 
 #' Get the body of a Catalog

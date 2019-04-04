@@ -9,7 +9,10 @@
 #' `ordering<-` sets the VariableOrder
 #' @name ordering
 #' @aliases ordering ordering<-
-NULL
+#' @keywords internal
+setGeneric("ordering", function(x) standardGeneric("ordering"))
+#' @rdname ordering
+setGeneric("ordering<-", function(x, value) standardGeneric("ordering<-"))
 
 #' @rdname ordering
 #' @export

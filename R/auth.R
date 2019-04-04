@@ -53,6 +53,7 @@ login <- function(email = envOrOption("crunch.email"),
 
 #' Get various catalogs for your Crunch session
 #' @return A Session object. Access dataset and project catalogs from it.
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' cr <- session()
