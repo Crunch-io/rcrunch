@@ -132,34 +132,6 @@ with_test_authentication({
         )
     })
 
-    test_that("If No Data isn't a category, it is added automatically to categorical", {
-        ## Create a clean categorical
-        ds$cat <- VarDef(
-            values = rep(1, nrow(ds)),
-            type = "categorical",
-            categories = list(
-                list(id = 1L, name = "B", numeric_value = 1L, missing = FALSE)
-            ),
-            name = "All B"
-        )
-        expect_equal(ids(categories(ds$cat)), c(1, -1))
-        expect_equal(as.vector(ds$cat[3:7], mode = "id"), c(1, 1, 1, 1, 1))
-    })
-    test_that("If No Data isn't a category, it is added automatically to array", {
-        ## Set up for next tests. Deep copy array, purge its missings,
-        ## remove No Data category.
-        generate_categorical <- function() {
-            v <- VariableDefinition(factor(sample(c("cat", "dog"), 20, replace = TRUE)))
-            v$categories <- v$categories[1:2]
-            return(v)
-        }
-        ds$sub1 <- generate_categorical()
-        ds$sub2 <- generate_categorical()
-        ds$array <- makeArray(ds[, c("sub1", "sub2")], name = "array")
-        expect_equal(ids(categories(ds$array)), c(1, 2, -1))
-        expect_equal(as.vector(ds$array[[1]][5], mode = "id"), 2)
-    })
-
     ## Roll it back, do some more updating
     ds <- restoreVersion(ds, 1)
     test_that("Insert values including NA into numeric", {
