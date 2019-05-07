@@ -79,25 +79,53 @@ with_test_authentication({
                 missing = FALSE
             )
         )
-        expect_json_equivalent(
-            test_cases[[10]],
-            list(
-                expression = ds$q1 == "Not Asked" & ds$country == "Australia",
-                name = "Not Asked:Australia",
-                missing = TRUE
+        tryCatch(
+            expect_json_equivalent(
+                test_cases[[11]],
+                list(
+                    expression = ds$q1 == "Not Asked" & ds$country == "Australia",
+                    name = "Not Asked:Australia",
+                    missing = TRUE
+                )
+            ),
+            error = function(e) expect_json_equivalent(
+                test_cases[[10]],
+                list(
+                    expression = ds$q1 == "Not Asked" & ds$country == "Australia",
+                    name = "Not Asked:Australia",
+                    missing = TRUE
+                )
             )
         )
 
         ds$interaction <- interactVariables(ds$q1, ds$country, name = "Pet.Country")
-        expect_equal(
-            names(categories(ds$interaction)),
-            apply(expand.grid(
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                c("Argentina", "Australia", "Austria", "Belgium", "Brazil")
-            ),
-            1, paste,
-            collapse = ":"
-            )
+        expect_true(
+            isTRUE(all.equal(
+                names(categories(ds$interaction)),
+                c(
+                    apply(
+                        expand.grid(
+                            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data"),
+                            c("Argentina", "Australia", "Austria", "Belgium", "Brazil", "No Data")
+                        ),
+                        1, paste,
+                        collapse = ":"
+                    ),
+                    "No Data"
+                )
+            ))
+            # Legacy output, if "No Data" categories are not automatically added:
+            || isTRUE(all.equal(
+                names(categories(ds$interaction)),
+                apply(
+                    expand.grid(
+                        c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
+                        c("Argentina", "Australia", "Austria", "Belgium", "Brazil")
+                    ),
+                    1, paste,
+                    collapse = ":"
+                )
+            ))
         )
     })
 
@@ -106,15 +134,33 @@ with_test_authentication({
             name = "Pet.Country2",
             description = "This is a description"
         )
-        expect_equal(
-            names(categories(ds$interaction)),
-            apply(expand.grid(
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                c("Argentina", "Australia", "Austria", "Belgium", "Brazil")
-            ),
-            1, paste,
-            collapse = ":"
-            )
+        expect_true(
+            isTRUE(all.equal(
+                names(categories(ds$interaction)),
+                c(
+                    apply(
+                        expand.grid(
+                            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data"),
+                            c("Argentina", "Australia", "Austria", "Belgium", "Brazil", "No Data")
+                        ),
+                        1, paste,
+                        collapse = ":"
+                    ),
+                    "No Data"
+                )
+            ))
+            # Legacy output, if "No Data" categories are not automatically added:
+            || isTRUE(all.equal(
+                names(categories(ds$interaction)),
+                apply(
+                    expand.grid(
+                        c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
+                        c("Argentina", "Australia", "Austria", "Belgium", "Brazil")
+                    ),
+                    1, paste,
+                    collapse = ":"
+                )
+            ))
         )
         expect_equal(description(ds$interaction2), "This is a description")
     })

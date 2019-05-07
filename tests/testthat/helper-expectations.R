@@ -52,8 +52,27 @@ expect_valid_apidocs_import <- function(ds) {
         )
     )
     expect_identical(name(ds), "Example dataset")
-    expect_identical(
-        names(categories(ds$q1)),
-        c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+    expect_identical_temp_nodata(
+        names(categories(ds$q1)), c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
+    )
+}
+
+expect_identical_temp_nodata <- function(actual, expected) {
+    # Newer versions of the Crunch API will automatically add a "No Data" category if not present.
+    # This helper transitions us to that future, and can be removed when all API nodes
+    # have moved to the new behavior.
+    expect_true(
+        identical(actual, expected) ||
+        identical(actual, expected[expected != "No Data"])
+    )
+}
+
+expect_equal_temp_nodata <- function(actual, expected) {
+    # Newer versions of the Crunch API will automatically add a "No Data" category if not present.
+    # This helper transitions us to that future, and can be removed when all API nodes
+    # have moved to the new behavior.
+    expect_true(
+        isTRUE(all.equal(actual, expected)) ||
+        isTRUE(all.equal(actual, expected[expected != -1]))
     )
 }
