@@ -79,6 +79,9 @@ with_test_authentication({
                 missing = FALSE
             )
         )
+        # Replace this `tryCatch(expect_json_equivalent(new), error = function(e) expect_json_equivalent(old))`
+        # construction with `expect_json_equivalent(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         tryCatch(
             expect_json_equivalent(
                 test_cases[[11]],
