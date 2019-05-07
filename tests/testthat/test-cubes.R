@@ -218,6 +218,9 @@ with_test_authentication({
                 )
             )
         )
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equivalent(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             isTRUE(all.equal(
                 as.array(crtabs(~v8 + v7, data = ds, useNA = "always")),
@@ -314,6 +317,9 @@ with_test_authentication({
             )
             )
         )
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equivalent(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             isTRUE(all.equal(
                 as.array(crtabs(~bin(v3) + v7, data = ds, useNA = "always")),

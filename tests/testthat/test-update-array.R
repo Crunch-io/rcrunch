@@ -45,6 +45,9 @@ with_test_authentication({
         )
     })
     test_that("Can update where two subvariables are equal", {
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equal(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             isTRUE(all.equal(
                 diag(as.array(crtabs(~allpets$allpets_1 + allpets$allpets_2,
@@ -60,6 +63,9 @@ with_test_authentication({
                 c(`not selected` = 1, selected = 1, `not asked` = 3, skipped = 1)
             ))
         )
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equal(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             isTRUE(all.equal(
                 as.array(crtabs(~allpets$allpets_1,
@@ -85,6 +91,9 @@ with_test_authentication({
                 )
             ))
         )
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equal(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             isTRUE(all.equal(
                 as.array(crtabs(~allpets$allpets_3,
@@ -116,6 +125,9 @@ with_test_authentication({
         )
 
         ds$allpets$allpets_3[ds$allpets$allpets_1 == ds$allpets$allpets_2] <- "selected"
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equal(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             isTRUE(all.equal(
                 as.array(crtabs(~allpets$allpets_3,

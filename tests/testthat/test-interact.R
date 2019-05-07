@@ -99,6 +99,9 @@ with_test_authentication({
         )
 
         ds$interaction <- interactVariables(ds$q1, ds$country, name = "Pet.Country")
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equal(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             isTRUE(all.equal(
                 names(categories(ds$interaction)),
@@ -134,6 +137,9 @@ with_test_authentication({
             name = "Pet.Country2",
             description = "This is a description"
         )
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equal(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             isTRUE(all.equal(
                 names(categories(ds$interaction)),

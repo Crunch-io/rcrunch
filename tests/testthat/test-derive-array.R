@@ -183,6 +183,9 @@ with_test_authentication({
     ds <- appendDataset(ds, part2)
     test_that("When appending, derived arrays get data (or missing, as appropriate)", {
         ## No Data is added to the categories here
+        # Replace this `expect_true(identical(new) || identical(old))`
+        # construction with `expect_identical(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             identical(
                 names(categories(ds$metapetloc)),
@@ -275,6 +278,9 @@ with_test_authentication({
             c("petloc_home", "petloc_work", "petloc_school")
         )
         ## No Data comes in after appending because petloc_work and petloc_school have data gaps
+        # Replace this `expect_true(identical(new) || identical(old))`
+        # construction with `expect_identical(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
         expect_true(
             identical(
                 names(categories(ds$petloc)),
