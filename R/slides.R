@@ -11,10 +11,10 @@ setMethod("initialize", "SlideCatalog", function(.Object, ...) {
     return(.Object)
 })
 
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "SlideCatalog", function(x) titles(x))
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names<-", "SlideCatalog", function(x, value) titles(x) <- value)
 
@@ -36,16 +36,15 @@ setMethod("subtitles<-", "SlideCatalog", function(x, value) {
     setIndexSlot(x, "subtitle", value)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "SlideCatalog", function(x, i, ...) {
     getEntity(x, i, CrunchSlide)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
+setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
     function(x, i, j, value) {
         if (length(i) > 1) {
             # TODO, allow assignment of more than one slide
@@ -110,14 +109,6 @@ reorderSlides <- function(x, order) {
 
 # CrunchSlide -------------------------------------------------------------------
 
-#' @rdname show-crunch
-#' @export
-setMethod("show", "CrunchSlide", function(object) {
-    out <- cubes(object)
-    names(out) <- title(object)
-    print(out)
-})
-
 # TODO: Find out what the mandatory display settings should be for the app then
 # change this list to reflect those settings.
 DEFAULT_DISPLAY_SETTINGS <- list(
@@ -181,13 +172,13 @@ newSlide <- function(deck,
     return(CrunchSlide(crGET(url)))
 }
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "CrunchSlide", function(x, i, ...) {
     an_cat <- analyses(x)
     return(an_cat[[i]])
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", "CrunchSlide", function(x, i, j, value) {
     an_cat <- analyses(x)
@@ -276,25 +267,26 @@ setMethod("initialize", "AnalysisCatalog", function(.Object, ...) {
     return(.Object)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "AnalysisCatalog", function(x, i, ...) {
     getEntity(x, i, Analysis)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), function(x, i, j, value) {
-    if (i > length(x)) {
-        halt("Index out of bounds, you can only assign a formula to an existing analysis.")
+setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"),
+    function(x, i, j, value) {
+        if (i > length(x)) {
+            halt("Index out of bounds, you can only assign a formula to an existing analysis.")
+        }
+        analysis <- x[[i]]
+        query(analysis) <- value
+        invisible(refresh(x))
     }
-    analysis <- x[[i]]
-    query(analysis) <- value
-    invisible(refresh(x))
-})
-#' @rdname catalog-extract
+)
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
+setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
     function(x, i, j, value) {
         if (length(i) > 1) {
             # TODO, recurse through i
@@ -314,10 +306,9 @@ setMethod(
         invisible(refresh(x))
     }
 )
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("AnalysisCatalog", "numeric", "missing", "list"),
+setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"),
     function(x, i, j, value) {
         all_fmla <- vapply(value, function(x) inherits(x, "formula"), logical(1))
         if (any(!all_fmla)) {

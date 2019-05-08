@@ -1,32 +1,11 @@
-#' Subset datasets and extract variables
-#'
-#' @param x a CrunchDataset
-#' @param i As with a `data.frame`, there are two cases:
-#' 1. if no other arguments are supplied (i.e `x[i]`, `i` provides for
-#' `as.list` extraction: columns of the dataset rather than rows. If
-#' character, identifies variables to extract based on their aliases (by
-#' default: set `options(crunch.namekey.dataset="name")` to use variable
-#' names); if numeric or logical, extracts variables accordingly.
-#' 1. If `j` is specified as either `x[i, j]` or `x[i,]`), `i` is an object of class
-#' `CrunchLogicalExpr` that will define a subset of rows.
-#' @param j columnar extraction, as described above
-#' @param name columnar extraction for `$`
-#' @param drop logical: automatically simplify a 1-column Dataset to a Variable?
-#' Default is FALSE, and the TRUE option is in fact not implemented.
-#' @param ... additional arguments
-#' @return `[` yields a Dataset; `[[` and `$` return a Variable
-#' @name dataset-extract
-#' @aliases dataset-extract
-NULL
-
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchDataset", "ANY"), function(x, i, ..., drop = FALSE) {
     x@variables <- variables(x)[i]
     return(x)
 })
 
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchDataset", "logical", "missing"), function(x, i, j, ..., drop = FALSE) {
     ## See [.data.frame: this is similar to how it distinguishes x[i] from x[i,]
@@ -71,7 +50,7 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function(x, i, j, ..., 
     }
     return(x)
 })
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALSE) {
     w <- findVariablesInDataset(x, i)
@@ -82,7 +61,7 @@ setMethod("[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALSE
     return(x)
 })
 
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchDataset", "VariableGroup"), function(x, i, ..., drop = FALSE) {
     ## Do allVariables because Group/Order may contain refs to hidden vars
@@ -90,7 +69,7 @@ setMethod("[", c("CrunchDataset", "VariableGroup"), function(x, i, ..., drop = F
     return(x)
 })
 
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchDataset", "VariableOrder"), function(x, i, ..., drop = FALSE) {
     x@variables <- allVariables(x)[i]
@@ -98,7 +77,7 @@ setMethod("[", c("CrunchDataset", "VariableOrder"), function(x, i, ..., drop = F
 })
 
 
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchDataset", "missing", "ANY"), function(x, i, j, ..., drop = FALSE) {
     x[j]
@@ -123,11 +102,11 @@ setMethod("[", c("CrunchDataset", "missing", "ANY"), function(x, i, j, ..., drop
     return(x)
 }
 
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "missing"), .updateActiveFilter)
 
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function(x, i, j, ..., drop = FALSE) {
     ## Do the filtering of rows, then cols
@@ -135,13 +114,13 @@ setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function(x, i, j,
     return(x[j])
 })
 
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("subset", "CrunchDataset", function(x, ...) {
     x[..1, ]
 })
 
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function(x, i, ..., drop = FALSE) {
     out <- variables(x)[[i]]
@@ -150,19 +129,19 @@ setMethod("[[", c("CrunchDataset", "ANY"), function(x, i, ..., drop = FALSE) {
     }
     return(out)
 })
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALSE) {
     out <- allVariables(x)[[findVariablesInDataset(x, i)]]
     if (!is.null(out)) {
         out <- CrunchVariable(out, filter = activeFilter(x))
-        if (tuple(out)$discarded) {
+        if (tuple(out)$discarded && getOption("crunch.warn.hidden", TRUE)) {
             warning("Variable ", alias(out), " is hidden", call. = FALSE)
         }
     }
     return(out)
 })
-#' @rdname dataset-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "CrunchDataset", function(x, name) x[[name]])
 

@@ -1,23 +1,3 @@
-#' Update a variable or variables in a dataset
-#'
-#' @param x a CrunchDataset
-#' @param i For `[`, a `CrunchLogicalExpr`, numeric, or logical
-#' vector defining a subset of the rows of `x`. For `[[`, see
-#' `j` for the as.list column subsetting.
-#' @param j if character, identifies variables to extract based on their
-#' aliases (by default: set `options(crunch.namekey.dataset="name")`
-#' to use variable names); if numeric or
-#' logical, extracts variables accordingly. Note that this is the as.list
-#' extraction, columns of the dataset rather than rows.
-#' @param name like `j` but for `$`
-#' @param value replacement values to insert. These can be `crunchExpr`s
-#' or R vectors of the corresponding type
-#' @return `x`, modified.
-#' @aliases dataset-update
-#' @name dataset-update
-NULL
-
-
 .addVariableSetter <- function(x, i, value) {
     if (i %in% names(x)) {
         ## We're not adding, we're updating.
@@ -74,50 +54,38 @@ NULL
     return(x)
 }
 
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "CrunchVariable"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchVariable"),
     .updateVariableMetadata
 )
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "ANY", "missing", "CrunchVariable"),
+setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchVariable"),
     function(x, i, value) .updateVariableMetadata(x, names(x)[i], value)
 )
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "ANY"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "ANY"),
     .addVariableSetter
 )
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"),
     function(x, i, value) {
         halt("Cannot currently derive a logical variable")
     }
 )
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "ANY"),
+setMethod("[[<-", c("CrunchDataset", "ANY"),
     function(x, i, value) {
         halt("Only character (name) indexing supported for [[<-")
     }
 )
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "NULL"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "NULL"),
     function(x, i, value) {
         allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
         if (!(i %in% allnames)) {
@@ -127,45 +95,38 @@ setMethod(
         return(deleteVariables(x, i))
     }
 )
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "ANY", "missing", "NULL"),
+setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "NULL"),
     function(x, i, value) deleteVariables(x, names(x)[i])
 )
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", c("CrunchDataset"), function(x, name, value) {
     x[[name]] <- value
     return(x)
 })
 
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "character", "missing", "CrunchGeography"),
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchGeography"),
     function(x, i, value) {
         geo(x[[i]]) <- value
         return(x)
     }
 )
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-",
-    c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
+setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
     function(x, i, value) {
         geo(x[[i]]) <- value
         return(x)
     }
 )
 
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[<-", c("CrunchDataset", "ANY", "missing", "list"),
+setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
     function(x, i, j, value) {
         ## For lapplying over variables to edit metadata
         stopifnot(
@@ -179,12 +140,21 @@ setMethod(
     }
 )
 
-## TODO: add similar [<-.CrunchDataset, CrunchDataset/VariableCatalog
-
-#' @rdname dataset-update
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
+setMethod("[<-", c("CrunchDataset", "ANY", "missing", "CrunchDataset"),
+    function(x, i, j, value) {
+        ## This is where you do e.g. names(variables(ds[subset])) <-
+        ## So assume the updates have already happened.
+        stopifnot(identical(self(x), self(value)))
+        allVariables(x) <- allVariables(value)
+        return(x)
+    }
+)
+
+#' @rdname crunch-extract
+#' @export
+setMethod("[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
     function(x, i, j, value) {
         if (j %in% names(x)) {
             return(.updateValues(x, j, value, filter = i))

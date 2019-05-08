@@ -3,7 +3,10 @@
 \docType{methods}
 \name{expressions}
 \alias{expressions}
-\alias{rollupResolution<-}
+\alias{\%in\%}
+\alias{==}
+\alias{!=}
+\alias{!}
 \alias{!,CrunchExpr-method}
 \alias{\%in\%,CategoricalVariable,character-method}
 \alias{\%in\%,CategoricalVariable,factor-method}
@@ -21,11 +24,10 @@
 \alias{!=,CategoricalVariable,factor-method}
 \alias{is.na,CrunchVariable-method}
 \alias{bin}
-\alias{rollup}
-\alias{rollupResolution}
-\alias{rollupResolution<-,DatetimeVariable-method}
 \title{Construct Crunch Expressions}
 \usage{
+x \%in\% table
+
 \S4method{!}{CrunchExpr}(x)
 
 \S4method{\%in\%}{CategoricalVariable,character}(x, table)
@@ -59,12 +61,6 @@
 \S4method{is.na}{CrunchVariable}(x)
 
 bin(x)
-
-rollup(x, resolution = rollupResolution(x))
-
-rollupResolution(x)
-
-\S4method{rollupResolution}{DatetimeVariable}(x) <- value
 }
 \arguments{
 \item{x}{an input}
@@ -74,15 +70,6 @@ rollupResolution(x)
 \item{e1}{an input}
 
 \item{e2}{an input}
-
-\item{resolution}{For \code{rollup}. Either \code{NULL} or a character in
-c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
-time at which a Datetime variable should be aggregated. If \code{NULL},
-the server will determine an appropriate resolution based on the range of
-the data.}
-
-\item{value}{for the \code{rollupResolution()} setter, the default resolution for
-this variable.}
 }
 \value{
 Most functions return a CrunchExpr or CrunchLogicalExpr.

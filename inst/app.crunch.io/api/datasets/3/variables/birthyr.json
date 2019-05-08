@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "https://app.crunch.io/api/datasets/1/variables/birthyr/",
+    "self": "https://app.crunch.io/api/datasets/3/variables/birthyr/",
     "body": {
         "alias": "birthyr",
         "name": "Birth Year",
@@ -26,15 +26,15 @@
         "id": "f78ca47313144b57adfb495893968e70"
     },
     "views": {
-        "summary": "https://app.crunch.io/api/datasets/1/variables/birthyr/summary/",
-        "values": "https://app.crunch.io/api/datasets/1/variables/birthyr/values/",
-        "cast": "https://app.crunch.io/api/datasets/1/variables/birthyr/cast/"
+        "summary": "https://app.crunch.io/api/datasets/3/variables/birthyr/summary/",
+        "values": "https://app.crunch.io/api/datasets/3/variables/birthyr/values/",
+        "cast": "https://app.crunch.io/api/datasets/3/variables/birthyr/cast/"
     },
     "catalogs": {
-        "folder": "https://app.crunch.io/api/datasets/1/folders/1/"
+        "folder": "https://app.crunch.io/api/datasets/3/folders/hidden/"
     },
     "urls": {
-        "dataset_url": "https://app.crunch.io/api/datasets/1/"
+        "dataset_url": "https://app.crunch.io/api/datasets/3/"
     },
     "description": "Details for a given Variable"
 }

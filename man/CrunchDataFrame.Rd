@@ -3,43 +3,12 @@
 \name{CrunchDataFrame}
 \alias{CrunchDataFrame}
 \alias{dim.CrunchDataFrame}
-\alias{names.CrunchDataFrame}
-\alias{[.CrunchDataFrame}
-\alias{[<-.CrunchDataFrame}
-\alias{[[.CrunchDataFrame}
-\alias{[[<-.CrunchDataFrame}
-\alias{$.CrunchDataFrame}
-\alias{$<-.CrunchDataFrame}
 \title{CrunchDataFrame}
 \usage{
 \method{dim}{CrunchDataFrame}(x)
-
-\method{names}{CrunchDataFrame}(x)
-
-\method{[}{CrunchDataFrame}(x, i, j, drop = TRUE)
-
-\method{[}{CrunchDataFrame}(x, i, j) <- value
-
-\method{[[}{CrunchDataFrame}(x, i)
-
-\method{[[}{CrunchDataFrame}(x, i) <- value
-
-\method{$}{CrunchDataFrame}(x, i)
-
-\method{$}{CrunchDataFrame}(x, i) <- value
 }
 \arguments{
 \item{x}{a CrunchDataFrame}
-
-\item{i}{indicators for rows (integers or logicals)}
-
-\item{j}{indicators for columns (names, integers, or logicals)}
-
-\item{drop}{logical. If \code{TRUE} the result is coerced to the lowest possible
-dimension. The default is to drop if only one column is left, but not to drop
-if only one row is left.}
-
-\item{value}{value to place (or replace) in the CrunchDataFrame}
 }
 \description{
 CrunchDataFrames are designed to mimic the ways that \code{\link{data.frame}}s are used.

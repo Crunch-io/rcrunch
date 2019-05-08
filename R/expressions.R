@@ -9,43 +9,23 @@
 #' @param e1 an input
 #' @param e2 an input
 #' @param table For \code{\%in\%}. See [base::match()]
-#' @param resolution For `rollup`. Either `NULL` or a character in
-#' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
-#' time at which a Datetime variable should be aggregated. If `NULL`,
-#' the server will determine an appropriate resolution based on the range of
-#' the data.
-#' @param value for the `rollupResolution()` setter, the default resolution for
-#' this variable.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
 #' `as.vector` returns an R vector.
-#' @aliases expressions rollupResolution<-
+#' @aliases expressions %in% == != !
 #' @name expressions
-NULL
-
-#' @rdname variable-to-R
-#' @export
-setMethod("as.vector", "CrunchExpr", function(x, mode) {
-    payload <- list(query = toJSON(list(out = zcl(x))))
-    if (length(x@filter)) {
-        payload[["filter"]] <- toJSON(x@filter)
-    } else {
-        payload$filter <- "{}"
-    }
-    out <- paginatedGET(paste0(x@dataset_url, "table/"),
-        query = payload, table = TRUE, limit = .crunchPageSize(x)
-    )
-    ## pass in the variable metadata to the column parser
-    variable <- VariableEntity(structure(list(body = out$metadata$out),
-        class = "shoji"
-    ))
-    return(columnParser(out$metadata$out$type)(out$data$out, variable, mode))
-})
-
-#' @rdname toVariable
-#' @export
-setMethod("toVariable", "CrunchExpr", function(x, ...) {
-    structure(list(derivation = zcl(x), ...), class = "VariableDefinition")
-})
+setGeneric("%in%")
+# TODO: figure this out.
+# Can't "roxygen" these because check says
+# Functions or methods with usage in documentation object 'expressions' but not in code:
+#   == != !
+#
+# but if you try standardGeneric, it fails to build with
+# Error in setGeneric("==", function(e1, e2) standardGeneric("==")) :
+#   ‘==’ dispatches internally;  methods can be defined, but the generic
+#   function is implicit, and cannot be changed.
+setGeneric("==")
+setGeneric("!=")
+setGeneric("!")
 
 ## "Ops" for Crunch Variables
 ##
@@ -306,9 +286,6 @@ setMethod(
     function(e1, e2) e1 != as.character(e2)
 )
 
-#' @rdname dataset-reference
-setMethod("datasetReference", "CrunchExpr", function(x) x@dataset_url)
-
 #' @rdname expressions
 #' @export
 setMethod("is.na", "CrunchVariable", function(x) zfuncExpr("is_missing", x))
@@ -317,36 +294,7 @@ setMethod("is.na", "CrunchVariable", function(x) zfuncExpr("is_missing", x))
 #' @export
 bin <- function(x) zfuncExpr("bin", x)
 
-#' @rdname expressions
-#' @export
-rollup <- function(x, resolution = rollupResolution(x)) {
-    validateResolution(force(resolution))
-    if (is.variable(x) && !is.Datetime(x)) {
-        halt("Cannot rollup a variable of type ", dQuote(type(x)))
-    }
-    return(zfuncExpr("rollup", x, list(value = resolution)))
-}
-
-#' @rdname expressions
-#' @export
-rollupResolution <- function(x) {
-    if (is.Datetime(x)) {
-        return(tuple(x)$rollup_resolution)
-    } else {
-        return(NULL)
-    }
-}
-
-#' @rdname expressions
-#' @export
-setMethod("rollupResolution<-", "DatetimeVariable", function(x, value) {
-    validateResolution(force(value))
-    setEntitySlot(entity(x), "view", list(rollup_resolution = value))
-    return(refresh(x))
-})
-
-
-#' @rdname variable-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
 
@@ -365,11 +313,11 @@ setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
     }
 }
 
-#' @rdname variable-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchExpr", "logical"), .updateActiveFilterLogical)
 
-#' @rdname variable-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchExpr", "numeric"), function(x, i, ...) {
     i <- CrunchLogicalExpr(

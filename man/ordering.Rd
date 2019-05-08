@@ -14,6 +14,10 @@
 \alias{ordering<-,ProjectFolder-method}
 \title{Get and set VariableOrder}
 \usage{
+ordering(x)
+
+ordering(x) <- value
+
 \S4method{ordering}{CrunchDataset}(x)
 
 \S4method{ordering}{CrunchDataset}(x) <- value
@@ -43,3 +47,4 @@
 The \code{ordering} methods allow you to get and set a \code{\link{VariableOrder}} on a
 \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that the dataset contains.
 }
+\keyword{internal}

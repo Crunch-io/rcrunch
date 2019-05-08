@@ -58,13 +58,6 @@ with_mock_crunch({
         )
     })
 
-    test_that("createWithMetadataAndFile when metadata is file too", {
-        expect_POST(
-            newDatasetFromFixture("apidocs"),
-            "https://app.crunch.io/api/datasets/",
-            toJSON(fromJSON(file.path("dataset-fixtures", "apidocs.json"), simplifyVector = FALSE))
-        )
-    })
     test_that("uploadData writes out a gzipped file", {
         ds <- loadDataset("test ds")
         with_DELETE(NULL, {
@@ -166,6 +159,13 @@ with_mock_crunch({
             "Must provide a file or url to createSource"
         )
     })
+
+    test_that("newExampleDataset", {
+        expect_POST(newExampleDataset(),
+            'https://app.crunch.io/api/datasets/',
+            '{"element":"shoji:entity","body":{"name":"Example dataset",'
+        )
+    })
 })
 
 with_test_authentication({
@@ -193,7 +193,7 @@ with_test_authentication({
         })
     })
 
-    m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
+    m <- fromJSON(system.file("example-datasets", "pets.json", package="crunch"),
         simplifyVector = FALSE
     )
 
@@ -230,7 +230,7 @@ with_test_authentication({
         m2$body$table$metadata$allpets$subvariables[[4]] <- list(name = "Another", alias = "allpets_1")
         expect_error(createWithMetadataAndFile(
             m2,
-            file.path("dataset-fixtures", "apidocs.csv")
+            system.file("example-datasets", "pets.csv", package="crunch")
         ))
     })
 

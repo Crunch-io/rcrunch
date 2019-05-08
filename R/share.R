@@ -1,35 +1,3 @@
-#' See who has access to a dataset
-#'
-#' @param x CrunchDataset
-#' @return A PermissionCatalog containing information on the users and teams
-#' that have access to this dataset.
-#' @name permissions
-#' @aliases permissions
-NULL
-
-#' @rdname permissions
-#' @export
-setMethod("permissions", "CrunchDataset", function(x) {
-    perm_url <- shojiURL(x, "catalogs", "permissions")
-    return(PermissionCatalog(crGET(perm_url)))
-})
-
-#' @rdname is.editor
-#' @export
-setMethod("is.editor", "PermissionCatalog", function(x) {
-    out <- vapply(index(x), function(a) {
-        isTRUE(a[["dataset_permissions"]][["edit"]])
-    }, logical(1), USE.NAMES = FALSE)
-    names(out) <- emails(x) ## Drop this
-    return(out)
-})
-
-#' @rdname is.editor
-#' @export
-setMethod("is.editor", "PermissionTuple", function(x) {
-    isTRUE(x[["dataset_permissions"]][["edit"]])
-})
-
 #' Share a dataset
 #'
 #' @param dataset a CrunchDataset

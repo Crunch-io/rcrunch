@@ -75,22 +75,11 @@
     return(f)
 }
 
-#' Update variables with expressions or values
-#'
-#' @param x a Variable
-#' @param i a CrunchLogicalExpr or R index, optionally
-#' @param j Invalid
-#' @param value an R vector or a CrunchExpr with which to update
-#' @return `x` duly modified
-#' @name variable-update
-#' @aliases variable-update
-NULL
-
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"), .backstopUpdate)
 
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CrunchVariable", "ANY", "missing", "NULL"),
@@ -103,25 +92,25 @@ setMethod(
     return(x)
 }
 
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("TextVariable", "ANY", "missing", "character"),
     .var.updater
 )
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("NumericVariable", "ANY", "missing", "numeric"),
     .var.updater
 )
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("DatetimeVariable", "ANY", "missing", "Date"),
     .var.updater
 )
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("DatetimeVariable", "ANY", "missing", "POSIXt"),
@@ -137,20 +126,20 @@ setMethod(
     }
 }
 
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CrunchVariable", "ANY", "missing", "CrunchExpr"),
     .var.updater.crunchobj
 )
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CrunchVariable", "ANY", "missing", "CrunchVariable"),
     .var.updater.crunchobj
 )
 
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CrunchVariable", "ANY", "missing", "CrunchLogicalExpr"),
@@ -211,44 +200,44 @@ setMethod(
     }
 )
 
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CategoricalVariable", "ANY", "missing", "numeric"),
     .categorical.update[["numeric"]]
 )
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CategoricalVariable", "ANY", "missing", "character"),
     .categorical.update[["character"]]
 )
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CategoricalVariable", "ANY", "missing", "factor"),
     .categorical.update[["factor"]]
 )
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CategoricalArrayVariable", "ANY", "missing", "numeric"),
     .categorical.update[["numeric"]]
 )
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CategoricalArrayVariable", "ANY", "missing", "character"),
     .categorical.update[["character"]]
 )
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CategoricalArrayVariable", "ANY", "missing", "factor"),
     .categorical.update[["factor"]]
 )
 
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("CrunchVariable", "ANY", "missing", "logical"),
@@ -287,7 +276,7 @@ setMethod(
     }
 }
 
-#' @rdname variable-update
+#' @rdname crunch-extract
 #' @export
 setMethod("is.na<-", "CrunchVariable", function(x, value) {
     x[value] <- NA

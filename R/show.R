@@ -4,8 +4,8 @@
 #' @return invisibly
 #' @seealso [`methods::show`]
 #' @importFrom methods show
-#' @name show-crunch
-NULL
+#' @name show
+setGeneric("show")
 
 
 # Boilerplate
@@ -21,28 +21,28 @@ NULL
     invisible(out)
 }
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "ShojiObject", .showIt)
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "CrunchVariable", .showIt)
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "Category", .showIt)
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "Categories", .showIt)
 
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "Insertion", .showIt)
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "Insertions", .showIt)
 
@@ -301,7 +301,7 @@ formatExpressionValue <- function(val, cats = NULL) {
     return(deparseAndFlatten(val))
 }
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "CrunchExpr", function(object) {
     cat("Crunch expression: ", formatExpression(object), "\n",
@@ -310,7 +310,7 @@ setMethod("show", "CrunchExpr", function(object) {
     invisible(object)
 })
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "CrunchLogicalExpr", function(object) {
     cat("Crunch logical expression: ", formatExpression(object), "\n",
@@ -395,11 +395,11 @@ setMethod(
         ))
     }
 )
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "CrunchCube", function(object) showTransforms(object))
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "OrderGroup", function(object) {
     ind <- structure(lapply(urls(object), function(x) list(name = x)),
@@ -408,7 +408,7 @@ setMethod("show", "OrderGroup", function(object) {
     cat(showOrderGroup(object, index = ind, key = "name"), sep = "\n")
 })
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "CrunchGeography", function(object) {
     geo_datum <- Geodata(crGET(object$geodatum))
@@ -421,6 +421,37 @@ setMethod("show", "CrunchGeography", function(object) {
         sep = ""
     )
     invisible(object)
+})
+
+#' @rdname show
+#' @export
+setMethod("show", "DeckCatalog", function(object) {
+    out <- as.data.frame(object)
+    if (length(object) > 0) {
+        print(out[, c("name", "team", "is_public", "owner_name")])
+    } else {
+        print(out)
+    }
+})
+
+#' @rdname show
+#' @export
+setMethod("show", "CrunchDeck", function(object) {
+    print(cubes(object))
+})
+
+#' @rdname show
+#' @export
+setMethod("show", "CrunchSlide", function(object) {
+    out <- cubes(object)
+    names(out) <- title(object)
+    print(out)
+})
+
+#' @rdname show
+#' @export
+setMethod("show", "MultitableResult", function(object) {
+    show(do.call("cbind", lapply(object, cubeToArray)))
 })
 
 setMethod("getShowContent", "ShojiFolder", function(x) {

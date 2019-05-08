@@ -1,3 +1,5 @@
+#' @include shoji-catalog.R
+NULL
 
 # Generics ----------------------------------------------------------------
 
@@ -126,13 +128,13 @@ newDeck <- function(dataset, name, ...) {
 
 setMethod("initialize", "DeckCatalog", init.sortCatalog)
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "DeckCatalog", function(x, i, ...) {
     getEntity(x, i, CrunchDeck, ...)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     if (length(i) > 1) {
@@ -150,24 +152,18 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     getEntity(x, index, CrunchDeck, ...)
 })
 
-#' @rdname show-crunch
+#' @rdname crunch-extract
 #' @export
-setMethod("show", "DeckCatalog", function(object) {
-    out <- as.data.frame(object)
-    if (length(object) > 0) {
-        print(out[, c("name", "team", "is_public", "owner_name")])
-    } else {
-        print(out)
-    }
-})
+setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
+    modifyCatalogInPlace)
 
 # CrunchDeck --------------------------------------------------------------
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "CrunchDeck", function(x, i, ...) slides(x)[[i]])
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
     slideCat <- slides(x)
@@ -188,7 +184,7 @@ slides <- function(x) {
     SlideCatalog(crGET(shojiURL(x, "catalogs", "slides")))
 }
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "CrunchDeck", function(x, value) {
     stopifnot(is.singleCharacter(value))
@@ -196,10 +192,10 @@ setMethod("name<-", "CrunchDeck", function(x, value) {
     return(invisible(out))
 })
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description", "CrunchDeck", function(x) x@body$description)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description<-", "CrunchDeck", function(x, value) {
     stopifnot(is.singleCharacter(value))
@@ -207,20 +203,10 @@ setMethod("description<-", "CrunchDeck", function(x, value) {
     return(invisible(out))
 })
 
-#' @rdname is-public
-#' @export
-setMethod("is.public", "CrunchDeck", function(x) x@body$is_public)
-#' @rdname is-public
-#' @export
-setMethod("is.public<-", "CrunchDeck", function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_public", value)
-})
-
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "CrunchDeck", function(x) titles(slides(x)))
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names<-", "CrunchDeck", function(x, value) {
     slide_cat <- slides(x)
@@ -274,10 +260,6 @@ exportDeck <- function(deck, file, format = c("xlsx", "pptx", "json")) {
     crDownload(dl_link, file)
 }
 
-#' @rdname catalog-length
-#' @export
-setMethod("length", "CrunchDeck", function(x) return(length(slides(x))))
-
 #' @rdname display-settings
 #' @export
 setMethod("cubes", "CrunchDeck", function(x) {
@@ -293,10 +275,4 @@ setMethod("cubes", "CrunchDeck", function(x) {
     })
     names(out) <- titles(x)
     return(out)
-})
-
-#' @rdname show-crunch
-#' @export
-setMethod("show", "CrunchDeck", function(object) {
-    print(cubes(object))
 })

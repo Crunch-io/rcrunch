@@ -13,13 +13,6 @@
 #' data.frames.
 #'
 #' @param x a CrunchDataFrame
-#' @param i indicators for rows (integers or logicals)
-#' @param j indicators for columns (names, integers, or logicals)
-#' @param value value to place (or replace) in the CrunchDataFrame
-#' @param drop logical. If `TRUE` the result is coerced to the lowest possible
-#' dimension. The default is to drop if only one column is left, but not to drop
-#' if only one row is left.
-#'
 #' @name CrunchDataFrame
 NULL
 
@@ -75,13 +68,11 @@ dim.CrunchDataFrame <- function(x) {
 }
 
 #' @export
-#' @rdname CrunchDataFrame
+#' @rdname describe-catalog
 names.CrunchDataFrame <- function(x) attr(x, "col_names")
 
-
-
 #' @export
-#' @rdname CrunchDataFrame
+#' @rdname crunch-extract
 `[.CrunchDataFrame` <- function(x, i, j, drop = TRUE) {
     j <- grabColNames(x, j)
     row_inds <- grabRowInd(x, i)
@@ -114,7 +105,7 @@ names.CrunchDataFrame <- function(x) attr(x, "col_names")
 }
 
 #' @export
-#' @rdname CrunchDataFrame
+#' @rdname crunch-extract
 `[<-.CrunchDataFrame` <- function(x, i, j, value) {
     j <- grabColNames(x, j)
     row_inds <- grabRowInd(x, i)
@@ -197,7 +188,7 @@ grabRowInd <- function(x, i) {
 }
 
 #' @export
-#' @rdname CrunchDataFrame
+#' @rdname crunch-extract
 `[[.CrunchDataFrame` <- function(x, i) {
     return(getCrdfVar(grabColNames(x, i, allow_logical = FALSE),
         x,
@@ -206,7 +197,7 @@ grabRowInd <- function(x, i) {
 }
 
 #' @export
-#' @rdname CrunchDataFrame
+#' @rdname crunch-extract
 `[[<-.CrunchDataFrame` <- function(x, i, value) {
     return(setCrdfVar(
         col_name = grabColNames(x, i, allow_logical = FALSE),
@@ -215,13 +206,13 @@ grabRowInd <- function(x, i) {
 }
 
 #' @export
-#' @rdname CrunchDataFrame
+#' @rdname crunch-extract
 `$.CrunchDataFrame` <- function(x, i) {
     return(getCrdfVar(i, x, mode = attr(x, "mode")))
 }
 
 #' @export
-#' @rdname CrunchDataFrame
+#' @rdname crunch-extract
 `$<-.CrunchDataFrame` <- function(x, i, value) {
     return(setCrdfVar(col_name = i, crdf = x, value = value))
 }

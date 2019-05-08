@@ -171,28 +171,6 @@ with(temp.option(foo.bar = "no", foo.other = "other"), {
     })
 })
 
-test_that("default date formater", {
-    expect_error(
-        datetimeFormater("not a resolution"),
-        paste0(
-            dQuote("resolution"), " is invalid. Valid values are ",
-            serialPaste(c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms"),
-                collapse = "or"
-            )
-        )
-    )
-    expect_equal(datetimeFormater("Y"), "%Y")
-    expect_equal(datetimeFormater("Q"), "%Y-%m-%d")
-    expect_equal(datetimeFormater("M"), "%Y-%m")
-    expect_equal(datetimeFormater("W"), "%Y W%W")
-    expect_equal(datetimeFormater("D"), "%Y-%m-%d")
-    expect_equal(datetimeFormater("h"), "%Y-%m-%d %H:00")
-    expect_equal(datetimeFormater("m"), "%Y-%m-%d %H:%M")
-    expect_equal(datetimeFormater("s"), "%Y-%m-%d %H:%M:%S")
-    expect_equal(datetimeFormater("ms"), "%Y-%m-%d %H:%M:%S.%f")
-    expect_equal(datetimeFormater(NULL), "%Y-%m-%d %H:%M:%S")
-})
-
 test_that("loadCube can handle a number of locations", {
     # loadCube can load old fixtures that lack element/self/value metadata
     cube <- loadCube("cubes/array-cube-sans-metadata.json")

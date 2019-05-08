@@ -22,14 +22,15 @@ with_mock_crunch({
     })
 
     test_that("active/hidden getters", {
+        expect_is(hidden(varcat), "VariableFolder")
+        expect_length(hidden(varcat), 0)
         expect_identical(
             index(active(varcat)),
             index(varcat)[urls(ordering(varcat))]
         )
-        expect_equivalent(index(hidden(varcat)), list())
         index(varcat)[[1]]$discarded <- TRUE
         expect_is(active(varcat), "VariableCatalog")
-        expect_is(hidden(varcat), "VariableCatalog")
+        # Specific behavior of "hidden" is tested in test-hide-variables.R
         expect_identical(
             urls(active(varcat)),
             c(
@@ -42,13 +43,6 @@ with_mock_crunch({
             )
         )
         expect_length(active(varcat), 6)
-        expect_identical(
-            urls(hidden(varcat)),
-            "https://app.crunch.io/api/datasets/1/variables/birthyr/"
-        )
-        expect_length(hidden(varcat), 1)
-        expect_length(varcat, 7)
-        expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
 
     gender.url <- "https://app.crunch.io/api/datasets/1/variables/gender/"

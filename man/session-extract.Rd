@@ -42,3 +42,4 @@ Extract catalogs from a Session object
 \seealso{
 \code{session}
 }
+\keyword{internal}

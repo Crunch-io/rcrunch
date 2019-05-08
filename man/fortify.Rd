@@ -20,3 +20,4 @@ fortify.CrunchDataset(model, data, ...)
 \description{
 Fortify crunch objects for use with ggplot
 }
+\keyword{internal}

@@ -12,6 +12,9 @@ A DatasetOrder object is a subclass of \code{list} that contains
 DatasetGroups. DatasetGroup objects contain a group name and an set of
 "entities", which can be dataset references or other nested DatasetGroups.
 }
+\details{
+This API is deprecated. Use folders instead.
+}
 \section{Slots}{
 
 \describe{
@@ -22,3 +25,4 @@ more generally, this field can be referenced as "name" as well.}
 combination of dataset URLs and DatasetGroup objects.}
 }}
 
+\keyword{internal}
