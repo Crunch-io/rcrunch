@@ -56,19 +56,40 @@ with_test_authentication({
             )
             # and now with No Data
             kube@useNA <- "always"
-            expect_equivalent(
-                as.array(kube)[, , "Cat"],
-                array(c(
-                    1, 1, 0, 0, 1, 0,
-                    2, 0, 0, 0, 0, 0
-                ),
-                dim = c(6L, 2L),
-                dimnames = list(
-                    q1 = c("A", "B", "C", "D", "E", "No Data"),
-                    wave = c("2014-12-01", "2015-01-01")
+            result <- as.array(kube)[, , "Cat"]
+            if (length(result) == 18) {
+                expect_equivalent(
+                    result,
+                    array(c(
+                        1, 1, 0, 0, 1, 0,
+                        2, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0
+                    ),
+                    dim = c(6L, 3L),
+                    dimnames = list(
+                        q1 = c("A", "B", "C", "D", "E", "No Data"),
+                        wave = c("2014-12-01", "2015-01-01", "<NA>")
+                    )
+                    )
                 )
+            } else {
+                # Remove this branch once the "default values" ticket
+                # https://www.pivotaltracker.com/story/show/164939686 is released,
+                # because it won't be correct output anymore.
+                expect_equivalent(
+                    result,
+                    array(c(
+                        1, 1, 0, 0, 1, 0,
+                        2, 0, 0, 0, 0, 0
+                    ),
+                    dim = c(6L, 2L),
+                    dimnames = list(
+                        q1 = c("A", "B", "C", "D", "E", "No Data"),
+                        wave = c("2014-12-01", "2015-01-01")
+                    )
+                    )
                 )
-            )
+            }
         })
 
         test_that("Categorical Array cube", {
