@@ -204,7 +204,7 @@ addNoDataCategory <- function(variable) {
 }
 
 ensureNoDataCategory <- function(cats) {
-    if (-1 %in% ids(cats)) {
+    if ("No Data" %in% names(cats)) {
         # check "No Data"?
         return(cats)
     } else {

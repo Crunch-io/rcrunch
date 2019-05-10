@@ -22,7 +22,7 @@ with_mock_crunch({
         expect_POST(
             is.na(ds$birthyr) <- ds$birthyr > 2016,
             "https://app.crunch.io/api/datasets/1/table/", '{"command":"update","variables":',
-            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":{"value":{"?":-1},',
+            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":{"value":null,',
             '"type":{"class":"numeric"}}},"filter":{"function":">","args":',
             '[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
             '{"value":2016}]}}'
