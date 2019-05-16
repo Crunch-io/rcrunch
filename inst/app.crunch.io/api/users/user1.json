@@ -11,6 +11,7 @@
         "preferences": {}
     },
     "catalogs": {
+        "integrations": "https://app.crunch.io/api/users/user1/integrations/",
         "datasets": "https://app.crunch.io/api/datasets/"
     },
     "urls": {

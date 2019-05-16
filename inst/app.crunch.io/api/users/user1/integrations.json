@@ -1,0 +1,19 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/users/user1/integrations/",
+    "description": "Integrations the user has associated with their account",
+    "index": {
+        "https://app.crunch.io/api/users/user1/integrations/decipher_id": {
+            "description": "Decipher",
+            "created": "2019-04-08T13:14:49.072000+00:00",
+            "id": "decipher_id",
+            "name": "decipher_apikey"
+        },
+        "https://app.crunch.io/api/users/user1/integrations/sm_id": {
+            "description": "fake (fake@fake.com)",
+            "created": "2019-04-17T15:35:18.729000+00:00",
+            "id": "sm_id",
+            "name": "surveymonkey_oauth"
+        }
+    }
+}
