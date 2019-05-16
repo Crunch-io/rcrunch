@@ -60,6 +60,7 @@ Collate:
     'archive-and-publish.R'
     'as-data-frame.R'
     'as-vector.R'
+    'auth-decipher.R'
     'auth.R'
     'batches.R'
     'case-variables.R'
