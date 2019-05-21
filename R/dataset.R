@@ -349,10 +349,6 @@ setMethod("as.environment", "CrunchDataset", function(x) {
     return(out)
 })
 
-.releaseDataset <- function(dataset) {
-    warning("The releaseDataset function now does nothing and will be removed in a future version.")
-}
-
 #' Get and set the owner of a dataset
 #'
 #' @param x CrunchDataset
