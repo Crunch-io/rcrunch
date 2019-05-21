@@ -299,7 +299,6 @@ with_test_authentication({
                 dimnames = list(combined_pets = c("Mammals", "Bird"))
             )
         )
-        ds <- releaseAndReload(ds)
         expect_equivalent(
             as.array(crtabs(~q1, data = ds)),
             array(c(6, 4, 10),

@@ -288,23 +288,6 @@ with_test_authentication({
         )
     })
 
-    ## Check that that persisted on release/reload
-    ds <- releaseAndReload(ds)
-    test_that("Reordering of subvars persists on release", {
-        expect_identical(
-            names(subvariables(ds$MR)),
-            c("mr_3", "mr_1", "M.R. Two")
-        )
-        expect_equivalent(
-            table(ds$MR),
-            structure(array(c(1, 2, 1),
-                dimnames = list(MR = c("mr_3", "mr_1", "M.R. Two"))
-            ),
-            class = "table"
-            )
-        )
-    })
-
     subvariables(ds$MR)[1:2] <- subvariables(ds$MR)[c(2, 1)]
     test_that("Can reorder a subset of subvariables", {
         expect_identical(
@@ -357,22 +340,6 @@ with_test_authentication({
 
     subvariables(ds$MRcopy) <- subvariables(ds$MRcopy)[c(2, 3, 1)]
     test_that("Can reorder the copy", {
-        expect_equivalent(
-            as.array(crtabs(~MR, data = ds)),
-            structure(array(c(2, 1, 1),
-                dimnames = list(MR = c("mr_1", "mr_2", "mr_3"))
-            ))
-        )
-        expect_equivalent(
-            as.array(crtabs(~MRcopy, data = ds)),
-            structure(array(c(1, 1, 2),
-                dimnames = list(MR = c("mr_2", "mr_3", "mr_1"))
-            ))
-        )
-    })
-
-    ds <- releaseAndReload(ds)
-    test_that("Still reordered on release", {
         expect_equivalent(
             as.array(crtabs(~MR, data = ds)),
             structure(array(c(2, 1, 1),

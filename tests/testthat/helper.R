@@ -52,11 +52,6 @@ newDatasetFromFixture <- function(filename) {
     )))
 }
 
-releaseAndReload <- function(dataset) {
-    .releaseDataset(dataset)
-    return(refresh(dataset))
-}
-
 ## Data frames to make datasets with
 df <- data.frame(
     v1 = c(rep(NA_real_, 5), rnorm(15)),
