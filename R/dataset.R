@@ -349,11 +349,6 @@ setMethod("as.environment", "CrunchDataset", function(x) {
     return(out)
 })
 
-.releaseDataset <- function(dataset) {
-    release_url <- absoluteURL("release/", self(dataset))
-    crPOST(release_url, drop = dropCache(self(dataset)))
-}
-
 #' Get and set the owner of a dataset
 #'
 #' @param x CrunchDataset
