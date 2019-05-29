@@ -245,10 +245,30 @@ test_that("hasFunction", {
 })
 
 test_that("expect_either", {
+    # when using the old expectation, it passes silently
     expect_either(expect_equal, c(1, 2), TRUE, c(1, 2))
+    # there is output when the new expectation is used (so we clean up after ourselves)
+    expect_output(
+        expect_either(expect_equal, c(1, 2), c(1, 2), TRUE),
+        paste0("\nThe following test call is using the new expectation, ",
+               "expect_either should probably be removed:\n",
+               "expect_either(expect_equal, c(1, 2), c(1, 2), TRUE)"),
+        fixed = TRUE
+    )
+    # it fails if neither works
     expect_error(expect_either(expect_equal, c(1, 2), TRUE, FALSE))
 
+    # when using the old expectation, it passes silently
     expect_either(expect_length, c(1, 2), 1, 2)
+    # there is output when the new expectation is used (so we clean up after ourselves)
+    expect_output(
+        expect_either(expect_length, c(1, 2), 2, 1),
+        paste0("\nThe following test call is using the new expectation, ",
+               "expect_either should probably be removed:\n",
+               "expect_either(expect_length, c(1, 2), 2, 1)"),
+        fixed = TRUE
+    )
+    # it fails if neither works
     expect_error(expect_either(expect_length, c(1, 2), 3, 4))
 })
 

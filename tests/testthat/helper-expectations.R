@@ -65,9 +65,24 @@ expect_either <- function(func, object, new, old, ...) {
     # new is the new expectation
     # old is the old expectation
     tryCatch(
-        func(object, new, ...),
+        func(object, old, ...),
         error = function(e) {
-            func(object, old, ...)
+            # if we hit new, be verbose printing the call's grandparent so that
+            # we know we probably should remove the expect_either
+            call <- sys.call(sys.parent(4))
+            msg <- paste0(
+                "\n",
+                "The following test call is using the new expectation, ",
+                "expect_either should probably be removed:",
+                "\n",
+                capture.output(call),
+                "\n"
+            )
+
+            func(object, new, ...)
+
+            # if the test passes, then display the message to remove.
+            cat(msg)
         })
 }
 
