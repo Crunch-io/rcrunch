@@ -244,6 +244,14 @@ test_that("hasFunction", {
     expect_false(hasFunction("Totally_not_a_function", "crunch"))
 })
 
+test_that("expect_either", {
+    expect_either(expect_equal, c(1, 2), TRUE, c(1, 2))
+    expect_error(expect_either(expect_equal, c(1, 2), TRUE, FALSE))
+
+    expect_either(expect_length, c(1, 2), 1, 2)
+    expect_error(expect_either(expect_length, c(1, 2), 3, 4))
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
