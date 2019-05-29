@@ -39,13 +39,7 @@ with_test_authentication({
                 NA
             ) ## No Result URL printed because autorollback=TRUE
 
-            part1 <- refresh(part1)
-            expect_prints(
-                batches(part1),
-                get_output(data.frame(
-                    status = c("error", "imported")
-                ))
-            )
+            expect_setequal(as.data.frame(batches(part1))$status, c("imported", "error"))
         })
     })
 
