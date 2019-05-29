@@ -43,7 +43,7 @@ with_test_authentication({
             expect_prints(
                 batches(part1),
                 get_output(data.frame(
-                    status = c("imported", "error")
+                    status = c("error", "imported")
                 ))
             )
         })
