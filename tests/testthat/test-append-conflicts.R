@@ -7,7 +7,7 @@ with_test_authentication({
         alias(part2$mr_3) <- "CA"
         name(part2$CA) <- "Bad var"
         test_that("setup for append array type mismatch", {
-            expect_length(batches(part1), 2)
+            expect_length(batches(part1), 1)
             expect_true("CA" %in% names(part1))
             expect_true("CA" %in% names(part2))
             expect_true(is.CA(part1$CA))
@@ -15,8 +15,7 @@ with_test_authentication({
             expect_prints(
                 batches(part1),
                 get_output(data.frame(
-                    id = c(0, 1),
-                    status = c("imported", "imported")
+                    status = c("imported")
                 ))
             )
         })
@@ -28,8 +27,7 @@ with_test_authentication({
             expect_prints(
                 batches(part1),
                 get_output(data.frame(
-                    id = c(0, 1),
-                    status = c("imported", "imported")
+                    status = c("imported")
                 ))
             )
 
@@ -41,14 +39,7 @@ with_test_authentication({
                 NA
             ) ## No Result URL printed because autorollback=TRUE
 
-            part1 <- refresh(part1)
-            expect_prints(
-                batches(part1),
-                get_output(data.frame(
-                    id = c(0, 1),
-                    status = c("imported", "imported")
-                ))
-            )
+            expect_setequal(as.data.frame(batches(part1))$status, c("imported", "error"))
         })
     })
 
