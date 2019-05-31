@@ -352,15 +352,6 @@ with_test_authentication({
                 as.array(crtabs(~v4, data = ds)),
                 array(c(110, 100), dim = 2L, dimnames = list(v4 = c("B", "C")))
             )
-            ## Now force the dataset to drop on the server and reload it
-            ## to confirm that our changes were persisted correctly
-            ds <- releaseAndReload(ds)
-            expect_equivalent(weight(ds), ds$w)
-            expect_true(is.Numeric(ds$w))
-            expect_equivalent(
-                as.array(crtabs(~v4, data = ds)),
-                array(c(110, 100), dim = 2L, dimnames = list(v4 = c("B", "C")))
-            )
         })
     })
     with(test.dataset(df), {

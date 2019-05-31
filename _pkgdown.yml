@@ -34,6 +34,7 @@ reference:
 - title: Upload
   contents:
   - newDataset
+  - newExampleDataset
   - toVariable
   - VariableDefinition
   - addVariables
@@ -85,17 +86,18 @@ reference:
   - dataset-variables
   - deleteVariables
   - derivations
-  - describe-category
-  - dichotomize
   - hiddenVariables
   - hide
   - hideVariables
   - na-omit-categories
+  - resolution
   - type
   - var-categories
+  - Categories-class
   - variableMetadata
 - title: Deriving variables
   contents:
+  - expressions
   - combine
   - copyVariable
   - makeCaseVariable
@@ -104,27 +106,20 @@ reference:
   - conditionalTransform
   - makeWeight
   - variable-as-methods
+  - which
 - title: Array variables
   contents:
   - Subvariables-class
   - addSubvariable
   - deleteSubvariables
   - flipArrays
-  - importMultitable
   - makeArray
   - makeMRFromText
   - makeArrayGadget
-  - is-selected-categories
+  - dichotomize
   - unbind
-- title: Ordering
+- title: Folders and organization
   contents:
-  - ordering
-  - ShojiOrder-length
-  - ShojiOrder-slots
-  - copyOrder
-  - flattenOrder
-  - grouped
-  - removeEmptyGroups
   - folder
   - mv
   - cd
@@ -132,6 +127,7 @@ reference:
   - setOrder
   - setName
   - setNames
+  - copyOrder
 - title: Analysis
   contents:
   - crtabs
@@ -144,11 +140,11 @@ reference:
   - dashboard
   - duplicated
   - filter-catalog
-  - fortify
   - is-na-categories
   - multitable-catalog
   - newFilter
   - newMultitable
+  - importMultitable
   - table
   - 'as.vector,CrunchExpr-method'
   - dimension-comparison
@@ -186,6 +182,7 @@ reference:
   - pollProgress
   - CrunchDataFrame
   - merge.CrunchDataFrame
+  - tabbook-dim
 - title: Geodata
   contents:
   - addGeoMetadata
@@ -195,7 +192,7 @@ reference:
   - scoreCatToFeat
 - title: Admin
   contents:
-  - 'is.archived,DatasetCatalog-method'
+  - archive-and-publish
   - dataset-owner
   - getAccountUserCatalog
   - getTeams
@@ -217,21 +214,17 @@ reference:
   - unshare
   - expropriateUser
   - team
-- title: Catalogs
-  contents:
-  - catalog-length
-  - catalog-dataframes
-  - 'names,BatchCatalog-method'
-  - shoji-index
-- title: Crunch options
-  contents:
-  - consent
 - title: Utility
   contents:
   - is.dataset
-  - describe
+  - describe-entity
+  - describe-catalog
   - refresh
   - webApp
+  - crunch-length
+  - catalog-dataframes
+  - shoji-index
+  - consent
 - title: API
   contents:
   - http-methods
@@ -240,31 +233,18 @@ reference:
   - tojson-crunch
 - title: Other
   contents:
-  - Categories-class
   - CrunchDataset-class
   - CrunchVariable-class
   - DatasetOrder-class
   - ShojiObject-class
-  - ShojiOrder-extract
   - VariableCatalog-class
   - VariableOrder-class
-  - catalog-extract
-  - category-extract
   - crunch
-  - dataset-extract
-  - dataset-update
-  - expressions
-  - session-extract
-  - subvars-extract
-  - tabbook-methods
-  - '[,CrunchExpr,CrunchLogicalExpr,ANY-method'
-  - variable-update
 - title: Internal
   contents:
   - ContextManager
   - show-crunch
   - temp.options
-  - which
   - with-context-manager
 - title: Data
   contents:

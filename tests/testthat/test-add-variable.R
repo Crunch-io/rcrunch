@@ -452,7 +452,6 @@ with_test_authentication({
     test_that("Another test for text truncation", {
         source("mapcty.R")
         ds <- newDataset(data.frame(x = seq_along(mapcty)))
-        ds <- releaseAndReload(ds)
         ds$county <- factor(mapcty)
         expect_identical(
             as.character(head(as.vector(ds$county))),

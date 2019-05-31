@@ -27,7 +27,7 @@ with_test_authentication({
 
         test_that("We can append despite the duplicate name", {
             expect_true(is.dataset(out))
-            expect_length(batches(out), 3)
+            expect_length(batches(out), 2)
             expect_identical(dim(out), c(nrow(mrdf) * 2L, 2L))
             expect_true(is.Multiple(out$MR))
             skip("We get 2 'Threes'")
@@ -49,33 +49,11 @@ with_test_authentication({
             expect_true(name(part1$allpets) == "Some of my pets")
         })
 
-        ## Release and re-lease
-        part1 <- releaseAndReload(part1)
-
-        test_that("Check again", {
-            expect_true(name(part1$allpets) == "Some of my pets")
-        })
-
         part2 <- newDatasetFromFixture("apidocs")
         out <- suppressMessages(try(appendDataset(part1, part2)))
         test_that("Append doesn't revert metadata changes", {
             expect_false(name(out$allpets) == "All pets owned")
             expect_true(name(out$allpets) == "Some of my pets")
-        })
-
-        ## Release and re-lease
-        out <- releaseAndReload(out)
-
-        test_that("Metadata sticks after releasing", {
-            expect_false(name(out$allpets) == "All pets owned")
-            expect_true(name(out$allpets) == "Some of my pets")
-        })
-
-        ## Change the name and release again
-        name(out$allpets) <- "Apple"
-        out <- releaseAndReload(out)
-        test_that("Metadata sticks after releasing and not appending", {
-            expect_true(name(out$allpets) == "Apple")
         })
     })
 })

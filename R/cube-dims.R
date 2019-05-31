@@ -88,10 +88,6 @@ elementName <- function(el) {
 #' object.
 #'
 #' @param x a CrunchCube or its CubeDims component.
-#' @param i used with `[` to extract a dimension
-#' @param j not used
-#' @param ... not used
-#' @param drop not used
 #' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube
 #' dimensions
 #'
@@ -136,7 +132,7 @@ setMethod("dimensions<-", c("CrunchCube", "CubeDims"), function(x, value) {
     return(invisible(x))
 })
 
-#' @rdname cube-methods
+#' @rdname crunch-extract
 #' @export
 setMethod("[", "CubeDims", function(x, i, ...) {
     return(CubeDims(x@.Data[i], names = x@names[i]))

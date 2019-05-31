@@ -51,11 +51,15 @@ setGeneric("subtitle<-", function(x, value) standardGeneric("subtitle<-"))
 #' additional metadata. You can get and set a slide's Analysis Catalog with the
 #' `analyses` method, and access an individual analysis with `analysis`.
 #'
-#' You can get the CrunchCube from a slide or analysis with the `cube` method and
-#' from a CrunchDeck with `cubes`. Analyses can be changed by assigning a formula
+#' You can get the `CrunchCube` from a slide or analysis with the `cube` method and
+#' from a `CrunchDeck` with `cubes`. Analyses can be changed by assigning a formula
 #' into the `query` function.
-#' @param x A CrunchSlide, AnalysisCatalog, or Analysis
+#' 
+#' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
 #' @param value for the setter, a query
+#' 
+#' @param return an `AnalysisCatalog`, `Analysis`, `Cube`, or `Filter`
+#'
 #' @rdname analysis-methods
 #' @export
 #' @examples
@@ -66,6 +70,7 @@ setGeneric("subtitle<-", function(x, value) standardGeneric("subtitle<-"))
 #' query(slide) <- ~ cyl + wt
 #' }
 setGeneric("analyses", function(x) standardGeneric("analyses"))
+#' @rdname analysis-methods
 #' @export
 setGeneric("analyses<-", function(x, value) standardGeneric("analyses<-"))
 #' @rdname analysis-methods
@@ -112,7 +117,9 @@ setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySetti
 #' Crunch decks are stored in catalogs. This function returns those catalogs so
 #' that you can access and manipulate decks in R.
 #'
-#' @param dataset a Crunch Dataset
+#' @param x a Crunch Dataset
+#' @param value a `CrunchDeck` to add
+#' 
 #' @return a DeckCatalog
 #' @rdname decks
 #' @export
@@ -155,13 +162,13 @@ newDeck <- function(dataset, name, ...) {
 
 setMethod("initialize", "DeckCatalog", init.sortCatalog)
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "DeckCatalog", function(x, i, ...) {
     getEntity(x, i, CrunchDeck, ...)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     if (length(i) > 1) {
@@ -179,16 +186,10 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     getEntity(x, index, CrunchDeck, ...)
 })
 
-#' @rdname show-crunch
+#' @rdname crunch-extract
 #' @export
-setMethod("show", "DeckCatalog", function(object) {
-    out <- as.data.frame(object)
-    if (length(object) > 0) {
-        print(out[, c("name", "team", "is_public", "owner_name")])
-    } else {
-        print(out)
-    }
-})
+setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
+    modifyCatalogInPlace)
 
 
 #' @rdname crunch-extract
@@ -221,30 +222,24 @@ setMethod("[[<-", c("AnalysisCatalog", "ANY", "missing", "Analysis"),
 
 # CrunchDeck --------------------------------------------------------------
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "CrunchDeck", function(x, i, ...) slides(x)[[i]])
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[<-", "CrunchDeck", function(x, i, j, value) slides(x)[[i]] <- value)
 
-#' #' @rdname catalog-extract
-#' #' @export
-#' setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
-#'     slideCat <- slides(x)
-#'     slideCat[[i]] <- value
-#'     invisible(refresh(x))
-#' })
-
 #' Access the slides of a CrunchDeck
 #'
-#' Return a SlideCatalog from a CrunchDeck. All slide catalog methods should be
-#' available for CrunchDecks, but this function is used internally to model the
+#' Return a `SlideCatalog` from a `CrunchDeck`. All slide catalog methods should be
+#' available for `CrunchDecks`, but this function is used internally to model the
 #' API.
 #'
 #' @param x a CrunchDeck
-#' @return a Slide Catalog
+#' @param value a `SlideCatalog` or `CrunchSlide` to add
+#' 
+#' @return a `SlideCatalog`
 #' @rdname slides
 #' @export
 setGeneric("slides", function(x) standardGeneric("slides"))
@@ -267,7 +262,7 @@ setMethod("slides<-", "CrunchDeck", function(x, value) {
 })
 
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "CrunchDeck", function(x, value) {
     stopifnot(is.singleCharacter(value))
@@ -275,10 +270,10 @@ setMethod("name<-", "CrunchDeck", function(x, value) {
     return(invisible(out))
 })
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description", "CrunchDeck", function(x) x@body$description)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description<-", "CrunchDeck", function(x, value) {
     stopifnot(is.singleCharacter(value))
@@ -286,20 +281,10 @@ setMethod("description<-", "CrunchDeck", function(x, value) {
     return(invisible(out))
 })
 
-#' @rdname is-public
-#' @export
-setMethod("is.public", "CrunchDeck", function(x) x@body$is_public)
-#' @rdname is-public
-#' @export
-setMethod("is.public<-", "CrunchDeck", function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_public", value)
-})
-
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "CrunchDeck", function(x) titles(slides(x)))
-#' @rdname describe
+#' @rdname describe-catalog
 #' @export
 setMethod("names<-", "CrunchDeck", function(x, value) {
     slide_cat <- slides(x)
@@ -353,10 +338,6 @@ exportDeck <- function(deck, file, format = c("xlsx", "pptx", "json")) {
     crDownload(dl_link, file)
 }
 
-#' @rdname catalog-length
-#' @export
-setMethod("length", "CrunchDeck", function(x) return(length(slides(x))))
-
 #' @rdname display-settings
 #' @export
 setMethod("cubes", "CrunchDeck", function(x) {
@@ -372,10 +353,4 @@ setMethod("cubes", "CrunchDeck", function(x) {
     })
     names(out) <- titles(x)
     return(out)
-})
-
-#' @rdname show-crunch
-#' @export
-setMethod("show", "CrunchDeck", function(object) {
-    print(cubes(object))
 })

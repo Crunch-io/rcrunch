@@ -5,12 +5,17 @@
 #' recode a categorical variable with three categories small, medium, and large
 #' to one that has just small and large.
 #'
-#' Categorical and categorical array variables can have their 
-#' categories combined (by specifying `categories` in the `combinations` 
-#' argument). Multiple response variables can only have their responses (or 
-#' items) combined (by specifying `responses` in the `combinations` argument). 
-#' Categorical array items are not able to be combined together (even by 
+#' Categorical and categorical array variables can have their
+#' categories combined (by specifying `categories` in the `combinations`
+#' argument). Multiple response variables can only have their responses (or
+#' items) combined (by specifying `responses` in the `combinations` argument).
+#' Categorical array items are not able to be combined together (even by
 #' specifying `responses`).
+#'
+#' `dplyr` users may experience a name conflict between `crunch::combine()` and
+#' `dplyr:: combine()`. To avoid this, you can either explicitly use the
+#' `crunch::` prefix, or you can call `combineCategories()` and
+#' `combineResponses()`, provided for disambiguation.
 #'
 #' @param variable Categorical, Categorical Array, or Multiple Response
 #' variable
@@ -88,6 +93,19 @@ combine <- function(variable, combinations = list(), ...) {
     }
     class(newvar) <- "VariableDefinition"
     return(newvar)
+}
+
+#' @export
+#' @rdname combine
+combineCategories <- combine
+
+#' @export
+#' @rdname combine
+combineResponses <- function(variable, combinations = list(), ...) {
+    if (!is.MR(variable)) {
+        halt("combineResponses() is only available for Multiple Response variables")
+    }
+    combine(variable, combinations, ...)
 }
 
 combCats <- function(cats, combs) {

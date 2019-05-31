@@ -26,7 +26,7 @@ with_test_authentication({
     })
     out <- suppressMessages(try(appendDataset(part1, part2)))
     test_that("the sparse arrays append", {
-        expect_length(batches(out), 3)
+        expect_length(batches(out), 2)
         expect_identical(nrow(out), 2000L)
         expect_identical(
             as.vector(out$CA$mr_2),

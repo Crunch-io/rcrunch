@@ -1,10 +1,20 @@
-init.CrunchDataset <- function(.Object, ...) {
+setMethod("initialize", "CrunchDataset", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    .Object@variables <- getDatasetVariables(.Object)
-    activeFilter(.Object) <- NULL
+    if (is.null(.Object@variables@self)) {
+        # This is only NULL when instantiating a fresh dataset object. If
+        # subclassing an existing dataset object, the variable catalog will
+        # already be populated (and due to subsetting, may not be identical
+        # to a fresh pull from the API)
+        #
+        # TODO: you could use this check to make lazy the fetching of variables
+        .Object@variables <- getDatasetVariables(.Object)
+    }
+    if (length(.Object@filter@expression) == 0) {
+        # Likewise for preserving filters
+        activeFilter(.Object) <- NULL
+    }
     return(.Object)
-}
-setMethod("initialize", "CrunchDataset", init.CrunchDataset)
+})
 
 getDatasetVariables <- function(x) {
     varcat_url <- variableCatalogURL(x)
@@ -27,66 +37,52 @@ getNrow <- function(dataset) {
 #' @export
 is.dataset <- function(x) inherits(x, "CrunchDataset")
 
-#' Name, alias, and description for Crunch objects
-#'
-#' @param x a Dataset or Variable.
-#' @param object Same as `x` but for the `alias` method, in order to
-#' match the generic from another package. Note that `alias` and `digits` are
-#' only defined for Variables.
-#' @param value For the setters, a length-1 character vector to assign
-#' @return Getters return the character object in the specified slot; setters
-#' return `x` duly modified.
-#' @name describe
-#' @aliases describe name name<- description description<- alias alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<- uniformBasis uniformBasis<-
-#' @seealso [`Categories`] [`describe-catalog`]
-NULL
-
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name", "CrunchDataset", function(x) tuple(x)$name)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "CrunchDataset", function(x, value) {
     setEntitySlot(x, "name", validateNewName(value))
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description", "CrunchDataset", function(x) tuple(x)$description)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description<-", "CrunchDataset", function(x, value) {
     setEntitySlot(x, "description", value)
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod(
     "startDate", "CrunchDataset",
     function(x) trimISODate(tuple(x)$start_date)
 )
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("startDate<-", "CrunchDataset", function(x, value) {
     setEntitySlot(x, "start_date", value)
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod(
     "endDate", "CrunchDataset",
     function(x) trimISODate(tuple(x)$end_date)
 )
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("endDate<-", "CrunchDataset", function(x, value) {
     setEntitySlot(x, "end_date", value)
 })
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("id", "CrunchDataset", function(x) tuple(x)$id)
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("notes", "CrunchDataset", function(x) x@body$notes)
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("notes<-", "CrunchDataset", function(x, value) {
     invisible(setEntitySlot(x, "notes", value))
@@ -181,7 +177,7 @@ setMethod("setPopulation", "CrunchDataset", function(x, size, magnitude) {
 #'
 #' A primary key is a variable in a dataset that has a unique value for every
 #' row. A variable must be either numeric or text type and have no duplicate or
-#' missing values. A primary key on a dataset causes updates to that dataset
+#' missing values. A primary key on a dataset causes appends to that dataset
 #' that have the rows with the same primary key value(s) as the first dataset
 #' to update the existing rows rather than inserting new ones.
 #'
@@ -190,33 +186,29 @@ setMethod("setPopulation", "CrunchDataset", function(x, size, magnitude) {
 #' `NULL` to remove the primary key.
 #' @return Getter returns the Variable object that is used as the primary key
 #' (`NULL` if there is no primary key); setter returns `x` duly modified.
-#' @name pk
-#' @aliases pk pk<-
-NULL
-
-#' @rdname pk
 #' @export
-setMethod("pk", "CrunchDataset", function(x) {
-    pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
-    if (length(pk)) {
-        return(x[[pk[[1]]]])
+pk <- function(x) {
+    stopifnot(is.dataset(x))
+    pk_var <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
+    if (length(pk_var)) {
+        return(x[[pk_var[[1]]]])
     } else {
         return(NULL)
     }
-})
+}
+
 #' @rdname pk
 #' @export
-setMethod("pk<-", "CrunchDataset", function(x, value) {
+`pk<-` <- function(x, value) {
+    stopifnot(is.dataset(x))
+    pk_url <- shojiURL(x, "fragments", "pk")
     if (is.null(value)) {
-        crDELETE(shojiURL(x, "fragments", "pk"))
+        crDELETE(pk_url)
     } else {
-        payload <- toJSON(list(pk = I(self(value))))
-        crPOST(shojiURL(x, "fragments", "pk"), body = payload)
+        crPOST(pk_url, body = toJSON(list(pk = I(self(value)))))
     }
-
     invisible(x)
-})
-
+}
 
 trimISODate <- function(x) {
     ## Drop time from datestring if it's only a date
@@ -244,10 +236,7 @@ NULL
 
 #' @rdname dim-dataset
 #' @export
-setMethod(
-    "dim", "CrunchDataset",
-    function(x) c(getNrow(x), ncol(x))
-)
+setMethod("dim", "CrunchDataset", function(x) c(getNrow(x), ncol(x)))
 
 #' @rdname dim-dataset
 #' @export
@@ -274,22 +263,6 @@ setMethod("tuple<-", "CrunchDataset", function(x, value) {
     x@tuple <- value
     return(x)
 })
-
-#' Get a fresh copy from the server
-#'
-#' Crunch objects generally keep themselves in sync with the server when you
-#' manipulate them, but some operations cause the local version to diverge from
-#' the version on the server. For instance, someone else may have
-#' modified the dataset you're working on, or maybe
-#' you have modified a variable outside of the context of its dataset.
-#' `refresh()` allows you to get back in sync.
-#'
-#' @param x pretty much any Crunch object
-#' @return a new version of `x`
-#' @name refresh
-#' @aliases refresh
-#' @importFrom httpcache dropCache dropOnly
-NULL
 
 #' @rdname refresh
 #' @export
@@ -325,9 +298,6 @@ as.list.CrunchDataset <- function(x, ...) {
 
 joins <- function(x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
 
-#' @rdname dataset-reference
-setMethod("datasetReference", "CrunchDataset", function(x) self(x))
-
 variableCatalogURL <- function(dataset) {
     ## Get the variable catalog URL that corresponds to an object
     if (class(dataset) == "VariableCatalog") return(self(dataset))
@@ -346,24 +316,6 @@ cubeURL <- function(x) {
         ## :( Construct the URL
         return(absoluteURL("./cube/", datasetReference(x)))
     }
-}
-
-setMethod("hidden", "CrunchDataset", function(x) hidden(allVariables(x)))
-
-setMethod("APIToWebURL", "ANY", function(x) {
-    halt("Web URL is not available for objects of class ", class(x))
-})
-setMethod("APIToWebURL", "CrunchDataset", function(x) {
-    return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
-})
-
-webToAPIURL <- function(url) {
-    id <- sub("^https.*?/dataset/([0-9a-f]+)/?.*$", "\\1", url)
-    if (identical(id, url)) {
-        halt("Not a valid web app URL")
-    }
-    path <- paste0("datasets/", id, "/")
-    return(absoluteURL(path, getOption("crunch.api")))
 }
 
 #' View a Crunch Object in the Web Application
@@ -397,11 +349,6 @@ setMethod("as.environment", "CrunchDataset", function(x) {
     return(out)
 })
 
-.releaseDataset <- function(dataset) {
-    release_url <- absoluteURL("release/", self(dataset))
-    crPOST(release_url, drop = dropCache(self(dataset)))
-}
-
 #' Get and set the owner of a dataset
 #'
 #' @param x CrunchDataset
@@ -430,86 +377,6 @@ setMethod("owner<-", "CrunchDataset", function(x, value) {
     x <- setEntitySlot(x, "owner", value)
     return(x)
 })
-
-
-#' Get and set "archived" and "published" status of a dataset
-#'
-#' "Archived" datasets are excluded from some views. "Draft" datasets are
-#' visible only to editors, while published datasets are available to all viewers.
-#' A dataset can either be published or in draft, but not both.
-#' These properties are accessed and set with the "is" methods. You can also
-#' set the properties by assigning into the function. The verb functions
-#' `archive` and `publish` are alternate versions of the setters.
-#'
-#' @param x CrunchDataset
-#' @param value logical
-#' @return For the getters, the logical value of whether the dataset is
-#' archived, in draft mode, or published, where draft and published are
-#' inverses. The setters return the dataset.
-#' @name archive-and-publish
-#' @aliases archive is.archived is.draft is.published is.archived<- is.draft<- is.published<- publish
-#' @examples
-#' \dontrun{
-#' ds <- loadDataset("mtcars")
-#' is.draft(ds)     # FALSE
-#' is.published(ds) # TRUE
-#' identical(is.draft(ds), !is.published(ds))
-#' # Can make a dataset a "draft" by:
-#' is.draft(ds) <- TRUE
-#' is.published(ds) # FALSE
-#' # Could also have set is.published(ds) <- FALSE
-#' # Now, can go the other way by setting is.draft, is.published, or:
-#' ds <- publish(ds)
-#' is.published(ds) # TRUE
-#'
-#' is.archived(ds)  # FALSE
-#' is.archived(ds) <- TRUE
-#' is.archived(ds)  # TRUE
-#' # Could have achieved the same effect by:
-#' ds <- archive(ds)
-#' }
-NULL
-
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.archived", "CrunchDataset", function(x) tuple(x)$archived)
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.draft", "CrunchDataset", function(x) !is.published(x))
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.published", "CrunchDataset", function(x) tuple(x)$is_published %||% TRUE)
-
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.archived<-", c("CrunchDataset", "logical"), function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "archived", value)
-})
-#' @rdname archive-and-publish
-#' @export
-archive <- function(x) {
-    is.archived(x) <- TRUE
-    return(x)
-}
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.draft<-", c("CrunchDataset", "logical"), function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_published", !value)
-})
-#' @rdname archive-and-publish
-#' @export
-setMethod("is.published<-", c("CrunchDataset", "logical"), function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_published", value)
-})
-#' @rdname archive-and-publish
-#' @export
-publish <- function(x) {
-    is.published(x) <- TRUE
-    return(x)
-}
 
 #' View and modify dataset-level settings
 #'

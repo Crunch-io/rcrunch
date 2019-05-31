@@ -144,7 +144,6 @@ with_mock_crunch({
     test_that("as.data.frame() works with hidden variables", {
         new_ds <- loadDataset("test ds")
         new_ds$gender@tuple[["discarded"]] <- TRUE
-        expect_equivalent(hiddenVariables(new_ds), "gender")
         new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
         expect_equal(
             names(new_ds_df),
@@ -188,10 +187,10 @@ with_mock_crunch({
 
 with_test_authentication({
     ds <- newDataset(df)
-    
+
     # change the alias of v6 to be something that includes spaces/punctuation
     alias(ds$v6) <- "vee six !"
-    
+
     test_that("Check the types of our imported data", {
         expect_true(is.Numeric(ds[["v1"]]))
         expect_true(is.Text(ds[["v2"]]))
@@ -245,7 +244,7 @@ with_test_authentication({
         expect_is(as.data.frame(ds), "CrunchDataFrame")
         expect_identical(dim(as.data.frame(ds)), dim(df))
         expect_identical(names(as.data.frame(ds)), aliases(variables(ds)))
-        
+
         # check that all of the values are the same
         expect_identical(as.data.frame(ds)$v1, as.vector(ds$v1))
         expect_identical(as.data.frame(ds)$v2, as.vector(ds$v2))
@@ -258,10 +257,10 @@ with_test_authentication({
     test_that("as.data.frame(force) with API", {
         skip_on_local_backend("Vagrant host doesn't serve files correctly")
         expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
-        
+
         df <- as.data.frame(ds, force = TRUE)
         expect_true(is.data.frame(df))
-        
+
         # check that all of the values are the same
         expect_identical(df$v1, as.vector(ds$v1))
         # we only compare the non-na (1:15) in the text variable, becuase the NA
@@ -302,7 +301,7 @@ with_test_authentication({
         )
         expect_equal(names(df), c("v1", "hidden_var"))
     })
-    
+
     test_that("Multiple response variables in as.data.frame(force=TRUE)", {
         skip_on_local_backend("Vagrant host doesn't serve files correctly")
         mrds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")

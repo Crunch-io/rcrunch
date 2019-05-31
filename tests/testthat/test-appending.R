@@ -32,19 +32,11 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/3/pk/"
         )
     })
-
-    test_that("appendDataset shows deprecation warnings", {
-        expect_warning(
-            expect_POST(
-                appendDataset(ds1, ds2, autorollback = TRUE),
-                "https://app.crunch.io/api/datasets/1/batches/",
-                '{"element":"shoji:entity","body":{"dataset":',
-                '"https://app.crunch.io/api/datasets/3/"}}'
-            ),
-            paste(
-                "The", sQuote("autorollback"),
-                "argument is deprecated and has no effect"
-            )
+    test_that("append doesn't DELETE the pk if upsert=TRUE", {
+        expect_POST(appendDataset(ds2, ds1, upsert=TRUE),
+            "https://app.crunch.io/api/datasets/3/batches/",
+            '{"element":"shoji:entity","body":{"dataset":',
+            '"https://app.crunch.io/api/datasets/1/"}}'
         )
     })
 })
@@ -66,15 +58,15 @@ with_test_authentication({
         expect_equivalent(v3.2, df$v3)
         expect_identical(dim(part1), dim(part2))
         expect_identical(dim(part1), dim(df))
-        expect_length(batches(part1), 2)
-        expect_length(batches(part2), 2)
+        expect_length(batches(part1), 1)
+        expect_length(batches(part2), 1)
         expect_equal(pk(part2), part2$v3)
     })
     out <- appendDataset(part1, part2)
     test_that("append handles two identical Datasets", {
         expect_true(is.dataset(out))
         expect_identical(self(out), self(part1))
-        expect_length(batches(out), 3)
+        expect_length(batches(out), 2)
         expect_identical(dim(out), c(nrow(df) * 2L, ncol(df)))
         expect_identical(getNrow(out), nrow(df) * 2L)
         expect_identical(nrow(out), length(as.vector(out$v3)))
@@ -84,15 +76,5 @@ with_test_authentication({
     })
     test_that("append removes the primary key if there is one", {
         expect_null(pk(out))
-    })
-
-    try(crDELETE(urls(batches(out))[2]))
-    out <- refresh(out)
-    test_that("deleting a batch drops its rows", {
-        expect_true(is.dataset(out))
-        expect_length(batches(out), 2)
-        expect_identical(dim(out), dim(df))
-        expect_identical(categories(out$v4), cats)
-        expect_equivalent(as.vector(out$v3), df$v3)
     })
 })

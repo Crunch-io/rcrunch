@@ -149,51 +149,17 @@ as.list.ShojiOrder <- function(x, ...) x@graph
 #' @export
 as.list.OrderGroup <- function(x, ...) x@entities
 
-#' Length of an Order
-#' @param x a ShojiOrder
-#' @return Integer: the number of elements in the Order
-#' @name ShojiOrder-length
-NULL
-
-#' @rdname ShojiOrder-length
-#' @export
-setMethod("length", "ShojiOrder", function(x) length(entities(x)))
-
-#' @rdname ShojiOrder-length
-#' @export
-setMethod("length", "OrderGroup", function(x) length(entities(x)))
-
-#' Extract and update in VariableOrders and VariableGroups
-#'
-#' @param x a VariableOrder or VariableGroup
-#' @param i an index. Numeric and logical indexing supported for both classes;
-#' character indexing supported for VariableOrder, matching on VariableGroup
-#' names
-#' @param name Same as i but for \code{$}
-#' @param j Invalid
-#' @param value For update methods, an object equivalent in class to what is
-#' being updated
-#' @param ... additional arguments
-#' @param drop Ignored
-#' @return `[[` and `$` on a VariableOrder return the VariableGroup.
-#' `[[` on VariableGroup returns the entity within, either a character
-#' (URL) or nested VariableGroup. `[` and assignment methods return
-#' objects of the same class as `x`
-#' @name ShojiOrder-extract
-#' @aliases ShojiOrder-extract
-NULL
-
 ###############################
 # 1. Extract from ShojiOrder
 ###############################
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiOrder", "ANY"), function(x, i, ..., drop = FALSE) {
     x@graph <- x@graph[i]
     return(x)
 })
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("ShojiOrder", "character"), function(x, i, ..., drop = FALSE) {
     w <- match(i, names(x))
@@ -203,13 +169,13 @@ setMethod("[", c("ShojiOrder", "character"), function(x, i, ..., drop = FALSE) {
     callNextMethod(x, w, ..., drop = drop)
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiOrder", "ANY"), function(x, i, ...) {
     x@graph[[i]]
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("ShojiOrder", "character"), function(x, i, ...) {
     ## i may be a path string, so split on the delimiter (default is "/")
@@ -227,7 +193,7 @@ setMethod("[[", c("ShojiOrder", "character"), function(x, i, ...) {
     return(x)
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "ShojiOrder", function(x, name) x[[name]])
 
@@ -235,10 +201,9 @@ setMethod("$", "ShojiOrder", function(x, name) x[[name]])
 # 2. Assign into ShojiOrder
 ###############################
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
+setMethod("[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
         w <- match(i, names(x))
@@ -248,10 +213,9 @@ setMethod(
         callNextMethod(x, w, value = value)
     }
 )
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
+setMethod("[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
         x@graph[i] <- value@graph
@@ -259,32 +223,28 @@ setMethod(
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "list"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "list"),
     .setNestedGroupByName
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "character"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "character"),
     .setNestedGroupByName
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
     .setNestedGroupByName
 )
 
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
     function(x, i, j, value) {
         if (length(entities(value))) {
             x <- setdiff_entities(x, value)
@@ -294,10 +254,9 @@ setMethod(
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
     function(x, i, j, value) {
         halt(
             "Cannot assign an object of class ", dQuote(class(value)),
@@ -306,19 +265,17 @@ setMethod(
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
     function(x, i, j, value) {
         x@graph[[i]] <- value
         return(x)
     }
 )
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "NULL"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "NULL"),
     function(x, i, j, value) {
         w <- match(i, names(x))
         if (any(is.na(w))) {
@@ -328,16 +285,15 @@ setMethod(
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", "ShojiOrder", function(x, name, value) {
     x[[name]] <- value
@@ -349,13 +305,13 @@ setMethod("$<-", "ShojiOrder", function(x, name, value) {
 # 3. Extract from OrderGroup
 ###############################
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("OrderGroup", "ANY"), function(x, i, ..., drop = FALSE) {
     x@entities <- x@entities[i]
     return(x)
 })
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("OrderGroup", "character"), function(x, i, ..., drop = FALSE) {
     w <- match(i, names(x))
@@ -365,7 +321,7 @@ setMethod("[", c("OrderGroup", "character"), function(x, i, ..., drop = FALSE) {
     callNextMethod(x, w, ..., drop = drop)
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("OrderGroup", "character"), function(x, i, ...) {
     w <- match(i, names(x))
@@ -375,13 +331,13 @@ setMethod("[[", c("OrderGroup", "character"), function(x, i, ...) {
     callNextMethod(x, w, ..., drop = drop)
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("OrderGroup", "ANY"), function(x, i, ...) {
     x@entities[[i]]
 })
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "OrderGroup", function(x, name) x[[name]])
 
@@ -389,42 +345,37 @@ setMethod("$", "OrderGroup", function(x, name) x[[name]])
 # 4. Assign into ShojiGroup
 ###############################
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "list"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "list"),
     .setNestedGroupByName
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "character"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "character"),
     .setNestedGroupByName
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
     function(x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
+setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
     function(x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
         entities(x)[[i]] <- value
@@ -432,10 +383,9 @@ setMethod(
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
+setMethod("[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
     function(x, i, j, value) {
         if (length(i) > 1 || i < 0) {
             halt("Illegal subscript")
@@ -444,10 +394,9 @@ setMethod(
         return(x)
     }
 )
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("OrderGroup", "character", "missing", "NULL"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "NULL"),
     function(x, i, j, value) {
         w <- match(i, names(x))
         if (any(is.na(w))) {
@@ -457,7 +406,7 @@ setMethod(
     }
 )
 
-#' @rdname ShojiOrder-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", "OrderGroup", function(x, name, value) {
     x[[name]] <- value
@@ -518,6 +467,7 @@ removeMissingEntities <- function(x) {
 #' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup
 #' @return \code{x} with empty groups removed.
 #' @export
+#' @keywords internal
 removeEmptyGroups <- function(x) {
     if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {
         entities(x) <- removeEmptyGroups(entities(x))
@@ -553,6 +503,7 @@ removeEmptyGroups <- function(x) {
 #' CrunchDataset or catalog that has an `ordering` property.
 #' @return `x`, or its order resource, flattened.
 #' @export
+#' @keywords internal
 flattenOrder <- function(x) {
     if (!(inherits(x, "ShojiOrder") || inherits(x, "OrderGroup"))) {
         ## Perhaps it's a dataset or catalog. Get its "ordering"
@@ -571,6 +522,7 @@ flattenOrder <- function(x) {
 #' omitted. For `ungrouped()`, an OrderGroup subclass.
 #' @seealso [`VariableOrder`]
 #' @export
+#' @keywords internal
 grouped <- function(order.obj) {
     # TODO: deprecate and suggest a folder method
     Filter(Negate(is.character), order.obj)

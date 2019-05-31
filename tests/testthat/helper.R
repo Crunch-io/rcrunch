@@ -37,6 +37,11 @@ crunch:::.onLoad()
 cereal <- function(x) fromJSON(toJSON(x), simplifyVector = FALSE)
 
 newDatasetFromFixture <- function(filename) {
+    if (filename == "apidocs") {
+        ## This one has been moved into the package and renamed
+        return(suppressMessages(newExampleDataset("pets")))
+    }
+
     ## Grab csv and json from "dataset-fixtures" and make a dataset
     m <- fromJSON(file.path("dataset-fixtures", paste0(filename, ".json")),
         simplifyVector = FALSE
@@ -45,11 +50,6 @@ newDatasetFromFixture <- function(filename) {
         m,
         file.path("dataset-fixtures", paste0(filename, ".csv"))
     )))
-}
-
-releaseAndReload <- function(dataset) {
-    .releaseDataset(dataset)
-    return(refresh(dataset))
 }
 
 ## Data frames to make datasets with

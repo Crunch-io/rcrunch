@@ -53,7 +53,7 @@ c.Categories <- concatenateCategories
 #' @export
 c.Category <- concatenateCategories
 
-#' @rdname Categories
+#' @rdname crunch-extract
 #' @export
 setMethod("[<-", c("Categories", "ANY"), function(x, i, ..., value) {
     x@.Data[i] <- Categories(data = value)
@@ -61,7 +61,7 @@ setMethod("[<-", c("Categories", "ANY"), function(x, i, ..., value) {
 })
 
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("ids<-", "Categories", function(x, value) {
     if (!identical(ids(x), value)) {
@@ -115,60 +115,18 @@ setMethod("na.omit", "Categories", function(object, ...) {
 #' @name is-na-categories
 NULL
 
-#' is.selected for Categories
-#'
-#' Crunch Multiple Response variables identify one or more categories as "selected".
-#' These methods allow you to get or set which categories should indicate a selection.
-#'
-#' @param x Categories or a single Category
-#' @param value A logical vector indicating whether the category should be selected.
-#' For a single category the value should be either `TRUE` or `FALSE` to change the
-#' selection status for a `Categories` object, supply a logical vector which is the
-#' same length as the number of categories.
-#' @return Getters return a logical vector indicating selection status. Setters return
-#' the `Categories` or `Category` object, duly modified.
-#' @name is-selected-categories
-#' @aliases is.selected<-
-NULL
-
 setValues <- function(x, value) {
     x[] <- mapply(setValue, x[], value = value, SIMPLIFY = FALSE)
     return(x)
 }
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("values", "Categories", function(x) vapply(x, value, numeric(1)))
 
-#' @rdname Categories
+#' @rdname describe-catalog
 #' @export
 setMethod("values<-", "Categories", setValues)
-
-#' @rdname is-selected-categories
-#' @export
-setMethod("is.selected", "Categories", function(x) {
-    structure(vapply(x, is.selected, logical(1), USE.NAMES = FALSE), .Names = names(x))
-})
-
-#' @rdname is-selected-categories
-#' @export
-setMethod("is.selected<-", "Categories", function(x, value) {
-    if (is.TRUEorFALSE(value)) {
-        value <- rep(value, length(x))
-    }
-    if (length(value) != length(x)) {
-        halt(
-            "You supplied ", length(value), " logical values for ", length(x),
-            " Categories."
-        )
-    }
-
-    x@.Data <- mapply(function(x, value) {
-        is.selected(x) <- value
-        return(x)
-    }, x = x@.Data, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
-    return(x) 
-})
 
 #' @rdname is-na-categories
 #' @aliases is-na-categories
@@ -246,7 +204,7 @@ addNoDataCategory <- function(variable) {
 }
 
 ensureNoDataCategory <- function(cats) {
-    if (-1 %in% ids(cats)) {
+    if ("No Data" %in% names(cats)) {
         # check "No Data"?
         return(cats)
     } else {
@@ -292,3 +250,134 @@ is.3vl <- function(cats) {
             sum(is.na(cats)) == 1
     )
 }
+
+#' Get and set Categories on Variables
+#'
+#' @param x a Variable
+#' @param value for the setters, an object of class Categories to set.
+#' @return Getters return Categories; setters return \code{x} duly modified.
+#' @name var-categories
+#' @aliases var-categories categories categories<-
+setGeneric("categories", function(x) standardGeneric("categories"))
+#' @rdname var-categories
+setGeneric("categories<-", function(x, value) standardGeneric("categories<-"))
+
+#' @rdname var-categories
+#' @export
+setMethod("categories", "VariableTuple", function(x) {
+    ## VariableTuples from a regular VariableCatalog don't have categories.
+    ## But, from variableMetadata() and from variables(cube), they do. And
+    ## if they do, return them instead of making an entity() request.
+    cats <- x$categories
+    if (!is.null(cats)) {
+        cats <- Categories(data = cats)
+    }
+    return(cats)
+})
+
+#' @rdname var-categories
+#' @export
+setMethod("categories", "CrunchVariable", function(x) categories(tuple(x)))
+#' @rdname var-categories
+#' @export
+setMethod("categories", "CategoricalVariable",
+    function(x) callNextMethod(x) %||% categories(entity(x))
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories", "CategoricalArrayVariable",
+    function(x) callNextMethod(x) %||% categories(entity(x))
+)
+
+#' @rdname var-categories
+#' @export
+setMethod("categories", "VariableEntity",
+    function(x) Categories(data = x@body$categories)
+)
+
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalVariable", "Categories"),
+    function(x, value) {
+        ent <- setEntitySlot(entity(x), "categories", value)
+        dropCache(cubeURL(x))
+        return(x)
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
+    function(x, value) {
+        ent <- setEntitySlot(entity(x), "categories", value)
+        lapply(subvariableURLs(tuple(x)), dropCache) ## Subvariables will update too
+        dropCache(cubeURL(x))
+        return(x)
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalVariable", "numeric"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not numeric. ",
+            "Did you mean `values(categories(x)) <- value`?"
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalVariable", "character"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not ",
+            "character. Did you mean `names(categories(x)) <- value`?"
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalVariable", "ANY"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not ",
+            class(value), "."
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalArrayVariable", "numeric"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not numeric. ",
+            "Did you mean `values(categories(x)) <- value`?"
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalArrayVariable", "character"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not ",
+            "character. Did you mean `names(categories(x)) <- value`?"
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CategoricalArrayVariable", "ANY"),
+    function(x, value) {
+        halt(
+            "`categories(x) <- value` only accepts Categories, not ",
+            class(value), "."
+        )
+    }
+)
+#' @rdname var-categories
+#' @export
+setMethod("categories<-", c("CrunchVariable", "ANY"),
+    function(x, value) {
+        halt("category assignment not defined for ", class(x))
+    }
+)

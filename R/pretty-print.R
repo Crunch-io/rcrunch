@@ -1,3 +1,6 @@
+#' @include show.R
+NULL
+
 #' @importFrom crayon col_nchar has_style col_align
 prettyPrint2d <- function(array, row_styles = NULL, col_styles = NULL) {
     # TODO: warn if bold is used, since it messes up alignment?
@@ -178,7 +181,7 @@ print_tree <- function(x, prefix = "", depth = 100, current_depth = 0) {
     return(unlist(tree))
 }
 
-#' @rdname show-crunch
+#' @rdname show
 #' @export
 setMethod("show", "ShojiFolder", function(object) {
     cat(formatFolderTitle(object), "\n")

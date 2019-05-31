@@ -15,22 +15,22 @@ setMethod("measures", "CrunchCube", function(x) {
     return(VariableCatalog(index = index, self = "")) ## Self just has to exist
 }
 
-#' @rdname cube-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "CrunchCube", function(x) names(variables(x)))
 
-#' @rdname cube-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("aliases", "CrunchCube", function(x) aliases(variables(x)))
 
-#' @rdname cube-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("descriptions", "CrunchCube", function(x) descriptions(variables(x)))
 
-#' @rdname cube-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("types", "CrunchCube", function(x) types(variables(x)))
 
-#' @rdname cube-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("notes", "CrunchCube", function(x) notes(variables(x)))

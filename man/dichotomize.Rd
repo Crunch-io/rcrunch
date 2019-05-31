@@ -5,6 +5,8 @@
 \alias{dichotomize}
 \alias{is.dichotomized}
 \alias{undichotomize}
+\alias{is.selected}
+\alias{is.selected<-}
 \alias{is.dichotomized,Categories-method}
 \alias{dichotomize,Categories,numeric-method}
 \alias{dichotomize,Categories,logical-method}
@@ -14,8 +16,22 @@
 \alias{dichotomize,CategoricalArrayVariable,ANY-method}
 \alias{undichotomize,CategoricalVariable-method}
 \alias{undichotomize,CategoricalArrayVariable-method}
+\alias{is.selected,Categories-method}
+\alias{is.selected<-,Categories-method}
+\alias{is.selected,Category-method}
+\alias{is.selected<-,Category-method}
 \title{Indicate how categories represent a dichotomized value}
 \usage{
+is.dichotomized(x)
+
+dichotomize(x, i)
+
+undichotomize(x)
+
+is.selected(x)
+
+is.selected(x) <- value
+
 \S4method{is.dichotomized}{Categories}(x)
 
 \S4method{dichotomize}{Categories,numeric}(x, i)
@@ -33,6 +49,14 @@
 \S4method{undichotomize}{CategoricalVariable}(x)
 
 \S4method{undichotomize}{CategoricalArrayVariable}(x)
+
+\S4method{is.selected}{Categories}(x)
+
+\S4method{is.selected}{Categories}(x) <- value
+
+\S4method{is.selected}{Category}(x)
+
+\S4method{is.selected}{Category}(x) <- value
 }
 \arguments{
 \item{x}{Categories or a Variable subclass that has Categories}
@@ -41,19 +65,45 @@
 of the categories to mark as "selected", or if character, the Category
 "names". Note that unlike some other categorical variable methods,
 numeric indices are positional, not with reference to category ids.}
+
+\item{value}{For \code{is.selected<-},
+A logical vector indicating whether the category should be selected.
+For a single category the value should be either \code{TRUE} or \code{FALSE}. To change the
+selection status for a \code{Categories} object, supply a logical vector which is the
+same length as the number of categories.}
 }
 \value{
 Categories or the Variable, (un)dichotomized accordingly
 }
 \description{
-Multiple Response variables are essentially Categorical Arrays in which one
-or more categories are set as "selected". These methods allow you set that state.
+Multiple Response variables are Categorical Arrays in which one
+or more categories are set as "selected". These methods allow you to view
+and set that attribute.
 }
 \details{
 \code{dichotomize} lets you specify which categories are "selected", while
 \code{undichotomize} strips that selection information. Dichotomize converts
 a Categorical Array to a Multiple Response, and undichotomize does the reverse.
+\code{is.dichotomized} reports whether categories have any selected values.
+
+\code{is.selected} is lower level and maps more directly onto the "selected"
+attributes of categories. The best illustration of this difference is that
+\code{is.selected(categories(var))} returns a logical vector, a value for each
+category, while \code{is.dichotomized(categories(var))} returns a single
+\code{TRUE/FALSE} value.
+}
+\examples{
+\dontrun{
+ds <- newExampleDataset()
+is.MR(ds$allpets)
+is.dichotomized(categories(ds$allpets))
+is.selected(categories(ds$allpets))
+ds$allpets <- undichotomize(ds$allpets)
+is.CA(ds$allpets)
+ds$allpets <- dichotomize(ds$allpets, "selected")
+is.MR(ds$allpets)
+}
 }
 \seealso{
-\code{\link{describe-category}}
+\code{\link{describe-entity}}
 }

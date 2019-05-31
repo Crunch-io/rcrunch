@@ -13,38 +13,6 @@ test_that("bin CrunchExpr", {
     )
 })
 
-test_that("rollup CrunchExpr from zcl variable", {
-    x <- list(variable = "test") ## "ZCL"
-    expect_is(rollup(x), "CrunchExpr")
-    expect_identical(
-        zcl(rollup(x)),
-        list(`function` = "rollup", args = list(
-            list(variable = "test"),
-            list(value = NULL)
-        ))
-    )
-
-    expect_is(rollup(x, resolution = "Y"), "CrunchExpr")
-    expect_identical(
-        zcl(rollup(x, resolution = "Y")),
-        list(`function` = "rollup", args = list(
-            list(variable = "test"),
-            list(value = "Y")
-        ))
-    )
-})
-
-test_that("rollup resolution validation", {
-    expect_error(
-        rollup("a", resolution = "Invalid"),
-        " is invalid. Valid values are "
-    )
-    expect_error(
-        rollup("a", resolution = 42),
-        " is invalid. Valid values are "
-    )
-})
-
 test_that("cube missing functions set @useNA", {
     cube <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
     expect_equal(cube@useNA, "no")
@@ -55,43 +23,6 @@ test_that("cube missing functions set @useNA", {
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
-    v <- ds$starttime
-
-    test_that("rollup CrunchExpr from DatetimeVariable", {
-        expect_is(rollup(v), "CrunchExpr")
-        expect_identical(
-            zcl(rollup(v)),
-            list(
-                `function` = "rollup",
-                args = list(
-                    list(variable = "https://app.crunch.io/api/datasets/1/variables/starttime/"),
-                    list(value = "s")
-                )
-            )
-        )
-        expect_is(rollup(v, resolution = "Y"), "CrunchExpr")
-        expect_identical(
-            zcl(rollup(v, resolution = "Y")),
-            list(
-                `function` = "rollup",
-                args = list(
-                    list(variable = "https://app.crunch.io/api/datasets/1/variables/starttime/"),
-                    list(value = "Y")
-                )
-            )
-        )
-        expect_is(rollup(v, resolution = NULL), "CrunchExpr")
-        expect_identical(
-            zcl(rollup(v, resolution = NULL)),
-            list(
-                `function` = "rollup",
-                args = list(
-                    list(variable = "https://app.crunch.io/api/datasets/1/variables/starttime/"),
-                    list(value = NULL)
-                )
-            )
-        )
-    })
 
     test_that("formulaToCubeQuery", {
         expect_identical(
@@ -287,20 +218,43 @@ with_test_authentication({
                 )
             )
         )
-        expect_equivalent(
-            as.array(crtabs(~v8 + v7, data = ds, useNA = "always")),
-            array(c(
-                5, 5,
-                3, 2,
-                2, 3,
-                0, 0
-            ),
-            dim = c(2L, 4L),
-            dimnames = list(
-                v8 = c("1955-11-05", "1955-11-06"),
-                v7 = c(LETTERS[3:5], "No Data")
-            )
-            )
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equivalent(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
+        expect_true(
+            isTRUE(all.equal(
+                as.array(crtabs(~v8 + v7, data = ds, useNA = "always")),
+                array(c(
+                    5, 5, 0,
+                    3, 2, 0,
+                    2, 3, 0,
+                    0, 0, 0
+                ),
+                dim = c(3L, 4L),
+                dimnames = list(
+                    v8 = c("1955-11-05", "1955-11-06", "<NA>"),
+                    v7 = c(LETTERS[3:5], "No Data")
+                )
+                ),
+                check.attributes = FALSE
+            ))
+            # Legacy output, if "No Data" categories are not automatically added:
+            || isTRUE(all.equal(
+                as.array(crtabs(~v8 + v7, data = ds, useNA = "always")),
+                array(c(
+                    5, 5,
+                    3, 2,
+                    2, 3,
+                    0, 0
+                ),
+                dim = c(2L, 4L),
+                dimnames = list(
+                    v8 = c("1955-11-05", "1955-11-06"),
+                    v7 = c(LETTERS[3:5], "No Data")
+                )
+                ),
+                check.attributes = FALSE
+            ))
         )
     })
 
@@ -363,20 +317,43 @@ with_test_authentication({
             )
             )
         )
-        expect_equivalent(
-            as.array(crtabs(~bin(v3) + v7, data = ds, useNA = "always")),
-            array(c(
-                2, 5, 3, 0, 0,
-                0, 0, 2, 3, 0,
-                0, 0, 0, 2, 3,
-                0, 0, 0, 0, 0
-            ),
-            dim = c(5L, 4L),
-            dimnames = list(
-                v3 = c("5-10", "10-15", "15-20", "20-25", "25-30"),
-                v7 = c(LETTERS[3:5], "No Data")
-            )
-            )
+        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
+        # construction with `expect_equivalent(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
+        expect_true(
+            isTRUE(all.equal(
+                as.array(crtabs(~bin(v3) + v7, data = ds, useNA = "always")),
+                array(c(
+                    2, 5, 3, 0, 0, 0,
+                    0, 0, 2, 3, 0, 0,
+                    0, 0, 0, 2, 3, 0,
+                    0, 0, 0, 0, 0, 0
+                ),
+                dim = c(6L, 4L),
+                dimnames = list(
+                    v3 = c("5-10", "10-15", "15-20", "20-25", "25-30", "<NA>"),
+                    v7 = c(LETTERS[3:5], "No Data")
+                )
+                ),
+                check.attributes = FALSE
+            ))
+            # Legacy output, if "No Data" categories are not automatically added:
+            || isTRUE(all.equal(
+                as.array(crtabs(~bin(v3) + v7, data = ds, useNA = "always")),
+                array(c(
+                    2, 5, 3, 0, 0,
+                    0, 0, 2, 3, 0,
+                    0, 0, 0, 2, 3,
+                    0, 0, 0, 0, 0
+                ),
+                dim = c(5L, 4L),
+                dimnames = list(
+                    v3 = c("5-10", "10-15", "15-20", "20-25", "25-30"),
+                    v7 = c(LETTERS[3:5], "No Data")
+                )
+                ),
+                check.attributes = FALSE
+            ))
         )
     })
     test_that("unbinned numeric", {

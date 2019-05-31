@@ -23,8 +23,7 @@ setGeneric("variables<-", function(x, value) standardGeneric("variables<-"))
 #' @rdname variables
 setGeneric("allVariables", function(x) standardGeneric("allVariables"))
 #' @rdname variables
-setGeneric(
-    "allVariables<-",
+setGeneric("allVariables<-",
     function(x, value) standardGeneric("allVariables<-")
 )
 
@@ -55,8 +54,7 @@ setDatasetVariables <- function(x, value) {
 setMethod("variables", "CrunchDataset", function(x) active(allVariables(x)))
 #' @rdname variables
 #' @export
-setMethod(
-    "variables<-", c("CrunchDataset", "VariableCatalog"),
+setMethod("variables<-", c("CrunchDataset", "VariableCatalog"),
     setDatasetVariables
 )
 #' @rdname variables
@@ -64,8 +62,7 @@ setMethod(
 setMethod("allVariables", "CrunchDataset", function(x) x@variables)
 #' @rdname variables
 #' @export
-setMethod(
-    "allVariables<-", c("CrunchDataset", "VariableCatalog"),
+setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
     setDatasetVariables
 )
 

@@ -23,49 +23,42 @@ setMethod("active", "VariableCatalog", function(x) {
     return(x)
 })
 
-setMethod("hidden", "VariableCatalog", function(x) {
-    index(x) <- Filter(.discardedTuple, index(x))
-    return(x)
-})
-
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("VariableCatalog", "numeric"), function(x, i, ...) {
     getTuple(x, i, VariableTuple)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"),
+setMethod("[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"),
     function(x, i, j, value) {
         index(x)[[i]] <- value@body
         return(x)
     }
 )
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
-setMethod(
-    "[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable"),
+setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable"),
     function(x, i, j, value) {
         stopifnot(i == self(value))
         x[[i]] <- tuple(value)
         return(x)
     }
 )
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("VariableCatalog", "VariableOrder"), function(x, i, ...) {
     index(x) <- index(x)[urls(i)]
     return(x)
 })
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("[", c("VariableCatalog", "VariableGroup"), function(x, i, ...) {
     index(x) <- index(x)[urls(i)]
     return(x)
 })
 
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("VariableCatalog", "VariableOrder", "missing", "VariableCatalog"),
@@ -74,7 +67,7 @@ setMethod(
         callNextMethod(x, i, value = value)
     }
 )
-#' @rdname catalog-extract
+#' @rdname crunch-extract
 #' @export
 setMethod(
     "[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatalog"),

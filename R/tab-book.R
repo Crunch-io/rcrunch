@@ -91,14 +91,11 @@ extToContentType <- function(ext){
     return(mapping[[ext]])
 }
 
-#' TabBookResult and MultitableResult methods
+#' TabBookResult and MultitableResult dimension
 #'
 #' @param x a TabBookResult or MultitableResult
-#' @param i an index into `x`
-#' @param j an index into `x`, ignored
-#' @param ... also ignored
 #' @return Returns what you'd expect.
-#' @name tabbook-methods
+#' @name tabbook-dim
 NULL
 
 setMethod("initialize", "TabBookResult", function(.Object, ...) {
@@ -107,38 +104,35 @@ setMethod("initialize", "TabBookResult", function(.Object, ...) {
     return(.Object)
 })
 
-#' @rdname tabbook-methods
-#' @export
-setMethod("length", "TabBookResult", function(x) length(x$sheets))
-#' @rdname tabbook-methods
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("TabBookResult", "numeric"), function(x, i, ...) {
     x$sheets[[i]]
 })
-#' @rdname tabbook-methods
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", c("TabBookResult", "character"), function(x, i, ...) {
     x$sheets[[match(i, names(x))]]
 })
 
-#' @rdname tabbook-methods
+#' @rdname tabbook-dim
 #' @export
 setMethod("dim", "TabBookResult", function(x) {
     nrows <- length(x)
     ncols <- ifelse(nrows, length(x[[1]]), 0L)
     return(c(nrows, ncols))
 })
-#' @rdname tabbook-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "TabBookResult", function(x) {
     unlist(lapply(x$meta$sheets, function(sheet) sheet$name))
 })
-#' @rdname tabbook-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("aliases", "TabBookResult", function(x) {
     unlist(lapply(x, function(mt) aliases(mt[[1]])[1]), use.names = FALSE)
 })
-#' @rdname tabbook-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("descriptions", "TabBookResult", function(x) {
     unlist(lapply(x, function(mt) descriptions(mt[[1]])[1]), use.names = FALSE)
@@ -198,10 +192,8 @@ setMethod("initialize", "MultitableResult", function(.Object, ...) {
 
     return(.Object)
 })
-#' @rdname tabbook-methods
-#' @export
-setMethod("length", "MultitableResult", function(x) length(x$result))
-#' @rdname tabbook-methods
+
+#' @rdname crunch-extract
 #' @export
 setMethod("[[", "MultitableResult", function(x, i, ...) {
     x$result[[i]]
@@ -209,26 +201,20 @@ setMethod("[[", "MultitableResult", function(x, i, ...) {
 setMethod("lapply", "MultitableResult", function(X, FUN, ...) {
     lapply(X$result, FUN, ...)
 })
-#' @rdname tabbook-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("names", "MultitableResult", function(x) {
     unlist(lapply(x, function(cube) names(cube)[2]), use.names = FALSE)
 })
-#' @rdname tabbook-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("aliases", "MultitableResult", function(x) {
     unlist(lapply(x, function(cube) aliases(cube)[2]), use.names = FALSE)
 })
-#' @rdname tabbook-methods
+#' @rdname describe-catalog
 #' @export
 setMethod("descriptions", "MultitableResult", function(x) {
     unlist(lapply(x, function(cube) descriptions(cube)[2]), use.names = FALSE)
-})
-
-#' @rdname show-crunch
-#' @export
-setMethod("show", "MultitableResult", function(object) {
-    show(do.call("cbind", lapply(object, cubeToArray)))
 })
 
 #' @export

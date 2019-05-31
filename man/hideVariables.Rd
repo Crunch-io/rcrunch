@@ -17,9 +17,9 @@ unhideVariables(dataset, variables)
 
 \item{variables}{names or indices of variables to (un)hide}
 
-\item{x}{same as \code{dataset}, for \code{hiddenVariables<-}}
+\item{x}{\code{dataset}, for \code{hiddenVariables<-}}
 
-\item{value}{same as \code{variables}, for \code{hiddenVariables<-}}
+\item{value}{\code{variables}, for \code{hiddenVariables<-}}
 }
 \value{
 (invisibly) \code{dataset} with the specified variables (un)hidden

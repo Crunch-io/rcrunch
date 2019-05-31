@@ -15,6 +15,7 @@
         "parent": "https://app.crunch.io/api/datasets/",
         "batches": "https://app.crunch.io/api/datasets/3/batches/",
         "filters": "https://app.crunch.io/api/datasets/3/filters/",
+        "folders": "https://app.crunch.io/api/datasets/3/folders/",
         "boxdata": "https://app.crunch.io/api/datasets/3/boxdata/",
         "multitables": "https://app.crunch.io/api/datasets/3/multitables/",
         "permissions": "https://app.crunch.io/api/datasets/3/permissions/",

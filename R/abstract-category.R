@@ -1,9 +1,9 @@
 is.AbstractCategory <- function(x) inherits(x, "AbstractCategory")
 
-#' @rdname category-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$", "AbstractCategory", function(x, name) x[[name]])
-#' @rdname category-extract
+#' @rdname crunch-extract
 #' @export
 setMethod("$<-", "AbstractCategory", function(x, name, value) {
     x[[name]] <- value
@@ -34,19 +34,19 @@ getName <- function(x) {
     return(ifelse(is.null(n), NA_character_, n))
 }
 
-#' @rdname describe-category
+#' @rdname describe-entity
 #' @export
 setMethod("name", "AbstractCategory", getName)
-#' @rdname describe-category
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "AbstractCategory", setAbstractCategoryName)
-#' @rdname describe-category
+#' @rdname describe-entity
 #' @export
 setMethod("name<-", "NULL", function(x, value) {
     halt("Cannot set name on NULL")
 })
 
-#' @rdname describe-category
+#' @rdname describe-entity
 #' @export
 setMethod("id", "AbstractCategory", function(x) {
     i <- as.integer(x[["id"]])

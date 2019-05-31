@@ -62,7 +62,7 @@ with_test_authentication({
         })
         test_that("the unbound subvariables get lined up", {
             expect_true(is.dataset(out))
-            expect_length(batches(out), 3)
+            expect_length(batches(out), 2)
             expect_identical(dim(out), c(nrow(mrdf) * 2L, 2L))
             expect_true(is.variable(out$MR))
             expect_identical(categories(out$MR), dichotomized_cats)
@@ -123,7 +123,7 @@ with_test_authentication({
         out <- suppressMessages(try(appendDataset(part1, part2)))
         test_that("the arrays with different subvariables can append", {
             expect_true(is.dataset(out))
-            expect_length(batches(out), 3)
+            expect_length(batches(out), 2)
             expect_identical(dim(out), c(nrow(mrdf) * 2L, 2L))
             expect_true(is.variable(out$MR))
             expect_true(is.Multiple(out$MR))

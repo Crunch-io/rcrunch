@@ -44,6 +44,13 @@ with_mock_crunch({
         expect_json_equivalent(combine.resps, extremes)
         expect_json_equivalent(combine.resps$expr, extremes$expr)
     })
+    test_that("combineResponses() is an alias for combine()", {
+        combine.resps <- combineResponses(ds$mymrset,
+            name = "MR combined",
+            list(list(name = "Extremes", responses = c("First", "Last")))
+        )
+        expect_json_equivalent(combine.resps, extremes)
+    })
 
     test_that("Default name for combine responses", {
         def <- combine(

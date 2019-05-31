@@ -62,10 +62,10 @@ with_test_authentication({
     ds <- new_ds_with_derived_array()
 
     test_that("changing category names in metadata carries", {
-        names(categories(ds$petloc)) <- c(
-            "Kat", "Dogz", "Bird",
-            "Skipped", "Not Asked"
-        )
+        existing <- names(categories(ds$petloc))
+        existing[1] <- "Kat"
+        existing[2] <- "Dogz"
+        names(categories(ds$petloc)) <- existing
         ds <- refresh(ds) # must refresh to update the derived variable's metadata
 
         expect_true(is.derived(ds$derivedarray))

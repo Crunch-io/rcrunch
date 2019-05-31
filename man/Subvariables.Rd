@@ -7,12 +7,19 @@
 \alias{subvariables}
 \alias{subvariables<-}
 \alias{subvariables,CategoricalArrayVariable-method}
+\alias{subvariables,CrunchVariable-method}
 \alias{subvariables,VariableTuple-method}
 \alias{subvariables<-,CategoricalArrayVariable,ANY-method}
 \alias{subvariables<-,CategoricalArrayVariable,Subvariables-method}
 \title{Subvariables in Array Variables}
 \usage{
+subvariables(x)
+
+subvariables(x) <- value
+
 \S4method{subvariables}{CategoricalArrayVariable}(x)
+
+\S4method{subvariables}{CrunchVariable}(x)
 
 \S4method{subvariables}{VariableTuple}(x)
 
@@ -49,5 +56,5 @@ with the \code{$} and \code{[[} extract methods.
 See the vignette on array variables for further details and examples.
 }
 \seealso{
-\code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
+\code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
 }

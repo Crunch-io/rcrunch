@@ -281,7 +281,7 @@ matchCatToFeat <- function(categories, all_features = availableGeodataFeatures()
     return(scores[scores$value %in% max(scores$value, na.rm = TRUE), ])
 }
 
-#' @rdname describe
+#' @rdname describe-entity
 #' @export
 setMethod("description", "Geodata", function(x) x@body$description)
 

@@ -13,8 +13,6 @@ AbstractCategories(..., data = NULL)
 AbstractCategory(..., data = NULL)
 }
 \arguments{
-\item{...}{additional arguments to \code{[}, ignored}
-
 \item{data}{For the constructor functions \code{AbstractCategory} and
 \code{AbstractCategories}, you can either pass in attributes via \code{...} or you
 can create the objects with a fully defined \code{list} representation of
@@ -22,12 +20,6 @@ the objects via the \code{data} argument. See the examples.}
 
 \item{x}{For the attribute getters and setters, an object of class
 AbstractCategory or AbstractCategories}
-
-\item{i}{For the \code{[} methods, just as with list extract methods}
-
-\item{j}{Invalid argument to \code{[}, but in the generic's signature}
-
-\item{drop}{Invalid argument to \code{[}, but in the generic's signature}
 
 \item{value}{For \code{[<-}, the replacement AbstractCategory to insert}
 }

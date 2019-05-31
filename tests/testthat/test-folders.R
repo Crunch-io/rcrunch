@@ -91,19 +91,23 @@ with_mock_crunch({
         '{"element":"shoji:catalog","index":{',
         '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}'
     )
+    add_birthyr_and_gender_to_group2 <- paste0(
+        "https://app.crunch.io/api/datasets/1/folders/2/",
+        " ",
+        '{"element":"shoji:catalog","index":{',
+        '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
+        '"https://app.crunch.io/api/datasets/1/variables/gender/":{}},',
+        '"graph":[',
+        '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
+        '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
+        '"https://app.crunch.io/api/datasets/1/variables/birthyr/",',
+        '"https://app.crunch.io/api/datasets/1/variables/gender/"',
+        "]}"
+    )
     test_that("mv variables to existing folder, selecting from dataset", {
         expect_PATCH(
             ds %>% mv(c("birthyr", "gender"), "Group 2"),
-            "https://app.crunch.io/api/datasets/1/folders/2/",
-            '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
-            '"https://app.crunch.io/api/datasets/1/variables/gender/":{}},',
-            '"graph":[',
-            '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
-            '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/",',
-            '"https://app.crunch.io/api/datasets/1/variables/gender/"',
-            "]}"
+            add_birthyr_and_gender_to_group2
         )
     })
     test_that("mv doesn't include vars that already exist in the folder in index patch", {
@@ -112,6 +116,12 @@ with_mock_crunch({
             add_birthyr_to_group2
         )
         expect_no_request(ds %>% mv("starttime", "Group 2"))
+    })
+    test_that("mv variables dedupes the graph too", {
+        expect_PATCH(
+            ds %>% mv(c("birthyr", "gender", "starttime"), "Group 2"),
+            add_birthyr_and_gender_to_group2
+        )
     })
     test_that("mkdir", {
         expect_POST(
