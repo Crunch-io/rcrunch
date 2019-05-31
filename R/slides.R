@@ -1,5 +1,68 @@
 # Generics ---------------------------------------------------------------
-# Generics for slides are located in the decks.R file
+#' Get and set slide analyses
+#'
+#' Slides are composed of analyses, which are effectively `CrunchCubes` with some
+#' additional metadata. You can get and set a slide's Analysis Catalog with the
+#' `analyses` method, and access an individual analysis with `analysis`.
+#'
+#' You can get the `CrunchCube` from a slide or analysis with the `cube` method and
+#' from a `CrunchDeck` with `cubes`. Analyses can be changed by assigning a formula
+#' into the `query` function.
+#' 
+#' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
+#' @param value for the setter, a query
+#' 
+#' @return an `AnalysisCatalog`, `Analysis`, `Cube`, or `Filter`
+#' @rdname analysis-methods
+#' @export
+#' @examples
+#' \dontrun{
+#' analysis(slide)
+#' cube(slide)
+#' cubes(deck)
+#' query(slide) <- ~ cyl + wt
+#' }
+setGeneric("analyses", function(x) standardGeneric("analyses"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("analyses<-", function(x, value) standardGeneric("analyses<-"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("analysis", function(x) standardGeneric("analysis"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("query", function(x) standardGeneric("query"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("query<-", function(x, value) standardGeneric("query<-"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("cube", function(x) standardGeneric("cube"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("cubes", function(x) standardGeneric("cubes"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter", function(x, value) standardGeneric("filter"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter<-", function(x, value) standardGeneric("filter<-"))
+
+#' Get or set a slide's display settings
+#'
+#' A slide's display settings can be modified by assigning a named list
+#' @param x a CrunchSlide, Analysis, or AnalysisCatalog
+#' @param value a named list, for valid settings see docs.crunch.io
+#' @rdname display-settings
+#' @export
+setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
+#' @rdname display-settings
+#' @export
+setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
+
 
 # Slide Catalog -----------------------------------------------------------
 
@@ -455,4 +518,21 @@ setMethod("filter", "Analysis", function(x) {
 setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
     return(setEntitySlot(x, "query_environment", list("filter" = list())))
+})
+
+#' @rdname display-settings
+#' @export
+setMethod("cubes", "CrunchDeck", function(x) {
+    out <- lapply(seq_len(length(x)), function(i) {
+        cubes <- cubes(x[[i]])
+        # If a slide has several analyses we should return a sublist of
+        # cubes, but most of the time they will have one analysis so not
+        # including the sublist is preferable.
+        if (length(cubes) == 1) {
+            cubes <- cubes[[1]]
+        }
+        return(cubes)
+    })
+    names(out) <- titles(x)
+    return(out)
 })
