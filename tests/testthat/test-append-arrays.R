@@ -27,7 +27,7 @@ with_test_authentication({
 
         test_that("We can append despite the duplicate name", {
             expect_true(is.dataset(out))
-            expect_length(batches(out), 3)
+            expect_length(batches(out), 2)
             expect_identical(dim(out), c(nrow(mrdf) * 2L, 2L))
             expect_true(is.Multiple(out$MR))
             skip("We get 2 'Threes'")
