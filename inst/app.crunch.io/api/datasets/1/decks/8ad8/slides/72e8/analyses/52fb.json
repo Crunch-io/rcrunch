@@ -7,9 +7,7 @@
             "measures": {
                 "count": {
                     "function": "cube_count",
-                    "args": [
-
-                    ]
+                    "args": []
                 }
             },
             "dimensions": [
@@ -69,7 +67,30 @@
         },
         "query_environment": {
             "filter": [
-
+                {
+                    "function": "in",
+                    "args": [
+                        {
+                            "variable": "gender",
+                            "dataset": "1"
+                        },
+                        {
+                            "column": [
+                                1
+                            ],
+                            "type": {
+                                "function": "typeof",
+                                "args": [
+                                    {
+                                        "variable": "gender",
+                                        "dataset": "1"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "name": "Adhoc filter"
+                }
             ],
             "weight": null
         },

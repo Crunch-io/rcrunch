@@ -54,6 +54,11 @@ setMethod(
             # TODO what to do with missing slide entries
             i <- length(x) + 1
         }
+        if (i <= length(x)) {
+            # we are replacing a slide, so return quickly modifying in place
+            out <- modifyCatalogInPlace(x, i, j, value)
+            return(out)
+        }
 
         n_slides <- length(x)
 
@@ -71,6 +76,7 @@ setMethod(
             # You can't modify the contents of a slide by patching it
             # so we need to add the new slide, delete the original slide,
             # and reorder the slideCatalog.
+            # Is ^^^ really true?
             new_order <- moveLastElement(seq_len(n_slides + 1), i)
             reorderSlides(x, new_order)
             with_consent(delete(x[[length(x)]]))
@@ -227,6 +233,15 @@ setMethod("analyses", "CrunchSlide", function(x) {
 
 #' @rdname analysis-methods
 #' @export
+setMethod("analyses<-", c("CrunchSlide", "ANY"), function(x, value) {
+    analyses <- lapply(seq_along(x), function(i) x[[i]])
+    lapply(analyses, function(x) analysis(x) <- value)
+    return(invisible(x))
+})
+
+
+#' @rdname analysis-methods
+#' @export
 setMethod("analysis", "CrunchSlide", function(x) {
     out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
     return(out[[1]])
@@ -235,7 +250,31 @@ setMethod("analysis", "CrunchSlide", function(x) {
 #' @rdname analysis-methods
 #' @export
 setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value) {
-    analyses[[1]] <- value
+    analysis <- analyses(x)[[1]]
+    query(analysis) <- value
+    return(invisible(x))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("analysis<-", c("CrunchSlide", "Analysis"), function(x, value) {
+    analysis_cat <- analyses(x)
+    return(invisible(modifyCatalogInPlace(analysis_cat, 1, NULL, value)))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter", "CrunchSlide", function(x) {
+    analysis <- analyses(x)[[1]]
+    return(filter(analysis))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter<-", c("CrunchSlide", "ANY"), function(x, value) {
+    # check that there is only on analysis?
+    first_analysis <- analyses(x)[[1]]
+    filter(first_analysis) <- value
     return(invisible(x))
 })
 
@@ -370,7 +409,7 @@ setMethod("query<-", c("Analysis", "formula"), function(x, value) {
     payload <- list(query = formulaToCubeQuery(value, data = ds))
     payload <- wrapEntity(body = payload)
     crPATCH(self(x), body = toJSON(payload))
-    invisible(refresh(x))
+    return(invisible(refresh(x)))
 })
 
 #' @rdname analysis-methods
@@ -403,3 +442,26 @@ setMethod("displaySettings<-", "Analysis", function(x, value) {
 wrapDisplaySettings <- function(settings) {
     return(lapply(settings, function(x) list(value = x)))
 }
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter", "Analysis", function(x) {
+    filt <- x@body$query_environment$filter
+    if (length(filt) == 0) {
+        return(NULL)
+    } else if (length(filt) == 1 && names(filt[[1]]) == "filter") {
+        # a saved filter
+        return(CrunchFilter(crGET(filt[[1]]$filter)))
+    } else {
+        # an adhoc filter
+        adhoc_expr <- CrunchExpr(expression = fixAdhocFilterExpression(filt[[1]]))
+        return(adhoc_expr)
+    }
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
+    # crPATCH(self(x), body = toJSON(frmt))
+    return(setEntitySlot(x, "query_environment", list("filter" = list())))
+})

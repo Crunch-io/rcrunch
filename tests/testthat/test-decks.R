@@ -248,7 +248,66 @@ with_mock_crunch({
             '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
         )
     })
-
+    
+    test_that("query assignment for slides, convenience function with analysis", {
+        expect_PATCH(
+            analysis(slide) <- ~birthyr,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+    })
+    
+    test_that("filter display for slides (and analyses)", {
+        expect_identical(filter(slide), NULL)
+        expect_prints(filter(slide), "NULL")
+        # filtre() on slide and analysis are identical (a shortcut when there is 
+        # one analysis)
+        expect_identical(filter(slide), filter(analysis(slide)))
+        
+        # main_deck[[2]] has a saved filter (though it has two analyses)
+        expect_is(filter(analyses(main_deck[[2]])[[1]]), "CrunchFilter")
+        expect_prints(
+            filter(analyses(main_deck[[2]])[[1]]), 
+            'Crunch filter "Occasional Political Interest"\nExpression: gender %in% "Male"'
+        )
+        
+        # main_deck[[3]] has an adhoc filter
+        expect_is(filter(main_deck[[3]]), "CrunchExpr")
+        expect_prints(
+            filter(main_deck[[3]]), 
+            'Crunch expression: gender %in% "Male"'
+        )
+        # filter() on slide and analysis are identical (a shortcut when there is 
+        # one analysis)
+        expect_identical(filter(main_deck[[3]]), filter(analysis(main_deck[[3]])))
+    })
+    
+    test_that("filter<-NULL for slides (and analyses)", {
+        expect_PATCH(
+            filter(decks(ds)[[2]][[3]]) <- NULL,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[]}}'
+        )
+        expect_PATCH(
+            filter(analysis(decks(ds)[[2]][[3]])) <- NULL,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[]}}'
+        )
+        expect_PATCH(
+            filter(main_deck[[3]]) <- NULL,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[]}}'
+        )
+        expect_PATCH(
+            filter(analysis(main_deck[[3]])) <- NULL,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[]}}'
+        )
+    })
+    
     test_that("Subset Crunch Slide", {
         an <- slide[[1]]
         expect_is(an, "Analysis")
@@ -510,7 +569,7 @@ with_test_authentication({
         expect_identical(cube_list[[1]], crtabs(~v2, ds))
     })
 
-    test_that("Formula's can be assigned to analyses", {
+    test_that("Formulas can be assigned to analyses", {
         query(analysis) <- ~v3
         expect_identical(cube(analysis), crtabs(~v3, ds))
     })
@@ -532,4 +591,50 @@ with_test_authentication({
         settings$countsOrPercents <- "count"
         displaySettings(analysis) <- settings
     })
+
+    ds <- refresh(ds)
+    deck <- decks(ds)[["new_name"]]
+    
+    test_that("query setting", {
+        # establish that we have three slides, and their queries
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v1, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+        
+        # change queries
+        query(analysis(deck[[1]])) <- ~ v4
+
+        # make sure that the slides are all the same
+        deck <- refresh(deck)
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+    })
+    
+    # test_that("Filter setting", {
+    #     ds <- refresh(ds)
+    #     deck <- decks(ds)[["new_name"]]
+    #     
+    #     # establish that we have three slides, and their queries
+    #     expect_equal(length(slides(deck)), 3)
+    #     expect_identical(cube(deck[[1]]), crtabs(~v1, ds))
+    #     expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+    #     expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+    # 
+    #     # add filters
+    #     
+    #     # remove filters
+    #     # filter(deck[[1]]) <- NULL # fails
+    #     # filter(analysis(deck[[1]])) <- NULL # fails
+    #     query(analysis(deck[[1]])) <- ~ v4 #fails
+    #     
+    #     # make sure that the slides are all the same
+    #     deck <- refresh(deck)
+    #     expect_equal(length(slides(deck)), 3)
+    #     expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
+    #     expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+    #     expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+    # })
 })

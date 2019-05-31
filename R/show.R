@@ -235,7 +235,6 @@ formatExpression <- function(expr) {
             return(paste0(func, "(", paste(args, collapse = ", "), ")"))
         }
     } else if ("variable" %in% names(expr)) {
-        ## GET URL, get alias from that
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
         return(deparseAndFlatten(expressionValue(expr)))
@@ -299,6 +298,26 @@ formatExpressionValue <- function(val, cats = NULL) {
         ## TODO: iterate over, replace {?:-1} with NA
     }
     return(deparseAndFlatten(val))
+}
+
+# adhoc expressions don't have variable urls, instead they have variable ids and
+# dataset urls. This function recursively goes through the expression replacing 
+# the variable/dataset pair with the correct URL.
+# This should be fixed in https://www.pivotaltracker.com/story/show/157399444
+fixAdhocFilterExpression <- function(expr){
+    if (is.CrunchExpr(expr)) {
+        return(fixAdhocFilterExpression(expr@expression))
+    } else if ("variable" %in% names(expr) && "dataset" %in% names(expr)) {
+        dataset <- expr[["dataset"]]
+        var <- expr[["variable"]]
+        expr[["dataset"]] <- NULL
+        path <- paste0("datasets/", dataset, "/variables/", var, "/")
+        expr[["variable"]] <- absoluteURL(path, getOption("crunch.api"))
+        return(expr)
+    } else if (is.atomic(expr)) {
+        return(expr)
+    }
+    return(lapply(expr, fixAdhocFilterExpression))
 }
 
 #' @rdname show-crunch

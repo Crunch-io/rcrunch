@@ -61,7 +61,9 @@
         },
         "query_environment": {
             "filter": [
-
+                {
+                    "filter": "https://app.crunch.io/api/datasets/1/filters/filter1/"
+                }
             ],
             "weight": null
         },

@@ -1,3 +1,5 @@
+#' @include shoji-catalog.R
+NULL
 
 # Generics ----------------------------------------------------------------
 
@@ -64,12 +66,17 @@ setGeneric("subtitle<-", function(x, value) standardGeneric("subtitle<-"))
 #' query(slide) <- ~ cyl + wt
 #' }
 setGeneric("analyses", function(x) standardGeneric("analyses"))
+#' @export
+setGeneric("analyses<-", function(x, value) standardGeneric("analyses<-"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("analysis", function(x) standardGeneric("analysis"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("query", function(x) standardGeneric("query"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("query<-", function(x, value) standardGeneric("query<-"))
@@ -79,6 +86,13 @@ setGeneric("cube", function(x) standardGeneric("cube"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("cubes", function(x) standardGeneric("cubes"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter", function(x, value) standardGeneric("filter"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter<-", function(x, value) standardGeneric("filter<-"))
+
 
 #' Get or set a slide's display settings
 #'
@@ -100,11 +114,26 @@ setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySetti
 #'
 #' @param dataset a Crunch Dataset
 #' @return a DeckCatalog
+#' @rdname decks
 #' @export
-decks <- function(dataset) {
-    stopifnot(is.dataset(dataset))
-    DeckCatalog(crGET(shojiURL(dataset, "catalogs", "decks")))
-}
+setGeneric("decks", function(x) standardGeneric("decks"))
+#' @rdname decks
+#' @export
+setGeneric("decks<-", function(x, value) standardGeneric("decks<-"))
+#' @rdname decks
+#' @export
+setMethod("decks", "CrunchDataset", function(x) {
+    return(DeckCatalog(crGET(shojiURL(x, "catalogs", "decks"))))
+})
+#' @rdname decks
+#' @export
+setMethod("decks<-", "CrunchDataset", function(x, value) {
+    deck <- urls(value)
+    deck_cat <- decks(x)
+    deck_cat[deck] <- value
+    # TODO: ordering?
+    return(invisible(x))
+})
 
 # Deck Catalog ------------------------------------------------------------
 
@@ -161,6 +190,35 @@ setMethod("show", "DeckCatalog", function(object) {
     }
 })
 
+
+#' @rdname crunch-extract
+#' @export
+setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
+          modifyCatalogInPlace)
+
+#' @rdname crunch-extract
+#' @export
+setMethod(
+    "[[<-", c("CrunchDeck", "ANY", "missing", "AnalysisCatalog"), 
+    function(x, i, j, value) {
+        # have to separate the slide to avoid:
+        # [[<- defined for objects of type "S4" only for subclasses of environment
+        slide <- slides(x)[[i]]
+        slide <- value
+        return(invisible(refresh(x)))
+    })
+
+#' @rdname crunch-extract
+#' @export
+setMethod("[[<-", c("SlideCatalog", "ANY", "missing", "CrunchSlide"),
+          modifyCatalogInPlace)
+
+#' @rdname crunch-extract
+#' @export
+setMethod("[[<-", c("AnalysisCatalog", "ANY", "missing", "Analysis"),
+          modifyCatalogInPlace)
+
+
 # CrunchDeck --------------------------------------------------------------
 
 #' @rdname catalog-extract
@@ -169,11 +227,15 @@ setMethod("[[", "CrunchDeck", function(x, i, ...) slides(x)[[i]])
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
-    slideCat <- slides(x)
-    slideCat[[i]] <- value
-    invisible(refresh(x))
-})
+setMethod("[[<-", "CrunchDeck", function(x, i, j, value) slides(x)[[i]] <- value)
+
+#' #' @rdname catalog-extract
+#' #' @export
+#' setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
+#'     slideCat <- slides(x)
+#'     slideCat[[i]] <- value
+#'     invisible(refresh(x))
+#' })
 
 #' Access the slides of a CrunchDeck
 #'
@@ -183,10 +245,27 @@ setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
 #'
 #' @param x a CrunchDeck
 #' @return a Slide Catalog
+#' @rdname slides
 #' @export
-slides <- function(x) {
-    SlideCatalog(crGET(shojiURL(x, "catalogs", "slides")))
-}
+setGeneric("slides", function(x) standardGeneric("slides"))
+#' @rdname slides
+#' @export
+setGeneric("slides<-", function(x, value) standardGeneric("slides<-"))
+#' @rdname slides
+#' @export
+setMethod("slides", "CrunchDeck", function(x) {
+    return(SlideCatalog(crGET(shojiURL(x, "catalogs", "slides"))))
+})
+#' @rdname slides
+#' @export
+setMethod("slides<-", "CrunchDeck", function(x, value) {
+    slides <- urls(value)
+    slide_cat <- slides(x)
+    slide_cat[slides] <- value
+    # TODO: ordering?
+    return(invisible(x))
+})
+
 
 #' @rdname describe
 #' @export
