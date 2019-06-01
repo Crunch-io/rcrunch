@@ -515,8 +515,21 @@ setMethod("filter", "Analysis", function(x) {
 
 #' @rdname analysis-methods
 #' @export
+setMethod("filter<-", "CrunchSlide", function(x, value) {
+    analysis <- analyses(x)[[1]]
+    filter(analysis) <- value
+    return(invisible(x))
+})
+
+#' @rdname analysis-methods
+#' @export
 setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
-    # crPATCH(self(x), body = toJSON(frmt))
+    halt("Setting adhoc filters on decks is unsupported")
+    # the following _should_ work, however query_environment filters must include
+    # dataset references (which our expression to ZCL converter does not support)
+    # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
+    # once query_environment is changed to work like every other expression, the 
+    # following should just work:
     return(setEntitySlot(x, "query_environment", list("filter" = list(value@expression))))
 })
 

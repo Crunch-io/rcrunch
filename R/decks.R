@@ -161,7 +161,10 @@ setMethod("[[", "CrunchDeck", function(x, i, ...) slides(x)[[i]])
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", "CrunchDeck", function(x, i, j, value) slides(x)[[i]] <- value)
+setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
+    slides(x)[[i]] <- value
+    return(invisible(refresh(x)))
+})
 
 #' Access the slides of a CrunchDeck
 #'

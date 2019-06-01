@@ -635,18 +635,18 @@ with_test_authentication({
         expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
         expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
 
+        # TODO: make a named filter
+        
         # add filters
-        filter(deck[[1]]) <- ds$v1 > 0
-        filter(analysis(deck[[2]])) <- ds$v4 == "B" 
+        # TODO: the following to error tests should be moved to unit tests.
+        expect_error(filter(deck[[1]]) <- ds$v1 > 0, "Setting adhoc filters on decks is unsupported")
+        expect_error(filter(analysis(deck[[2]])) <- ds$v4 == "B" , "Setting adhoc filters on decks is unsupported")
 
-        # TODO: check filters
+        # check filters
         
         # remove filters
         filter(deck[[1]]) <- NULL
-        filter(analysis(deck[[1]])) <- NULL 
-
-        # TODO: make a named filter and add that
-        
+        filter(analysis(deck[[2]])) <- NULL 
         
         # make sure that the slides are all the same
         deck <- refresh(deck)
