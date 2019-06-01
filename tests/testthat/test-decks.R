@@ -625,28 +625,29 @@ with_test_authentication({
         expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
     })
     
-    # test_that("Filter setting", {
-    #     ds <- refresh(ds)
-    #     deck <- decks(ds)[["new_name"]]
-    #     
-    #     # establish that we have three slides, and their queries
-    #     expect_equal(length(slides(deck)), 3)
-    #     expect_identical(cube(deck[[1]]), crtabs(~v1, ds))
-    #     expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
-    #     expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
-    # 
-    #     # add filters
-    #     
-    #     # remove filters
-    #     # filter(deck[[1]]) <- NULL # fails
-    #     # filter(analysis(deck[[1]])) <- NULL # fails
-    #     query(analysis(deck[[1]])) <- ~ v4 #fails
-    #     
-    #     # make sure that the slides are all the same
-    #     deck <- refresh(deck)
-    #     expect_equal(length(slides(deck)), 3)
-    #     expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
-    #     expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
-    #     expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
-    # })
+    test_that("Filter setting", {
+        ds <- refresh(ds)
+        deck <- decks(ds)[["new_name"]]
+
+        # establish that we have three slides, and their queries
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+
+        # add filters
+        filter(analysis(deck[[1]])) <- ds$v1 > 0
+        filter(analysis(deck[[2]])) <- ds$v4 == "B"
+
+        # remove filters
+        # filter(deck[[1]]) <- NULL # fails
+        filter(analysis(deck[[1]])) <- NULL 
+
+        # make sure that the slides are all the same
+        deck <- refresh(deck)
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+    })
 })
