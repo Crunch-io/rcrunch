@@ -26,6 +26,8 @@
 \alias{query<-,Analysis,formula-method}
 \alias{cube,Analysis-method}
 \alias{filter,Analysis-method}
+\alias{filter<-,Analysis,CrunchLogicalExpr-method}
+\alias{filter<-,Analysis,CrunchFilter-method}
 \alias{filter<-,Analysis,NULL-method}
 \title{Get and set slide analyses}
 \usage{
@@ -76,6 +78,10 @@ filter(x) <- value
 \S4method{cube}{Analysis}(x)
 
 \S4method{filter}{Analysis}(x)
+
+\S4method{filter}{Analysis,CrunchLogicalExpr}(x) <- value
+
+\S4method{filter}{Analysis,CrunchFilter}(x) <- value
 
 \S4method{filter}{Analysis,`NULL`}(x) <- value
 }

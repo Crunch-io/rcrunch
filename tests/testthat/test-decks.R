@@ -636,13 +636,18 @@ with_test_authentication({
         expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
 
         # add filters
-        filter(analysis(deck[[1]])) <- ds$v1 > 0
-        filter(analysis(deck[[2]])) <- ds$v4 == "B"
+        filter(deck[[1]]) <- ds$v1 > 0
+        filter(analysis(deck[[2]])) <- ds$v4 == "B" 
 
+        # TODO: check filters
+        
         # remove filters
-        # filter(deck[[1]]) <- NULL # fails
+        filter(deck[[1]]) <- NULL
         filter(analysis(deck[[1]])) <- NULL 
 
+        # TODO: make a named filter and add that
+        
+        
         # make sure that the slides are all the same
         deck <- refresh(deck)
         expect_equal(length(slides(deck)), 3)
