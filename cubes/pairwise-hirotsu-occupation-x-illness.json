@@ -1,0 +1,274 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/9271a0/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F9271a0%2Fvariables%2F000001%2F%22%7D%2C%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F9271a0%2Fvariables%2F000000%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/9271a0/variables/000001/"
+                },
+                {
+                    "variable": "/api/datasets/9271a0/variables/000000/"
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "occupation",
+                        "name": "occupation"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "1"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "2"
+                            },
+                            {
+                                "numeric_value": 3,
+                                "missing": false,
+                                "id": 3,
+                                "name": "3"
+                            },
+                            {
+                                "numeric_value": 4,
+                                "missing": false,
+                                "id": 4,
+                                "name": "4"
+                            },
+                            {
+                                "numeric_value": 5,
+                                "missing": false,
+                                "id": 5,
+                                "name": "5"
+                            },
+                            {
+                                "numeric_value": 6,
+                                "missing": false,
+                                "id": 6,
+                                "name": "6"
+                            },
+                            {
+                                "numeric_value": 7,
+                                "missing": false,
+                                "id": 7,
+                                "name": "7"
+                            },
+                            {
+                                "numeric_value": 8,
+                                "missing": false,
+                                "id": 8,
+                                "name": "8"
+                            },
+                            {
+                                "numeric_value": 9,
+                                "missing": false,
+                                "id": 9,
+                                "name": "9"
+                            },
+                            {
+                                "numeric_value": 10,
+                                "missing": false,
+                                "id": 10,
+                                "name": "10"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "references": {
+                        "alias": "illness",
+                        "name": "illness"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 3,
+                                "id": 3,
+                                "name": "slight",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 1,
+                                "id": 1,
+                                "name": "medium",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "serious",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 0,
+            "measures": {
+                "count": {
+                    "data": [
+                        148,
+                        444,
+                        86,
+                        0,
+                        111,
+                        352,
+                        49,
+                        0,
+                        645,
+                        1911,
+                        328,
+                        0,
+                        165,
+                        771,
+                        119,
+                        0,
+                        383,
+                        1829,
+                        311,
+                        0,
+                        96,
+                        293,
+                        47,
+                        0,
+                        98,
+                        330,
+                        58,
+                        0,
+                        199,
+                        874,
+                        155,
+                        0,
+                        59,
+                        199,
+                        30,
+                        0,
+                        262,
+                        1320,
+                        236,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "n_missing": 0,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "n": 11908,
+            "unfiltered": {
+                "unweighted_n": 11908,
+                "weighted_n": 11908
+            },
+            "filtered": {
+                "unweighted_n": 11908,
+                "weighted_n": 11908
+            },
+            "counts": [
+                148,
+                444,
+                86,
+                0,
+                111,
+                352,
+                49,
+                0,
+                645,
+                1911,
+                328,
+                0,
+                165,
+                771,
+                119,
+                0,
+                383,
+                1829,
+                311,
+                0,
+                96,
+                293,
+                47,
+                0,
+                98,
+                330,
+                58,
+                0,
+                199,
+                874,
+                155,
+                0,
+                59,
+                199,
+                30,
+                0,
+                262,
+                1320,
+                236,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "element": "crunch:cube"
+        }
+    }
+}

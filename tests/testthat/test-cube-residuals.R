@@ -31,3 +31,8 @@ test_that("broadcast returns a matrix that mataches", {
         fixed = TRUE
     )
 })
+
+test_that("scalars broadcast too", {
+    array <- array(c(1,1), dim=c(1,2))
+    expect_equal(broadcast(1, dim=c(1,2)), array)
+})
