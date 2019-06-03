@@ -283,7 +283,7 @@ with_mock_crunch({
             '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
         )
     })
-        
+
     test_that("query assignment for slides via subset methods", {
         expect_PATCH(
             analysis(decks(ds)[[2]][[1]]) <- ~birthyr, 
@@ -296,6 +296,24 @@ with_mock_crunch({
         
         expect_PATCH(
             analysis(main_deck[[1]]) <- ~birthyr, 
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+
+        expect_PATCH(
+            query(main_deck[[1]]) <- ~birthyr, 
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+                
+        expect_PATCH(
+            query(analysis(main_deck[[1]])) <- ~birthyr, 
             "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
             '{"element":"shoji:entity",',
             '"body":{"query":{"dimensions":[',
@@ -705,13 +723,14 @@ with_test_authentication({
         expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
         
         # change queries
-        query(analysis(deck[[1]])) <- ~ v4
+        query(deck[[1]]) <- ~ v3
+        query(analysis(deck[[2]])) <- ~ v4
 
         # make sure that the slides are all the same (except the one we replaced)
         deck <- refresh(deck)
         expect_equal(length(slides(deck)), 3)
-        expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
-        expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[1]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v4, ds))
         expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
     })
     
@@ -721,8 +740,8 @@ with_test_authentication({
 
         # establish that we have three slides, and their queries
         expect_equal(length(slides(deck)), 3)
-        expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
-        expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[1]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v4, ds))
         expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
 
         # make a named filter
@@ -744,8 +763,8 @@ with_test_authentication({
         # make sure that the slides are still all the same
         deck <- refresh(deck)
         expect_equal(length(slides(deck)), 3)
-        expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
-        expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[1]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v4, ds))
         expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
     })
 })
