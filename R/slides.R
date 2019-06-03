@@ -503,7 +503,7 @@ setMethod("filter", "Analysis", function(x) {
     filt <- x@body$query_environment$filter
     if (length(filt) == 0) {
         return(NULL)
-    } else if (length(filt) == 1 && names(filt[[1]]) == "filter") {
+    } else if (length(filt) == 1 && "filter" %in% names(filt[[1]])) {
         # a saved filter
         return(CrunchFilter(crGET(filt[[1]]$filter)))
     } else {
