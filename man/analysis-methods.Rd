@@ -111,5 +111,8 @@ analysis(slide)
 cube(slide)
 cubes(deck)
 query(slide) <- ~ cyl + wt
+filter(slide)
+filter(slide) <- NULL # to remove a filter
+filter(slide) <- filters(ds)[["My filter"]]
 }
 }
