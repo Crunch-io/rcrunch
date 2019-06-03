@@ -643,7 +643,7 @@ with_test_authentication({
         # change queries
         query(analysis(deck[[1]])) <- ~ v4
 
-        # make sure that the slides are all the same
+        # make sure that the slides are all the same (except the one we replaced)
         deck <- refresh(deck)
         expect_equal(length(slides(deck)), 3)
         expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
