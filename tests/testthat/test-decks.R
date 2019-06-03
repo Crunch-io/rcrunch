@@ -283,7 +283,8 @@ with_mock_crunch({
         expect_is(filter(analyses(main_deck[[2]])[[1]]), "CrunchFilter")
         expect_prints(
             filter(analyses(main_deck[[2]])[[1]]), 
-            'Crunch filter "Occasional Political Interest"\nExpression: gender %in% "Male"'
+            'Crunch filter .*Occasional Political Interest.*\nExpression: gender %in% "Male"',
+            fixed = FALSE
         )
         
         # main_deck[[3]] has an adhoc filter
