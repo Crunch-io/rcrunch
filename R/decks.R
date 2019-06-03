@@ -65,15 +65,6 @@ setGeneric("decks<-", function(x, value) standardGeneric("decks<-"))
 setMethod("decks", "CrunchDataset", function(x) {
     return(DeckCatalog(crGET(shojiURL(x, "catalogs", "decks"))))
 })
-#' @rdname decks
-#' @export
-setMethod("decks<-", "CrunchDataset", function(x, value) {
-    deck <- urls(value)
-    deck_cat <- decks(x)
-    deck_cat[deck] <- value
-    # TODO: ordering?
-    return(invisible(x))
-})
 
 # Deck Catalog ------------------------------------------------------------
 
@@ -118,12 +109,6 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     }
     getEntity(x, index, CrunchDeck, ...)
 })
-
-#' @rdname crunch-extract
-#' @export
-setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
-    modifyCatalogInPlace)
-
 
 #' @rdname crunch-extract
 #' @export
