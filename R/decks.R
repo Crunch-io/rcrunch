@@ -52,7 +52,7 @@ setGeneric("subtitle<-", function(x, value) standardGeneric("subtitle<-"))
 #'
 #' @param x a Crunch Dataset
 #' @param value a `CrunchDeck` to add
-#' 
+#'
 #' @return a DeckCatalog
 #' @rdname decks
 #' @export
@@ -112,26 +112,33 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
-          modifyCatalogInPlace)
+setMethod(
+    "[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
+    modifyCatalogInPlace
+)
 
 #' This function is no-op because the items are already updated on the server
 #' with other methods called prior to it.
 #' @rdname crunch-extract
 #' @export
 setMethod(
-    "[[<-", c("CrunchDeck", "ANY", "missing", "AnalysisCatalog"), 
-    function(x, i, j, value) invisible(refresh(x)))
+    "[[<-", c("CrunchDeck", "ANY", "missing", "AnalysisCatalog"),
+    function(x, i, j, value) invisible(refresh(x))
+)
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("SlideCatalog", "ANY", "missing", "CrunchSlide"),
-          modifyCatalogInPlace)
+setMethod(
+    "[[<-", c("SlideCatalog", "ANY", "missing", "CrunchSlide"),
+    modifyCatalogInPlace
+)
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("AnalysisCatalog", "ANY", "missing", "Analysis"),
-          modifyCatalogInPlace)
+setMethod(
+    "[[<-", c("AnalysisCatalog", "ANY", "missing", "Analysis"),
+    modifyCatalogInPlace
+)
 
 
 # CrunchDeck --------------------------------------------------------------
@@ -155,12 +162,12 @@ setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
 #'
 #' @param x a CrunchDeck
 #' @param value a `SlideCatalog` or `CrunchSlide` to add
-#' 
+#'
 #' @return a `SlideCatalog`
 #' @rdname slides
 #' @export
 setGeneric("slides", function(x) standardGeneric("slides"))
-#' The following function is no-op because the items are already updated on the 
+#' The following function is no-op because the items are already updated on the
 #' server with other methods called prior to it.
 #' @rdname slides
 #' @export
