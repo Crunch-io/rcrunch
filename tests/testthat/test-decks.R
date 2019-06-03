@@ -141,6 +141,13 @@ with_mock_crunch({
         )
     })
 
+    test_that("Deck export errors helpfully", {
+        expect_error(
+            exportDeck(ds, format = "json"),
+            "exportDeck is only available for CrunchDecks."
+        )
+    })
+    
     test_that("deck assignment", {
         expect_POST(
             main_deck[[4]] <- main_deck[[1]],
@@ -230,6 +237,15 @@ with_mock_crunch({
     test_that("Slide titles and subtitles", {
         expect_PATCH(
             names(main_deck) <- c("new_name", "other_new_name", "other_new_name"),
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
+            '{"element":"shoji:catalog","index":',
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":{"title":"new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":{"title":"other_new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":{"title":"other_new_name"}}}'
+        )  
+        
+        expect_PATCH(
+            titles(main_deck) <- c("new_name", "other_new_name", "other_new_name"),
             "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
             '{"element":"shoji:catalog","index":',
             '{"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":{"title":"new_name"},',
@@ -651,6 +667,7 @@ with_test_authentication({
         expect_is(slideCat, "SlideCatalog")
         expect_equal(length(slideCat), 2)
         expect_equal(titles(slideCat), c("slide1", "new_title2"))
+        expect_equal(names(slideCat), c("slide1", "new_title2"))
     })
     test_that("slides can be added by assignment", {
         slide <- slideCat[[2]]

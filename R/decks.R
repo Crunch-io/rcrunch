@@ -115,17 +115,13 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
 setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
           modifyCatalogInPlace)
 
+#' This function is no-op because the items are already updated on the server
+#' with other methods called prior to it.
 #' @rdname crunch-extract
 #' @export
 setMethod(
     "[[<-", c("CrunchDeck", "ANY", "missing", "AnalysisCatalog"), 
-    function(x, i, j, value) {
-        # have to separate the slide to avoid:
-        # [[<- defined for objects of type "S4" only for subclasses of environment
-        slide <- slides(x)[[i]]
-        slide <- value
-        return(invisible(refresh(x)))
-    })
+    function(x, i, j, value) invisible(refresh(x)))
 
 #' @rdname crunch-extract
 #' @export
@@ -164,6 +160,8 @@ setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
 #' @rdname slides
 #' @export
 setGeneric("slides", function(x) standardGeneric("slides"))
+#' The following function is no-op because the items are already updated on the 
+#' server with other methods called prior to it.
 #' @rdname slides
 #' @export
 setGeneric("slides<-", function(x, value) standardGeneric("slides<-"))
@@ -174,14 +172,7 @@ setMethod("slides", "CrunchDeck", function(x) {
 })
 #' @rdname slides
 #' @export
-setMethod("slides<-", "CrunchDeck", function(x, value) {
-    slides <- urls(value)
-    slide_cat <- slides(x)
-    slide_cat[slides] <- value
-    # TODO: ordering?
-    return(invisible(x))
-})
-
+setMethod("slides<-", "CrunchDeck", function(x, value) invisible(refresh(x)))
 
 #' @rdname describe-entity
 #' @export

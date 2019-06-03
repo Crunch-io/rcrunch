@@ -519,7 +519,7 @@ setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
     # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
     # once query_environment is changed to work like every other expression, the 
     # following should just work:
-    return(setEntitySlot(x, "query_environment", list("filter" = list(value@expression))))
+    # return(setEntitySlot(x, "query_environment", list("filter" = list(value@expression))))
 })
 
 #' @rdname analysis-methods
