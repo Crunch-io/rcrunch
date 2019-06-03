@@ -5,7 +5,6 @@
 \alias{decks}
 \alias{decks<-}
 \alias{decks,CrunchDataset-method}
-\alias{decks<-,CrunchDataset-method}
 \title{Get a dataset's DeckCatalog}
 \usage{
 decks(x)
@@ -13,8 +12,6 @@ decks(x)
 decks(x) <- value
 
 \S4method{decks}{CrunchDataset}(x)
-
-\S4method{decks}{CrunchDataset}(x) <- value
 }
 \arguments{
 \item{x}{a Crunch Dataset}

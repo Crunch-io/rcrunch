@@ -310,8 +310,6 @@
 
 \S4method{[[}{DeckCatalog,ANY,missing,CrunchDeck}(x, i, j) <- value
 
-\S4method{[[}{DeckCatalog,ANY,missing,CrunchDeck}(x, i, j) <- value
-
 \S4method{[[}{CrunchDeck,ANY,missing,AnalysisCatalog}(x, i, j) <- value
 
 \S4method{[[}{SlideCatalog,ANY,missing,CrunchSlide}(x, i, j) <- value
