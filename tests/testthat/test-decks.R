@@ -58,6 +58,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/decks/8ad8/",
             '{"name":"new_name"}'
         )
+        
         expect_PATCH(
             description(main_deck) <- "new_description",
             "https://app.crunch.io/api/datasets/1/decks/8ad8/",
@@ -224,6 +225,17 @@ with_mock_crunch({
             slide,
             get_output(cube(slide))
         )
+    })
+    
+    test_that("Slide titles and subtitles", {
+        expect_PATCH(
+            names(main_deck) <- c("new_name", "other_new_name", "other_new_name"),
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
+            '{"element":"shoji:catalog","index":',
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":{"title":"new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":{"title":"other_new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":{"title":"other_new_name"}}}'
+        )  
     })
 
     test_that("Slide titles and subtitles", {
