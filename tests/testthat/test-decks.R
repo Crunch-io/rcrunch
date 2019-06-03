@@ -283,7 +283,7 @@ with_mock_crunch({
             '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
         )
     })
-    
+        
     test_that("query assignment for slides via subset methods", {
         expect_PATCH(
             analysis(decks(ds)[[2]][[1]]) <- ~birthyr, 
@@ -498,9 +498,28 @@ with_mock_crunch({
             '"currentTab":{"value":0},',
             '"uiView":{"value":"app.datasets.browse"}}}}'
         )
+        
+        # and the same thing works with the convenience of specifying the slide
+        expect_identical(settings, displaySettings(slide))
+        expect_PATCH(
+            displaySettings(slide) <- list(decimalPlaces = 1),
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"display_settings":{',
+            '"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":true},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"populationMagnitude":{"value":3},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0},',
+            '"uiView":{"value":"app.datasets.browse"}}}}'
+        )
     })
 
-    test_that("AnalysisCatelog display settings", {
+    test_that("AnalysisCatalog display settings", {
         ancat <- analyses(slide)
         settings_list <- displaySettings(ancat)
         expect_is(settings_list, "list")
