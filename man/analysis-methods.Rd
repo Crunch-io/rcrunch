@@ -79,6 +79,8 @@ filter(x) <- value
 
 \S4method{filter}{Analysis}(x)
 
+\S4method{filter}{CrunchSlide,ANY}(x) <- value
+
 \S4method{filter}{Analysis,CrunchLogicalExpr}(x) <- value
 
 \S4method{filter}{Analysis,CrunchFilter}(x) <- value

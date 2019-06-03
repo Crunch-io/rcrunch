@@ -537,7 +537,7 @@ setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
 #' @export
 setMethod("filter<-", c("Analysis", "CrunchFilter"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
-    return(setEntitySlot(x, "query_environment", list("filter" = self(value))))
+    return(setEntitySlot(x, "query_environment", list("filter" = list(self(value)))))
 })
 
 #' @rdname analysis-methods

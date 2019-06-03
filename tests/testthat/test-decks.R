@@ -275,7 +275,7 @@ with_mock_crunch({
     test_that("filter display for slides (and analyses)", {
         expect_identical(filter(slide), NULL)
         expect_prints(filter(slide), "NULL")
-        # filtre() on slide and analysis are identical (a shortcut when there is 
+        # filter() on slide and analysis are identical (a shortcut when there is 
         # one analysis)
         expect_identical(filter(slide), filter(analysis(slide)))
         
@@ -295,6 +295,32 @@ with_mock_crunch({
         # filter() on slide and analysis are identical (a shortcut when there is 
         # one analysis)
         expect_identical(filter(main_deck[[3]]), filter(analysis(main_deck[[3]])))
+    })
+    
+    test_that("filter<-something for slides (and analyses)", {
+        # though CrunchLogicalExpr could be made into filters, the expression in
+        # query_environment is a bespoke shape unlike any other expression. 
+        # This can be enabled once the specialness here is removed on the server.
+        expect_error(
+            filter(decks(ds)[[2]][[3]]) <- ds$birthyr > 1990, 
+            "Setting adhoc filters on decks is unsupported"
+        )
+        expect_error(
+            filter(analysis(decks(ds)[[2]][[3]])) <- ds$birthyr > 1990 , 
+            "Setting adhoc filters on decks is unsupported"
+        )
+        
+        # named filters
+        expect_PATCH(
+            filter(decks(ds)[[2]][[3]]) <- filters(ds)[["Occasional Political Interest"]], 
+            'https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/',
+            '{"query_environment":{"filter":["https://app.crunch.io/api/datasets/1/filters/filter1/"]}'
+        )
+        expect_PATCH(
+            filter(analysis(decks(ds)[[2]][[3]])) <- filters(ds)[["Public filter"]], 
+            'https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/',
+            '{"query_environment":{"filter":["https://app.crunch.io/api/datasets/1/filters/filter2/"]}'
+        )
     })
     
     test_that("filter<-NULL for slides (and analyses)", {
@@ -635,20 +661,23 @@ with_test_authentication({
         expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
         expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
 
-        # TODO: make a named filter
+        # make a named filter
+        filters(ds)[["v4 is B"]] <- ds$v4 == "B"
+        filters(ds)[["v1 over 0"]] <- ds$v1 > 0
         
         # add filters
-        # TODO: the following to error tests should be moved to unit tests.
-        expect_error(filter(deck[[1]]) <- ds$v1 > 0, "Setting adhoc filters on decks is unsupported")
-        expect_error(filter(analysis(deck[[2]])) <- ds$v4 == "B" , "Setting adhoc filters on decks is unsupported")
-
+        filter(deck[[1]]) <- filters(ds)[["v4 is B"]]
+        filter(analysis(deck[[2]])) <- filters(ds)[["v1 over 0"]]
+        
         # check filters
+        expect_identical(filter(deck[[1]]), filters(ds)[["v4 is B"]])
+        expect_identical(filter(analysis(deck[[2]])), filters(ds)[["v1 over 0"]])
         
         # remove filters
         filter(deck[[1]]) <- NULL
         filter(analysis(deck[[2]])) <- NULL 
         
-        # make sure that the slides are all the same
+        # make sure that the slides are still all the same
         deck <- refresh(deck)
         expect_equal(length(slides(deck)), 3)
         expect_identical(cube(deck[[1]]), crtabs(~v4, ds))
