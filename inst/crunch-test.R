@@ -23,7 +23,7 @@ skip_on_local_env <- function(message) {
 }
 
 decompress_fixtures <- function(dest = tempdir()) {
-    untar(find_file("cubes.tgz"), compressed = TRUE, exdir = tempdir())
+    untar(find_file("cubes.tgz"), exdir = tempdir())
 }
 
 cubePath <- function(filename) {
