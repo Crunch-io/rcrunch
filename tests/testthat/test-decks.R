@@ -272,6 +272,26 @@ with_mock_crunch({
         )
     })
     
+    test_that("query assignment for slides via subset methods", {
+        expect_PATCH(
+            analysis(decks(ds)[[2]][[1]]) <- ~birthyr, 
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+        
+        expect_PATCH(
+            analysis(main_deck[[1]]) <- ~birthyr, 
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+    })
+    
     test_that("filter display for slides (and analyses)", {
         expect_identical(filter(slide), NULL)
         expect_prints(filter(slide), "NULL")
@@ -310,8 +330,20 @@ with_mock_crunch({
             filter(analysis(decks(ds)[[2]][[3]])) <- ds$birthyr > 1990 , 
             "Setting adhoc filters on decks is unsupported"
         )
-        
-        # named filters
+
+        # named filters (through a CrunchDeck object)
+        expect_PATCH(
+            filter(main_deck[[3]]) <- filters(ds)[["Occasional Political Interest"]], 
+            'https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/',
+            '{"query_environment":{"filter":["https://app.crunch.io/api/datasets/1/filters/filter1/"]}'
+        )
+        expect_PATCH(
+            filter(analysis(main_deck[[3]])) <- filters(ds)[["Public filter"]], 
+            'https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/',
+            '{"query_environment":{"filter":["https://app.crunch.io/api/datasets/1/filters/filter2/"]}'
+        )
+                
+        # named filters (through teh decks catalog)
         expect_PATCH(
             filter(decks(ds)[[2]][[3]]) <- filters(ds)[["Occasional Political Interest"]], 
             'https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/',
