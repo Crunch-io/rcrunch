@@ -3,17 +3,14 @@
 \docType{methods}
 \name{analyses}
 \alias{analyses}
-\alias{analyses<-}
 \alias{analysis}
 \alias{analysis<-}
-\alias{query}
 \alias{query<-}
 \alias{cube}
 \alias{cubes}
 \alias{filter}
 \alias{filter<-}
 \alias{analyses,CrunchSlide-method}
-\alias{analyses<-,CrunchSlide-method}
 \alias{analysis,CrunchSlide-method}
 \alias{analysis<-,CrunchSlide,formula-method}
 \alias{analysis<-,CrunchSlide,Analysis-method}
@@ -33,13 +30,9 @@
 \usage{
 analyses(x)
 
-analyses(x) <- value
-
 analysis(x)
 
 analysis(x) <- value
-
-query(x)
 
 query(x) <- value
 
@@ -52,8 +45,6 @@ filter(x, value)
 filter(x) <- value
 
 \S4method{analyses}{CrunchSlide}(x)
-
-\S4method{analyses}{CrunchSlide}(x) <- value
 
 \S4method{analysis}{CrunchSlide}(x)
 

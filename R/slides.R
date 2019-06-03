@@ -28,16 +28,10 @@
 setGeneric("analyses", function(x) standardGeneric("analyses"))
 #' @rdname analysis-methods
 #' @export
-setGeneric("analyses<-", function(x, value) standardGeneric("analyses<-"))
-#' @rdname analysis-methods
-#' @export
 setGeneric("analysis", function(x) standardGeneric("analysis"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
-#' @rdname analysis-methods
-#' @export
-setGeneric("query", function(x) standardGeneric("query"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("query<-", function(x, value) standardGeneric("query<-"))
@@ -286,14 +280,6 @@ setMethod("subtitle<-", "CrunchSlide", function(x, value) {
 #' @export
 setMethod("analyses", "CrunchSlide", function(x) {
     AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
-})
-
-#' @rdname analysis-methods
-#' @export
-setMethod("analyses<-", c("CrunchSlide", "ANY"), function(x, value) {
-    analyses <- lapply(seq_along(x), function(i) x[[i]])
-    lapply(analyses, function(x) analysis(x) <- value)
-    return(invisible(x))
 })
 
 
