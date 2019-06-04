@@ -154,8 +154,10 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
-    modifyCatalogInPlace)
+setMethod(
+    "[[<-", c("DeckCatalog", "ANY", "missing", "CrunchDeck"),
+    modifyCatalogInPlace
+)
 
 # CrunchDeck --------------------------------------------------------------
 

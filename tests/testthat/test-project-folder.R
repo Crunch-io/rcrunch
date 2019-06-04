@@ -30,8 +30,10 @@ with_mock_crunch({
     })
 
     test_that("cd personal", {
-        expect_identical(self(cd(projects(), "~")),
-            "https://app.crunch.io/api/projects/personal/")
+        expect_identical(
+            self(cd(projects(), "~")),
+            "https://app.crunch.io/api/projects/personal/"
+        )
         expect_identical(
             projects() %>%
                 cd("Project One/Project Two") %>%
@@ -44,17 +46,23 @@ with_mock_crunch({
     test_that("folder() and rootFolder() for projects", {
         expect_null(folder(projects()))
         expect_identical(folder(cd(projects(), "Project One")), projects())
-        expect_identical(folder(cd(projects(), "Project One/Project Two")),
-            cd(projects(), "Project One"))
-        expect_identical(rootFolder(cd(projects(), "Project One/Project Two")),
-            projects())
+        expect_identical(
+            folder(cd(projects(), "Project One/Project Two")),
+            cd(projects(), "Project One")
+        )
+        expect_identical(
+            rootFolder(cd(projects(), "Project One/Project Two")),
+            projects()
+        )
     })
 
     test_that("path()", {
         expect_identical(path(projects()), "/")
         expect_identical(path(cd(projects(), "Project One")), "/Project One")
-        expect_identical(path(cd(projects(), "Project One/Project Two")),
-            "/Project One/Project Two")
+        expect_identical(
+            path(cd(projects(), "Project One/Project Two")),
+            "/Project One/Project Two"
+        )
     })
 
     create_group_2 <- '{"element":"shoji:entity","body":{"name":"Group 2"}}'
@@ -170,7 +178,6 @@ with_mock_crunch({
             "https://app.crunch.io/api/projects/project5/",
             '{"element":"shoji:catalog",',
             '"index":{"https://app.crunch.io/api/projects/project2/":{}}}'
-
         )
     })
 
@@ -238,8 +245,10 @@ with_mock_crunch({
 
     test_that("members() methods work on ProjectFolders", {
         expect_is(members(proj), "MemberCatalog")
-        expect_PATCH(members(proj) <- "me@myself.io",
-            self(members(proj)))
+        expect_PATCH(
+            members(proj) <- "me@myself.io",
+            self(members(proj))
+        )
     })
 
     test_that("print project folders", {

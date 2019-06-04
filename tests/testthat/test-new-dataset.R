@@ -95,7 +95,7 @@ with_mock_crunch({
         expect_POST(
             newDataset(x = "helper.R", schema = "helper.R"),
             "https://app.crunch.io/api/sources/",
-            'list\\(uploaded_file = list\\(path = .*helper.R',
+            "list\\(uploaded_file = list\\(path = .*helper.R",
             fixed = FALSE
         )
     })
@@ -161,8 +161,9 @@ with_mock_crunch({
     })
 
     test_that("newExampleDataset", {
-        expect_POST(newExampleDataset(),
-            'https://app.crunch.io/api/datasets/',
+        expect_POST(
+            newExampleDataset(),
+            "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Example dataset",'
         )
     })
@@ -193,7 +194,7 @@ with_test_authentication({
         })
     })
 
-    m <- fromJSON(system.file("example-datasets", "pets.json", package="crunch"),
+    m <- fromJSON(system.file("example-datasets", "pets.json", package = "crunch"),
         simplifyVector = FALSE
     )
 
@@ -230,7 +231,7 @@ with_test_authentication({
         m2$body$table$metadata$allpets$subvariables[[4]] <- list(name = "Another", alias = "allpets_1")
         expect_error(createWithMetadataAndFile(
             m2,
-            system.file("example-datasets", "pets.csv", package="crunch")
+            system.file("example-datasets", "pets.csv", package = "crunch")
         ))
     })
 

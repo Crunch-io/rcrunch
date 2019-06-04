@@ -158,9 +158,9 @@ with_mock_crunch({
             names(variables(crtabs(max(birthyr) ~ 1, data = ds))),
             "Birth Year"
         )
-        expect_length(measures(crtabs(~gender + textVar, data = ds)), 0)
+        expect_length(measures(crtabs(~ gender + textVar, data = ds)), 0)
         expect_identical(
-            names(variables(crtabs(~gender + textVar, data = ds))),
+            names(variables(crtabs(~ gender + textVar, data = ds))),
             c("Gender", "Text variable ftw")
         )
         skip("'mean' doesn't return variable metadata like 'max' does")

@@ -28,7 +28,8 @@ setMethod("[[", c("MultitableCatalog", "numeric"), function(x, i, ...) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
+setMethod(
+    "[[<-", c("MultitableCatalog", "character", "missing", "formula"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         w <- match(i, names(x))
@@ -47,7 +48,8 @@ setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
+setMethod(
+    "[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
 
@@ -66,8 +68,10 @@ setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "Multitable"),
-    modifyCatalogInPlace)
+setMethod(
+    "[[<-", c("MultitableCatalog", "ANY", "missing", "Multitable"),
+    modifyCatalogInPlace
+)
 
 makeMultitablePayload <- function(template, ...) {
     template <- lapply(template$dimensions, function(x) list(query = x))
@@ -77,7 +81,8 @@ makeMultitablePayload <- function(template, ...) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
+setMethod(
+    "[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (is.character(i) && !i %in% names(x)) {
@@ -124,7 +129,7 @@ setMethod("names<-", "MultitableCatalog", function(x, value) {
 #' @seealso [`stats::formula`]
 #' @examples
 #' \dontrun{
-#' m <- newMultitable(~ gender + age4 + marstat, data=ds)
+#' m <- newMultitable(~ gender + age4 + marstat, data = ds)
 #' name(m) # [1] "gender + age4 + marstat"
 #' }
 #' @export
@@ -161,7 +166,7 @@ newMultitable <- function(formula, data, name, ...) {
 #' @return An object of class `Multitable`
 #' @examples
 #' \dontrun{
-#' m <- newMultitable(~ gender + age4 + marstat, data=ds)
+#' m <- newMultitable(~ gender + age4 + marstat, data = ds)
 #' copied_m <- importMultitable(another_ds, m)
 #' name(copied_m) # [1] "gender + age4 + marstat"
 #' }

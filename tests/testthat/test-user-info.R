@@ -4,7 +4,8 @@ user_cat_output <- get_output(data.frame(
     name = c("Bill User", "Roger User"),
     email = c("william.user@example.io", "ruser@crunch.io"),
     teams = NA,
-    collaborator = c(FALSE, TRUE)))
+    collaborator = c(FALSE, TRUE)
+))
 
 with_mock_crunch({
     test_that("users() works with dataset tuples from catalogs", {

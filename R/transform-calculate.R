@@ -108,7 +108,7 @@ collateCats <- function(inserts, var_cats) {
     }
 
     # remove the fake bottom category
-    not_fake_bottom <- which(names(cats_out) !=  "__fake__bottom__category__")
+    not_fake_bottom <- which(names(cats_out) != "__fake__bottom__category__")
     cats_out@.Data <- cats_out@.Data[not_fake_bottom]
 
     return(cats_out)

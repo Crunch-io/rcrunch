@@ -52,9 +52,9 @@ from8601 <- function(x) {
 #' rollup(ds$starttime)
 #' rollup(ds$starttime, "D")
 #' rollupResolution(ds$starttime) <- "D"
-#' crtabs(~ rollup(starttime), data=ds)
+#' crtabs(~ rollup(starttime), data = ds)
 #' }
-resolution <- function (x) {
+resolution <- function(x) {
     if (is.Datetime(x)) {
         return(tuple(x)$resolution)
     } else {
@@ -64,7 +64,7 @@ resolution <- function (x) {
 
 #' @rdname resolution
 #' @export
-`resolution<-` <- function (x, value) {
+`resolution<-` <- function(x, value) {
     stopifnot(is.Datetime(x))
     validateResolution(force(value))
     # and one more validation

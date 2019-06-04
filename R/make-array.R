@@ -289,7 +289,7 @@ deriveArray <- function(subvariables, name, selections, ...) {
 #' array definitions. Use [`addVariables`] to add these to your dataset.
 #' @examples
 #' \dontrun{
-#' ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix=", rearranged"))
+#' ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix = ", rearranged"))
 #' }
 #' @export
 flipArrays <- function(variables, suffix = ", flipped") {

@@ -4,7 +4,7 @@ with_test_authentication({
     with(test.dataset(newDatasetFromFixture("apidocs")), {
         # Remove this adding of no data chunk once the "default values"
         # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
-        # This section ensures that q1 and petloc both have "No Data" categories 
+        # This section ensures that q1 and petloc both have "No Data" categories
         # even if the server did not make one on creation.
         if (!"No Data" %in% names(categories(ds$q1))) {
             categories(ds$q1) <- c(categories(ds$q1), Category(data = .no.data))
@@ -14,7 +14,7 @@ with_test_authentication({
         }
         names(categories(ds$q1)) <- c(LETTERS[1:5], "No Data") ## To distinguish from other vars
         test_that("Cat x datetime x subvar", {
-            kube <- crtabs(~q1 + wave + petloc$petloc_home, data = ds)
+            kube <- crtabs(~ q1 + wave + petloc$petloc_home, data = ds)
             expect_equivalent(
                 as.array(kube)[, , "Cat"],
                 array(c(
@@ -128,7 +128,7 @@ with_test_authentication({
             )
         })
         test_that("CA x categorical", {
-            kube <- crtabs(~petloc + country, data = ds)
+            kube <- crtabs(~ petloc + country, data = ds)
             expect_equivalent(
                 as.array(kube)[, , "Belgium"],
                 array(c(

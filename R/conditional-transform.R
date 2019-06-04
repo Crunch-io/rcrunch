@@ -43,11 +43,12 @@
 #' @examples
 #' \dontrun{
 #'
-#' ds$cat_opinion <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
-#'                                        pet2 == 'Cat' ~ Opinion2,
-#'                                        pet3 == 'Cat' ~ Opinion3,
-#'                                        data = ds,
-#'                                        name = "Opinion of Cats")
+#' ds$cat_opinion <- conditionalTransform(pet1 == "Cat" ~ Opinion1,
+#'     pet2 == "Cat" ~ Opinion2,
+#'     pet3 == "Cat" ~ Opinion3,
+#'     data = ds,
+#'     name = "Opinion of Cats"
+#' )
 #' }
 #' @export
 conditionalTransform <- function(..., data, else_condition = NA, type = NULL,

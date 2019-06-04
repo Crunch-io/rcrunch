@@ -24,7 +24,7 @@ with_mock_crunch({
         expect_true(is.Numeric(z))
     })
     test_that("Option not to warn when accessing hidden variables", {
-        with(temp.option(crunch.warn.hidden=FALSE), {
+        with(temp.option(crunch.warn.hidden = FALSE), {
             expect_warning(ds$birthyr, NA)
         })
     })
@@ -43,30 +43,30 @@ with_mock_crunch({
     })
 
     hide_gender <- paste0(
-        'https://app.crunch.io/api/datasets/3/folders/hidden/',
-        ' ',
-        '{',
-            '"element":"shoji:catalog",',
-            '"index":{',
-                '"https://app.crunch.io/api/datasets/3/variables/gender/":{}',
-            '}',
-        '}'
+        "https://app.crunch.io/api/datasets/3/folders/hidden/",
+        " ",
+        "{",
+        '"element":"shoji:catalog",',
+        '"index":{',
+        '"https://app.crunch.io/api/datasets/3/variables/gender/":{}',
+        "}",
+        "}"
     )
     hide_both <- paste0(
-        'https://app.crunch.io/api/datasets/3/folders/hidden/',
-        ' ',
-        '{',
-            '"element":"shoji:catalog",',
-            '"index":{',
-                '"https://app.crunch.io/api/datasets/3/variables/gender/":{},',
-                '"https://app.crunch.io/api/datasets/3/variables/starttime/":{}',
-            '},',
-            '"graph":[',
-                '"https://app.crunch.io/api/datasets/3/variables/birthyr/",',
-                '"https://app.crunch.io/api/datasets/3/variables/gender/",',
-                '"https://app.crunch.io/api/datasets/3/variables/starttime/"',
-            ']',
-        '}'
+        "https://app.crunch.io/api/datasets/3/folders/hidden/",
+        " ",
+        "{",
+        '"element":"shoji:catalog",',
+        '"index":{',
+        '"https://app.crunch.io/api/datasets/3/variables/gender/":{},',
+        '"https://app.crunch.io/api/datasets/3/variables/starttime/":{}',
+        "},",
+        '"graph":[',
+        '"https://app.crunch.io/api/datasets/3/variables/birthyr/",',
+        '"https://app.crunch.io/api/datasets/3/variables/gender/",',
+        '"https://app.crunch.io/api/datasets/3/variables/starttime/"',
+        "]",
+        "}"
     )
     test_that("hideVariables with one variable to hide", {
         expect_PATCH(
@@ -109,14 +109,14 @@ with_mock_crunch({
     })
 
     unhide_birthyr <- paste0(
-        'https://app.crunch.io/api/datasets/3/folders/',
-        ' ',
-        '{',
-            '"element":"shoji:catalog",',
-            '"index":{',
-                '"https://app.crunch.io/api/datasets/3/variables/birthyr/":{}',
-            '}',
-        '}'
+        "https://app.crunch.io/api/datasets/3/folders/",
+        " ",
+        "{",
+        '"element":"shoji:catalog",',
+        '"index":{',
+        '"https://app.crunch.io/api/datasets/3/variables/birthyr/":{}',
+        "}",
+        "}"
     )
     test_that("unhideVariables with various input types makes the right request", {
         expect_PATCH(

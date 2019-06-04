@@ -74,7 +74,7 @@ with_mock_crunch({
     })
     test_that("joinDatasets with copy=FALSE is (no longer/not yet) valid", {
         expect_error(
-            joinDatasets(ds1, ds2, by.x = ds1$birthyr, ds2$birthyr, copy=FALSE),
+            joinDatasets(ds1, ds2, by.x = ds1$birthyr, ds2$birthyr, copy = FALSE),
             "Virtual joins are not yet supported."
         )
     })

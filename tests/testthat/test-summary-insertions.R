@@ -105,10 +105,12 @@ test_that("can set and calc a mean insertion", {
     # there are no transforms (yet!)
     expect_equal(
         transforms(pet_feelings),
-        TransformsList(feelings = NULL, animals = NULL))
+        TransformsList(feelings = NULL, animals = NULL)
+    )
     expect_equal(
         transforms(pet_feelings_w),
-        TransformsList(feelings = NULL, animals = NULL))
+        TransformsList(feelings = NULL, animals = NULL)
+    )
 
     # add transforms
     pet_feelings <- addSummaryStat(pet_feelings, stat = "mean", var = "feelings")
@@ -162,7 +164,8 @@ test_that("can set and calc a median insertion", {
     # there are no transforms (yet!)
     expect_equal(
         transforms(pet_feelings),
-        TransformsList(feelings = NULL, animals = NULL))
+        TransformsList(feelings = NULL, animals = NULL)
+    )
 
     # add transforms
     pet_feelings <- addSummaryStat(pet_feelings, stat = "median", var = "feelings")
@@ -234,25 +237,35 @@ test_that("can set and calc a mean insertion with catarrays", {
     # there are no transforms (yet!)
     expect_equal(
         transforms(cat_array),
-        TransformsList(feeling_ca = NULL, feeling_ca = NULL))
+        TransformsList(feeling_ca = NULL, feeling_ca = NULL)
+    )
 
     # add transforms
     cat_array <- addSummaryStat(cat_array, stat = "mean", margin = 2)
 
-    feelings_trans <- Transforms(insertions = Insertions(
-        SummaryStat(name = "mean", stat = "mean", position = "bottom",
-                    categories = c(1L, 4L, 3L, 5L, 2L, -1L))),
+    feelings_trans <- Transforms(
+        insertions = Insertions(
+            SummaryStat(
+                name = "mean", stat = "mean", position = "bottom",
+                categories = c(1L, 4L, 3L, 5L, 2L, -1L)
+            )
+        ),
         elements = NULL,
-        categories = NULL)
+        categories = NULL
+    )
 
-    expect_json_equivalent(transforms(cat_array),
-                           TransformsList(feeling_ca = NULL, feeling_ca = feelings_trans))
+    expect_json_equivalent(
+        transforms(cat_array),
+        TransformsList(feeling_ca = NULL, feeling_ca = feelings_trans)
+    )
 
     # check that they are calculated and added in the correct place.
     base_cube <- as.array(cat_array)
     calced_means <- apply(base_cube, 1, weighted.mean, x = c(1, 2, 3, 4, 5))
-    expect_equivalent(applyTransforms(cat_array),
-                      cbind(base_cube, "mean" = calced_means))
+    expect_equivalent(
+        applyTransforms(cat_array),
+        cbind(base_cube, "mean" = calced_means)
+    )
 })
 
 test_that("can set and calc a mean for two dimensions", {
@@ -262,34 +275,47 @@ test_that("can set and calc a mean for two dimensions", {
     # there are no transforms (yet!)
     expect_equal(
         transforms(pet_feelings),
-        TransformsList(feelings = NULL, animals = NULL))
+        TransformsList(feelings = NULL, animals = NULL)
+    )
 
     # add transforms
     pet_feelings <- addSummaryStat(pet_feelings, stat = "mean", margin = c(1, 2))
 
-    feelings_trans <- Transforms(insertions = Insertions(
-        SummaryStat(name = "mean", stat = "mean", position = "bottom",
-                    categories = c(1L, 4L, 3L, 5L, 2L, -1L))),
+    feelings_trans <- Transforms(
+        insertions = Insertions(
+            SummaryStat(
+                name = "mean", stat = "mean", position = "bottom",
+                categories = c(1L, 4L, 3L, 5L, 2L, -1L)
+            )
+        ),
         elements = NULL,
-        categories = NULL)
+        categories = NULL
+    )
 
-    animal_trans <- Transforms(insertions = Insertions(
-        SummaryStat(name = "mean", stat = "mean", position = "bottom",
-                    categories = c(1L, 2L, -1L))),
+    animal_trans <- Transforms(
+        insertions = Insertions(
+            SummaryStat(
+                name = "mean", stat = "mean", position = "bottom",
+                categories = c(1L, 2L, -1L)
+            )
+        ),
         elements = NULL,
-        categories = NULL)
+        categories = NULL
+    )
 
     expect_json_equivalent(
         transforms(pet_feelings),
-        list("feelings" = feelings_trans,"animals" = animal_trans)
+        list("feelings" = feelings_trans, "animals" = animal_trans)
     )
 
     # check that they are calculated and added in the correct place.
     base_cube <- as.array(pet_feelings)
     row_means <- c(apply(base_cube, 1, weighted.mean, x = c(1, 2)), NA)
     col_means <- apply(base_cube, 2, weighted.mean, x = c(10, 7.5, 5, 2.5, 0))
-    expect_equivalent(applyTransforms(pet_feelings),
-                      cbind(rbind(base_cube, "mean" = col_means), "mean" = row_means))
+    expect_equivalent(
+        applyTransforms(pet_feelings),
+        cbind(rbind(base_cube, "mean" = col_means), "mean" = row_means)
+    )
 
     # with a weighted cube
     transforms(pet_feelings_w) <- NULL
@@ -297,7 +323,8 @@ test_that("can set and calc a mean for two dimensions", {
     # there are no transforms (yet!)
     expect_equal(
         transforms(pet_feelings_w),
-        TransformsList(feelings = NULL, animals = NULL))
+        TransformsList(feelings = NULL, animals = NULL)
+    )
 
     # add transforms
     pet_feelings_w <- addSummaryStat(pet_feelings_w, stat = "mean", margin = c(1, 2))
@@ -311,8 +338,10 @@ test_that("can set and calc a mean for two dimensions", {
     base_cube <- as.array(pet_feelings_w)
     row_means <- c(apply(base_cube, 1, weighted.mean, x = c(1, 2)), NA)
     col_means <- apply(base_cube, 2, weighted.mean, x = c(10, 7.5, 5, 2.5, 0))
-    expect_equivalent(applyTransforms(pet_feelings_w),
-                      cbind(rbind(base_cube, "mean" = col_means), "mean" = row_means))
+    expect_equivalent(
+        applyTransforms(pet_feelings_w),
+        cbind(rbind(base_cube, "mean" = col_means), "mean" = row_means)
+    )
 })
 
 test_that("can set and calc a mean insertion, and maintain subtotals", {
@@ -454,8 +483,8 @@ test_that("mean and median value redaction works with a 3-dimensional cube", {
         apply(
             as.array(noTransforms(three_d_cube_one)),
             MARGIN = c(2, 3),
-            FUN = function (w) weighted.mean(c(1, 2, 0, 4, 5, 6), w = w)
-            )
+            FUN = function(w) weighted.mean(c(1, 2, 0, 4, 5, 6), w = w)
+        )
     )
 
     # dim two
@@ -473,7 +502,7 @@ test_that("mean and median value redaction works with a 3-dimensional cube", {
         apply(
             as.array(noTransforms(three_d_cube_two)),
             MARGIN = c(1, 3),
-            FUN = function (w) weighted.mean(c(0, 2, 5, 4), w = w)
+            FUN = function(w) weighted.mean(c(0, 2, 5, 4), w = w)
         )
     )
 
@@ -492,7 +521,7 @@ test_that("mean and median value redaction works with a 3-dimensional cube", {
         apply(
             as.array(noTransforms(three_d_cube_three)),
             MARGIN = c(1, 2),
-            FUN = function (w) weighted.mean(c(1, 2, 3, 4, 5, 6, 7, 8), w = w)
+            FUN = function(w) weighted.mean(c(1, 2, 3, 4, 5, 6, 7, 8), w = w)
         )
     )
 
@@ -511,7 +540,7 @@ test_that("mean and median value redaction works with a 3-dimensional cube", {
         apply(
             as.array(noTransforms(three_d_cube_123)),
             MARGIN = c(2, 3),
-            FUN = function (w) weighted.mean(c(1, 2, 0, 4, 5, 6), w = w)
+            FUN = function(w) weighted.mean(c(1, 2, 0, 4, 5, 6), w = w)
         )
     )
 
@@ -520,7 +549,7 @@ test_that("mean and median value redaction works with a 3-dimensional cube", {
         apply(
             as.array(noTransforms(three_d_cube_123)),
             MARGIN = c(1, 3),
-            FUN = function (w) weighted.mean(c(0, 2, 5, 4), w = w)
+            FUN = function(w) weighted.mean(c(0, 2, 5, 4), w = w)
         )
     )
 
@@ -529,8 +558,7 @@ test_that("mean and median value redaction works with a 3-dimensional cube", {
         apply(
             as.array(noTransforms(three_d_cube_123)),
             MARGIN = c(1, 2),
-            FUN = function (w) weighted.mean(c(1, 2, 3, 4, 5, 6, 7, 8), w = w)
+            FUN = function(w) weighted.mean(c(1, 2, 3, 4, 5, 6, 7, 8), w = w)
         )
     )
-
 })

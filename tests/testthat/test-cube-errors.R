@@ -43,14 +43,14 @@ with_mock_crunch({
 
     test_that("Reserved function names cannot be variable aliases", {
         expect_error(
-            crtabs(~mean + bin(birthyr), data = ds),
+            crtabs(~ mean + bin(birthyr), data = ds),
             paste0(
                 "Cannot evaluate a cube with reserved name: ",
                 dQuote("mean")
             )
         )
         expect_error(
-            crtabs(~mean + sd, data = ds),
+            crtabs(~ mean + sd, data = ds),
             paste0(
                 "Cannot evaluate a cube with reserved names: ",
                 dQuote("mean"), " and ", dQuote("sd")
@@ -71,14 +71,14 @@ with_mock_crunch({
 
     test_that("What if there are aggregations on the RHS?", {
         expect_error(
-            crtabs(~mean(birthyr), data = ds),
+            crtabs(~ mean(birthyr), data = ds),
             "Right side of formula cannot contain aggregation functions"
         )
     })
 
     test_that("'rollup' on non-Datetime", {
         expect_error(
-            crtabs(~rollup(gender), data = ds),
+            crtabs(~ rollup(gender), data = ds),
             paste0(
                 "Cannot rollup a variable of type ",
                 dQuote("categorical")
@@ -88,7 +88,7 @@ with_mock_crunch({
 
     test_that("'as_array' on non-MR", {
         expect_error(
-            crtabs(~as_array(gender), data = ds),
+            crtabs(~ as_array(gender), data = ds),
             paste0(
                 "Cannot analyze a variable of type ",
                 dQuote("categorical"), " 'as_array'"
@@ -117,11 +117,11 @@ with_mock_crunch({
     })
 
     test_that("can't request NULL as subvariable (bad subvar ref)", {
-        expect_error(crtabs(~catarray$subvar2 + catarray$NOTAVAR, data = ds),
+        expect_error(crtabs(~ catarray$subvar2 + catarray$NOTAVAR, data = ds),
             "Invalid cube dimension: catarray$NOTAVAR cannot be NULL",
             fixed = TRUE
         )
-        expect_error(crtabs(~catarray$foo + catarray$subvar2 + catarray$NOTAVAR, data = ds),
+        expect_error(crtabs(~ catarray$foo + catarray$subvar2 + catarray$NOTAVAR, data = ds),
             "Invalid cube dimensions: catarray$foo and catarray$NOTAVAR cannot be NULL",
             fixed = TRUE
         )
@@ -132,14 +132,14 @@ with_test_authentication({
     ds <- newDataset(df[, 1:4])
     test_that("All variables must be present in data", {
         expect_error(
-            crtabs(~aaa + v3, data = ds),
+            crtabs(~ aaa + v3, data = ds),
             "object 'aaa' not found"
         )
         ## But works if variable is in workspace
         aaa <- ds$v4
         skip("Appears not to work in the test at least. aaa is in the enclos environment but it doesn't find it")
         expect_equivalent(
-            as.array(crtabs(~aaa + bin(v3), data = ds)),
+            as.array(crtabs(~ aaa + bin(v3), data = ds)),
             array(c(1, 1, 3, 2, 2, 3, 3, 2, 1, 2),
                 dim = c(2L, 5L),
                 dimnames = list(
@@ -159,7 +159,7 @@ with_test_authentication({
 
         expect_identical(names(dsb), c("mean", "sd", "v3", "v4"))
         expect_error(
-            crtabs(~mean + bin(v3), data = dsb),
+            crtabs(~ mean + bin(v3), data = dsb),
             paste0(
                 "Cannot evaluate a cube with reserved name: ",
                 dQuote("mean")
@@ -167,7 +167,7 @@ with_test_authentication({
         )
         ## But you can still get analyses with other variables
         expect_equivalent(
-            as.array(crtabs(~bin(v3), data = dsb)),
+            as.array(crtabs(~ bin(v3), data = dsb)),
             array(c(2, 5, 5, 5, 3),
                 dim = c(5L),
                 dimnames = list(v3 = c("5-10", "10-15", "15-20", "20-25", "25-30"))
@@ -181,13 +181,13 @@ with_test_authentication({
     })
 
     test_that("Limit on number of dimension variables", {
-        out <- crtabs(~v1 + v2 + v3 + v4, data = ds)
+        out <- crtabs(~ v1 + v2 + v3 + v4, data = ds)
         ## nope, 4 works too. Assert about it
     })
 
     test_that("prop.table cannot take margin greater than dim", {
         expect_error(
-            prop.table(crtabs(~v4 + v3, data = ds), margin = 3),
+            prop.table(crtabs(~ v4 + v3, data = ds), margin = 3),
             "Margin 3 exceeds Cube's number of dimensions \\(2\\)"
         )
     })

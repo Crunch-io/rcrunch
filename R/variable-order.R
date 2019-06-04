@@ -23,12 +23,14 @@ setMethod("entitiesInitializer", "VariableGroup", variableGroupEntitiesInit)
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"),
+setMethod(
+    "[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"),
     .setNestedGroupByName
 )
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("VariableGroup", "character", "missing", "CrunchDataset"),
+setMethod(
+    "[[<-", c("VariableGroup", "character", "missing", "CrunchDataset"),
     .setNestedGroupByName
 )

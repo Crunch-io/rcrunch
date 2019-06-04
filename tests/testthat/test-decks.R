@@ -97,13 +97,16 @@ with_mock_crunch({
 
     test_that("teams on decks", {
         expect_null(team(deck_cat[[2]]))
-        expect_PATCH(team(deck_cat[[2]]) <- getTeams()[[1]],
-            'https://app.crunch.io/api/datasets/1/decks/8ad8/',
+        expect_PATCH(
+            team(deck_cat[[2]]) <- getTeams()[[1]],
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/",
             '{"team":"https://app.crunch.io/api/teams/team1/"}'
         )
         expect_no_request(team(deck_cat[[2]]) <- NULL)
-        expect_error(team(deck_cat[[2]]) <- 4.2,
-            "Team setting requires either a CrunchTeam entity, URL, or NULL")
+        expect_error(
+            team(deck_cat[[2]]) <- 4.2,
+            "Team setting requires either a CrunchTeam entity, URL, or NULL"
+        )
     })
 
     test_that("subset CrunchDecks", {
@@ -290,8 +293,9 @@ with_mock_crunch({
 
         expect_equal(
             names(index(anCat)),
-            c("https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/analyses/3f2e3/",
-              "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/analyses/3f2e2/"
+            c(
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/analyses/3f2e3/",
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/analyses/3f2e2/"
             )
         )
     })
@@ -400,7 +404,7 @@ with_mock_crunch({
             "Index out of bounds, you can only assign a formula to an existing analysis."
         )
         expect_PATCH(
-            ancat[[1]] <- ~birthyr + gender,
+            ancat[[1]] <- ~ birthyr + gender,
             "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
             '{"element":"shoji:entity",',
             '"body":{"query":{"dimensions":[',

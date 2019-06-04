@@ -17,7 +17,8 @@ with_mock_crunch({
         )
         # Also test that this only warns the first time
         expect_warning(
-            expect_identical(listDatasets("archived"),
+            expect_identical(
+                listDatasets("archived"),
                 "an archived dataset"
             ),
             NA
@@ -29,20 +30,23 @@ with_mock_crunch({
         ))
     })
     test_that("listDatasets in project", {
-        expect_identical(listDatasets(project="Project One"),
+        expect_identical(
+            listDatasets(project = "Project One"),
             c(
                 "test ds",
                 "streaming no messages"
             )
         )
-        expect_identical(listDatasets("all", project="Project One"),
+        expect_identical(
+            listDatasets("all", project = "Project One"),
             c(
                 "an archived dataset",
                 "test ds",
                 "streaming no messages"
             )
         )
-        expect_identical(listDatasets(project="Project One/Project Two"),
+        expect_identical(
+            listDatasets(project = "Project One/Project Two"),
             c(
                 "ECON.sav",
                 "streaming test ds"
@@ -52,7 +56,7 @@ with_mock_crunch({
     test_that("listDatasets(refresh=TRUE) drops caches", {
         with(temp.option(httpcache.log = ""), {
             logs <- capture.output({
-                listDatasets(refresh=TRUE)
+                listDatasets(refresh = TRUE)
             })
         })
         in_logs <- function(str, loglines) {
@@ -63,7 +67,7 @@ with_mock_crunch({
 
     test_that("listDatasets error handling", {
         expect_error(
-            listDatasets(project=42),
+            listDatasets(project = 42),
             "Project 42 is not valid"
         )
     })
@@ -130,7 +134,7 @@ with_mock_crunch({
     test_that("loadDataset(refresh=TRUE) drops caches", {
         with(temp.option(httpcache.log = ""), {
             logs <- capture.output({
-                loadDataset("test ds", refresh=TRUE)
+                loadDataset("test ds", refresh = TRUE)
             })
         })
         in_logs <- function(str, loglines) {
@@ -145,7 +149,7 @@ with_mock_crunch({
             paste(dQuote("not a dataset"), "not found")
         )
         expect_error(
-            loadDataset("not a dataset", project=42),
+            loadDataset("not a dataset", project = 42),
             "Project 42 is not valid"
         )
         expect_error(

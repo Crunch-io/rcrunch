@@ -25,7 +25,7 @@ setMethod("delete", "CrunchDataset", function(x, ...) {
     invisible(delete(tuple(x), ...))
 })
 
-confirmDeleteEntity <- function(entity_name, entity_type=NULL) {
+confirmDeleteEntity <- function(entity_name, entity_type = NULL) {
     prompt <- paste("Really delete", entity_type, dQuote(entity_name))
     if (!askForPermission(paste0(prompt, "?"))) {
         halt("Must confirm deleting ", entity_type)
@@ -178,8 +178,10 @@ deleteDataset <- function(x, ...) {
             # Assume it is a path or name
             found <- lookupDataset(x)
             if (length(found) != 1) {
-                halt(dQuote(x), " identifies ", length(found),
-                    " datasets. To delete, please identify the dataset uniquely by URL or path.")
+                halt(
+                    dQuote(x), " identifies ", length(found),
+                    " datasets. To delete, please identify the dataset uniquely by URL or path."
+                )
             }
             ## We know there is just one now
             url <- urls(found)

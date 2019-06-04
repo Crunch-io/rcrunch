@@ -52,10 +52,10 @@ with_mock_crunch({
 
 with_test_authentication({
     ds <- newDataset(data.frame(
-        samevalue=df$v4[1:4],
-        diffvalue=df$v4[1:4],
-        excluded=df$v4[1:4],
-        nothree=1:4
+        samevalue = df$v4[1:4],
+        diffvalue = df$v4[1:4],
+        excluded = df$v4[1:4],
+        nothree = 1:4
     ))
     values(categories(ds$diffvalue)) <- c(NA, 20, NA)
     orig_vector <- as.vector(ds$samevalue)

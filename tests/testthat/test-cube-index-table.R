@@ -137,7 +137,7 @@ with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
 
     test_that("proof: index.table(~x+y, 2) == prop.table(~x+y, 2)/prop.table(~x)*100", {
-        bivariate_cube <- crtabs(~allpets + country, data = ds)
+        bivariate_cube <- crtabs(~ allpets + country, data = ds)
         univariate_allpets <- crtabs(~allpets, data = ds)
         univariate_country <- crtabs(~country, data = ds)
 

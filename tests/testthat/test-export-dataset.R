@@ -100,45 +100,49 @@ with_mock_crunch({
         )
     })
 
-    url <- 'https://app.crunch.io/api/datasets/3/export/csv/'
+    url <- "https://app.crunch.io/api/datasets/3/export/csv/"
     post_request <- paste0(
         '{"filter":null,',
         '"where":{"function":"select",',
-            '"args":[{"map":{',
-                '"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
-                '"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},',
-                '"d7c21314ca9e453c93069168681a285c":{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]'
-)
+        '"args":[{"map":{',
+        '"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+        '"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},',
+        '"d7c21314ca9e453c93069168681a285c":{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]'
+    )
     test_that("exporting hidden variables", {
         ds <- loadDataset("ECON.sav")
 
         expect_POST(
             write.csv(ds, file = "", include.hidden = TRUE),
             url,
-            post_request)
+            post_request
+        )
 
         # ensure that include.hidden is passed down from as.data.frame to write.csv
         expect_POST(
             as.data.frame(ds, include.hidden = TRUE, force = TRUE),
             url,
-            post_request)
+            post_request
+        )
 
         subset_post <- paste0(
             '{"filter":null,',
             '"where":{"function":"select",',
             '"args":[{"map":{',
-                '"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
-                '"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}'
+            '"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+            '"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}'
         )
         # Hidden variables can be exported by name without include.hidden
-            expect_POST(
-                write.csv(ds[, c("gender", "birthyr")], file = ""),
-                url,
-                subset_post)
-            expect_POST(
-                as.data.frame(ds[, c("gender", "birthyr")], force = TRUE),
-                url,
-                subset_post)
+        expect_POST(
+            write.csv(ds[, c("gender", "birthyr")], file = ""),
+            url,
+            subset_post
+        )
+        expect_POST(
+            as.data.frame(ds[, c("gender", "birthyr")], force = TRUE),
+            url,
+            subset_post
+        )
     })
     test_that("users can specify all variables by name and get the hidden variables", {
         skip("TODO modify variablesFilter to distinguish between a fully specified variable subset and the original dataset")
@@ -151,7 +155,8 @@ with_mock_crunch({
         expect_POST(
             write.csv(ds[, c("gender", "birthyr", "starttime")], file = ""),
             url,
-            post_request)
+            post_request
+        )
     })
 })
 
@@ -253,18 +258,19 @@ with_test_authentication({
         df <- read.csv(filename)
         expect_identical(
             names(df),
-            c("v1", "v2", "v3", "v4", "v5", "v6", "hidden_var"))
+            c("v1", "v2", "v3", "v4", "v5", "v6", "hidden_var")
+        )
 
         write.csv(ds, file = filename)
         df <- read.csv(filename)
         expect_identical(
             names(df),
-            c("v1", "v2", "v3", "v4", "v5", "v6"))
+            c("v1", "v2", "v3", "v4", "v5", "v6")
+        )
 
         # When variable is specified but include.hidden is ommitted
         write.csv(ds[, "hidden_var"], file = filename)
         df <- read.csv(filename)
         expect_identical("hidden_var", names(df))
     })
-
 })

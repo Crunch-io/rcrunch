@@ -150,7 +150,9 @@ setMethod("[[", c("ShojiCatalog", "ANY"), function(x, i, ...) {
 
 getTuple <- function(x, i, Constructor = ShojiTuple, ...) {
     b <- index(x)[[i]]
-    if (is.null(b)) return(NULL)
+    if (is.null(b)) {
+          return(NULL)
+      }
     Constructor(index_url = self(x), entity_url = urls(x)[i], body = b)
 }
 
@@ -187,7 +189,8 @@ setMethod("$<-", "ShojiCatalog", function(x, name, value) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
+setMethod(
+    "[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
     function(x, i, j, value) {
         index(x)[i] <- index(value)[i]
         ## Assume that PATCHing has happened outside this function

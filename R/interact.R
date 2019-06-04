@@ -17,7 +17,7 @@
 #' @return A [`VariableDefinition`] that creates the new interaction variable.
 #' @examples
 #' \dontrun{
-#' ds$ethn_race <- interactVariables(ds$ethnicity, ds$race, name="Interaction of ethnicity and race")
+#' ds$ethn_race <- interactVariables(ds$ethnicity, ds$race, name = "Interaction of ethnicity and race")
 #' }
 #' @export
 interactVariables <- function(..., name, sep = ":") {

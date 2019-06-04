@@ -184,7 +184,7 @@ test_that("applyTransforms can return what is asked for", {
     expect_equivalent(applyTransforms(pet_feelings_headers), all)
 
     pet_array <- cubeToArray(pet_feelings_headers)
-    insert_funcs <-  makeInsertionFunctions(
+    insert_funcs <- makeInsertionFunctions(
         Categories(data = index(variables(pet_feelings_headers))[[1]]$categories),
         transforms(pet_feelings_headers)[[1]],
         include = c("subtotals", "headings")
@@ -881,10 +881,10 @@ test_that("subtotals after cube subsetting", {
 
     one_col <- cubify(
         c(
-            5,  5,  0,
+            5, 5, 0,
             12, 12, 0,
             17, 17, 0,
-            7,  7,  0,
+            7, 7, 0,
             10, 10, 0,
             12, 12, 0,
             22, 22, 0
@@ -1008,7 +1008,8 @@ test_that("can remove transformations from a cube", {
     # without changing the cube
     expect_equal(
         transforms(noTransforms(unicat_trans_cube)),
-        TransformsList("v7" = NULL))
+        TransformsList("v7" = NULL)
+    )
 
     # with changing the cube
     transforms(unicat_trans_cube) <- NULL
@@ -1020,11 +1021,16 @@ transforms(pet_feelings) <- NULL
 feelings_trans <- Transforms(
     insertions = Insertions(
         Heading(name = "Fabulous new header", position = "top"),
-        Subtotal(name = "moderately happy",
-                 after = "somewhat unhappy",
-                 categories = c("somewhat happy", "neutral",
-                                "somewhat unhappy"))
-    ))
+        Subtotal(
+            name = "moderately happy",
+            after = "somewhat unhappy",
+            categories = c(
+                "somewhat happy", "neutral",
+                "somewhat unhappy"
+            )
+        )
+    )
+)
 animals_trans <- Transforms(
     insertions = Insertions(
         Subtotal("felines", categories = "cats", after = "cats"),
@@ -1035,7 +1041,8 @@ animals_trans <- Transforms(
 test_that("can set transforms on a cube", {
     expect_equal(
         transforms(pet_feelings),
-        TransformsList(feelings = NULL, animals = NULL))
+        TransformsList(feelings = NULL, animals = NULL)
+    )
 
     transforms(pet_feelings)[["feelings"]] <- feelings_trans
 
@@ -1123,7 +1130,8 @@ test_that("can remove individual dimensions transforms", {
 test_that("can set transforms on a cube indexed by numerics", {
     expect_equal(
         transforms(pet_feelings),
-        TransformsList(feelings = NULL, animals = NULL))
+        TransformsList(feelings = NULL, animals = NULL)
+    )
     transforms(pet_feelings)[[1]] <- feelings_trans
 
     # add empty elements/categories

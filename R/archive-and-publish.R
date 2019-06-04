@@ -17,7 +17,7 @@
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("mtcars")
-#' is.draft(ds)     # FALSE
+#' is.draft(ds) # FALSE
 #' is.published(ds) # TRUE
 #' identical(is.draft(ds), !is.published(ds))
 #' # Can make a dataset a "draft" by:
@@ -28,9 +28,9 @@
 #' ds <- publish(ds)
 #' is.published(ds) # TRUE
 #'
-#' is.archived(ds)  # FALSE
+#' is.archived(ds) # FALSE
 #' is.archived(ds) <- TRUE
-#' is.archived(ds)  # TRUE
+#' is.archived(ds) # TRUE
 #' # Could have achieved the same effect by:
 #' ds <- archive(ds)
 #' }
@@ -89,7 +89,8 @@ publish <- function(x) {
 
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.archived", "DatasetCatalog",
+setMethod(
+    "is.archived", "DatasetCatalog",
     function(x) getIndexSlot(x, "archived", logical(1))
 )
 #' @rdname archive-and-publish
@@ -97,7 +98,8 @@ setMethod("is.archived", "DatasetCatalog",
 setMethod("is.draft", "DatasetCatalog", function(x) !is.published(x))
 #' @rdname archive-and-publish
 #' @export
-setMethod("is.published", "DatasetCatalog",
+setMethod(
+    "is.published", "DatasetCatalog",
     function(x) getIndexSlot(x, "is_published", logical(1), ifnot = TRUE)
 )
 

@@ -44,7 +44,9 @@ setMethod("jsonprep", "OrderGroup", .jsonprep.ordergroup)
 #' @rdname tojson-crunch
 #' @export
 toJSON <- function(x, ...) {
-    if (is.null(x)) return(jsonlite::toJSON(emptyObject()))
+    if (is.null(x)) {
+          return(jsonlite::toJSON(emptyObject()))
+      }
     out <- jsonlite::toJSON(jsonprep(x), auto_unbox = TRUE, null = "null", na = "null", force = TRUE, ...)
     # cat(out)
     return(out)

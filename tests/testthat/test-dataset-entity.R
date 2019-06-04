@@ -14,10 +14,12 @@ with_mock_crunch({
     test_that("CrunchDataset class (re-)init preserves object state", {
         expect_identical(CrunchDataset(ds), ds)
         expect_identical(CrunchDataset(ds[, "gender"]), ds[, "gender"])
-        expect_identical(CrunchDataset(ds[ds$gender == "Female",]),
-            ds[ds$gender == "Female",])
+        expect_identical(
+            CrunchDataset(ds[ds$gender == "Female", ]),
+            ds[ds$gender == "Female", ]
+        )
         # Now confirm the same with subclasses
-        SubDataset <- setClass("SubDataset", contains="CrunchDataset")
+        SubDataset <- setClass("SubDataset", contains = "CrunchDataset")
         expect_is(SubDataset(ds), "SubDataset")
         expect_identical(names(SubDataset(ds[, "gender"])), "gender")
     })
@@ -324,8 +326,9 @@ with_mock_crunch({
     test_that("Setting variable metadata on the dataset", {
         # See other tests in test-variable-catalog.R; this tests the [<- methods
         # on the dataset entity
-        expect_PATCH(names(variables(ds[1])) <- "year of birth",
-            'https://app.crunch.io/api/datasets/1/variables/', '{"element":"shoji:catalog","index":{',
+        expect_PATCH(
+            names(variables(ds[1])) <- "year of birth",
+            "https://app.crunch.io/api/datasets/1/variables/", '{"element":"shoji:catalog","index":{',
             '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{',
             '"name":"year of birth"}}}'
         )
@@ -477,8 +480,10 @@ with_mock_crunch({
             paste(dQuote("this is totally not a dataset"), "not found")
         ))
         test_that("deleteDataset by index (is no longer supported)", {
-            expect_error(deleteDataset(4),
-                "deleteDataset requires either a Dataset, a unique dataset name, or a URL")
+            expect_error(
+                deleteDataset(4),
+                "deleteDataset requires either a Dataset, a unique dataset name, or a URL"
+            )
         })
         expect_error(deleteDataset(ds), "Must confirm")
         expect_error(
@@ -488,8 +493,10 @@ with_mock_crunch({
                 "To delete, please identify the dataset uniquely by URL or path."
             )
         )
-        expect_error(deleteDataset("http://app.crunch.io/api/"),
-            "http://app.crunch.io/api/ is not a valid dataset URL")
+        expect_error(
+            deleteDataset("http://app.crunch.io/api/"),
+            "http://app.crunch.io/api/ is not a valid dataset URL"
+        )
     })
 
     test_that("Dashboard URL", {

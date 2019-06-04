@@ -28,8 +28,8 @@
 #' and you will get a JSON file written there as well.
 #' @examples
 #' \dontrun{
-#' m <- newMultitable(~ gender + age4 + marstat, data=ds)
-#' tabBook(m, ds[ds$income > 1000000,], format="xlsx", file="wealthy-tab-book.xlsx")
+#' m <- newMultitable(~ gender + age4 + marstat, data = ds)
+#' tabBook(m, ds[ds$income > 1000000, ], format = "xlsx", file = "wealthy-tab-book.xlsx")
 #' book <- tabBook(m, ds) # Returns a TabBookResult
 #' tables <- prop.table(book, 2)
 #' }
@@ -82,7 +82,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     }
 }
 
-extToContentType <- function(ext){
+extToContentType <- function(ext) {
     mapping <- list(
         json = "application/json",
         xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

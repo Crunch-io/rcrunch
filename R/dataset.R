@@ -300,7 +300,9 @@ joins <- function(x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
 
 variableCatalogURL <- function(dataset) {
     ## Get the variable catalog URL that corresponds to an object
-    if (class(dataset) == "VariableCatalog") return(self(dataset))
+    if (class(dataset) == "VariableCatalog") {
+          return(self(dataset))
+      }
     if (!is.dataset(dataset)) {
         dataset <- ShojiObject(crGET(datasetReference(dataset)))
     }

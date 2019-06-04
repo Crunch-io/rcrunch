@@ -41,9 +41,9 @@ concatenateCategories <- function(...) {
 #' @name c-categories
 #' @export
 #' @examples
-#' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
-#' cat.b <- Category(name="Second", id=2)
-#' cat.c <- Category(name="Third", id=3, missing=TRUE)
+#' cat.a <- Category(name = "First", id = 1, numeric_value = 1, missing = FALSE)
+#' cat.b <- Category(name = "Second", id = 2)
+#' cat.c <- Category(name = "Third", id = 3, missing = TRUE)
 #' cats.1 <- Categories(cat.a, cat.b)
 #' identical(cats.1, c(cat.a, cat.b))
 #' identical(c(cats.1, cat.c), Categories(cat.a, cat.b, cat.c))
@@ -280,24 +280,28 @@ setMethod("categories", "VariableTuple", function(x) {
 setMethod("categories", "CrunchVariable", function(x) categories(tuple(x)))
 #' @rdname var-categories
 #' @export
-setMethod("categories", "CategoricalVariable",
+setMethod(
+    "categories", "CategoricalVariable",
     function(x) callNextMethod(x) %||% categories(entity(x))
 )
 #' @rdname var-categories
 #' @export
-setMethod("categories", "CategoricalArrayVariable",
+setMethod(
+    "categories", "CategoricalArrayVariable",
     function(x) callNextMethod(x) %||% categories(entity(x))
 )
 
 #' @rdname var-categories
 #' @export
-setMethod("categories", "VariableEntity",
+setMethod(
+    "categories", "VariableEntity",
     function(x) Categories(data = x@body$categories)
 )
 
 #' @rdname var-categories
 #' @export
-setMethod("categories<-", c("CategoricalVariable", "Categories"),
+setMethod(
+    "categories<-", c("CategoricalVariable", "Categories"),
     function(x, value) {
         ent <- setEntitySlot(entity(x), "categories", value)
         dropCache(cubeURL(x))
@@ -306,7 +310,8 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
 )
 #' @rdname var-categories
 #' @export
-setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
+setMethod(
+    "categories<-", c("CategoricalArrayVariable", "Categories"),
     function(x, value) {
         ent <- setEntitySlot(entity(x), "categories", value)
         lapply(subvariableURLs(tuple(x)), dropCache) ## Subvariables will update too
@@ -316,7 +321,8 @@ setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
 )
 #' @rdname var-categories
 #' @export
-setMethod("categories<-", c("CategoricalVariable", "numeric"),
+setMethod(
+    "categories<-", c("CategoricalVariable", "numeric"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not numeric. ",
@@ -326,7 +332,8 @@ setMethod("categories<-", c("CategoricalVariable", "numeric"),
 )
 #' @rdname var-categories
 #' @export
-setMethod("categories<-", c("CategoricalVariable", "character"),
+setMethod(
+    "categories<-", c("CategoricalVariable", "character"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not ",
@@ -336,7 +343,8 @@ setMethod("categories<-", c("CategoricalVariable", "character"),
 )
 #' @rdname var-categories
 #' @export
-setMethod("categories<-", c("CategoricalVariable", "ANY"),
+setMethod(
+    "categories<-", c("CategoricalVariable", "ANY"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not ",
@@ -346,7 +354,8 @@ setMethod("categories<-", c("CategoricalVariable", "ANY"),
 )
 #' @rdname var-categories
 #' @export
-setMethod("categories<-", c("CategoricalArrayVariable", "numeric"),
+setMethod(
+    "categories<-", c("CategoricalArrayVariable", "numeric"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not numeric. ",
@@ -356,7 +365,8 @@ setMethod("categories<-", c("CategoricalArrayVariable", "numeric"),
 )
 #' @rdname var-categories
 #' @export
-setMethod("categories<-", c("CategoricalArrayVariable", "character"),
+setMethod(
+    "categories<-", c("CategoricalArrayVariable", "character"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not ",
@@ -366,7 +376,8 @@ setMethod("categories<-", c("CategoricalArrayVariable", "character"),
 )
 #' @rdname var-categories
 #' @export
-setMethod("categories<-", c("CategoricalArrayVariable", "ANY"),
+setMethod(
+    "categories<-", c("CategoricalArrayVariable", "ANY"),
     function(x, value) {
         halt(
             "`categories(x) <- value` only accepts Categories, not ",
@@ -376,7 +387,8 @@ setMethod("categories<-", c("CategoricalArrayVariable", "ANY"),
 )
 #' @rdname var-categories
 #' @export
-setMethod("categories<-", c("CrunchVariable", "ANY"),
+setMethod(
+    "categories<-", c("CrunchVariable", "ANY"),
     function(x, value) {
         halt("category assignment not defined for ", class(x))
     }

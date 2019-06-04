@@ -104,19 +104,19 @@ with_mock_crunch({
 
     test_that("useNA is set correctly on CrunchCube init", {
         expect_identical(
-            crtabs(~birthyr > 1980, data = ds)@useNA,
+            crtabs(~ birthyr > 1980, data = ds)@useNA,
             "no"
         )
         expect_identical(
-            crtabs(~birthyr > 1980, data = ds, useNA = "ifany")@useNA,
+            crtabs(~ birthyr > 1980, data = ds, useNA = "ifany")@useNA,
             "ifany"
         )
         expect_identical(
-            crtabs(~birthyr > 1980, data = ds, useNA = "always")@useNA,
+            crtabs(~ birthyr > 1980, data = ds, useNA = "always")@useNA,
             "always"
         )
         expect_error(
-            crtabs(~birthyr > 1980, data = ds, useNA = "fosho"),
+            crtabs(~ birthyr > 1980, data = ds, useNA = "fosho"),
             "should be one of"
         )
     })

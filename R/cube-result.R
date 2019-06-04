@@ -484,13 +484,13 @@ setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
     mt_margins <- mr_items_margins(margin, cube = x)
     out <- cubeMarginTable(x, margin)
     if (is.array(out)) {
-        out <- makeCrunchCubeCalculation(out,  x@dims[mt_margins], "margin")
+        out <- makeCrunchCubeCalculation(out, x@dims[mt_margins], "margin")
     }
     return(out)
 })
 
-makeCrunchCubeCalculation <- function(x, dims,  type) {
-    class(x) <-  c("CrunchCubeCalculation", "array")
+makeCrunchCubeCalculation <- function(x, dims, type) {
+    class(x) <- c("CrunchCubeCalculation", "array")
     attr(x, "dims") <- dims
     attr(x, "type") <- type
     return(x)

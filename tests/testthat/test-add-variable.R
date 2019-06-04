@@ -87,7 +87,7 @@ test_that("toVariable parses haven::labelled", {
             list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
         ))
     )
-    
+
     # even if only some values are labelled, the values are still used
     labelled <- haven::labelled(
         rep(LETTERS[1:3], 3),
@@ -142,9 +142,9 @@ test_that("toVariable parses haven::labelled_spss", {
     # backwards compatilbity with old class names
     class(labelled) <- c("labelled_spss", "labelled")
 
-    # hack to make the the is.na method act like the old one if we have a newer 
+    # hack to make the the is.na method act like the old one if we have a newer
     # haven
-    if (packageVersion("haven") > '1.1.2') {
+    if (packageVersion("haven") > "1.1.2") {
         is.na.labelled_spss <<- haven:::is.na.haven_labelled_spss
     }
     expect_equivalent(
@@ -156,7 +156,7 @@ test_that("toVariable parses haven::labelled_spss", {
             list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
         ))
     )
-    
+
     # even if only some values are labelled, the values are still used
     labelled <- haven::labelled_spss(rep(LETTERS[1:3], 3),
         structure(LETTERS[2],

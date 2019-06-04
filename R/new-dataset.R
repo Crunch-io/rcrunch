@@ -9,7 +9,7 @@
 #' than first reading it into R. Uploading SPSS files directly to Crunch will
 #' preserve metadata that is stripped by the R import, regardless of the library
 #' used to read it into R.
-#' 
+#'
 #' If you have Triple-S files, you can import those directly to Crunch like you
 #' can with SPSS files. You should use the filename to the data file (ending in
 #' `.asc` or `.dat`) as the `x` argument and use the metadata file (ending in
@@ -20,7 +20,7 @@
 #' Zip file containing a single file in CSV or SPSS format.
 #' @param name character name to give the new Crunch dataset. By default the
 #' function uses the name of the R object, or, if passing a file, the file name.
-#' @param ... additional arguments passed to [createDataset()], or `schema` if 
+#' @param ... additional arguments passed to [createDataset()], or `schema` if
 #'  you're upload Triple-S
 #' @return If successful, an object of class CrunchDataset.
 #' @examples
@@ -286,18 +286,18 @@ newDatasetByColumn <- function(x, name = deparseAndFlatten(substitute(x), max_le
 #' @seealso [newDataset()]
 #' @keywords internal
 newDatasetFromFile <- function(x, name = basename(x), schema, ...) {
-    # TODO: check file extensions of the files to not return "Error: An error 
+    # TODO: check file extensions of the files to not return "Error: An error
     # occurred processing your request. We have been notified"
     if (!missing(schema)) {
-        schema_source = createSource(schema)
-        body_payload = list(name = name, table = list(source = schema_source))
+        schema_source <- createSource(schema)
+        body_payload <- list(name = name, table = list(source = schema_source))
         ds <- createDataset(body = body_payload, ...)
         ds <- addBatchFile(ds, x, first_batch = TRUE, schema = schema_source)
     } else {
         ds <- createDataset(name = name, ...)
         ds <- addBatchFile(ds, x, first_batch = TRUE)
     }
-    
+
     return(invisible(ds))
 }
 

@@ -73,7 +73,7 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             msg,
             " Details: ",
             warning,
-            call.=FALSE
+            call. = FALSE
         )
     }
     code <- response$status_code
@@ -157,7 +157,7 @@ handleAPIresponse <- function(response, special.statuses = list()) {
     }
 }
 
-get_header <- function(x, headers, default=NULL) {
+get_header <- function(x, headers, default = NULL) {
     m <- tolower(names(headers)) == tolower(x)
     if (any(m)) {
         return(headers[[which(m)[1]]])
@@ -219,15 +219,15 @@ crunch_user_agent <- function(...) {
 ua_packages <- c(
     # This is a named vector so that we can provide an alternate name in the
     # user-agent string ("rcrunch" instead of "crunch", for example)
-    curl="curl",
-    httr="httr",
-    rcrunch="crunch",
-    crplyr="crplyr",
-    crunchy="crunchy"
+    curl = "curl",
+    httr = "httr",
+    rcrunch = "crunch",
+    crplyr = "crplyr",
+    crunchy = "crunchy"
 )
 
 #' @importFrom utils packageVersion
-packageUA <- function (pkg, name=pkg) {
+packageUA <- function(pkg, name = pkg) {
     # Return a string like "rcrunch/3.4.2" for a package
     paste0(name, "/", as.character(packageVersion(pkg)))
 }
@@ -287,8 +287,8 @@ crDownload <- function(url, file, ...) {
     return(file)
 }
 
-featureFlag <- function (flag) {
+featureFlag <- function(flag) {
     url <- sessionURL("feature_flag", "views")
-    f <- crGET(url, query=list(feature_name=flag))
+    f <- crGET(url, query = list(feature_name = flag))
     return(isTRUE(f$active))
 }

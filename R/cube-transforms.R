@@ -219,7 +219,7 @@ maskAndApplyInserts <- function(array, na_mask, d, insert_funcs) {
     # get the coordinates of in the array that must be masked and turn them into
     # NAs
     var_coord_cols <- startsWith(colnames(na_mask), "Var")
-    array[as.matrix(na_mask[,var_coord_cols])] <- NA
+    array[as.matrix(na_mask[, var_coord_cols])] <- NA
 
     # do the actual transforms calculations for the dimension d
     array <- applyAgainst(
@@ -239,12 +239,12 @@ maskAndApplyInserts <- function(array, na_mask, d, insert_funcs) {
         # positions after things have been inserted.
         id_map <- which(insert_types == "Category")
         names(id_map) <- seq_along(id_map)
-        na_mask[,d] <- id_map[na_mask[,d]]
+        na_mask[, d] <- id_map[na_mask[, d]]
         var_coord_cols <- startsWith(colnames(na_mask), "Var")
-        if (!(all(is.na(array[as.matrix(na_mask[,var_coord_cols])])))) {
+        if (!(all(is.na(array[as.matrix(na_mask[, var_coord_cols])])))) {
             halt("Trying to overwrite uncensored values something is wrong")
         }
-        array[as.matrix(na_mask[,var_coord_cols])] <- na_mask$values
+        array[as.matrix(na_mask[, var_coord_cols])] <- na_mask$values
     }
 
     return(array)
@@ -415,7 +415,7 @@ getInsertionTypes <- function(cat_insert_map, cats_in_array) {
 #' @keywords internal
 #'
 #' @examples
-#' array <- array(c(1:24), dim = c(4,3,2))
+#' array <- array(c(1:24), dim = c(4, 3, 2))
 #' array
 #' # , , 1
 #' #
@@ -433,9 +433,9 @@ getInsertionTypes <- function(cat_insert_map, cats_in_array) {
 #' # [3,]   15   19   23
 #' # [4,]   16   20   24
 #'
-#' add_one_hundred <- function (x) c(x, 100)
+#' add_one_hundred <- function(x) c(x, 100)
 #'
-#' crunch:::applyAgainst(array, 1,  add_one_hundred)
+#' crunch:::applyAgainst(array, 1, add_one_hundred)
 #' # , , 1
 #' #
 #' #      [,1] [,2] [,3]
@@ -454,7 +454,7 @@ getInsertionTypes <- function(cat_insert_map, cats_in_array) {
 #' # [4,]   16   20   24
 #' # [5,]  100  100  100
 #'
-#' crunch:::applyAgainst(array, 2,  add_one_hundred)
+#' crunch:::applyAgainst(array, 2, add_one_hundred)
 #' # , , 1
 #' #
 #' #      [,1] [,2] [,3] [,4]
@@ -471,7 +471,7 @@ getInsertionTypes <- function(cat_insert_map, cats_in_array) {
 #' # [3,]   15   19   23  100
 #' # [4,]   16   20   24  100
 #'
-#' crunch:::applyAgainst(array, 3,  add_one_hundred)
+#' crunch:::applyAgainst(array, 3, add_one_hundred)
 #' # , , 1
 #' #
 #' #      [,1] [,2] [,3]

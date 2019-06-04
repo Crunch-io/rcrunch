@@ -65,7 +65,7 @@ expect_identical_temp_nodata <- function(actual, expected) {
     # https://www.pivotaltracker.com/story/show/164939686 is released.
     expect_true(
         identical(actual, expected) ||
-        identical(actual, expected[expected != "No Data"])
+            identical(actual, expected[expected != "No Data"])
     )
 }
 
@@ -77,6 +77,6 @@ expect_equal_temp_nodata <- function(actual, expected) {
     # https://www.pivotaltracker.com/story/show/164939686 is released.
     expect_true(
         isTRUE(all.equal(actual, expected)) ||
-        isTRUE(all.equal(actual, expected[expected != -1]))
+            isTRUE(all.equal(actual, expected[expected != -1]))
     )
 }

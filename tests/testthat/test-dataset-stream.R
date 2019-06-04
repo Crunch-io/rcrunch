@@ -27,11 +27,11 @@ with_mock_crunch({
             '{"streaming":"finished"}'
         )
         expect_error(
-            streaming(ds) <- "foo bar", 
+            streaming(ds) <- "foo bar",
             "'arg' should be one of .*no.*, .*streaming.*, .*finished.*"
         )
-    })  
-    
+    })
+
     test_that("streamRows streams rows", {
         expect_equal(streamRows(ds, data = data.frame()), ds)
         expect_POST(

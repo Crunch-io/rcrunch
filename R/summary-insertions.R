@@ -174,7 +174,7 @@ setMethod("makeInsertion", "SummaryStat", function(x, var_categories) {
 #' \dontrun{
 #' pet_feelings
 #' #                   animals
-#' #feelings            cats dogs
+#' # feelings            cats dogs
 #' #  extremely happy      9    5
 #' #  somewhat happy      12   12
 #' #  neutral             12    7
@@ -184,38 +184,38 @@ setMethod("makeInsertion", "SummaryStat", function(x, var_categories) {
 #' # add a mean summary statistic to a CrunchCube
 #' addSummaryStat(pet_feelings, stat = "mean", var = "feelings")
 #' #                 animals
-#' #feelings                      cats             dogs
+#' # feelings                      cats             dogs
 #' #  extremely happy                9                5
 #' #   somewhat happy               12               12
 #' #          neutral               12                7
 #' # somewhat unhappy               10               10
-#' #extremely unhappy               11               12
+#' # extremely unhappy               11               12
 #' #             mean 4.90740740740741 4.34782608695652
 #'
 #' # we can also store the CrunchCube for use elsewhere
 #' pet_feelings <- addSummaryStat(pet_feelings, stat = "mean", var = "feelings")
 #' pet_feelings
 #' #                 animals
-#' #feelings                      cats             dogs
+#' # feelings                      cats             dogs
 #' #  extremely happy                9                5
 #' #   somewhat happy               12               12
 #' #          neutral               12                7
 #' # somewhat unhappy               10               10
-#' #extremely unhappy               11               12
+#' # extremely unhappy               11               12
 #' #             mean 4.90740740740741 4.34782608695652
 #'
 #' # `addSummaryStat` returns a CrunchCube that has had the summary statistic
 #' # added to it, so that you can still use the Crunch logic for multiple
 #' # response variables, missingness, etc.
 #' class(pet_feelings)
-#' #[1] "CrunchCube"
-#' #attr(,"package")
-#' #[1] "crunch"
+#' # [1] "CrunchCube"
+#' # attr(,"package")
+#' # [1] "crunch"
 #'
 #' # Since `pet_feelings` is a CrunchCube, although it has similar properties
 #' # and behaviors to arrays, it is not a R array:
 #' is.array(pet_feelings)
-#' #[1] FALSE
+#' # [1] FALSE
 #'
 #' # cleanup transforms
 #' transforms(pet_feelings) <- NULL
@@ -223,12 +223,12 @@ setMethod("makeInsertion", "SummaryStat", function(x, var_categories) {
 #' pet_feelings <- addSummaryStat(pet_feelings, stat = "median", var = "feelings")
 #' pet_feelings
 #' #                 animals
-#' #feelings             cats    dogs
+#' # feelings             cats    dogs
 #' #  extremely happy       9       5
 #' #   somewhat happy      12      12
 #' #          neutral      12       7
 #' # somewhat unhappy      10      10
-#' #extremely unhappy      11      12
+#' # extremely unhappy      11      12
 #' #           median       5       5
 #'
 #' # additionally, if you want a true matrix object from the CrunchCube, rather
@@ -237,17 +237,17 @@ setMethod("makeInsertion", "SummaryStat", function(x, var_categories) {
 #' pet_feelings_array <- applyTransforms(pet_feelings)
 #' pet_feelings_array
 #' #                 animals
-#' #feelings             cats    dogs
+#' # feelings             cats    dogs
 #' #  extremely happy       9       5
 #' #   somewhat happy      12      12
 #' #          neutral      12       7
 #' # somewhat unhappy      10      10
-#' #extremely unhappy      11      12
+#' # extremely unhappy      11      12
 #' #           median       5       5
 #'
 #' # and we can see that this is an array and no longer a CrunchCube
 #' is.array(pet_feelings_array)
-#' #[1] TRUE
+#' # [1] TRUE
 #' }
 #'
 #' @export
@@ -263,7 +263,8 @@ addSummaryStat <- function(cube, stat = c("mean", "median"), var, margin, ...) {
             halt(
                 "Margin ", max(margin),
                 " exceeds Cube's number of dimensions (",
-                length(dim(cube)), ")")
+                length(dim(cube)), ")"
+            )
         }
     } else {
         halt("Must supply either a `margin` or `var` argument.")

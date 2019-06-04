@@ -59,8 +59,10 @@ with_mock_crunch({
         expect_json_equivalent(combine.names, both)
     })
     test_that("combineResponses() is only for MR", {
-        expect_error(combineResponses(ds$gender),
-            "combineResponses.. is only available for Multiple Response variables")
+        expect_error(
+            combineResponses(ds$gender),
+            "combineResponses.. is only available for Multiple Response variables"
+        )
     })
 
     test_that("Default variable name for combine()", {

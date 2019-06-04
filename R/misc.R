@@ -4,12 +4,12 @@ rethrow <- function(x) halt(errorMessage(x))
 
 errorMessage <- function(e) attr(e, "condition")$message
 
-warn_once <- function(..., call.=FALSE, option) {
+warn_once <- function(..., call. = FALSE, option) {
     # Warn the first time, then set an option so we know not to warn again in
     # the current session
     if (!isTRUE(getOption(option, FALSE))) {
-        warning(..., call.=call.)
-        opts <- structure(list(TRUE), .Names=option)
+        warning(..., call. = call.)
+        opts <- structure(list(TRUE), .Names = option)
         do.call(options, opts)
     }
 }
@@ -207,7 +207,6 @@ envOrOption <- function(opt, default = NULL) {
 #' @examples
 #' setCrunchAPI("local", 8080)
 #' setCrunchAPI("app")
-#'
 #' @keywords internal
 #' @export
 setCrunchAPI <- function(subdomain, port = NULL) {
@@ -253,7 +252,7 @@ haltIfArray <- function(variable, callingFunc) {
 is.TRUEorFALSE <- function(value) {
     return(is.logical(value) && length(value) == 1 && !is.na(value))
 }
-is.singleCharacter <- function(value){
+is.singleCharacter <- function(value) {
     return(is.character(value) && length(value) == 1)
 }
 
@@ -304,7 +303,7 @@ escapeRegex <- function(string) {
     return(gsub("(\\[|\\])", "\\\\\\1", out))
 }
 
-pluralize <- function (string, count) {
+pluralize <- function(string, count) {
     # Naive conditional pluralization
     ifelse(count == 1, string, paste0(string, "s"))
 }
