@@ -101,13 +101,14 @@ with_mock_crunch({
                 expect_length(permissions(ds), 0)
                 expect_PATCH(
                     share(ds, "lauren.ipsum@crunch.io",
-                          notify = FALSE
+                        notify = FALSE
                     ),
                     "https://app.crunch.io/api/datasets/1/permissions/",
                     '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
                     '{"edit":false,"view":true}},"send_notification":false}'
                 )
-            })
+            }
+        )
     )
 })
 
