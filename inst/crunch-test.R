@@ -1,6 +1,3 @@
-# nolint start
-# we don't lint this file because we commit a few violations so that test envs
-# can be set up and torn down easily.
 library(httptest)
 
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
@@ -245,4 +242,3 @@ crunch_test_teardown_check <- function() {
     cat("Total teardown: ")
     print(get("cleanup.runtime", envir = globalenv()))
 }
-# nolint end
