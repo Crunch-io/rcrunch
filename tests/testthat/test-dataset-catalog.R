@@ -106,12 +106,14 @@ with_mock_crunch({
         expect_PATCH(
             is.archived(datcat[1]) <- TRUE,
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/":{"archived":true}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/3/":{"archived":true}}}'
         )
         expect_PATCH(
             archive(datcat[c(2, 5)]),
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/":{"archived":true}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/1/":{"archived":true}}}'
         )
     })
     test_that("is.published setter", {

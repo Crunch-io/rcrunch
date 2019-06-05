@@ -128,7 +128,8 @@ with_mock_crunch({
         expect_PATCH(
             name(subvariables(mr)$Second) <- "Due",
             "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
-            '{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}'
+            '{"https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            'subvariables/subvar1/":{"name":"Due"}}'
         )
     })
 

@@ -778,6 +778,7 @@ test_that("cat by mr, with cat subtotals (margins and proportions)", {
     )
     expect_equivalent(as.array(margin.table(cat_mr)), table_margin)
 
+    # nolint start
     row_prop <- cubify(
         0.136663674865857, 0.433765442860944, 0.376342587283855, 0.733896246595956, 0.927657892394531,
         0.143580139370435, 0.378692947805666, 0.439828706304162, 0.784689941525965, 0.8628811114845,
@@ -810,6 +811,7 @@ test_that("cat by mr, with cat subtotals (margins and proportions)", {
         dims = cat_mr_dims_subtotals
     )
     expect_equivalent(as.array(prop.table(cat_mr)), table_prop)
+    # nolint end
 })
 
 cat_array_cube <- loadCube("./cubes/catarray-with-transforms.json")

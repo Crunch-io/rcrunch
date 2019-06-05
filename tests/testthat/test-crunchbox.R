@@ -23,7 +23,9 @@ test_that("Embed URL", {
 test_that("Iframe code (prints and returns invisibly)", {
     expect_output(
         expect_identical(
-            embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"),
+            embedCrunchBox(
+                "http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"
+            ),
             paste0(
                 '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c',
                 '1cbd3800e181188508/" width="600" height="480" style="border: ',

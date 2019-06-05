@@ -107,7 +107,8 @@ with_mock_crunch({
             with(temp.option(httpcache.log = logfile), {
                 expect_output(
                     expect_message(
-                        expect_error(handleAPIresponse(fakeProg("https://app.crunch.io/api/progress2/")),
+                        expect_error(
+                            handleAPIresponse(fakeProg("https://app.crunch.io/api/progress2/")),
                             paste("Education, Commerce, and, uh, oops."),
                             fixed = TRUE
                         ),

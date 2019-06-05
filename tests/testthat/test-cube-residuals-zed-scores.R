@@ -396,7 +396,8 @@ test_that("compareColsPairwise()", {
         compareCols(gender_x_ideology, baseline = "Moderate", x = "Not sure"),
         dims = list(
             RespondentIdeology = c(
-                "Very liberal", "Liberal", "Moderate", "Conservative", "Very Conservative", "Not sure"
+                "Very liberal", "Liberal", "Moderate", "Conservative",
+                "Very Conservative", "Not sure"
             ),
             Gender = c("Male", "Female")
         )

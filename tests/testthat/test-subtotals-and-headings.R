@@ -171,7 +171,8 @@ with_mock_crunch({
     test_that("When after is not supplied, it defauls to follow the last category", {
         expect_PATCH(
             subtotals(ds$gender) <- list(
-                Subtotal(name = "Not men", categories = c(-1, 1)), # categories supplied in reverse order
+                # categories supplied in reverse order
+                Subtotal(name = "Not men", categories = c(-1, 1)),
                 Subtotal(name = "Women", categories = "Female")
             ),
             "https://app.crunch.io/api/datasets/1/variables/gender/",
@@ -183,7 +184,8 @@ with_mock_crunch({
         # one supplied category (23) isn't a real category, after should still be -1
         expect_PATCH(
             subtotals(ds$gender) <- list(
-                Subtotal(name = "Not men", categories = c(-1, 1, 23)), # categories supplied in reverse order
+                # categories supplied in reverse order
+                Subtotal(name = "Not men", categories = c(-1, 1, 23)),
                 Subtotal(name = "Women", categories = "Female")
             ),
             "https://app.crunch.io/api/datasets/1/variables/gender/",

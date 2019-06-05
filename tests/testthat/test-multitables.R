@@ -188,7 +188,8 @@ with_mock_crunch({
             multitables(ds)[["mt again"]] <- ~ gender + birthyr,
             "https://app.crunch.io/api/datasets/1/multitables/",
             '{"element":"shoji:entity","body":',
-            '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
+            '{"template":[{"query":[{"variable":',
+            '"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
             '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
             ',"name":"mt again"}}'
         )
@@ -196,7 +197,8 @@ with_mock_crunch({
             multitables(ds)[["Shared multitable"]] <- ~ gender + birthyr,
             "https://app.crunch.io/api/datasets/1/multitables/4de322/",
             '{"element":"shoji:entity","body":',
-            '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
+            '{"template":[{"query":[{"variable":',
+            '"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
             '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
             "}}"
         )
@@ -204,7 +206,8 @@ with_mock_crunch({
             multitables(ds)[[3]] <- ~ gender + birthyr,
             "https://app.crunch.io/api/datasets/1/multitables/4de322/",
             '{"element":"shoji:entity","body":',
-            '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
+            '{"template":[{"query":[{"variable":',
+            '"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
             '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
             "}}"
         )

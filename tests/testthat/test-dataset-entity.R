@@ -131,7 +131,10 @@ with_mock_crunch({
     test_that("setPopulation handles datasets with no population values", {
         expect_error(
             setPopulation(ds2, magnitude = 3),
-            "Dataset does not have a population, please set one before attempting to change magnitude"
+            paste0(
+                "Dataset does not have a population, please set one before ",
+                "attempting to change magnitude"
+            )
         )
         expect_warning(
             expect_PATCH(
@@ -328,7 +331,8 @@ with_mock_crunch({
         # on the dataset entity
         expect_PATCH(
             names(variables(ds[1])) <- "year of birth",
-            "https://app.crunch.io/api/datasets/1/variables/", '{"element":"shoji:catalog","index":{',
+            "https://app.crunch.io/api/datasets/1/variables/",
+            '{"element":"shoji:catalog","index":{',
             '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{',
             '"name":"year of birth"}}}'
         )
@@ -443,7 +447,8 @@ with_mock_crunch({
     })
     test_that("Can set a variable as weight", {
         expect_PATCH(
-            settings(ds)$weight <- ds$gender, ## Silly; server would reject, but just checking request
+            ## Silly; server would reject, but just checking request
+            settings(ds)$weight <- ds$gender,
             "https://app.crunch.io/api/datasets/1/settings/",
             '{"weight":"https://app.crunch.io/api/datasets/1/variables/gender/"}'
         )

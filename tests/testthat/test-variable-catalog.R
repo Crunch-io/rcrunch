@@ -116,8 +116,9 @@ with_mock_crunch({
     test_that("attribute setters with duplication", {
         ## In the first case, the first element is duplicated, but it's getting
         ## the same value, so we can ignore it
+        names <- c("Year of birth", "Year of birth", "Gender", "Loc", "Start time")
         expect_PATCH(
-            names(varcat[c(1, 1:4)]) <- c("Year of birth", "Year of birth", "Gender", "Loc", "Start time"),
+            names(varcat[c(1, 1:4)]) <- names,
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
             'datasets/1/variables/birthyr/":{"name":"Year of birth"},',
@@ -217,7 +218,10 @@ with_mock_crunch({
     test_that("As.data.frame method errors correctly", {
         expect_error(
             as.data.frame(varcat[1:3], keys = "Not a field at all"),
-            paste(dQuote("Not a field at all"), "is an invalid key for catalogs of class VariableCatalog.")
+            paste(
+                dQuote("Not a field at all"),
+                "is an invalid key for catalogs of class VariableCatalog."
+            )
         )
         expect_error(
             as.data.frame(varcat[1:3], keys = c("banana", "fooey")),

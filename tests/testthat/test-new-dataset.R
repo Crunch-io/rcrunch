@@ -230,7 +230,8 @@ with_test_authentication({
     test_that("Duplicate subvariables are forbidden", {
         m2 <- m
         ## Add a duplicate subvariable
-        m2$body$table$metadata$allpets$subvariables[[4]] <- list(name = "Another", alias = "allpets_1")
+        dupe <- list(name = "Another", alias = "allpets_1")
+        m2$body$table$metadata$allpets$subvariables[[4]] <- dupe
         expect_error(createWithMetadataAndFile(
             m2,
             system.file("example-datasets", "pets.csv", package = "crunch")

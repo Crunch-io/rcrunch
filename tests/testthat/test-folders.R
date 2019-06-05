@@ -221,7 +221,8 @@ with_mock_crunch({
                 cd("Group 1") %>%
                 setNames(c("Year of birth", "Nested folder", "FTW! textvar")),
             "https://app.crunch.io/api/datasets/1/folders/1/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
+            '{"element":"shoji:catalog","index":',
+            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
             '{"name":"Year of birth"},',
             '"https://app.crunch.io/api/datasets/1/folders/3/":',
             '{"name":"Nested folder"},',
