@@ -1,6 +1,3 @@
-# nolint start
-# we don't lint this file because we commit a few violations so that test envs
-# can be set up and torn down easily.
 expect_prints <- function(object, ..., fixed = TRUE) {
     expect_output(print(object), ..., fixed = fixed)
 }
@@ -84,4 +81,3 @@ expect_equal_temp_nodata <- function(actual, expected) {
             isTRUE(all.equal(actual, expected[expected != -1]))
     )
 }
-# nolint end

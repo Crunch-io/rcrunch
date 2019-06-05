@@ -1,6 +1,3 @@
-# nolint start
-# we don't lint this file because we commit a few violations so that test envs
-# can be set up and torn down easily.
 with_fake_input <- function(input, expr) {
     with_mock(
         `crunch:::is.interactive` = function() return(TRUE),
@@ -75,4 +72,3 @@ testUser <- function(email = uniqueEmail(), name = paste("Ms.", email, "User"), 
     u.url <- invite(email, name = name, notify = FALSE, ...)
     return(UserEntity(crGET(u.url)))
 }
-# nolint end
