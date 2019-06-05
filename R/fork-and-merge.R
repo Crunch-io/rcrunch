@@ -93,6 +93,6 @@ mergeFork <- function(dataset, fork, autorollback = TRUE, force = FALSE) {
         dataset = self(fork), autorollback = autorollback,
         force = force
     )
-    m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body = toJSON(payload))
+    crPOST(shojiURL(dataset, "catalogs", "actions"), body = toJSON(payload))
     return(refresh(dataset))
 }

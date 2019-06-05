@@ -90,14 +90,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -1.4998629)
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -0.4424)
                                 )
                             )
@@ -109,14 +109,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -0.4424)
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 0.6119)
                                 )
                             )
@@ -128,14 +128,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 0.6119)
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 1.6693629)
                                 )
                             )
@@ -185,13 +185,13 @@ with_mock_crunch({
                             list(
                                 `function` = ">=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -1.4998629)
                                 )
                             ), list(
                                 `function` = "<",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -0.4424)
                                 )
                             )
@@ -203,14 +203,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -0.4424)
                                 )
                             ),
                             list(
                                 `function` = "<",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 0.6119)
                                 )
                             )
@@ -222,13 +222,13 @@ with_mock_crunch({
                             list(
                                 `function` = ">=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 0.6119)
                                 )
                             ), list(
                                 `function` = "<",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 1.6693629)
                                 )
                             )
@@ -271,14 +271,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -1.4967)
                                 )
                             ),
                             list(
                                 `function` = "<",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 0)
                                 )
                             )
@@ -290,14 +290,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 0)
                                 )
                             ),
                             list(
                                 `function` = "<",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 1.6662)
                                 )
                             )
@@ -346,14 +346,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -1.4998629)
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -0.4424)
                                 )
                             )
@@ -365,14 +365,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = -0.4424)
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 0.6119)
                                 )
                             )
@@ -384,14 +384,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 0.6119)
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
                                     list(value = 1.6693629)
                                 )
                             )
@@ -455,7 +455,10 @@ with_mock_crunch({
                 label = c("one", "two"),
                 right = TRUE
             ),
-            "There are 3 resulting categories but you only supplied 2 labels. Change number of breaks or the number of labels."
+            paste0(
+                "There are 3 resulting categories but you only supplied 2 ",
+                "labels. Change number of breaks or the number of labels."
+            )
         )
         expect_error(
             cut(ds$birthyr,

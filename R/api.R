@@ -73,7 +73,7 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             msg,
             " Details: ",
             warning,
-            call.=FALSE
+            call. = FALSE
         )
     }
     code <- response$status_code
@@ -83,7 +83,8 @@ handleAPIresponse <- function(response, special.statuses = list()) {
     } else if (tolower(http_status(response)$category) == "success") {
         if (code == 202) {
             ## 202 Continue: a few cases:
-            ## 1) Legacy: POST /batches/ returns Batch entity in Location, no response content
+            ## 1) Legacy: POST /batches/ returns Batch entity in Location, no
+            ##    response content
             ## 2) Progress body with Location
             ## 3) Progress body without Location
             ## So, if there's a shoji:value response, it's a Progress, so poll it.
@@ -151,13 +152,16 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             msg <- paste(msg, msg2, sep = ": ")
         }
         if (code == 409 && grepl("current editor", msg)) {
-            halt("You are not the current editor of this dataset. `unlock()` it and try again.")
+            halt(
+                "You are not the current editor of this dataset. `unlock()` ",
+                "it and try again."
+            )
         }
         halt(msg)
     }
 }
 
-get_header <- function(x, headers, default=NULL) {
+get_header <- function(x, headers, default = NULL) {
     m <- tolower(names(headers)) == tolower(x)
     if (any(m)) {
         return(headers[[which(m)[1]]])
@@ -219,15 +223,15 @@ crunch_user_agent <- function(...) {
 ua_packages <- c(
     # This is a named vector so that we can provide an alternate name in the
     # user-agent string ("rcrunch" instead of "crunch", for example)
-    curl="curl",
-    httr="httr",
-    rcrunch="crunch",
-    crplyr="crplyr",
-    crunchy="crunchy"
+    curl = "curl",
+    httr = "httr",
+    rcrunch = "crunch",
+    crplyr = "crplyr",
+    crunchy = "crunchy"
 )
 
 #' @importFrom utils packageVersion
-packageUA <- function (pkg, name=pkg) {
+packageUA <- function(pkg, name = pkg) {
     # Return a string like "rcrunch/3.4.2" for a package
     paste0(name, "/", as.character(packageVersion(pkg)))
 }
@@ -287,8 +291,8 @@ crDownload <- function(url, file, ...) {
     return(file)
 }
 
-featureFlag <- function (flag) {
+featureFlag <- function(flag) {
     url <- sessionURL("feature_flag", "views")
-    f <- crGET(url, query=list(feature_name=flag))
+    f <- crGET(url, query = list(feature_name = flag))
     return(isTRUE(f$active))
 }

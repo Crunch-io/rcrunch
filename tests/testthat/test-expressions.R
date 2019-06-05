@@ -240,7 +240,7 @@ with_test_authentication({
         expect_is(e2, "CrunchExpr")
         expect_identical(as.vector(e1), as.vector(ds$v3) + 5)
         expect_identical(as.vector(e1), as.vector(e2))
-        expect_identical(as.vector(ds$v3 * ds$v3), df$v3^2)
+        expect_identical(as.vector(ds$v3 * ds$v3), df$v3^2) # nolint
     })
 
     uncached({

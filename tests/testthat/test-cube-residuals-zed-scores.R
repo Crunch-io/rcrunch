@@ -35,20 +35,29 @@ mr_by_mr_heterogeneous_dims <- list(
 catarray <- loadCube("cubes/cat-array.json")
 catarray_dims <- list(
     "feeling_ca" = c("cat_feeling", "dog_feeling"),
-    "feeling_ca" = c("Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy", "Extremely Unhappy")
+    "feeling_ca" = c(
+        "Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy",
+        "Extremely Unhappy"
+    )
 )
 
 catarray_by_cat <- loadCube("cubes/catarray-x-cat.json")
 catarray_by_cat_dims <- list(
     "feeling_ca" = c("cat_feeling", "dog_feeling"),
-    "feeling_ca" = c("Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy", "Extremely Unhappy"),
+    "feeling_ca" = c(
+        "Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy",
+        "Extremely Unhappy"
+    ),
     "animal" = c("cats", "dog")
 )
 
 catarray_by_mr <- loadCube("cubes/catarray-x-mr.json")
 catarray_by_mr_dims <- list(
     "feeling_ca" = c("cat_feeling", "dog_feeling"),
-    "feeling_ca" = c("Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy", "Extremely Unhappy"),
+    "feeling_ca" = c(
+        "Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy",
+        "Extremely Unhappy"
+    ),
     "opinion_mr" = c("food_opinion", "rest_opinion", "play_opinion")
 )
 
@@ -65,7 +74,10 @@ cat_by_cat <- loadCube("cubes/feelings-pets.json")
 cat_by_mr_NSS_alltypes <- loadCube("cubes/cat-mr-NSS-alltypes.json")
 
 
-test_that("zScores for CrunchCube normal contingency table is chisq standardized residuals", {
+test_that(paste0(
+    "zScores for CrunchCube normal contingency table is chisq standardized ",
+    "residuals"
+), {
     # values from crunch-cube tests
     out <- chisq.test(as.array(gender_x_ideology))$stdres
     expect_equal(zScores(gender_x_ideology), out)
@@ -384,7 +396,8 @@ test_that("compareColsPairwise()", {
         compareCols(gender_x_ideology, baseline = "Moderate", x = "Not sure"),
         dims = list(
             RespondentIdeology = c(
-                "Very liberal", "Liberal", "Moderate", "Conservative", "Very Conservative", "Not sure"
+                "Very liberal", "Liberal", "Moderate", "Conservative",
+                "Very Conservative", "Not sure"
             ),
             Gender = c("Male", "Female")
         )

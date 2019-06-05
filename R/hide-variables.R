@@ -2,7 +2,7 @@ setMethod("hidden", "CrunchDataset", function(x) hidden(folders(x)))
 
 setMethod("hidden", "VariableCatalog", function(x) hidden(folders(x)))
 
-setMethod("hidden", "VariableFolder", function (x) {
+setMethod("hidden", "VariableFolder", function(x) {
     return(VariableFolder(crGET(shojiURL(rootFolder(x), "catalogs", "hidden"))))
 })
 

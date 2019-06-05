@@ -13,10 +13,11 @@
 #' its side effects.
 #' @export
 #' @keywords internal
-notifyIfNewVersion <- function(
-                               package = "crunch",
+notifyIfNewVersion <- function(package = "crunch",
                                github = "Crunch-io/rcrunch",
-                               installed.version = as.character(packageVersion(package))) {
+                               installed.version = as.character(
+                                   packageVersion(package)
+                               )) {
     v <- tryCatch(checkForNewVersion(github, installed.version),
         error = function(e) return(NULL)
     )
@@ -40,7 +41,7 @@ notifyIfNewVersion <- function(
 checkForNewVersion <- function(github, installed.version) {
     # Only check if this option isn't set *and* if the session is interactive
     if (getOption("crunch.check.updates", is.interactive())) {
-        github.url <- paste0("https://api.github.com/repos/", github, "/tags")
+        github.url <- paste0("https://api.github.com/repos/", github, "/tags") # nolint
         ## Get the names of the tagged versions on GitHub
         gh.tags <- vapply(crGET(github.url), vget("name"), character(1))
         ## Filter to keep only those that match x.y.z

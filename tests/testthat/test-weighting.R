@@ -11,7 +11,7 @@ with_mock_crunch({
             "Variable birthyr is hidden"
         )
     })
-    
+
     test_that("Can get weights from a subset dataset", {
         expect_warning(
             expect_identical(weight(newds[c("gender", "starttime")]), newds$birthyr),
@@ -79,7 +79,12 @@ with_mock_crunch({
         expect_identical(weightVariables(oldds), c())
     })
     test_that("weightVariables can be assigned", {
-        body <- '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets/1/variables/weights/","description":"Order of the weight variables for this dataset","graph":["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
+        body <- paste0(
+            '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets',
+            '/1/variables/weights/","description":"Order of the weight variables ', # nolint
+            'for this dataset","graph":',
+            '["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
+        )
         expect_PUT(
             weightVariables(oldds) <- oldds$birthyr,
             "https://app.crunch.io/api/datasets/1/variables/weights/",
@@ -95,7 +100,12 @@ with_mock_crunch({
         expect_false(is.weightVariable(oldds$birthyr))
     })
     test_that("is.weightVariable assignment method", {
-        body <- '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets/1/variables/weights/","description":"Order of the weight variables for this dataset","graph":["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
+        body <- paste0(
+            '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets',
+            '/1/variables/weights/","description":"Order of the weight variables', # nolint
+            ' for this dataset","graph":',
+            '["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
+        )
         expect_PUT(
             is.weightVariable(oldds$birthyr) <- TRUE,
             "https://app.crunch.io/api/datasets/1/variables/weights/",
@@ -303,7 +313,7 @@ with_test_authentication({
                 weightVariables(ds), c("weight22", "weight23")
             )
         })
-        test_that("is.weightVariable identifies weight variable and allows it to be set", {
+        test_that("is.weightVariable identifies weight variable, allows it to be set", {
             expect_true(is.weightVariable(ds$weight22))
             is.weightVariable(ds$weight22) <- FALSE
             expect_false(is.weightVariable(ds$weight22))
@@ -313,7 +323,7 @@ with_test_authentication({
             expect_identical(weightVariables(ds), c("weight22", "weight23"))
             expect_false(is.weightVariable("notvar"))
         })
-        test_that("is.weightVariable identifies weight variable and allows it to be set", {
+        test_that("is.weightVariable identifies weight variable, allows it to be set 2", {
             weight(ds) <- ds$weight22
             expect_true(is.weight(ds$weight22))
             is.weight(ds$weight22) <- FALSE

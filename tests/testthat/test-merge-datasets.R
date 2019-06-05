@@ -74,7 +74,7 @@ with_mock_crunch({
     })
     test_that("joinDatasets with copy=FALSE is (no longer/not yet) valid", {
         expect_error(
-            joinDatasets(ds1, ds2, by.x = ds1$birthyr, ds2$birthyr, copy=FALSE),
+            joinDatasets(ds1, ds2, by.x = ds1$birthyr, ds2$birthyr, copy = FALSE),
             "Virtual joins are not yet supported."
         )
     })
@@ -218,7 +218,7 @@ printed_order_apidocs2 <- c(
     "    Case ID"
 )
 
-printed_order_apidocs2_merge_by_stringid <- c(
+printed_order_apidocs2_merge_by_stringid <- c( # nolint
     "    [+] Key Pet Indicators",
     "        All pets owned",
     "        Pet",
@@ -239,7 +239,7 @@ printed_order_apidocs2_merge_by_stringid <- c(
     "        Case ID"
 )
 
-printed_order_apidocs2_merge_by_caseid <- c(
+printed_order_apidocs2_merge_by_caseid <- c( # nolint
     "    [+] Key Pet Indicators",
     "        All pets owned",
     "        Pet",
@@ -290,7 +290,7 @@ with_test_authentication({
                 "Join matches",
                 "Another variable",
                 paste0("[+] ", name(ds2)),
-                paste0(printed_order_apidocs2_merge_by_stringid)
+                paste0(printed_order_apidocs2_merge_by_stringid) # nolint
             ),
             collapse = "\n"
             ),
@@ -329,7 +329,7 @@ with_test_authentication({
                 "Join matches",
                 "Another variable",
                 paste0("[+] ", name(ds2)),
-                paste0(printed_order_apidocs2_merge_by_caseid)
+                paste0(printed_order_apidocs2_merge_by_caseid) # nolint
             ),
             collapse = "\n"
             ),
@@ -412,7 +412,7 @@ with_test_authentication({
                 "Join matches",
                 "Another variable",
                 paste0("[+] ", name(ds2)),
-                paste0(printed_order_apidocs2_merge_by_stringid)
+                paste0(printed_order_apidocs2_merge_by_stringid) # nolint
             ),
             collapse = "\n"
             ),

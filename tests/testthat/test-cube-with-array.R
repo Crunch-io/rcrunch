@@ -18,7 +18,7 @@ with_test_authentication({
     })
 
     test_that("bivariate cube with MR", {
-        kube <- crtabs(~MR + v4, data = mrds)
+        kube <- crtabs(~ MR + v4, data = mrds)
         expect_is(kube, "CrunchCube")
         expect_equivalent(
             as.array(kube),
@@ -31,7 +31,7 @@ with_test_authentication({
             )
         )
 
-        kube <- crtabs(~v4 + MR, data = mrds)
+        kube <- crtabs(~ v4 + MR, data = mrds)
         expect_is(kube, "CrunchCube")
         expect_equivalent(
             as.array(kube),
@@ -44,7 +44,7 @@ with_test_authentication({
             )
         )
 
-        kube <- crtabs(~v4 + MR, data = mrds, useNA = "ifany")
+        kube <- crtabs(~ v4 + MR, data = mrds, useNA = "ifany")
         expect_is(kube, "CrunchCube")
         expect_equivalent(
             as.array(kube),
@@ -96,7 +96,7 @@ with_test_authentication({
         )
     })
 
-    c1 <- crtabs(~v5 + MR, data = mrds)
+    c1 <- crtabs(~ v5 + MR, data = mrds)
     #    MR
     # v5  mr_1 mr_2 mr_3
     #   A    1    0    0
@@ -251,7 +251,7 @@ with_test_authentication({
         )
     )
     test_that("Cube of MR as_array", {
-        kube <- crtabs(~as_array(MR), data = mrds, useNA = "ifany")
+        kube <- crtabs(~ as_array(MR), data = mrds, useNA = "ifany")
         expect_is(kube, "CrunchCube")
         expect_equivalent(as.array(kube), cube.as.CA)
     })
@@ -265,7 +265,7 @@ with_test_authentication({
     })
 
     test_that("accessing array subvariables", {
-        kube <- crtabs(~CA$mr_1 + CA$mr_2, data = mrds, useNA = "ifany")
+        kube <- crtabs(~ CA$mr_1 + CA$mr_2, data = mrds, useNA = "ifany")
         expect_equivalent(
             as.array(kube),
             array(c(1, 1, 0, 0, 1, 0, 0, 0, 1),

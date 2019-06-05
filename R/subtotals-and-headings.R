@@ -52,12 +52,16 @@
 #' # Agree, Neither Agree nor Disagree, Somewhat Disagree, and Strongly Disagree,
 #' # to make two subtotals for Agree and Disagree:
 #' subtotals(ds$opinion) <- list(
-#'     Subtotal(name = "Agree",
-#'              categories = c("Strongly Agree", "Somewhat Agree"),
-#'              after = "Somewhat Agree"),
-#'     Subtotal(name = "Disagree",
-#'              categories = c("Strongly Disagree", "Somewhat Disagree"),
-#'              after = "Strongly Disagree")
+#'     Subtotal(
+#'         name = "Agree",
+#'         categories = c("Strongly Agree", "Somewhat Agree"),
+#'         after = "Somewhat Agree"
+#'     ),
+#'     Subtotal(
+#'         name = "Disagree",
+#'         categories = c("Strongly Disagree", "Somewhat Disagree"),
+#'         after = "Strongly Disagree"
+#'     )
 #' )
 #'
 #' # headings can also be added:

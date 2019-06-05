@@ -124,6 +124,7 @@ test_that("prettyPrint2d works with both styles", {
                 crayon::red
             )
         ),
+        # nolint start
         list(
             "        ",
             "      \033[47m  A\033[49m \033[3m   B\033[23m \033[31m    C\033[39m",
@@ -131,6 +132,7 @@ test_that("prettyPrint2d works with both styles", {
             "\033[44m  two \033[47m NA\033[44m \033[3m \033[31m500\033[39m\033[23m \033[31m   80\033[39m\033[49m",
             "\033[4mthree \033[47m  \033[47m3\033[47m\033[49m \033[3m6000\033[23m \033[31m    9\033[39m\033[24m"
         )
+        # nolint end
     )
 })
 

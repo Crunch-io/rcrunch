@@ -305,10 +305,10 @@ with_test_authentication({
     })
 
     test_that("casting in a CrunchCubes returns expected values", {
-        cube <- crtabs(~as.Categorical(v2), ds)
+        cube <- crtabs(~ as.Categorical(v2), ds)
         expect_equal(dimensions(cube)[[1]]$references$type, "categorical")
 
-        cube <- crtabs(~as.Numeric(num_as_text), ds)
+        cube <- crtabs(~ as.Numeric(num_as_text), ds)
         expect_equal(dimensions(cube)[[1]]$references$type, "enum")
 
         cube <- crtabs(mean(as.Numeric(num_as_text)) ~ v4, ds)

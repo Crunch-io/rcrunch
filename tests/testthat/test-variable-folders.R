@@ -86,7 +86,8 @@ with_mock_crunch({
         expect_PATCH(
             names(folders(ds)[[1]]) <- c("Year of Birth", "A folder in a folder", "Plain text"),
             "https://app.crunch.io/api/datasets/1/folders/1/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
+            '{"element":"shoji:catalog","index":',
+            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
             '{"name":"Year of Birth"},',
             '"https://app.crunch.io/api/datasets/1/folders/3/":',
             '{"name":"A folder in a folder"},',
@@ -141,8 +142,8 @@ with_mock_crunch({
     })
 
     test_that("path()", {
-        expect_identical(path(folders(ds)[["Group 1/Nested"]]), "/Group 1/Nested")
-        expect_identical(path(ds$birthyr), "/Group 1/Birth Year")
+        expect_identical(path(folders(ds)[["Group 1/Nested"]]), "/Group 1/Nested") # nolint
+        expect_identical(path(ds$birthyr), "/Group 1/Birth Year") # nolint
         expect_identical(path(folders(ds)), "/")
     })
 
@@ -165,7 +166,7 @@ with_mock_crunch({
         })
         test_that("If there are names longer than 'width', it still prints", {
             skip("unskip when testthat 2.1.0 is released (testthat#805)")
-            alphabet <- paste(letters, collapse="")
+            alphabet <- paste(letters, collapse = "")
             expect_output(
                 colored_print(alphabet),
                 '[1] "abcdefghijklmnopqrstuvwxyz"',

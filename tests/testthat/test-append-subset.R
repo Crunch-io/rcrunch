@@ -17,7 +17,8 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/batches/",
             '{"element":"shoji:entity","body":',
             '{"dataset":"https://app.crunch.io/api/datasets/3/",',
-            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}'
+            '"filter":{"function":"==","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}'
         )
     })
     test_that("Append with variable selection", {
@@ -26,7 +27,11 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/batches/",
             '{"element":"shoji:entity","body":',
             '{"dataset":"https://app.crunch.io/api/datasets/3/",',
-            '"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}}}'
+            '"where":{"function":"select","args":[{"map":',
+            '{"66ae9881e3524f7db84970d556c34552":{"variable":',
+            '"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+            '"f78ca47313144b57adfb495893968e70":{"variable":',
+            '"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}}}'
         )
     })
     test_that("Append with variable selection and filter", {
@@ -35,8 +40,13 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/batches/",
             '{"element":"shoji:entity","body":',
             '{"dataset":"https://app.crunch.io/api/datasets/3/",',
-            '"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]},',
-            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}'
+            '"where":{"function":"select","args":[{"map":',
+            '{"66ae9881e3524f7db84970d556c34552":{"variable":',
+            '"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+            '"f78ca47313144b57adfb495893968e70":{"variable":',
+            '"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]},',
+            '"filter":{"function":"==","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}'
         )
     })
 })

@@ -83,7 +83,7 @@ listDatasets <- function(kind = c("active", "all", "archived"),
                 "As of crunch 1.26.0, listDatasets() with no project specified ",
                 "only lists your 'personal' datasets (those that you created) ",
                 "and not those that were shared with you.",
-                option="crunch.list.personal.msg"
+                option = "crunch.list.personal.msg"
             )
             project <- "~"
         }
@@ -143,7 +143,7 @@ listDatasets <- function(kind = c("active", "all", "archived"),
 #' \dontrun{
 #' ds <- loadDatasets("A special dataset")
 #' ds2 <- loadDatasets("~/My dataset")
-#' ds3 <- loadDataset("My dataset", project="~") # Same as ds2
+#' ds3 <- loadDataset("My dataset", project = "~") # Same as ds2
 #' ds4 <- loadDataset("https://app.crunch.io/api/datasets/bd3ad2/")
 #' }
 #' @export
@@ -153,7 +153,6 @@ loadDataset <- function(dataset,
                         kind = c("active", "all", "archived"),
                         project = NULL,
                         refresh = FALSE) {
-
     if (inherits(dataset, "DatasetTuple")) {
         return(entity(dataset))
     }
@@ -185,7 +184,10 @@ loadDataset <- function(dataset,
         }
         return(out)
     } else if (is.whole(dataset)) {
-        warning("'dataset' should be a character dataset name, path, or URL. Loading by numeric index is deprecated.")
+        warning(
+            "'dataset' should be a character dataset name, path, or URL. ",
+            "Loading by numeric index is deprecated."
+        )
         dsname <- listDatasets(kind = kind, project = project)[dataset]
         if (is.na(dsname)) {
             halt("subscript out of bounds")
@@ -196,22 +198,25 @@ loadDataset <- function(dataset,
             project = project
         ))
     } else {
-        halt("'dataset' should be a character dataset name, path, or URL, not an object of class ", class(dataset))
+        halt(
+            "'dataset' should be a character dataset name, path, or URL, ",
+            "not an object of class ", class(dataset)
+        )
     }
 }
 
-is.crunchURL <- function (x) {
+is.crunchURL <- function(x) {
     # /api/ check is for redacted mocks that prune the scheme://host
     # We don't only use that check because web app URLs don't include /api/
     # Note that this does pass through URLs that are to resources inside a
     # dataset, such as /api/datasets/123/variables/.
     # Call `datasetReference()` on the return to get a dataset URL
-    is.character(x) && length(x) == 1L && grepl("^http|^/api/", x)
+    is.character(x) && length(x) == 1L && grepl("^http|^/api/", x) # nolint
 }
 
 loadDatasetFromURL <- function(url) {
     ## Load dataset without touching a dataset catalog
-    if (!grepl("/api/", url)) {
+    if (!grepl("/api/", url)) { # nolint
         ## It's a web app URL, probably. Turn it into an API URL
         url <- datasetReference(url)
     }

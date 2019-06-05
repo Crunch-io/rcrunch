@@ -43,11 +43,12 @@
 #' @examples
 #' \dontrun{
 #'
-#' ds$cat_opinion <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
-#'                                        pet2 == 'Cat' ~ Opinion2,
-#'                                        pet3 == 'Cat' ~ Opinion3,
-#'                                        data = ds,
-#'                                        name = "Opinion of Cats")
+#' ds$cat_opinion <- conditionalTransform(pet1 == "Cat" ~ Opinion1,
+#'     pet2 == "Cat" ~ Opinion2,
+#'     pet3 == "Cat" ~ Opinion3,
+#'     data = ds,
+#'     name = "Opinion of Cats"
+#' )
 #' }
 #' @export
 conditionalTransform <- function(..., data, else_condition = NA, type = NULL,
@@ -123,7 +124,8 @@ conditionalTransform <- function(..., data, else_condition = NA, type = NULL,
                 halt(
                     "When specifying categories, all categories in the ",
                     "results must be included. These categories are in the ",
-                    "results that were not specified in categories: ", serialPaste(uni_results[results_not_categories])
+                    "results that were not specified in categories: ",
+                    serialPaste(uni_results[results_not_categories])
                 )
             }
             result <- factor(result, levels = names(categories))

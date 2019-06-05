@@ -139,7 +139,8 @@ makeMRFromText <- function(var,
             var, x, delim,
             selected, not_selected, unanswered
         ))
-    names(subvarderivs) <- gsub("\\.", "_", items) # mongo errors if there are dots in the names
+    # mongo errors if there are dots in the names
+    names(subvarderivs) <- gsub("\\.", "_", items)
 
     # generate the ZCL to make an array from the subvariable derivations, and
     # then do selection magic to make an MR
@@ -207,8 +208,9 @@ createSubvarDeriv <- function(var, str, delim, selected, not_selected,
     new_cat <- list(column = I(1:3), type = new_cat_type)
     deriv <- zfunc("case", new_cat)
     deriv$args[[2]] <- zfunc("is_missing", var)
-    deriv$args[[3]] <- zfunc("~=", var, buildDelimRegex(str, delim))
-    new_alias <- paste0(alias(var), "_", gsub("\\.", "_", str)) # Mongo doesn't allow aliases with dots
+    deriv$args[[3]] <- zfunc("~=", var, buildDelimRegex(str, delim)) # nolint
+    # Mongo doesn't allow aliases with dots
+    new_alias <- paste0(alias(var), "_", gsub("\\.", "_", str)) # nolint
     deriv$references <- list(name = str, alias = new_alias)
     return(deriv)
 }
@@ -289,7 +291,7 @@ deriveArray <- function(subvariables, name, selections, ...) {
 #' array definitions. Use [`addVariables`] to add these to your dataset.
 #' @examples
 #' \dontrun{
-#' ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix=", rearranged"))
+#' ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix = ", rearranged"))
 #' }
 #' @export
 flipArrays <- function(variables, suffix = ", flipped") {
@@ -318,7 +320,9 @@ flipArrays <- function(variables, suffix = ", flipped") {
             deriveArray(
                 subvariables = vars,
                 name = paste0(n, suffix),
-                subreferences = lapply(varnames[has_this_variable], function(x) list(name = x))
+                subreferences = lapply(
+                    varnames[has_this_variable], function(x) list(name = x)
+                )
             )
         })
     })

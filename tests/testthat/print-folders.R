@@ -33,6 +33,7 @@ expect_output(print(folders(ds), pretty = TRUE),
     fixed = TRUE
 )
 
+# nolint start
 expect_output(print(folders(ds)[["Group 1/Nested"]], pretty = TRUE),
     "/Group 1/Nested/
 ├── Gender
@@ -40,6 +41,7 @@ expect_output(print(folders(ds)[["Group 1/Nested"]], pretty = TRUE),
 └── mymrset",
     fixed = TRUE
 )
+# nolint end
 
 with(temp.option(crunch.delimiter = "|"), {
     expect_output(print(folders(ds), depth = 2),

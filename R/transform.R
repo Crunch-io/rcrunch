@@ -169,7 +169,7 @@ setMethod("showTransforms", "CategoricalVariable", function(x) {
 
     tab <- as.array(calcTransforms(
         tab,
-        insert_funcs =  makeInsertionFunctions(
+        insert_funcs = makeInsertionFunctions(
             categories(x),
             transforms(x),
             cats_in_array = names(tab)

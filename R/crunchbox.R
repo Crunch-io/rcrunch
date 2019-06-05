@@ -32,19 +32,23 @@
 #'
 #' \dontrun{
 #' # Creating a CrunchBox with three variables
-#' crunchBox(ds[c("var1", "var2", "var3")], title="New CrunchBox")
+#' crunchBox(ds[c("var1", "var2", "var3")], title = "New CrunchBox")
 #'
 #' # Creating a CrunchBox changing primary, secondary, and message brand colors
 #' crunchBox(ds[c("var1", "var2", "var3")],
-#'           title="Branded CrunchBox",
-#'           brand_colors = c("#ff0aa4", "#af17ff", "#260aff"))
+#'     title = "Branded CrunchBox",
+#'     brand_colors = c("#ff0aa4", "#af17ff", "#260aff")
+#' )
 #'
 #' # Creating a CrunchBox changing category-specific colors
 #' crunchBox(ds[c("var1", "var2", "var3")],
-#'           title="CrunchBox with category colors",
-#'           category_color_lookup = list("agree" = "#ff0aa4",
-#'                                        "disagree" = "#af17ff",
-#'                                        "don't know" = "#260aff"))
+#'     title = "CrunchBox with category colors",
+#'     category_color_lookup = list(
+#'         "agree" = "#ff0aa4",
+#'         "disagree" = "#af17ff",
+#'         "don't know" = "#260aff"
+#'     )
+#' )
 #' }
 #'
 #' @seealso [`preCrunchBoxCheck()`] to provide guidance on what you're including in the
@@ -82,7 +86,7 @@ crunchBox <- function(dataset,
     nfilt <- length(filters)
     if (boxTooBig(nvars, nfilt)) {
         halt(
-            nvars, pluralize(" variable", nvars), 
+            nvars, pluralize(" variable", nvars),
             " and ", nfilt, pluralize(" filter", nfilt),
             " results in too many cubes to fit in the box. ",
             "Please try again with fewer of either."
@@ -95,7 +99,8 @@ crunchBox <- function(dataset,
         weight = weight,
         ...
     )
-    ## Add "where" after so that it no-ops if variablesFilter returns NULL (i.e. no filter)
+    ## Add "where" after so that it no-ops if variablesFilter returns
+    ## NULL (i.e. no filter)
     payload$where <- variablesFilter(dataset)
 
     ## Add colors if they exist to the payload
@@ -215,7 +220,9 @@ preCrunchBoxCheck <- function(dataset) {
     ## TODO: add checking for category color specifications?
     num_cats <- vapply(vm, function(x) {
         cats <- x$categories
-        if (is.null(cats)) return(0)
+        if (is.null(cats)) {
+            return(0)
+        }
         ## We care only about non-missing categories
         return(sum(vapply(cats, function(ctg) !isTRUE(ctg$missing), logical(1))))
     }, numeric(1))
@@ -238,7 +245,9 @@ preCrunchBoxCheck <- function(dataset) {
     ## Check threshold: 40
     longest_cat <- vapply(vm, function(x) {
         cats <- x$categories
-        if (is.null(cats)) return("")
+        if (is.null(cats)) {
+            return("")
+        }
         catnames <- vapply(cats, function(ctg) ctg$name, character(1))
         return(catnames[which.max(nchar(catnames))])
     }, character(1))
@@ -277,7 +286,9 @@ preCrunchBoxCheck <- function(dataset) {
 
     longest_subvar <- vapply(vm, function(x) {
         cats <- x$subreferences
-        if (is.null(cats)) return("")
+        if (is.null(cats)) {
+            return("")
+        }
         catnames <- vapply(cats, function(ctg) ctg$name, character(1))
         return(catnames[which.max(nchar(catnames))])
     }, character(1))
@@ -324,7 +335,7 @@ demonstrativeCount <- function(n, noun = "variable") {
 #' @examples
 #' \dontrun{
 #' box <- crunchBox(ds)
-#' embedCrunchBox(box, logo="//myco.example/img/logo_200px.png")
+#' embedCrunchBox(box, logo = "//myco.example/img/logo_200px.png")
 #' }
 #' @export
 embedCrunchBox <- function(box, title = NULL, logo = NULL, ...) {

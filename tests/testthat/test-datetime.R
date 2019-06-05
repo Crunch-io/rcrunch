@@ -154,7 +154,10 @@ with_mock_crunch({
         )
         expect_error(
             resolution(ds$starttime) <- "invalid_rollup",
-            paste0(dQuote("resolution"), " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms")
+            paste0(
+                dQuote("resolution"),
+                " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms"
+            )
         )
         expect_no_request(resolution(ds$starttime) <- "D")
     })
@@ -174,7 +177,10 @@ with_mock_crunch({
         )
         expect_error(
             rollupResolution(ds$starttime) <- "invalid_rollup",
-            paste0(dQuote("resolution"), " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms")
+            paste0(
+                dQuote("resolution"),
+                " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms"
+            )
         )
     })
 })

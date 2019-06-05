@@ -32,9 +32,13 @@ with_mock_crunch({
     })
 
     test_that("Validation on categorical update", {
+        cats <- c("Male", "Other", "Prefer not to say", "Female")
         expect_error(
-            ds$gender[is.na(ds$birthyr)] <- as.factor(c("Male", "Other", "Prefer not to say", "Female")),
-            "Input values Other and Prefer not to say are not present in the category names of variable"
+            ds$gender[is.na(ds$birthyr)] <- as.factor(cats),
+            paste0(
+                "Input values Other and Prefer not to say are not present in ",
+                "the category names of variable"
+            )
         )
         expect_error(
             ds$gender[is.na(ds$birthyr)] <- 3,

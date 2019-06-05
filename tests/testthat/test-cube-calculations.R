@@ -41,8 +41,8 @@ test_that("margin table returns a cube-calculation", {
             "           I never mess with Texas  I don't mind pickles on my burger ",
             "                          7865.977                          12669.603 ",
             sep = "\n"
-            ),
-    fixed = TRUE
+        ),
+        fixed = TRUE
     )
 })
 
@@ -105,4 +105,3 @@ test_that("as.array method", {
     expect_null(attr(arr, "dims"))
     expect_is(as.array(prop), "matrix")
 })
-

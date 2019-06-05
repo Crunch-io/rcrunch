@@ -59,7 +59,7 @@ with_mock_crunch({
     test_that("Filter catalog extract", {
         expect_is(f, "CrunchFilter")
         expect_identical(f, filters(ds)[[1]])
-        expect_identical(f, filters(ds)$`Occasional Political Interest`)
+        expect_identical(f, filters(ds)$`Occasional Political Interest`) # nolint
     })
 
     test_that("Filter entity is.public", {
@@ -173,7 +173,11 @@ with_mock_crunch({
         expect_is(f, "CrunchFilter")
         expect_prints(
             f,
-            'starttime %in% c("2016-04-06", "2016-04-15", "2016-04-25", "2016-05-06", "2016-05-13", "2016-05-27", "2016-06-06", "2016-06-14", "2016-06-29") & gender %in% "Male"'
+            paste0(
+                'starttime %in% c("2016-04-06", "2016-04-15", "2016-04-25", ',
+                '"2016-05-06", "2016-05-13", "2016-05-27", "2016-06-06", ',
+                '"2016-06-14", "2016-06-29") & gender %in% "Male"'
+            )
         )
     })
 })

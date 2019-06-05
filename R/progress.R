@@ -38,7 +38,8 @@ pollProgress <- function(progress_url, wait = .5) {
     close(pb)
 
     if (status < 0) {
-        msg <- prog$message %||% "There was an error on the server. Please contact support@crunch.io"
+        email <- "There was an error on the server. Please contact support@crunch.io"
+        msg <- prog$message %||% email
         halt(msg)
     } else if (status != 100) {
         halt(

@@ -3,17 +3,23 @@ context("Adding subvariables")
 with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Adding an existing var to an array", {
-        expect_PATCH(addSubvariable(ds$mymrset, ds$gender),
-            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/")
+        expect_PATCH(
+            addSubvariable(ds$mymrset, ds$gender),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/"
+        )
     })
     test_that("Adding a VarDef as a subvar to an array", {
         vd <- VariableDefinition(factor("1.0"), name = "doggy daycare")
-        expect_POST(addSubvariable(ds$mymrset, vd),
-            "https://app.crunch.io/api/datasets/1/variables/")
+        expect_POST(
+            addSubvariable(ds$mymrset, vd),
+            "https://app.crunch.io/api/datasets/1/variables/"
+        )
     })
     test_that("Can't add subvariables to a non-array", {
         expect_error(addSubvariable(ds$birthyr, ds$gender),
-            "is.Array(variable) is not TRUE", fixed=TRUE)
+            "is.Array(variable) is not TRUE",
+            fixed = TRUE
+        )
     })
 })
 

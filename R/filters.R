@@ -30,7 +30,8 @@ setMethod("[[", c("FilterCatalog", "numeric"), function(x, i, ...) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"),
+setMethod(
+    "[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (i %in% names(x)) {
@@ -89,7 +90,8 @@ newFilter <- function(name, expression, catalog = NULL, ...) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
+setMethod(
+    "[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
     function(x, i, j, value) {
         stopifnot(length(i) == 1)
         if (i %in% seq_along(urls(x))) {
@@ -106,7 +108,8 @@ setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
+setMethod(
+    "[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
     function(x, i, j, value) {
         if (i %in% names(x)) {
             ## Assume server update of the entity already happened in a
@@ -122,7 +125,8 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
+setMethod(
+    "[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
     function(x, i, j, value) {
         if (i %in% seq_len(length(x))) {
             ## See above.

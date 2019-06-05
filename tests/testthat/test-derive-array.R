@@ -12,7 +12,7 @@ with_mock_crunch({
             '{"derivation":{"function":"select_categories","args":',
             '[{"function":"array","args":[{"function":"select","args":',
             '[{"map":{"1":{"variable":"https://app.crunch.io/api/datasets',
-            '/1/variables/gender/"}}},{"value":["1"]}]}]},{"value":',
+            '/1/variables/gender/"}}},{"value":["1"]}]}]},{"value":', # nolint
             '["Female"]}]},"name":"derivedMR","alias":"derived_mr"}'
         )
     })
@@ -50,7 +50,10 @@ with_test_authentication({
         expect_identical(as.vector(ds$derivedarray[[1]]), q1.values)
     })
 
-    ds$derivedmr <- deriveArray(list(ds$q1, ds$petloc$petloc_home), selections = "Dog", name = "Derived pets MR") # cat dog has id 2
+    ds$derivedmr <- deriveArray(
+        list(ds$q1, ds$petloc$petloc_home),
+        selections = "Dog", name = "Derived pets MR"
+    ) # cat dog has id 2
     test_that("deriveArray can also derive MRs", {
         expect_true(is.MR(ds$derivedmr))
         expect_identical(names(subvariables(ds$derivedmr)), c("Pet", "Home"))
@@ -361,5 +364,6 @@ with_test_authentication({
     #         c(15, 6, 9, 3))
     # })
 
-    ## TODO: more things (filter entities, drop rows, etc., edit values of base variables; edit values of derived array?)
+    ## TODO: more things (filter entities, drop rows, etc., edit values of base
+    ## variables; edit values of derived array?)
 })

@@ -106,29 +106,34 @@ with_mock_crunch({
         expect_PATCH(
             is.archived(datcat[1]) <- TRUE,
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/":{"archived":true}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/3/":{"archived":true}}}'
         )
         expect_PATCH(
             archive(datcat[c(2, 5)]),
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/":{"archived":true}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/1/":{"archived":true}}}'
         )
     })
     test_that("is.published setter", {
         expect_PATCH(
             is.published(datcat[c(1, 3)]) <- TRUE,
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/":{"is_published":true}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/3/":{"is_published":true}}}'
         )
         expect_PATCH(
             publish(datcat[c(1, 3)]),
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/3/":{"is_published":true}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/3/":{"is_published":true}}}'
         )
         expect_PATCH(
             is.draft(datcat) <- TRUE,
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/2/":{"is_published":false},',
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/2/":{"is_published":false},',
             '"https://app.crunch.io/api/datasets/streaming-no-msg/":{"is_published":false},',
             '"https://app.crunch.io/api/datasets/1streaming/":{"is_published":false},',
             '"https://app.crunch.io/api/datasets/1/":{"is_published":false}}}'

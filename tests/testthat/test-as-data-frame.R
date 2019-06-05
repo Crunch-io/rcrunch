@@ -113,15 +113,17 @@ with_mock_crunch({
     })
 
     test_that("as.data.frame(force = TRUE) generates a POST", {
-
-        expect_POST(as.data.frame(ds, force = TRUE, include.hidden = FALSE),
-            'https://app.crunch.io/api/datasets/1/export/csv/',
-            '{"filter":null,"options":{"use_category_ids":true}}')
+        expect_POST(
+            as.data.frame(ds, force = TRUE, include.hidden = FALSE),
+            "https://app.crunch.io/api/datasets/1/export/csv/",
+            '{"filter":null,"options":{"use_category_ids":true}}'
+        )
     })
     csv_df <- read.csv("dataset-fixtures/test_ds.csv", stringsAsFactors = FALSE)
     test_that("csvToDataFrame produces the correct data frame", {
         expected <- readRDS("dataset-fixtures/test_ds.rds")
-        cdf <- as.data.frame(ds[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")])
+        vars <- c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")
+        cdf <- as.data.frame(ds[, vars])
         # test local CDF variables
         cdf$newvar <- expected$newvar <- c(1:24, NA)
         expect_identical(csvToDataFrame(csv_df, cdf), expected)
@@ -218,7 +220,7 @@ with_test_authentication({
     values(categories(ds$v4b)[1:2]) <- c(5, 3)
     test_that("as.vector on a Categorical", {
         expect_true(is.factor(as.vector(ds$v4b)))
-        expect_equivalent(as.vector(ds$v4b)[-(3:5)], df$v4[-(3:5)])
+        expect_equivalent(as.vector(ds$v4b)[-(3:5)], df$v4[-(3:5)]) # nolint
         expect_true(all(is.na(as.vector(ds$v4b)[3:5])))
     })
     test_that("as.vector with mode specified on Categorical", {
@@ -287,12 +289,14 @@ with_test_authentication({
         # should be revisited
         expect_warning(
             df <- as.data.frame(ds, force = TRUE),
-            "Variable hidden_var is hidden")
+            "Variable hidden_var is hidden"
+        )
         expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "vee six !", "hidden_var"))
 
         expect_warning(
             df <- as.data.frame(ds, force = TRUE, include.hidden = TRUE),
-            "Variable hidden_var is hidden")
+            "Variable hidden_var is hidden"
+        )
         expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "vee six !", "hidden_var"))
 
         expect_warning(

@@ -79,10 +79,10 @@ folderDelimiter <- function() getOption("crunch.delimiter", "/")
 
 parentFolderURL <- function(x) {
     if (is.variable(x) || inherits(x, "VariableFolder")) {
-        shojiURL(x, "catalogs", "folder", mustWork=FALSE)
+        shojiURL(x, "catalogs", "folder", mustWork = FALSE)
     } else {
         # A dataset or project
-        shojiURL(x, "catalogs", "project", mustWork=FALSE)
+        shojiURL(x, "catalogs", "project", mustWork = FALSE)
     }
 }
 
@@ -116,7 +116,8 @@ createFolder <- function(where, name, index, ...) {
 
 #' @rdname describe-entity
 #' @export
-setMethod("name<-", "ShojiFolder",
+setMethod(
+    "name<-", "ShojiFolder",
     function(x, value) setEntitySlot(x, "name", value)
 )
 
@@ -195,6 +196,6 @@ path <- function(x) {
 #     return(get(class(x))(crGET(names(tuple))))
 # })
 
-setMethod("personalFolder", "ShojiFolder", function (x) {
+setMethod("personalFolder", "ShojiFolder", function(x) {
     halt("Not implemented")
 })

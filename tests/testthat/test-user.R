@@ -55,7 +55,7 @@ with_mock_crunch({
             '"send_invite":true,"id_method":"pwhash",',
             '"account_permissions":{"alter_users":false,',
             '"create_datasets":false},"first_name":"Me",',
-            '"url_base":"/password/change/${token}/"}}'
+            '"url_base":"/password/change/${token}/"}}' # nolint
         )
     })
 

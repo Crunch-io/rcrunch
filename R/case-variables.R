@@ -36,20 +36,28 @@
 #' case variable when assigned into the Dataset.
 #' @examples
 #' \dontrun{
-#' makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")
-#' makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
-#'                             list(expression=ds$v2 == 2, name="case2")),
-#'                  name="new case")
+#' makeCaseVariable(case1 = ds$v1 == 1, case2 = ds$v2 == 2, name = "new case")
+#' makeCaseVariable(
+#'     cases = list(
+#'         list(expression = ds$v1 == 1, name = "case1"),
+#'         list(expression = ds$v2 == 2, name = "case2")
+#'     ),
+#'     name = "new case"
+#' )
 #'
 #' # different ways to specify else cases
-#' makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
-#'                             list(expression=ds$v2 == 2, name="case2"),
-#'                             list(expression="else", name="other")),
-#'                  name="new case")
-#' makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, other="else", name="new case")
+#' makeCaseVariable(
+#'     cases = list(
+#'         list(expression = ds$v1 == 1, name = "case1"),
+#'         list(expression = ds$v2 == 2, name = "case2"),
+#'         list(expression = "else", name = "other")
+#'     ),
+#'     name = "new case"
+#' )
+#' makeCaseVariable(case1 = ds$v1 == 1, case2 = ds$v2 == 2, other = "else", name = "new case")
 #'
 #' # the dataset can be specified with data=
-#' makeCaseVariable(case1=v1 == 1, case2=v2 == 2, data=ds, name="new case")
+#' makeCaseVariable(case1 = v1 == 1, case2 = v2 == 2, data = ds, name = "new case")
 #' }
 #' @export
 makeCaseVariable <- function(..., cases, data = NULL, name) {
@@ -256,7 +264,10 @@ fillIds <- function(cases) {
         halt("there are duplicate ids provided: ", serialPaste(all_ids))
     }
     if (any(all_ids > 32767L)) {
-        halt("id must be less than 32,768, this might be a result of too many cases being used.")
+        halt(
+            "id must be less than 32,768, this might be a result of too many ",
+            "cases being used."
+        )
     }
     if (any(all_ids < 1L)) {
         halt("id must not be less than 1")

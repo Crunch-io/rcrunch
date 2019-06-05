@@ -32,17 +32,24 @@
 #' appended to the end of the combinations.
 #' @examples
 #' \dontrun{
-#' ds$fav_pet2 <- combine(ds$fav_pet, name="Pets (combined)",
-#'     combinations=list(list(name="Mammals", categories=c("Cat", "Dog")),
-#'                       list(name="Reptiles", categories=c("Snake", "Lizard"))))
-#' ds$pets_owned2 <- combine(ds$allpets, name="Pets owned (collapsed)",
-#'     combinations=list(list(name="Mammals", responses=c("Cat", "Dog"))))
+#' ds$fav_pet2 <- combine(ds$fav_pet,
+#'     name = "Pets (combined)",
+#'     combinations = list(
+#'         list(name = "Mammals", categories = c("Cat", "Dog")),
+#'         list(name = "Reptiles", categories = c("Snake", "Lizard"))
+#'     )
+#' )
+#' ds$pets_owned2 <- combine(ds$allpets,
+#'     name = "Pets owned (collapsed)",
+#'     combinations = list(list(name = "Mammals", responses = c("Cat", "Dog")))
+#' )
 #' }
 #' @export
 #' @importFrom utils modifyList
 combine <- function(variable, combinations = list(), ...) {
     ## Validate inputs
-    if (!(type(variable) %in% c("categorical", "categorical_array", "multiple_response"))) {
+    valid_types <- c("categorical", "categorical_array", "multiple_response")
+    if (!(type(variable) %in% valid_types)) {
         halt(
             "Cannot combine ", dQuote(name(variable)), ": must be type ",
             "categorical, categorical_array, or multiple_response"

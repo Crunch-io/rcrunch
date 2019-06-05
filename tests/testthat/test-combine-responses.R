@@ -24,13 +24,13 @@ with_mock_crunch({
                     list(
                         name = "Extremes",
                         combined_ids = I(c(
-                            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/",
-                            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar3/"
+                            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/", # nolint
+                            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar3/" # nolint
                         ))
                     ),
                     list(
                         name = "Second",
-                        combined_ids = I(c("https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/"))
+                        combined_ids = I(c("https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/")) # nolint
                     )
                 ))
             )

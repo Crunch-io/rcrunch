@@ -88,8 +88,12 @@ with_mock_crunch({
             makeMRFromText(ds$var, "; "),
             "Must supply a name for the new variable"
         )
-        expect_error(makeMRFromText(ds$birthyr, name = "name"),
-            paste0(dQuote("ds$birthyr"), " is of class NumericVariable, it must be a Crunch TextVariable."),
+        expect_error(
+            makeMRFromText(ds$birthyr, name = "name"),
+            paste0(
+                dQuote("ds$birthyr"),
+                " is of class NumericVariable, it must be a Crunch TextVariable."
+            ),
             fixed = TRUE
         )
     })
@@ -133,7 +137,7 @@ with_mock_crunch({
                     )
                 ),
                 list(
-                    `function` = "~=",
+                    `function` = "~=", # nolint
                     args = list(
                         list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/"),
                         list(value = "^oak; |; oak; |; oak$|^oak$")
@@ -240,7 +244,10 @@ with_test_authentication({
             expect_true(is.CA(var))
         })
 
-        test_that("can make MultipleResponse from CategoricalArray by dichotomizing categories (and back by undichotomize)", {
+        test_that(paste0(
+            "can make MultipleResponse from CategoricalArray by dichotomizing ",
+            "categories (and back by undichotomize)"
+        ), {
             categories(var) <- dichotomize(categories(var), 1)
             var <- refresh(var) ## Refresh required if changing type by editing categories
             expect_true(is.Multiple(var))
@@ -287,7 +294,9 @@ with_test_authentication({
     whereas("makeMRFromText functions as expected", {
         ds <- newDataset(mrdf)
         v <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
-        ds$delim <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
+        ds$delim <- c(
+            "ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak"
+        )
         test_that("makeMRFromText creates a variable", {
             ds$mr_5 <- makeMRFromText(ds$delim, delim = "; ", name = "myMR")
             expect_true(is.derived(ds$mr_5))

@@ -40,12 +40,15 @@
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("mtcars")
-#' ds$cat_var <- cut(ds$mpg, breaks = c(10, 15, 20),
-#'     labels = c("small", "medium"), name = "Fuel efficiency")
+#' ds$cat_var <- cut(ds$mpg,
+#'     breaks = c(10, 15, 20),
+#'     labels = c("small", "medium"), name = "Fuel efficiency"
+#' )
 #' ds$age <- sample(1:100, 32)
 #' ds$age4 <- cut(df$age, c(0, 30, 45, 65, 200),
-#'            c("Youth", "Adult", "Middle-aged", "Elderly"),
-#'            name = "Age (4 category)")
+#'     c("Youth", "Adult", "Middle-aged", "Elderly"),
+#'     name = "Age (4 category)"
+#' )
 #' }
 NULL
 
@@ -85,7 +88,8 @@ setMethod("cut", "NumericVariable", function(x,
     if (anyDuplicated(breaks)) {
         halt(sQuote("breaks"), " must be unique")
     }
-    if (is.null(labels)) { # Autogenerate labels if not supplied
+    # Autogenerate labels if not supplied
+    if (is.null(labels)) {
         labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
         halt(

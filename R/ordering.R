@@ -48,7 +48,7 @@ setMethod("ordering<-", "VariableCatalog", function(x, value) {
             "You're seeing this message because you're still using the ",
             "ordering<- method, which is fine today, but it will be going ",
             "away in the future, so check out the new methods. ",
-            option="crunch.already.shown.folders.msg"
+            option = "crunch.already.shown.folders.msg"
         )
 
         ## Validate.
@@ -75,7 +75,10 @@ setMethod("ordering<-", "VariableCatalog", function(x, value) {
 #' @rdname ordering
 #' @export
 setMethod("ordering", "DatasetCatalog", function(x) {
-    .Deprecated(msg="dataset 'ordering' is deprecated. Use the dataset folder API instead. See 'vignette(\"projects\")'.")
+    .Deprecated(
+        msg = "dataset 'ordering' is deprecated. Use the dataset ",
+        "folder API instead. See 'vignette(\"projects\")'."
+    )
     out <- DatasetOrder(crGET(shojiURL(x, "orders", "order")))
     out@catalog_url <- self(x)
     return(out)
@@ -126,8 +129,12 @@ copyOrder <- function(source, target) {
     ord <- entities(ordering(source))
 
     # make url and alias maps
-    url_to_alias_source <- as.list(structure(aliases(allVariables(source)), .Names = urls(allVariables(source))))
-    alias_to_url_target <- as.list(structure(urls(allVariables(target)), .Names = aliases(allVariables(target))))
+    url_to_alias_source <- as.list(
+        structure(aliases(allVariables(source)), .Names = urls(allVariables(source)))
+    )
+    alias_to_url_target <- as.list(
+        structure(urls(allVariables(target)), .Names = aliases(allVariables(target)))
+    )
 
     new_ord <- lapply(ord, copyOrderGroup,
         source_map = url_to_alias_source,

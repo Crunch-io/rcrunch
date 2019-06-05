@@ -216,7 +216,7 @@ with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
 
     test_that("dimSums(~x+y, 1) == dimSums(~x)", {
-        bivariate_cube <- crtabs(~allpets + q1, data = ds)
+        bivariate_cube <- crtabs(~ allpets + q1, data = ds)
         univariate_allpets <- crtabs(~allpets, data = ds)
         univariate_q1 <- crtabs(~q1, data = ds)
         expect_equal(dimSums(bivariate_cube, 2)@dims, univariate_q1@dims)
@@ -225,32 +225,32 @@ with_test_authentication({
         expect_equal(dimSums(bivariate_cube, 1)@arrays, univariate_allpets@arrays)
 
 
-        trivariate_cube <- crtabs(~country + allpets + q1, data = ds)
+        trivariate_cube <- crtabs(~ country + allpets + q1, data = ds)
         expect_equal(
             dimSums(trivariate_cube, c(2, 3))@dims,
-            crtabs(~allpets + q1, data = ds)@dims
+            crtabs(~ allpets + q1, data = ds)@dims
         )
         expect_equal(
             dimSums(trivariate_cube, c(2, 3))@arrays,
-            crtabs(~allpets + q1, data = ds)@arrays
+            crtabs(~ allpets + q1, data = ds)@arrays
         )
 
         expect_equal(
             dimSums(trivariate_cube, c(1, 3))@dims,
-            crtabs(~country + q1, data = ds)@dims
+            crtabs(~ country + q1, data = ds)@dims
         )
         expect_equal(
             dimSums(trivariate_cube, c(1, 3))@arrays,
-            crtabs(~country + q1, data = ds)@arrays
+            crtabs(~ country + q1, data = ds)@arrays
         )
 
         expect_equal(
             dimSums(trivariate_cube, c(1, 2))@dims,
-            crtabs(~country + allpets, data = ds)@dims
+            crtabs(~ country + allpets, data = ds)@dims
         )
         expect_equal(
             dimSums(trivariate_cube, c(1, 2))@arrays,
-            crtabs(~country + allpets, data = ds)@arrays
+            crtabs(~ country + allpets, data = ds)@arrays
         )
 
         expect_equal(

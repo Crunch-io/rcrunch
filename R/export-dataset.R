@@ -33,11 +33,10 @@
 #'
 #' @return Invisibly, `file`.
 #' @export
-exportDataset <- function (dataset, file, format=c("csv", "spss"),
-                           categorical=c("name", "id"), na=NULL,
-                           varlabel=c("name", "description"),
-                           include.hidden = FALSE, ...) {
-
+exportDataset <- function(dataset, file, format = c("csv", "spss"),
+                          categorical = c("name", "id"), na = NULL,
+                          varlabel = c("name", "description"),
+                          include.hidden = FALSE, ...) {
     exporters <- crGET(shojiURL(dataset, "views", "export"))
     format <- match.arg(format, choices = names(exporters))
     export_url <- exporters[[format]]
@@ -66,16 +65,17 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
     invisible(file)
 }
 
-variablesFilter <- function (dataset, include.hidden = FALSE) {
+variablesFilter <- function(dataset, include.hidden = FALSE) {
     ## Check to see if we have a subset of variables in `dataset`.
     ## If so, return a Crunch expression to filter them
     allvars <- allVariables(dataset)
     ## TODO: fix Variable catalog so that it doesn't pop off its "relative"
     ## query from self. Adding it here so that we hit cache.
-    dsvars <- ShojiCatalog(crGET(self(allvars), query=list(relative="on")))
+    dsvars <- ShojiCatalog(crGET(self(allvars), query = list(relative = "on")))
     if (include.hidden || (length(allvars) != length(dsvars))) {
-        v <- structure(lapply(urls(allvars), function (x) list(variable=x)),
-            .Names=ids(allvars))
+        v <- structure(lapply(urls(allvars), function(x) list(variable = x)),
+            .Names = ids(allvars)
+        )
         ## Make sure that duplicate variables haven't been referenced (surely
         ## by accident).
         ## TODO: move this to a ShojiCatalog subset method?
@@ -95,4 +95,6 @@ variablesFilter <- function (dataset, include.hidden = FALSE) {
 
 #' @rdname exportDataset
 #' @export
-setMethod("write.csv", "CrunchDataset", function(x, ...) exportDataset(x, ..., format = "csv"))
+setMethod("write.csv", "CrunchDataset", function(x, ...) {
+    exportDataset(x, ..., format = "csv")
+})

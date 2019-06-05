@@ -50,7 +50,9 @@
             missings <- is.na(x$column)
             if (any(missings)) {
                 x$column <- as.list(x$column)
-                x$column[missings] <- rep(list(.no.data.value(type(variable))), sum(missings))
+                x$column[missings] <- rep(
+                    list(.no.data.value(type(variable))), sum(missings)
+                )
             }
         }
         return(x)
@@ -88,7 +90,7 @@ setMethod(
 
 .var.updater <- function(x, i, j, value) {
     if (missing(i)) i <- NULL
-    out <- .updateVariable(x, value, filter = .dispatchFilter(i))
+    .updateVariable(x, value, filter = .dispatchFilter(i))
     return(x)
 }
 

@@ -33,7 +33,8 @@ with_mock_crunch({
         )
     })
     test_that("append doesn't DELETE the pk if upsert=TRUE", {
-        expect_POST(appendDataset(ds2, ds1, upsert=TRUE),
+        expect_POST(
+            appendDataset(ds2, ds1, upsert = TRUE),
             "https://app.crunch.io/api/datasets/3/batches/",
             '{"element":"shoji:entity","body":{"dataset":',
             '"https://app.crunch.io/api/datasets/1/"}}'

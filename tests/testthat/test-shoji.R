@@ -48,13 +48,15 @@ test_that("ShojiCatalog", {
         "Subscript out of bounds: got 3 logicals, need 2"
     )
     expect_identical(sho[TRUE], sho)
-    expect_identical(sho["/a"], sho[1])
-    expect_error(sho[c("/a", "c")], "Undefined elements selected: c")
+    expect_identical(sho["/a"], sho[1]) # nolint
+    expect_error(sho[c("/a", "c")], "Undefined elements selected: c") # nolint
 })
 
 with_mock_crunch({
     full.urls <- DatasetCatalog(crGET("https://app.crunch.io/api/datasets/"))
-    rel.urls <- DatasetCatalog(crGET("https://app.crunch.io/api/datasets/", query = list(relative = "on")))
+    rel.urls <- DatasetCatalog(
+        crGET("https://app.crunch.io/api/datasets/", query = list(relative = "on"))
+    )
     test_that("urls() method returns absolute URLs", {
         expect_identical(urls(full.urls), urls(rel.urls))
     })

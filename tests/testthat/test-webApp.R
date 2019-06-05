@@ -11,11 +11,19 @@ with_mock_crunch({
             )
         })
         expect_identical(
-            datasetReference("https://app.crunch.io/dataset/b6c2325a8de9438ebab5d9a42d376b90/browse/eyJhcHBTdGF0ZVN0b3JlIjp0cnVlLCJhbmFseXplIjp7fSwidmFyaWFibGVzTmF2aWdhdG9yIjp7Iml0ZW0iOiIvZWU2NTI0YWFjMzFiNDkyZjk4M2ZiYzM0MGJjODYzYzkvIn19"),
+            datasetReference(paste0(
+                "https://app.crunch.io/dataset/b6c2325a8de9438ebab5d9a42d376b90/",
+                "browse/eyJhcHBTdGF0ZVN0b3JlIjp0cnVlLCJhbmFseXplIjp7fSwidmFyaWFib",
+                "GVzTmF2aWdhdG9yIjp7Iml0ZW0iOiIvZWU2NTI0YWFjMzFiNDkyZjk4M2ZiYzM0M",
+                "GJjODYzYzkvIn19"
+            )),
             "https://app.crunch.io/api/datasets/b6c2325a8de9438ebab5d9a42d376b90/"
         )
         expect_identical(
-            datasetReference("https://app.crunch.io/dataset/3f57d1924a914176b24969bc6cc9059d?variableId=000194"),
+            datasetReference(paste0(
+                "https://app.crunch.io/dataset/3f57d1924a914176b24969bc6cc9059d?",
+                "variableId=000194"
+            )),
             "https://app.crunch.io/api/datasets/3f57d1924a914176b24969bc6cc9059d/"
         )
         expect_null(datasetReference("Not actually a URL"))
@@ -24,10 +32,16 @@ with_mock_crunch({
     test_that("Variable URL", {
         expect_identical(
             APIToWebURL(ds$gender),
-            "https://app.crunch.io/dataset/1/browse?variableId=66ae9881e3524f7db84970d556c34552"
+            paste0(
+                "https://app.crunch.io/dataset/1/browse?variableId=66ae9881e3524",
+                "f7db84970d556c34552"
+            )
         )
     })
     test_that("webApp errors correctly", {
-        expect_error(webApp(mtcars), "Web URL is not available for objects of class data.frame")
+        expect_error(
+            webApp(mtcars),
+            "Web URL is not available for objects of class data.frame"
+        )
     })
 })

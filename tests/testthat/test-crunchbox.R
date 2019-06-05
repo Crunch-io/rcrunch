@@ -9,7 +9,9 @@ test_that("Box size limit check", {
 
 test_that("Embed URL", {
     expect_identical(
-        boxdataToWidgetURL("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"),
+        boxdataToWidgetURL(
+            "http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"
+        ),
         "//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/"
     )
     expect_identical(
@@ -21,31 +23,50 @@ test_that("Embed URL", {
 test_that("Iframe code (prints and returns invisibly)", {
     expect_output(
         expect_identical(
-            embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"),
-            '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>'
+            embedCrunchBox(
+                "http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"
+            ),
+            paste0(
+                '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c',
+                '1cbd3800e181188508/" width="600" height="480" style="border: ',
+                '1px solid #d3d3d3;"></iframe>'
+            )
         ),
-        '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>',
+        paste0(
+            '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/"',
+            ' width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>'
+        ),
         fixed = TRUE
     )
 })
 
-iframe_with_logo <- '<figure style="text-align: left;" class="content-list-component image">
-    <img src="//s.crunch.io/public/branding/example.gif" style="height:auto; width:200px; margin-left:-4px"></img>
-    <iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>
+iframe_with_logo <- paste0(
+    '<figure style="text-align: left;" class="content-list-component image">
+    <img src="//s.crunch.io/public/branding/example.gif" style="height:auto; ',
+    'width:200px; margin-left:-4px"></img>
+    <iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/"',
+    ' width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>
 </figure>'
+)
 
-iframe_with_title <- '<figure style="text-align: left;" class="content-list-component image">
+iframe_with_title <- paste0(
+    '<figure style="text-align: left;" class="content-list-component image">
     <div style="padding-bottom: 12px">
         <span style="font-size: 18px; color: #444444; line-height: 1;">Example title here</span>
     </div>
-    <iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>
+    <iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/"',
+    ' width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>
 </figure>'
+)
 
 
 test_that("Iframe code with logo", {
     expect_output(
         expect_identical(
-            embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json", logo = "//s.crunch.io/public/branding/example.gif"),
+            embedCrunchBox(
+                "http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json",
+                logo = "//s.crunch.io/public/branding/example.gif"
+            ),
             iframe_with_logo
         ),
         iframe_with_logo,
@@ -56,7 +77,10 @@ test_that("Iframe code with logo", {
 test_that("Iframe code with title", {
     expect_output(
         expect_identical(
-            embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json", title = "Example title here"),
+            embedCrunchBox(
+                "http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json",
+                title = "Example title here"
+            ),
             iframe_with_title
         ),
         iframe_with_title,
@@ -95,7 +119,10 @@ with_mock_crunch({
     test_that("preCrunchBoxCheck does not error", {
         expect_prints(
             preCrunchBoxCheck(ds),
-            "We recommend using only categorical and multiple_response variables. These 4 variables have an unsupported type"
+            paste0(
+                "We recommend using only categorical and multiple_response variables. ",
+                "These 4 variables have an unsupported type"
+            )
         )
     })
 
@@ -200,7 +227,9 @@ with_mock_crunch({
         )
         expect_POST(
             crunchBox(ds,
-                brand_colors = list(secondary = "#af17ff", message = "#ff0aa4", primary = "#260aff"),
+                brand_colors = list(
+                    secondary = "#af17ff", message = "#ff0aa4", primary = "#260aff"
+                ),
                 filters = NULL
             ),
             "https://app.crunch.io/api/datasets/1/boxdata/",
@@ -314,13 +343,17 @@ with_test_authentication({
         name = "Excessively long variable name to trigger the check for length",
         selections = "B"
     )
-    names(subvariables(ds$mr))[1] <- "Another really really long name to check for the same for subvariables"
+    names(subvariables(ds$mr))[1] <-
+        "Another really really long name to check for the same for subvariables"
     names(categories(ds$cat))[2] <- "Extra long category name because we check those too"
 
     test_that("check box catches the various cases", {
         expect_prints(
             preCrunchBoxCheck(ds),
-            "Shorter variable names will display in the menus better. This variable has a name longer than 40 characters"
+            paste0(
+                "Shorter variable names will display in the menus better. ",
+                "This variable has a name longer than 40 characters"
+            )
         )
     })
 

@@ -44,7 +44,7 @@ setMethod("datasetReference", "ANY", function(x) NULL)
 setGeneric("APIToWebURL", function(x) standardGeneric("APIToWebURL"))
 
 setMethod("APIToWebURL", "CrunchVariable", function(x) {
-    ds_url <- gsub("/api/datasets", "/dataset", datasetReference(x))
+    ds_url <- gsub("/api/datasets", "/dataset", datasetReference(x)) # nolint
     return(paste0(ds_url, "browse?variableId=", id(x)))
 })
 

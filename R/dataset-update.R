@@ -56,36 +56,42 @@
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchVariable"),
+setMethod(
+    "[[<-", c("CrunchDataset", "character", "missing", "CrunchVariable"),
     .updateVariableMetadata
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchVariable"),
+setMethod(
+    "[[<-", c("CrunchDataset", "ANY", "missing", "CrunchVariable"),
     function(x, i, value) .updateVariableMetadata(x, names(x)[i], value)
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("CrunchDataset", "character", "missing", "ANY"),
+setMethod(
+    "[[<-", c("CrunchDataset", "character", "missing", "ANY"),
     .addVariableSetter
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"),
+setMethod(
+    "[[<-", c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"),
     function(x, i, value) {
         halt("Cannot currently derive a logical variable")
     }
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("CrunchDataset", "ANY"),
+setMethod(
+    "[[<-", c("CrunchDataset", "ANY"),
     function(x, i, value) {
         halt("Only character (name) indexing supported for [[<-")
     }
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("CrunchDataset", "character", "missing", "NULL"),
+setMethod(
+    "[[<-", c("CrunchDataset", "character", "missing", "NULL"),
     function(x, i, value) {
         allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
         if (!(i %in% allnames)) {
@@ -97,7 +103,8 @@ setMethod("[[<-", c("CrunchDataset", "character", "missing", "NULL"),
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "NULL"),
+setMethod(
+    "[[<-", c("CrunchDataset", "ANY", "missing", "NULL"),
     function(x, i, value) deleteVariables(x, names(x)[i])
 )
 #' @rdname crunch-extract
@@ -109,7 +116,8 @@ setMethod("$<-", c("CrunchDataset"), function(x, name, value) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchGeography"),
+setMethod(
+    "[[<-", c("CrunchDataset", "character", "missing", "CrunchGeography"),
     function(x, i, value) {
         geo(x[[i]]) <- value
         return(x)
@@ -117,7 +125,8 @@ setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchGeography"),
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
+setMethod(
+    "[[<-", c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
     function(x, i, value) {
         geo(x[[i]]) <- value
         return(x)
@@ -126,7 +135,8 @@ setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
+setMethod(
+    "[<-", c("CrunchDataset", "ANY", "missing", "list"),
     function(x, i, j, value) {
         ## For lapplying over variables to edit metadata
         stopifnot(
@@ -142,7 +152,8 @@ setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[<-", c("CrunchDataset", "ANY", "missing", "CrunchDataset"),
+setMethod(
+    "[<-", c("CrunchDataset", "ANY", "missing", "CrunchDataset"),
     function(x, i, j, value) {
         ## This is where you do e.g. names(variables(ds[subset])) <-
         ## So assume the updates have already happened.
@@ -154,7 +165,8 @@ setMethod("[<-", c("CrunchDataset", "ANY", "missing", "CrunchDataset"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
+setMethod(
+    "[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
     function(x, i, j, value) {
         if (j %in% names(x)) {
             return(.updateValues(x, j, value, filter = i))

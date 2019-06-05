@@ -42,7 +42,8 @@ with_mock_crunch({
         expect_PATCH(
             derivation(birthyrPlus) <- ds$birthyr + 1,
             "https://app.crunch.io/api/datasets/1/variables/birthyrPlus/",
-            '{"derivation":{"function":"+","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},{"value":1}]}}'
+            '{"derivation":{"function":"+","args":[{"variable":"https://app.',
+            'crunch.io/api/datasets/1/variables/birthyr/"},{"value":1}]}}'
         )
     })
 

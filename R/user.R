@@ -49,7 +49,7 @@ invite <- function(email, name = NULL, notify = TRUE, id_method = "pwhash",
         payload$first_name <- name
     }
     if (id_method == "pwhash") {
-        payload$url_base <- "/password/change/${token}/"
+        payload$url_base <- "/password/change/${token}/" # nolint
     }
 
     url <- shojiURL(getAccount(), "catalogs", "users")

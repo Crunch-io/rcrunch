@@ -29,7 +29,8 @@ setMethod("[[", c("TeamCatalog", "numeric"), function(x, i, ...) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("TeamCatalog", "character", "missing", "list"),
+setMethod(
+    "[[<-", c("TeamCatalog", "character", "missing", "list"),
     function(x, i, j, value) {
         if (i %in% names(x)) {
             ## TODO: update team attributes
@@ -49,7 +50,8 @@ setMethod("[[<-", c("TeamCatalog", "character", "missing", "list"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
+setMethod(
+    "[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
     function(x, i, j, value) {
         ## TODO: something
         ## For now, assuming that modifications have already been persisted

@@ -7,49 +7,53 @@ setMethod("[", c("CrunchDataset", "ANY"), function(x, i, ..., drop = FALSE) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[", c("CrunchDataset", "logical", "missing"), function(x, i, j, ..., drop = FALSE) {
-    ## See [.data.frame: this is similar to how it distinguishes x[i] from x[i,]
-    ## Ignoring the possibility of x[i, drop=TRUE]. x[i, drop=TRUE] should be x[[i]]
-    if (nargs() == 2L) {
-        ## x[i]. So subset the variables, list-wise
-        x@variables <- variables(x)[i]
+setMethod(
+    "[", c("CrunchDataset", "logical", "missing"),
+    function(x, i, j, ..., drop = FALSE) {
+        ## See [.data.frame: this is similar to how it distinguishes x[i]
+        ## from x[i,] Ignoring the possibility of x[i, drop=TRUE].
+        ## x[i, drop=TRUE] should be x[[i]]
+        if (nargs() == 2L) {
+            ## x[i]. So subset the variables, list-wise
+            x@variables <- variables(x)[i]
+            return(x)
+        }
+        ## else: x[i,]
+        ## TODO: generalize the logic and do similar for "numeric" method
+        if (length(i)) {
+            if (length(i) == 1) {
+                if (isTRUE(i)) {
+                    ## Keep all rows, so no filter
+                    return(x)
+                } else {
+                    ## FALSE or NA. Reject it?
+                    halt("Invalid logical filter: ", i)
+                }
+            } else if (length(i) == nrow(x)) {
+                if (all(i)) {
+                    ## Keep all rows, so no filter
+                    return(x)
+                }
+                i <- CrunchLogicalExpr(
+                    dataset_url = datasetReference(x),
+                    expression = .dispatchFilter(i)
+                )
+                return(x[i, ])
+            } else {
+                halt(
+                    "Logical filter vector is length ", length(i),
+                    ", but dataset has ", nrow(x), " rows"
+                )
+            }
+        } else {
+            ## If you reference a variable in a dataset that doesn't exist, you
+            ## get NULL, and e.g. NULL == something becomes logical(0).
+            ## That does awful things if you try to send to the server. So don't.
+            halt("Invalid expression: ", deparseAndFlatten(match.call()$i))
+        }
         return(x)
     }
-    ## else: x[i,]
-    ## TODO: generalize the logic and do similar for "numeric" method
-    if (length(i)) {
-        if (length(i) == 1) {
-            if (isTRUE(i)) {
-                ## Keep all rows, so no filter
-                return(x)
-            } else {
-                ## FALSE or NA. Reject it?
-                halt("Invalid logical filter: ", i)
-            }
-        } else if (length(i) == nrow(x)) {
-            if (all(i)) {
-                ## Keep all rows, so no filter
-                return(x)
-            }
-            i <- CrunchLogicalExpr(
-                dataset_url = datasetReference(x),
-                expression = .dispatchFilter(i)
-            )
-            return(x[i, ])
-        } else {
-            halt(
-                "Logical filter vector is length ", length(i),
-                ", but dataset has ", nrow(x), " rows"
-            )
-        }
-    } else {
-        ## If you reference a variable in a dataset that doesn't exist, you
-        ## get NULL, and e.g. NULL == something becomes logical(0).
-        ## That does awful things if you try to send to the server. So don't.
-        halt("Invalid expression: ", deparseAndFlatten(match.call()$i))
-    }
-    return(x)
-})
+)
 #' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALSE) {
@@ -79,9 +83,12 @@ setMethod("[", c("CrunchDataset", "VariableOrder"), function(x, i, ..., drop = F
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[", c("CrunchDataset", "missing", "ANY"), function(x, i, j, ..., drop = FALSE) {
-    x[j]
-})
+setMethod(
+    "[", c("CrunchDataset", "missing", "ANY"),
+    function(x, i, j, ..., drop = FALSE) {
+        x[j]
+    }
+)
 
 .updateActiveFilter <- function(x, i, j, ..., drop = FALSE) {
     ## x[i] where i is CrunchLogicalExpr and x may already have an active filter
@@ -95,7 +102,10 @@ setMethod("[", c("CrunchDataset", "missing", "ANY"), function(x, i, j, ..., drop
             i <- f & i
         } else {
             callstring <- deparseAndFlatten(tail(sys.calls(), 1)[[1]])
-            halt("In ", callstring, ", object and subsetting expression have different filter expressions")
+            halt(
+                "In ", callstring, ", object and subsetting expression have ",
+                "different filter expressions"
+            )
         }
     }
     activeFilter(x) <- i
@@ -108,11 +118,14 @@ setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "missing"), .updateActive
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function(x, i, j, ..., drop = FALSE) {
-    ## Do the filtering of rows, then cols
-    x <- x[i, ]
-    return(x[j])
-})
+setMethod(
+    "[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"),
+    function(x, i, j, ..., drop = FALSE) {
+        ## Do the filtering of rows, then cols
+        x <- x[i, ]
+        return(x[j])
+    }
+)
 
 #' @rdname crunch-extract
 #' @export

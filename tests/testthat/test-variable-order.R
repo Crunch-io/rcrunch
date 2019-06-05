@@ -424,7 +424,10 @@ with_mock_crunch({
             fixed = TRUE
         )
     })
-    test_that("Printing a single group doesn't fail (though it probably should do better than show URLs)", {
+    test_that(paste0(
+        "Printing a single group doesn't fail (though it probably should do ",
+        "better than show URLs)"
+    ), {
         expect_prints(nested.ord[[2]],
             paste("[+] Group 2",
                 "    https://app.crunch.io/api/datasets/1/variables/starttime/",
@@ -805,7 +808,7 @@ with_test_authentication({
         bad.vg <- starting.vg
         entities(bad.vg[[1]]) <- c(
             entities(bad.vg[[1]])[-2],
-            "/not/a/variable"
+            "/not/a/variable" # nolint
         )
         expect_error(
             ordering(ds) <- bad.vg,

@@ -30,11 +30,11 @@ NULL
 #' @examples
 #' var1 <- rnorm(10)
 #' toVariable(var1)
-#' toVariable(var1, name="Random", description="Generated in R")
+#' toVariable(var1, name = "Random", description = "Generated in R")
 #' \dontrun{
-#' ds$random <- toVariable(var1, name="Random")
+#' ds$random <- toVariable(var1, name = "Random")
 #' # Or, this way:
-#' ds <- addVariables(ds, toVariable(var1, name="Random"))
+#' ds <- addVariables(ds, toVariable(var1, name = "Random"))
 #' }
 #' @export
 setGeneric("toVariable", function(x, ...) standardGeneric("toVariable"))
@@ -141,7 +141,7 @@ haven_labelled_spss_func <- function(x, ...) {
     # convert to factor quickly (the recommended workflow for labelled objects
     # from haven, since there are few methods for labelled objects)
     x_factor <- as.factor(x)
-    nlevels <- length(levels(x_factor))
+
     categories <- categoriesFromLevels(levels(x_factor))
     # grab the user missing levels
     user_missings <- levels(droplevels(x_factor[is.na(x)]))
@@ -192,7 +192,6 @@ as.categorical.values <- function(x) {
 #' @examples
 #'
 #' categoriesFromLevels(levels(iris$Species))
-#'
 categoriesFromLevels <- function(level_vect) {
     if (anyDuplicated(level_vect)) {
         warning(

@@ -1,8 +1,5 @@
 language: r
 cache: packages
-after_success:
-- Rscript -e 'covr::codecov()'
-- bash pkgdown.sh
 
 # matrix to include a windows build this can be removed when
 # https://github.com/travis-ci/travis-build/pull/1538 is merged in
@@ -25,6 +22,11 @@ matrix:
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
       - secure: "BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc="
+    after_success:
+      - Rscript -e 'covr::codecov()'
+      - export _R_CHECK_LENGTH_1_LOGIC2_=false # can be remove when https://github.com/jimhester/lintr/issues/377 is merged
+      - Rscript -e 'lintr::lint_package()'
+      - bash pkgdown.sh
   - os: linux
     r: devel
     env:

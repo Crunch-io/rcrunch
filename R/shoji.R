@@ -26,7 +26,7 @@ init.Shoji <- function(.Object, ...) {
 }
 setMethod("initialize", "ShojiObject", init.Shoji)
 
-is.shoji.like <- function (x) {
+is.shoji.like <- function(x) {
     is.list(x) && "element" %in% names(x) && startsWith(as.character(x$element), "shoji")
 }
 
@@ -101,8 +101,7 @@ setEntitySlot <- function(x, i, value) {
 shojiURL <- function(x,
                      collection = c("catalogs", "views", "fragments", "orders"),
                      key,
-                     mustWork=TRUE) {
-
+                     mustWork = TRUE) {
     if (is.variable(x) || inherits(x, "ShojiTuple")) {
         x <- entity(x) ## Get the *Entity (e.g. VariableEntity)
         logMessage("INFO", "GET entity in shojiURL")

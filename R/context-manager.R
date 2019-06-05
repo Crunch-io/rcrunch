@@ -9,7 +9,7 @@
 #' @seealso `with-context-manager`
 #' @aliases contextManager
 #' @export
-ContextManager <- function(enter = function() {}, exit = function() {},
+ContextManager <- function(enter = function() {}, exit = function() {}, # nolint
                            error = NULL, as = NULL) {
     structure(list(enter = enter, exit = exit, error = error, as = as),
         class = "contextManager"

@@ -59,8 +59,10 @@ with_mock_crunch({
         expect_json_equivalent(combine.names, both)
     })
     test_that("combineResponses() is only for MR", {
-        expect_error(combineResponses(ds$gender),
-            "combineResponses.. is only available for Multiple Response variables")
+        expect_error(
+            combineResponses(ds$gender),
+            "combineResponses.. is only available for Multiple Response variables"
+        )
     })
 
     test_that("Default variable name for combine()", {
@@ -233,7 +235,12 @@ with_mock_crunch({
         expect_PATCH(
             var <- collapseCategories(ds$location, c("London", "Scotland"), "GB"),
             "https://app.crunch.io/api/datasets/1/variables/location/",
-            '{"categories":[{"id":1,"missing":false,"name":"London","numeric_value":1},{"id":2,"missing":false,"name":"Scotland","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null},{"id":3,"name":"GB"}]}'
+            paste0(
+                '{"categories":[{"id":1,"missing":false,"name":"London",',
+                '"numeric_value":1},{"id":2,"missing":false,"name":"Scotland",',
+                '"numeric_value":2},{"id":-1,"missing":true,"name":"No Data",',
+                '"numeric_value":null},{"id":3,"name":"GB"}]}'
+            )
         )
     })
     test_that("collapseCategories updates the variable", {
@@ -251,7 +258,11 @@ with_mock_crunch({
         expect_PATCH(
             categories(ds$gender) <- collapseCategories(ds$gender, "Female", "woman"),
             "https://app.crunch.io/api/datasets/1/variables/gender/",
-            '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},{"id":2,"missing":false,"name":"woman","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]}'
+            paste0(
+                '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},',
+                '{"id":2,"missing":false,"name":"woman","numeric_value":2},',
+                '{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]}'
+            )
         )
     })
 })
@@ -333,18 +344,31 @@ with_test_authentication({
 
     test_that("collapseCategories works on categorical variable", {
         ds$cat <- factor(rep(c("cat", "Cat", "dog", "aphid"), 5))
-        expect_identical(names(categories(ds$cat)), c("Cat", "aphid", "cat", "dog", "No Data"))
+        expect_identical(
+            names(categories(ds$cat)),
+            c("Cat", "aphid", "cat", "dog", "No Data")
+        )
         ds$cat <- collapseCategories(ds$cat, c("cat", "Cat"), "cat")
-        expect_identical(names(categories(ds$cat)), c("aphid", "cat", "dog", "No Data"))
+        expect_identical(
+            names(categories(ds$cat)),
+            c("aphid", "cat", "dog", "No Data")
+        )
         ds$cat <- collapseCategories(ds$cat, c("cat", "aphid"), "nope")
         expect_identical(names(categories(ds$cat)), c("dog", "No Data", "nope"))
         ds$cat <- collapseCategories(ds$cat, c("dog", "nope"), "Has Data")
         expect_identical(names(categories(ds$cat)), c("No Data", "Has Data"))
-        expect_identical(names(table(ds$cat, useNA = "always")), c("No Data", "Has Data"))
+        expect_identical(
+            names(table(ds$cat, useNA = "always")),
+            c("No Data", "Has Data")
+        )
     })
     test_that("collapseCategories renames variable", {
-        # when length(from) == 1 and to is not present in the categories, the categories are just renamed
+        # when length(from) == 1 and to is not present in the categories, the
+        # categories are just renamed
         ds$q1 <- collapseCategories(ds$q1, "Bird", "Tucan")
-        expect_identical_temp_nodata(names(categories(ds$q1)), c("Cat", "Dog", "Tucan", "Skipped", "Not Asked", "No Data"))
+        expect_identical_temp_nodata(
+            names(categories(ds$q1)),
+            c("Cat", "Dog", "Tucan", "Skipped", "Not Asked", "No Data")
+        )
     })
 })

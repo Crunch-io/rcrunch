@@ -12,9 +12,9 @@ test_that("Deleted endpoints tell user to upgrade", {
 })
 
 test_that("get_header", {
-    expect_identical(get_header("bar", list(bar=5)), 5)
-    expect_identical(get_header("foo", list(bar=5)), NULL)
-    expect_identical(get_header("foo", list(bar=5), default=42), 42)
+    expect_identical(get_header("bar", list(bar = 5)), 5)
+    expect_identical(get_header("foo", list(bar = 5)), NULL)
+    expect_identical(get_header("foo", list(bar = 5), default = 42), 42)
 })
 
 with_mock_crunch({
@@ -22,9 +22,9 @@ with_mock_crunch({
         expect_warning(
             resp <- crGET("https://app.crunch.io/deprecated/"),
             paste(
-                'The API resource at https://app.crunch.io/api/ returned a',
-                'deprecation warning. Updating to the latest version of the',
-                'package is recommended and may resolve the issue. Details:',
+                "The API resource at https://app.crunch.io/api/ returned a",
+                "deprecation warning. Updating to the latest version of the",
+                "package is recommended and may resolve the issue. Details:",
                 '299 - "This resource is scheduled for removal on 2018-03-20"'
             )
         )
@@ -34,7 +34,7 @@ with_mock_crunch({
         expect_warning(
             resp <- crGET("https://app.crunch.io/other-warning/"),
             paste(
-                'The API resource at https://app.crunch.io/api/ returned a',
+                "The API resource at https://app.crunch.io/api/ returned a",
                 'warning. Details: 298 - "This is some other kind of warning"'
             )
         )
@@ -90,11 +90,11 @@ with_mock_crunch({
     test_that("crDELETE passes on and calls drop= args", {
         msg <- "Drop and roll"
         expect_DELETE(
-            crDELETE("https://app.crunch.io/", drop=stop(msg)),
+            crDELETE("https://app.crunch.io/", drop = stop(msg)),
             "https://app.crunch.io/"
         )
         expect_error(
-            crDELETE("https://app.crunch.io/delete-me", drop=stop(msg)),
+            crDELETE("https://app.crunch.io/delete-me", drop = stop(msg)),
             "Drop and roll"
         )
     })

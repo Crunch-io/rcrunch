@@ -104,7 +104,10 @@ setMethod("[[", c("DeckCatalog", "character", "ANY"), function(x, i, ...) {
     }
     index <- which(matches)
     if (sum(matches) > 1) {
-        warning(dQuote(i), " does not uniquely identify elements. Returning the first match")
+        warning(
+            dQuote(i),
+            " does not uniquely identify elements. Returning the first match"
+        )
         index <- index[1]
     }
     getEntity(x, index, CrunchDeck, ...)

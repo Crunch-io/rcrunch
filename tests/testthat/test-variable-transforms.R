@@ -320,7 +320,7 @@ with_mock_crunch({
             )
         )
 
-        expect_equivalent(calcTransforms(table(loc_var), insert_funcs),  loc_ary)
+        expect_equivalent(calcTransforms(table(loc_var), insert_funcs), loc_ary)
     })
 
     test_that("Transform respects anchors", {

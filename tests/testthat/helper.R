@@ -5,7 +5,7 @@ set.seed(666)
 
 skip_on_jenkins <- function(...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
-        skip(...)
+        skip(...) # nolint
     }
 }
 

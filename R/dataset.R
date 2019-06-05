@@ -142,7 +142,10 @@ setMethod("setPopulation", "CrunchDataset", function(x, size, magnitude) {
     pop <- settings(x)$population
     if (missing(size)) {
         if (is.null(pop$size)) {
-            halt("Dataset does not have a population, please set one before attempting to change magnitude")
+            halt(
+                "Dataset does not have a population, please set one before ",
+                "attempting to change magnitude"
+            )
         }
         size <- pop$size
     } else if (is.null(size)) {
@@ -300,7 +303,9 @@ joins <- function(x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
 
 variableCatalogURL <- function(dataset) {
     ## Get the variable catalog URL that corresponds to an object
-    if (class(dataset) == "VariableCatalog") return(self(dataset))
+    if (class(dataset) == "VariableCatalog") {
+        return(self(dataset))
+    }
     if (!is.dataset(dataset)) {
         dataset <- ShojiObject(crGET(datasetReference(dataset)))
     }

@@ -30,7 +30,8 @@ setMethod("rootFolder", "ProjectFolder", function(x) projects())
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ProjectFolder", "character", "missing", "list"),
+setMethod(
+    "[[<-", c("ProjectFolder", "character", "missing", "list"),
     function(x, i, j, value) {
         # This is for backwards compatibility with the old project API
         if (i %in% names(x)) {
@@ -49,7 +50,8 @@ setMethod("[[<-", c("ProjectFolder", "character", "missing", "list"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ProjectFolder", "character", "missing", "ProjectFolder"),
+setMethod(
+    "[[<-", c("ProjectFolder", "character", "missing", "ProjectFolder"),
     function(x, i, j, value) {
         # This is for backwards compatibility with the old project API
 

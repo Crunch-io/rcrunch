@@ -60,11 +60,11 @@ appendStream <- function(ds) {
 #' [streamRows] for example), the dataset has to be set up to stream rows. Use
 #' `streaming(ds)` to get the streaming status, and `streaming(ds) <-
 #' "streaming"` to set the streaming status.
-#' 
+#'
 #' @param x a CrunchDataset
 #' @param value for setting only (values can be: `"no"`, `"streaming"`, or
 #' `"finished"`)
-#' 
+#'
 #' @return the streaming status
 #' @rdname streaming
 #' @export
@@ -80,4 +80,3 @@ streaming <- function(x) {
     value <- match.arg(value)
     return(setEntitySlot(x, "streaming", value))
 }
-

@@ -27,7 +27,8 @@ setMethod("groupClass", "OrderGroup", function(x) "OrderGroup")
 setMethod("entityClass", "ShojiOrder", function(x) "ShojiObject")
 setMethod("entityClass", "OrderGroup", function(x) "ShojiObject")
 
-.initEntities <- function(x, url.base = NULL, group.class = "OrderGroup", entity.class = "ShojiObject") {
+.initEntities <- function(x, url.base = NULL, group.class = "OrderGroup",
+                          entity.class = "ShojiObject") {
     ## Sanitize the inputs in OrderGroup construction/updating
     ## Result should be a list, each element being either a URL (character)
     ## or OrderGroup
@@ -118,7 +119,9 @@ setMethod("entitiesInitializer", "OrderGroup", orderEntitiesInit)
         ## Recursive function for internal use
         if (!(path[1] %in% names(ord))) {
             ## Create an empty folder
-            entities(ord) <- c(entities(ord), do.call(grp, list(name = path[1], entities = val)))
+            entities(ord) <- c(
+                entities(ord), do.call(grp, list(name = path[1], entities = val))
+            )
         } else if (length(path) == 1) {
             w <- match(path[1], names(ord))
             if (inherits(val, "OrderGroup")) {
@@ -203,7 +206,8 @@ setMethod("$", "ShojiOrder", function(x, name) x[[name]])
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
+setMethod(
+    "[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
         w <- match(i, names(x))
@@ -215,7 +219,8 @@ setMethod("[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
+setMethod(
+    "[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
         x@graph[i] <- value@graph
@@ -225,26 +230,30 @@ setMethod("[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ShojiOrder", "character", "missing", "list"),
+setMethod(
+    "[[<-", c("ShojiOrder", "character", "missing", "list"),
     .setNestedGroupByName
 )
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ShojiOrder", "character", "missing", "character"),
+setMethod(
+    "[[<-", c("ShojiOrder", "character", "missing", "character"),
     .setNestedGroupByName
 )
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
+setMethod(
+    "[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
     .setNestedGroupByName
 )
 
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
+setMethod(
+    "[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
     function(x, i, j, value) {
         if (length(entities(value))) {
             x <- setdiff_entities(x, value)
@@ -256,7 +265,8 @@ setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
+setMethod(
+    "[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
     function(x, i, j, value) {
         halt(
             "Cannot assign an object of class ", dQuote(class(value)),
@@ -267,7 +277,8 @@ setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
+setMethod(
+    "[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
     function(x, i, j, value) {
         x@graph[[i]] <- value
         return(x)
@@ -275,7 +286,8 @@ setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ShojiOrder", "character", "missing", "NULL"),
+setMethod(
+    "[[<-", c("ShojiOrder", "character", "missing", "NULL"),
     function(x, i, j, value) {
         w <- match(i, names(x))
         if (any(is.na(w))) {
@@ -287,7 +299,8 @@ setMethod("[[<-", c("ShojiOrder", "character", "missing", "NULL"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
+setMethod(
+    "[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     }
@@ -347,19 +360,22 @@ setMethod("$", "OrderGroup", function(x, name) x[[name]])
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("OrderGroup", "character", "missing", "list"),
+setMethod(
+    "[[<-", c("OrderGroup", "character", "missing", "list"),
     .setNestedGroupByName
 )
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("OrderGroup", "character", "missing", "character"),
+setMethod(
+    "[[<-", c("OrderGroup", "character", "missing", "character"),
     .setNestedGroupByName
 )
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
+setMethod(
+    "[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
     function(x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     }
@@ -367,7 +383,8 @@ setMethod("[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
+setMethod(
+    "[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
     function(x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     }
@@ -375,7 +392,8 @@ setMethod("[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
+setMethod(
+    "[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
     function(x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
         entities(x)[[i]] <- value
@@ -385,7 +403,8 @@ setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
+setMethod(
+    "[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
     function(x, i, j, value) {
         if (length(i) > 1 || i < 0) {
             halt("Illegal subscript")
@@ -396,7 +415,8 @@ setMethod("[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("OrderGroup", "character", "missing", "NULL"),
+setMethod(
+    "[[<-", c("OrderGroup", "character", "missing", "NULL"),
     function(x, i, j, value) {
         w <- match(i, names(x))
         if (any(is.na(w))) {

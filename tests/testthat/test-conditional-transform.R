@@ -13,7 +13,7 @@ with_mock_crunch({
                 " .*formulas.* argument, or through .*....*"
             )
         )
-               
+
         expect_error(
             conditionalTransform(TRUE ~ "foo"),
             paste0(
@@ -21,14 +21,14 @@ with_mock_crunch({
                 "specifying cases or use the data argument to specify a dataset."
             )
         )
-        
+
         # but sending the dataset alone does work
         expect_silent(new_var <- conditionalTransform(TRUE ~ "foo", data = ds))
         expect_equal(new_var$values, c(
-            c("foo", rep(NA, nrow(ds)-1))
+            c("foo", rep(NA, nrow(ds) - 1))
         ))
         expect_equal(new_var$type, "text")
-        
+
         expect_error(
             conditionalTransform("bar" ~ "foo", data = ds),
             paste0(
@@ -166,7 +166,9 @@ with_mock_crunch({
             list(id = 5L, name = "z", numeric_value = 50L, missing = FALSE),
             list(id = 6L, name = "x", numeric_value = 60L, missing = TRUE)
         )
-        no_data_cat <- Categories(list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE))
+        no_data_cat <- Categories(
+            list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
+        )
         textVarCats <- Categories(data = textVarCats)
         expect_true(is.categories(textVarCats))
         expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar,
@@ -218,7 +220,9 @@ with_mock_crunch({
             list(id = 5L, name = "z", numeric_value = 50L, missing = FALSE),
             list(id = 6L, name = "x", numeric_value = 60L, missing = TRUE)
         )
-        no_data_cat <- Categories(list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE))
+        no_data_cat <- Categories(
+            list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
+        )
         textVarCats <- Categories(data = textVarCats)
         expect_true(is.categories(textVarCats))
         expect_warning(
