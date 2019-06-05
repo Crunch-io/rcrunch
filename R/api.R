@@ -83,7 +83,8 @@ handleAPIresponse <- function(response, special.statuses = list()) {
     } else if (tolower(http_status(response)$category) == "success") {
         if (code == 202) {
             ## 202 Continue: a few cases:
-            ## 1) Legacy: POST /batches/ returns Batch entity in Location, no response content
+            ## 1) Legacy: POST /batches/ returns Batch entity in Location, no
+            ##    response content
             ## 2) Progress body with Location
             ## 3) Progress body without Location
             ## So, if there's a shoji:value response, it's a Progress, so poll it.
@@ -151,7 +152,10 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             msg <- paste(msg, msg2, sep = ": ")
         }
         if (code == 409 && grepl("current editor", msg)) {
-            halt("You are not the current editor of this dataset. `unlock()` it and try again.")
+            halt(
+                "You are not the current editor of this dataset. `unlock()` ",
+                "it and try again."
+            )
         }
         halt(msg)
     }

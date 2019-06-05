@@ -1,5 +1,6 @@
 context("Derived array variables maintain subvar links")
 
+# nolint start
 # derived ds instantaitor
 new_ds_with_derived_array <- function() {
     ds <- newDatasetFromFixture("apidocs")
@@ -9,6 +10,7 @@ new_ds_with_derived_array <- function() {
     )
     return(ds)
 }
+# nolint end
 
 with_test_authentication({
     ds <- new_ds_with_derived_array()

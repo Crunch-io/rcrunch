@@ -98,7 +98,8 @@ summary.NumericVariable <- function(object, ...) {
     if (summ$missing_count) {
         out <- c(out, summ$missing_count)
     }
-    names(out) <- c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max.", "NA's")[1:length(out)]
+    names <- c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max.", "NA's")
+    names(out) <- names[1:length(out)]
     class(out) <- c("NumericVariableSummary", "summaryDefault", "table")
     attr(out, "varname") <- getNameAndType(object)
     return(out)

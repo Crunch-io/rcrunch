@@ -14,7 +14,9 @@ with_mock_crunch({
     })
 
     test_that("is.Geodata", {
-        expect_true(is.Geodata(Geodata(crGET("https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"))))
+        expect_true(is.Geodata(Geodata(
+            crGET("https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
+        )))
     })
 
     test_that("if there is no geography on a variable, geo() returns null", {
@@ -29,17 +31,21 @@ with_mock_crunch({
         )
     })
 
-    test_that("we can update individual fiels of the geography", {
+    # nolint start
+    # complains about tabs instead of spaces, but spaces are used
+    test_that("we can update individual fields of the geography", {
         expect_PATCH(
             geo(ds$location)$feature_key <- "properties.location2",
             "https://app.crunch.io/api/datasets/1/variables/location/",
-            '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+            '{"view":{"geodata":[{"geodatum":',
+            '"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
             ',"feature_key":"properties.location2","match_field":"name"}]}}'
         )
         expect_PATCH(
             geo(ds$location)$match_field <- "name2",
             "https://app.crunch.io/api/datasets/1/variables/location/",
-            '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+            '{"view":{"geodata":[{"geodatum":',
+            '"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
             ',"feature_key":"properties.location","match_field":"name2"}]}}'
         )
         expect_PATCH(
@@ -48,17 +54,20 @@ with_mock_crunch({
             '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/newone/"',
             ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
+        # nolint end
         # geographies can also be set by assigning a CrunchGeography to a variable
         expect_PATCH(
             ds$gender <- geo_data,
             "https://app.crunch.io/api/datasets/1/variables/gender/",
-            '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+            '{"view":{"geodata":[{"geodatum":',
+            '"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
             ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
         expect_PATCH(
             ds[[2]] <- geo_data,
             "https://app.crunch.io/api/datasets/1/variables/gender/",
-            '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+            '{"view":{"geodata":[{"geodatum":',
+            '"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
             ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
     })
@@ -173,7 +182,8 @@ with_mock_crunch({
                 "set the variable's geographic mapping with ",
                 "following:\n",
                 "geo(var) <- CrunchGeography(geodatum='https",
-                "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/_new_new',",
+                "://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/",
+                "_new_new',",
                 " feature_key='properties.name_new_new',\n",
                 "                   match_field='name')\n\n"
             )
@@ -268,14 +278,15 @@ with_mock_crunch({
             )
         )
     })
-
+    # nolint start
+    # complains about tabs instead of spaces, but spaces are used
     test_that("CrunchGeography show methods", {
         expect_prints(
             geo_data,
             paste("CrunchGeography metadata for variable ",
                 "geodatum name: 		GB Regions",
                 "geodatum description: 	These are the GB regions",
-                "geodatum url: 		https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/",
+                "geodatum url: 		https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/", # nolint
                 "feature_key: 		properties.location",
                 "match_field: 		name",
                 sep = "\n"
@@ -293,7 +304,8 @@ with_mock_crunch({
 
 with_test_authentication({
     # # setup a geography because one doesn't already exits locally
-    # # TODO: only trigger locally, but check to make sure they haven't already been created.
+    # # TODO: only trigger locally, but check to make sure they haven't already
+    #         been created.
     # # test01/stable already has these
     # payload <- list("description" = "use properties.name or properties.postal-code",
     #                 "format" = "geojson",
@@ -332,7 +344,7 @@ with_test_authentication({
             fixed = FALSE
         )
     })
-
+    # nolint end
     test_that("Can match and set geodata on a categorical variable", {
         skip_on_local_backend("Vagrant doesn't currently have hosted geodata")
         geo_ds$region2 <- factor(rep(c("South", "West", "West", "South", "West"), 4))
@@ -341,7 +353,7 @@ with_test_authentication({
             paste0(
                 "geodatum name: 		US Census Regions\\\n",
                 "geodatum description: 	Census regions\\\n",
-                "geodatum url: 		.*\\\n", # the geodatum id will change, so the url will change.
+                "geodatum url: 		.*\\\n", # the geodatum id changes
                 "feature_key: 		properties.name\\\n",
                 "match_field: 		name"
             ),

@@ -107,8 +107,8 @@ setMethod("[[", c("Subvariables", "character"), function(x, i, ...) {
     ## TODO: drop this in favor of ShojiCatalog method (have to pass in namekey)
     i <- match(i, names(x))
     if (is.na(i)) {
-          return(NULL)
-      }
+        return(NULL)
+    }
     return(x[[i, ...]])
 })
 #' @rdname crunch-extract
@@ -244,9 +244,12 @@ setMethod("[", c("CategoricalArrayVariable", "missing", "ANY"), function(x, i, j
 })
 #' @rdname crunch-extract
 #' @export
-setMethod("[", c("CategoricalArrayVariable", "missing", "character"), function(x, i, j, ...) {
-    return(x[j])
-})
+setMethod(
+    "[", c("CategoricalArrayVariable", "missing", "character"),
+    function(x, i, j, ...) {
+        return(x[j])
+    }
+)
 
 #' @rdname crunch-extract
 #' @export
@@ -258,8 +261,8 @@ setMethod("[[", c("CategoricalArrayVariable", "ANY"), function(x, i, ...) {
 setMethod("[[", c("CategoricalArrayVariable", "character"), function(x, i, ...) {
     i <- match(i, names(x))
     if (is.na(i)) {
-          return(NULL)
-      }
+        return(NULL)
+    }
     return(x[[i, ...]])
 })
 

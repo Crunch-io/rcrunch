@@ -141,8 +141,8 @@ with_mock_crunch({
     })
 
     test_that("path()", {
-        expect_identical(path(folders(ds)[["Group 1/Nested"]]), "/Group 1/Nested")
-        expect_identical(path(ds$birthyr), "/Group 1/Birth Year")
+        expect_identical(path(folders(ds)[["Group 1/Nested"]]), "/Group 1/Nested") # nolint
+        expect_identical(path(ds$birthyr), "/Group 1/Birth Year") # nolint
         expect_identical(path(folders(ds)), "/")
     })
 

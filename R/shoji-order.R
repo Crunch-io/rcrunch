@@ -27,7 +27,8 @@ setMethod("groupClass", "OrderGroup", function(x) "OrderGroup")
 setMethod("entityClass", "ShojiOrder", function(x) "ShojiObject")
 setMethod("entityClass", "OrderGroup", function(x) "ShojiObject")
 
-.initEntities <- function(x, url.base = NULL, group.class = "OrderGroup", entity.class = "ShojiObject") {
+.initEntities <- function(x, url.base = NULL, group.class = "OrderGroup",
+                          entity.class = "ShojiObject") {
     ## Sanitize the inputs in OrderGroup construction/updating
     ## Result should be a list, each element being either a URL (character)
     ## or OrderGroup
@@ -118,7 +119,9 @@ setMethod("entitiesInitializer", "OrderGroup", orderEntitiesInit)
         ## Recursive function for internal use
         if (!(path[1] %in% names(ord))) {
             ## Create an empty folder
-            entities(ord) <- c(entities(ord), do.call(grp, list(name = path[1], entities = val)))
+            entities(ord) <- c(
+                entities(ord), do.call(grp, list(name = path[1], entities = val))
+            )
         } else if (length(path) == 1) {
             w <- match(path[1], names(ord))
             if (inherits(val, "OrderGroup")) {

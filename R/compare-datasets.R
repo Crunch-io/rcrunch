@@ -50,7 +50,8 @@ compareDatasets <- function(A, B) {
     ## Compare.
     comp.vars <- compareVariables(varsA, varsB)
 
-    same.type <- comp.vars$type.A == comp.vars$type.B ## is NA if either is NA, i.e. not found
+    ## is NA if either is NA, i.e. not found
+    same.type <- comp.vars$type.A == comp.vars$type.B
     ## How to address CA vs MR not a problem?
     vars.in.both <- same.type & !is.na(same.type)
     intersect.vars <- comp.vars[vars.in.both, ]

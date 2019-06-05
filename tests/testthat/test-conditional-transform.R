@@ -166,7 +166,9 @@ with_mock_crunch({
             list(id = 5L, name = "z", numeric_value = 50L, missing = FALSE),
             list(id = 6L, name = "x", numeric_value = 60L, missing = TRUE)
         )
-        no_data_cat <- Categories(list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE))
+        no_data_cat <- Categories(
+            list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
+        )
         textVarCats <- Categories(data = textVarCats)
         expect_true(is.categories(textVarCats))
         expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar,
@@ -218,7 +220,9 @@ with_mock_crunch({
             list(id = 5L, name = "z", numeric_value = 50L, missing = FALSE),
             list(id = 6L, name = "x", numeric_value = 60L, missing = TRUE)
         )
-        no_data_cat <- Categories(list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE))
+        no_data_cat <- Categories(
+            list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
+        )
         textVarCats <- Categories(data = textVarCats)
         expect_true(is.categories(textVarCats))
         expect_warning(

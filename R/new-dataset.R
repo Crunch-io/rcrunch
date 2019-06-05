@@ -249,7 +249,11 @@ shojifyDatasetMetadata <- function(metadata, order = I(names(metadata)), ...) {
 #' @seealso [newDataset()]
 #' @export
 #' @keywords internal
-newDatasetByColumn <- function(x, name = deparseAndFlatten(substitute(x), max_length = 40), ...) {
+newDatasetByColumn <- function(x,
+                               name = deparseAndFlatten(
+                                   substitute(x),
+                                   max_length = 40
+                               ), ...) {
     vardefs <- lapply(
         names(x),
         function(v) toVariable(x[[v]], name = v, alias = v)

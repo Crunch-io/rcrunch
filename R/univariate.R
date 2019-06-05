@@ -64,15 +64,19 @@ is.R.3.4 <- "..." %in% names(formals(median))
 
 no_median <- function(v) {
     if (v) {
-          return(function(x, na.rm, ...) halt(dQuote("median"), " is not defined for ", class(x)))
-      }
+        return(function(x, na.rm, ...) {
+            halt(dQuote("median"), " is not defined for ", class(x))
+        })
+    }
     return(function(x, na.rm) halt(dQuote("median"), " is not defined for ", class(x)))
 }
 
 yes_median <- function(v) {
     if (v) {
-          return(function(x, na.rm = FALSE, ...) .summary.stat(x, "median", na.rm = na.rm))
-      }
+        return(function(x, na.rm = FALSE, ...) {
+            .summary.stat(x, "median", na.rm = na.rm)
+        })
+    }
     return(function(x, na.rm = FALSE) .summary.stat(x, "median", na.rm = na.rm))
 }
 

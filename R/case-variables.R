@@ -264,7 +264,10 @@ fillIds <- function(cases) {
         halt("there are duplicate ids provided: ", serialPaste(all_ids))
     }
     if (any(all_ids > 32767L)) {
-        halt("id must be less than 32,768, this might be a result of too many cases being used.")
+        halt(
+            "id must be less than 32,768, this might be a result of too many ",
+            "cases being used."
+        )
     }
     if (any(all_ids < 1L)) {
         halt("id must not be less than 1")

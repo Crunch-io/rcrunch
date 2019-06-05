@@ -37,7 +37,8 @@
 #' @return `x` extended by the columns of `y`, matched on the "by" variables.
 #' @export
 joinDatasets <- function(x, y, by = intersect(names(x), names(y)), by.x = by,
-                         by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE, copy = TRUE) {
+                         by.y = by, all = FALSE, all.x = TRUE, all.y = FALSE,
+                         copy = TRUE) {
     if (copy) {
         ## Just another way to call extend/merge
         Call <- match.call()

@@ -15,7 +15,7 @@ dropRows <- function(dataset, expr) {
         halt("Invalid expression: ", deparseAndFlatten(match.call()$expr))
     }
     payload <- list(command = "delete", filter = zcl(expr))
-    out <- crPOST(shojiURL(dataset, "fragments", "table"), body = toJSON(payload))
+    crPOST(shojiURL(dataset, "fragments", "table"), body = toJSON(payload))
     dropCache(self(dataset)) ## Could do a more surgical cache drop, but this is safe
     return(dataset)
 }

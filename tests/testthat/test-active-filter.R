@@ -19,7 +19,7 @@ with_mock_crunch({
         expect_identical(activeFilter(ds2), ds$gender == "Male")
     })
     test_that("Active filter persists on refreshing dataset", {
-        expect_identical(activeFilter(refresh(ds2)), ds$gender == "Male")
+        expect_identical(activeFilter(refresh(ds2)), ds$gender == "Male") # nolint
     })
     test_that("Further [ on a filtered dataset ands the filters together", {
         expect_identical(
@@ -28,12 +28,20 @@ with_mock_crunch({
         )
     })
     test_that("But further [ on filtered dataset must match the dataset's filtering", {
-        expect_error(ds2b <- ds2[ds$birthyr > 1981, ],
-            "In ds2[ds$birthyr > 1981, ], object and subsetting expression have different filter expressions",
+        expect_error(
+            ds2b <- ds2[ds$birthyr > 1981, ],
+            paste0(
+                "In ds2[ds$birthyr > 1981, ], object and subsetting expression ",
+                "have different filter expressions"
+            ),
             fixed = TRUE
         )
-        expect_error(ds2b <- ds2[ds3$birthyr > 1981, ],
-            "In ds2[ds3$birthyr > 1981, ], object and subsetting expression have different filter expressions",
+        expect_error(
+            ds2b <- ds2[ds3$birthyr > 1981, ],
+            paste0(
+                "In ds2[ds3$birthyr > 1981, ], object and subsetting ",
+                "expression have different filter expressions"
+            ),
             fixed = TRUE
         )
     })
@@ -100,11 +108,17 @@ with_mock_crunch({
     })
     test_that("But further [ on filtered variable must match the variable's filtering", {
         expect_error(ds2$gender[ds$birthyr > 1981],
-            "In ds2$gender[ds$birthyr > 1981], object and subsetting expression have different filter expressions",
+            paste0(
+                "In ds2$gender[ds$birthyr > 1981], object and subsetting ",
+                "expression have different filter expressions"
+            ),
             fixed = TRUE
         )
         expect_error(ds2$gender[ds3$birthyr > 1981],
-            "In ds2$gender[ds3$birthyr > 1981], object and subsetting expression have different filter expressions",
+            paste0(
+                "In ds2$gender[ds3$birthyr > 1981], object and subsetting ",
+                "expression have different filter expressions"
+            ),
             fixed = TRUE
         )
     })
@@ -124,7 +138,7 @@ with_mock_crunch({
     })
     age2 <- ds2$starttime - ds2$birthyr
     test_that("activeFilter from CrunchExpr from filtered dataset", {
-        expect_identical(activeFilter(age2), ds$gender == "Male")
+        expect_identical(activeFilter(age2), ds$gender == "Male") # nolint
     })
     test_that("Further [ on a filtered expression ands the filters together", {
         expect_identical(
@@ -134,11 +148,17 @@ with_mock_crunch({
     })
     test_that("But further [ on filtered expression must match the expression's filtering", {
         expect_error(age2[ds$birthyr > 1981],
-            "In age2[ds$birthyr > 1981], object and subsetting expression have different filter expressions",
+            paste0(
+                "In age2[ds$birthyr > 1981], object and subsetting expression ",
+                "have different filter expressions"
+            ),
             fixed = TRUE
         )
         expect_error(age2[ds3$birthyr > 1981],
-            "In age2[ds3$birthyr > 1981], object and subsetting expression have different filter expressions",
+            paste0(
+                "In age2[ds3$birthyr > 1981], object and subsetting ",
+                "expression have different filter expressions"
+            ),
             fixed = TRUE
         )
     })

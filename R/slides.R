@@ -279,7 +279,10 @@ setMethod(
     "[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"),
     function(x, i, j, value) {
         if (i > length(x)) {
-            halt("Index out of bounds, you can only assign a formula to an existing analysis.")
+            halt(
+                "Index out of bounds, you can only assign a formula to an ",
+                "existing analysis."
+            )
         }
         analysis <- x[[i]]
         query(analysis) <- value

@@ -111,7 +111,10 @@ with_mock_crunch({
             fixed = TRUE
         )
         expect_error(crtabs(~gender, data = ds[ds$gender %in% "Male" | ds$NOTAVARIABLE == 3, ]),
-            "Invalid expression (probably a reference to a variable that doesn't exist): ds$gender %in% \"Male\" | ds$NOTAVARIABLE == 3",
+            paste0(
+                "Invalid expression (probably a reference to a variable that ",
+                "doesn't exist): ds$gender %in% \"Male\" | ds$NOTAVARIABLE == 3"
+            ),
             fixed = TRUE
         )
     })
@@ -137,7 +140,10 @@ with_test_authentication({
         )
         ## But works if variable is in workspace
         aaa <- ds$v4
-        skip("Appears not to work in the test at least. aaa is in the enclos environment but it doesn't find it")
+        skip(paste0(
+            "Appears not to work in the test at least. aaa is in the enclos ",
+            "environment but it doesn't find it"
+        ))
         expect_equivalent(
             as.array(crtabs(~ aaa + bin(v3), data = ds)),
             array(c(1, 1, 3, 2, 2, 3, 3, 2, 1, 2),

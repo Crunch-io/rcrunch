@@ -31,13 +31,13 @@ askForPermission <- function(prompt = "") {
     ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
     must.confirm <- getOption("crunch.require.confirmation", TRUE)
     if (must.confirm == FALSE) {
-          return(TRUE)
-      }
+        return(TRUE)
+    }
 
     ## If we're here but not interactive, we can't give permission.
     if (!is.interactive()) {
-          return(FALSE)
-      }
+        return(FALSE)
+    }
     prompt <- paste(prompt, "(y/n) ")
     proceed <- ""
     while (!(proceed %in% c("y", "n"))) {

@@ -122,7 +122,8 @@ with_mock_crunch({
     csv_df <- read.csv("dataset-fixtures/test_ds.csv", stringsAsFactors = FALSE)
     test_that("csvToDataFrame produces the correct data frame", {
         expected <- readRDS("dataset-fixtures/test_ds.rds")
-        cdf <- as.data.frame(ds[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")])
+        vars <- c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")
+        cdf <- as.data.frame(ds[, vars])
         # test local CDF variables
         cdf$newvar <- expected$newvar <- c(1:24, NA)
         expect_identical(csvToDataFrame(csv_df, cdf), expected)
@@ -219,7 +220,7 @@ with_test_authentication({
     values(categories(ds$v4b)[1:2]) <- c(5, 3)
     test_that("as.vector on a Categorical", {
         expect_true(is.factor(as.vector(ds$v4b)))
-        expect_equivalent(as.vector(ds$v4b)[-(3:5)], df$v4[-(3:5)])
+        expect_equivalent(as.vector(ds$v4b)[-(3:5)], df$v4[-(3:5)]) # nolint
         expect_true(all(is.na(as.vector(ds$v4b)[3:5])))
     })
     test_that("as.vector with mode specified on Categorical", {

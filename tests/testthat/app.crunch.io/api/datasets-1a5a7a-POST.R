@@ -3,7 +3,8 @@ structure(list(
     status_code = 201L, headers = structure(list(
         allow = "GET, HEAD, OPTIONS, PATCH, POST",
         `content-encoding` = "gzip", `content-type` = "application/json;charset=utf-8",
-        date = "Thu, 14 Feb 2019 23:09:50 GMT", location = "https://app.crunch.io/api/datasets/1/",
+        date = "Thu, 14 Feb 2019 23:09:50 GMT",
+        location = "https://app.crunch.io/api/datasets/1/",
         server = "nginx", `set-cookie` = "REDACTED", vary = "Cookie, Accept-Encoding",
         `x-timing` = "", `content-length` = "24", connection = "keep-alive"
     ), class = c(
@@ -13,9 +14,12 @@ structure(list(
         status = 201L, version = "HTTP/1.1",
         headers = structure(list(
             allow = "GET, HEAD, OPTIONS, PATCH, POST",
-            `content-encoding` = "gzip", `content-type` = "application/json;charset=utf-8",
-            date = "Thu, 14 Feb 2019 23:09:50 GMT", location = "https://app.crunch.io/api/datasets/1/",
-            server = "nginx", `set-cookie` = "REDACTED", vary = "Cookie, Accept-Encoding",
+            `content-encoding` = "gzip",
+            `content-type` = "application/json;charset=utf-8",
+            date = "Thu, 14 Feb 2019 23:09:50 GMT",
+            location = "https://app.crunch.io/api/datasets/1/",
+            server = "nginx", `set-cookie` = "REDACTED",
+            vary = "Cookie, Accept-Encoding",
             `x-timing` = "", `content-length` = "24", connection = "keep-alive"
         ), class = c(
             "insensitive",
@@ -23,7 +27,8 @@ structure(list(
         ))
     )), cookies = structure(list(
         domain = ".crunch.io",
-        flag = TRUE, path = "/", secure = FALSE, expiration = structure(1581721790, class = c(
+        flag = TRUE, path = "/", secure = FALSE,
+        expiration = structure(1581721790, class = c(
             "POSIXct",
             "POSIXt"
         )), name = "token", value = "REDACTED"

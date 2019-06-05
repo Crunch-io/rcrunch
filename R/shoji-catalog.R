@@ -46,7 +46,8 @@ setIndexSlot <- function(x, i, value, unique = FALSE) {
     }, a = index(x), v = value, SIMPLIFY = FALSE)
     if (unique) {
         ## Check to see if any of the value is duplicated after updating
-        newvals <- getIndexSlot(x, i) ## Assumes "character". Revisit if need unique for non-char
+        ## Assumes "character". Revisit if need unique for non-char
+        newvals <- getIndexSlot(x, i)
         dups <- duplicated(newvals)
         if (any(dups)) {
             halt(
@@ -151,8 +152,8 @@ setMethod("[[", c("ShojiCatalog", "ANY"), function(x, i, ...) {
 getTuple <- function(x, i, Constructor = ShojiTuple, ...) {
     b <- index(x)[[i]]
     if (is.null(b)) {
-          return(NULL)
-      }
+        return(NULL)
+    }
     Constructor(index_url = self(x), entity_url = urls(x)[i], body = b)
 }
 
@@ -260,7 +261,7 @@ setMethod("urls", "ShojiCatalog", function(x) names(index(x)))
 
 #' @rdname urls
 #' @export
-setMethod("urls", "list", function(x) vapply(x, self, character(1))) ## Assumes list of entities
+setMethod("urls", "list", function(x) vapply(x, self, character(1))) ## list of entities
 
 #' @rdname urls
 #' @export
@@ -406,7 +407,10 @@ setMethod("setNames", "ShojiCatalog", function(object, nm) {
     # check lengths to provide a friendly user-facing error message.
     if (length(object) != length(nm)) {
         # TODO: should this check be lower, inside names<- or even lower?
-        halt("names must have the same length as the number of children: ", length(object))
+        halt(
+            "names must have the same length as the number of children: ",
+            length(object)
+        )
     }
 
     names(object) <- nm

@@ -23,7 +23,7 @@ variableMetadata <- function(dataset) {
         if (length(x$subvariables)) {
             ## table/ returns ids, not relative URLs, so make them appear to be
             x$subvariables <- absoluteURL(
-                paste0(i, "/subvariables/", unlist(x$subvariables), "/"),
+                paste0(i, "/subvariables/", unlist(x$subvariables), "/"), # nolint
                 self(varcat)
             )
         }

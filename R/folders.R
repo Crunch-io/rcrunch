@@ -77,7 +77,7 @@ mv <- function(x, what, path) {
 #' @export
 mkdir <- function(x, path) {
     ## TODO: add an "after" argument, move created folder there
-    f <- cd(x, path, create = TRUE)
+    cd(x, path, create = TRUE)
     # Refresh without busting cache, in case there was no change
     # If there had been a change, cd() would have busted cache already
     x <- do.call(class(x), crGET(self(x)))

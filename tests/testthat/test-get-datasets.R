@@ -126,7 +126,7 @@ with_mock_crunch({
         ds3 <- loadDataset("Project One/Project Two/ECON.sav")
         expect_is(ds3, "CrunchDataset")
         expect_identical(name(ds3), "ECON.sav")
-        ds1 <- loadDataset("~/test ds")
+        ds1 <- loadDataset("~/test ds") # nolint
         expect_is(ds1, "CrunchDataset")
         expect_identical(name(ds1), "test ds")
     })
@@ -159,11 +159,17 @@ with_mock_crunch({
         )
         expect_error(
             loadDataset(NULL),
-            "'dataset' should be a character dataset name, path, or URL, not an object of class NULL"
+            paste0(
+                "'dataset' should be a character dataset name, path, or URL, ",
+                "not an object of class NULL"
+            )
         )
         expect_error(
             loadDataset(list(5)),
-            "'dataset' should be a character dataset name, path, or URL, not an object of class list"
+            paste0(
+                "'dataset' should be a character dataset name, path, or URL, ",
+                "not an object of class list"
+            )
         )
     })
 })

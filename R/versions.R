@@ -32,7 +32,9 @@ setMethod("descriptions", "VersionCatalog", function(x) getIndexSlot(x, "descrip
 
 #' @rdname describe-catalog
 #' @export
-setMethod("timestamps", "VersionCatalog", function(x) from8601(getIndexSlot(x, "creation_time")))
+setMethod("timestamps", "VersionCatalog", function(x) {
+    return(from8601(getIndexSlot(x, "creation_time")))
+})
 
 #' Create a new saved version
 #'

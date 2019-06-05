@@ -145,7 +145,9 @@ setMethod("delete", "ShojiObject", function(x, ...) invisible(crDELETE(self(x)))
 
 #' @rdname delete
 #' @export
-setMethod("delete", "ANY", function(x, ...) halt("'delete' only valid for Crunch objects"))
+setMethod("delete", "ANY", function(x, ...) {
+    halt("'delete' only valid for Crunch objects")
+})
 
 #' Delete a dataset from the dataset list
 #'
@@ -180,7 +182,8 @@ deleteDataset <- function(x, ...) {
             if (length(found) != 1) {
                 halt(
                     dQuote(x), " identifies ", length(found),
-                    " datasets. To delete, please identify the dataset uniquely by URL or path."
+                    " datasets. To delete, please identify the dataset ",
+                    "uniquely by URL or path."
                 )
             }
             ## We know there is just one now
@@ -222,9 +225,9 @@ deleteVariables <- function(dataset, variables) {
     if (!askForPermission(prompt)) {
         halt("Must confirm deleting variable(s)")
     }
-    out <- lapply(unique(urls(to.delete)), crDELETE)
+    lapply(unique(urls(to.delete)), crDELETE)
     dropCache(self(to.delete))
-    invisible(refresh(dataset))
+    return(invisible(refresh(dataset)))
 }
 
 #' @rdname deleteVariables

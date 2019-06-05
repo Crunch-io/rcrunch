@@ -75,7 +75,8 @@ medianInsert <- function(element, var_cats, vec, includeNA = FALSE) {
     # grab category combinations, and then sum those categories.
     combos <- unlist(arguments(element, var_cats))
     which.cats <- names(var_cats[ids(var_cats) %in% combos])
-    num_values <- values(var_cats[which.cats])
+    # the num_values will be used in the function below, which confuses lintr
+    num_values <- values(var_cats[which.cats]) # nolint
 
     return(function(vec) {
         counts <- vec

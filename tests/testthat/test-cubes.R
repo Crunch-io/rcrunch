@@ -106,7 +106,7 @@ df.dims <- list(
 
 arrayify <- function(data, dims) {
     ## dims are names (aliases) of dims defined above
-    dn <- df.dims[dims]
+    dn <- df.dims[dims] # nolint
     array(data, dim = vapply(dn, length, integer(1), USE.NAMES = FALSE), dimnames = dn)
 }
 

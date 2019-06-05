@@ -51,9 +51,11 @@ with_mock_crunch({
         expect_POST(
             newDataset(data.frame(a = 1, really_really_long_name = 2)),
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:entity","body":{"name":"data.frame(a = 1, really_really_long_nam",',
-            '"table":{"element":"crunch:table",',
-            '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"},"really_really_long_name":{"type":"numeric","name":"really_really_long_name","alias":"really_really_long_name"}},',
+            '{"element":"shoji:entity","body":{"name":"data.frame(a = 1, ',
+            'really_really_long_nam","table":{"element":"crunch:table",',
+            '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"},',
+            '"really_really_long_name":{"type":"numeric",',
+            '"name":"really_really_long_name","alias":"really_really_long_name"}},',
             '"order":["a","really_really_long_name"]}}}'
         )
     })

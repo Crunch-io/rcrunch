@@ -18,8 +18,12 @@ with_test_authentication({
     })
     ds <- addVariables(ds, newvars)
     test_that("The flipped variables are created", {
-        expect_true(all(c("Home, flipped", "Work, flipped", "Pet, flipped") %in% names(variables(ds))))
-        expect_true(all(c("Home, flipped", "Work, flipped", "Pet, flipped") %in% names(ds)))
+        expect_true(
+            all(c("Home, flipped", "Work, flipped", "Pet, flipped") %in% names(variables(ds)))
+        )
+        expect_true(
+            all(c("Home, flipped", "Work, flipped", "Pet, flipped") %in% names(ds))
+        )
         expect_identical(
             names(subvariables(ds[["Home, flipped"]])),
             c("Pets by location", "Other pet loc")

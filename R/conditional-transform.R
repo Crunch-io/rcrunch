@@ -124,7 +124,8 @@ conditionalTransform <- function(..., data, else_condition = NA, type = NULL,
                 halt(
                     "When specifying categories, all categories in the ",
                     "results must be included. These categories are in the ",
-                    "results that were not specified in categories: ", serialPaste(uni_results[results_not_categories])
+                    "results that were not specified in categories: ",
+                    serialPaste(uni_results[results_not_categories])
                 )
             }
             result <- factor(result, levels = names(categories))

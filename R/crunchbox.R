@@ -99,7 +99,8 @@ crunchBox <- function(dataset,
         weight = weight,
         ...
     )
-    ## Add "where" after so that it no-ops if variablesFilter returns NULL (i.e. no filter)
+    ## Add "where" after so that it no-ops if variablesFilter returns
+    ## NULL (i.e. no filter)
     payload$where <- variablesFilter(dataset)
 
     ## Add colors if they exist to the payload
@@ -220,8 +221,8 @@ preCrunchBoxCheck <- function(dataset) {
     num_cats <- vapply(vm, function(x) {
         cats <- x$categories
         if (is.null(cats)) {
-              return(0)
-          }
+            return(0)
+        }
         ## We care only about non-missing categories
         return(sum(vapply(cats, function(ctg) !isTRUE(ctg$missing), logical(1))))
     }, numeric(1))
@@ -245,8 +246,8 @@ preCrunchBoxCheck <- function(dataset) {
     longest_cat <- vapply(vm, function(x) {
         cats <- x$categories
         if (is.null(cats)) {
-              return("")
-          }
+            return("")
+        }
         catnames <- vapply(cats, function(ctg) ctg$name, character(1))
         return(catnames[which.max(nchar(catnames))])
     }, character(1))
@@ -286,8 +287,8 @@ preCrunchBoxCheck <- function(dataset) {
     longest_subvar <- vapply(vm, function(x) {
         cats <- x$subreferences
         if (is.null(cats)) {
-              return("")
-          }
+            return("")
+        }
         catnames <- vapply(cats, function(ctg) ctg$name, character(1))
         return(catnames[which.max(nchar(catnames))])
     }, character(1))

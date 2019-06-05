@@ -58,7 +58,9 @@ setMethod("[", "CrunchCube", function(x, i, j, ..., drop = TRUE) {
         return(idx > dim)
     }
 
-    invalid_indices <- unlist(mapply(isInValid, idx = err_indices, dim = dims, SIMPLIFY = FALSE))
+    invalid_indices <- unlist(
+        mapply(isInValid, idx = err_indices, dim = dims, SIMPLIFY = FALSE)
+    )
     if (any(invalid_indices)) {
         errs <- paste(
             "- At position", which(invalid_indices),

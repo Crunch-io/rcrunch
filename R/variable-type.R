@@ -32,7 +32,10 @@ is.MultipleResponse <- is.Multiple
 
 #' @rdname crunch-is
 #' @export
-is.CA <- function(x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't return true for MultipleResponse
+is.CA <- function(x) {
+    ## so it doesn't return true for MultipleResponse
+    return(class(x) %in% "CategoricalArrayVariable")
+}
 
 #' @rdname crunch-is
 #' @export
@@ -92,7 +95,8 @@ castVariable <- function(x, value) {
             " Valid types are ", serialPaste(dQuote(CASTABLE_TYPES))
         )
     }
-    if (type(x) != value) { ## no-op if cast type is same as current type
+    if (type(x) != value) {
+        ## no-op if cast type is same as current type
         crPOST(shojiURL(x, "views", "cast"), body = toJSON(list(cast_as = value)))
         x <- refresh(x)
     }

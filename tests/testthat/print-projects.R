@@ -32,6 +32,7 @@ expect_output(print(projects(), pretty = TRUE),
     fixed = TRUE
 )
 
+# nolint start
 expect_output(print(cd(projects(), "Project One"), depth = 1),
     "/Project One/
 ├── an archived dataset
@@ -43,3 +44,4 @@ expect_output(print(cd(projects(), "Project One"), depth = 1),
 └── streaming no messages",
     fixed = TRUE
 )
+# nolint end

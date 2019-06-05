@@ -30,7 +30,10 @@ with_mock_crunch({
     })
 
     test_that("Can delete a hidden variable", {
-        skip_on_jenkins("No idea why this fails to catch the warning on Jenkins but not on Travis or locally")
+        skip_on_jenkins(paste0(
+            "No idea why this fails to catch the warning on Jenkins but not on ",
+            "Travis or locally"
+        ))
         with_consent({
             expect_warning(
                 expect_DELETE(

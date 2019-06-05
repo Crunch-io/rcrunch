@@ -49,7 +49,10 @@ with_test_authentication({
         })
         part1 <- cleanseBatches(part1)
 
-        test_that("Can re-alias array variables to make them line up **and then drop rows** (and old refs don't reappear)", {
+        test_that(paste0(
+            "Can re-alias array variables to make them line up ",
+            "**and then drop rows** (and old refs don't reappear)"
+        ), {
             alias(part2$CA2) <- "CA1"
             ## This is the critical piece to trigger the error: delete rows after realiasing
             part2 <- dropRows(part2, seq_len(nrow(part2)) == 1)
@@ -111,7 +114,10 @@ with_test_authentication({
         df2 <- data.frame(bar = c(100:1))
         ds2 <- newDataset(df2)
 
-        ds1$new1 <- makeCaseVariable(`less than one` = ds1$foo < 1, other = "else", name = "new one")
+        ds1$new1 <- makeCaseVariable(
+            `less than one` = ds1$foo < 1,
+            other = "else", name = "new one"
+        )
         ds <- appendDataset(ds1, ds2)
 
         expect_equal(nrow(ds), 200)

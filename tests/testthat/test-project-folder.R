@@ -24,7 +24,7 @@ with_mock_crunch({
             projects()
         )
         expect_identical(
-            projects() %>% cd("Project One/Project Two") %>% cd("/Project One"),
+            projects() %>% cd("Project One/Project Two") %>% cd("/Project One"), # nolint
             cd(projects(), "Project One")
         )
     })
@@ -58,10 +58,10 @@ with_mock_crunch({
 
     test_that("path()", {
         expect_identical(path(projects()), "/")
-        expect_identical(path(cd(projects(), "Project One")), "/Project One")
+        expect_identical(path(cd(projects(), "Project One")), "/Project One") # nolint
         expect_identical(
             path(cd(projects(), "Project One/Project Two")),
-            "/Project One/Project Two"
+            "/Project One/Project Two" # nolint
         )
     })
 
@@ -224,7 +224,10 @@ with_mock_crunch({
             expect_error(
                 proj %>%
                     rmdir("Project Two"),
-                "Cannot remove 'Project Two' because it is not empty. Move its contents somewhere else and then retry."
+                paste0(
+                    "Cannot remove 'Project Two' because it is not empty. Move ",
+                    "its contents somewhere else and then retry."
+                )
             )
         })
     })

@@ -173,19 +173,27 @@ with_mock_crunch({
             c("Gender", "Text variable ftw", "Birth Year")
         )
         expect_identical(
-            names(measures(crtabs(list(mean(birthyr), max(birthyr)) ~ gender + textVar, data = ds))),
+            names(measures(
+                crtabs(list(mean(birthyr), max(birthyr)) ~ gender + textVar, data = ds)
+            )),
             c("Birth Year", "Birth Year")
         )
         expect_identical(
-            names(variables(crtabs(list(mean(birthyr), max(birthyr)) ~ gender + textVar, data = ds))),
+            names(variables(
+                crtabs(list(mean(birthyr), max(birthyr)) ~ gender + textVar, data = ds)
+            )),
             c("Gender", "Text variable ftw", "Birth Year")
         ) ## De-duped
         expect_identical(
-            names(measures(crtabs(list(mean(birthyr), max(starttime)) ~ gender + textVar, data = ds))),
+            names(measures(
+                crtabs(list(mean(birthyr), max(starttime)) ~ gender + textVar, data = ds)
+            )),
             c("Interview Start Time", "Birth Year")
         ) ## Order in the JSON is reversed
         expect_identical(
-            names(variables(crtabs(list(mean(birthyr), max(starttime)) ~ gender + textVar, data = ds))),
+            names(variables(
+                crtabs(list(mean(birthyr), max(starttime)) ~ gender + textVar, data = ds)
+            )),
             c("Gender", "Text variable ftw", "Interview Start Time", "Birth Year")
         )
     })

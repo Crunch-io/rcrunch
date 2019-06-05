@@ -1,5 +1,6 @@
 options(
-    ## For real auth, pass in creds via env vars. This makes login() not error when mocking
+    ## For real auth, pass in creds via env vars. This makes login() not error
+    ## when mocking
     crunch.email = "fake",
     crunch.pw = "fake",
     crunch.show.progress = FALSE

@@ -63,36 +63,65 @@ with_mock_crunch({
     })
 
     test_that("Can't compose CrunchLogicalExprs with invalid", {
-        expect_error(ds$gender %in% "Male" | ds$NOTAVARIABLE == 3,
-            "Invalid expression (probably a reference to a variable that doesn't exist): ds$gender %in% \"Male\" | ds$NOTAVARIABLE == 3",
+        expect_error(
+            ds$gender %in% "Male" | ds$NOTAVARIABLE == 3,
+            paste0(
+                "Invalid expression (probably a reference to a variable that ",
+                "doesn't exist): ds$gender %in% \"Male\" | ds$NOTAVARIABLE == 3"
+            ),
             fixed = TRUE
         )
-        expect_error(ds$gender %in% "Male" & ds$NOTAVARIABLE == 3,
-            "Invalid expression (probably a reference to a variable that doesn't exist): ds$gender %in% \"Male\" & ds$NOTAVARIABLE == 3",
+        expect_error(
+            ds$gender %in% "Male" & ds$NOTAVARIABLE == 3,
+            paste0(
+                "Invalid expression (probably a reference to a variable that ",
+                "doesn't exist): ds$gender %in% \"Male\" & ds$NOTAVARIABLE == 3"
+            ),
             fixed = TRUE
         )
-        expect_error(ds$NOTAVARIABLE == 3 | ds$gender %in% "Male",
-            "Invalid expression (probably a reference to a variable that doesn't exist): ds$NOTAVARIABLE == 3 | ds$gender %in% \"Male\"",
+        expect_error(
+            ds$NOTAVARIABLE == 3 | ds$gender %in% "Male",
+            paste0(
+                "Invalid expression (probably a reference to a variable ",
+                "that doesn't exist): ds$NOTAVARIABLE == 3 | ds$gender ",
+                "%in% \"Male\""
+            ),
             fixed = TRUE
         )
-        expect_error(badexpr | ds$gender %in% "Male",
-            "Invalid expression (probably a reference to a variable that doesn't exist): badexpr | ds$gender %in% \"Male\"",
+        expect_error(
+            badexpr | ds$gender %in% "Male",
+            paste0(
+                "Invalid expression (probably a reference to a variable that ",
+                "doesn't exist): badexpr | ds$gender %in% \"Male\""
+            ),
             fixed = TRUE
         )
-        expect_error(!(ds$NOTAVARIABLE == 3) | ds$gender %in% "Male",
-            "Invalid expression (probably a reference to a variable that doesn't exist): !(ds$NOTAVARIABLE == 3) | ds$gender %in% \"Male\"",
+        expect_error(
+            !(ds$NOTAVARIABLE == 3) | ds$gender %in% "Male",
+            paste0(
+                "Invalid expression (probably a reference to a variable that ",
+                "doesn't exist): !(ds$NOTAVARIABLE == 3) | ds$gender %in% \"Male\""
+            ),
             fixed = TRUE
         )
         expect_error(
             with(ds, NOTAVARIABLE == 3 | gender %in% "Male"),
             "object 'NOTAVARIABLE' not found"
         ) ## Base R error
-        expect_error(ds$NOTAVARIABLE %in% 3 | ds$gender %in% "Male",
-            "Invalid expression (probably a reference to a variable that doesn't exist): ds$NOTAVARIABLE %in% 3 | ds$gender %in% \"Male\"",
+        expect_error(
+            ds$NOTAVARIABLE %in% 3 | ds$gender %in% "Male",
+            paste0(
+                "Invalid expression (probably a reference to a variable that ",
+                "doesn't exist): ds$NOTAVARIABLE %in% 3 | ds$gender %in% \"Male\""
+            ),
             fixed = TRUE
         )
-        expect_error(suppressWarnings(is.na(ds$NOTAVARIABLE) | ds$gender %in% "Male"),
-            "Invalid expression (probably a reference to a variable that doesn't exist): is.na(ds$NOTAVARIABLE) | ds$gender %in% \"Male\"",
+        expect_error(
+            suppressWarnings(is.na(ds$NOTAVARIABLE) | ds$gender %in% "Male"),
+            paste0(
+                "Invalid expression (probably a reference to a variable that ",
+                "doesn't exist): is.na(ds$NOTAVARIABLE) | ds$gender %in% \"Male\""
+            ),
             fixed = TRUE
         )
     })

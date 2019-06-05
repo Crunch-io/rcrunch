@@ -70,7 +70,9 @@ with_mock_crunch({
 
     test_that("compareVariables", {
         expect_equal(
-            summarizeCompareVariables(compareVariables(allVariables(ds1), allVariables(ds2)))$problems,
+            summarizeCompareVariables(
+                compareVariables(allVariables(ds1), allVariables(ds2))
+            )$problems,
             list(
                 mismatched.type = "birthyr",
                 mismatched.name = c("birthyr", "starttime", "birthyr2")
@@ -153,7 +155,10 @@ with_mock_crunch({
                 "",
                 "Subvariables in B have multiple parents: mymrset and mymrset2 ",
                 "",
-                "Contains subvariables found in other arrays after matching: catarray and mymrset2 ",
+                paste0(
+                    "Contains subvariables found in other arrays after ",
+                    "matching: catarray and mymrset2 "
+                ),
                 "",
                 "$catarray",
                 "Total subvariables: 3 ",

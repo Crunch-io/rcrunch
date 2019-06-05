@@ -48,7 +48,8 @@
 #' @importFrom utils modifyList
 combine <- function(variable, combinations = list(), ...) {
     ## Validate inputs
-    if (!(type(variable) %in% c("categorical", "categorical_array", "multiple_response"))) {
+    valid_types <- c("categorical", "categorical_array", "multiple_response")
+    if (!(type(variable) %in% valid_types)) {
         halt(
             "Cannot combine ", dQuote(name(variable)), ": must be type ",
             "categorical, categorical_array, or multiple_response"

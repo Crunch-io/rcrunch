@@ -211,7 +211,7 @@ envOrOption <- function(opt, default = NULL) {
 #' @export
 setCrunchAPI <- function(subdomain, port = NULL) {
     if (!is.null(port)) {
-        api <- paste0("http://", subdomain, ".crunch.io:", port, "/api/")
+        api <- paste0("http://", subdomain, ".crunch.io:", port, "/api/") # nolint
     } else {
         api <- paste0("https://", subdomain, ".crunch.io/api/")
     }
@@ -220,8 +220,8 @@ setCrunchAPI <- function(subdomain, port = NULL) {
 }
 
 
-# halt if variable is an array variable. If callingFunc is provided, provide the function that
-# the user used to get to this point.
+# halt if variable is an array variable. If callingFunc is provided, provide
+# the function that the user used to get to this point.
 haltIfArray <- function(variable, callingFunc) {
     # if the variable is not an array type, return quickly
     # TODO: should this also short-circuit if variable is not a variable?

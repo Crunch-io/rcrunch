@@ -805,7 +805,7 @@ with_test_authentication({
         bad.vg <- starting.vg
         entities(bad.vg[[1]]) <- c(
             entities(bad.vg[[1]])[-2],
-            "/not/a/variable"
+            "/not/a/variable" # nolint
         )
         expect_error(
             ordering(ds) <- bad.vg,

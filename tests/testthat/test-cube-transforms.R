@@ -313,8 +313,10 @@ test_that("applyTransforms handles useNA", {
 cat_by_cat <- loadCube("cubes/cat-by-cat-col-subtotals.json")
 cat_by_cat_dims <- dimnames(cat_by_cat)
 # drop no data categories, and add in the subtotals
-cat_by_cat_dims$food_groups <- cat_by_cat_dims$food_groups[!(cat_by_cat_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))]
-cat_by_cat_dims$offal <- cat_by_cat_dims$offal[!(cat_by_cat_dims$offal %in% c("Don't know", "No Data", "Not asked"))]
+cond <- !(cat_by_cat_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))
+cat_by_cat_dims$food_groups <- cat_by_cat_dims$food_groups[cond]
+cond <- !(cat_by_cat_dims$offal %in% c("Don't know", "No Data", "Not asked"))
+cat_by_cat_dims$offal <- cat_by_cat_dims$offal[cond]
 cat_by_cat_dims_subtotals <- cat_by_cat_dims
 cat_by_cat_dims_subtotals$food_groups <- c(
     cat_by_cat_dims_subtotals$food_groups[1], "plant-based",
@@ -484,6 +486,7 @@ test_that("cat by cat with both column and row subtotals", {
     skip_on_local_env("Pretty formatting isn't exactly the same in many terminals")
     expect_prints(
         pet_feeling_both,
+        # nolint start
         paste(
             "                 animals",
             "feelings             cats \033[30m\033[3mfelines\033[23m\033[39m    dogs \033[30m\033[3m   both\033[23m\033[39m",
@@ -496,6 +499,7 @@ test_that("cat by cat with both column and row subtotals", {
             "\033[30m\033[3m          unhappy      21 \033[30m\033[3m     21\033[3m\033[30m      22 \033[30m\033[3m     43\033[3m\033[30m\033[23m\033[39m",
             sep = "\n"
         ),
+        # nolint end
         fixed = TRUE
     )
 })
@@ -618,6 +622,7 @@ test_that("broken row transforms don't break columns", {
     skip_on_local_env("Pretty formatting isn't exactly the same in many terminals")
     expect_warning(expect_prints(
         pet_feeling_bad_feelings,
+        # nolint start
         paste(
             "                 animals",
             "feelings             cats \033[30m\033[3mfelines\033[23m\033[39m    dogs \033[30m\033[3m   both\033[23m\033[39m",
@@ -628,6 +633,7 @@ test_that("broken row transforms don't break columns", {
             "extremely unhappy      11 \033[30m\033[3m     11\033[23m\033[39m      12 \033[30m\033[3m     23\033[23m\033[39m",
             sep = "\n"
         ),
+        # nolint end
         fixed = TRUE
     ), "Transforms for dimensions 1 were malformed and have been ignored.")
 })
@@ -713,7 +719,8 @@ test_that("Two bad transforms are both ignored", {
 cat_mr <- loadCube("cubes/cat-x-mr-subtotals-on-cat.json")
 cat_mr_dims <- dimnames(cat_mr)
 # drop no data categories, and add in the subtotals
-cat_mr_dims$food_groups <- cat_mr_dims$food_groups[!(cat_mr_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))]
+cond <- !(cat_mr_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))
+cat_mr_dims$food_groups <- cat_mr_dims$food_groups[cond]
 cat_mr_dims_subtotals <- cat_mr_dims
 cat_mr_dims_subtotals$food_groups <- c(
     cat_mr_dims_subtotals$food_groups[1], "plant-based",
@@ -963,7 +970,8 @@ test_that("Can get subtotals with headers", {
 cat <- loadCube("cubes/cat-subtotals-0id.json")
 cat_dims <- dimnames(cat)
 # drop no data categories, and add in the subtotals
-cat_dims$food_groups <- cat_dims$food_groups[!(cat_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))]
+cond <- !(cat_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))
+cat_dims$food_groups <- cat_dims$food_groups[cond]
 cat_dims_subtotals <- cat_dims
 cat_dims_subtotals$food_groups <- c(
     cat_dims_subtotals$food_groups[1], "plant-based",

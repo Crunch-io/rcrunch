@@ -41,7 +41,7 @@ login <- function(email = envOrOption("crunch.email"),
         ## We may already be logged in. Log out first.
         logout()
     }
-    auth <- crunchAuth(email = email, password = password, ...)
+    crunchAuth(email = email, password = password, ...)
     options(
         prompt = paste("[crunch]", getOption("prompt")),
         crunch.old.prompt = getOption("prompt")

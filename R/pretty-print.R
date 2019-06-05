@@ -234,7 +234,8 @@ colored_print <- function(x, styler = force, empty = "") {
 }
 
 #' @export
-print.ShojiFolder <- function(x, depth = 0, verbose = FALSE, pretty = !verbose & depth > 0, ...) {
+print.ShojiFolder <- function(x, depth = 0, verbose = FALSE,
+                              pretty = !verbose & depth > 0, ...) {
     if (pretty) {
         out <- c(formatFolderTitle(x), print_tree(x, depth = depth))
         cat(out, sep = "\n")

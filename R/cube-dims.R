@@ -168,7 +168,8 @@ getDimTypes <- function(x) {
         if (alias(one_var) %in% array_aliases) {
             # we are in an array, we need to figure out if this is a multiple
             # response or not
-            array_cat_dim <- vars[aliases(vars) == alias(one_var) & types(vars) == "categorical"]
+            is.arr <- aliases(vars) == alias(one_var) & types(vars) == "categorical"
+            array_cat_dim <- vars[is.arr]
 
             # if we can't find the matching categories dimension we might have a
             # subset cube, so simply return the dim_type un-identified (this

@@ -22,7 +22,10 @@ share <- function(dataset, users, edit = FALSE, notify = TRUE, message = NULL) {
         edit <- rep(edit, length(users))
     }
     if (length(edit) != length(users)) {
-        halt("Must supply `edit` permissions of equal length as the number of `emails` supplied")
+        halt(
+            "Must supply `edit` permissions of equal length as the number of ",
+            "`emails` supplied"
+        )
     }
     if (!is.null(message) && !notify) {
         halt("Cannot send message if not notifying")
@@ -44,7 +47,7 @@ share <- function(dataset, users, edit = FALSE, notify = TRUE, message = NULL) {
 }
 
 passwordSetURLTemplate <- function() {
-    absoluteURL("/password/change/${token}/", getOption("crunch.api"))
+    absoluteURL("/password/change/${token}/", getOption("crunch.api")) # nolint
 }
 
 #' Revoke a user's access to a dataset

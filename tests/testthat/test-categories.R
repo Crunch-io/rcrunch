@@ -19,7 +19,12 @@ with_mock_crunch({
         )
         expect_prints(
             cats,
-            get_output(data.frame(id = c(1, 2, -1), name = c("Male", "Female", "No Data"), value = c(1, 2, NA), missing = c(FALSE, FALSE, TRUE)))
+            get_output(
+                data.frame(
+                    id = c(1, 2, -1), name = c("Male", "Female", "No Data"),
+                    value = c(1, 2, NA), missing = c(FALSE, FALSE, TRUE)
+                )
+            )
         )
     })
 
@@ -251,7 +256,12 @@ with_mock_crunch({
         )
     })
     test_that("is.selected assignment methods", {
-        true_body <- '{"categories":[{"id":1,"missing":false,"name":"0.0","numeric_value":0,"selected":true},{"id":2,"missing":false,"name":"1.0","numeric_value":1,"selected":true},{"id":-1,"missing":true,"name":"No Data","numeric_value":null,"selected":true}]}'
+        true_body <- paste0(
+            '{"categories":[{"id":1,"missing":false,"name":"0.0","numeric_value":',
+            '0,"selected":true},{"id":2,"missing":false,"name":"1.0",',
+            '"numeric_value":1,"selected":true},{"id":-1,"missing":true,',
+            '"name":"No Data","numeric_value":null,"selected":true}]}'
+        )
 
         expect_PATCH(
             is.selected(categories(ds$mymrset)) <- c(TRUE, TRUE, TRUE),
@@ -266,7 +276,13 @@ with_mock_crunch({
         expect_PATCH(
             is.selected(categories(ds$mymrset)[2]) <- TRUE,
             "https://app.crunch.io/api/datasets/1/variables/mymrset/",
-            '{"categories":[{"id":1,"missing":false,"name":"0.0","numeric_value":0,"selected":false},{"id":2,"missing":false,"name":"1.0","numeric_value":1,"selected":true},{"id":-1,"missing":true,"name":"No Data","numeric_value":null,"selected":false}]}'
+            paste0(
+                '{"categories":[{"id":1,"missing":false,"name":"0.0",',
+                '"numeric_value":0,"selected":false},{"id":2,"missing":false,',
+                '"name":"1.0","numeric_value":1,"selected":true},{"id":-1,',
+                '"missing":true,"name":"No Data","numeric_value":null,',
+                '"selected":false}]}'
+            )
         )
     })
     test_that("is.selected assignment errors correctly", {

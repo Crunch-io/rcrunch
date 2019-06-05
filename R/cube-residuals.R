@@ -62,7 +62,7 @@ standardizedMRResiduals <- function(cube) {
     # calculate expected values
     E <- r * c / n
     # calculate variance
-    V <- r * c * (n - r) * (n - c) / n^3
+    V <- r * c * (n - r) * (n - c) / n^3 # nolint
     out <- (cube_array - E) / sqrt(V)
     if (is.array(out)) {
         out <- makeCrunchCubeCalculation(out, cube@dims, "z_score")
@@ -222,8 +222,6 @@ compareDimsPairwise <- function(cube, dim = c("cols", "rows"), baseline) {
         len_out <- dim(as.array(cube))[2]
         names <- rownames(as.array(cube))
     }
-
-    to_compare <- names[!(names %in% baseline)]
 
     out <- vapply(
         names, function(one_extent) {

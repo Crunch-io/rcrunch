@@ -42,8 +42,8 @@ math.exp <- function(e1, e2, operator) {
         ## Because of how this function is invoked, get the offending expression
         ## from the call before this one
         halt(
-            "Invalid expression (probably a reference to a variable that doesn't exist): ",
-            deparseAndFlatten(tail(sys.calls(), 2)[[1]])
+            "Invalid expression (probably a reference to a variable that ",
+            "doesn't exist): ", deparseAndFlatten(tail(sys.calls(), 2)[[1]])
         )
     }
     ex <- zfunc(operator, e1, e2)
@@ -102,8 +102,10 @@ crunch.ops <- function(i) {
     c("NumericVariable", "numeric"),
     c("DatetimeVariable", "Date"),
     c("DatetimeVariable", "POSIXt"),
-    c("DatetimeVariable", "character"), ## TODO: validate that the "character" is valid 8601?
-    c("CategoricalVariable", "numeric") ## TODO: add cast(x, "numeric") around var for this?
+    ## TODO: validate that the "character" is valid 8601?
+    c("DatetimeVariable", "character"),
+    ## TODO: add cast(x, "numeric") around var for this?
+    c("CategoricalVariable", "numeric")
 )
 
 .rtypes <- unique(vapply(.sigs, function(a) a[[2]], character(1)))

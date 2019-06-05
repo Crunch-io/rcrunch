@@ -11,13 +11,18 @@ with_mock_crunch({
             '{"categories":'
         )
     })
-    test_that("If an subvariables gets NA assigned and it doesn't have No Data, we add that category to its parent", {
-        expect_PATCH(
-            ds2$mymrset[[1]][3] <- NA,
-            "https://app.crunch.io/api/datasets/2/variables/mymrset/",
-            '{"categories":'
-        )
-    })
+    test_that(
+        paste0(
+            "If an subvariables gets NA assigned and it doesn't have No Data, ",
+            "we add that category to its parent"
+        ), {
+            expect_PATCH(
+                ds2$mymrset[[1]][3] <- NA,
+                "https://app.crunch.io/api/datasets/2/variables/mymrset/",
+                '{"categories":'
+            )
+        }
+    )
     test_that("is.na<- sends an expression", {
         expect_POST(
             is.na(ds$birthyr) <- ds$birthyr > 2016,

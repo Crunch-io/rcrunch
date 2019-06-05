@@ -48,8 +48,8 @@ test_that("ShojiCatalog", {
         "Subscript out of bounds: got 3 logicals, need 2"
     )
     expect_identical(sho[TRUE], sho)
-    expect_identical(sho["/a"], sho[1])
-    expect_error(sho[c("/a", "c")], "Undefined elements selected: c")
+    expect_identical(sho["/a"], sho[1]) # nolint
+    expect_error(sho[c("/a", "c")], "Undefined elements selected: c") # nolint
 })
 
 with_mock_crunch({

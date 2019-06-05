@@ -19,7 +19,11 @@ with_mock(
     }, {
         test_that("Gadget calling", {
             expect_error(makeArrayGadget(), "crunchy::makeArrayGadget() called", fixed = TRUE)
-            expect_error(listDatasets(shiny = TRUE), "crunchy::listDatasetGadget(kind = kind, refresh = refresh) called", fixed = TRUE)
+            expect_error(
+                listDatasets(shiny = TRUE),
+                "crunchy::listDatasetGadget(kind = kind, refresh = refresh) called",
+                fixed = TRUE
+            )
         })
     }
 )

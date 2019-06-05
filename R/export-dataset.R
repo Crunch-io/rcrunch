@@ -95,4 +95,6 @@ variablesFilter <- function(dataset, include.hidden = FALSE) {
 
 #' @rdname exportDataset
 #' @export
-setMethod("write.csv", "CrunchDataset", function(x, ...) exportDataset(x, ..., format = "csv"))
+setMethod("write.csv", "CrunchDataset", function(x, ...) {
+    exportDataset(x, ..., format = "csv")
+})

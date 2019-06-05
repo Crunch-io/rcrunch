@@ -105,9 +105,12 @@ with_mock_crunch({
         '{"filter":null,',
         '"where":{"function":"select",',
         '"args":[{"map":{',
-        '"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
-        '"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},',
-        '"d7c21314ca9e453c93069168681a285c":{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]'
+        '"66ae9881e3524f7db84970d556c34552":',
+        '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+        '"f78ca47313144b57adfb495893968e70":',
+        '{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},',
+        '"d7c21314ca9e453c93069168681a285c":',
+        '{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]'
     )
     test_that("exporting hidden variables", {
         ds <- loadDataset("ECON.sav")
@@ -129,8 +132,10 @@ with_mock_crunch({
             '{"filter":null,',
             '"where":{"function":"select",',
             '"args":[{"map":{',
-            '"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
-            '"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}'
+            '"66ae9881e3524f7db84970d556c34552":',
+            '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+            '"f78ca47313144b57adfb495893968e70":',
+            '{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}'
         )
         # Hidden variables can be exported by name without include.hidden
         expect_POST(
@@ -145,7 +150,10 @@ with_mock_crunch({
         )
     })
     test_that("users can specify all variables by name and get the hidden variables", {
-        skip("TODO modify variablesFilter to distinguish between a fully specified variable subset and the original dataset")
+        skip(paste0(
+            "TODO modify variablesFilter to distinguish between a fully specified ",
+            "variable subset and the original dataset"
+        ))
         # Currently the API makes us send hidden variables as a where clause to
         # the export API. We work around this by asking for hidden variables when
         # the user specifies them in the variable subset. We don't currently have a
@@ -160,12 +168,14 @@ with_mock_crunch({
     })
 })
 
+# nolint start
 validExport <- function(df2) {
     expect_identical(dim(df2), dim(ds))
     expect_equal(df2$v3, df$v3)
     expect_identical(levels(df2$v4), c("B", "C"))
     ## assert more
 }
+# nolint end
 
 with_test_authentication({
     ds <- newDataset(df)

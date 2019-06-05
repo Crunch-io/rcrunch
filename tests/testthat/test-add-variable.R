@@ -279,7 +279,10 @@ test_that("POSTNewVariable rejects invalid categories", {
 
 test_that("checkVarDefErrors errors correctly", {
     test_errs <- lapply(list("a", "b", 29), function(x) try(log(x), silent = TRUE))
-    expect_error(checkVarDefErrors(test_errs), "The following variable definitions errored on upload: 1, 2")
+    expect_error(
+        checkVarDefErrors(test_errs),
+        "The following variable definitions errored on upload: 1, 2"
+    )
     test_errs <- lapply(list(29, 23, 24), function(x) try(log(x), silent = TRUE))
     expect_silent(checkVarDefErrors(test_errs))
 })

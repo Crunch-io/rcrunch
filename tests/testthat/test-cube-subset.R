@@ -175,7 +175,10 @@ test_that("subsetArrayDimension categorical array dimension", {
             )
         )
     )
-    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[2]], c(2:3), "ca_categories"), expected)
+    expect_identical(
+        subsetArrayDimension(catarray_x_mr@dims[[2]], c(2:3), "ca_categories"),
+        expected
+    )
 })
 
 test_that("translateCubeIndex", {

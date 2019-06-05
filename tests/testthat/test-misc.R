@@ -51,8 +51,8 @@ test_that("joinPath", {
         "a/b/c/e/h/"
     )
     expect_identical(
-        joinPath("https://app.crunch.io/api/datasets/", "/variables/"),
-        "/variables/"
+        joinPath("https://app.crunch.io/api/datasets/", "/variables/"), # nolint
+        "/variables/" # nolint
     )
     expect_identical(
         joinPath("https://app.crunch.io/api/datasets/", "/"),
@@ -82,7 +82,7 @@ test_that("absoluteURL", {
         "https://fake.crunch.io/a/b/c/e/h/"
     )
     expect_identical(
-        absoluteURL("/variables/", base.url),
+        absoluteURL("/variables/", base.url), # nolint
         "https://fake.crunch.io/variables/"
     )
     expect_identical(

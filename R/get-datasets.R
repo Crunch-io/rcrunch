@@ -184,7 +184,10 @@ loadDataset <- function(dataset,
         }
         return(out)
     } else if (is.whole(dataset)) {
-        warning("'dataset' should be a character dataset name, path, or URL. Loading by numeric index is deprecated.")
+        warning(
+            "'dataset' should be a character dataset name, path, or URL. ",
+            "Loading by numeric index is deprecated."
+        )
         dsname <- listDatasets(kind = kind, project = project)[dataset]
         if (is.na(dsname)) {
             halt("subscript out of bounds")
@@ -195,7 +198,10 @@ loadDataset <- function(dataset,
             project = project
         ))
     } else {
-        halt("'dataset' should be a character dataset name, path, or URL, not an object of class ", class(dataset))
+        halt(
+            "'dataset' should be a character dataset name, path, or URL, ",
+            "not an object of class ", class(dataset)
+        )
     }
 }
 
@@ -205,12 +211,12 @@ is.crunchURL <- function(x) {
     # Note that this does pass through URLs that are to resources inside a
     # dataset, such as /api/datasets/123/variables/.
     # Call `datasetReference()` on the return to get a dataset URL
-    is.character(x) && length(x) == 1L && grepl("^http|^/api/", x)
+    is.character(x) && length(x) == 1L && grepl("^http|^/api/", x) # nolint
 }
 
 loadDatasetFromURL <- function(url) {
     ## Load dataset without touching a dataset catalog
-    if (!grepl("/api/", url)) {
+    if (!grepl("/api/", url)) { # nolint
         ## It's a web app URL, probably. Turn it into an API URL
         url <- datasetReference(url)
     }

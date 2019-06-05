@@ -141,7 +141,7 @@ haven_labelled_spss_func <- function(x, ...) {
     # convert to factor quickly (the recommended workflow for labelled objects
     # from haven, since there are few methods for labelled objects)
     x_factor <- as.factor(x)
-    nlevels <- length(levels(x_factor))
+
     categories <- categoriesFromLevels(levels(x_factor))
     # grab the user missing levels
     user_missings <- levels(droplevels(x_factor[is.na(x)]))

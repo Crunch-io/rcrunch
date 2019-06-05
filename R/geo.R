@@ -142,7 +142,9 @@ addGeoMetadata <- function(variable, ...) {
             )
             match_scores <- match_scores[1, ]
         } else {
-            halt(multiMatchHelper(match_scores, match_field, deparse(substitute(variable))))
+            halt(multiMatchHelper(
+                match_scores, match_field, deparse(substitute(variable))
+            ))
         }
     }
 
@@ -207,7 +209,11 @@ availableGeodata <- function(x = getAPIRoot()) {
 #'
 #' @export
 availableGeodataFeatures <- function(x = getAPIRoot(),
-                                     geodatum_fields = c("name", "description", "location")) {
+                                     geodatum_fields = c(
+                                         "name",
+                                         "description",
+                                         "location"
+                                     )) {
     geo_cat <- availableGeodata(x)
 
     # grab each geodatum in order to get metadata
