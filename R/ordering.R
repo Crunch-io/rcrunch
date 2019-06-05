@@ -107,41 +107,61 @@ setMethod("ordering<-", "DatasetCatalog", .stopDatasetOrderSetter)
 #' @export
 setMethod("ordering<-", "ProjectFolder", .stopDatasetOrderSetter)
 
-#' Copy the variable order from one dataset to another.
+#' Copy the folder structure from one dataset to another.
 #'
 #' @param source the dataset you want to copy the order from
 #' @param target the dataset you want to copy the order to
-#' @return returns an object of class [`VariableOrder`] (which can be assigned
-#' to a dataset with [`ordering`])
+#' @return returns the target dataset with source's folder structure
 #' @examples
 #' \dontrun{
-#' ordering(ds) <- copyOrder(ds1, ds)
+#' ds <- copyOrder(ds1, ds)
 #' }
 #' @export
 copyOrder <- function(source, target) {
     if (!is.dataset(source) | !is.dataset(target)) {
         halt("Both source and target must be Crunch datasets.")
     }
+    
+    getVars <- function(folder_url){
+    test_fold <- crGET(folder_url)
+    unlist(unname(lapply(test_fold$index,function(x){x$alias})))
+}
 
-    ord <- entities(ordering(source))
 
-    # make url and alias maps
-    url_to_alias_source <- as.list(structure(aliases(allVariables(source)), .Names = urls(allVariables(source))))
-    alias_to_url_target <- as.list(structure(urls(allVariables(target)), .Names = aliases(allVariables(target))))
+makePaths <- function(folder, nm = folder$name){
+        
+        parent_url <- folder$parent
+        if (parent_url %in% "../"){
+            path <- gsub("..","",parent_url,fixed=TRUE)
+            path <- paste0(path,nm)
+            return(path)
+        }else{
+            path <- paste0(source_parents_idx[[parent_url]]$name,"/",nm)
+            makePaths(source_parents_idx[[parent_url]], nm = path)
+            }
+    
+}
 
-    new_ord <- lapply(ord, copyOrderGroup,
-        source_map = url_to_alias_source,
-        target_map = alias_to_url_target
-    )
 
-    # drop any null entities, those that were not found in target but in source
-    new_ord <- removeMissingEntities(new_ord)
-    new_ord <- do.call(VariableOrder, new_ord)
-
-    # set catalog URL so show methods work on the new ordering
-    new_ord@catalog_url <- variableCatalogURL(target)
-
-    return(new_ord)
+    folders_endpoint_url <- shojiURL(ds,collection="catalogs",key="folders")
+    parents_endpoint_url <- paste0(folders_endpoint_url,"/parents")
+    source_parents_endpoint <- crGET(parents_endpoint_url)
+    ##for each folder
+    ##Construct pathway to root (using parents part of the api)
+    ##Get vars in folder
+    paths <- lapply(source_parents_endpoint$index, makePaths)
+    
+    all_folder_urls <- gsub("../","",names(source_parents_endpoint$index),fixed="TRUE")
+    all_folder_urls <- paste0(folders_endpoint_url,all_folder_urls)
+    folder_aliases <- lapply(all_folder_urls,getVars)
+    
+    target_aliases <- aliases(variables(target))
+    for (i in 1:length(paths)){
+        present_in_both <- intersect(folder_aliases[[i]],target_aliases)
+        mv(target,present_in_both,paths[[i]])
+    }
+    
+    return(refresh(target))
 }
 
 #' Copy the order of a `VariableGroup` (or individual variable URL) from `VariableOrder`
