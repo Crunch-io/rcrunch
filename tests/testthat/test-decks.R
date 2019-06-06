@@ -253,18 +253,24 @@ with_mock_crunch({
             names(main_deck) <- c("new_name", "other_new_name", "other_new_name"),
             "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
             '{"element":"shoji:catalog","index":',
-            '{"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":{"title":"new_name"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":{"title":"other_new_name"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":{"title":"other_new_name"}}}'
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":',
+            '{"title":"new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":',
+            '{"title":"other_new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":',
+            '{"title":"other_new_name"}}}'
         )
 
         expect_PATCH(
             titles(main_deck) <- c("new_name", "other_new_name", "other_new_name"),
             "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
             '{"element":"shoji:catalog","index":',
-            '{"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":{"title":"new_name"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":{"title":"other_new_name"},',
-            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":{"title":"other_new_name"}}}'
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":',
+            '{"title":"new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":',
+            '{"title":"other_new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":',
+            '{"title":"other_new_name"}}}'
         )
     })
 
@@ -395,24 +401,28 @@ with_mock_crunch({
         expect_PATCH(
             filter(main_deck[[3]]) <- filters(ds)[["Occasional Political Interest"]],
             "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/datasets/1/filters/filter1/"]}'
+            '{"query_environment":{"filter":["https://app.crunch.io/api/',
+            'datasets/1/filters/filter1/"]}'
         )
         expect_PATCH(
             filter(analysis(main_deck[[3]])) <- filters(ds)[["Public filter"]],
             "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/datasets/1/filters/filter2/"]}'
+            '{"query_environment":{"filter":["https://app.crunch.io/api/',
+            'datasets/1/filters/filter2/"]}'
         )
 
         # named filters (through teh decks catalog)
         expect_PATCH(
             filter(decks(ds)[[2]][[3]]) <- filters(ds)[["Occasional Political Interest"]],
             "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/datasets/1/filters/filter1/"]}'
+            '{"query_environment":{"filter":["https://app.crunch.io/api/',
+            'datasets/1/filters/filter1/"]}'
         )
         expect_PATCH(
             filter(analysis(decks(ds)[[2]][[3]])) <- filters(ds)[["Public filter"]],
             "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/datasets/1/filters/filter2/"]}'
+            '{"query_environment":{"filter":["https://app.crunch.io/api/',
+            'datasets/1/filters/filter2/"]}'
         )
     })
 
@@ -735,9 +745,9 @@ with_test_authentication({
         expect_equal(
             names(settings),
             c(
-                "percentageDirection", "showEmpty", "showMean", "vizType", "countsOrPercents",
-                "decimalPlaces", "populationMagnitude", "showSignif", "currentTab",
-                "uiView"
+                "percentageDirection", "showEmpty", "showMean", "vizType",
+                "countsOrPercents", "decimalPlaces", "populationMagnitude",
+                "showSignif", "currentTab", "uiView"
             )
         )
         expect_equal(settings$countsOrPercents, "percent")
