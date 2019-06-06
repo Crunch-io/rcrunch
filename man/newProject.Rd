@@ -35,9 +35,9 @@ p <- projects()
 p[["A project name"]] <- list()
 proj <- p[["A project name"]]
 
-proj2 <- newProject("Another project", members="you@yourco.com")
+proj2 <- newProject("Another project", members = "you@yourco.com")
 # That is equivalent to doing:
-p[["Another project"]] <- list(members="you@yourco.com")
+p[["Another project"]] <- list(members = "you@yourco.com")
 proj <- p[["Another project"]]
 }
 }

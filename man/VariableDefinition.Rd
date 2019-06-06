@@ -31,11 +31,15 @@ This function converts an R vector or set of attributes into a variable definiti
 can be posted to the server.
 }
 \examples{
-VariableDefinition(rnorm(5), name="Some numbers",
-    description="Generated pseudorandomly from the normal distribution")
-VarDef(name="Integers", values=1:5, type="numeric",
-    description="When creating variable definitions with 'values', you must
-    specify 'type', and categorical variables will require 'categories'.")
+VariableDefinition(rnorm(5),
+    name = "Some numbers",
+    description = "Generated pseudorandomly from the normal distribution"
+)
+VarDef(
+    name = "Integers", values = 1:5, type = "numeric",
+    description = "When creating variable definitions with 'values', you must
+    specify 'type', and categorical variables will require 'categories'."
+)
 }
 \seealso{
 \code{toVariable}

@@ -22,5 +22,4 @@ imported into Crunch.
 \examples{
 
 categoriesFromLevels(levels(iris$Species))
-
 }

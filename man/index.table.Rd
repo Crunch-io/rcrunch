@@ -30,26 +30,26 @@ calculate indexes for a higher dimension Cube, please slice the cube first.
 }
 \examples{
 \dontrun{
- cube_object
- #    v7
- # v4  C E
- #   B 5 2
- #   C 5 3
- index.table(cube_object, 1)
- #    v7
- # v4         C         E
- #   B 107.1429  85.71429
- #   C  93.7500 112.50000
- index.table(cube_object, 2)
- #    v7
- # v4    C   E
- #   B 100  80
- #   C 100 120
- index.table(cube_object, 2, c(0.6, 0.4))
- #    v7
- # v4          C         E
- #   B  83.33333  66.66667
- #   C 125.00000 150.00000
+cube_object
+#    v7
+# v4  C E
+#   B 5 2
+#   C 5 3
+index.table(cube_object, 1)
+#    v7
+# v4         C         E
+#   B 107.1429  85.71429
+#   C  93.7500 112.50000
+index.table(cube_object, 2)
+#    v7
+# v4    C   E
+#   B 100  80
+#   C 100 120
+index.table(cube_object, 2, c(0.6, 0.4))
+#    v7
+# v4          C         E
+#   B  83.33333  66.66667
+#   C 125.00000 150.00000
 }
 
 }

@@ -31,7 +31,7 @@ common use case is a function that adds new entries to the vector,
 effectively expanding the array in the dimension given.
 }
 \examples{
-array <- array(c(1:24), dim = c(4,3,2))
+array <- array(c(1:24), dim = c(4, 3, 2))
 array
 # , , 1
 #
@@ -49,9 +49,9 @@ array
 # [3,]   15   19   23
 # [4,]   16   20   24
 
-add_one_hundred <- function (x) c(x, 100)
+add_one_hundred <- function(x) c(x, 100)
 
-crunch:::applyAgainst(array, 1,  add_one_hundred)
+crunch:::applyAgainst(array, 1, add_one_hundred)
 # , , 1
 #
 #      [,1] [,2] [,3]
@@ -70,7 +70,7 @@ crunch:::applyAgainst(array, 1,  add_one_hundred)
 # [4,]   16   20   24
 # [5,]  100  100  100
 
-crunch:::applyAgainst(array, 2,  add_one_hundred)
+crunch:::applyAgainst(array, 2, add_one_hundred)
 # , , 1
 #
 #      [,1] [,2] [,3] [,4]
@@ -87,7 +87,7 @@ crunch:::applyAgainst(array, 2,  add_one_hundred)
 # [3,]   15   19   23  100
 # [4,]   16   20   24  100
 
-crunch:::applyAgainst(array, 3,  add_one_hundred)
+crunch:::applyAgainst(array, 3, add_one_hundred)
 # , , 1
 #
 #      [,1] [,2] [,3]

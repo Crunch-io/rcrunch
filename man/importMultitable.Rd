@@ -23,7 +23,7 @@ Allows you to import a multitable from a different dataset
 }
 \examples{
 \dontrun{
-m <- newMultitable(~ gender + age4 + marstat, data=ds)
+m <- newMultitable(~ gender + age4 + marstat, data = ds)
 copied_m <- importMultitable(another_ds, m)
 name(copied_m) # [1] "gender + age4 + marstat"
 }

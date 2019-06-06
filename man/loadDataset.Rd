@@ -47,7 +47,7 @@ URL will never change.
 \dontrun{
 ds <- loadDatasets("A special dataset")
 ds2 <- loadDatasets("~/My dataset")
-ds3 <- loadDataset("My dataset", project="~") # Same as ds2
+ds3 <- loadDataset("My dataset", project = "~") # Same as ds2
 ds4 <- loadDataset("https://app.crunch.io/api/datasets/bd3ad2/")
 }
 }

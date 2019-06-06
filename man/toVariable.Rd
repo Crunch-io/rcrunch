@@ -80,11 +80,11 @@ you can declare methods for \code{toVariable}.
 \examples{
 var1 <- rnorm(10)
 toVariable(var1)
-toVariable(var1, name="Random", description="Generated in R")
+toVariable(var1, name = "Random", description = "Generated in R")
 \dontrun{
-ds$random <- toVariable(var1, name="Random")
+ds$random <- toVariable(var1, name = "Random")
 # Or, this way:
-ds <- addVariables(ds, toVariable(var1, name="Random"))
+ds <- addVariables(ds, toVariable(var1, name = "Random"))
 }
 }
 \seealso{

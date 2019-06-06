@@ -58,6 +58,6 @@ resolution(ds$starttime) <- "s"
 rollup(ds$starttime)
 rollup(ds$starttime, "D")
 rollupResolution(ds$starttime) <- "D"
-crtabs(~ rollup(starttime), data=ds)
+crtabs(~ rollup(starttime), data = ds)
 }
 }

@@ -47,8 +47,8 @@ results. You can then further format these and construct custom tab reports.
 }
 \examples{
 \dontrun{
-m <- newMultitable(~ gender + age4 + marstat, data=ds)
-tabBook(m, ds[ds$income > 1000000,], format="xlsx", file="wealthy-tab-book.xlsx")
+m <- newMultitable(~ gender + age4 + marstat, data = ds)
+tabBook(m, ds[ds$income > 1000000, ], format = "xlsx", file = "wealthy-tab-book.xlsx")
 book <- tabBook(m, ds) # Returns a TabBookResult
 tables <- prop.table(book, 2)
 }

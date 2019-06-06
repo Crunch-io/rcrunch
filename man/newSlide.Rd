@@ -31,9 +31,9 @@ Append a new slide to a Crunch Deck
 \dontrun{
 newSlide(
     main_deck,
-    ~cyl + wt,
+    ~ cyl + wt,
     title = "Cyl and Weight",
     subtitle = "2017 Data"
-    )
+)
 }
 }

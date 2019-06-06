@@ -33,7 +33,7 @@ of a tab book.
 }
 \examples{
 \dontrun{
-m <- newMultitable(~ gender + age4 + marstat, data=ds)
+m <- newMultitable(~ gender + age4 + marstat, data = ds)
 name(m) # [1] "gender + age4 + marstat"
 }
 }

@@ -10,8 +10,9 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
 Version: 1.26.1
 Authors@R: c(
     person("Neal", "Richardson", role="aut", email="neal.p.richardson@gmail.com"),
-    person("Jonathan", "Keane", role=c("aut", "cre"), email="jon.keane@crunch.io"),
-    person("Gordon", "Shotwell", role="aut", email="gordon.shotwell@gmail.com"))
+    person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
+    person("Gordon", "Shotwell", role="aut", email="gordon.shotwell@gmail.com"),
+    person("Mike", "Malecki", role=c("aut", "cre"), email="mike@crunch.io"))
 URL: https://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)

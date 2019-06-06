@@ -43,7 +43,7 @@ to result in better alignment.
 }
 \examples{
 \dontrun{
-    comp <- compareDataset(ds1, ds2)
-    summary(comp)
+comp <- compareDataset(ds1, ds2)
+summary(comp)
 }
 }

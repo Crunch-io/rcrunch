@@ -28,11 +28,11 @@ lists and contain the following fields: "name", "id", "numeric_value",
 "missing", and optionally "selected".
 }
 \examples{
-cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
-cat.b <- Category(data=list(name="First", id=1, numeric_value=1, missing=FALSE))
+cat.a <- Category(name = "First", id = 1, numeric_value = 1, missing = FALSE)
+cat.b <- Category(data = list(name = "First", id = 1, numeric_value = 1, missing = FALSE))
 identical(cat.a, cat.b)
-cat.c <- Category(name="Second", id=2)
+cat.c <- Category(name = "Second", id = 2)
 cats.1 <- Categories(cat.a, cat.c)
-cats.2 <- Categories(data=list(cat.a, cat.c))
+cats.2 <- Categories(data = list(cat.a, cat.c))
 identical(cats.1, cats.2)
 }

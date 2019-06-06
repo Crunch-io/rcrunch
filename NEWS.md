@@ -1,4 +1,4 @@
-# crunch 1.26.1 (under development)
+# crunch 1.26.1
 * Internally, the `(un)hideVariables()` functions are upgraded to use folder operations.
 
 # crunch 1.26.0

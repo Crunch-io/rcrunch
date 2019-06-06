@@ -29,6 +29,6 @@ when new data is appended.
 }
 \examples{
 \dontrun{
-ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix=", rearranged"))
+ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix = ", rearranged"))
 }
 }

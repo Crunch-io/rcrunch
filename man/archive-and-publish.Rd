@@ -86,7 +86,7 @@ set the properties by assigning into the function. The verb functions
 \examples{
 \dontrun{
 ds <- loadDataset("mtcars")
-is.draft(ds)     # FALSE
+is.draft(ds) # FALSE
 is.published(ds) # TRUE
 identical(is.draft(ds), !is.published(ds))
 # Can make a dataset a "draft" by:
@@ -97,9 +97,9 @@ is.published(ds) # FALSE
 ds <- publish(ds)
 is.published(ds) # TRUE
 
-is.archived(ds)  # FALSE
+is.archived(ds) # FALSE
 is.archived(ds) <- TRUE
-is.archived(ds)  # TRUE
+is.archived(ds) # TRUE
 # Could have achieved the same effect by:
 ds <- archive(ds)
 }

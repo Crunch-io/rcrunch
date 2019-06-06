@@ -56,19 +56,23 @@ such as "darkgreen".
 
 \dontrun{
 # Creating a CrunchBox with three variables
-crunchBox(ds[c("var1", "var2", "var3")], title="New CrunchBox")
+crunchBox(ds[c("var1", "var2", "var3")], title = "New CrunchBox")
 
 # Creating a CrunchBox changing primary, secondary, and message brand colors
 crunchBox(ds[c("var1", "var2", "var3")],
-          title="Branded CrunchBox",
-          brand_colors = c("#ff0aa4", "#af17ff", "#260aff"))
+    title = "Branded CrunchBox",
+    brand_colors = c("#ff0aa4", "#af17ff", "#260aff")
+)
 
 # Creating a CrunchBox changing category-specific colors
 crunchBox(ds[c("var1", "var2", "var3")],
-          title="CrunchBox with category colors",
-          category_color_lookup = list("agree" = "#ff0aa4",
-                                       "disagree" = "#af17ff",
-                                       "don't know" = "#260aff"))
+    title = "CrunchBox with category colors",
+    category_color_lookup = list(
+        "agree" = "#ff0aa4",
+        "disagree" = "#af17ff",
+        "don't know" = "#260aff"
+    )
+)
 }
 
 }

@@ -21,6 +21,5 @@ to connect to.
 \examples{
 setCrunchAPI("local", 8080)
 setCrunchAPI("app")
-
 }
 \keyword{internal}

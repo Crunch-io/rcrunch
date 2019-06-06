@@ -43,12 +43,14 @@ mtcars$gear <- as.factor(mtcars$gear)
 ds <- newDataset(mtcars)
 # Create a new "raked" variable
 ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0),
-    ds$gear ~ c(20, 20, 60, 0), name = "weight")
+    ds$gear ~ c(20, 20, 60, 0),
+    name = "weight"
+)
 summary(ds$weight)
 # ds$weight is not "the weight" for the dataset unless you set it:
 weight(ds) <- ds$weight
 # Or, you can create the variable and set as weight in one step:
-weight(ds) <-  makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight2")
+weight(ds) <- makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight2")
 }
 }
 \seealso{

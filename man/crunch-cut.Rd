@@ -62,11 +62,14 @@ whether the numeric vector falls between 1 and 5 or 5 and 10.
 \examples{
 \dontrun{
 ds <- loadDataset("mtcars")
-ds$cat_var <- cut(ds$mpg, breaks = c(10, 15, 20),
-    labels = c("small", "medium"), name = "Fuel efficiency")
+ds$cat_var <- cut(ds$mpg,
+    breaks = c(10, 15, 20),
+    labels = c("small", "medium"), name = "Fuel efficiency"
+)
 ds$age <- sample(1:100, 32)
 ds$age4 <- cut(df$age, c(0, 30, 45, 65, 200),
-           c("Youth", "Adult", "Middle-aged", "Elderly"),
-           name = "Age (4 category)")
+    c("Youth", "Adult", "Middle-aged", "Elderly"),
+    name = "Age (4 category)"
+)
 }
 }

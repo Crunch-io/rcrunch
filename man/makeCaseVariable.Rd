@@ -50,19 +50,27 @@ details.
 }
 \examples{
 \dontrun{
-makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")
-makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
-                            list(expression=ds$v2 == 2, name="case2")),
-                 name="new case")
+makeCaseVariable(case1 = ds$v1 == 1, case2 = ds$v2 == 2, name = "new case")
+makeCaseVariable(
+    cases = list(
+        list(expression = ds$v1 == 1, name = "case1"),
+        list(expression = ds$v2 == 2, name = "case2")
+    ),
+    name = "new case"
+)
 
 # different ways to specify else cases
-makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
-                            list(expression=ds$v2 == 2, name="case2"),
-                            list(expression="else", name="other")),
-                 name="new case")
-makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, other="else", name="new case")
+makeCaseVariable(
+    cases = list(
+        list(expression = ds$v1 == 1, name = "case1"),
+        list(expression = ds$v2 == 2, name = "case2"),
+        list(expression = "else", name = "other")
+    ),
+    name = "new case"
+)
+makeCaseVariable(case1 = ds$v1 == 1, case2 = ds$v2 == 2, other = "else", name = "new case")
 
 # the dataset can be specified with data=
-makeCaseVariable(case1=v1 == 1, case2=v2 == 2, data=ds, name="new case")
+makeCaseVariable(case1 = v1 == 1, case2 = v2 == 2, data = ds, name = "new case")
 }
 }

@@ -31,7 +31,7 @@ takes a CrunchBox and returns the HTML which you can embed in a website.
 \examples{
 \dontrun{
 box <- crunchBox(ds)
-embedCrunchBox(box, logo="//myco.example/img/logo_200px.png")
+embedCrunchBox(box, logo = "//myco.example/img/logo_200px.png")
 }
 }
 \seealso{
