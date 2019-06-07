@@ -623,7 +623,11 @@ with_mock_crunch({
 
     test_that("copyOrder returns the order of target as a VariableOrder", {
         ds_again <- loadDataset("test ds")
-        expect_silent(new_order <- copyOrder(ds, ds_again))
+        # because copyOrder is deprecated, there will be a warning.
+        expect_warning(
+            new_order <- copyOrder(ds, ds_again),
+            "There's a new way to copy ordering and folders: `copyFolders`!"
+        )
         expect_is(new_order, "VariableOrder")
         expect_identical(entities(ordering(ds)), entities(new_order))
     })
@@ -849,7 +853,7 @@ with_test_authentication({
         expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
 
         # copy order, and check that ds_fork has the new order.
-        expect_silent(copied_order <- copyOrder(ds, ds_fork))
+        expect_warning(copied_order <- copyOrder(ds, ds_fork))
         ordering(ds_fork) <- copied_order
         expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
     })
@@ -881,7 +885,7 @@ with_test_authentication({
         expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
 
         # copy order, and check that ds_fork has the new order.
-        expect_silent(copied_order <- copyOrder(ds, ds_fork))
+        expect_warning(copied_order <- copyOrder(ds, ds_fork))
         ordering(ds_fork) <- copied_order
         expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
     })
@@ -913,7 +917,7 @@ with_test_authentication({
         expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
 
         # copy order, and check that ds_fork has the new order.
-        expect_silent(copied_order <- copyOrder(ds, ds_fork))
+        expect_warning(copied_order <- copyOrder(ds, ds_fork))
         ordering(ds_fork) <- copied_order
         expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
     })
@@ -956,7 +960,7 @@ with_test_authentication({
         expect_false(identical(entities(ordering(ds_alt)), entities(new_order_alt)))
 
         # copy order, and check that ds_alt has the new order.
-        expect_silent(copied_order <- copyOrder(ds, ds_alt))
+        expect_warning(copied_order <- copyOrder(ds, ds_alt))
         ordering(ds_alt) <- copied_order
         # ignore the last three variables because their order was not specified
         expect_identical(

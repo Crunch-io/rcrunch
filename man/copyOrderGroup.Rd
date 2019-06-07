@@ -14,7 +14,8 @@ copyOrderGroup(group, source_map, target_map)
 \item{target_map}{alias to url map for target variables}
 }
 \value{
-returns either a \code{\link{VariableGroup}} (if a group is supplied) or a URL (if just a variable URL is supplied)
+returns either a \code{\link{VariableGroup}} (if a group is supplied) or a URL
+(if just a variable URL is supplied)
 }
 \description{
 Copy the order of a \code{VariableGroup} (or individual variable URL) from \code{VariableOrder}

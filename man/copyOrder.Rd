@@ -7,7 +7,7 @@
 copyOrder(source, target)
 }
 \arguments{
-\item{source}{the dataset you want to copy the order from}
+\item{source}{the dataset you wan to copy the order from}
 
 \item{target}{the dataset you want to copy the order to}
 }
@@ -16,7 +16,8 @@ returns an object of class \code{\link{VariableOrder}} (which can be assigned
 to a dataset with \code{\link{ordering}})
 }
 \description{
-Copy the variable order from one dataset to another.
+\code{copyOrder} is deprecated and will be removed in a future version. Instead,
+you should use the \code{\link{copyFolders}} function.
 }
 \examples{
 \dontrun{
