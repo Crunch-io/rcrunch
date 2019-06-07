@@ -1,3 +1,8 @@
+# crunch 1.26.2 (under development)
+* A new `copyFolders()` function that copies folders and variable order from one dataset to another (similar to `copyOrder()` which was deprecated)
+* Slides in decks can be manipulated more robustly (and their filters can be removed or added with `filters(slide_object) <- NULL` or `filters(slide_object) <- filter_object`) 
+* There is a new helper function for dealing with API changes that lets you expect two different outcomes while testing (`expect_either()`)
+
 # crunch 1.26.1
 * Internally, the `(un)hideVariables()` functions are upgraded to use folder operations.
 
