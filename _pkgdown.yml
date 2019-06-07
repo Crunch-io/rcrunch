@@ -127,6 +127,7 @@ reference:
   - setOrder
   - setName
   - setNames
+  - copyFolders
   - copyOrder
 - title: Analysis
   contents:
@@ -243,7 +244,7 @@ reference:
 - title: Internal
   contents:
   - ContextManager
-  - show-crunch
+  - show
   - temp.options
   - with-context-manager
 - title: Data

@@ -620,5 +620,8 @@ assignment happens in the \code{names<-} method).
 }
 \description{
 Extract and modify Crunch objects
+
+This function is no-op because the items are already updated on the server
+with other methods called prior to it.
 }
 \keyword{internal}
