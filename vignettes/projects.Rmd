@@ -194,6 +194,6 @@ proj
 # Crunch User Survey
 ```
 
-As we said at the top, we are actively developing organizing datasets, so please give us any feedback you have as a [GitHub issue](https://github.com/Crunch-io/rcrunch/issues) or at [support@crunch.io](support@crunch.io).
+As we said at the top, we are actively developing organizing datasets, so please give us any feedback you have as a [GitHub issue](https://github.com/Crunch-io/rcrunch/issues) or at <support@crunch.io>.
 
 [Next: transforming and deriving](derive.html)
