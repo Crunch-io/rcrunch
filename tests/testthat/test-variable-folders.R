@@ -165,6 +165,7 @@ with_mock_crunch({
             )
         })
         test_that("If there are names longer than 'width', it still prints", {
+            skip_on_jenkins("Unskip when testthat is next updated on jenkins")
             alphabet <- paste(letters, collapse = "")
             expect_output(
                 colored_print(alphabet),
