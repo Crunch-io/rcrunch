@@ -1,5 +1,65 @@
 # Generics ---------------------------------------------------------------
-# Generics for slides are located in the decks.R file
+#' Get and set slide analyses
+#'
+#' Slides are composed of analyses, which are effectively `CrunchCubes` with some
+#' additional metadata. You can get and set a slide's Analysis Catalog with the
+#' `analyses` method, and access an individual analysis with `analysis`.
+#'
+#' You can get the `CrunchCube` from a slide or analysis with the `cube` method and
+#' from a `CrunchDeck` with `cubes`. Analyses can be changed by assigning a formula
+#' into the `query` function.
+#'
+#' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
+#' @param value for the setter, a query
+#'
+#' @return an `AnalysisCatalog`, `Analysis`, `Cube`, or `Filter`
+#' @rdname analysis-methods
+#' @export
+#' @examples
+#' \dontrun{
+#' analysis(slide)
+#' cube(slide)
+#' cubes(deck)
+#' query(slide) <- ~ cyl + wt
+#' filter(slide)
+#' filter(slide) <- NULL # to remove a filter
+#' filter(slide) <- filters(ds)[["My filter"]]
+#' }
+setGeneric("analyses", function(x) standardGeneric("analyses"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("analysis", function(x) standardGeneric("analysis"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("query<-", function(x, value) standardGeneric("query<-"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("cube", function(x) standardGeneric("cube"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("cubes", function(x) standardGeneric("cubes"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter", function(x, value) standardGeneric("filter"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter<-", function(x, value) standardGeneric("filter<-"))
+
+#' Get or set a slide's display settings
+#'
+#' A slide's display settings can be modified by assigning a named list
+#' @param x a CrunchSlide, Analysis, or AnalysisCatalog
+#' @param value a named list, for valid settings see docs.crunch.io
+#' @rdname display-settings
+#' @export
+setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
+#' @rdname display-settings
+#' @export
+setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
+
 
 # Slide Catalog -----------------------------------------------------------
 
@@ -54,6 +114,11 @@ setMethod(
             # TODO what to do with missing slide entries
             i <- length(x) + 1
         }
+        if (i <= length(x)) {
+            # we are replacing a slide, so return quickly modifying in place
+            out <- modifyCatalogInPlace(x, i, j, value)
+            return(out)
+        }
 
         n_slides <- length(x)
 
@@ -71,6 +136,7 @@ setMethod(
             # You can't modify the contents of a slide by patching it
             # so we need to add the new slide, delete the original slide,
             # and reorder the slideCatalog.
+            # Is ^^^ really true?
             new_order <- moveLastElement(seq_len(n_slides + 1), i)
             reorderSlides(x, new_order)
             with_consent(delete(x[[length(x)]]))
@@ -217,6 +283,7 @@ setMethod("analyses", "CrunchSlide", function(x) {
     AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
 })
 
+
 #' @rdname analysis-methods
 #' @export
 setMethod("analysis", "CrunchSlide", function(x) {
@@ -227,7 +294,31 @@ setMethod("analysis", "CrunchSlide", function(x) {
 #' @rdname analysis-methods
 #' @export
 setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value) {
-    analyses[[1]] <- value
+    analysis <- analyses(x)[[1]]
+    query(analysis) <- value
+    return(invisible(x))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("analysis<-", c("CrunchSlide", "Analysis"), function(x, value) {
+    analysis_cat <- analyses(x)
+    return(invisible(modifyCatalogInPlace(analysis_cat, 1, NULL, value)))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter", "CrunchSlide", function(x) {
+    analysis <- analyses(x)[[1]]
+    return(filter(analysis))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter<-", c("CrunchSlide", "ANY"), function(x, value) {
+    # check that there is only on analysis?
+    first_analysis <- analyses(x)[[1]]
+    filter(first_analysis) <- value
     return(invisible(x))
 })
 
@@ -368,7 +459,7 @@ setMethod("query<-", c("Analysis", "formula"), function(x, value) {
     payload <- list(query = formulaToCubeQuery(value, data = ds))
     payload <- wrapEntity(body = payload)
     crPATCH(self(x), body = toJSON(payload))
-    invisible(refresh(x))
+    return(invisible(refresh(x)))
 })
 
 #' @rdname analysis-methods
@@ -401,3 +492,70 @@ setMethod("displaySettings<-", "Analysis", function(x, value) {
 wrapDisplaySettings <- function(settings) {
     return(lapply(settings, function(x) list(value = x)))
 }
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter", "Analysis", function(x) {
+    filt <- x@body$query_environment$filter
+    if (length(filt) == 0) {
+        return(NULL)
+    } else if (length(filt) == 1 && "filter" %in% names(filt[[1]])) {
+        # a saved filter
+        return(CrunchFilter(crGET(filt[[1]]$filter)))
+    } else {
+        # an adhoc filter
+        adhoc_expr <- CrunchExpr(expression = fixAdhocFilterExpression(filt[[1]]))
+        return(adhoc_expr)
+    }
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter<-", "CrunchSlide", function(x, value) {
+    analysis <- analyses(x)[[1]]
+    filter(analysis) <- value
+    return(invisible(x))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
+    halt("Setting adhoc filters on decks is unsupported")
+    # the following _should_ work, however query_environment filters must include
+    # dataset references (which our expression to ZCL converter does not support)
+    # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
+    # once query_environment is changed to work like every other expression, the
+    # following should just work:
+    # return(setEntitySlot(x, "query_environment", list("filter" = list(value@expression))))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter<-", c("Analysis", "CrunchFilter"), function(x, value) {
+    # crPATCH(self(x), body = toJSON(frmt))
+    return(setEntitySlot(x, "query_environment", list("filter" = list(self(value)))))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
+    # crPATCH(self(x), body = toJSON(frmt))
+    return(setEntitySlot(x, "query_environment", list("filter" = list())))
+})
+
+#' @rdname display-settings
+#' @export
+setMethod("cubes", "CrunchDeck", function(x) {
+    out <- lapply(seq_len(length(x)), function(i) {
+        cubes <- cubes(x[[i]])
+        # If a slide has several analyses we should return a sublist of
+        # cubes, but most of the time they will have one analysis so not
+        # including the sublist is preferable.
+        if (length(cubes) == 1) {
+            cubes <- cubes[[1]]
+        }
+        return(cubes)
+    })
+    names(out) <- titles(x)
+    return(out)
+})

@@ -68,6 +68,9 @@
 \alias{[[,DeckCatalog,ANY-method}
 \alias{[[,DeckCatalog,character-method}
 \alias{[[<-,DeckCatalog,ANY,missing,CrunchDeck-method}
+\alias{[[<-,CrunchDeck,ANY,missing,AnalysisCatalog-method}
+\alias{[[<-,SlideCatalog,ANY,missing,CrunchSlide-method}
+\alias{[[<-,AnalysisCatalog,ANY,missing,Analysis-method}
 \alias{[[,CrunchDeck,ANY-method}
 \alias{[[<-,CrunchDeck,ANY,ANY,ANY-method}
 \alias{[,CrunchExpr,CrunchLogicalExpr,ANY-method}
@@ -306,6 +309,12 @@
 \S4method{[[}{DeckCatalog,character}(x, i, j, ...)
 
 \S4method{[[}{DeckCatalog,ANY,missing,CrunchDeck}(x, i, j) <- value
+
+\S4method{[[}{CrunchDeck,ANY,missing,AnalysisCatalog}(x, i, j) <- value
+
+\S4method{[[}{SlideCatalog,ANY,missing,CrunchSlide}(x, i, j) <- value
+
+\S4method{[[}{AnalysisCatalog,ANY,missing,Analysis}(x, i, j) <- value
 
 \S4method{[[}{CrunchDeck,ANY}(x, i, j, ...)
 

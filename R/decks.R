@@ -45,68 +45,26 @@ setGeneric("subtitle", function(x, value) standardGeneric("subtitle"))
 #' @export
 setGeneric("subtitle<-", function(x, value) standardGeneric("subtitle<-"))
 
-#' Get and set slide analyses
-#'
-#' Slides are composed of analyses, which are effectively `CrunchCubes` with some
-#' additional metadata. You can get and set a slide's Analysis Catalog with the
-#' `analyses` method, and access an individual analysis with `analysis`.
-#'
-#' You can get the CrunchCube from a slide or analysis with the `cube` method and
-#' from a CrunchDeck with `cubes`. Analyses can be changed by assigning a formula
-#' into the `query` function.
-#' @param x A CrunchSlide, AnalysisCatalog, or Analysis
-#' @param value for the setter, a query
-#' @rdname analysis-methods
-#' @export
-#' @examples
-#' \dontrun{
-#' analysis(slide)
-#' cube(slide)
-#' cubes(deck)
-#' query(slide) <- ~ cyl + wt
-#' }
-setGeneric("analyses", function(x) standardGeneric("analyses"))
-#' @rdname analysis-methods
-#' @export
-setGeneric("analysis", function(x) standardGeneric("analysis"))
-#' @rdname analysis-methods
-#' @export
-setGeneric("analysis<-", function(x, value) standardGeneric("analysis<-"))
-#' @rdname analysis-methods
-#' @export
-setGeneric("query<-", function(x, value) standardGeneric("query<-"))
-#' @rdname analysis-methods
-#' @export
-setGeneric("cube", function(x) standardGeneric("cube"))
-#' @rdname analysis-methods
-#' @export
-setGeneric("cubes", function(x) standardGeneric("cubes"))
-
-#' Get or set a slide's display settings
-#'
-#' A slide's display settings can be modified by assigning a named list
-#' @param x a CrunchSlide, Analysis, or AnalysisCatalog
-#' @param value a named list, for valid settings see docs.crunch.io
-#' @rdname display-settings
-#' @export
-setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
-#' @rdname display-settings
-#' @export
-setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
-
-
 #' Get a dataset's DeckCatalog
 #'
 #' Crunch decks are stored in catalogs. This function returns those catalogs so
 #' that you can access and manipulate decks in R.
 #'
-#' @param dataset a Crunch Dataset
+#' @param x a Crunch Dataset
+#' @param value a `CrunchDeck` to add
+#'
 #' @return a DeckCatalog
+#' @rdname decks
 #' @export
-decks <- function(dataset) {
-    stopifnot(is.dataset(dataset))
-    DeckCatalog(crGET(shojiURL(dataset, "catalogs", "decks")))
-}
+setGeneric("decks", function(x) standardGeneric("decks"))
+#' @rdname decks
+#' @export
+setGeneric("decks<-", function(x, value) standardGeneric("decks<-"))
+#' @rdname decks
+#' @export
+setMethod("decks", "CrunchDataset", function(x) {
+    return(DeckCatalog(crGET(shojiURL(x, "catalogs", "decks"))))
+})
 
 # Deck Catalog ------------------------------------------------------------
 
@@ -162,6 +120,30 @@ setMethod(
     modifyCatalogInPlace
 )
 
+#' This function is no-op because the items are already updated on the server
+#' with other methods called prior to it.
+#' @rdname crunch-extract
+#' @export
+setMethod(
+    "[[<-", c("CrunchDeck", "ANY", "missing", "AnalysisCatalog"),
+    function(x, i, j, value) invisible(refresh(x))
+)
+
+#' @rdname crunch-extract
+#' @export
+setMethod(
+    "[[<-", c("SlideCatalog", "ANY", "missing", "CrunchSlide"),
+    modifyCatalogInPlace
+)
+
+#' @rdname crunch-extract
+#' @export
+setMethod(
+    "[[<-", c("AnalysisCatalog", "ANY", "missing", "Analysis"),
+    modifyCatalogInPlace
+)
+
+
 # CrunchDeck --------------------------------------------------------------
 
 #' @rdname crunch-extract
@@ -171,23 +153,36 @@ setMethod("[[", "CrunchDeck", function(x, i, ...) slides(x)[[i]])
 #' @rdname crunch-extract
 #' @export
 setMethod("[[<-", "CrunchDeck", function(x, i, j, value) {
-    slideCat <- slides(x)
-    slideCat[[i]] <- value
-    invisible(refresh(x))
+    slides(x)[[i]] <- value
+    return(invisible(refresh(x)))
 })
 
 #' Access the slides of a CrunchDeck
 #'
-#' Return a SlideCatalog from a CrunchDeck. All slide catalog methods should be
-#' available for CrunchDecks, but this function is used internally to model the
+#' Return a `SlideCatalog` from a `CrunchDeck`. All slide catalog methods should be
+#' available for `CrunchDecks`, but this function is used internally to model the
 #' API.
 #'
 #' @param x a CrunchDeck
-#' @return a Slide Catalog
+#' @param value a `SlideCatalog` or `CrunchSlide` to add
+#'
+#' @return a `SlideCatalog`
+#' @rdname slides
 #' @export
-slides <- function(x) {
-    SlideCatalog(crGET(shojiURL(x, "catalogs", "slides")))
-}
+setGeneric("slides", function(x) standardGeneric("slides"))
+#' The following function is no-op because the items are already updated on the
+#' server with other methods called prior to it.
+#' @rdname slides
+#' @export
+setGeneric("slides<-", function(x, value) standardGeneric("slides<-"))
+#' @rdname slides
+#' @export
+setMethod("slides", "CrunchDeck", function(x) {
+    return(SlideCatalog(crGET(shojiURL(x, "catalogs", "slides"))))
+})
+#' @rdname slides
+#' @export
+setMethod("slides<-", "CrunchDeck", function(x, value) invisible(refresh(x)))
 
 #' @rdname describe-entity
 #' @export
@@ -264,20 +259,3 @@ exportDeck <- function(deck, file, format = c("xlsx", "pptx", "json")) {
     dl_link <- crPOST(url, config = add_headers(`Accept` = accept))
     crDownload(dl_link, file)
 }
-
-#' @rdname display-settings
-#' @export
-setMethod("cubes", "CrunchDeck", function(x) {
-    out <- lapply(seq_len(length(x)), function(i) {
-        cubes <- cubes(x[[i]])
-        # If a slide has several analyses we should return a sublist of
-        # cubes, but most of the time they will have one analysis so not
-        # including the sublist is preferable.
-        if (length(cubes) == 1) {
-            cubes <- cubes[[1]]
-        }
-        return(cubes)
-    })
-    names(out) <- titles(x)
-    return(out)
-})

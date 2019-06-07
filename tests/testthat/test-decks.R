@@ -61,6 +61,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/decks/8ad8/",
             '{"name":"new_name"}'
         )
+
         expect_PATCH(
             description(main_deck) <- "new_description",
             "https://app.crunch.io/api/datasets/1/decks/8ad8/",
@@ -149,6 +150,13 @@ with_mock_crunch({
                 "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
             ),
             "Accept: application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        )
+    })
+
+    test_that("Deck export errors helpfully", {
+        expect_error(
+            exportDeck(ds, format = "json"),
+            "exportDeck is only available for CrunchDecks."
         )
     })
 
@@ -241,6 +249,32 @@ with_mock_crunch({
     })
 
     test_that("Slide titles and subtitles", {
+        expect_PATCH(
+            names(main_deck) <- c("new_name", "other_new_name", "other_new_name"),
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
+            '{"element":"shoji:catalog","index":',
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":',
+            '{"title":"new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":',
+            '{"title":"other_new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":',
+            '{"title":"other_new_name"}}}'
+        )
+
+        expect_PATCH(
+            titles(main_deck) <- c("new_name", "other_new_name", "other_new_name"),
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/",
+            '{"element":"shoji:catalog","index":',
+            '{"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/":',
+            '{"title":"new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/5938/":',
+            '{"title":"other_new_name"},',
+            '"https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/":',
+            '{"title":"other_new_name"}}}'
+        )
+    })
+
+    test_that("Slide titles and subtitles", {
         expect_equal(title(slide), "birthyr")
         expect_equal(subtitle(slide), "")
         expect_PATCH(
@@ -272,6 +306,146 @@ with_mock_crunch({
             '"body":{"query":{"dimensions":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
             '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+    })
+
+    test_that("query assignment for slides, convenience function with analysis", {
+        expect_PATCH(
+            analysis(slide) <- ~birthyr,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+    })
+
+    test_that("query assignment for slides via subset methods", {
+        expect_PATCH(
+            analysis(decks(ds)[[2]][[1]]) <- ~birthyr,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+
+        expect_PATCH(
+            analysis(main_deck[[1]]) <- ~birthyr,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+
+        expect_PATCH(
+            query(main_deck[[1]]) <- ~birthyr,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+
+        expect_PATCH(
+            query(analysis(main_deck[[1]])) <- ~birthyr,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"query":{"dimensions":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
+        )
+    })
+
+    test_that("filter display for slides (and analyses)", {
+        expect_identical(filter(slide), NULL)
+        expect_prints(filter(slide), "NULL")
+        # filter() on slide and analysis are identical (a shortcut when there is
+        # one analysis)
+        expect_identical(filter(slide), filter(analysis(slide)))
+
+        # main_deck[[2]] has a saved filter (though it has two analyses)
+        expect_is(filter(analyses(main_deck[[2]])[[1]]), "CrunchFilter")
+        expect_prints(
+            filter(analyses(main_deck[[2]])[[1]]),
+            'Crunch filter .*Occasional Political Interest.*\nExpression: gender %in% "Male"',
+            fixed = FALSE
+        )
+
+        # main_deck[[3]] has an adhoc filter
+        expect_is(filter(main_deck[[3]]), "CrunchExpr")
+        expect_prints(
+            filter(main_deck[[3]]),
+            'Crunch expression: gender %in% "Male"'
+        )
+        # filter() on slide and analysis are identical (a shortcut when there is
+        # one analysis)
+        expect_identical(filter(main_deck[[3]]), filter(analysis(main_deck[[3]])))
+    })
+
+    test_that("filter<-something for slides (and analyses)", {
+        # though CrunchLogicalExpr could be made into filters, the expression in
+        # query_environment is a bespoke shape unlike any other expression.
+        # This can be enabled once the specialness here is removed on the server.
+        expect_error(
+            filter(decks(ds)[[2]][[3]]) <- ds$birthyr > 1990,
+            "Setting adhoc filters on decks is unsupported"
+        )
+        expect_error(
+            filter(analysis(decks(ds)[[2]][[3]])) <- ds$birthyr > 1990,
+            "Setting adhoc filters on decks is unsupported"
+        )
+
+        # named filters (through a CrunchDeck object)
+        expect_PATCH(
+            filter(main_deck[[3]]) <- filters(ds)[["Occasional Political Interest"]],
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":["https://app.crunch.io/api/',
+            'datasets/1/filters/filter1/"]}'
+        )
+        expect_PATCH(
+            filter(analysis(main_deck[[3]])) <- filters(ds)[["Public filter"]],
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":["https://app.crunch.io/api/',
+            'datasets/1/filters/filter2/"]}'
+        )
+
+        # named filters (through teh decks catalog)
+        expect_PATCH(
+            filter(decks(ds)[[2]][[3]]) <- filters(ds)[["Occasional Political Interest"]],
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":["https://app.crunch.io/api/',
+            'datasets/1/filters/filter1/"]}'
+        )
+        expect_PATCH(
+            filter(analysis(decks(ds)[[2]][[3]])) <- filters(ds)[["Public filter"]],
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":["https://app.crunch.io/api/',
+            'datasets/1/filters/filter2/"]}'
+        )
+    })
+
+    test_that("filter<-NULL for slides (and analyses)", {
+        expect_PATCH(
+            filter(decks(ds)[[2]][[3]]) <- NULL,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[]}}'
+        )
+        expect_PATCH(
+            filter(analysis(decks(ds)[[2]][[3]])) <- NULL,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[]}}'
+        )
+        expect_PATCH(
+            filter(main_deck[[3]]) <- NULL,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[]}}'
+        )
+        expect_PATCH(
+            filter(analysis(main_deck[[3]])) <- NULL,
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[]}}'
         )
     })
 
@@ -384,9 +558,28 @@ with_mock_crunch({
             '"currentTab":{"value":0},',
             '"uiView":{"value":"app.datasets.browse"}}}}'
         )
+
+        # and the same thing works with the convenience of specifying the slide
+        expect_identical(settings, displaySettings(slide))
+        expect_PATCH(
+            displaySettings(slide) <- list(decimalPlaces = 1),
+            "https://app.crunch.io/api/datasets/1/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity",',
+            '"body":{"display_settings":{',
+            '"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":true},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"populationMagnitude":{"value":3},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0},',
+            '"uiView":{"value":"app.datasets.browse"}}}}'
+        )
     })
 
-    test_that("AnalysisCatelog display settings", {
+    test_that("AnalysisCatalog display settings", {
         ancat <- analyses(slide)
         settings_list <- displaySettings(ancat)
         expect_is(settings_list, "list")
@@ -500,6 +693,7 @@ with_test_authentication({
         expect_is(slideCat, "SlideCatalog")
         expect_equal(length(slideCat), 2)
         expect_equal(titles(slideCat), c("slide1", "new_title2"))
+        expect_equal(names(slideCat), c("slide1", "new_title2"))
     })
     test_that("slides can be added by assignment", {
         slide <- slideCat[[2]]
@@ -538,7 +732,7 @@ with_test_authentication({
         expect_identical(cube_list[[1]], crtabs(~v2, ds))
     })
 
-    test_that("Formula's can be assigned to analyses", {
+    test_that("Formulas can be assigned to analyses", {
         query(analysis) <- ~v3
         expect_identical(cube(analysis), crtabs(~v3, ds))
     })
@@ -551,13 +745,69 @@ with_test_authentication({
         expect_equal(
             names(settings),
             c(
-                "percentageDirection", "showEmpty", "showMean", "vizType", "countsOrPercents",
-                "decimalPlaces", "populationMagnitude", "showSignif", "currentTab",
-                "uiView"
+                "percentageDirection", "showEmpty", "showMean", "vizType",
+                "countsOrPercents", "decimalPlaces", "populationMagnitude",
+                "showSignif", "currentTab", "uiView"
             )
         )
         expect_equal(settings$countsOrPercents, "percent")
         settings$countsOrPercents <- "count"
         displaySettings(analysis) <- settings
+    })
+
+    ds <- refresh(ds)
+    deck <- decks(ds)[["new_name"]]
+
+    test_that("query setting", {
+        # establish that we have three slides, and their queries
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v1, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+
+        # change queries
+        query(deck[[1]]) <- ~v3
+        query(analysis(deck[[2]])) <- ~v4
+
+        # make sure that the slides are all the same (except the one we replaced)
+        deck <- refresh(deck)
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v4, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+    })
+
+    test_that("Filter setting", {
+        ds <- refresh(ds)
+        deck <- decks(ds)[["new_name"]]
+
+        # establish that we have three slides, and their queries
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v4, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+
+        # make a named filter
+        filters(ds)[["v4 is B"]] <- ds$v4 == "B"
+        filters(ds)[["v1 over 0"]] <- ds$v1 > 0
+
+        # add filters
+        filter(deck[[1]]) <- filters(ds)[["v4 is B"]]
+        filter(analysis(deck[[2]])) <- filters(ds)[["v1 over 0"]]
+
+        # check filters
+        expect_identical(filter(deck[[1]]), filters(ds)[["v4 is B"]])
+        expect_identical(filter(analysis(deck[[2]])), filters(ds)[["v1 over 0"]])
+
+        # remove filters
+        filter(deck[[1]]) <- NULL
+        filter(analysis(deck[[2]])) <- NULL
+
+        # make sure that the slides are still all the same
+        deck <- refresh(deck)
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v4, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
     })
 })
