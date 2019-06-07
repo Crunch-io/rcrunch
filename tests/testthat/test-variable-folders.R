@@ -263,9 +263,9 @@ with_test_authentication({
             mkdir("Group 1") %>%
             mv(c("v1", "v2"), "Group 1") %>%
             mkdir("Group 1/Group 1.5") %>%
-            mv(c("v5", "v6"), "/Group 1/Group 1.5") %>%
+            mv(c("v5", "v6"), "/Group 1/Group 1.5") %>% # nolint
             mkdir("Group 2") %>%
-            mv(c("v4", "v3"), "/Group 2")
+            mv(c("v4", "v3"), "/Group 2") # nolint
 
         # test that ds_fork has the old order still
         expect_identical(
