@@ -112,7 +112,10 @@ setMethod("ordering<-", "ProjectFolder", .stopDatasetOrderSetter)
 
 #' Copy the variable order from one dataset to another.
 #'
-#' @param source the dataset you want to copy the order from
+#' `copyOrder` is deprecated and will be removed in a future version. Instead,
+#' you should use the [`copyFolders`] function.
+#'
+#' @param source the dataset you wan to copy the order from
 #' @param target the dataset you want to copy the order to
 #' @return returns an object of class [`VariableOrder`] (which can be assigned
 #' to a dataset with [`ordering`])
@@ -125,6 +128,13 @@ copyOrder <- function(source, target) {
     if (!is.dataset(source) | !is.dataset(target)) {
         halt("Both source and target must be Crunch datasets.")
     }
+
+    warning(
+        "There's a new way to copy ordering and folders: `copyFolders`!",
+        "It uses Crunch's new folders system which is easier to use and more ",
+        "reliable. `copyOrder` will be removed shortly, so please change your ",
+        "code to use `copyFolders`. See `?copyFolders` for more information."
+    )
 
     ord <- entities(ordering(source))
 
@@ -153,10 +163,12 @@ copyOrder <- function(source, target) {
 
 #' Copy the order of a `VariableGroup` (or individual variable URL) from `VariableOrder`
 #'
+#'
 #' @param group the group or variable URL to be copied
 #' @param source_map url to alias map for source variables
 #' @param target_map alias to url map for target variables
-#' @return returns either a [`VariableGroup`] (if a group is supplied) or a URL (if just a variable URL is supplied)
+#' @return returns either a [`VariableGroup`] (if a group is supplied) or a URL
+#' (if just a variable URL is supplied)
 #' @keywords internal
 copyOrderGroup <- function(group, source_map, target_map) {
     # if there is a single element in group, and it is a character,

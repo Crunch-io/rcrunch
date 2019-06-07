@@ -165,7 +165,6 @@ with_mock_crunch({
             )
         })
         test_that("If there are names longer than 'width', it still prints", {
-            skip("unskip when testthat 2.1.0 is released (testthat#805)")
             alphabet <- paste(letters, collapse = "")
             expect_output(
                 colored_print(alphabet),
@@ -180,6 +179,20 @@ with_mock_crunch({
             source("print-folders.R", local = TRUE)
         })
     })
+
+    test_that("copyFolders returns the target dataset with the order applied", {
+        ds_again <- loadDataset("test ds")
+        expect_silent(new_order <- copyFolders(ds, ds_again))
+        expect_is(new_order, "CrunchDataset")
+        expect_identical(entities(ordering(ds)), entities(ordering(new_order)))
+    })
+
+    test_that("copyFolders input validation", {
+        expect_error(
+            copyFolders(ds, "foo"),
+            "Both source and target must be Crunch datasets."
+        )
+    })
 })
 
 
@@ -187,5 +200,135 @@ with_test_authentication({
     ds <- createDataset(name = now())
     test_that("folders are enabled by default in the tests", {
         expect_true(settings(ds)$variable_folders)
+    })
+
+    ds <- newDataset(df)
+    test_that("copyFolders copies across datasets with simple order", {
+        ds_fork <- forkDataset(ds)
+        old_order <- capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+        ds %>% cd("/") %>% setOrder(c("v1", "v2", "v5", "v6", "v3", "v4"))
+        ds <- refresh(ds)
+
+        # test that ds_fork has the old order still
+        expect_identical(
+            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
+            old_order
+        )
+        expect_false(identical(
+            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
+            capture_output_lines(folders(ds) %>% print(depth = 10))
+        ))
+
+        # copy order, and check that ds_fork has the new order.
+        ds_fork <- copyFolders(ds, ds_fork)
+
+        expect_identical(
+            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
+            capture_output_lines(folders(ds) %>% print(depth = 10))
+        )
+    })
+
+    test_that("copyFolders copies across datasets with simple(-ish) order (and one nesting)", {
+        ds_fork <- forkDataset(ds)
+        old_order <- capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+        ds %>% cd ("/") %>% mkdir("Group A") %>% mv(c("v4", "v3"), "Group A")
+
+        # test that ds_fork has the old order still
+        expect_identical(
+            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
+            old_order
+        )
+        expect_false(identical(
+            capture_output_lines(folders(ds) %>% print(depth = 10)),
+            capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+        ))
+
+        # copy order, and check that ds_fork has the new order.
+        ds_fork <- copyFolders(ds, ds_fork)
+        expect_identical(
+            capture_output(folders(ds_fork) %>% print(depth = 10)),
+            capture_output(folders(ds) %>% print(depth = 10))
+        )
+    })
+
+
+    test_that("copyFolders copies across datasets with nested hierarchical order", {
+        ds_fork <- forkDataset(ds)
+        old_order <- capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+
+        # reset order
+        ds %>% mv(aliases(allVariables(ds)), "/")
+
+        ds %>%
+            mkdir("Group 1") %>%
+            mv(c("v1", "v2"), "Group 1") %>%
+            mkdir("Group 1/Group 1.5") %>%
+            mv(c("v5", "v6"), "/Group 1/Group 1.5") %>% # nolint
+            mkdir("Group 2") %>%
+            mv(c("v4", "v3"), "/Group 2") # nolint
+
+        # test that ds_fork has the old order still
+        expect_identical(
+            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
+            old_order
+        )
+        expect_false(identical(
+            capture_output_lines(folders(ds) %>% print(depth = 10)),
+            capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+        ))
+
+        # copy order, and check that ds_fork has the new order.
+        ds_fork <- copyFolders(ds, ds_fork)
+        expect_identical(
+            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
+            capture_output_lines(folders(ds) %>% print(depth = 10))
+        )
+    })
+
+    test_that("copyFolders copies across disparate datasets", {
+        # setup an alternative dataset that has some overlap with ds
+        df_alt <- df
+        df_alt$v12 <- df_alt$v1
+        df_alt$v1 <- NULL
+        df_alt$v2 <- NULL
+        df_alt$new_var <- 1
+        df_alt$new_var2 <- letters[20:1]
+        ds_alt <- newDataset(df_alt)
+
+        old_order <- capture_output_lines(folders(ds_alt) %>% print(depth = 10))
+
+        # reset order
+        with_consent(
+            ds %>%
+                mv(aliases(allVariables(ds)), "/") %>%
+                rmdir(c("Group 1")) %>%
+                rmdir(c("Group 2")) %>%
+                rmdir(c("Group A"))
+        )
+
+
+        ds %>% mkdir("Group A") %>% mv(c("v4", "v3"), "Group A")
+
+        # test that ds_alt has the old order still
+        expect_identical(
+            capture_output_lines(folders(ds_alt) %>% print(depth = 10)),
+            old_order
+        )
+
+        expect_false(identical(
+            capture_output_lines(folders(ds_alt) %>% print(depth = 10))[-c(4, 5, 6)],
+            capture_output_lines(folders(ds) %>% print(depth = 10))[-c(2, 3)]
+        ))
+
+        # copy order, and check that ds_alt has the new order.
+        ds_alt <- copyFolders(ds, ds_alt)
+        expect_identical(
+            # ignore lines 4, 5, and 6 because they are vars in ds_alt that are
+            # not in ds
+            capture_output_lines(folders(ds_alt) %>% print(depth = 10))[-c(4, 5, 6)],
+            # ignore lines 3 and 2 because they are vars in ds that are
+            # not in ds_alt
+            capture_output_lines(folders(ds) %>% print(depth = 10))[-c(2, 3)]
+        )
     })
 })
