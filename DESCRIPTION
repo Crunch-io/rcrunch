@@ -20,7 +20,7 @@ Depends:
     R (>= 3.0.0)
 Imports:
     crayon,
-    curl,
+    curl (== 4.0),
     grDevices,
     httr (>= 1.0.0),
     httpcache (>= 0.1.4),
