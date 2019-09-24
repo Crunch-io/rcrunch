@@ -12,8 +12,7 @@ lint:
 	R --slave -e 'styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'
 
 deps:
-	R --slave -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/curl/curl_4.0.tar.gz",repo=NULL,type="source")'
-	#R --slave -e 'cran <- "http://cran.at.r-project.org"; if (!dir.exists(file.path(.libPaths()[1], "devtools"))) install.packages("devtools", repo=cran); devtools::install_deps()'
+	R --slave -e 'cran <- "http://cran.at.r-project.org"; if (!dir.exists(file.path(.libPaths()[1], "devtools"))) install.packages("devtools", repo=cran); devtools::install_deps()'
 
 install-ci: deps
 	R -e 'devtools::session_info(installed.packages()[, "Package"])'
