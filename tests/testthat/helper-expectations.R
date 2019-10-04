@@ -41,6 +41,39 @@ expect_valid_df_import <- function(ds) {
     expect_identical(names(versions(ds)), "initial import")
 }
 
+expect_valid_df_revert <- function(ds) {
+    ## Pull out common tests that "df" was reverted correctly
+    ## This is different from `expect_valid_df_import` that it does Not
+    ## expect the folder structure to have been reverted
+    expect_true(is.dataset(ds))
+    expect_identical(description(ds), "")
+    expect_true(setequal(names(df), names(ds)))
+    expect_identical(dim(ds), dim(df))
+    expect_true(is.Numeric(ds[["v1"]]))
+    expect_true(is.Text(ds[["v2"]]))
+    expect_identical(name(ds$v2), "v2")
+    expect_true(is.Numeric(ds[["v3"]]))
+    expect_identical(description(ds$v3), "")
+    expect_equivalent(
+        as.array(crtabs(mean(v3) ~ v4, data = ds)),
+        tapply(df$v3, df$v4, mean, na.rm = TRUE)
+    )
+    expect_equivalent(as.vector(ds$v3), df$v3)
+    expect_true(is.Categorical(ds[["v4"]]))
+    expect_equivalent(
+        as.array(crtabs(~v4, data = ds)),
+        array(c(10, 10), dim = 2L, dimnames = list(v4 = c("B", "C")))
+    )
+    expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
+    expect_identical(categories(ds$v4), categories(refresh(ds$v4)))
+    expect_identical(ds$v4, refresh(ds$v4))
+    expect_equivalent(as.vector(ds$v4), df$v4)
+    expect_true(is.Datetime(ds$v5))
+    expect_true(is.Categorical(ds$v6))
+    expect_identical(names(categories(ds$v6)), c("True", "False", "No Data"))
+    expect_identical(names(versions(ds)), "initial import")
+}
+
 expect_valid_apidocs_import <- function(ds) {
     expect_true(is.dataset(ds))
     expect_identical(dim(ds), c(20L, 9L))

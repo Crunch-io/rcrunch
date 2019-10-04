@@ -169,7 +169,7 @@ with_test_authentication({
     ## Revert to the first version
     ds <- try(restoreVersion(ds, "initial import"))
     test_that("Restoring restored correctly", {
-        expect_valid_df_import(ds)
+        expect_valid_df_revert(ds)
     })
 
     test_that("Added variables are really removed by rolling back", {
@@ -193,6 +193,6 @@ with_test_authentication({
 
     ds <- try(restoreVersion(ds, "initial import"))
     test_that("And if we revert again, it's all good", {
-        expect_valid_df_import(ds)
+        expect_valid_df_revert(ds)
     })
 })
