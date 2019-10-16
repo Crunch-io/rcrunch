@@ -68,7 +68,7 @@ with_test_authentication({
     test_that("We can select rows to append", {
         ds1 <- appendDataset(ds1, ds2[ds2$v3 < 10, ])
         expect_equal(ncol(ds1), 5)
-        expect_identical(names(ds1), c("v1", "v2", "v3", "v4", "v5"))
+        expect_true(setequal(names(ds1), c("v1", "v2", "v3", "v4", "v5")))
         asdf <- as.data.frame(ds1)
         expect_equivalent(asdf$v1, c(df$v1, rep(NA_real_, 2)))
         expect_equivalent(asdf$v2, c(df$v2, df$v2[1:2]))
