@@ -49,8 +49,7 @@ toVariable(x, ...)
 \item{x}{An R vector you want to turn into a Crunch variable}
 
 \item{...}{Additional metadata fields for the variable, such as "name" and
-"description". See the
-\href{http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog}{API documentation} #nolint
+"description". See the \href{http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog}{API documentation}
 for a complete list of valid attributes.}
 }
 \value{
