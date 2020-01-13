@@ -19,8 +19,10 @@
 #' assign
 #' @return Getters return the character object in the specified slot; setters
 #' return `x` duly modified.
-#' @aliases describe-catalog aliases aliases<- descriptions descriptions<- types emails timestamps names names<-
-#' @seealso [`Subvariables`] [`Categories`] [base::names()] `vignette("variables", package="crunch")`
+#' @aliases describe-catalog aliases aliases<- descriptions descriptions<-
+#' types emails timestamps names names<-
+#' @seealso [`Subvariables`] [`Categories`] [base::names()]
+#' `vignette("variables", package="crunch")`
 #' @rdname describe-catalog
 setGeneric("aliases", function(x) standardGeneric("aliases"))
 #' @rdname describe-catalog
@@ -64,7 +66,8 @@ setGeneric("names<-")
 #' @return Getters return the character object in the specified slot; setters
 #' return `x` duly modified.
 #' @name describe-entity
-#' @aliases describe name name<- description description<- alias alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<- uniformBasis uniformBasis<-
+#' @aliases describe name name<- description description<- alias alias<- startDate
+#' startDate<- endDate endDate<- notes notes<- digits digits<- uniformBasis uniformBasis<-
 #' @seealso [`Categories`] [`describe-catalog`]
 setGeneric("name", function(x) standardGeneric("name"))
 #' @rdname describe-entity

@@ -4,8 +4,14 @@
 \alias{newSlide}
 \title{Append a new slide to a Crunch Deck}
 \usage{
-newSlide(deck, query, display_settings = list(), title = "",
-  subtitle = "", ...)
+newSlide(
+  deck,
+  query,
+  display_settings = list(),
+  title = "",
+  subtitle = "",
+  ...
+)
 }
 \arguments{
 \item{deck}{A Crunch Deck}

@@ -15,7 +15,7 @@ include at least a \code{name} and an \code{expression} element. Cases may also 
 \code{missing} (logical) and \code{numeric_value} (numeric).}
 
 \item{data}{(optional) a crunch dataset to use. Specifying this means you
-don't have to put \code{dataset$} in front of each variable name.}
+don't have to put \verb{dataset$} in front of each variable name.}
 
 \item{name}{a character to use as the name of the case variable to create}
 }
@@ -38,7 +38,7 @@ two will produce the same case variable):
 \code{makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")}
 \item You can also use the \code{cases} argument, which is useful when you want to
 provide category ids, numeric values, or missingness:
-\code{makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")}
+\code{makeCaseVariable(   cases=list( list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")   ),   name="new case" )}
 }
 
 Rows in the dataset that do not match any of the provided "cases" will

@@ -232,7 +232,7 @@ with_test_authentication({
     test_that("copyFolders copies across datasets with simple(-ish) order (and one nesting)", {
         ds_fork <- forkDataset(ds)
         old_order <- capture_output_lines(folders(ds_fork) %>% print(depth = 10))
-        ds %>% cd ("/") %>% mkdir("Group A") %>% mv(c("v4", "v3"), "Group A")
+        ds %>% cd("/") %>% mkdir("Group A") %>% mv(c("v4", "v3"), "Group A")
 
         # test that ds_fork has the old order still
         expect_identical(

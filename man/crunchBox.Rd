@@ -5,13 +5,25 @@
 \alias{CrunchBox}
 \title{Make a CrunchBox}
 \usage{
-crunchBox(dataset, filters = crunch::filters(dataset),
-  weight = crunch::weight(dataset), brand_colors, static_colors,
-  category_color_lookup, ...)
+crunchBox(
+  dataset,
+  filters = crunch::filters(dataset),
+  weight = crunch::weight(dataset),
+  brand_colors,
+  static_colors,
+  category_color_lookup,
+  ...
+)
 
-CrunchBox(dataset, filters = crunch::filters(dataset),
-  weight = crunch::weight(dataset), brand_colors, static_colors,
-  category_color_lookup, ...)
+CrunchBox(
+  dataset,
+  filters = crunch::filters(dataset),
+  weight = crunch::weight(dataset),
+  brand_colors,
+  static_colors,
+  category_color_lookup,
+  ...
+)
 }
 \arguments{
 \item{dataset}{A CrunchDataset, potentially a selection of variables from it}

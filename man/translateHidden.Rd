@@ -29,6 +29,6 @@ For example, if \code{v} includes c("cat1", "hidden_cat", "cat2") and \code{useN
 "no". The user will see \code{v} as c("cat1", "cat2") and might subset it with
 \code{v[c(2,1)]}. We need to skip over the hidden category and change the index
 to account for any hidden categories which might appear in the vector. Here
-the translated index would be \code{c(3,1}. This function does all of that.
+the translated index would be \verb{c(3,1}. This function does all of that.
 }
 \keyword{internal}

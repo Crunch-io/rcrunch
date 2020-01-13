@@ -13,7 +13,8 @@
 #' archived, in draft mode, or published, where draft and published are
 #' inverses. The setters return the dataset.
 #' @name archive-and-publish
-#' @aliases archive is.archived is.draft is.published is.archived<- is.draft<- is.published<- publish
+#' @aliases archive is.archived is.draft is.published is.archived<- is.draft<-
+#' is.published<- publish
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("mtcars")

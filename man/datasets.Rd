@@ -27,7 +27,7 @@ projects). You can also use it to pull a catalog of datasets from search
 results.
 }
 \details{
-The \code{datasets()<-} assignment function provides an alternative method for
+The \verb{datasets()<-} assignment function provides an alternative method for
 moving a dataset into a project. This may be more convenient in some cases
 than using \code{\link[=mv]{mv()}}.
 }

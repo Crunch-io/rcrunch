@@ -64,5 +64,8 @@ projects() \%>\%
 }
 }
 \seealso{
-\code{\link[=cd]{cd()}} to select a folder by path; \code{\link[=rmdir]{rmdir()}} to delete a folder; \code{\link[=folder]{folder()}} to identify and set an object's parent folder; \code{\link[base:dir.create]{base::dir.create()}} if you literally want to create a directory in your local file system, which \code{mkdir()} does not do
+\code{\link[=cd]{cd()}} to select a folder by path; \code{\link[=rmdir]{rmdir()}} to delete a folder;
+\code{\link[=folder]{folder()}} to identify and set an object's parent folder; \code{\link[base:dir.create]{base::dir.create()}}
+if you literally want to create a directory in your local file system, which
+\code{mkdir()} does not do
 }

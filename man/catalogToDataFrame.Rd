@@ -4,8 +4,13 @@
 \alias{catalogToDataFrame}
 \title{A utility to return a data.frame from a ShojiCatalog.}
 \usage{
-catalogToDataFrame(x, keys = TRUE, rownames = NULL,
-  list_columns = c("subvariables", "subvariables_catalog"), ...)
+catalogToDataFrame(
+  x,
+  keys = TRUE,
+  rownames = NULL,
+  list_columns = c("subvariables", "subvariables_catalog"),
+  ...
+)
 }
 \arguments{
 \item{x}{\code{ShojiCatalog} or subclass}

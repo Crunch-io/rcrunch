@@ -25,8 +25,7 @@ subvariables(x) <- value
 
 \S4method{subvariables}{CategoricalArrayVariable,ANY}(x) <- value
 
-
-  \S4method{subvariables}{CategoricalArrayVariable,Subvariables}(x) <- value
+\S4method{subvariables}{CategoricalArrayVariable,Subvariables}(x) <- value
 }
 \arguments{
 \item{x}{A Variable or Subvariables object}
@@ -41,14 +40,14 @@ the subvariables of a multiple-response or categorical-array variable.
 \details{
 Subvariables can be accessed from array variables (including multiple
 response) with the \code{subvariables} method. They can be assigned back
-with the \code{subvariables<-} setter, but there are limitations to what
+with the \verb{subvariables<-} setter, but there are limitations to what
 is supported. Specifically, you can reorder subvariables, but you cannot
-add or remove subvariables by \code{subvariables<-} assignment. See
+add or remove subvariables by \verb{subvariables<-} assignment. See
 \code{\link{deleteSubvariable}} to remove subvariables from an array.
 
 Subvariables have a \code{names} attribute that can be accessed, showing
 the display names of the subvariables. These can be set with the
-\code{names<-} method.
+\verb{names<-} method.
 
 Finally, subvariables can be accessed as regular (categorical) variables
 with the \code{$} and \code{[[} extract methods.
@@ -56,5 +55,6 @@ with the \code{$} and \code{[[} extract methods.
 See the vignette on array variables for further details and examples.
 }
 \seealso{
-\code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
+\code{\link{describe-catalog}} \code{\link{deleteSubvariable}}
+\code{vignette("array-variables", package="crunch")}
 }

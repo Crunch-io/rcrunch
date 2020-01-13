@@ -4,8 +4,7 @@
 \alias{crunchAPI}
 \title{Main Crunch API handling function}
 \usage{
-crunchAPI(http.verb, url, config = list(), status.handlers = list(),
-  ...)
+crunchAPI(http.verb, url, config = list(), status.handlers = list(), ...)
 }
 \arguments{
 \item{http.verb}{character in GET, PUT, POST, PATCH, DELETE}

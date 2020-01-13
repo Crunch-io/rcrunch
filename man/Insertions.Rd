@@ -103,7 +103,7 @@ the objects via the \code{data} argument. See the examples.}
 \item{x}{For the attribute getters and setters, an object of class
 Insertion or Insertions}
 
-\item{value}{For \code{[<-}, the replacement Insertion to insert}
+\item{value}{For \verb{[<-}, the replacement Insertion to insert}
 
 \item{var_categories}{categories (from \code{\link[=categories]{categories()}}) to used by the
 \code{arguments} and \code{anchor} methods when needed to translate between category

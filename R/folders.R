@@ -25,7 +25,10 @@
 #' projects).
 #' @return `x`, with the folder at `path` guaranteed to be created, and for
 #' `mv`, containing `what` moved into it.
-#' @seealso [cd()] to select a folder by path; [rmdir()] to delete a folder; [folder()] to identify and set an object's parent folder; [base::dir.create()] if you literally want to create a directory in your local file system, which `mkdir()` does not do
+#' @seealso [cd()] to select a folder by path; [rmdir()] to delete a folder;
+#' [folder()] to identify and set an object's parent folder; [base::dir.create()]
+#' if you literally want to create a directory in your local file system, which
+#' `mkdir()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")
@@ -120,7 +123,9 @@ setName <- function(object, nm) {
 #' the folder exists. You can call `cd` directly with `create=TRUE`, though that
 #' seems unnatural.
 #' @return A `Folder` (`VariableFolder` or `ProjectFolder`)
-#' @seealso [mv()] to move entities to a folder; [rmdir()] to delete a folder; [base::setwd()] if you literally want to change your working directory in your local file system, which `cd()` does not do
+#' @seealso [mv()] to move entities to a folder; [rmdir()] to delete a folder;
+#' [base::setwd()] if you literally want to change your working directory in your
+#' local file system, which `cd()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")
@@ -174,7 +179,9 @@ cd <- function(x, path, create = FALSE) {
 #'
 #' @inheritParams mv
 #' @return `NULL`
-#' @seealso [mv()] to move entities to a folder; [cd()] to select a folder; [base::file.remove()] if you literally want to delete a directory from your local file system, which `rmdir()` does not do
+#' @seealso [mv()] to move entities to a folder; [cd()] to select a folder;
+#' [base::file.remove()] if you literally want to delete a directory from your local
+#' file system, which `rmdir()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")
@@ -199,9 +206,11 @@ rmdir <- function(x, path) {
 
 #' Find and move entities to a new folder
 #'
-#' @param x For `folder`, a Variable to find. For folder assignment, a Variable, selection of variables in a
+#' @param x For `folder`, a Variable to find. For folder assignment, a Variable,
+#' selection of variables in a
 #' Dataset, or any other object that can be moved to a folder.
-#' @return `folder` returns the parent folder of `x`, or `NULL` if the `x` is the root level. `folder<-` returns the
+#' @return `folder` returns the parent folder of `x`, or `NULL` if the `x` is the root
+#' level. `folder<-` returns the
 #' `x` input, having been moved to the requested location.
 #' @export
 #' @examples
@@ -324,7 +333,7 @@ folder_recurse <- function(folder) {
 
 # take a folder/var tree (from folder_recurse) and copy it to dataset
 plant_tree <- function(tree, dataset, folder_position = folders(dataset)) {
-    lapply(seq_along(tree), function(i){
+    lapply(seq_along(tree), function(i) {
         item <- tree[[i]]
         if(!is.null(names(item))) {
             # we have a folder!

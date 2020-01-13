@@ -5,8 +5,12 @@
 \alias{contextManager}
 \title{Context managers}
 \usage{
-ContextManager(enter = function() { }, exit = function() { },
-  error = NULL, as = NULL)
+ContextManager(
+  enter = function() { },
+  exit = function() { },
+  error = NULL,
+  as = NULL
+)
 }
 \arguments{
 \item{enter}{function to run before taking actions}

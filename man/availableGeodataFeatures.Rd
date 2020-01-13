@@ -4,8 +4,10 @@
 \alias{availableGeodataFeatures}
 \title{Get the property features for available geographies}
 \usage{
-availableGeodataFeatures(x = getAPIRoot(), geodatum_fields = c("name",
-  "description", "location"))
+availableGeodataFeatures(
+  x = getAPIRoot(),
+  geodatum_fields = c("name", "description", "location")
+)
 }
 \arguments{
 \item{x}{an API root address (default: the R-session default)}

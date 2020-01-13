@@ -17,7 +17,8 @@ NULL
 #' you can declare methods for `toVariable`.
 #' @param x An R vector you want to turn into a Crunch variable
 #' @param ... Additional metadata fields for the variable, such as "name" and
-#' "description". See the [API documentation](http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog)
+#' "description". See the
+#' [API documentation](http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog) #nolint
 #' for a complete list of valid attributes.
 #' @return A `VariableDefinition` object. To add this to a dataset, either
 #' assign it into the dataset (like `ds$newvar <- toVariable(...)`) or call

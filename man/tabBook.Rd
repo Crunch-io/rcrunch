@@ -4,8 +4,14 @@
 \alias{tabBook}
 \title{Compute a Tab Book}
 \usage{
-tabBook(multitable, dataset, weight = crunch::weight(dataset),
-  format = c("json", "xlsx"), file, ...)
+tabBook(
+  multitable,
+  dataset,
+  weight = crunch::weight(dataset),
+  format = c("json", "xlsx"),
+  file,
+  ...
+)
 }
 \arguments{
 \item{multitable}{a \code{Multitable} object}

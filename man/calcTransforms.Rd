@@ -7,14 +7,15 @@
 calcTransforms(array, insert_funcs, dim_names = names(insert_funcs))
 }
 \arguments{
-\item{array}{the array to use (this is most likely from a \code{CrunchCube`` object). The cells from this array are the cube_cells referred to in }include`}
+\item{array}{the array to use (this is most likely from a \verb{CrunchCube`` object). The cells from this array are the cube_cells referred to in }include`}
 
 \item{trans}{a \code{Transform} object to get the transformations to calculate}
 
 \item{var_cats}{a \code{Categories} object that are the categories for the
 variable the transforms are being calculated for}
 
-\item{include}{what values should be included in the output? (default: "subtotals", "headings", "cube_cells", "other_insertions")
+\item{include}{what values should be included in the output?
+(default: "subtotals", "headings", "cube_cells", "other_insertions")
 \itemize{
 \item cube_cells -- the values from the array given in \code{array}
 \item subtotals -- insertions that have the function subtotal

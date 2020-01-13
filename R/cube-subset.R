@@ -316,7 +316,7 @@ translateHidden <- function(index,
         is_hidden = !not_hidden,
         visible = vis
     )
-    mapping$true_index <- 1:nrow(mapping)
+    mapping$true_index <- seq_len(nrow(mapping))
     mapping$new_order <- NA
 
     # The non-visible dimensions get their true index
@@ -324,7 +324,7 @@ translateHidden <- function(index,
 
     # This translate the provided index, to its true index accounting for hidden
     # categories. It also handles reordering indexes like cube[(2,1), ]
-    mapping$new_order[vis][1:length(index)] <- mapping$true_index[vis][index]
+    mapping$new_order[vis][seq_along(index)] <- mapping$true_index[vis][index]
 
     out <- mapping$new_order
     if (length(index) == 1 && !drop) {

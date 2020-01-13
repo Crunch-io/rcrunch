@@ -8,11 +8,23 @@
 \alias{are.SummaryStats}
 \title{Summary insertions}
 \usage{
-SummaryStat(name, stat, categories = NULL, position = c("relative",
-  "top", "bottom"), after = NULL, includeNA = FALSE)
+SummaryStat(
+  name,
+  stat,
+  categories = NULL,
+  position = c("relative", "top", "bottom"),
+  after = NULL,
+  includeNA = FALSE
+)
 
-SummaryStat(name, stat, categories = NULL, position = c("relative",
-  "top", "bottom"), after = NULL, includeNA = FALSE)
+SummaryStat(
+  name,
+  stat,
+  categories = NULL,
+  position = c("relative", "top", "bottom"),
+  after = NULL,
+  includeNA = FALSE
+)
 
 is.SummaryStat(x)
 

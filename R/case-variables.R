@@ -14,7 +14,12 @@
 #'
 #' 1. You can also use the `cases` argument, which is useful when you want to
 #' provide category ids, numeric values, or missingness:
-#' `makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")`
+#' `makeCaseVariable(
+#'   cases=list(
+#'     list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")
+#'   ),
+#'   name="new case"
+#' )`
 #'
 #' Rows in the dataset that do not match any of the provided "cases" will
 #' be assigned to an "else" category. By default, Crunch will use the system

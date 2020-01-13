@@ -23,7 +23,7 @@ To create a team by  assignment, assign a list to
 \code{teams("myteam") <- value_list}. The \code{value_list} can either empty
 (to just create a team with that name), or can contain a "members" element
 with the emails or URLs of users to add to the team. Users can be also be
-added later with the \code{members<-}  method.
+added later with the \verb{members<-}  method.
 }
 \seealso{
 \code{\link{members}}

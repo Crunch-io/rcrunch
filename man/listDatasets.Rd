@@ -4,8 +4,12 @@
 \alias{listDatasets}
 \title{Get the names of datasets in a project}
 \usage{
-listDatasets(kind = c("active", "all", "archived"), project = NULL,
-  refresh = FALSE, shiny = FALSE)
+listDatasets(
+  kind = c("active", "all", "archived"),
+  project = NULL,
+  refresh = FALSE,
+  shiny = FALSE
+)
 }
 \arguments{
 \item{kind}{character specifying whether to look in active, archived, or all

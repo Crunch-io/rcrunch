@@ -64,12 +64,12 @@ with_test_authentication({
     })
     ds <- refresh(ds)
     test_that("Variable definitions can be added to an array", {
-        sub1 <- toVariable(factor(1:nrow(ds)), name = "Ant")
+        sub1 <- toVariable(factor(seq_len(nrow(ds))), name = "Ant")
         ds$allpets <- addSubvariables(ds$allpets, sub1)
         expect_true("Ant" %in% names(subvariables(ds$allpets)))
 
-        sub2 <- toVariable(factor(1:nrow(ds)), name = "Bee")
-        sub3 <- toVariable(factor(1:nrow(ds)), name = "Mosquito")
+        sub2 <- toVariable(factor(seq_len(nrow(ds))), name = "Bee")
+        sub3 <- toVariable(factor(seq_len(nrow(ds))), name = "Mosquito")
         ds$allpets <- addSubvariables(ds$allpets, list(sub2, sub3))
         expect_identical(
             names(subvariables(ds$allpets)),
@@ -79,8 +79,8 @@ with_test_authentication({
             )
         )
 
-        sub4 <- toVariable(factor(1:nrow(ds)), name = "Fly")
-        ds$Aphid <- factor(1:nrow(ds))
+        sub4 <- toVariable(factor(seq_len(nrow(ds))), name = "Fly")
+        ds$Aphid <- factor(seq_len(nrow(ds)))
         ds$allpets <- addSubvariable(ds$allpets, list(sub4, ds$Aphid))
         expect_identical(
             names(subvariables(ds$allpets)),

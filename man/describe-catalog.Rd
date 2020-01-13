@@ -4,7 +4,6 @@
 %   R/dataset.R, R/shoji-catalog.R, R/decks.R, R/multitables.R,
 %   R/shoji-folder.R, R/shoji-order-slots.R, R/slides.R, R/subvariables.R,
 %   R/tab-book.R, R/variable-catalog.R, R/variable-folder.R, R/versions.R
-\docType{methods}
 \name{aliases}
 \alias{aliases}
 \alias{describe-catalog}
@@ -199,5 +198,6 @@ Set \code{options(crunch.namekey.dataset="name")} if you wish to use
 variable names. See the variables vignette for more information.
 }
 \seealso{
-\code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base:names]{base::names()}} \code{vignette("variables", package="crunch")}
+\code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base:names]{base::names()}}
+\code{vignette("variables", package="crunch")}
 }

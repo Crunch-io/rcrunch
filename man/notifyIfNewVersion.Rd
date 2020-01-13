@@ -5,8 +5,11 @@
 \alias{checkForNewVersion}
 \title{See if there's a new version of the package on GitHub}
 \usage{
-notifyIfNewVersion(package = "crunch", github = "Crunch-io/rcrunch",
-  installed.version = as.character(packageVersion(package)))
+notifyIfNewVersion(
+  package = "crunch",
+  github = "Crunch-io/rcrunch",
+  installed.version = as.character(packageVersion(package))
+)
 
 checkForNewVersion(github, installed.version)
 }

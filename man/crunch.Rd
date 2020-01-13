@@ -3,7 +3,6 @@
 \docType{package}
 \name{crunch}
 \alias{crunch}
-\alias{crunch-package}
 \title{Crunch.io: instant, visual, collaborative data analysis}
 \description{
 \href{http://crunch.io/}{Crunch.io} provides a cloud-based data store and

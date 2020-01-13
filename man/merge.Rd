@@ -5,8 +5,15 @@
 \alias{merge.CrunchDataFrame}
 \title{Merge a CrunchDataFrame}
 \usage{
-\method{merge}{CrunchDataFrame}(x, y, by = intersect(names(x), names(y)),
-  by.x = by, by.y = by, sort = c("x", "y"), ...)
+\method{merge}{CrunchDataFrame}(
+  x,
+  y,
+  by = intersect(names(x), names(y)),
+  by.x = by,
+  by.y = by,
+  sort = c("x", "y"),
+  ...
+)
 }
 \arguments{
 \item{x}{a CrunchDataFrame}

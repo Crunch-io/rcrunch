@@ -304,7 +304,7 @@ formatExpressionValue <- function(val, cats = NULL) {
 # dataset urls. This function recursively goes through the expression replacing
 # the variable/dataset pair with the correct URL.
 # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
-fixAdhocFilterExpression <- function(expr){
+fixAdhocFilterExpression <- function(expr) {
     if (is.CrunchExpr(expr)) {
         return(fixAdhocFilterExpression(expr@expression))
     } else if ("variable" %in% names(expr) && "dataset" %in% names(expr)) {

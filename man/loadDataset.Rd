@@ -4,8 +4,12 @@
 \alias{loadDataset}
 \title{Load a Crunch Dataset}
 \usage{
-loadDataset(dataset, kind = c("active", "all", "archived"),
-  project = NULL, refresh = FALSE)
+loadDataset(
+  dataset,
+  kind = c("active", "all", "archived"),
+  project = NULL,
+  refresh = FALSE
+)
 }
 \arguments{
 \item{dataset}{character, the name or path to a Crunch dataset to load, or a

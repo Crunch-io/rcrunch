@@ -4,8 +4,11 @@
 \alias{login}
 \title{Authenticate with the Crunch API}
 \usage{
-login(email = envOrOption("crunch.email"),
-  password = envOrOption("crunch.pw"), ...)
+login(
+  email = envOrOption("crunch.email"),
+  password = envOrOption("crunch.pw"),
+  ...
+)
 }
 \arguments{
 \item{email}{the email address associated with the user's Crunch account}

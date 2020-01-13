@@ -25,7 +25,8 @@
 #'
 #' @name Subvariables
 #' @aliases Subvariables subvariables subvariables<-
-#' @seealso [`describe-catalog`] [`deleteSubvariable`] `vignette("array-variables", package="crunch")`
+#' @seealso [`describe-catalog`] [`deleteSubvariable`]
+#' `vignette("array-variables", package="crunch")`
 setGeneric("subvariables", function(x) standardGeneric("subvariables"))
 
 #' @rdname Subvariables

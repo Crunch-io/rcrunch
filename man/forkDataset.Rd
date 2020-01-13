@@ -4,8 +4,7 @@
 \alias{forkDataset}
 \title{Create a fork of a dataset}
 \usage{
-forkDataset(dataset, name = defaultForkName(dataset), draft = FALSE,
-  ...)
+forkDataset(dataset, name = defaultForkName(dataset), draft = FALSE, ...)
 }
 \arguments{
 \item{dataset}{The \code{CrunchDataset} to fork}

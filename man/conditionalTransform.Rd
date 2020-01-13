@@ -4,8 +4,14 @@
 \alias{conditionalTransform}
 \title{Conditional transformation}
 \usage{
-conditionalTransform(..., data, else_condition = NA, type = NULL,
-  categories = NULL, formulas = NULL)
+conditionalTransform(
+  ...,
+  data,
+  else_condition = NA,
+  type = NULL,
+  categories = NULL,
+  formulas = NULL
+)
 }
 \arguments{
 \item{...}{a list of conditions to evaluate (as formulas, see Details) as well as

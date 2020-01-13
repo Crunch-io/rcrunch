@@ -92,7 +92,7 @@ with_mock_crunch({
         expect_equal(dim(avail_features), c(51, 6))
         expect_equal(
             as.character(avail_features$value),
-            c( # GB Regions geodatum
+            c(# GB Regions geodatum
                 "UKH", "UKI", "UKL", "UKF", "UKJ", "UKC", "East",
                 "London", "Wales", "Scotland", "Northern Ireland",
                 "Midlands", "South", "North",

@@ -8,7 +8,8 @@
 #' @param trans a `Transform` object to get the transformations to calculate
 #' @param var_cats a `Categories` object that are the categories for the
 #' variable the transforms are being calculated for
-#' @param include what values should be included in the output? (default: "subtotals", "headings", "cube_cells", "other_insertions")
+#' @param include what values should be included in the output?
+#' (default: "subtotals", "headings", "cube_cells", "other_insertions")
 #' * cube_cells -- the values from the array given in `array`
 #' * subtotals -- insertions that have the function subtotal
 #' * headings -- insertions that have no function specified

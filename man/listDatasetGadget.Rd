@@ -4,8 +4,7 @@
 \alias{listDatasetGadget}
 \title{Open dataset selector}
 \usage{
-listDatasetGadget(kind = c("active", "all", "archived"),
-  refresh = FALSE)
+listDatasetGadget(kind = c("active", "all", "archived"), refresh = FALSE)
 }
 \arguments{
 \item{kind}{character specifying whether to look in active, archived, or all

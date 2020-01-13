@@ -21,7 +21,7 @@ the objects via the \code{data} argument. See the examples.}
 \item{x}{For the attribute getters and setters, an object of class
 AbstractCategory or AbstractCategories}
 
-\item{value}{For \code{[<-}, the replacement AbstractCategory to insert}
+\item{value}{For \verb{[<-}, the replacement AbstractCategory to insert}
 }
 \description{
 An abstract class that categories, elements, insertions, etc. fall under

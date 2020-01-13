@@ -4,8 +4,7 @@
 \alias{table}
 \title{Table function for Crunch objects}
 \usage{
-table(..., exclude, useNA = c("no", "ifany", "always"), dnn,
-  deparse.level)
+table(..., exclude, useNA = c("no", "ifany", "always"), dnn, deparse.level)
 }
 \arguments{
 \item{...}{CrunchVariables to tabulate}

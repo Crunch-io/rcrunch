@@ -2,7 +2,6 @@
 % Please edit documentation in R/AllGenerics.R, R/abstract-category.R,
 %   R/category.R, R/dataset.R, R/decks.R, R/geo.R, R/multitables.R,
 %   R/project-folder.R, R/shoji-folder.R, R/shoji.R, R/variable.R
-\docType{methods}
 \name{describe-entity}
 \alias{describe-entity}
 \alias{describe}

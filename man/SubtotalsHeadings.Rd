@@ -19,13 +19,21 @@
 \alias{subtotals<-,CrunchVariable,NULL-method}
 \title{Subtotals and headings}
 \usage{
-Subtotal(name, categories, position = c("relative", "top", "bottom"),
-  after = NULL)
+Subtotal(
+  name,
+  categories,
+  position = c("relative", "top", "bottom"),
+  after = NULL
+)
 
 Heading(name, position = c("relative", "top", "bottom"), after = NULL)
 
-Subtotal(name, categories, position = c("relative", "top", "bottom"),
-  after = NULL)
+Subtotal(
+  name,
+  categories,
+  position = c("relative", "top", "bottom"),
+  after = NULL
+)
 
 is.Subtotal(x)
 
@@ -63,7 +71,7 @@ this defaults to the last of the \code{categories} supplied to \code{Subtotal}.}
 transforms for, for \code{is.Subtotal()} and \code{is.Heading()} an object to test if
 it is either a Subtotal or Heading}
 
-\item{value}{For \code{[<-}, the replacement Subtotal to insert}
+\item{value}{For \verb{[<-}, the replacement Subtotal to insert}
 
 \item{...}{additional arguments to \code{[}, ignored}
 }
@@ -94,7 +102,7 @@ To get an array of just the subtotal rows from a CrunchCube, use the function
 \section{Working with Subtotals and headings}{
 
 When interacting programmatically with Subtotals and Headings, it can be
-useful to be able to tell if something is a Subtotal or a Heading. The \code{is.*}
+useful to be able to tell if something is a Subtotal or a Heading. The \verb{is.*}
 family of methods are useful here: the singular versions (\code{is.Subtotal} and
 \code{is.Heading}) take a single object and returns \code{TRUE} if the object is either
 a Subtotal or a Heading and \code{FALSE} if not; the plural versions

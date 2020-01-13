@@ -4,8 +4,10 @@
 \alias{set_crunch_config}
 \title{Set or modify general Crunch API request configuration}
 \usage{
-set_crunch_config(cfg = c(config(postredir = 3), add_headers(`user-agent`
-  = crunch_user_agent())), update = FALSE)
+set_crunch_config(
+  cfg = c(config(postredir = 3), add_headers(`user-agent` = crunch_user_agent())),
+  update = FALSE
+)
 }
 \arguments{
 \item{cfg}{A \code{\link[httr:config]{httr::config()}} object}

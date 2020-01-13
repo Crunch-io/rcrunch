@@ -14,7 +14,7 @@ project members.}
 
 \item{catalog}{ProjectFolder in which to create the new project. There is
 only one project catalog currently, \code{\link[=projects]{projects()}}, but this is left here
-so that all \code{new*} functions follow the same pattern.}
+so that all \verb{new*} functions follow the same pattern.}
 
 \item{...}{Additional project attributes to set}
 }

@@ -7,7 +7,7 @@
 setOrder(folder, ord)
 }
 \arguments{
-\item{folder}{A \code{VariableFolder} or other \code{*Folder} object}
+\item{folder}{A \code{VariableFolder} or other \verb{*Folder} object}
 
 \item{ord}{A vector of integer indices or character references to objects
 contained in the folder}

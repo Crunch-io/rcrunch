@@ -8,7 +8,6 @@
 %   R/shoji-order.R, R/slides.R, R/subvariables.R, R/tab-book.R, R/teams.R,
 %   R/user.R, R/variable-catalog.R, R/variable-order.R, R/variable-update.R,
 %   R/variable.R
-\docType{methods}
 \name{crunch-extract}
 \alias{crunch-extract}
 \alias{[,AbstractCategories,ANY,ANY-method}
@@ -199,8 +198,7 @@
 
 \S4method{[[}{AbstractCategories,character}(x, i, j, ...)
 
-\S4method{[[}{AbstractCategories,character,ANY,ANY}(x, i, j,
-  ...) <- value
+\S4method{[[}{AbstractCategories,character,ANY,ANY}(x, i, j, ...) <- value
 
 \S4method{$}{AbstractCategory}(x, name)
 
@@ -228,8 +226,7 @@
 
 \S4method{[[}{DatasetCatalog,numeric}(x, i, j, ...)
 
-\S4method{[[}{DatasetCatalog,character,missing,DatasetTuple}(x, i,
-  j) <- value
+\S4method{[[}{DatasetCatalog,character,missing,DatasetTuple}(x, i, j) <- value
 
 \S4method{[}{CrunchDataset,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
@@ -243,11 +240,9 @@
 
 \S4method{[}{CrunchDataset,missing,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{CrunchDataset,CrunchLogicalExpr,missing}(x, i, j, ...,
-  drop = FALSE)
+\S4method{[}{CrunchDataset,CrunchLogicalExpr,missing}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY}(x, i, j, ...,
-  drop = FALSE)
+\S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{subset}{CrunchDataset}(x, ...)
 
@@ -257,15 +252,13 @@
 
 \S4method{$}{CrunchDataset}(x, name)
 
-\S4method{[[}{CrunchDataset,character,missing,CrunchVariable}(x,
-  i) <- value
+\S4method{[[}{CrunchDataset,character,missing,CrunchVariable}(x, i) <- value
 
 \S4method{[[}{CrunchDataset,ANY,missing,CrunchVariable}(x, i) <- value
 
 \S4method{[[}{CrunchDataset,character,missing,ANY}(x, i) <- value
 
-\S4method{[[}{CrunchDataset,character,missing,CrunchLogicalExpr}(x,
-  i) <- value
+\S4method{[[}{CrunchDataset,character,missing,CrunchLogicalExpr}(x, i) <- value
 
 \S4method{[[}{CrunchDataset,ANY,ANY,ANY}(x, i) <- value
 
@@ -275,8 +268,7 @@
 
 \S4method{$}{CrunchDataset}(x, name) <- value
 
-\S4method{[[}{CrunchDataset,character,missing,CrunchGeography}(x,
-  i) <- value
+\S4method{[[}{CrunchDataset,character,missing,CrunchGeography}(x, i) <- value
 
 \S4method{[[}{CrunchDataset,ANY,missing,CrunchGeography}(x, i) <- value
 
@@ -320,8 +312,7 @@
 
 \S4method{[[}{CrunchDeck,ANY,ANY,ANY}(x, i, j) <- value
 
-\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ...,
-  drop = FALSE)
+\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{CrunchExpr,logical,ANY}(x, i, j, ..., drop = TRUE)
 
@@ -329,17 +320,13 @@
 
 \S4method{[[}{FilterCatalog,numeric}(x, i, j, ...)
 
-\S4method{[[}{FilterCatalog,character,missing,CrunchLogicalExpr}(x, i,
-  j) <- value
+\S4method{[[}{FilterCatalog,character,missing,CrunchLogicalExpr}(x, i, j) <- value
 
-\S4method{[[}{FilterCatalog,numeric,missing,CrunchLogicalExpr}(x, i,
-  j) <- value
+\S4method{[[}{FilterCatalog,numeric,missing,CrunchLogicalExpr}(x, i, j) <- value
 
-\S4method{[[}{FilterCatalog,character,missing,CrunchFilter}(x, i,
-  j) <- value
+\S4method{[[}{FilterCatalog,character,missing,CrunchFilter}(x, i, j) <- value
 
-\S4method{[[}{FilterCatalog,numeric,missing,CrunchFilter}(x, i,
-  j) <- value
+\S4method{[[}{FilterCatalog,numeric,missing,CrunchFilter}(x, i, j) <- value
 
 \S4method{[[}{MemberCatalog,character}(x, i, j, ...)
 
@@ -349,11 +336,9 @@
 
 \S4method{[[}{MultitableCatalog,numeric}(x, i, j, ...)
 
-\S4method{[[}{MultitableCatalog,character,missing,formula}(x, i,
-  j) <- value
+\S4method{[[}{MultitableCatalog,character,missing,formula}(x, i, j) <- value
 
-\S4method{[[}{MultitableCatalog,numeric,missing,formula}(x, i,
-  j) <- value
+\S4method{[[}{MultitableCatalog,numeric,missing,formula}(x, i, j) <- value
 
 \S4method{[[}{MultitableCatalog,ANY,missing,Multitable}(x, i, j) <- value
 
@@ -363,8 +348,7 @@
 
 \S4method{[[}{ProjectFolder,character,missing,list}(x, i, j) <- value
 
-\S4method{[[}{ProjectFolder,character,missing,ProjectFolder}(x, i,
-  j) <- value
+\S4method{[[}{ProjectFolder,character,missing,ProjectFolder}(x, i, j) <- value
 
 \S4method{[[}{ShojiFolder,numeric}(x, i, ..., drop = FALSE)
 
@@ -450,8 +434,7 @@
 
 \S4method{[}{Subvariables,character,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[[}{Subvariables,character,missing,CrunchVariable}(x,
-  i) <- value
+\S4method{[[}{Subvariables,character,missing,CrunchVariable}(x, i) <- value
 
 \S4method{[[}{Subvariables,ANY,missing,CrunchVariable}(x, i) <- value
 
@@ -465,14 +448,11 @@
 
 \S4method{[}{Subvariables,ANY,missing,ANY}(x, i) <- value
 
-\S4method{[}{CategoricalArrayVariable,character,ANY}(x, i, j, ...,
-  drop = TRUE)
+\S4method{[}{CategoricalArrayVariable,character,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CategoricalArrayVariable,missing,ANY}(x, i, j, ...,
-  drop = TRUE)
+\S4method{[}{CategoricalArrayVariable,missing,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CategoricalArrayVariable,missing,character}(x, i, j, ...,
-  drop = TRUE)
+\S4method{[}{CategoricalArrayVariable,missing,character}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{CategoricalArrayVariable,ANY}(x, i, j, ...)
 
@@ -482,8 +462,7 @@
 
 \S4method{[[}{CategoricalArrayVariable,ANY,missing,ANY}(x, i) <- value
 
-\S4method{[[}{CategoricalArrayVariable,character,missing,ANY}(x,
-  i) <- value
+\S4method{[[}{CategoricalArrayVariable,character,missing,ANY}(x, i) <- value
 
 \S4method{$}{CategoricalArrayVariable}(x, name) <- value
 
@@ -505,29 +484,21 @@
 
 \S4method{[[}{VariableCatalog,numeric}(x, i, j, ...)
 
-\S4method{[[}{VariableCatalog,character,missing,VariableTuple}(x, i,
-  j) <- value
+\S4method{[[}{VariableCatalog,character,missing,VariableTuple}(x, i, j) <- value
 
-\S4method{[[}{VariableCatalog,character,missing,CrunchVariable}(x, i,
-  j) <- value
+\S4method{[[}{VariableCatalog,character,missing,CrunchVariable}(x, i, j) <- value
 
-\S4method{[}{VariableCatalog,VariableOrder,ANY}(x, i, j, ...,
-  drop = TRUE)
+\S4method{[}{VariableCatalog,VariableOrder,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{VariableCatalog,VariableGroup,ANY}(x, i, j, ...,
-  drop = TRUE)
+\S4method{[}{VariableCatalog,VariableGroup,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{VariableCatalog,VariableOrder,missing,VariableCatalog}(x, i,
-  j) <- value
+\S4method{[}{VariableCatalog,VariableOrder,missing,VariableCatalog}(x, i, j) <- value
 
-\S4method{[}{VariableCatalog,VariableGroup,missing,VariableCatalog}(x, i,
-  j) <- value
+\S4method{[}{VariableCatalog,VariableGroup,missing,VariableCatalog}(x, i, j) <- value
 
-\S4method{[[}{VariableOrder,character,missing,CrunchDataset}(x, i,
-  j) <- value
+\S4method{[[}{VariableOrder,character,missing,CrunchDataset}(x, i, j) <- value
 
-\S4method{[[}{VariableGroup,character,missing,CrunchDataset}(x, i,
-  j) <- value
+\S4method{[[}{VariableGroup,character,missing,CrunchDataset}(x, i, j) <- value
 
 \S4method{[}{CrunchVariable,ANY,missing,ANY}(x, i, j) <- value
 
@@ -545,8 +516,7 @@
 
 \S4method{[}{CrunchVariable,ANY,missing,CrunchVariable}(x, i, j) <- value
 
-\S4method{[}{CrunchVariable,ANY,missing,CrunchLogicalExpr}(x, i,
-  j) <- value
+\S4method{[}{CrunchVariable,ANY,missing,CrunchLogicalExpr}(x, i, j) <- value
 
 \S4method{[}{CategoricalVariable,ANY,missing,numeric}(x, i, j) <- value
 
@@ -554,14 +524,11 @@
 
 \S4method{[}{CategoricalVariable,ANY,missing,factor}(x, i, j) <- value
 
-\S4method{[}{CategoricalArrayVariable,ANY,missing,numeric}(x, i,
-  j) <- value
+\S4method{[}{CategoricalArrayVariable,ANY,missing,numeric}(x, i, j) <- value
 
-\S4method{[}{CategoricalArrayVariable,ANY,missing,character}(x, i,
-  j) <- value
+\S4method{[}{CategoricalArrayVariable,ANY,missing,character}(x, i, j) <- value
 
-\S4method{[}{CategoricalArrayVariable,ANY,missing,factor}(x, i,
-  j) <- value
+\S4method{[}{CategoricalArrayVariable,ANY,missing,factor}(x, i, j) <- value
 
 \S4method{[}{CrunchVariable,ANY,missing,logical}(x, i, j) <- value
 
@@ -616,7 +583,7 @@ they clearly are used to create a new entity (as in assigning a variable
 definition to a Dataset); for editing metadata attributes, these methods
 generally assume that the API request to set the changes on the server
 happens in a different method (e.g. in \code{names(variables(ds)[1:5]) <- value},
-assignment happens in the \code{names<-} method).
+assignment happens in the \verb{names<-} method).
 }
 \description{
 Extract and modify Crunch objects

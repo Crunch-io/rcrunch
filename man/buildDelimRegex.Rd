@@ -17,9 +17,9 @@ A character string
 \description{
 A delimited item \code{maple} can appear in a list in four ways
 \enumerate{
-\item At the start of a list \code{maple; oak}
-\item In the middle of a list \code{oak; maple; birch}
-\item At the end of a list \code{oak; maple}
+\item At the start of a list \verb{maple; oak}
+\item In the middle of a list \verb{oak; maple; birch}
+\item At the end of a list \verb{oak; maple}
 \item Alone with no delimiters \code{maple}
 }
 }

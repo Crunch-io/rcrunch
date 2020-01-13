@@ -4,8 +4,12 @@
 \alias{crtabs}
 \title{Crunch xtabs: Crosstab and otherwise aggregate variables in a Crunch Dataset}
 \usage{
-crtabs(formula, data, weight = crunch::weight(data), useNA = c("no",
-  "ifany", "always"))
+crtabs(
+  formula,
+  data,
+  weight = crunch::weight(data),
+  useNA = c("no", "ifany", "always")
+)
 }
 \arguments{
 \item{formula}{an object of class 'formula' object with the

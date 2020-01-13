@@ -34,5 +34,7 @@ ds <- ds \%>\%
 }
 }
 \seealso{
-\code{\link[=mv]{mv()}} to move entities to a folder; \code{\link[=cd]{cd()}} to select a folder; \code{\link[base:file.remove]{base::file.remove()}} if you literally want to delete a directory from your local file system, which \code{rmdir()} does not do
+\code{\link[=mv]{mv()}} to move entities to a folder; \code{\link[=cd]{cd()}} to select a folder;
+\code{\link[base:file.remove]{base::file.remove()}} if you literally want to delete a directory from your local
+file system, which \code{rmdir()} does not do
 }

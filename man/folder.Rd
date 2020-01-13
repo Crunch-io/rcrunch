@@ -10,7 +10,8 @@ folder(x)
 folder(x) <- value
 }
 \arguments{
-\item{x}{For \code{folder}, a Variable to find. For folder assignment, a Variable, selection of variables in a
+\item{x}{For \code{folder}, a Variable to find. For folder assignment, a Variable,
+selection of variables in a
 Dataset, or any other object that can be moved to a folder.}
 
 \item{value}{For assignment, a character "path" to the folder: either a
@@ -18,7 +19,8 @@ vector of nested folder names or a single string with nested folders
 separated by a delimiter ("/" default)}
 }
 \value{
-\code{folder} returns the parent folder of \code{x}, or \code{NULL} if the \code{x} is the root level. \code{folder<-} returns the
+\code{folder} returns the parent folder of \code{x}, or \code{NULL} if the \code{x} is the root
+level. \verb{folder<-} returns the
 \code{x} input, having been moved to the requested location.
 }
 \description{

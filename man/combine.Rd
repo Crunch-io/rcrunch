@@ -21,8 +21,8 @@ variable}
 \item "categories": category ids or names for categorical types, or for multiple response,
 "responses": subvariable names, aliases, or positional indices;
 \item a "name" for the new category or response; and
-\item optionally, other category ("missing", "numeric_value") or subvariable ("alias", "description")
-attributes. If \code{combinations} is omitted, the resulting variable will
+\item optionally, other category ("missing", "numeric_value") or subvariable
+("alias", "description") attributes. If \code{combinations} is omitted, the resulting variable will
 essentially be a copy (but see \code{\link[=copy]{copy()}} for a more natural way to copy variables.
 }}
 
@@ -49,7 +49,7 @@ specifying \code{responses}).
 
 \code{dplyr} users may experience a name conflict between \code{crunch::combine()} and
 \code{dplyr:: combine()}. To avoid this, you can either explicitly use the
-\code{crunch::} prefix, or you can call \code{combineCategories()} and
+\verb{crunch::} prefix, or you can call \code{combineCategories()} and
 \code{combineResponses()}, provided for disambiguation.
 }
 \examples{

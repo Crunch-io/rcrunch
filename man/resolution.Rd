@@ -23,7 +23,7 @@ rollupResolution(x) <- value
 
 \item{value}{a resolution string. Valid resolutions in Crunch are
 \code{c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")}. \code{NULL} is also valid for
-\code{rollupResolution<-} but not for \code{resolution<-}.}
+\verb{rollupResolution<-} but not for \verb{resolution<-}.}
 
 \item{resolution}{Same as \code{value}, in \code{rollup()}. This may be \code{NULL}, in
 which case the server will determine an appropriate resolution based on the
@@ -37,12 +37,12 @@ entity after modifying the state on the server. \code{rollup()} returns a
 }
 \description{
 Datetime data has a "resolution", the units of the values.
-\code{resolution()} exposes that property and \code{resolution<-} lets you set it.
+\code{resolution()} exposes that property and \verb{resolution<-} lets you set it.
 "Rollups" are a way of binning datetime data into meaningful units.
 \code{rollup()} lets you create an expression that you can query with. Datetime
 variables also have a \code{rollupResolution()} attribute that is the default
 resolution they will roll-up to, if not specified in \code{rollup()};
-\code{rollupResolution<-} lets you set that.
+\verb{rollupResolution<-} lets you set that.
 }
 \details{
 Note that \code{resolution} is a property of the data while \code{rollupResolution} is
