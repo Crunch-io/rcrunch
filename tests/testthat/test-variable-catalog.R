@@ -44,10 +44,10 @@ with_mock_crunch({
         )
         expect_length(active(varcat), 6)
     })
-    
+
     test_that("secure variables aren't considered active (#383)", {
         index(varcat)[[1]]$secure <- TRUE
-        
+
         expect_identical(
             urls(active(varcat)),
             c(
