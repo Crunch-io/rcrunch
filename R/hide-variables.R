@@ -73,11 +73,7 @@ unhideVariables <- function(dataset, variables) {
 #' @export
 hiddenVariables <- function(dataset, key = namekey(dataset)) {
     hv <- hidden(dataset)
-    if (length(hv)) {
-        return(sort(vapply(index(hv), vget(key), character(1),
-            USE.NAMES = FALSE
-        )))
-    } else {
-        return(c())
-    }
+    out <- variablesBelowFolder(hv, key)
+    if (length(out) == 0) return(c()) # to match old behavior
+    out
 }
