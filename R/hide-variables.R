@@ -75,5 +75,5 @@ hiddenVariables <- function(dataset, key = namekey(dataset)) {
     hv <- hidden(dataset)
     out <- variablesBelowFolder(hv, key)
     if (length(out) == 0) return(c()) # to match old behavior
-    out
+    sort(out)
 }
