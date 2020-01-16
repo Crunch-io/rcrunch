@@ -141,10 +141,6 @@ headingStyle <- c(nonas, make_style("#546499"), underline) # blue with underline
 subtotalStyle <- c(italic, make_style("#005e46"))
 
 print_tree <- function(x, prefix = "", depth = 100, current_depth = 0) {
-    ## Temporary: don't show hidden variables (which soon won't be here at all)
-    ## cf active() method in variable-catalog.R
-    index(x) <- Filter(Negate(.discardedTuple), index(x))
-
     len <- length(x)
     what <- types(x)
     these <- colorize_folder_contents(names(x), what)
@@ -185,9 +181,6 @@ print_tree <- function(x, prefix = "", depth = 100, current_depth = 0) {
 #' @export
 setMethod("show", "ShojiFolder", function(object) {
     cat(formatFolderTitle(object), "\n")
-    ## Temporary: don't show hidden variables (which soon won't be here at all)
-    ## cf active() method in variable-catalog.R
-    index(object) <- Filter(Negate(.discardedTuple), index(object))
     colored_print(
         names(object),
         styler = function(x) colorize_folder_contents(x, types(object)),
