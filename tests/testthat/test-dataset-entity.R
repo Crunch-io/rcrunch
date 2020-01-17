@@ -284,15 +284,6 @@ with_mock_crunch({
         })
     })
 
-    test_that("Dataset ncol doesn't make any requests", {
-        with(temp.options(httpcache.log = ""), {
-            logs <- capture.output(nc <- ncol(ds))
-        })
-        expect_identical(logs, character(0))
-        expect_identical(nc, 7L)
-        expect_identical(dim(ds), c(25L, 7L))
-    })
-
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(ds)))
         expect_identical(
