@@ -16,11 +16,12 @@ setMethod("initialize", "VariableCatalog", function(.Object, ...) {
     return(.Object)
 })
 
-.discardedTuple <- function(x) isTRUE(x[["discarded"]])
+.notHiddenVar <- function(x, hidden) !(isTRUE(x[["alias"]] %in% hidden))
 .secureTuple <- function(x) isTRUE(x[["secure"]])
 
 setMethod("active", "VariableCatalog", function(x) {
-    index(x) <- Filter(Negate(.discardedTuple), index(x))
+    hidden <- hiddenVariables(x, key = "alias")
+    index(x) <- index(x)[vapply(index(x), .notHiddenVar, logical(1), hidden = hidden)]
     index(x) <- Filter(Negate(.secureTuple), index(x))
     return(x)
 })
