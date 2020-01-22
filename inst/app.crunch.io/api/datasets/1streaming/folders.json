@@ -1,0 +1,16 @@
+{
+    "self": "https://app.crunch.io/api/datasets/1/folders/",
+    "element": "shoji:catalog",
+    "catalogs": {
+        "hidden": "https://app.crunch.io/api/datasets/1/folders/hidden/"
+    },
+    "size": 7,
+    "body": {
+        "name": ""
+    },
+    "index": {
+        "2/": {"type": "folder", "name": "Group 2"},
+        "1/": {"type": "folder", "name": "Group 1"}
+    },
+    "graph": ["1/", "2/"]
+}
