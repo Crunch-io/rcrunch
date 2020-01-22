@@ -1,0 +1,30 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/2a1579/folders/f6d907/",
+    "index": {
+        "../../variables/000002/": {
+            "secure": false,
+            "derived": false,
+            "id": "000002",
+            "description": "",
+            "scale": "interval",
+            "name": "location",
+            "notes": "",
+            "discarded": true,
+            "alias": "location",
+            "hidden": true,
+            "type": "categorical"
+        }
+    },
+    "body": {
+        "name": "test1",
+        "id": "f6d907"
+    },
+    "graph": [
+        "../../variables/000002/"
+    ],
+    "size": 1,
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/2a1579/folders/hidden/"
+    }
+}

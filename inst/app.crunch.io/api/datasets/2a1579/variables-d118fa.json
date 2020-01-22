@@ -1,0 +1,65 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/2a1579/variables/?relative=on",
+    "catalogs": {
+        "private": "https://app.crunch.io/api/datasets/2a1579/variables/private/"
+    },
+    "orders": {
+        "personal": "https://app.crunch.io/api/datasets/2a1579/variables/personal/",
+        "weights": "https://app.crunch.io/api/datasets/2a1579/variables/weights/",
+        "hier": "https://app.crunch.io/api/datasets/2a1579/variables/hier/"
+    },
+    "description": "List of Variables of this dataset",
+    "index": {
+        "000000/": {
+            "discarded": false,
+            "alias": "age",
+            "secure": false,
+            "name": "age",
+            "id": "000000",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        },
+        "000001/": {
+            "secure": false,
+            "derived": false,
+            "id": "000001",
+            "description": "",
+            "scale": "interval",
+            "name": "education",
+            "notes": "",
+            "discarded": false,
+            "alias": "education",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "000002/": {
+            "secure": false,
+            "derived": false,
+            "id": "000002",
+            "description": "",
+            "scale": "interval",
+            "name": "location",
+            "notes": "",
+            "discarded": true,
+            "alias": "location",
+            "hidden": true,
+            "type": "categorical"
+        },
+        "000003/": {
+            "discarded": true,
+            "alias": "textVar",
+            "secure": false,
+            "name": "textVar",
+            "id": "000003",
+            "type": "text",
+            "notes": "",
+            "derived": false,
+            "hidden": true,
+            "description": ""
+        }
+    }
+}

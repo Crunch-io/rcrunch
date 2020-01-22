@@ -4,6 +4,10 @@ with_mock_crunch({
     ds <- loadDataset("test ds")
     varcat <- allVariables(ds)
     varorder <- ordering(varcat)
+    
+    ds_hidden <- loadDataset("https://app.crunch.io/dataset/2a1579")
+    varcat_hidden <- allVariables(ds_hidden)
+    
     test_that("VariableCatalog instantiates from Shoji", {
         expect_is(varcat, "VariableCatalog")
     })
@@ -21,28 +25,26 @@ with_mock_crunch({
         expect_identical(entities(ordering(varcat)), entities(varorder))
     })
 
-    test_that("active/hidden getters", {
+    test_that("active/hidden getters work when no variables are hidden", {
         expect_is(hidden(varcat), "VariableFolder")
         expect_length(hidden(varcat), 0)
         expect_identical(
             index(active(varcat)),
             index(varcat)[urls(ordering(varcat))]
         )
-        index(varcat)[[1]]$discarded <- TRUE
-        expect_is(active(varcat), "VariableCatalog")
+    })
+
+    test_that("active/hidden getters work when variables are hidden",  {
+        expect_is(active(varcat_hidden), "VariableCatalog")
         # Specific behavior of "hidden" is tested in test-hide-variables.R
         expect_identical(
-            urls(active(varcat)),
+            urls(active(varcat_hidden)),
             c(
-                "https://app.crunch.io/api/datasets/1/variables/gender/",
-                "https://app.crunch.io/api/datasets/1/variables/location/",
-                "https://app.crunch.io/api/datasets/1/variables/mymrset/",
-                "https://app.crunch.io/api/datasets/1/variables/textVar/",
-                "https://app.crunch.io/api/datasets/1/variables/starttime/",
-                "https://app.crunch.io/api/datasets/1/variables/catarray/"
+                "https://app.crunch.io/api/datasets/2a1579/variables/000000/",
+                "https://app.crunch.io/api/datasets/2a1579/variables/000001/"
             )
         )
-        expect_length(active(varcat), 6)
+        expect_length(active(varcat_hidden), 2)
     })
 
     test_that("secure variables aren't considered active (#383)", {

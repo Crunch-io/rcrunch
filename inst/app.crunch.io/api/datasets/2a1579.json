@@ -1,0 +1,94 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/2a1579/",
+    "catalogs": {
+        "folders": "https://app.crunch.io/api/datasets/2a1579/folders/",
+        "batches": "https://app.crunch.io/api/datasets/2a1579/batches/",
+        "users": "https://app.crunch.io/api/datasets/2a1579/users/",
+        "tags": "https://app.crunch.io/api/datasets/2a1579/tags/",
+        "variables": "https://app.crunch.io/api/datasets/2a1579/variables/",
+        "actions": "https://app.crunch.io/api/datasets/2a1579/actions/",
+        "teams": "https://app.crunch.io/api/datasets/2a1579/teams/",
+        "savepoints": "https://app.crunch.io/api/datasets/2a1579/savepoints/",
+        "boxdata": "https://app.crunch.io/api/datasets/2a1579/boxdata/",
+        "filters": "https://app.crunch.io/api/datasets/2a1579/filters/",
+        "multitables": "https://app.crunch.io/api/datasets/2a1579/multitables/",
+        "forks": "https://app.crunch.io/api/datasets/2a1579/forks/",
+        "decks": "https://app.crunch.io/api/datasets/2a1579/decks/",
+        "permissions": "https://app.crunch.io/api/datasets/2a1579/permissions/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "project": "https://app.crunch.io/api/projects/personal/",
+        "variables_private": "https://app.crunch.io/api/datasets/2a1579/variables/private/"
+    },
+    "fragments": {
+        "state": "https://app.crunch.io/api/datasets/2a1579/state/",
+        "preferences": "https://app.crunch.io/api/datasets/2a1579/preferences/",
+        "stream": "https://app.crunch.io/api/datasets/2a1579/stream/",
+        "settings": "https://app.crunch.io/api/datasets/2a1579/settings/",
+        "table": "https://app.crunch.io/api/datasets/2a1579/table/",
+        "pk": "https://app.crunch.io/api/datasets/2a1579/pk/",
+        "exclusion": "https://app.crunch.io/api/datasets/2a1579/exclusion/"
+    },
+    "views": {
+        "second_order_analysis": "https://app.crunch.io/api/datasets/2a1579/second_order_analysis/",
+        "cube": "https://app.crunch.io/api/datasets/2a1579/cube/",
+        "export": "https://app.crunch.io/api/datasets/2a1579/export/",
+        "summary": "https://app.crunch.io/api/datasets/2a1579/summary/",
+        "applied_filters": "https://app.crunch.io/api/datasets/2a1579/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "https://app.crunch.io/api/users/27a158/",
+        "current_editor": "https://app.crunch.io/api/users/27a158/",
+        "creation_time": "2020-01-21T21:16:16.262000",
+        "streaming": "no",
+        "owner": "https://app.crunch.io/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "2a1579",
+        "size": {
+            "rows": 2,
+            "unfiltered_rows": 2,
+            "columns": 4
+        },
+        "palette": {
+
+        },
+        "script": null,
+        "app_settings": {
+            "whaam": {
+
+            }
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "",
+        "end_date": null,
+        "access_time": "2020-01-22T17:07:45.878000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2020-01-22T02:19:49.574000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "https://app.crunch.io/api/accounts/00001/",
+        "name": "test_ds_hidden",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "https://app.crunch.io/api/datasets/2a1579/variables/weights/",
+        "variables_hier": "https://app.crunch.io/api/datasets/2a1579/variables/hier/",
+        "variables_personal": "https://app.crunch.io/api/datasets/2a1579/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "https://app.crunch.io/api/projects/378ad4/",
+        "editor_url": "https://app.crunch.io/api/users/27a158/",
+        "user_url": "https://app.crunch.io/api/users/27a158/"
+    }
+}

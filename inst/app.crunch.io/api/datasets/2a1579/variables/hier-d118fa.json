@@ -1,0 +1,23 @@
+{
+    "element": "shoji:order",
+    "self": "https://app.crunch.io/api/datasets/2a1579/variables/hier/?relative=on",
+    "description": "Hierarchical order from folder structure of dataset variables",
+    "graph": [
+        "../000000/",
+        "../000001/",
+        {
+            "__hidden__": [
+                {
+                    "test1": [
+                        "../000002/"
+                    ]
+                },
+                {
+                    "test2": [
+                        "../000003/"
+                    ]
+                }
+            ]
+        }
+    ]
+}
