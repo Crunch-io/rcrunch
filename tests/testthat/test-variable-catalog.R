@@ -270,7 +270,7 @@ with_test_authentication({
                 c("", "Des 1", "Des 2", "")
             )
         })
-        expect_length(logs, 2) ## PATCH, DROP
+        expect_length(logs, 5) ## PATCH, DROP, 3 GETs for checking folders hierarchy
     })
     test_that("Get/set notes", {
         expect_identical(notes(variables(ds)), rep("", ncol(ds)))
