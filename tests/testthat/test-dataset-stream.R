@@ -33,7 +33,6 @@ with_mock_crunch({
     })
 
     test_that("streamRows streams rows", {
-        expect_equal(streamRows(ds, data = data.frame()), ds)
         expect_POST(
             streamRows(ds, data = mock_stream_rows),
             "https://app.crunch.io/api/datasets/1streaming/stream/",

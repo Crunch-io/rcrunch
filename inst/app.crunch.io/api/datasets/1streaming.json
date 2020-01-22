@@ -12,7 +12,6 @@
         "streaming": "streaming"
     },
     "catalogs": {
-        "folders": "https://app.crunch.io/api/datasets/1streaming/folders/",
         "variables": "https://app.crunch.io/api/datasets/1streaming/variables/",
         "savepoints": "https://app.crunch.io/api/datasets/1streaming/savepoints/",
         "batches": "https://app.crunch.io/api/datasets/1streaming/batches/",
