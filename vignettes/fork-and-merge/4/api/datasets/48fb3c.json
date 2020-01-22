@@ -1,0 +1,92 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/48fb3c/",
+    "catalogs": {
+        "folders": "/api/datasets/48fb3c/folders/",
+        "batches": "/api/datasets/48fb3c/batches/",
+        "users": "/api/datasets/48fb3c/users/",
+        "tags": "/api/datasets/48fb3c/tags/",
+        "variables": "/api/datasets/48fb3c/variables/",
+        "actions": "/api/datasets/48fb3c/actions/",
+        "teams": "/api/datasets/48fb3c/teams/",
+        "savepoints": "/api/datasets/48fb3c/savepoints/",
+        "boxdata": "/api/datasets/48fb3c/boxdata/",
+        "filters": "/api/datasets/48fb3c/filters/",
+        "multitables": "/api/datasets/48fb3c/multitables/",
+        "forks": "/api/datasets/48fb3c/forks/",
+        "decks": "/api/datasets/48fb3c/decks/",
+        "permissions": "/api/datasets/48fb3c/permissions/",
+        "parent": "/api/datasets/",
+        "project": "/api/projects/personal/",
+        "variables_private": "/api/datasets/48fb3c/variables/private/"
+    },
+    "fragments": {
+        "state": "/api/datasets/48fb3c/state/",
+        "preferences": "/api/datasets/48fb3c/preferences/",
+        "stream": "/api/datasets/48fb3c/stream/",
+        "settings": "/api/datasets/48fb3c/settings/",
+        "table": "/api/datasets/48fb3c/table/",
+        "pk": "/api/datasets/48fb3c/pk/",
+        "exclusion": "/api/datasets/48fb3c/exclusion/"
+    },
+    "views": {
+        "second_order_analysis": "/api/datasets/48fb3c/second_order_analysis/",
+        "cube": "/api/datasets/48fb3c/cube/",
+        "export": "/api/datasets/48fb3c/export/",
+        "summary": "/api/datasets/48fb3c/summary/",
+        "applied_filters": "/api/datasets/48fb3c/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "/api/users/27a158/",
+        "current_editor": "/api/users/27a158/",
+        "creation_time": "2020-01-22T22:28:33.733000",
+        "streaming": "no",
+        "owner": "/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "48fb3c",
+        "size": {
+            "rows": 3268,
+            "unfiltered_rows": 3268,
+            "columns": 22
+        },
+        "palette": {
+
+        },
+        "script": null,
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "",
+        "end_date": null,
+        "access_time": "2020-01-22T22:28:34.814000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2020-01-22T22:28:36.555000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "/api/accounts/00001/",
+        "name": "Fork #2 of stackoverflow_survey",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/48fb3c/variables/weights/",
+        "variables_hier": "/api/datasets/48fb3c/variables/hier/",
+        "variables_personal": "/api/datasets/48fb3c/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "/api/projects/378ad4/",
+        "editor_url": "/api/users/27a158/",
+        "user_url": "/api/users/27a158/"
+    }
+}
