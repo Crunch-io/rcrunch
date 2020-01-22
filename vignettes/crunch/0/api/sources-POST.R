@@ -1,20 +1,20 @@
 structure(list(url = "/api/sources/", status_code = 201L, headers = structure(list(
-    date = "Wed, 22 Jan 2020 20:56:24 GMT", `content-type` = "application/json;charset=utf-8", 
-    `content-length` = "86", location = "/api/sources/e773f7/", 
+    date = "Wed, 22 Jan 2020 22:14:00 GMT", `content-type` = "application/json;charset=utf-8", 
+    `content-length` = "86", location = "/api/sources/7e6f75/", 
     server = "nginx", `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
     allow = "GET, HEAD, OPTIONS, POST", `x-timing` = "", `set-cookie` = "REDACTED"), class = c("insensitive", 
 "list")), all_headers = list(list(status = 201L, version = "HTTP/2", 
-    headers = structure(list(date = "Wed, 22 Jan 2020 20:56:24 GMT", 
+    headers = structure(list(date = "Wed, 22 Jan 2020 22:14:00 GMT", 
         `content-type` = "application/json;charset=utf-8", `content-length` = "86", 
-        location = "/api/sources/e773f7/", server = "nginx", 
+        location = "/api/sources/7e6f75/", server = "nginx", 
         `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
         allow = "GET, HEAD, OPTIONS, POST", `x-timing` = "", 
         `set-cookie` = "REDACTED"), class = c("insensitive", 
     "list")))), cookies = structure(list(domain = ".crunch.io", 
-    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1611262584, class = c("POSIXct", 
+    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1611267240, class = c("POSIXct", 
     "POSIXt")), name = "token", value = "REDACTED"), row.names = c(NA, 
 -1L), class = "data.frame"), content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/sources/\"}"), 
-    date = structure(1579726584, class = c("POSIXct", "POSIXt"
+    date = structure(1579731240, class = c("POSIXct", "POSIXt"
     ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.4e-05, 
-    connect = 2.5e-05, pretransfer = 0.000125, starttransfer = 0.00013, 
-    total = 1.050099)), class = "response")
+    connect = 2.6e-05, pretransfer = 0.000131, starttransfer = 0.000136, 
+    total = 1.001255)), class = "response")
