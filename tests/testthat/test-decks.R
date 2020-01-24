@@ -701,9 +701,12 @@ with_test_authentication({
         expect_is(slideCat[[3]], "CrunchSlide")
         expect_equal(length(slideCat), 3)
     })
-    test_that("slide title and subtitle", {
+    test_that("slide title can be changed", {
         slide <- slideCat[[2]]
         expect_equal(title(slide), "slide2")
+        title(slide) <- "new_title2"
+        expect_equal(title(slide), "new_title2")
+
     })
 
     slide <- slideCat[[2]]
