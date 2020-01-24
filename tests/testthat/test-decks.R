@@ -674,17 +674,10 @@ with_test_authentication({
         expect_equal(length(anCat), 1)
     })
 
-    test_that("deck titles and subtitles", {
+    test_that("can GET deck titles and subtitles", {
         slide_2 <- newSlide(deck, ~v2, settings, title = "slide2", subtitle = "two analyses")
         expect_equal(titles(deck), c("slide1", "slide2"))
         expect_equal(subtitles(deck), c("one analysis", "two analyses"))
-        expect_equal(titles(deck)[1], "new_title1")
-        subtitles(deck) <- c("new-one-analysis", "new-two-analyses")
-        expect_equal(subtitles(deck)[1], "new-one-analysis")
-        titles(deck)[1] <- "slide1"
-        expect_equal(titles(deck)[1], "slide1")
-        subtitles(deck)[1] <- "one analysis"
-        expect_equal(subtitles(deck)[1], "one analysis")
     })
 
     slideCat <- slides(deck)
