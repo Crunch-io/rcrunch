@@ -678,7 +678,6 @@ with_test_authentication({
         slide_2 <- newSlide(deck, ~v2, settings, title = "slide2", subtitle = "two analyses")
         expect_equal(titles(deck), c("slide1", "slide2"))
         expect_equal(subtitles(deck), c("one analysis", "two analyses"))
-        titles(deck) <- c("new_title1", "new_title2")
         expect_equal(titles(deck)[1], "new_title1")
         subtitles(deck) <- c("new-one-analysis", "new-two-analyses")
         expect_equal(subtitles(deck)[1], "new-one-analysis")
@@ -692,8 +691,8 @@ with_test_authentication({
     test_that("slides method", {
         expect_is(slideCat, "SlideCatalog")
         expect_equal(length(slideCat), 2)
-        expect_equal(titles(slideCat), c("slide1", "new_title2"))
-        expect_equal(names(slideCat), c("slide1", "new_title2"))
+        expect_equal(titles(slideCat), c("slide1", "slide2"))
+        expect_equal(names(slideCat), c("slide1", "slide2"))
     })
     test_that("slides can be added by assignment", {
         slide <- slideCat[[2]]
@@ -704,7 +703,7 @@ with_test_authentication({
     })
     test_that("slide title and subtitle", {
         slide <- slideCat[[2]]
-        expect_equal(title(slide), "new_title2")
+        expect_equal(title(slide), "slide2")
     })
 
     slide <- slideCat[[2]]
