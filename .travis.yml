@@ -13,14 +13,17 @@ matrix:
     warnings_are_errors: false
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
+      - _R_CHECK_TESTS_NLINES_=0
   - os: linux
     r: oldrel
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
+      - _R_CHECK_TESTS_NLINES_=0
   - os: linux
     r: release
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
+      - _R_CHECK_TESTS_NLINES_=0
       - secure: "BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc="
     after_success:
       - Rscript -e 'covr::codecov()'
@@ -32,12 +35,14 @@ matrix:
     r: devel
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
+      - _R_CHECK_TESTS_NLINES_=0
   - os: windows
     language: shell
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
       - _R_CHECK_CRAN_INCOMING_=false
       - R_QPDF=true
+      - _R_CHECK_TESTS_NLINES_=0
     before_install:
       - source .travis.win.install.sh
     script:
