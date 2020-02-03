@@ -72,8 +72,6 @@ transforms for, for \code{is.Subtotal()} and \code{is.Heading()} an object to te
 it is either a Subtotal or Heading}
 
 \item{value}{For \verb{[<-}, the replacement Subtotal to insert}
-
-\item{...}{additional arguments to \code{[}, ignored}
 }
 \description{
 Subtotals and headings for categorical Variables and
