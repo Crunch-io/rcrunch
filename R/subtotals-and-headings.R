@@ -34,7 +34,6 @@
 #' @param x either a variable or CrunchCube object to add or get subtotal
 #' transforms for, for `is.Subtotal()` and `is.Heading()` an object to test if
 #' it is either a Subtotal or Heading
-#' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Subtotal to insert
 #' @param name character the name of the subtotal or heading
 #' @param categories character or numeric the category names or ids for subtotal
