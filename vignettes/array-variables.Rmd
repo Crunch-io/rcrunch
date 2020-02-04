@@ -30,7 +30,7 @@ In our sample _Economist_ dataset, we have set of variables prefixed with "imiss
 grep("^imiss_", names(ds), value=TRUE)
 ```
 ```{r, echo=FALSE}
-grep("^imiss_", names(start_make_array), value=TRUE)
+grep("^imiss_", names_start_make_array, value=TRUE)
 ```
 
 These correspond to a survey grid question about how important respondents view a set of issues. Examining one of them, we see
@@ -164,8 +164,11 @@ cat(show_boap3, sep="\n")
 
 As noted above, when we make an array, its subvariables no longer appear in the dataset outside of the array.
 
-```{r}
+```{r, eval = FALSE}
 grep("boap", names(ds), value=TRUE)
+```
+```{r, echo = FALSE}
+grep("boap", names_end_step4, value=TRUE)
 ```
 
 We can access the subvariables and do things with them directly via the `subvariables` method, but the case may arise in which we want to undo our binding of these subvariables into the array. The function `unbind` deletes the array variable and restores the subvariables as top-level variables.
@@ -183,7 +186,7 @@ Note the use of `refresh`. Most functions that modify objects on the server refr
 Now, if we check the names of `ds`, we see our full set of `boap_*` former subvariables:
 
 ```{r}
-grep("boap", names(ds), value=TRUE)
+grep("boap", names_start_make_array, value=TRUE)
 ```
 
 [Next: variable organization](variable-order.html)

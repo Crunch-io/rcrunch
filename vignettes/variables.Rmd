@@ -112,22 +112,31 @@ name(track.var) == name(ds$track)
 
 It is not always convenient that the `names` attribute of the dataset actually yields *aliases*. Moreover, if we want to edit the Crunch names of many variables, we need a way of accessing the Crunch metadata more directly. It will be very slow to edit each variable in the dataset individually, referencing them with `$`, because each edit would send a request to the server. Instead, we'd rather bundle those into a single request. To do this, we can access the `variables` attribute of the dataset, which is a "variable catalog":
 
-```{r}
+```{r, eval=FALSE}
 class(variables(ds))
 ```
-
+```
+## [1] "VariableCatalog"
+## attr(,"package")
+## [1] "crunch"
+```
 In the variable catalog, Crunch names are names, and aliases are aliases. Hence,
 
-```{r}
+```{r, eval=FALSE}
 identical(names(ds), aliases(variables(ds)))
+```
+```
+## [1] TRUE
 ```
 
 but
 
-```{r}
+```{r, eval=FALSE}
 identical(names(ds), names(variables(ds)))
 ```
-
+```
+## [1] FALSE
+```
 because "Direction of country" is the name for `ds$track`
 
 ```{r, eval=FALSE}

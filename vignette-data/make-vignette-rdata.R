@@ -29,6 +29,7 @@ head2[4:7] <- names(variables(ds))[4:7] <- c("Favorability of Edward Snowden",
 
 message("4. Make array")
 start_make_array <- ds
+names_start_make_array <- names(ds)
 
 show_imiss_b <- capture.output(print(ds$imiss_b))
 ds$imiss <- makeArray(ds[grep("^imiss_", names(ds))], name="Issue importance")
@@ -56,6 +57,8 @@ ds$boap <- undichotomize(ds$boap)
 show_boap2 <- capture.output(print(ds$boap))
 ds$boap <- dichotomize(ds$boap, "Strongly approve")
 show_boap3 <- capture.output(print(ds$boap))
+names_end_step4 <- names(ds)
+
 
 message("5. Variable order")
 step0 <- ordering(ds)
