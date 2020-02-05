@@ -138,6 +138,7 @@ Collate:
     'project-folder.R'
     'projects.R'
     'search.R'
+    'secure-variables.R'
     'session.R'
     'share.R'
     'shoji-entity.R'
