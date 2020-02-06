@@ -20,17 +20,6 @@ with_mock_crunch({
 })
 
 httpcache::clearCache()
-without_internet({
-    test_that("Getting categories and subvariables from variableMetadata doesn't make a request", {
-        ds2 <- ds
-        ds2@variables <- vm
-        expect_identical(categories(ds2$gender), genders)
-        expect_identical(
-            names(subvariables(ds2$mymrset)),
-            c("First", "Second", "Last")
-        )
-    })
-})
 
 with_test_authentication({
     test_that("variableMetadata on apidocs dataset", {

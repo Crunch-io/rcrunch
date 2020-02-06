@@ -1,0 +1,13 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/2/folders/",
+    "catalogs": {
+        "personal": "https://app.crunch.io/api/datasets/2/variables/personal/",
+        "hidden": "https://app.crunch.io/api/datasets/2/folders/hidden/",
+        "trash": "https://app.crunch.io/api/datasets/2/folders/trash/",
+        "parents": "https://app.crunch.io/api/datasets/2/folders/parents/",
+        "secure": "https://app.crunch.io/api/datasets/2/folders/secure/"
+    },
+    "description": "This is the variables' folder root",
+    "COMMENT":"Intentionally stripped index area out of this file to make minimal." 
+}
