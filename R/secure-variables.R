@@ -3,7 +3,9 @@ setMethod("secured", "CrunchDataset", function(x) secured(folders(x)))
 setMethod("secured", "VariableCatalog", function(x) secured(folders(x)))
 
 setMethod("secured", "VariableFolder", function(x) {
-  return(VariableFolder(crGET(shojiURL(rootFolder(x), "catalogs", "secure"))))
+  secured <- shojiURL(rootFolder(x), "catalogs", "secure", mustWork = FALSE)
+  if (is.null(secured)) return(VariableFolder(NULL))
+  VariableFolder(crGET(secured))
 })
 
 #' Secure and Unsecure Variables

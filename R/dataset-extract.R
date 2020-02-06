@@ -151,6 +151,9 @@ setMethod("[[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALS
         if (alias(out) %in% hiddenVariables(x, "alias") && getOption("crunch.warn.hidden", TRUE)) {
             warning("Variable ", alias(out), " is hidden", call. = FALSE)
         }
+        if (alias(out) %in% securedVariables(x, "alias") && getOption("crunch.warn.secure", TRUE)) {
+            warning("Variable ", alias(out), " is secure", call. = FALSE)
+        }
     }
     return(out)
 })
