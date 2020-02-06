@@ -9,9 +9,9 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     point-and-click interface.
 Version: 1.26.2
 Authors@R: c(
-    person("Greg", "Freedman Ellis", role = "aut", email = "greg@crunch.io"),
+    person("Greg", "Freedman Ellis", role = c("aut", "cre"), email = "greg@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
-    person("Mike", "Malecki", role=c("aut", "cre"), email="mike@crunch.io"),
+    person("Mike", "Malecki", role="aut", email="mike@crunch.io"),
     person("Neal", "Richardson", role="aut", email="neal.p.richardson@gmail.com"),
     person("Gordon", "Shotwell", role="aut", email="gordon.shotwell@gmail.com"))
 URL: https://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
