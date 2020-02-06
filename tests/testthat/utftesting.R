@@ -6,13 +6,13 @@ test_that("encoding + JSON reads correctly", {
     expect_true(grepl("Inglés", sj))
     s2 <- fromJSON(sj)
     expect_identical(s2, s)
-    expect_identical(fromJSON("utf-test.json"), "Budějovický Budvar")
+    expect_identical(fromJSON("utf-test.json"), "Bud\u011bjovick\u00fd Budvar")
 })
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Reading UTF in tests", {
-        expect_identical(description(ds$textVar), "Budějovický Budvar")
+        expect_identical(description(ds$textVar), "Bud\u011bjovick\u00fd Budvar")
     })
 })
 
@@ -23,7 +23,7 @@ with_test_authentication({
         name(ds$v1) <- s
         expect_identical(name(ds$v1), s)
         expect_identical(name(refresh(ds)$v1), s)
-        s2 <- "Budějovický Budvar"
+        s2 <- "Bud\u011bjovick\u00fd Budvar"
         name(ds$v2) <- s2
         expect_identical(name(ds$v2), s2)
         expect_identical(name(refresh(ds)$v2), s2)
