@@ -47,23 +47,6 @@ with_mock_crunch({
         expect_length(active(varcat_hidden), 2)
     })
 
-    test_that("secure variables aren't considered active (#383)", {
-        index(varcat)[[1]]$secure <- TRUE
-
-        expect_identical(
-            urls(active(varcat)),
-            c(
-                "https://app.crunch.io/api/datasets/1/variables/gender/",
-                "https://app.crunch.io/api/datasets/1/variables/location/",
-                "https://app.crunch.io/api/datasets/1/variables/mymrset/",
-                "https://app.crunch.io/api/datasets/1/variables/textVar/",
-                "https://app.crunch.io/api/datasets/1/variables/starttime/",
-                "https://app.crunch.io/api/datasets/1/variables/catarray/"
-            )
-        )
-        expect_length(active(varcat), 6)
-    })
-
     gender.url <- "https://app.crunch.io/api/datasets/1/variables/gender/"
     test_that("Extract methods: character and numeric", {
         expect_is(varcat[[gender.url]], "VariableTuple")
