@@ -1,0 +1,92 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/04cfc3/",
+    "catalogs": {
+        "folders": "/api/datasets/04cfc3/folders/",
+        "batches": "/api/datasets/04cfc3/batches/",
+        "users": "/api/datasets/04cfc3/users/",
+        "tags": "/api/datasets/04cfc3/tags/",
+        "variables": "/api/datasets/04cfc3/variables/",
+        "actions": "/api/datasets/04cfc3/actions/",
+        "teams": "/api/datasets/04cfc3/teams/",
+        "savepoints": "/api/datasets/04cfc3/savepoints/",
+        "boxdata": "/api/datasets/04cfc3/boxdata/",
+        "filters": "/api/datasets/04cfc3/filters/",
+        "multitables": "/api/datasets/04cfc3/multitables/",
+        "forks": "/api/datasets/04cfc3/forks/",
+        "decks": "/api/datasets/04cfc3/decks/",
+        "permissions": "/api/datasets/04cfc3/permissions/",
+        "parent": "/api/datasets/",
+        "project": "/api/projects/personal/",
+        "variables_private": "/api/datasets/04cfc3/variables/private/"
+    },
+    "fragments": {
+        "state": "/api/datasets/04cfc3/state/",
+        "preferences": "/api/datasets/04cfc3/preferences/",
+        "stream": "/api/datasets/04cfc3/stream/",
+        "settings": "/api/datasets/04cfc3/settings/",
+        "table": "/api/datasets/04cfc3/table/",
+        "pk": "/api/datasets/04cfc3/pk/",
+        "exclusion": "/api/datasets/04cfc3/exclusion/"
+    },
+    "views": {
+        "second_order_analysis": "/api/datasets/04cfc3/second_order_analysis/",
+        "cube": "/api/datasets/04cfc3/cube/",
+        "export": "/api/datasets/04cfc3/export/",
+        "summary": "/api/datasets/04cfc3/summary/",
+        "applied_filters": "/api/datasets/04cfc3/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "/api/users/27a158/",
+        "current_editor": "/api/users/27a158/",
+        "creation_time": "2020-02-07T20:16:08.798000",
+        "streaming": "no",
+        "owner": "/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "04cfc3",
+        "size": {
+            "rows": 1634,
+            "unfiltered_rows": 1634,
+            "columns": 23
+        },
+        "palette": {
+
+        },
+        "script": null,
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "",
+        "end_date": null,
+        "access_time": "2020-02-07T20:16:08.636000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2020-02-07T20:16:11.039000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "/api/accounts/00001/",
+        "name": "SO_survey_wave2",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/04cfc3/variables/weights/",
+        "variables_hier": "/api/datasets/04cfc3/variables/hier/",
+        "variables_personal": "/api/datasets/04cfc3/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "/api/projects/378ad4/",
+        "editor_url": "/api/users/27a158/",
+        "user_url": "/api/users/27a158/"
+    }
+}
