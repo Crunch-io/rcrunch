@@ -22,3 +22,4 @@
 ^cubes$
 ^hooks$
 ^.travis.win.install.sh$
+^cran-comments\.md$
