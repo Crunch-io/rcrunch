@@ -20,7 +20,7 @@ setMethod("initialize", "VariableCatalog", function(.Object, ...) {
 
 setMethod("active", "VariableCatalog", function(x) {
     index(x) <- index(x)[vapply(index(x), .notInVars, logical(1), vars = hiddenVariables(x, key = "alias"))]
-    index(x) <- index(x)[vapply(index(x), .notInVars, logical(1), vars = securedVariables(x, key = "alias"))]
+    index(x) <- index(x)[vapply(index(x), .notInVars, logical(1), vars = privateVariables(x, key = "alias"))]
     return(x)
 })
 
