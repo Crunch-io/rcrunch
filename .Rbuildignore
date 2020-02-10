@@ -23,3 +23,4 @@
 ^hooks$
 ^.travis.win.install.sh$
 ^cran-comments\.md$
+^CRAN-RELEASE$
