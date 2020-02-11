@@ -1,0 +1,14 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/private%20test%20data/",
+    "index": {
+        "https://app.crunch.io/api/datasets/4/": {
+            "owner_name": "Greg",
+            "name": "private test data",
+            "owner_id": "https://app.crunch.io/api/users/notme/",
+            "is_published": true,
+            "id": "b67c19",
+            "description": ""
+        }
+    }
+}

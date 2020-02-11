@@ -1,0 +1,61 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/4/folders/",
+    "catalogs": {
+        "personal": "https://app.crunch.io/api/datasets/4/variables/personal/",
+        "hidden": "https://app.crunch.io/api/datasets/4/folders/hidden/",
+        "trash": "https://app.crunch.io/api/datasets/4/folders/trash/",
+        "parents": "https://app.crunch.io/api/datasets/4/folders/parents/",
+        "secure": "https://app.crunch.io/api/datasets/4/folders/secure/"
+    },
+    "description": "This is the variables' folder root",
+    "index": {
+        "../variables/age/": {
+            "discarded": false,
+            "alias": "age",
+            "secure": false,
+            "name": "age",
+            "id": "000000",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        },
+        "../variables/food/": {
+            "secure": false,
+            "derived": false,
+            "id": "000002",
+            "description": "",
+            "scale": "interval",
+            "name": "food",
+            "notes": "",
+            "discarded": false,
+            "alias": "food",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "../variables/city/": {
+            "secure": false,
+            "derived": false,
+            "id": "000001",
+            "description": "",
+            "scale": "interval",
+            "name": "city",
+            "notes": "",
+            "discarded": false,
+            "alias": "city",
+            "hidden": false,
+            "type": "categorical"
+        }
+    },
+    "body": {
+        "name": "Root"
+    },
+    "graph": [
+        "../variables/age/",
+        "../variables/food/",
+        "../variables/city/"
+    ],
+    "size": 3
+}

@@ -1,0 +1,65 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/4/variables/?relative=on",
+    "catalogs": {
+        "private": "https://app.crunch.io/api/datasets/4/variables/private/"
+    },
+    "orders": {
+        "personal": "https://app.crunch.io/api/datasets/4/variables/personal/",
+        "weights": "https://app.crunch.io/api/datasets/4/variables/weights/",
+        "hier": "https://app.crunch.io/api/datasets/4/variables/hier/"
+    },
+    "description": "List of Variables of this dataset",
+    "index": {
+        "phone/": {
+            "discarded": false,
+            "alias": "phone",
+            "secure": true,
+            "name": "Phone number",
+            "id": "000003",
+            "type": "text",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        },
+        "food/": {
+            "secure": false,
+            "derived": false,
+            "id": "000002",
+            "description": "",
+            "scale": "interval",
+            "name": "food",
+            "notes": "",
+            "discarded": false,
+            "alias": "food",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "city/": {
+            "secure": false,
+            "derived": false,
+            "id": "000001",
+            "description": "",
+            "scale": "interval",
+            "name": "city",
+            "notes": "",
+            "discarded": false,
+            "alias": "city",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "age/": {
+            "discarded": false,
+            "alias": "age",
+            "secure": false,
+            "name": "age",
+            "id": "000000",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        }
+    }
+}

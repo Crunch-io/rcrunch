@@ -1,0 +1,26 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/4/",
+    "description": "Detail for a given dataset",
+    "body": {
+        "owner_id": "https://app.crunch.io/api/users/user1/",
+        "id": "b67c19",
+        "streaming": "no"
+    },
+    "catalogs": {
+        "variables": "https://app.crunch.io/api/datasets/4/variables/",
+        "folders": "https://app.crunch.io/api/datasets/4/folders/",
+        "savepoints": "https://app.crunch.io/api/datasets/4/savepoints/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "batches": "https://app.crunch.io/api/datasets/4/batches/",
+        "permissions": "https://app.crunch.io/api/datasets/4/permissions/"
+    },
+    "views": {
+        "summary": "https://app.crunch.io/api/datasets/4/summary/"
+    },
+    "fragments": {
+        "table": "https://app.crunch.io/api/datasets/4/table/",
+        "stream": "https://app.crunch.io/api/datasets/4/stream/"
+    },
+    "some_other_key": {}
+}

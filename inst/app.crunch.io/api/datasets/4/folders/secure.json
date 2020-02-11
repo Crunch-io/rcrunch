@@ -1,0 +1,25 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/4/folders/secure/",
+    "index": {
+        "../../variables/phone/": {
+            "discarded": false,
+            "alias": "phone",
+            "secure": true,
+            "name": "Phone number",
+            "id": "000003",
+            "type": "text",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        }
+    },
+    "body": {
+        "name": "Secure"
+    },
+    "graph": [
+        "../../variables/phone/"
+    ],
+    "size": 1
+}
