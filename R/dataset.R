@@ -8,6 +8,12 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
         #
         # TODO: you could use this check to make lazy the fetching of variables
         .Object@variables <- getDatasetVariables(.Object)
+        
+        # Hidden variables now require folder transversal, so we do this up front
+        # so that we don't have to hit API whenever we want a list of active variables
+        hidden_dir <- hidden(.Object)
+        hidden_vars <- variablesBelowFolder(hidden_dir, "alias")
+        .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% hidden_vars]
     }
     if (length(.Object@filter@expression) == 0) {
         # Likewise for preserving filters

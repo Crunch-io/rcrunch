@@ -72,7 +72,7 @@ unhideVariables <- function(dataset, variables) {
 #' @return a vector of the names of Variables marked as hidden.
 #' @export
 hiddenVariables <- function(dataset, key = namekey(dataset)) {
-    hv <- hidden(dataset)
+    hv <- dataset@hiddenVariables
     if (length(hv)) {
         return(sort(vapply(index(hv), vget(key), character(1),
             USE.NAMES = FALSE
