@@ -9,7 +9,8 @@
         "../../variables/birthyr/": {
             "name": "Birth Year",
             "discarded": true,
-            "alias": "birthyr",
+            "derived": false,
+            "alias": "birthyr2",
             "type": "numeric",
             "id": "f78ca47313144b57adfb495893968e70",
             "description": null
