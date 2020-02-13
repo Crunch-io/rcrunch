@@ -303,7 +303,6 @@ with_test_authentication({
                 "ndogs_a", "ndogs_b", "q3", "country", "wave"
             )
         )
-        skip("This fails, maybe because the hidden folder has a subfolder?")
         expect_identical(hiddenVariables(ds1, "name"), c("Case ID", "Weight"))
     })
 
@@ -342,7 +341,6 @@ with_test_authentication({
                 "ndogs_a", "ndogs_b", "q3", "country", "wave", "stringid"
             )
         )
-        skip("This fails, maybe because the hidden folder has a subfolder?")
         expect_identical(hiddenVariables(ds1, "name"), "Weight")
     })
 
