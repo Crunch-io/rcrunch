@@ -1,0 +1,124 @@
+{
+    "self": "https://app.crunch.io/api/datasets/four/folders/",
+    "element": "shoji:catalog",
+    "catalogs": {
+        "hidden": "https://app.crunch.io/api/datasets/four/folders/hidden/"
+    },
+    "size": 10,
+    "body": {
+        "name": ""
+    },
+    "index": {
+        "../variables/000003/": {
+            "discarded": false,
+            "alias": "drat",
+            "name": "drat",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000003",
+            "description": ""
+        },
+        "../variables/000004/": {
+            "discarded": false,
+            "alias": "qsec",
+            "name": "qsec",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000004",
+            "description": ""
+        },
+        "../variables/000005/": {
+            "discarded": false,
+            "alias": "am",
+            "name": "am",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000005",
+            "description": ""
+        },
+        "../variables/000000/": {
+            "discarded": false,
+            "alias": "disp",
+            "name": "disp",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000000",
+            "description": ""
+        },
+        "../variables/000001/": {
+            "discarded": false,
+            "alias": "mpg",
+            "name": "mpg",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000001",
+            "description": ""
+        },
+        "../variables/000010/": {
+            "discarded": false,
+            "alias": "cyl",
+            "name": "cyl",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000010",
+            "description": ""
+        },
+        "../variables/000002/": {
+            "discarded": false,
+            "alias": "gear",
+            "name": "gear",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000002",
+            "description": ""
+        },
+        "../variables/000008/": {
+            "discarded": false,
+            "alias": "wt",
+            "name": "wt",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000008",
+            "description": ""
+        },
+        "../variables/000009/": {
+            "discarded": false,
+            "alias": "carb",
+            "name": "carb",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000009",
+            "description": ""
+        },
+        "../variables/000006/": {
+            "discarded": false,
+            "alias": "hp",
+            "name": "hp",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000006",
+            "description": ""
+        },
+        "../variables/000007/": {
+            "discarded": false,
+            "alias": "vs",
+            "name": "vs",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000007",
+            "description": ""
+        }
+    },
+    "graph": ["../variables/000003/", "../variables/000004/", "../variables/000005/", "../variables/000000/", "../variables/000001/", "../variables/000010/", "../variables/000002/", "../variables/000008/", "../variables/000009/", "../variables/000006/", "../variables/000007/"]
+}

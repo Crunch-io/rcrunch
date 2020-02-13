@@ -13,6 +13,7 @@
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/1streaming/variables/",
+        "folders": "https://app.crunch.io/api/datasets/1streaming/folders/",
         "savepoints": "https://app.crunch.io/api/datasets/1streaming/savepoints/",
         "batches": "https://app.crunch.io/api/datasets/1streaming/batches/",
         "permissions": "https://app.crunch.io/api/datasets/1streaming/permissions/",
