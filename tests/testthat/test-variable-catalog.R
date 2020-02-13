@@ -21,18 +21,21 @@ with_mock_crunch({
         expect_identical(entities(ordering(varcat)), entities(varorder))
     })
 
-    test_that("active/hidden getters", {
+    test_that("hidden getters", {
         expect_is(hidden(varcat), "VariableFolder")
         expect_length(hidden(varcat), 0)
+    })
+    
+    test_that("active variables don't include hidden (now a dataset property)", {
         expect_identical(
-            index(active(varcat)),
+            index(variables(ds)),
             index(varcat)[urls(ordering(varcat))]
         )
-        index(varcat)[[1]]$discarded <- TRUE
-        expect_is(active(varcat), "VariableCatalog")
+        ds@hiddenVariables <- ds@variables[1]
+        expect_is(variables(ds), "VariableCatalog")
         # Specific behavior of "hidden" is tested in test-hide-variables.R
         expect_identical(
-            urls(active(varcat)),
+            urls(variables(ds)),
             c(
                 "https://app.crunch.io/api/datasets/1/variables/gender/",
                 "https://app.crunch.io/api/datasets/1/variables/location/",
@@ -42,14 +45,14 @@ with_mock_crunch({
                 "https://app.crunch.io/api/datasets/1/variables/catarray/"
             )
         )
-        expect_length(active(varcat), 6)
+        expect_length(variables(ds), 6)
     })
 
     test_that("secure variables aren't considered active (#383)", {
-        index(varcat)[[1]]$secure <- TRUE
+        index(ds@variables)[[1]]$secure <- TRUE
 
         expect_identical(
-            urls(active(varcat)),
+            urls(variables(ds)),
             c(
                 "https://app.crunch.io/api/datasets/1/variables/gender/",
                 "https://app.crunch.io/api/datasets/1/variables/location/",
@@ -59,7 +62,7 @@ with_mock_crunch({
                 "https://app.crunch.io/api/datasets/1/variables/catarray/"
             )
         )
-        expect_length(active(varcat), 6)
+        expect_length(variables(ds), 6)
     })
 
     gender.url <- "https://app.crunch.io/api/datasets/1/variables/gender/"
