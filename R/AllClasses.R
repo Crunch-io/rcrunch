@@ -221,11 +221,13 @@ CrunchDataset <- setClass("CrunchDataset",
     contains = c("ShojiObject"),
     slots = c(
         variables = "VariableCatalog",
+        hiddenVariables = "VariableCatalog",
         filter = "CrunchLogicalExpr",
         tuple = "DatasetTuple"
     ),
     prototype = prototype(
         variables = VariableCatalog(),
+        hiddenVariables = VariableCatalog(),
         filter = CrunchLogicalExpr(),
         tuple = DatasetTuple()
     )
