@@ -9,6 +9,7 @@
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/2/variables/",
+        "folders": "https://app.crunch.io/api/datasets/2/folders/",
         "savepoints": "https://app.crunch.io/api/datasets/2/savepoints/",
         "batches": "https://app.crunch.io/api/datasets/2/batches/",
         "permissions": "https://app.crunch.io/api/datasets/2/permissions/"

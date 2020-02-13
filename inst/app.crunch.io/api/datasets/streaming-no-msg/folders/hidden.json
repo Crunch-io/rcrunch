@@ -1,0 +1,19 @@
+{
+    "self": "https://app.crunch.io/api/datasets/streaming-no-msg/folders/hidden/",
+    "element": "shoji:catalog",
+    "size": 1,
+    "body": {
+        "name": ""
+    },
+    "index": {
+        "../../variables/birthyr/": {
+            "name": "Birth Year",
+            "discarded": true,
+            "alias": "birthyr",
+            "type": "numeric",
+            "id": "f78ca47313144b57adfb495893968e70",
+            "description": null
+        }
+    },
+    "graph": ["../../variables/birthyr/"]
+}

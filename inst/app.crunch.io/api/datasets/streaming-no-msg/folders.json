@@ -1,0 +1,32 @@
+{
+    "self": "https://app.crunch.io/api/datasets/streaming-no-msg/folders/",
+    "element": "shoji:catalog",
+    "catalogs": {
+        "hidden": "https://app.crunch.io/api/datasets/streaming-no-msg/folders/hidden/"
+    },
+    "size": 2,
+    "body": {
+        "name": ""
+    },
+    "index": {
+        "../variables/gender/": {
+            "name": "Gender",
+            "discarded": false,
+            "alias": "gender",
+            "type": "categorical",
+            "id": "66ae9881e3524f7db84970d556c34552",
+            "description": "Gender"
+        },
+        "../variables/starttime/": {
+            "name": "starttime",
+            "discarded": false,
+            "alias": "starttime",
+            "type": "datetime",
+            "id": "d7c21314ca9e453c93069168681a285c",
+            "description": "Interview Start Time",
+            "resolution": "D",
+            "rollup_resolution": "s"
+        }
+    },
+    "graph": ["../variables/gender/", "../variables/starttime/"]
+}
