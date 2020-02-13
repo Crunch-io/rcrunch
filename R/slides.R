@@ -196,10 +196,10 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' similar to CrunchCube query
 #' @param display_settings (optional) A list of display settings. If omitted,
 #' slide will be a table of column percentages with hypothesis test highlighting
-#' enabled. These plot types that can be set here as \code{vizType}:
-#' \code{table, groupedBarPlot, stackedBarPlot, horizontalGroupedBarPlot,
-#' horizontalStackedBarPlot, donut}, and (if the second variable in the query
-#' formula  is a wave variable) \code{timeplot}.
+#' enabled. These plot types that can be set here as `vizType`:
+#' `table`, `groupedBarPlot`, `stackedBarPlot`, `horizontalGroupedBarPlot`,
+#' `horizontalStackedBarPlot`, `donut`, and (if the second variable in the
+#' query formula is a wave variable) `timeplot`.
 #' @param title The slide's title
 #' @param subtitle The slide's subtitle
 #' @param ... Further options to be passed on to the API
