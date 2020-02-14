@@ -1,0 +1,138 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/f32c24/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Ff32c24%2Fvariables%2F7dLPATPjh8h2E8vWTuZarH000021%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/f32c24/variables/7dLPATPjh8h2E8vWTuZarH000021/"
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "alias": "TabsSpaces",
+                        "name": "TabsSpaces"
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "id": 1,
+                                "name": "Both",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "Spaces",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 3,
+                                "id": 3,
+                                "name": "Tabs",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 12,
+            "measures": {
+                "count": {
+                    "data": [
+                        293,
+                        631,
+                        698,
+                        12
+                    ],
+                    "n_missing": 12,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "n": 1634,
+            "filter_stats": {
+                "filtered_complete": {
+                    "unweighted": {
+                        "selected": 1634,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 1634,
+                        "other": 0,
+                        "missing": 0
+                    }
+                },
+                "filtered": {
+                    "unweighted": {
+                        "selected": 1634,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 1634,
+                        "other": 0,
+                        "missing": 0
+                    }
+                }
+            },
+            "unfiltered": {
+                "unweighted_n": 1634,
+                "weighted_n": 1634
+            },
+            "filtered": {
+                "unweighted_n": 1634,
+                "weighted_n": 1634
+            },
+            "counts": [
+                293,
+                631,
+                698,
+                12
+            ],
+            "element": "crunch:cube"
+        }
+    }
+}

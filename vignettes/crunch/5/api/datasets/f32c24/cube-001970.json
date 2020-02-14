@@ -1,0 +1,1076 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/f32c24/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22%2Fapi%2Fdatasets%2Ff32c24%2Fvariables%2F11f1ba%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Ff32c24%2Fvariables%2F11f1ba%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "each": "/api/datasets/f32c24/variables/11f1ba/"
+                },
+                {
+                    "function": "as_selected",
+                    "args": [
+                        {
+                            "variable": "/api/datasets/f32c24/variables/11f1ba/"
+                        }
+                    ]
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "subreferences": [
+                            {
+                                "alias": "WantWorkLanguage_VBA",
+                                "name": "VBA"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_TypeScript",
+                                "name": "TypeScript"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Java",
+                                "name": "Java"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Scala",
+                                "name": "Scala"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_JavaScript",
+                                "name": "JavaScript"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Perl",
+                                "name": "Perl"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Lua",
+                                "name": "Lua"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Matlab",
+                                "name": "Matlab"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Erlang",
+                                "name": "Erlang"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Assembly",
+                                "name": "Assembly"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_VB_NET",
+                                "name": "VB.NET"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Python",
+                                "name": "Python"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Common Lisp",
+                                "name": "Common Lisp"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Dart",
+                                "name": "Dart"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_CoffeeScript",
+                                "name": "CoffeeScript"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Elixir",
+                                "name": "Elixir"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Ruby",
+                                "name": "Ruby"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Groovy",
+                                "name": "Groovy"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_C",
+                                "name": "C"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_F#",
+                                "name": "F#"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Hack",
+                                "name": "Hack"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_C++",
+                                "name": "C++"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Objective-C",
+                                "name": "Objective-C"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_R",
+                                "name": "R"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Clojure",
+                                "name": "Clojure"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Rust",
+                                "name": "Rust"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Swift",
+                                "name": "Swift"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Julia",
+                                "name": "Julia"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Haskell",
+                                "name": "Haskell"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Visual Basic 6",
+                                "name": "Visual Basic 6"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_SQL",
+                                "name": "SQL"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Go",
+                                "name": "Go"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_PHP",
+                                "name": "PHP"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Smalltalk",
+                                "name": "Smalltalk"
+                            }
+                        ],
+                        "uniform_basis": false,
+                        "description": "Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?",
+                        "name": "Languages Desired for Work",
+                        "alias": "WantWorkLanguageMR"
+                    },
+                    "derived": true,
+                    "type": {
+                        "subtype": {
+                            "class": "variable"
+                        },
+                        "elements": [
+                            {
+                                "id": 1,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_VBA",
+                                        "name": "VBA"
+                                    },
+                                    "id": "VBA"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_TypeScript",
+                                        "name": "TypeScript"
+                                    },
+                                    "id": "TypeScript"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Java",
+                                        "name": "Java"
+                                    },
+                                    "id": "Java"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 4,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Scala",
+                                        "name": "Scala"
+                                    },
+                                    "id": "Scala"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 5,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_JavaScript",
+                                        "name": "JavaScript"
+                                    },
+                                    "id": "JavaScript"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 6,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Perl",
+                                        "name": "Perl"
+                                    },
+                                    "id": "Perl"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 7,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Lua",
+                                        "name": "Lua"
+                                    },
+                                    "id": "Lua"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 8,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Matlab",
+                                        "name": "Matlab"
+                                    },
+                                    "id": "Matlab"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 9,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Erlang",
+                                        "name": "Erlang"
+                                    },
+                                    "id": "Erlang"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 10,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Assembly",
+                                        "name": "Assembly"
+                                    },
+                                    "id": "Assembly"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 11,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_VB_NET",
+                                        "name": "VB.NET"
+                                    },
+                                    "id": "VB_NET"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 12,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Python",
+                                        "name": "Python"
+                                    },
+                                    "id": "Python"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 13,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Common Lisp",
+                                        "name": "Common Lisp"
+                                    },
+                                    "id": "Common Lisp"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 14,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Dart",
+                                        "name": "Dart"
+                                    },
+                                    "id": "Dart"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 15,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_CoffeeScript",
+                                        "name": "CoffeeScript"
+                                    },
+                                    "id": "CoffeeScript"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 16,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Elixir",
+                                        "name": "Elixir"
+                                    },
+                                    "id": "Elixir"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 17,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Ruby",
+                                        "name": "Ruby"
+                                    },
+                                    "id": "Ruby"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 18,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Groovy",
+                                        "name": "Groovy"
+                                    },
+                                    "id": "Groovy"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 19,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_C",
+                                        "name": "C"
+                                    },
+                                    "id": "C"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 20,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_F#",
+                                        "name": "F#"
+                                    },
+                                    "id": "F"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 21,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Hack",
+                                        "name": "Hack"
+                                    },
+                                    "id": "Hack"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 22,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_C++",
+                                        "name": "C++"
+                                    },
+                                    "id": "C++"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 23,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Objective-C",
+                                        "name": "Objective-C"
+                                    },
+                                    "id": "Objective-C"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 24,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_R",
+                                        "name": "R"
+                                    },
+                                    "id": "R"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 25,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Clojure",
+                                        "name": "Clojure"
+                                    },
+                                    "id": "Clojure"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 26,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Rust",
+                                        "name": "Rust"
+                                    },
+                                    "id": "Rust"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 27,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Swift",
+                                        "name": "Swift"
+                                    },
+                                    "id": "Swift"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 28,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Julia",
+                                        "name": "Julia"
+                                    },
+                                    "id": "Julia"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 29,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Haskell",
+                                        "name": "Haskell"
+                                    },
+                                    "id": "Haskell"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 30,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Visual Basic 6",
+                                        "name": "Visual Basic 6"
+                                    },
+                                    "id": "Visual Basic 6"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 31,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_SQL",
+                                        "name": "SQL"
+                                    },
+                                    "id": "SQL"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 32,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Go",
+                                        "name": "Go"
+                                    },
+                                    "id": "Go"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 33,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_PHP",
+                                        "name": "PHP"
+                                    },
+                                    "id": "PHP"
+                                },
+                                "missing": false
+                            },
+                            {
+                                "id": 34,
+                                "value": {
+                                    "derived": false,
+                                    "references": {
+                                        "alias": "WantWorkLanguage_Smalltalk",
+                                        "name": "Smalltalk"
+                                    },
+                                    "id": "Smalltalk"
+                                },
+                                "missing": false
+                            }
+                        ],
+                        "class": "enum"
+                    }
+                },
+                {
+                    "derived": true,
+                    "references": {
+                        "subreferences": [
+                            {
+                                "alias": "WantWorkLanguage_VBA",
+                                "name": "VBA"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_TypeScript",
+                                "name": "TypeScript"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Java",
+                                "name": "Java"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Scala",
+                                "name": "Scala"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_JavaScript",
+                                "name": "JavaScript"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Perl",
+                                "name": "Perl"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Lua",
+                                "name": "Lua"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Matlab",
+                                "name": "Matlab"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Erlang",
+                                "name": "Erlang"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Assembly",
+                                "name": "Assembly"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_VB_NET",
+                                "name": "VB.NET"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Python",
+                                "name": "Python"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Common Lisp",
+                                "name": "Common Lisp"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Dart",
+                                "name": "Dart"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_CoffeeScript",
+                                "name": "CoffeeScript"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Elixir",
+                                "name": "Elixir"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Ruby",
+                                "name": "Ruby"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Groovy",
+                                "name": "Groovy"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_C",
+                                "name": "C"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_F#",
+                                "name": "F#"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Hack",
+                                "name": "Hack"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_C++",
+                                "name": "C++"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Objective-C",
+                                "name": "Objective-C"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_R",
+                                "name": "R"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Clojure",
+                                "name": "Clojure"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Rust",
+                                "name": "Rust"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Swift",
+                                "name": "Swift"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Julia",
+                                "name": "Julia"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Haskell",
+                                "name": "Haskell"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Visual Basic 6",
+                                "name": "Visual Basic 6"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_SQL",
+                                "name": "SQL"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Go",
+                                "name": "Go"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_PHP",
+                                "name": "PHP"
+                            },
+                            {
+                                "alias": "WantWorkLanguage_Smalltalk",
+                                "name": "Smalltalk"
+                            }
+                        ],
+                        "uniform_basis": false,
+                        "alias": "WantWorkLanguageMR",
+                        "description": "Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?",
+                        "name": "Languages Desired for Work"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "subvariables": [
+                            "VBA",
+                            "TypeScript",
+                            "Java",
+                            "Scala",
+                            "JavaScript",
+                            "Perl",
+                            "Lua",
+                            "Matlab",
+                            "Erlang",
+                            "Assembly",
+                            "VB_NET",
+                            "Python",
+                            "Common Lisp",
+                            "Dart",
+                            "CoffeeScript",
+                            "Elixir",
+                            "Ruby",
+                            "Groovy",
+                            "C",
+                            "F",
+                            "Hack",
+                            "C++",
+                            "Objective-C",
+                            "R",
+                            "Clojure",
+                            "Rust",
+                            "Swift",
+                            "Julia",
+                            "Haskell",
+                            "Visual Basic 6",
+                            "SQL",
+                            "Go",
+                            "PHP",
+                            "Smalltalk"
+                        ],
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "selected": true,
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected"
+                            },
+                            {
+                                "numeric_value": 0,
+                                "id": 0,
+                                "name": "Other",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 136,
+            "measures": {
+                "count": {
+                    "data": [
+                        44,
+                        1454,
+                        136,
+                        170,
+                        1328,
+                        136,
+                        418,
+                        1080,
+                        136,
+                        257,
+                        1241,
+                        136,
+                        591,
+                        907,
+                        136,
+                        65,
+                        1433,
+                        136,
+                        69,
+                        1429,
+                        136,
+                        120,
+                        1378,
+                        136,
+                        67,
+                        1431,
+                        136,
+                        89,
+                        1409,
+                        136,
+                        24,
+                        1474,
+                        136,
+                        915,
+                        583,
+                        136,
+                        44,
+                        1454,
+                        136,
+                        22,
+                        1476,
+                        136,
+                        51,
+                        1447,
+                        136,
+                        70,
+                        1428,
+                        136,
+                        143,
+                        1355,
+                        136,
+                        43,
+                        1455,
+                        136,
+                        255,
+                        1243,
+                        136,
+                        88,
+                        1410,
+                        136,
+                        18,
+                        1480,
+                        136,
+                        420,
+                        1078,
+                        136,
+                        65,
+                        1433,
+                        136,
+                        815,
+                        683,
+                        136,
+                        82,
+                        1416,
+                        136,
+                        105,
+                        1393,
+                        136,
+                        148,
+                        1350,
+                        136,
+                        155,
+                        1343,
+                        136,
+                        150,
+                        1348,
+                        136,
+                        23,
+                        1475,
+                        136,
+                        594,
+                        904,
+                        136,
+                        289,
+                        1209,
+                        136,
+                        149,
+                        1349,
+                        136,
+                        24,
+                        1474,
+                        136
+                    ],
+                    "n_missing": 136,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {
+
+                            },
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "n": 34,
+            "filter_stats": {
+                "filtered_complete": {
+                    "unweighted": {
+                        "selected": 1634,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 1634,
+                        "other": 0,
+                        "missing": 0
+                    }
+                },
+                "filtered": {
+                    "unweighted": {
+                        "selected": 1634,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 1634,
+                        "other": 0,
+                        "missing": 0
+                    }
+                }
+            },
+            "unfiltered": {
+                "unweighted_n": 1634,
+                "weighted_n": 1634
+            },
+            "filtered": {
+                "unweighted_n": 1634,
+                "weighted_n": 1634
+            },
+            "counts": [
+                44,
+                1454,
+                136,
+                170,
+                1328,
+                136,
+                418,
+                1080,
+                136,
+                257,
+                1241,
+                136,
+                591,
+                907,
+                136,
+                65,
+                1433,
+                136,
+                69,
+                1429,
+                136,
+                120,
+                1378,
+                136,
+                67,
+                1431,
+                136,
+                89,
+                1409,
+                136,
+                24,
+                1474,
+                136,
+                915,
+                583,
+                136,
+                44,
+                1454,
+                136,
+                22,
+                1476,
+                136,
+                51,
+                1447,
+                136,
+                70,
+                1428,
+                136,
+                143,
+                1355,
+                136,
+                43,
+                1455,
+                136,
+                255,
+                1243,
+                136,
+                88,
+                1410,
+                136,
+                18,
+                1480,
+                136,
+                420,
+                1078,
+                136,
+                65,
+                1433,
+                136,
+                815,
+                683,
+                136,
+                82,
+                1416,
+                136,
+                105,
+                1393,
+                136,
+                148,
+                1350,
+                136,
+                155,
+                1343,
+                136,
+                150,
+                1348,
+                136,
+                23,
+                1475,
+                136,
+                594,
+                904,
+                136,
+                289,
+                1209,
+                136,
+                149,
+                1349,
+                136,
+                24,
+                1474,
+                136
+            ],
+            "element": "crunch:cube"
+        }
+    }
+}
