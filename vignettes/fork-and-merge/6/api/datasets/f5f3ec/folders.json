@@ -1,0 +1,46 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/f5f3ec/folders/",
+    "catalogs": {
+        "personal": "/api/datasets/f5f3ec/variables/personal/",
+        "hidden": "/api/datasets/f5f3ec/folders/hidden/",
+        "trash": "/api/datasets/f5f3ec/folders/trash/",
+        "parents": "/api/datasets/f5f3ec/folders/parents/",
+        "secure": "/api/datasets/f5f3ec/folders/secure/"
+    },
+    "description": "This is the variables' folder root",
+    "index": {
+        "../variables/000000/": {
+            "discarded": false,
+            "alias": "HouseholdSize",
+            "secure": false,
+            "name": "HouseholdSize",
+            "id": "000000",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        },
+        "../variables/000001/": {
+            "discarded": false,
+            "alias": "Respondent",
+            "secure": false,
+            "name": "Respondent",
+            "id": "000001",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        }
+    },
+    "body": {
+        "name": "Root"
+    },
+    "graph": [
+        "../variables/000001/",
+        "../variables/000000/"
+    ],
+    "size": 2
+}

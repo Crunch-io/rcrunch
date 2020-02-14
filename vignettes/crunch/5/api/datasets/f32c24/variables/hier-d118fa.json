@@ -1,0 +1,26 @@
+{
+    "element": "shoji:order",
+    "self": "/api/datasets/f32c24/variables/hier/?relative=on",
+    "description": "Hierarchical order from folder structure of dataset variables",
+    "graph": [
+        "../7dLPATPjh8h2E8vWTuZarH000019/",
+        "../7dLPATPjh8h2E8vWTuZarH000017/",
+        "../7dLPATPjh8h2E8vWTuZarH000001/",
+        "../7dLPATPjh8h2E8vWTuZarH000000/",
+        "../7dLPATPjh8h2E8vWTuZarH000016/",
+        "../4f54f1/",
+        "../7dLPATPjh8h2E8vWTuZarH000004/",
+        "../7dLPATPjh8h2E8vWTuZarH000018/",
+        "../7dLPATPjh8h2E8vWTuZarH000002/",
+        "../7dLPATPjh8h2E8vWTuZarH000020/",
+        "../7dLPATPjh8h2E8vWTuZarH000003/",
+        "../7dLPATPjh8h2E8vWTuZarH000021/",
+        "../7dLPATPjh8h2E8vWTuZarH000005/",
+        "../11f1ba/",
+        {
+            "__hidden__": [
+                "../7dLPATPjh8h2E8vWTuZarH000022/"
+            ]
+        }
+    ]
+}

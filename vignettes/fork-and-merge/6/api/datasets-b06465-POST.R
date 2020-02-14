@@ -1,19 +1,21 @@
-structure(list(url = "/api/datasets/", status_code = 201L, headers = structure(list(
-    allow = "GET, HEAD, OPTIONS, PATCH, POST", `content-encoding` = "gzip", 
-    `content-type` = "application/json;charset=utf-8", date = "Mon, 14 May 2018 16:51:51 GMT", 
-    location = "/api/datasets/84f751/", server = "nginx", `set-cookie` = "REDACTED", 
-    vary = "Cookie, Accept-Encoding", `x-timing` = "", `content-length` = "24", 
-    connection = "keep-alive"), class = c("insensitive", "list"
-)), all_headers = list(list(status = 201L, version = "HTTP/1.1", 
-    headers = structure(list(allow = "GET, HEAD, OPTIONS, PATCH, POST", 
-        `content-encoding` = "gzip", `content-type` = "application/json;charset=utf-8", 
-        date = "Mon, 14 May 2018 16:51:51 GMT", location = "/api/datasets/84f751/", 
-        server = "nginx", `set-cookie` = "REDACTED", vary = "Cookie, Accept-Encoding", 
-        `x-timing` = "", `content-length` = "24", connection = "keep-alive"), class = c("insensitive", 
+structure(list(url = "/api/datasets/", status_code = 202L, headers = structure(list(
+    date = "Fri, 14 Feb 2020 18:07:21 GMT", `content-type` = "application/json;charset=utf-8", 
+    `content-length` = "175", location = "/api/datasets/f5f3ec/", 
+    server = "nginx", `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
+    allow = "GET, HEAD, OPTIONS, PATCH, POST", `x-timing` = "", 
+    `set-cookie` = "REDACTED"), class = c("insensitive", "list"
+)), all_headers = list(list(status = 202L, version = "HTTP/2", 
+    headers = structure(list(date = "Fri, 14 Feb 2020 18:07:21 GMT", 
+        `content-type` = "application/json;charset=utf-8", `content-length` = "175", 
+        location = "/api/datasets/f5f3ec/", server = "nginx", 
+        `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
+        allow = "GET, HEAD, OPTIONS, PATCH, POST", `x-timing` = "", 
+        `set-cookie` = "REDACTED"), class = c("insensitive", 
     "list")))), cookies = structure(list(domain = ".crunch.io", 
-    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1557852711, class = c("POSIXct", 
+    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1613239641, class = c("POSIXct", 
     "POSIXt")), name = "token", value = "REDACTED"), row.names = c(NA, 
--1L), class = "data.frame"), content = charToRaw("null"), date = structure(1526316711, class = c("POSIXct", 
-"POSIXt"), tzone = "GMT"), times = c(redirect = 0, namelookup = 3e-05, 
-connect = 3.1e-05, pretransfer = 0.000123, starttransfer = 0.386065, 
-total = 0.386112)), class = "response")
+-1L), class = "data.frame"), content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/datasets/\", \"value\": \"/api/progress/\"}"), 
+    date = structure(1581703641, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.6e-05, 
+    connect = 2.7e-05, pretransfer = 8.6e-05, starttransfer = 9.1e-05, 
+    total = 0.524775)), class = "response")

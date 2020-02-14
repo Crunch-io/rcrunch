@@ -1,0 +1,63 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/ee066a/forks/",
+    "description": "Datasets forked from the given dataset",
+    "index": {
+        "/api/datasets/74e7ce/": {
+            "size": {
+                "rows": 3268,
+                "unfiltered_rows": 3268,
+                "columns": 22
+            },
+            "current_editor_name": "Greg",
+            "account": "/api/accounts/00001/",
+            "owner_name": "Greg",
+            "name": "Fork #2 of stackoverflow_survey",
+            "end_date": null,
+            "streaming": "no",
+            "owner_id": "/api/users/27a158/",
+            "current_editor": "/api/users/27a158/",
+            "creation_time": "2020-02-14T18:07:11.375000+00:00",
+            "archived": false,
+            "view_of": null,
+            "start_date": null,
+            "modification_time": "2020-02-14T18:07:14.112000+00:00",
+            "access_time": "2020-02-14T18:07:12.210000+00:00",
+            "permissions": {
+                "edit": true,
+                "view": true
+            },
+            "is_published": true,
+            "id": "74e7ce",
+            "description": ""
+        },
+        "/api/datasets/7bcba2/": {
+            "size": {
+                "rows": 1634,
+                "unfiltered_rows": 1634,
+                "columns": 23
+            },
+            "current_editor_name": "Greg",
+            "account": "/api/accounts/00001/",
+            "owner_name": "Greg",
+            "name": "Fork of stackoverflow_survey",
+            "end_date": null,
+            "streaming": "no",
+            "owner_id": "/api/users/27a158/",
+            "current_editor": "/api/users/27a158/",
+            "creation_time": "2020-02-14T18:06:57.916000+00:00",
+            "archived": false,
+            "view_of": null,
+            "start_date": null,
+            "modification_time": "2020-02-14T18:06:58.120000+00:00",
+            "access_time": "2020-02-14T18:06:58.571000+00:00",
+            "permissions": {
+                "edit": true,
+                "view": true
+            },
+            "is_published": true,
+            "id": "7bcba2",
+            "description": ""
+        }
+    }
+}
