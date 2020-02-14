@@ -20,6 +20,7 @@ login()
 library(crunch)
 library(httptest)
 start_vignette("fork-and-merge")
+login()
 ```
 
 ```{r message=FALSE, results='hide'}
