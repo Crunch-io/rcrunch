@@ -1,0 +1,8 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/ee066a/forks/",
+    "description": "Datasets forked from the given dataset",
+    "index": {
+
+    }
+}

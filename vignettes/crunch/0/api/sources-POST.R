@@ -1,20 +1,20 @@
 structure(list(url = "/api/sources/", status_code = 201L, headers = structure(list(
-    allow = "GET, HEAD, OPTIONS, POST", `content-encoding` = "gzip", 
-    `content-type` = "application/json;charset=utf-8", date = "Thu, 02 Aug 2018 21:33:21 GMT", 
-    location = "/api/sources/b96140/", server = "nginx", `set-cookie` = "REDACTED", 
-    vary = "Cookie, Accept-Encoding", `x-timing` = "", `content-length` = "86", 
-    connection = "keep-alive"), class = c("insensitive", "list"
-)), all_headers = list(list(status = 201L, version = "HTTP/1.1", 
-    headers = structure(list(allow = "GET, HEAD, OPTIONS, POST", 
-        `content-encoding` = "gzip", `content-type` = "application/json;charset=utf-8", 
-        date = "Thu, 02 Aug 2018 21:33:21 GMT", location = "/api/sources/b96140/", 
-        server = "nginx", `set-cookie` = "REDACTED", vary = "Cookie, Accept-Encoding", 
-        `x-timing` = "", `content-length` = "86", connection = "keep-alive"), class = c("insensitive", 
+    date = "Fri, 14 Feb 2020 17:50:06 GMT", `content-type` = "application/json;charset=utf-8", 
+    `content-length` = "86", location = "/api/sources/0fec55/", 
+    server = "nginx", `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
+    allow = "GET, HEAD, OPTIONS, POST", `x-timing` = "", `set-cookie` = "REDACTED"), class = c("insensitive", 
+"list")), all_headers = list(list(status = 201L, version = "HTTP/2", 
+    headers = structure(list(date = "Fri, 14 Feb 2020 17:50:06 GMT", 
+        `content-type` = "application/json;charset=utf-8", `content-length` = "86", 
+        location = "/api/sources/0fec55/", server = "nginx", 
+        `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
+        allow = "GET, HEAD, OPTIONS, POST", `x-timing` = "", 
+        `set-cookie` = "REDACTED"), class = c("insensitive", 
     "list")))), cookies = structure(list(domain = ".crunch.io", 
-    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1564781601, class = c("POSIXct", 
+    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1613238607, class = c("POSIXct", 
     "POSIXt")), name = "token", value = "REDACTED"), row.names = c(NA, 
 -1L), class = "data.frame"), content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/sources/\"}"), 
-    date = structure(1533245601, class = c("POSIXct", "POSIXt"
+    date = structure(1581702606, class = c("POSIXct", "POSIXt"
     ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.8e-05, 
-    connect = 3e-05, pretransfer = 0.00015, starttransfer = 0.000159, 
-    total = 0.974349)), class = "response")
+    connect = 2.9e-05, pretransfer = 0.000863, starttransfer = 0.000868, 
+    total = 1.071246)), class = "response")

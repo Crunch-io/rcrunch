@@ -1,0 +1,56 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/ee066a/variables/000000/",
+    "catalogs": {
+        "parent": "/api/datasets/ee066a/variables/",
+        "folder": "/api/datasets/ee066a/folders/770775/"
+    },
+    "fragments": {
+        "missing_rules": "/api/datasets/ee066a/variables/000000/missing_rules/",
+        "user_settings": "/api/datasets/ee066a/variables/000000/user_settings/",
+        "dataset": "/api/datasets/ee066a/"
+    },
+    "views": {
+        "frequencies": "/api/datasets/ee066a/variables/000000/frequencies/",
+        "summary": "/api/datasets/ee066a/variables/000000/summary/",
+        "values": "/api/datasets/ee066a/variables/000000/values/",
+        "cast": "/api/datasets/ee066a/variables/000000/cast/"
+    },
+    "body": {
+        "timestamped": false,
+        "secure": false,
+        "name": "HouseholdSize",
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "HouseholdSize",
+        "dataset_id": "ee066a",
+        "owner": null,
+        "hidden": false,
+        "view": {
+            "column_width": null
+        },
+        "type": "numeric",
+        "id": "000000",
+        "categories": [
+
+        ],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "/api/datasets/ee066a/"
+    }
+}
