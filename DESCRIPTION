@@ -134,6 +134,7 @@ Collate:
     'permissions.R'
     'show.R'
     'pretty-print.R'
+    'private-variables.R'
     'progress.R'
     'project-folder.R'
     'projects.R'
