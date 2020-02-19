@@ -345,7 +345,7 @@ flipArrays <- function(variables, suffix = ", flipped") {
 #' @param .subvariables 
 #'
 #' @return A `VariableDefinition` that when added to a Dataset will create the multiple-response
-#' array and subvaribales.
+#' array and subvariables.
 #' @export
 formMR <- function(name, ..., .categories = NULL, .subvariables = NULL) {
     if (is.null(.categories)) {

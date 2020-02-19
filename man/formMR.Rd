@@ -18,7 +18,7 @@ category (1 = "Selected", 0 = "Other")}
 }
 \value{
 A \code{VariableDefinition} that when added to a Dataset will create the multiple-response
-array and subvaribales.
+array and subvariables.
 }
 \description{
 Multiple Response Variables are a type of array variables (a set of "subvariables"

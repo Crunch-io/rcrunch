@@ -52,7 +52,7 @@ setOldClass("VariableDefinition")
 #' @param x A `CrunchExpr`
 #' @param ... additional attributes to be included in the references section (eg name, alias, etc.)
 #'
-#' @return a SubvariableDefinition object, ready to be included in a POST to Crunch.
+#' @return a `SubvariableDefinition` object, ready to be included in a POST to Crunch.
 #' @export
 SubvariableDefinition <- function(x, ...) {
     if (!inherits(x, "CrunchExpr")) {

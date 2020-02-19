@@ -12,7 +12,7 @@ SubvariableDefinition(x, ...)
 \item{...}{additional attributes to be included in the references section (eg name, alias, etc.)}
 }
 \value{
-a SubvariableDefinition object, ready to be included in a POST to Crunch.
+a \code{SubvariableDefinition} object, ready to be included in a POST to Crunch.
 }
 \description{
 Some specifications for creating Crunch Variables allow for subvariables to
