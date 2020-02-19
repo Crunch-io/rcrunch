@@ -361,6 +361,12 @@ formMR <- function(name, ..., .categories = NULL, .subvariables = NULL) {
     } 
     .subvariables <- .subvariables[lengths(.subvariables) != 0] # get rid of NULLs
     .subvariables <- lapply(.subvariables, function(x) crunch:::zcl(x))
+    # TODO: better default naming strategy? Don't think this is used anywhere
+    # so doesn't matter a ton, but could be better about when only some don't
+    # have a name.
+    if (is.null(names(.subvariables))) {
+        names(.subvariables) <- paste0(name, seq_along(.subvariables))
+    }
     
     VariableDefinition(
         derivation = list(
