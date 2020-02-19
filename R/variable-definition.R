@@ -50,7 +50,7 @@ setOldClass("VariableDefinition")
 #' can be posted to the server.
 #'
 #' @param x A `CrunchExpr`
-#' @param ... additional attributes to be included in the references section (eg name, alias, etc.)
+#' @param ... additional attributes to be included in the references section (such as name, alias, etc.)
 #'
 #' @return a `SubvariableDefinition` object, ready to be included in a POST to Crunch.
 #' @export
