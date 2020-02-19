@@ -9,7 +9,7 @@ SubvariableDefinition(x, ...)
 \arguments{
 \item{x}{A \code{CrunchExpr}}
 
-\item{...}{additional attributes to be included in the references section (eg name, alias, etc.)}
+\item{...}{additional attributes to be included in the references section (such as name, alias, etc.)}
 }
 \value{
 a \code{SubvariableDefinition} object, ready to be included in a POST to Crunch.
