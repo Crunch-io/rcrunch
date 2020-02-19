@@ -330,3 +330,54 @@ flipArrays <- function(variables, suffix = ", flipped") {
     ## Return the list of derivations. Can then pass that to addVariables
     return(newvars)
 }
+
+#' Form a Multiple Response Variable from functions of existing variables
+#'
+#' Multiple Response Variables are a type of array variables (a set of "subvariables"
+#' bound together for display in the app) that take only 2 values ("selected" and "not").
+#' This function forms an MR variable by taking functions of existing variables and 
+#' deriving them at the same time as the new variable.
+#'
+#' @param name character, the name that the new Categorical Array variable should have.
+#' @param ... named `SubvariableDefinnition`s
+#' @param .categories (Optional) Categories to define, defaults to the default MR 
+#' category (1 = "Selected", 0 = "Other")
+#' @param .subvariables 
+#'
+#' @return A `VariableDefinition` that when added to a Dataset will create the multiple-response
+#' array and subvaribales.
+#' @export
+formMR <- function(name, ..., .categories = NULL, .subvariables = NULL) {
+    if (is.null(.categories)) {
+        .categories <- Categories(
+            Category(id = 1L, missing = FALSE, name = "Selected", numeric_value = 1L, selected = TRUE),
+            Category(id = 0L, missing = FALSE, name = "Other", numeric_value = 0L),
+            Category(id = -1L, missing = TRUE, name = "No Data", numeric_value = NULL)
+        )
+    }
+    
+    if (is.null(.subvariables)) {
+        .subvariables <- list(...)
+    } 
+    .subvariables <- .subvariables[lengths(.subvariables) != 0] # get rid of NULLs
+    .subvariables <- lapply(.subvariables, function(x) crunch:::zcl(x))
+    
+    VariableDefinition(
+        derivation = list(
+            `function` = "array",
+            args = list(
+                list(
+                    `function` = "select", 
+                    args = list(
+                        list(
+                            map = .subvariables
+                        )
+                    )
+                )
+            )
+        ),
+        name = name, 
+        type = "multiple_response", 
+        categories = .categories
+    )
+}
