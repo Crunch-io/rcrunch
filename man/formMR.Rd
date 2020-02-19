@@ -9,12 +9,13 @@ formMR(name, ..., .categories = NULL, .subvariables = NULL)
 \arguments{
 \item{name}{character, the name that the new Categorical Array variable should have.}
 
-\item{...}{named \code{SubvariableDefinnition}s}
+\item{...}{\code{SubvariableDefinition}s that will be the subvariables of the new variable}
 
 \item{.categories}{(Optional) Categories to define, defaults to the default MR
 category (1 = "Selected", 0 = "Other")}
 
-\item{.subvariables}{}
+\item{.subvariables}{A list of \code{SubvariableDefinition}s, like what would be
+passed into \code{...}.}
 }
 \value{
 A \code{VariableDefinition} that when added to a Dataset will create the multiple-response

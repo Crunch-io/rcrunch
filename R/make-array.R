@@ -339,10 +339,11 @@ flipArrays <- function(variables, suffix = ", flipped") {
 #' deriving them at the same time as the new variable.
 #'
 #' @param name character, the name that the new Categorical Array variable should have.
-#' @param ... named `SubvariableDefinnition`s
+#' @param ... `SubvariableDefinition`s that will be the subvariables of the new variable
 #' @param .categories (Optional) Categories to define, defaults to the default MR 
 #' category (1 = "Selected", 0 = "Other")
-#' @param .subvariables 
+#' @param .subvariables A list of `SubvariableDefinition`s, like what would be 
+#' passed into `...`.
 #'
 #' @return A `VariableDefinition` that when added to a Dataset will create the multiple-response
 #' array and subvariables.
@@ -360,7 +361,7 @@ formMR <- function(name, ..., .categories = NULL, .subvariables = NULL) {
         .subvariables <- list(...)
     } 
     .subvariables <- .subvariables[lengths(.subvariables) != 0] # get rid of NULLs
-    .subvariables <- lapply(.subvariables, function(x) crunch:::zcl(x))
+    .subvariables <- lapply(.subvariables, function(x) zcl(x))
     # TODO: better default naming strategy? Don't think this is used anywhere
     # so doesn't matter a ton, but could be better about when only some don't
     # have a name.
