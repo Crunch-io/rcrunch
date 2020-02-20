@@ -222,12 +222,14 @@ CrunchDataset <- setClass("CrunchDataset",
     slots = c(
         variables = "VariableCatalog",
         hiddenVariables = "VariableCatalog",
+        privateVariables = "VariableCatalog",
         filter = "CrunchLogicalExpr",
         tuple = "DatasetTuple"
     ),
     prototype = prototype(
         variables = VariableCatalog(),
         hiddenVariables = VariableCatalog(),
+        privateVariables = VariableCatalog(),
         filter = CrunchLogicalExpr(),
         tuple = DatasetTuple()
     )
