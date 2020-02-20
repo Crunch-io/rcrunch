@@ -209,6 +209,48 @@ with_mock_crunch({
         )
         expect_equivalent(varDef, expected)
     })
+    
+    test_that("formMR creates a VariableDefinition", {
+        expect_json_equivalent(
+            formMR(SubvariableDefinition(ds$gender == "Male", name = "male"), name = "Gender MR"),
+            list(
+                name = "Gender MR",
+                derivation = list(
+                    `function` = "array", 
+                    args = list(list(
+                        `function` = "select",
+                        args = list(list(
+                            map = list(
+                                c(zcl(ds$gender == "Male"), reference = list(name = "male"))
+                            )
+                        ))
+                    ))
+                ),
+                type = "multiple_response",
+                categories = Categories(
+                    Category(id = 1L, missing = FALSE, name = "Selected", numeric_value = 1L, selected = TRUE),
+                    Category(id = 0L, missing = FALSE, name = "Other", numeric_value = 0L),
+                    Category(id = -1L, missing = TRUE, name = "No Data", numeric_value = NULL)
+                )
+            )
+        )
+    })
+    
+    test_that("formMR error conditions", {
+        expect_error(
+            formMR(ds$gender == "Male", name = "Gender MR"), 
+            "All subvariables must be `SubvariableDefinition` objects"
+        )
+        
+        expect_error(
+            formMR(
+                SubvariableDefinition(ds$gender == "Male", name = "male"), 
+                name = "Gender MR",
+                .categories = list(1)
+            ), 
+            ".categories must be `Categories` object."
+        )
+    })
 })
 
 with_test_authentication({
@@ -301,6 +343,21 @@ with_test_authentication({
             ds$mr_5 <- makeMRFromText(ds$delim, delim = "; ", name = "myMR")
             expect_true(is.derived(ds$mr_5))
             expect_equivalent(dim(as.vector(ds$mr_5)), c(nrow(ds), 5))
+        })
+    })
+    
+    whereas("formMR functions as expected", {
+        ds <- newDataset(mrdf)
+        ds$mrVar <- formMR(
+            SubvariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias"), 
+            name = "MR Variable"
+        )
+        
+        test_that("can make MR with formMR", {
+            expect_identical(names(ds), c(names(mrdf), "mrVar"))
+            expect_true(is.MR(ds$mrVar))
+            expect_true(is.Categorical(ds$mrVar$sv_alias))
+            expect_equal(unclass(as.vector(table(ds$mrVar$sv_alias))), c(2, 2))
         })
     })
 })

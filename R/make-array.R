@@ -357,9 +357,15 @@ formMR <- function(name, ..., .categories = NULL, .subvariables = NULL) {
         )
     }
     
+    if (!inherits(.categories, "Categories")) halt(".categories must be `Categories` object.")
+    
     if (is.null(.subvariables)) {
         .subvariables <- list(...)
     } 
+    is_sv <- vapply(.subvariables, function(x) inherits(x, "SubvariableDefinition"), logical(1))
+    if (!all(is_sv)) {
+        halt("All subvariables must be `SubvariableDefinition` objects")
+    }
     .subvariables <- .subvariables[lengths(.subvariables) != 0] # get rid of NULLs
     .subvariables <- lapply(.subvariables, function(x) zcl(x))
     # TODO: better default naming strategy? Don't think this is used anywhere

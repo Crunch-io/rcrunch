@@ -50,7 +50,8 @@ setOldClass("VariableDefinition")
 #' can be posted to the server.
 #'
 #' @param x A `CrunchExpr`
-#' @param ... additional attributes to be included in the references section (such as name, alias, etc.)
+#' @param ... additional attributes to be included in the references section 
+#' (such as name, alias, etc.)
 #'
 #' @return a `SubvariableDefinition` object, ready to be included in a POST to Crunch.
 #' @export
@@ -59,9 +60,13 @@ SubvariableDefinition <- function(x, ...) {
         halt("SubvariableDefinition only supports `CrunchExpr` objects.")
     }
     out <- crunch:::zcl(x)
-    out$references = list(...)
+    out$references <- list(...)
     class(out) <- "SubvariableDefinition"
     out
 }
+
+#' @rdname SubvariableDefinition
+#' @export
+SubvarDef <- SubvariableDefinition
 
 setOldClass("SubvariableDefinition")
