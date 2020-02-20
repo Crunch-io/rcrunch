@@ -201,7 +201,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' `horizontalStackedBarPlot`, `donut`, and (if the second variable in the
 #' query formula is a wave variable) `timeplot`.
 #' In addition, `showValueLabels` (logical) controls whether the web app and
-#' exports show lablels on bars or arcs of donuts.
+#' exports show labels on bars or arcs of donuts.
 #' @param title The slide's title
 #' @param subtitle The slide's subtitle
 #' @param ... Further options to be passed on to the API
