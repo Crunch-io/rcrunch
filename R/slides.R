@@ -196,10 +196,12 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' similar to CrunchCube query
 #' @param display_settings (optional) A list of display settings. If omitted,
 #' slide will be a table of column percentages with hypothesis test highlighting
-#' enabled. These plot types that can be set here as `vizType`:
+#' enabled. The most common setting used is `vizType`, which can be:
 #' `table`, `groupedBarPlot`, `stackedBarPlot`, `horizontalGroupedBarPlot`,
 #' `horizontalStackedBarPlot`, `donut`, and (if the second variable in the
 #' query formula is a wave variable) `timeplot`.
+#' In addition, `showValueLabels` (logical) controls whether the web app and
+#' exports show lablels on bars or arcs of donuts.
 #' @param title The slide's title
 #' @param subtitle The slide's subtitle
 #' @param ... Further options to be passed on to the API
@@ -222,7 +224,8 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     ~ approval + age4,
 #'     title = "Approval by age group",
 #'     display_settings = list(
-#'         vizType = "groupedBarPlot"
+#'         vizType = "groupedBarPlot",
+#'         showValueLabels = TRUE
 #'     ),
 #'     subtitle = "2017 Data"
 #' )
@@ -244,7 +247,8 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     ~ approval,
 #'     title = "Approval of new feature",
 #'     display_settings = list(
-#'         vizType = "donut"
+#'         vizType = "donut",
+#'         showValueLabels = FALSE
 #'     ),
 #'     subtitle = "2017 Data"
 #' )

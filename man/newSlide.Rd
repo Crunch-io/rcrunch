@@ -21,10 +21,12 @@ similar to CrunchCube query}
 
 \item{display_settings}{(optional) A list of display settings. If omitted,
 slide will be a table of column percentages with hypothesis test highlighting
-enabled. These plot types that can be set here as \code{vizType}:
+enabled. The most common setting used is \code{vizType}, which can be:
 \code{table}, \code{groupedBarPlot}, \code{stackedBarPlot}, \code{horizontalGroupedBarPlot},
 \code{horizontalStackedBarPlot}, \code{donut}, and (if the second variable in the
-query formula is a wave variable) \code{timeplot}.}
+query formula is a wave variable) \code{timeplot}.
+In addition, \code{showValueLabels} (logical) controls whether the web app and
+exports show labels on bars or arcs of donuts.}
 
 \item{title}{The slide's title}
 
@@ -53,7 +55,8 @@ newSlide(
     ~ approval + age4,
     title = "Approval by age group",
     display_settings = list(
-        vizType = "groupedBarPlot"
+        vizType = "groupedBarPlot",
+        showValueLabels = TRUE
     ),
     subtitle = "2017 Data"
 )
@@ -75,7 +78,8 @@ newSlide(
     ~ approval,
     title = "Approval of new feature",
     display_settings = list(
-        vizType = "donut"
+        vizType = "donut",
+        showValueLabels = FALSE
     ),
     subtitle = "2017 Data"
 )
