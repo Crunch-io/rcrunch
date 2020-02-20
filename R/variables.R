@@ -50,14 +50,12 @@ setDatasetVariables <- function(x, value) {
     return(x)
 }
 
-.secureTuple <- function(x) isTRUE(x[["secure"]])
-
 #' @rdname variables
 #' @export
 setMethod("variables", "CrunchDataset", function(x) {
     variables <- allVariables(x)
     variables <- variables[!(aliases(variables) %in% hiddenVariables(x, "alias"))]
-    index(variables) <- Filter(Negate(.secureTuple), index(variables))
+    variables <- variables[!(aliases(variables) %in% privateVariables(x, "alias"))]
     variables
 })
 #' @rdname variables
