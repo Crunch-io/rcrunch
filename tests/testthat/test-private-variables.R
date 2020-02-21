@@ -221,11 +221,6 @@ with_test_authentication({
             expect_true(is.Text(ds$v2))
         })
         
-
-        
-        test_that("Initial hidden + private worked", {
-
-        })
         
         test_that("Can privatize hidden variables and vice versa", {
             ds <- privatizeVariables(ds, "v2")
