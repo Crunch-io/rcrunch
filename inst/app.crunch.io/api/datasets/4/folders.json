@@ -10,7 +10,7 @@
     },
     "description": "This is the variables' folder root",
     "index": {
-        "../variables/000001/": {
+        "../variables/height_inches/": {
             "discarded": false,
             "alias": "height_inches",
             "secure": false,
@@ -22,7 +22,7 @@
             "hidden": false,
             "description": ""
         },
-        "../variables/000000/": {
+        "../variables/gender/": {
             "secure": false,
             "derived": false,
             "id": "000000",
@@ -40,8 +40,8 @@
         "name": "Root"
     },
     "graph": [
-        "../variables/000000/",
-        "../variables/000001/"
+        "../variables/height_inches/",
+        "../variables/gender/"
     ],
     "size": 2
 }

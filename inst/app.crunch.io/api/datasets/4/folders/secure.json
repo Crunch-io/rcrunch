@@ -2,7 +2,7 @@
     "element": "shoji:catalog",
     "self": "https://app.crunch.io/api/datasets/4/folders/secure/",
     "index": {
-        "../../variables/000002/": {
+        "../../variables/id/": {
             "discarded": false,
             "alias": "id",
             "secure": true,
@@ -19,7 +19,7 @@
         "name": "Secure"
     },
     "graph": [
-        "../../variables/000002/"
+        "../../variables/id/"
     ],
     "size": 1
 }

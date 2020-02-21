@@ -61,13 +61,13 @@ with_mock_crunch({
         "{",
         '"element":"shoji:catalog",',
         '"index":{',
-        '"https://app.crunch.io/api/datasets/3/variables/gender/":{},',
-        '"https://app.crunch.io/api/datasets/3/variables/height_inches/":{}',
+        '"https://app.crunch.io/api/datasets/4/variables/gender/":{},',
+        '"https://app.crunch.io/api/datasets/4/variables/height_inches/":{}',
         "},",
         '"graph":[',
-        '"https://app.crunch.io/api/datasets/3/variables/id/",',
-        '"https://app.crunch.io/api/datasets/3/variables/gender/",',
-        '"https://app.crunch.io/api/datasets/3/variables/height_inches/"',
+        '"https://app.crunch.io/api/datasets/4/variables/id/",',
+        '"https://app.crunch.io/api/datasets/4/variables/gender/",',
+        '"https://app.crunch.io/api/datasets/4/variables/height_inches/"',
         "]",
         "}"
     )
@@ -220,8 +220,29 @@ with_test_authentication({
             expect_warning(ds$v2, NA)
             expect_true(is.Text(ds$v2))
         })
-    })
+        
 
+        
+        test_that("Initial hidden + private worked", {
+
+        })
+        
+        test_that("Can privatize hidden variables and vice versa", {
+            ds <- privatizeVariables(ds, "v2")
+            ds <- hideVariables(ds, "v3")
+            expect_equal(privateVariables(ds), "v2")
+            expect_equal(hiddenVariables(ds), "v3")
+            
+            ds <- privatizeVariables(ds, "v3")
+            ds <- hideVariables(ds, "v2")
+            expect_equal(privateVariables(ds), "v3")
+            expect_equal(hiddenVariables(ds), "v2")
+            ds <- deprivatizeVariables(ds, "v3")
+            ds <- unhideVariables(ds, "v2")
+        })
+        
+
+    })
     whereas("Checking that array variables can be private", {
         ds <- newDatasetFromFixture("apidocs")
 
