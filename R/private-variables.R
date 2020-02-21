@@ -45,14 +45,14 @@ setMethod("deprivatize", "VariableCatalog", function(x) {
 
 #' @rdname hide
 #' @export
-privatise <- function(...) {
-  privatize(...)
+privatise <- function(x) {
+  privatize(x)
 }
 
 #' @rdname hide
 #' @export
-deprivatise <- function(...) {
-  deprivatize(...)
+deprivatise <- function(x) {
+  deprivatize(x)
 }
 
 #' @rdname hideVariables
@@ -60,6 +60,12 @@ deprivatise <- function(...) {
 privatizeVariables <- function(dataset, variables) {
   dataset <- mv(dataset, variables, private(dataset))
   return(invisible(refresh(dataset)))
+}
+
+#' @rdname hide
+#' @export
+privatiseVariables <- function(dataset, variables) {
+  privatizeVariables(dataset, variables)
 }
 
 #' @rdname hideVariables
@@ -72,6 +78,13 @@ deprivatizeVariables <- function(dataset, variables) {
   dataset <- mv(dataset, variables, folders(dataset))
   return(invisible(refresh(dataset)))
 }
+
+#' @rdname hide
+#' @export
+deprivatiseVariables <- function(dataset, variables) {
+  deprivatizeVariables(dataset, variables)
+}
+
 
 #' @rdname hiddenVariables
 #' @export
