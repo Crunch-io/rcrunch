@@ -3,7 +3,10 @@ setMethod("private", "CrunchDataset", function(x) private(folders(x)))
 setMethod("private", "VariableCatalog", function(x) private(folders(x)))
 
 setMethod("private", "VariableFolder", function(x) {
-  return(VariableFolder(crGET(shojiURL(rootFolder(x), "catalogs", "secure", mustWork = FALSE))))
+  url <- shojiURL(rootFolder(x), "catalogs", "secure", mustWork = FALSE)
+  if (is.null(url)) return(url)
+  
+  VariableFolder(crGET(url))
 })
 
 
