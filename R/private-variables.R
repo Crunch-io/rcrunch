@@ -3,21 +3,30 @@ setMethod("private", "CrunchDataset", function(x) private(folders(x)))
 setMethod("private", "VariableCatalog", function(x) private(folders(x)))
 
 setMethod("private", "VariableFolder", function(x) {
-  return(VariableFolder(crGET(shojiURL(rootFolder(x), "catalogs", "secure"))))
+  return(VariableFolder(crGET(shojiURL(rootFolder(x), "catalogs", "secure", mustWork = FALSE))))
 })
 
 
 #' @rdname hide
 #' @export
 setMethod("privatize", "CrunchVariable", function(x) {
-  .moveToFolder(private(rootFolder(x)), x)
+  private_dir <- private(rootFolder(x))
+  if (is.null(private_dir)) {
+    halt("Could not access private directory, are you an editor of this dataset?")
+  }
+  .moveToFolder(private_dir, x)
   # TODO: should these refresh?
   invisible(x)
 })
 #' @rdname hide
 #' @export
 setMethod("privatize", "VariableCatalog", function(x) {
-  .moveToFolder(private(rootFolder(x)), x)
+  private_dir <- private(rootFolder(x))
+  if (is.null(private_dir)) {
+    halt("Could not access private directory, are you an editor of this dataset?")
+  }
+  .moveToFolder(private_dir, x)
+  # TODO: should these refresh?
   invisible(x)
 })
 
