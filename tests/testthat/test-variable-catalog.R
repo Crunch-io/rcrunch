@@ -48,8 +48,8 @@ with_mock_crunch({
         expect_length(variables(ds), 6)
     })
 
-    test_that("secure variables aren't considered active (#383)", {
-        index(ds@variables)[[1]]$secure <- TRUE
+    test_that("private variables aren't considered active (#383)", {
+        ds@privateVariables <- ds@variables[1]
 
         expect_identical(
             urls(variables(ds)),
