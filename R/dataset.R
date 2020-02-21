@@ -18,7 +18,7 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
         # Secure variables also accessed via folder transversal
         private_dir <- private(.Object)
         private_vars <- variablesBelowFolder(private_dir, "alias")
-        .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars]
+        .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars]
     }
     if (length(.Object@filter@expression) == 0) {
         # Likewise for preserving filters
