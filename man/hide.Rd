@@ -15,6 +15,8 @@
 \alias{deprivatize,VariableCatalog-method}
 \alias{privatise}
 \alias{deprivatise}
+\alias{privatiseVariables}
+\alias{deprivatiseVariables}
 \title{Hide/Unhide or Privatize/Deprivatize Variables}
 \usage{
 \S4method{hide}{CrunchVariable}(x)
@@ -33,9 +35,13 @@
 
 \S4method{deprivatize}{VariableCatalog}(x)
 
-privatise(...)
+privatise(x)
 
-deprivatise(...)
+deprivatise(x)
+
+privatiseVariables(dataset, variables)
+
+deprivatiseVariables(dataset, variables)
 }
 \arguments{
 \item{x}{a Variable or subset of a VariableCatalog to hide or unhide}
