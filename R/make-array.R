@@ -255,6 +255,7 @@ deriveArray <- function(subvariables, name, selections, ...) {
     
     # if it's a list, it could contain subvariable defintions:
     if (is.list(subvariables)) {
+        subvariables <- subvariables[lengths(subvariables) > 0] # remove NULLs (from eg slider)
         subvariables <- lapply(subvariables, function(x) {
             if (is.SubvarDef(x)) {
                 zcl(x)
