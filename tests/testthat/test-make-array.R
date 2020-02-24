@@ -210,9 +210,12 @@ with_mock_crunch({
         expect_equivalent(varDef, expected)
     })
     
-    test_that("formMR creates a VariableDefinition", {
+    test_that("deriveArray with subvariables creates a VariableDefinition", {
         expect_json_equivalent(
-            formMR(SubvariableDefinition(ds$gender == "Male", name = "male"), name = "Gender MR"),
+            deriveArray(
+                subvariables = list(SubvariableDefinition(ds$gender == "Male", name = "male")), 
+                name = "Gender MR"
+            ),
             list(
                 name = "Gender MR",
                 derivation = list(
@@ -221,34 +224,12 @@ with_mock_crunch({
                         `function` = "select",
                         args = list(list(
                             map = list(
-                                c(zcl(ds$gender == "Male"), reference = list(name = "male"))
+                                c(zcl(ds$gender == "Male"), references = list(name = "male"))
                             )
-                        ))
+                        ), list(value = I("1")))
                     ))
-                ),
-                type = "multiple_response",
-                categories = Categories(
-                    Category(id = 1L, missing = FALSE, name = "Selected", numeric_value = 1L, selected = TRUE),
-                    Category(id = 0L, missing = FALSE, name = "Other", numeric_value = 0L),
-                    Category(id = -1L, missing = TRUE, name = "No Data", numeric_value = NULL)
                 )
             )
-        )
-    })
-    
-    test_that("formMR error conditions", {
-        expect_error(
-            formMR(ds$gender == "Male", name = "Gender MR"), 
-            "All subvariables must be `SubvariableDefinition` objects"
-        )
-        
-        expect_error(
-            formMR(
-                SubvariableDefinition(ds$gender == "Male", name = "male"), 
-                name = "Gender MR",
-                .categories = list(1)
-            ), 
-            ".categories must be `Categories` object."
         )
     })
 })
@@ -346,10 +327,10 @@ with_test_authentication({
         })
     })
     
-    whereas("formMR functions as expected", {
+    whereas("deriveArray with subvariables functions as expected", {
         ds <- newDataset(mrdf)
-        ds$mrVar <- formMR(
-            SubvariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias"), 
+        ds$mrVar <- deriveArray(
+            list(SubvariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias")), 
             name = "MR Variable"
         )
         

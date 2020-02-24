@@ -252,12 +252,24 @@ deriveArray <- function(subvariables, name, selections, ...) {
         ## as in, if the list of variables is a [ extraction from a Dataset
         subvariables <- allVariables(subvariables)
     }
-    subvariables <- urls(subvariables)
-
+    
+    # if it's a list, it could contain subvariable defintions:
+    if (is.list(subvariables)) {
+        subvariables <- lapply(subvariables, function(x) {
+            if (is.SubvarDef(x)) {
+                zcl(x)
+            } else {
+                list(variable = urls(x))
+            }
+        })
+    } else { # but ShojiCatalogs don't give their urls when lapplying, so treat differently
+        subvariables <- lapply(urls(subvariables), function(x) list(variable = x))
+    }
+    
     subvarids <- as.character(seq_along(subvariables))
     derivation <- zfunc("array", zfunc(
         "select",
-        list(map = structure(lapply(subvariables, function(x) list(variable = x)),
+        list(map = structure(subvariables,
             .Names = subvarids
         )),
         list(value = I(subvarids))
@@ -329,69 +341,4 @@ flipArrays <- function(variables, suffix = ", flipped") {
 
     ## Return the list of derivations. Can then pass that to addVariables
     return(newvars)
-}
-
-#' Form a Multiple Response Variable from functions of existing variables
-#'
-#' Multiple Response Variables are a type of array variables (a set of "subvariables"
-#' bound together for display in the app) that take only 2 values ("selected" and "not").
-#' This function forms an MR variable by taking functions of existing variables and 
-#' deriving them at the same time as the new variable.
-#'
-#' @param name character, the name that the new Categorical Array variable should have.
-#' @param ... `SubvariableDefinition`s that will be the subvariables of the new variable
-#' @param .categories (Optional) Categories to define, defaults to the default MR 
-#' category (1 = "Selected", 0 = "Other")
-#' @param .subvariables A list of `SubvariableDefinition`s, like what would be 
-#' passed into `...`.
-#'
-#' @return A `VariableDefinition` that when added to a Dataset will create the multiple-response
-#' array and subvariables.
-#' @export
-formMR <- function(name, ..., .categories = NULL, .subvariables = NULL) {
-    if (is.null(.categories)) {
-        .categories <- Categories(
-            Category(id = 1L, missing = FALSE, name = "Selected", numeric_value = 1L, selected = TRUE),
-            Category(id = 0L, missing = FALSE, name = "Other", numeric_value = 0L),
-            Category(id = -1L, missing = TRUE, name = "No Data", numeric_value = NULL)
-        )
-    }
-    
-    if (!inherits(.categories, "Categories")) halt(".categories must be `Categories` object.")
-    
-    if (is.null(.subvariables)) {
-        .subvariables <- list(...)
-    } 
-    .subvariables <- .subvariables[lengths(.subvariables) != 0] # get rid of NULLs
-    is_sv <- vapply(.subvariables, is.SubvarDef, logical(1))
-    if (!all(is_sv)) {
-        halt("All subvariables must be `SubvariableDefinition` objects")
-    }
-    .subvariables <- lapply(.subvariables, function(x) zcl(x))
-    # TODO: better default naming strategy? Don't think this is used anywhere
-    # so doesn't matter a ton, but could be better about when only some don't
-    # have a name.
-    if (is.null(names(.subvariables))) {
-        names(.subvariables) <- paste0(name, seq_along(.subvariables))
-    }
-    
-    VariableDefinition(
-        derivation = list(
-            `function` = "array",
-            args = list(
-                list(
-                    `function` = "select", 
-                    args = list(
-                        list(
-                            map = .subvariables
-                        ),
-                        list(value = I(names(.subvariables)))
-                    )
-                )
-            )
-        ),
-        name = name, 
-        type = "multiple_response", 
-        categories = .categories
-    )
 }
