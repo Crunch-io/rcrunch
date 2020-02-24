@@ -384,7 +384,8 @@ formMR <- function(name, ..., .categories = NULL, .subvariables = NULL) {
                     args = list(
                         list(
                             map = .subvariables
-                        )
+                        ),
+                        list(value = I(names(.subvariables)))
                     )
                 )
             )
