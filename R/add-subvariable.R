@@ -42,17 +42,13 @@ addSubvarDef <- function(var, subvar) {
     ## Input can be a variable, subvariable, dataset subset or
     ## a mixed or uniform list of variables and subvariables this
     ## wraps single entries in a list for type consistency.
-    if (inherits(subvar, "VariableDefinition") ||
+    if (is.VarDef(subvar) ||
         is.variable(subvar)) {
         ## wrap single variables in list
         subvar <- list(subvar)
     }
 
-    vardefs <- vapply(
-        subvar,
-        function(x) inherits(x, "VariableDefinition"),
-        logical(1)
-    )
+    vardefs <- vapply(subvar, is.VarDef, logical(1))
 
     out <- vector("list", length(subvar))
 

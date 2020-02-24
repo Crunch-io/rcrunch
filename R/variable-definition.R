@@ -40,6 +40,14 @@ VariableDefinition <- function(data, ...) {
 #' @export
 VarDef <- VariableDefinition
 
+#' @rdname crunch-is
+#' @export
+is.VariableDefinition <- function(x) inherits(x, "VariableDefinition")
+
+#' @rdname crunch-is
+#' @export
+is.VarDef <- is.VariableDefinition
+
 setOldClass("VariableDefinition")
 
 
@@ -68,5 +76,13 @@ SubvariableDefinition <- function(x, ...) {
 #' @rdname SubvariableDefinition
 #' @export
 SubvarDef <- SubvariableDefinition
+
+#' @rdname crunch-is
+#' @export
+is.SubvariableDefinition <- function(x) inherits(x, "SubvariableDefinition")
+
+#' @rdname crunch-is
+#' @export
+is.SubvarDef <- is.SubvariableDefinition
 
 setOldClass("SubvariableDefinition")

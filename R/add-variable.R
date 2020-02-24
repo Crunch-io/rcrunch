@@ -17,7 +17,7 @@ addVariables <- function(dataset, ...) {
     ## Check for whether a list of vardefs passed
     if (length(vardefs) == 1 &&
         is.list(vardefs[[1]]) &&
-        !inherits(vardefs[[1]], "VariableDefinition")) {
+        !is.VarDef(vardefs[[1]])) {
         vardefs <- vardefs[[1]]
     }
     ## Check that all are VariableDefinitions

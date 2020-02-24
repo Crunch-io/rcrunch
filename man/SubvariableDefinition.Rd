@@ -2,14 +2,18 @@
 % Please edit documentation in R/variable-definition.R
 \name{SubvariableDefinition}
 \alias{SubvariableDefinition}
+\alias{SubvarDef}
 \title{Construct a Subvariable Definition}
 \usage{
 SubvariableDefinition(x, ...)
+
+SubvarDef(x, ...)
 }
 \arguments{
 \item{x}{A \code{CrunchExpr}}
 
-\item{...}{additional attributes to be included in the references section (such as name, alias, etc.)}
+\item{...}{additional attributes to be included in the references section
+(such as name, alias, etc.)}
 }
 \value{
 a \code{SubvariableDefinition} object, ready to be included in a POST to Crunch.

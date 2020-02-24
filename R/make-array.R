@@ -362,7 +362,7 @@ formMR <- function(name, ..., .categories = NULL, .subvariables = NULL) {
     if (is.null(.subvariables)) {
         .subvariables <- list(...)
     } 
-    is_sv <- vapply(.subvariables, function(x) inherits(x, "SubvariableDefinition"), logical(1))
+    is_sv <- vapply(.subvariables, is.SubvarDef, logical(1))
     if (!all(is_sv)) {
         halt("All subvariables must be `SubvariableDefinition` objects")
     }
