@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @examples
-slideCategories <- function(variable, step, width, ..., complete = TRUE, useNA = TRUE) {
+slideCategories <- function(variable, step, width, ..., complete = TRUE, useNA = FALSE) {
   cats <- categories(variable)
   if (!useNA) cats <- cats[!is.na(cats)]
   

@@ -4,7 +4,7 @@
 \alias{slideCategories}
 \title{Create sliding subvariable definitions}
 \usage{
-slideCategories(variable, step, width, ..., complete = TRUE, useNA = TRUE)
+slideCategories(variable, step, width, ..., complete = TRUE, useNA = FALSE)
 }
 \arguments{
 \item{variable}{A categorical crunch variable}
