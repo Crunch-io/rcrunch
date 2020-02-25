@@ -46,16 +46,16 @@ ds$wave_step1_wide3 <- deriveArray(
    "Sliding example 1"
 )
 
-# You can also make names (and other subvariable metadat like alias or description) 
+# You can also make names (and other subvariable metadata like alias or description) 
 # with a function:
 ds$wave_step2_wide2 <- deriveArray(
    slideCategories(
      ds$wave, 
      step = 2, 
      width = 2, 
-     name = function(x) paste(x[1], "-", x[length(x)]),
-     "Sliding example 2"
-   )
+     name = function(x) paste(x[1], "-", x[length(x)])
+   ),
+   "Sliding example 2"
 )
 }
 }
