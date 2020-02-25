@@ -81,84 +81,93 @@ handleAPIresponse <- function(response, special.statuses = list()) {
     if (is.function(handler)) {
         invisible(handler(response))
     } else if (tolower(http_status(response)$category) == "success") {
-        if (code == 202) {
-            ## 202 Continue: a few cases:
-            ## 1) Legacy: POST /batches/ returns Batch entity in Location, no
-            ##    response content
-            ## 2) Progress body with Location
-            ## 3) Progress body without Location
-            ## So, if there's a shoji:value response, it's a Progress, so poll it.
-            ## Otherwise, return the location.
-            loc <- locationHeader(response)
-            if (length(response$content) > 0) {
-                ## Progress URL comes in a shoji:value
-                progress_url <- handleShoji(content(response))
-                ## Quick validation
-                if (is.character(progress_url) && length(progress_url) == 1) {
-                    tryCatch(pollProgress(progress_url),
-                        error = function(e) {
-                            ## Handle the error here so we can message the
-                            ## Location header, if present
-                            if (!is.null(loc)) {
-                                message("Result URL: ", loc)
-                            }
-                            stop(e)
-                        }
-                    )
-                }
-            }
-            ## Return the location header, if it exists
-            invisible(loc)
-        } else if (code == 201) {
-            ## 201 Location: return the Location header
-            return(locationHeader(response))
-        } else if (code == 204 || length(response$content) == 0) {
-            ## If No Content, invisibly return NULL
-            invisible(NULL)
-        } else {
-            ## Parse the content
-            return(handleShoji(content(response)))
-        }
+        handleAPIsuccess(code, response)
     } else {
-        if (code == 401) {
-            halt("You are not authenticated. Please `login()` and try again.")
-        } else if (code == 410) {
-            halt(
-                "The API resource at ",
-                response$url,
-                " has moved permanently. Please upgrade crunch to the ",
-                "latest version."
-            )
-        } else if (code == 503 && response$request$method == "GET" &&
-            "retry-after" %in% tolower(names(response$headers))) {
-            ## Server is busy and telling us to retry the request again after
-            ## some period.
-            wait <- get_header("Retry-After", response$headers)
-            message("This request is taking longer than expected. Please stand by...")
-            Sys.sleep(as.numeric(wait))
-            ## TODO: resend request headers? Or, include the request to evaluate
-            ## inside this function, do match.call at the beginning, and re-eval?
-            return(crGET(response$url))
-        }
-        msg <- http_status(response)$message
-        if (code == 404) {
-            # Add the URL that was "not found" (there isn't going to be any
-            # useful response content message)
-            msg2 <- response$url
-        } else {
-            msg2 <- try(content(response)$message, silent = TRUE)
-        }
-        if (!is.error(msg2)) {
-            msg <- paste(msg, msg2, sep = ": ")
-        }
-        if (code == 409 && grepl("current editor", msg)) {
-            halt(
-                "You are not the current editor of this dataset. `unlock()` ",
-                "it and try again."
-            )
-        }
-        halt(msg)
+        handleAPIfailure(code, response)
     }
+}
+
+handleAPIsuccess <- function(code, response) {
+    if (code == 202) {
+        ## 202 Continue: a few cases:
+        ## 1) Legacy: POST /batches/ returns Batch entity in Location, no
+        ##    response content
+        ## 2) Progress body with Location
+        ## 3) Progress body without Location
+        ## So, if there's a shoji:value response, it's a Progress, so poll it.
+        ## Otherwise, return the location.
+        loc <- locationHeader(response)
+        if (length(response$content) > 0) {
+            ## Progress URL comes in a shoji:value
+            progress_url <- handleShoji(content(response))
+            ## Quick validation
+            if (is.character(progress_url) && length(progress_url) == 1) {
+                tryCatch(pollProgress(progress_url),
+                         error = function(e) {
+                             ## Handle the error here so we can message the
+                             ## Location header, if present
+                             if (!is.null(loc)) {
+                                 message("Result URL: ", loc)
+                             }
+                             stop(e)
+                         }
+                )
+            }
+        }
+        ## Return the location header, if it exists
+        invisible(loc)
+    } else if (code == 201) {
+        ## 201 Location: return the Location header
+        return(locationHeader(response))
+    } else if (code == 204 || length(response$content) == 0) {
+        ## If No Content, invisibly return NULL
+        invisible(NULL)
+    } else {
+        ## Parse the content
+        return(handleShoji(content(response)))
+    }
+}
+
+handleAPIfailure <- function(code, response) {
+    if (code == 401) {
+        halt("You are not authenticated. Please `login()` and try again.")
+    } else if (code == 410) {
+        halt(
+            "The API resource at ",
+            response$url,
+            " has moved permanently. Please upgrade crunch to the ",
+            "latest version."
+        )
+    } else if (code == 503 && response$request$method == "GET" &&
+               "retry-after" %in% tolower(names(response$headers))) {
+        ## Server is busy and telling us to retry the request again after
+        ## some period.
+        wait <- get_header("Retry-After", response$headers)
+        message("This request is taking longer than expected. Please stand by...")
+        Sys.sleep(as.numeric(wait))
+        ## TODO: resend request headers? Or, include the request to evaluate
+        ## inside this function, do match.call at the beginning, and re-eval?
+        return(crGET(response$url))
+    }
+    msg <- http_status(response)$message
+    if (code == 404) {
+        # Add the URL that was "not found" (there isn't going to be any
+        # useful response content message)
+        msg2 <- response$url
+    } else {
+        msg2 <- try(content(response)$message, silent = TRUE)
+    }
+    if (!is.error(msg2)) {
+        msg <- paste(msg, msg2, sep = ": ")
+    }
+    if (code == 409 && grepl("current editor", msg)) {
+        halt(
+            "You are not the current editor of this dataset. `unlock()` ",
+            "it and try again."
+        )
+    }
+    halt(msg)
+    
 }
 
 get_header <- function(x, headers, default = NULL) {
