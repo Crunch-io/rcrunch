@@ -157,6 +157,7 @@ check_brand_colors <- function(brand_colors) {
             serialPaste(dQuote(brand_labels), collapse = "and")
         )
     }
+    brand_colors
 }
 
 #' @rdname crunchBox
