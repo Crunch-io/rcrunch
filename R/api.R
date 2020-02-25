@@ -167,7 +167,6 @@ handleAPIfailure <- function(code, response) {
         )
     }
     halt(msg)
-    
 }
 
 get_header <- function(x, headers, default = NULL) {
