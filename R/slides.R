@@ -217,7 +217,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     title = "Cyl and Weight",
 #'     subtitle = "2017 Data"
 #' )
-#' 
+#'
 #' # Grouped bar plot
 #' newSlide(
 #'     main_deck,
@@ -229,7 +229,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     ),
 #'     subtitle = "2017 Data"
 #' )
-#' 
+#'
 #' # Horizontal stacked bars
 #' newSlide(
 #'     main_deck,
@@ -240,7 +240,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     ),
 #'     subtitle = "2017 Data"
 #' )
-#' 
+#'
 #' # A donut is only suitable for a single variable
 #' newSlide(
 #'     main_deck,
