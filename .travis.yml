@@ -29,7 +29,7 @@ matrix:
       - Rscript -e 'covr::codecov()'
       - R CMD INSTALL $PKG_TARBALL
       - export _R_CHECK_LENGTH_1_LOGIC2_=false # can be remove when https://github.com/jimhester/lintr/issues/377 is merged
-      - Rscript -e 'devtools::install_github("lintr")' # can be removed after new release
+      - Rscript -e 'devtools::install_github("jimhester/lintr")' # can be removed after new release
       - Rscript -e 'lintr::lint_package()'
       - bash pkgdown.sh
   - os: linux
