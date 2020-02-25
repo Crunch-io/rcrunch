@@ -30,3 +30,32 @@ A list of \code{SubvariableDefinition}s appropriate for use in \code{deriveArray
 \description{
 Create
 }
+\examples{
+\dontrun{
+login()
+data <- data.frame(
+    wave = factor(c("a", "b", "c", "d", "e"))
+)
+
+ds <- newDataset(data, "Sliding Categories")
+
+# Make an MR variable where subvariable is 1 step apart, and with 3 categories wide
+# and name subvariables with vector 
+ds$wave_step1_wide3 <- deriveArray(
+   slideCategories(ds$wave, step = 1, width = 3, name = c("a - c", "b - d", "c - e")),
+   "Sliding example 1"
+)
+
+# You can also make names (and other subvariable metadat like alias or description) 
+# with a function:
+ds$wave_step2_wide2 <- deriveArray(
+   slideCategories(
+     ds$wave, 
+     step = 2, 
+     width = 2, 
+     name = function(x) paste(x[1], "-", x[length(x)]),
+     "Sliding example 2"
+   )
+)
+}
+}
