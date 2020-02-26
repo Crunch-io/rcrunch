@@ -213,7 +213,7 @@ with_mock_crunch({
     test_that("deriveArray with subvariables creates a VariableDefinition", {
         expect_json_equivalent(
             deriveArray(
-                subvariables = list(SubvariableDefinition(ds$gender == "Male", name = "male")), 
+                subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")), 
                 name = "Gender MR"
             ),
             list(
@@ -330,7 +330,7 @@ with_test_authentication({
     whereas("deriveArray with subvariables functions as expected", {
         ds <- newDataset(mrdf)
         ds$mrVar <- deriveArray(
-            list(SubvariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias")), 
+            list(VariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias")), 
             name = "MR Variable"
         )
         

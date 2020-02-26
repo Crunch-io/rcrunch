@@ -5,7 +5,7 @@
 #' @param variable A categorical crunch variable
 #' @param step number of categories between starting points of groups
 #' @param width number of categories wide the grouping should be
-#' @param ... additional attributes to be included in the `SubvariableDefinition`,
+#' @param ... additional attributes to be included in the `VariableDefinition`,
 #'     can be either functions that take the category names to be included in the 
 #'     sliding group and returns a single string, or a character vector the same length 
 #'     as the number of subvariables that will be created.
@@ -14,7 +14,7 @@
 #' @param useNA whether to use missing categories from the original variable (defaults
 #'     to `FALSE`)
 #'
-#' @return A list of `SubvariableDefinition`s appropriate for use in `deriveArray()`
+#' @return A list of `VariableDefinition`s appropriate for use in `deriveArray()`
 #' @export
 #'
 #' @examples
@@ -54,11 +54,11 @@ slideCategories <- function(variable, step, width, ..., complete = TRUE, useNA =
   subvar_meta <- sliding_subvar_meta(list(...), cat_groups)
 
   lapply(seq_along(cat_groups), function(iii) {
-    call <- list(x = variable %in% cat_groups[[iii]])
+    call <- list(data = variable %in% cat_groups[[iii]])
     for (nnn in names(subvar_meta)) {
       call[[nnn]] <- subvar_meta[[nnn]](cat_groups[[iii]])
     }
-    do.call(SubvariableDefinition, call)
+    do.call(VariableDefinition, call)
   })
 }
 

@@ -4,8 +4,6 @@
 \name{is.VariableDefinition}
 \alias{is.VariableDefinition}
 \alias{is.VarDef}
-\alias{is.SubvariableDefinition}
-\alias{is.SubvarDef}
 \alias{is.dataset}
 \alias{is.CrunchExpr}
 \alias{is.Expr}
@@ -27,10 +25,6 @@
 is.VariableDefinition(x)
 
 is.VarDef(x)
-
-is.SubvariableDefinition(x)
-
-is.SubvarDef(x)
 
 is.dataset(x)
 

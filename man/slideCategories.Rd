@@ -13,7 +13,7 @@ slideCategories(variable, step, width, ..., complete = TRUE, useNA = FALSE)
 
 \item{width}{number of categories wide the grouping should be}
 
-\item{...}{additional attributes to be included in the \code{SubvariableDefinition},
+\item{...}{additional attributes to be included in the \code{VariableDefinition},
 can be either functions that take the category names to be included in the
 sliding group and returns a single string, or a character vector the same length
 as the number of subvariables that will be created.}
@@ -25,7 +25,7 @@ as the number of subvariables that will be created.}
 to \code{FALSE})}
 }
 \value{
-A list of \code{SubvariableDefinition}s appropriate for use in \code{deriveArray()}
+A list of \code{VariableDefinition}s appropriate for use in \code{deriveArray()}
 }
 \description{
 Create

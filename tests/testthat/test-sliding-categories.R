@@ -88,23 +88,23 @@ with_mock_crunch({
     expect_equal(
       slideCategories(ds$gender, 1, 1, name = c("m", "f")),
       list(
-        SubvarDef(ds$gender %in% "Male", name = "m"),
-        SubvarDef(ds$gender %in% "Female", name = "f")
+        VarDef(ds$gender %in% "Male", name = "m"),
+        VarDef(ds$gender %in% "Female", name = "f")
       )
     )
     
     expect_equal(
       slideCategories(ds$gender, 1, 2, name = "b"),
       list(
-        SubvarDef(ds$gender %in% c("Male", "Female"), name = "b")
+        VarDef(ds$gender %in% c("Male", "Female"), name = "b")
       )
     )
     
     expect_equal(
       slideCategories(ds$gender, 1, 2, name = function(x) paste(x, collapse = "-"), useNA = TRUE),
       list(
-        SubvarDef(ds$gender %in% c("Male", "Female"), name = "Male-Female"),
-        SubvarDef(ds$gender %in% c("Female", "No Data"), name = "Female-No Data")
+        VarDef(ds$gender %in% c("Male", "Female"), name = "Male-Female"),
+        VarDef(ds$gender %in% c("Female", "No Data"), name = "Female-No Data")
       )
     )
   })

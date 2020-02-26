@@ -64,23 +64,6 @@ test_that("Can make a VarDef with no values", {
     )
 })
 
-test_that("SubvariableDefinition constructs", {
-    test_expr <- CrunchExpr(dataset_url = "blah")
-    expect_is(SubvariableDefinition(test_expr), "SubvariableDefinition")
-    expect_is(SubvarDef(test_expr), "SubvariableDefinition")
-    expect_identical(class(SubvarDef(test_expr, name = "foo")), "SubvariableDefinition")
-    expect_equivalent(
-        SubvarDef(test_expr, name = "Short", description = "More verbose"),
-        list(references = list(name = "Short", description = "More verbose"))
-    )
-})
-
-test_that("SubvariableDefinition errors", {
-    expect_error(
-        SubvariableDefinition(1),
-        "SubvariableDefinition only supports `CrunchExpr` objects."
-    )
-})
 
 with_test_authentication({
     ds <- newDataset(df)

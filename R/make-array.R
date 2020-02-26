@@ -253,12 +253,14 @@ deriveArray <- function(subvariables, name, selections, ...) {
         subvariables <- allVariables(subvariables)
     }
     
-    # if it's a list, it could contain subvariable defintions:
+    # if it's a list, it could contain variable definitions:
     if (is.list(subvariables)) {
         subvariables <- subvariables[lengths(subvariables) > 0] # remove NULLs (from eg slider)
         subvariables <- lapply(subvariables, function(x) {
-            if (is.SubvarDef(x)) {
-                zcl(x)
+            if (is.VarDef(x)) {
+                out <- x$derivation
+                out$references <- x[names(x) != "derivation"]
+                out
             } else {
                 list(variable = urls(x))
             }
