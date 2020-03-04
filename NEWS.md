@@ -1,5 +1,9 @@
 # crunch (development version)
 
+# crunch 1.26.3
+* Exporting a Deck requires (and now includes) a valid JSON body in its request.
+* Documentation for `newSlide` includes examples of `vizType` settings and other improvements.
+
 # crunch 1.26.2
 * A new `copyFolders()` function that copies folders and variable order from one dataset to another (similar to `copyOrder()` which was deprecated)
 * Slides in decks can be manipulated more robustly (and their filters can be removed or added with `filters(slide_object) <- NULL` or `filters(slide_object) <- filter_object`) 
