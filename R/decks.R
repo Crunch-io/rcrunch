@@ -256,6 +256,6 @@ exportDeck <- function(deck, file, format = c("xlsx", "pptx", "json")) {
     if (missing(file)) {
         file <- paste0(name(deck), ".", format)
     }
-    dl_link <- crPOST(url, config = add_headers(`Accept` = accept))
+    dl_link <- crPOST(url, body = toJSON(ShojiEntity()), config = add_headers(`Accept` = accept))
     crDownload(dl_link, file)
 }
