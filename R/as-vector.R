@@ -117,9 +117,13 @@ parse_column <- list(
     },
     categorical_array = function(col, variable, mode) {
         out <- columnParser("categorical")(unlist(col), variable, mode)
-        out <- as.data.frame(matrix(out,
-            ncol = length(tuple(variable)$subvariables), byrow = TRUE
-        ))
+        ncols <- length(tuple(variable)$subvariables)
+        nvals <- length(out)
+        out <- lapply(seq_len(ncols), function(iii) {
+            out[seq(iii, to = nvals, by = ncols)]
+        })
+        out <- as.data.frame(out)
+        
         if (namekey(variable) == "alias") {
             names(out) <- aliases(subvariables(variable))
         } else {
