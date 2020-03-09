@@ -54,10 +54,10 @@ slideCategories <- function(variable, step, width, ..., complete = TRUE, useNA =
   
   subvar_meta <- sliding_subvar_meta(list(...), cat_groups)
 
-  lapply(seq_along(cat_groups), function(iii) {
-    call <- list(data = variable %in% cat_groups[[iii]])
-    for (nnn in names(subvar_meta)) {
-      call[[nnn]] <- subvar_meta[[nnn]](cat_groups[[iii]])
+  lapply(seq_along(cat_groups), function(group) {
+    call <- list(data = variable %in% cat_groups[[group]])
+    for (group_name in names(subvar_meta)) {
+      call[[group_name]] <- subvar_meta[[group_name]](cat_groups[[group]])
     }
     do.call(VariableDefinition, call)
   })
@@ -68,8 +68,8 @@ slide_over <- function(x, step, width, complete) {
   if (step < 1) halt("'step' must be a positive number")
   if (width < 1) halt("'width' must be a positive number")
   start <- seq(1, length(x), by = step)
-  out <- lapply(start, function(iii) {
-    sequence <- seq(iii, iii + width - 1)
+  out <- lapply(start, function(step_pos) {
+    sequence <- seq(step_pos, step_pos + width - 1)
     sequence <- sequence[sequence <= length(x)]
     x[sequence]
   })
