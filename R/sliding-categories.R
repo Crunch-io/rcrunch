@@ -67,6 +67,7 @@ slide_over <- function(x, step, width, complete) {
   if (length(x) == 0) halt("No categories found to slide over")
   if (step < 1) halt("'step' must be a positive number")
   if (width < 1) halt("'width' must be a positive number")
+  if (width > length(x)) halt("Cannot slide because 'width' is larger than number of categories.")
   start <- seq(1, length(x), by = step)
   out <- lapply(start, function(step_pos) {
     sequence <- seq(step_pos, step_pos + width - 1)

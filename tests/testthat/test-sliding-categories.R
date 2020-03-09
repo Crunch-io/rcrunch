@@ -21,11 +21,6 @@ test_that("slide_over works in typical cases", {
     slide_over(letters[1:5], step = 2, width = 3, complete = TRUE),
     list(c("a", "b", "c"), c("c", "d", "e"))
   )
-  
-  expect_equal(
-    slide_over(letters[1:5], step = 1, width = 100, complete = TRUE),
-    list()
-  )
 })
 
 test_that("slide_over fails correctly", {
@@ -42,6 +37,11 @@ test_that("slide_over fails correctly", {
   expect_error(
     slide_over(letters[1:5], step = 2, width = 0, complete = TRUE),
     "'width' must be a positive number"
+  )
+  
+  expect_error(
+    slide_over(letters[1:5], step = 1, width = 100, complete = TRUE),
+    "Cannot slide because 'width' is larger than number of categories."
   )
 })
 
