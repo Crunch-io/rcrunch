@@ -77,6 +77,8 @@ with_mock_crunch({
     test_that("as.vector on Categorical Array", {
         expect_true(is.CA(ds$catarray))
         expect_true(is.data.frame(as.vector(ds$catarray)))
+        # if subvar3 doesn't have correct factor levels, there may have been
+        # an accidental cast to string
         expect_identical(as.vector(ds$catarray), ca.values)
     })
 
