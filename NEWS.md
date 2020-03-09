@@ -1,4 +1,5 @@
 # crunch (development version)
+* crunch will work with upcoming changes to `stringsAsFactors` defaults (#402).
 
 # crunch 1.26.3
 * Exporting a Deck requires (and now includes) a valid JSON body in its request.

@@ -14,8 +14,8 @@ ca.values <- data.frame(
     levels = c("A", "B"), class = "factor"
     ),
     subvar3 = structure(c(
-        1L, NA, 1L, 2L, NA, 1L, 2L, NA, 1L, NA, 2L, 1L, 1L, 2L,
-        1L, 1L, 2L, 1L, NA, 1L, 2L, 1L, 1L, 1L, 2L
+        1L, NA, 1L, 1L, NA, 1L, 1L, NA, 1L, NA, 1L, 1L, 1L, 1L,
+        1L, 1L, 1L, 1L, NA, 1L, 1L, 1L, 1L, 1L, 1L
     ),
     levels = c("A", "B"), class = "factor"
     )
@@ -35,8 +35,8 @@ mr.values <- data.frame(
     levels = c("0.0", "1.0"), class = "factor"
     ),
     subvar3 = structure(c(
-        1L, NA, 1L, 2L, NA, 1L, 2L, NA, 1L, NA, 2L, 1L, 1L, 2L,
-        1L, 1L, 2L, 1L, NA, 1L, 2L, 1L, 1L, 1L, 2L
+        1L, NA, 1L, 1L, NA, 1L, 1L, NA, 1L, NA, 1L, 1L, 1L, 1L,
+        1L, 1L, 1L, 1L, NA, 1L, 1L, 1L, 1L, 1L, 1L
     ),
     levels = c("0.0", "1.0"), class = "factor"
     )
@@ -52,8 +52,8 @@ mr.ids <- data.frame(
         -1, 1, 2, 1, 1, 1, -1, 1, -1, 1, 2
     ),
     subvar3 = c(
-        1, -1, 1, 2, -1, 1, 2, -1, 1, -1, 2, 1, 1, 2,
-        1, 1, 2, 1, -1, 1, 2, 1, 1, 1, 2
+        1, -1, 1, 1, -1, 1, 1, -1, 1, -1, 1, 1, 1, 1,
+        1, 1, 1, 1, -1, 1, 1, 1, 1, 1, 1
     )
 )
 
@@ -77,6 +77,8 @@ with_mock_crunch({
     test_that("as.vector on Categorical Array", {
         expect_true(is.CA(ds$catarray))
         expect_true(is.data.frame(as.vector(ds$catarray)))
+        # if subvar3 doesn't have correct factor levels, there may have been
+        # an accidental cast to string
         expect_identical(as.vector(ds$catarray), ca.values)
     })
 
