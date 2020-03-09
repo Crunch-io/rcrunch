@@ -104,32 +104,8 @@ crunchBox <- function(dataset,
     payload$where <- variablesFilter(dataset)
 
     ## Add colors if they exist to the payload
-    brand_labels <- c("primary", "secondary", "message")
     if (!missing(brand_colors)) {
-        if (!vectorOrList(brand_colors, "character")) {
-            halt(
-                sQuote("brand_colors"), " must be character vector or list",
-                " of characters"
-            )
-        }
-        if (length(brand_colors) > 3) {
-            halt(sQuote("brand_colors"), " must be at most 3 elements long")
-        }
-
-        # ensure is a list of valid colors
-        brand_colors <- lapply(brand_colors, validHexColor)
-
-        # if there are no names, name them according to position
-        # if there are names, check that they are the right ones.
-        if (is.null(names(brand_colors))) {
-            names(brand_colors) <- brand_labels[seq_along(brand_colors)]
-        } else if (any(!names(brand_colors) %in% brand_labels)) {
-            halt(
-                "If ", sQuote("brand_colors"), " is a named list, it must",
-                " contain only ",
-                serialPaste(dQuote(brand_labels), collapse = "and")
-            )
-        }
+        brand_colors <- check_brand_colors(brand_colors)
 
         payload$display_settings$palette$brand_colors <- brand_colors
     }
@@ -153,6 +129,35 @@ crunchBox <- function(dataset,
         body = toJSON(do.call("wrapEntity", payload))
     )
     return(out)
+}
+
+check_brand_colors <- function(brand_colors) {
+    brand_labels <- c("primary", "secondary", "message")
+    if (!vectorOrList(brand_colors, "character")) {
+        halt(
+            sQuote("brand_colors"), " must be character vector or list",
+            " of characters"
+        )
+    }
+    if (length(brand_colors) > 3) {
+        halt(sQuote("brand_colors"), " must be at most 3 elements long")
+    }
+
+    # ensure is a list of valid colors
+    brand_colors <- lapply(brand_colors, validHexColor)
+
+    # if there are no names, name them according to position
+    # if there are names, check that they are the right ones.
+    if (is.null(names(brand_colors))) {
+        names(brand_colors) <- brand_labels[seq_along(brand_colors)]
+    } else if (any(!names(brand_colors) %in% brand_labels)) {
+        halt(
+            "If ", sQuote("brand_colors"), " is a named list, it must",
+            " contain only ",
+            serialPaste(dQuote(brand_labels), collapse = "and")
+        )
+    }
+    brand_colors
 }
 
 #' @rdname crunchBox
