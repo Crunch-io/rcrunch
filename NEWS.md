@@ -1,4 +1,5 @@
 # crunch (development version)
+* crunch will work with upcoming changes to `stringsAsFactors` defaults (#402).
 
 # crunch 1.26.2
 * A new `copyFolders()` function that copies folders and variable order from one dataset to another (similar to `copyOrder()` which was deprecated)
