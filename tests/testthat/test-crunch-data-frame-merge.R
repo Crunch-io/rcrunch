@@ -6,7 +6,7 @@ with_mock_crunch({
 
     test_that("the most basic case of merging a CrunchDataFarme with a data.frame", {
         ds_df <- as.data.frame(ds)
-        local_df <- data.frame(gender = c("Male", "Female"), new = "new")
+        local_df <- data.frame(gender = factor(c("Male", "Female")), new = factor("new"))
         expect_silent(merged_df <- merge(ds_df,
             local_df,
             by.x = "gender",
