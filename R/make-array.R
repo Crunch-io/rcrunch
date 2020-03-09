@@ -252,12 +252,27 @@ deriveArray <- function(subvariables, name, selections, ...) {
         ## as in, if the list of variables is a [ extraction from a Dataset
         subvariables <- allVariables(subvariables)
     }
-    subvariables <- urls(subvariables)
-
+    
+    # if it's a list, it could contain variable definitions:
+    if (is.list(subvariables)) {
+        subvariables <- subvariables[lengths(subvariables) > 0] # remove NULLs (from eg slider)
+        subvariables <- lapply(subvariables, function(x) {
+            if (is.VarDef(x)) {
+                out <- x$derivation
+                out$references <- x[names(x) != "derivation"]
+                out
+            } else {
+                list(variable = urls(x))
+            }
+        })
+    } else { # but ShojiCatalogs don't give their urls when lapplying, so treat differently
+        subvariables <- lapply(urls(subvariables), function(x) list(variable = x))
+    }
+    
     subvarids <- as.character(seq_along(subvariables))
     derivation <- zfunc("array", zfunc(
         "select",
-        list(map = structure(lapply(subvariables, function(x) list(variable = x)),
+        list(map = structure(subvariables,
             .Names = subvarids
         )),
         list(value = I(subvarids))

@@ -3,7 +3,7 @@
         ## We're not adding, we're updating.
         return(.updateValues(x, i, value))
     } else {
-        if (inherits(value, "VariableDefinition")) {
+        if (is.VarDef(value)) {
             ## Just update its alias with the one we're setting
             value$alias <- i
             ## But also check to make sure it has a name, and use `i` if not

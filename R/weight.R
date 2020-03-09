@@ -36,7 +36,7 @@ weight <- function(x) {
 `weight<-` <- function(x, value) {
     stopifnot(is.dataset(x))
 
-    if (inherits(value, "VariableDefinition")) {
+    if (is.VarDef(value)) {
         x <- addVariables(x, value)
         value <- x[[value$name]]
     }

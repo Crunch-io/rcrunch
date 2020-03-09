@@ -64,6 +64,7 @@ test_that("Can make a VarDef with no values", {
     )
 })
 
+
 with_test_authentication({
     ds <- newDataset(df)
     test_that("Wrapping VarDef has same result as just ds<-", {
