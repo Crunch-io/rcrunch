@@ -1,4 +1,7 @@
 # crunch (development version)
+* Can now `deriveArray()` using expressions to create the subvariables.
+* New function `slideCategories()` helps you create overlapping categorical 
+variables (#396).
 
 # crunch 1.26.2
 * A new `copyFolders()` function that copies folders and variable order from one dataset to another (similar to `copyOrder()` which was deprecated)
