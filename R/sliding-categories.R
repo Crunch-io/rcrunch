@@ -1,6 +1,7 @@
 #' Create sliding subvariable definitions 
 #'
-#' Create 
+#' Create a multiple response array variable by sliding through category levels
+#' and selecting potentially overlapping sets of categories.
 #'
 #' @param variable A categorical crunch variable
 #' @param step number of categories between starting points of groups

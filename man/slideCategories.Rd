@@ -28,7 +28,8 @@ to \code{FALSE})}
 A list of \code{VariableDefinition}s appropriate for use in \code{deriveArray()}
 }
 \description{
-Create
+Create a multiple response array variable by sliding through category levels
+and selecting potentially overlapping sets of categories.
 }
 \examples{
 \dontrun{
