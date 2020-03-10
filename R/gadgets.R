@@ -30,6 +30,8 @@ makeArrayGadget <- function() {
 callFromOtherPackage <- function(call, pkg) {
     # Find the function of the same name in the crunchy package and call it instead
     function_name <- as.character(call[[1]])
+    # remove namespacing if included
+    function_name <- function_name[!(function_name %in% c("crunch", "::", ":::"))]
     if (hasFunction(function_name, pkg)) {
         call[[1]] <- get(function_name, asNamespace(pkg))
     } else {
