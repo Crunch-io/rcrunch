@@ -6,17 +6,17 @@ test_that("slide_over works in typical cases", {
     slide_over(letters[1:5], step = 1, width = 2, complete = TRUE),
     list(c("a", "b"), c("b", "c"), c("c", "d"), c("d", "e"))
   )
-  
+
   expect_equal(
     slide_over(letters[1:5], step = 1, width = 2, complete = FALSE),
     list(c("a", "b"), c("b", "c"), c("c", "d"), c("d", "e"), "e")
   )
-  
+
   expect_equal(
     slide_over(letters[1:5], step = 3, width = 1, complete = TRUE),
     list(c("a"), c("d"))
   )
-  
+
   expect_equal(
     slide_over(letters[1:5], step = 2, width = 3, complete = TRUE),
     list(c("a", "b", "c"), c("c", "d", "e"))
@@ -28,17 +28,17 @@ test_that("slide_over fails correctly", {
     slide_over(NULL, step = 1, width = 2, complete = TRUE),
     "No categories found to slide over"
   )
-  
+
   expect_error(
     slide_over(letters[1:5], step = 0, width = 2, complete = TRUE),
     "'step' must be a positive number"
   )
-  
+
   expect_error(
     slide_over(letters[1:5], step = 2, width = 0, complete = TRUE),
     "'width' must be a positive number"
   )
-  
+
   expect_error(
     slide_over(letters[1:5], step = 1, width = 100, complete = TRUE),
     "Cannot slide because 'width' is larger than number of categories."
@@ -50,7 +50,7 @@ test_that("sliding_subvar_meta works correctly", {
     list(
       name = c("a - c", "c - e"),
       description = function(x) paste(x, collapse = ", ")
-    ), 
+    ),
     list(c("a", "b", "c"), c("c", "d", "e"))
   )
   expect_equal(length(meta), 2)
@@ -66,24 +66,24 @@ test_that("sliding_subvar_meta works correctly", {
 test_that("sliding_subvar_meta fails correctly", {
   expect_error(
     meta <- sliding_subvar_meta(
-      list(name = 1), 
+      list(name = 1),
       list(c("a", "b", "c"), c("c", "d", "e"))
-    ), 
+    ),
     "Expected either function or character vector"
   )
-  
+
   expect_error(
     meta <- sliding_subvar_meta(
-      list(name = c("a - c", "d - e", "XXX")), 
+      list(name = c("a - c", "d - e", "XXX")),
       list(c("a", "b", "c"), c("c", "d", "e"))
-    ), 
+    ),
     "Expected subvariable meta object to be of length"
   )
 })
 
 with_mock_crunch({
   ds <- loadDataset("ECON.sav")
-  
+
   test_that("slidingCategories creates expected VariableDefinition", {
     expect_equal(
       slideCategories(ds$gender, 1, 1, name = c("m", "f")),
@@ -92,14 +92,14 @@ with_mock_crunch({
         VarDef(ds$gender %in% "Female", name = "f")
       )
     )
-    
+
     expect_equal(
       slideCategories(ds$gender, 1, 2, name = "b"),
       list(
         VarDef(ds$gender %in% c("Male", "Female"), name = "b")
       )
     )
-    
+
     expect_equal(
       slideCategories(ds$gender, 1, 2, name = function(x) paste(x, collapse = "-"), useNA = TRUE),
       list(

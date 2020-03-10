@@ -123,7 +123,7 @@ parse_column <- list(
             out[seq(iii, to = nvals, by = ncols)]
         })
         out <- as.data.frame(out)
-        
+
         if (namekey(variable) == "alias") {
             names(out) <- aliases(subvariables(variable))
         } else {

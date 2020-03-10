@@ -209,17 +209,17 @@ with_mock_crunch({
         )
         expect_equivalent(varDef, expected)
     })
-    
+
     test_that("deriveArray with subvariables creates a VariableDefinition", {
         expect_json_equivalent(
             deriveArray(
-                subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")), 
+                subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")),
                 name = "Gender MR"
             ),
             list(
                 name = "Gender MR",
                 derivation = list(
-                    `function` = "array", 
+                    `function` = "array",
                     args = list(list(
                         `function` = "select",
                         args = list(list(
@@ -326,14 +326,14 @@ with_test_authentication({
             expect_equivalent(dim(as.vector(ds$mr_5)), c(nrow(ds), 5))
         })
     })
-    
+
     whereas("deriveArray with subvariables functions as expected", {
         ds <- newDataset(mrdf)
         ds$mrVar <- deriveArray(
-            list(VariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias")), 
+            list(VariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias")),
             name = "MR Variable"
         )
-        
+
         test_that("can make MR with formMR", {
             expect_identical(names(ds), c(names(mrdf), "mrVar"))
             expect_true(is.MR(ds$mrVar))

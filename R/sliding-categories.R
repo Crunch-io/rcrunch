@@ -1,4 +1,4 @@
-#' Create sliding subvariable definitions 
+#' Create sliding subvariable definitions
 #'
 #' Create a multiple response array variable by sliding through category levels
 #' and selecting potentially overlapping sets of categories.
@@ -7,8 +7,8 @@
 #' @param step number of categories between starting points of groups
 #' @param width number of categories wide the grouping should be
 #' @param ... additional attributes to be included in the `VariableDefinition`,
-#'     can be either functions that take the category names to be included in the 
-#'     sliding group and returns a single string, or a character vector the same length 
+#'     can be either functions that take the category names to be included in the
+#'     sliding group and returns a single string, or a character vector the same length
 #'     as the number of subvariables that will be created.
 #' @param complete whether to only include category groupings that are as wide as width
 #'     (defaults to `TRUE`)
@@ -24,23 +24,23 @@
 #' data <- data.frame(
 #'     wave = factor(c("a", "b", "c", "d", "e"))
 #' )
-#' 
+#'
 #' ds <- newDataset(data, "Sliding Categories")
-#' 
+#'
 #' # Make an MR variable where subvariable is 1 step apart, and with 3 categories wide
-#' # and name subvariables with vector 
+#' # and name subvariables with vector
 #' ds$wave_step1_wide3 <- deriveArray(
 #'    slideCategories(ds$wave, step = 1, width = 3, name = c("a - c", "b - d", "c - e")),
 #'    "Sliding example 1"
 #' )
-#' 
-#' # You can also make names (and other subvariable metadata like alias or description) 
+#'
+#' # You can also make names (and other subvariable metadata like alias or description)
 #' # with a function:
 #' ds$wave_step2_wide2 <- deriveArray(
 #'    slideCategories(
-#'      ds$wave, 
-#'      step = 2, 
-#'      width = 2, 
+#'      ds$wave,
+#'      step = 2,
+#'      width = 2,
 #'      name = function(x) paste(x[1], "-", x[length(x)])
 #'    ),
 #'    "Sliding example 2"
@@ -49,9 +49,9 @@
 slideCategories <- function(variable, step, width, ..., complete = TRUE, useNA = FALSE) {
   cats <- categories(variable)
   if (!useNA) cats <- cats[!is.na(cats)]
-  
+
   cat_groups <- slide_over(names(cats), step, width, complete)
-  
+
   subvar_meta <- sliding_subvar_meta(list(...), cat_groups)
 
   lapply(seq_along(cat_groups), function(group) {
@@ -85,15 +85,17 @@ sliding_subvar_meta <- function(subvar_meta, cat_groups) {
   subvar_meta <- lapply(subvar_meta, function(meta) {
     if (is.function(meta)) return(meta)
     if (!is.character((meta))) {
-      halt("Expected either function or character vector to describe sliding subariable's metadata.")
+      halt(
+        "Expected either function or character vector to describe sliding subariable's metadata."
+      )
     }
     if (length(meta) != length(cat_groups)) {
       halt(
-        "Expected subvariable meta object to be of length ", length(cat_groups), 
+        "Expected subvariable meta object to be of length ", length(cat_groups),
         " but found object of length ", length(meta), "."
       )
     }
-    
+
     function(x) {
       meta[match(list(x), cat_groups)]
     }

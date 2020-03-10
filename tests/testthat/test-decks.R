@@ -134,14 +134,14 @@ with_mock_crunch({
             expect_POST(
                 exportDeck(main_deck, format = "json"),
                 "https://app.crunch.io/api/datasets/1/decks/8ad8/export/",
-                body='{"element":"shoji:entity","body":{}}'),
+                body = '{"element":"shoji:entity","body":{}}'),
             "Accept: application/json"
         )
         expect_header(
             expect_POST(
                 exportDeck(main_deck, format = "xlsx"),
                 "https://app.crunch.io/api/datasets/1/decks/8ad8/export/",
-                body='{"element":"shoji:entity","body":{}}'
+                body = '{"element":"shoji:entity","body":{}}'
             ),
             "Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
@@ -149,7 +149,7 @@ with_mock_crunch({
             expect_POST(
                 exportDeck(main_deck, format = "pptx"),
                 "https://app.crunch.io/api/datasets/1/decks/8ad8/export/",
-                body='{"element":"shoji:entity","body":{}}'
+                body = '{"element":"shoji:entity","body":{}}'
             ),
             "Accept: application/vnd.openxmlformats-officedocument.presentationml.presentation"
         )

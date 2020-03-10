@@ -48,7 +48,7 @@ addSubvarDef <- function(var, subvar) {
         subvar <- list(subvar)
     }
 
-    vardefs <- vapply(subvar, is.VarDef, logical(1))
+    vardefs <- vapply(subvar, is.VarDef, logical(1)) # nolint
 
     out <- vector("list", length(subvar))
 
