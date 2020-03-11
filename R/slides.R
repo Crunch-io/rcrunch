@@ -197,7 +197,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' @param display_settings (optional) A list of display settings. If omitted,
 #' slide will be a table of column percentages with hypothesis test highlighting
 #' enabled. The most common setting used is `vizType`, which can be:
-#' `table`, `groupedBarPlot`, `stackedBarPlot`, `horizontalGroupedBarPlot`,
+#' `table`, `groupedBarPlot`, `stackedBarPlot`, `horizontalBarPlot`,
 #' `horizontalStackedBarPlot`, `donut`, and (if the second variable in the
 #' query formula is a wave variable) `timeplot`.
 #' In addition, `showValueLabels` (logical) controls whether the web app and
