@@ -22,7 +22,7 @@ similar to CrunchCube query}
 \item{display_settings}{(optional) A list of display settings. If omitted,
 slide will be a table of column percentages with hypothesis test highlighting
 enabled. The most common setting used is \code{vizType}, which can be:
-\code{table}, \code{groupedBarPlot}, \code{stackedBarPlot}, \code{horizontalGroupedBarPlot},
+\code{table}, \code{groupedBarPlot}, \code{stackedBarPlot}, \code{horizontalBarPlot},
 \code{horizontalStackedBarPlot}, \code{donut}, and (if the second variable in the
 query formula is a wave variable) \code{timeplot}.
 In addition, \code{showValueLabels} (logical) controls whether the web app and
