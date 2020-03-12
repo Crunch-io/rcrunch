@@ -1,4 +1,4 @@
-# crunch (development version)
+# crunch 1.26.3
 * Can now `deriveArray()` using expressions to create the subvariables.
 * New function `slideCategories()` helps you create overlapping categorical 
 variables (#396).
