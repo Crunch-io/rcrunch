@@ -117,7 +117,8 @@ test_options <- temp.options(
 
     crunch.email = crunch::envOrOption("test.user"),
     crunch.pw = crunch::envOrOption("test.pw"),
-    crunch.show.progress = FALSE
+    crunch.show.progress = FALSE,
+    crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE)
 )
 
 with_test_authentication <- function(expr) {
