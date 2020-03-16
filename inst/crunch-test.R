@@ -2,6 +2,9 @@ library(httptest)
 
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 
+if (crunch::envOrOption("test.verify.ssl") == FALSE) {
+    crunch::set_crunch_config(c(ssl_verifyhost = FALSE, ssl_verifypeer=FALSE), update = TRUE)
+}
 
 skip_on_local_backend <- function(message) {
     # if we are trying to skip when the backend is local

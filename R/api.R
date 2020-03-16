@@ -16,8 +16,7 @@ crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(),
         if (!is.null(payload)) try(cat("\n", payload, "\n"), silent = TRUE)
     }
     FUN <- get(http.verb, envir = asNamespace("httpcache"))
-    no_verify_ssl <- getOption("crunch.verify_ssl")=="FALSE"
-    x <- FUN(url, ..., config = c(get_crunch_config(), config, config(ssl_verifyhost = !no_verify_ssl, ssl_verifypeer=!no_verify_ssl)))
+    x <- FUN(url, ..., config = c(get_crunch_config(), config))
     out <- handleAPIresponse(x, special.statuses = status.handlers)
     return(out)
 }
