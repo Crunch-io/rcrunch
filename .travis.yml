@@ -8,9 +8,7 @@ cache: packages
 matrix:
   include:
   - os: linux
-    r: 3.3
-    # Ignore warnings in 3.3; this is mainly for the `median` method signature difference
-    warnings_are_errors: false
+    r: 3.4
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
       - _R_CHECK_TESTS_NLINES_=0
