@@ -93,7 +93,13 @@ options(
 
 or by setting the environment variables `R_TEST_USER`, `R_TEST_PW`, and `R_TEST_API`.
 
-If you are a Crunch developer serving a version of the API/backend with Vagrant, you will have best results if your R_TEST_API/test.api (1) is `local.crunch.io`, thanks to a mapping of localhost to that in your hosts file, and (2) you use http rather than https in order to avoid certificate errors. You might point at "http://local.crunch.io:8080/api/", for example. Some tests that cannot run successfully in the Vagrant environment will be skipped when run against a local.crunch.io URL.
+If you are a Crunch developer serving a version of the API/backend with Vagrant or Docker, you will have best results if your R_TEST_API/test.api (1) is `local.crunch.io`, thanks to a mapping of localhost to that in your hosts file. In order to avoid self-signed certificate errors use the environment variable `R_TEST_VERIFY_SSL=FALSE`. You might point at "https://local.crunch.io:8443/api/", for example. Some tests that cannot run successfully in the local environment will be skipped when run against a local.crunch.io URL.
+
+Example of local usage:
+
+```bash
+$ R_TEST_VERIFY_SSL=TRUE R_TEST_USER=magic.testuser@crunch.io R_TEST_PW=t0pSecretP@ssw0rD R_TEST_API=https://local.crunch.io:28443/api/ make test INTEGRATION=TRUE file=variable-summary
+```
 
 ### Updating documentation
 
