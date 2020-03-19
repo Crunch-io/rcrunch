@@ -298,13 +298,13 @@ with_test_authentication({
             c(name(u), my.name)
         ))
         expect_identical(
-            is.editor(members(tp)),
-            c(TRUE, FALSE)
+            is.editor(members(tp)[email(u)]),
+            c(FALSE)
         )
         is.editor(members(tp)[email(u)]) <- TRUE
         expect_identical(
-            is.editor(members(tp)),
-            c(TRUE, TRUE)
+            is.editor(members(tp)[email(u)]),
+            c(TRUE)
         )
     })
 
