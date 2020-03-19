@@ -263,16 +263,6 @@ with_test_authentication({
         expect_identical(self(myprojects[[name3]]), p_url)
     })
 
-    test_that("Get and set project icon", {
-        ico <- icon(pj)
-        # expect_true(nchar(ico) > 0) ## Unskip after #119305641 ships
-        icon(pj) <- "empty.png"
-        expect_false(icon(pj) == "empty.png")
-        expect_true(endsWith(icon(pj), ".png"))
-        expect_false(identical(icon(pj), ico))
-    })
-
-
     test_that("Can delete a project by URL", {
         myprojects <- refresh(myprojects)
         expect_true(p_url %in% urls(myprojects))
