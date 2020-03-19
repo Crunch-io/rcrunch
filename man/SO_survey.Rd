@@ -4,7 +4,8 @@
 \name{SO_survey}
 \alias{SO_survey}
 \title{R users who responded to the 2017 Stack Overflow developer survey}
-\format{A data frame with 1634 rows and 25 variables.
+\format{
+A data frame with 1634 rows and 25 variables.
 \describe{
 \item{Respondent}{Respondent ID number}
 \item{Professional}{Which of the following best describes you?}
@@ -29,7 +30,8 @@
 \item{TabsSpaces}{Tabs or spaces?}
 \item{WantWorkLanguage}{Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?}
 \item{HaveWorkedLanguage}{Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?}
-}}
+}
+}
 \source{
 \url{https://insights.stackoverflow.com/survey/}
 }
