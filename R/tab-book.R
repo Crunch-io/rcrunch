@@ -19,7 +19,7 @@
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
 #' @param ... Additional "options" passed to the tab book POST request.
-#' @param filter A [`filter`] or string with a filter's name to use in the tab 
+#' @param filter A [`filter`] or string with a filter's name to use in the tab
 #' book. `NULL`, the default will use the currently active filter.
 #' @return If "json" format is requested, the function returns an object of
 #' class `TabBookResult`, containing a list of `MultitableResult`
