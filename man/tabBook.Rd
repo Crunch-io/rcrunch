@@ -10,7 +10,8 @@ tabBook(
   weight = crunch::weight(dataset),
   format = c("json", "xlsx"),
   file,
-  ...
+  ...,
+  filter = NULL
 )
 }
 \arguments{
@@ -31,6 +32,9 @@ generated from the \code{multitable}'s name if one is not supplied and the
 "xlsx" format is requested. Not required for "json" format export.}
 
 \item{...}{Additional "options" passed to the tab book POST request.}
+
+\item{filter}{A \code{\link{filter}} or string with a filter's name to use in the tab
+book. \code{NULL}, the default will use the currently active filter.}
 }
 \value{
 If "json" format is requested, the function returns an object of

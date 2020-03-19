@@ -19,6 +19,8 @@
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
 #' @param ... Additional "options" passed to the tab book POST request.
+#' @param filter A [`filter`] or string with a filter's name to use in the tab 
+#' book. `NULL`, the default will use the currently active filter.
 #' @return If "json" format is requested, the function returns an object of
 #' class `TabBookResult`, containing a list of `MultitableResult`
 #' objects, which themselves contain `CrunchCube`s. If "xlsx" is requested,
@@ -36,7 +38,7 @@
 #' @importFrom jsonlite fromJSON
 #' @export
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
-                    format = c("json", "xlsx"), file, ...) {
+                    format = c("json", "xlsx"), file, ..., filter = NULL) {
     f <- match.arg(format)
     accept <- extToContentType(f)
     if (missing(file)) {
@@ -52,8 +54,17 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     if (!is.null(weight)) {
         weight <- self(weight)
     }
+
+    if (is.null(filter)) {
+        filter <- activeFilter(dataset)
+    } else if (is.character(filter)) {
+        filter_name <- filter
+        filter <- filters(dataset)[[filter]]
+        if (is.null(filter)) halt("Could not find filter named '", filter_name, "'")
+    }
+
     body <- list(
-        filter = zcl(activeFilter(dataset)),
+        filter = zcl(filter),
         weight = weight,
         options = list(...)
     )
