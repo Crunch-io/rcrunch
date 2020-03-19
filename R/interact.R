@@ -37,10 +37,12 @@ interactVariables <- function(..., name, collapse_missings = FALSE) {
     other_dots$name <- name
     other_dots$derivation <- zfunc(
         "interact_categories", 
-        lapply(vars, function(x) list(variable = urls(x))),
-        list(value = collapse_missings)
+        # unnaming prevents JSON request object getting numeric descriptors
+        unname(lapply(vars, function(x) list(variable = urls(x))))#, 
+        # list(value = collapse_missings) # if statement is temporary work around for https://www.pivotaltracker.com/story/show/171882266
     )
-
+    if (collapse_missings) other_dots$derivation$args[[2]] <- list(value = collapse_missings)
+    
     do.call(VariableDefinition, other_dots)
 }
 
