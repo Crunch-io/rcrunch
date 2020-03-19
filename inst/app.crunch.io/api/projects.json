@@ -32,7 +32,6 @@
             "view": true
         },
         "owner_id": "https://app.crunch.io/api/users/user1/",
-        "user_icon": false,
         "description": "Displays all the projects you have access to"
     }
 }
