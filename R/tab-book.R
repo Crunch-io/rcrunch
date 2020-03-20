@@ -64,7 +64,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     }
 
     body <- list(
-        filter = zcl(filter),
+        filter = list(self(filter)),
         weight = weight,
         options = list(...)
     )
