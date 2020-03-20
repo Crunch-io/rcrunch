@@ -20,7 +20,7 @@
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
 #' @param ... Additional "options" passed to the tab book POST request.
-#' More details can be found 
+#' More details can be found
 #' [in the crunch API documentation](
 #' https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options)
 #' @param filter [`filter`]s or strings with a filter's name to use in the tab
