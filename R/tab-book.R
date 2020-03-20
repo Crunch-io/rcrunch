@@ -20,6 +20,9 @@
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
 #' @param ... Additional "options" passed to the tab book POST request.
+#' More details can be found 
+#' [in the crunch API documentation](
+#' https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options)
 #' @param filter [`filter`]s or strings with a filter's name to use in the tab
 #' book. (`NULL` the default uses no filter)
 #' @return If "json" format is requested, the function returns an object of
@@ -59,7 +62,9 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     if (is.character(filter)) {
         filter_name <- filter
         available <- filter_name %in% names(filters(dataset))
-        if (any(!available)) halt("Could not find filter named: ", paste(filter_name[!available], collapse = ", "))
+        if (any(!available)) {
+            halt("Could not find filter named: ", paste(filter_name[!available], collapse = ", "))
+        }
         filter <- filters(dataset)[filter]
     }
 

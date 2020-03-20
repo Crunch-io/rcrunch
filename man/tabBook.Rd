@@ -32,7 +32,9 @@ Default is the currently applied \code{\link{weight}}.}
 generated from the \code{multitable}'s name if one is not supplied and the
 "xlsx" format is requested. Not required for "json" format export.}
 
-\item{...}{Additional "options" passed to the tab book POST request.}
+\item{...}{Additional "options" passed to the tab book POST request.
+More details can be found
+\href{https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options}{in the crunch API documentation}}
 
 \item{filter}{\code{\link{filter}}s or strings with a filter's name to use in the tab
 book. (\code{NULL} the default uses no filter)}
