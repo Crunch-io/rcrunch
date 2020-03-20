@@ -8,8 +8,9 @@
 #' workbook, you'll get a TabBookResult object, containing nested CrunchCube
 #' results. You can then further format these and construct custom tab reports.
 #' @param multitable a `Multitable` object
-#' @param dataset CrunchDataset, which may have been subsetted with a filter
-#' expression on the rows and a selection of variables on the columns.
+#' @param dataset CrunchDataset, which may have a selection of variables on the
+#' columns (ad-hoc filters are not supported, you must use existing named filter
+#' in the `filter` argument).
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `dataset`, or `NULL` for unweighted results.
 #' Default is the currently applied [`weight`].
@@ -20,7 +21,7 @@
 #' "xlsx" format is requested. Not required for "json" format export.
 #' @param ... Additional "options" passed to the tab book POST request.
 #' @param filter A [`filter`] or string with a filter's name to use in the tab
-#' book. `NULL`, the default will use the currently active filter.
+#' book.
 #' @return If "json" format is requested, the function returns an object of
 #' class `TabBookResult`, containing a list of `MultitableResult`
 #' objects, which themselves contain `CrunchCube`s. If "xlsx" is requested,
@@ -31,7 +32,7 @@
 #' @examples
 #' \dontrun{
 #' m <- newMultitable(~ gender + age4 + marstat, data = ds)
-#' tabBook(m, ds[ds$income > 1000000, ], format = "xlsx", file = "wealthy-tab-book.xlsx")
+#' tabBook(m, ds, format = "xlsx", file = "wealthy-tab-book.xlsx", filter = "wealthy")
 #' book <- tabBook(m, ds) # Returns a TabBookResult
 #' tables <- prop.table(book, 2)
 #' }
@@ -55,9 +56,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         weight <- self(weight)
     }
 
-    if (is.null(filter)) {
-        filter <- activeFilter(dataset)
-    } else if (is.character(filter)) {
+    if (is.character(filter)) {
         filter_name <- filter
         filter <- filters(dataset)[[filter]]
         if (is.null(filter)) halt("Could not find filter named '", filter_name, "'")

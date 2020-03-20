@@ -17,8 +17,9 @@ tabBook(
 \arguments{
 \item{multitable}{a \code{Multitable} object}
 
-\item{dataset}{CrunchDataset, which may have been subsetted with a filter
-expression on the rows and a selection of variables on the columns.}
+\item{dataset}{CrunchDataset, which may have a selection of variables on the
+columns (ad-hoc filters are not supported, you must use existing named filter
+in the \code{filter} argument).}
 
 \item{weight}{a CrunchVariable that has been designated as a potential
 weight variable for \code{dataset}, or \code{NULL} for unweighted results.
@@ -34,7 +35,7 @@ generated from the \code{multitable}'s name if one is not supplied and the
 \item{...}{Additional "options" passed to the tab book POST request.}
 
 \item{filter}{A \code{\link{filter}} or string with a filter's name to use in the tab
-book. \code{NULL}, the default will use the currently active filter.}
+book.}
 }
 \value{
 If "json" format is requested, the function returns an object of
@@ -58,7 +59,7 @@ results. You can then further format these and construct custom tab reports.
 \examples{
 \dontrun{
 m <- newMultitable(~ gender + age4 + marstat, data = ds)
-tabBook(m, ds[ds$income > 1000000, ], format = "xlsx", file = "wealthy-tab-book.xlsx")
+tabBook(m, ds, format = "xlsx", file = "wealthy-tab-book.xlsx", filter = "wealthy")
 book <- tabBook(m, ds) # Returns a TabBookResult
 tables <- prop.table(book, 2)
 }
