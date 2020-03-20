@@ -61,29 +61,3 @@ newProject <- function(name, members = NULL, catalog = projects(), ...) {
     stopifnot(is.project(x))
     .moveToFolder(x, value)
 }
-
-#' Get or set a project's icon
-#'
-#' This function allows you to change a project's icon. Note that you
-#' must first upload the icon to a website, as this function does not
-#' allow you to upload a local file.
-#' @param x a `ProjectFolder`
-#' @param value character file path of the icon image file to set
-#' @return The URL of the project's icon. The setter returns the
-#' project after having uploaded the specified file as the new icon.
-#' @name project-icon
-#' @export
-icon <- function(x) {
-    stopifnot(is.project(x))
-    return(x@body$icon)
-}
-
-#' @rdname project-icon
-#' @export
-`icon<-` <- function(x, value) {
-    crPUT(shojiURL(x, "views", "icon"),
-        body = list(icon = upload_file(value))
-    )
-    dropOnly(absoluteURL("../", self(x))) ## Invalidate catalog
-    return(refresh(x))
-}

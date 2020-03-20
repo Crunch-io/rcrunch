@@ -5,7 +5,6 @@
         "https://app.crunch.io/api/projects/project1/": {
             "name": "Project One",
             "description": "Long description text",
-            "icon": "",
             "permissions": {},
             "id": "project1",
             "type": "project"
@@ -13,7 +12,6 @@
         "https://app.crunch.io/api/projects/project3/": {
             "name": "Project Three",
             "description": "Long description text here as well",
-            "icon": "",
             "permissions": {},
             "id": "project3",
             "type": "project"
@@ -28,14 +26,12 @@
     },
     "body": {
         "name": "Projects catalog",
-        "icon": "",
         "owner": "https://app.crunch.io/api/users/user1/",
         "permissions": {
             "edit": true,
             "view": true
         },
         "owner_id": "https://app.crunch.io/api/users/user1/",
-        "user_icon": false,
         "description": "Displays all the projects you have access to"
     }
 }

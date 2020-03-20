@@ -10,8 +10,7 @@
     "description": "Details for a specific project",
     "body": {
         "name": "Project Two",
-        "description": "A nested project",
-        "icon": ""
+        "description": "A nested project"
     },
     "index": {
         "https://app.crunch.io/api/datasets/3/": {
