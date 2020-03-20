@@ -7,8 +7,7 @@
     },
     "body": {
         "name": "Personal Project",
-        "description": "Long description text",
-        "icon": ""
+        "description": "Long description text"
     },
     "index": {
         "https://app.crunch.io/api/datasets/1/": {

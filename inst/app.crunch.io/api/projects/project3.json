@@ -10,8 +10,7 @@
     "description": "Details for a specific project",
     "body": {
         "name": "Project Three",
-        "description": "Long description text here as well",
-        "icon": ""
+        "description": "Long description text here as well"
     },
     "index": {},
     "graph": []

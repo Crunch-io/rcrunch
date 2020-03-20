@@ -10,8 +10,7 @@
     "description": "Details for a specific project",
     "body": {
         "name": "Project Five",
-        "description": "An empty project",
-        "icon": ""
+        "description": "An empty project"
     },
     "index": {},
     "graph": []
