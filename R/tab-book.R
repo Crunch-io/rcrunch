@@ -53,7 +53,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         weight <- self(weight)
     }
     body <- list(
-        filter = list(c(zcl(activeFilter(dataset)), name = "Complex expression")),
+        filter = list(zcl(activeFilter(dataset))),
         weight = weight,
         options = list(...)
     )
