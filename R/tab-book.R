@@ -8,9 +8,9 @@
 #' workbook, you'll get a TabBookResult object, containing nested CrunchCube
 #' results. You can then further format these and construct custom tab reports.
 #' @param multitable a `Multitable` object
-#' @param dataset CrunchDataset, which may have a selection of variables on the
-#' columns (ad-hoc filters are not supported, you must use existing named filter
-#' in the `filter` argument).
+#' @param dataset CrunchDataset, which may have been subsetted with a filter
+#' expression on the rows and a selection of variables on the columns.
+#' Passing non-`NULL` to the `filter` argumet overrides the active filter.
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `dataset`, or `NULL` for unweighted results.
 #' Default is the currently applied [`weight`].
@@ -35,7 +35,7 @@
 #' @examples
 #' \dontrun{
 #' m <- newMultitable(~ gender + age4 + marstat, data = ds)
-#' tabBook(m, ds, format = "xlsx", file = "wealthy-tab-book.xlsx", filter = "wealthy")
+#' tabBook(m, ds[ds$income > 1000000, ], format = "xlsx", file = "wealthy-tab-book.xlsx")
 #' book <- tabBook(m, ds) # Returns a TabBookResult
 #' tables <- prop.table(book, 2)
 #' }
@@ -59,20 +59,24 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         weight <- self(weight)
     }
 
-    if (is.character(filter)) {
-        filter_name <- filter
-        available <- filter_name %in% names(filters(dataset))
-        if (any(!available)) {
-            halt("Could not find filter named: ", paste(filter_name[!available], collapse = ", "))
+    if (is.null(filter)) {
+        filter <- list(zcl(activeFilter(dataset)))
+    } else {
+        if (is.character(filter)) {
+            filter_name <- filter
+            available <- filter_name %in% names(filters(dataset))
+            if (any(!available)) {
+                halt("Could not find filter named: ", paste(filter_name[!available], collapse = ", "))
+            }
+            filter <- filters(dataset)[filter]
+        } else if (inherits(filter, "CrunchFilter")) {
+            filter <- list(filter)
         }
-        filter <- filters(dataset)[filter]
+        filter <- as.list(urls(filter))
     }
 
-    if (inherits(filter, "FilterCatalog")) filter <- urls(filter)
-    if (inherits(filter, "CrunchFilter")) filter <- self(filter)
-
     body <- list(
-        filter = unname(filter),
+        filter = filter,
         weight = weight,
         options = list(...)
     )

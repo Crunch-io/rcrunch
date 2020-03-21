@@ -17,9 +17,9 @@ tabBook(
 \arguments{
 \item{multitable}{a \code{Multitable} object}
 
-\item{dataset}{CrunchDataset, which may have a selection of variables on the
-columns (ad-hoc filters are not supported, you must use existing named filter
-in the \code{filter} argument).}
+\item{dataset}{CrunchDataset, which may have been subsetted with a filter
+expression on the rows and a selection of variables on the columns.
+Passing non-\code{NULL} to the \code{filter} argumet overrides the active filter.}
 
 \item{weight}{a CrunchVariable that has been designated as a potential
 weight variable for \code{dataset}, or \code{NULL} for unweighted results.
@@ -61,7 +61,7 @@ results. You can then further format these and construct custom tab reports.
 \examples{
 \dontrun{
 m <- newMultitable(~ gender + age4 + marstat, data = ds)
-tabBook(m, ds, format = "xlsx", file = "wealthy-tab-book.xlsx", filter = "wealthy")
+tabBook(m, ds[ds$income > 1000000, ], format = "xlsx", file = "wealthy-tab-book.xlsx")
 book <- tabBook(m, ds) # Returns a TabBookResult
 tables <- prop.table(book, 2)
 }
