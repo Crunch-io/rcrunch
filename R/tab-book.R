@@ -18,7 +18,7 @@
 #' @param file character local filename to write to. A default filename will be
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
-#' @param filter a Crunch `filter` object or a vector of names 
+#' @param filter a Crunch `filter` object or a vector of names
 #' of \code{\link{filters}} defined in the dataset.
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
@@ -57,7 +57,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     if (!is.null(weight)) {
         weight <- self(weight)
     }
-    flt <- filter
+
     if (!is.null(filter) & all(is.character(filter))) {
         filter_name <- filter
         available <- filter_name %in% names(filters(dataset))
@@ -66,15 +66,19 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         }
         filter <- filters(dataset)[filter]
     }
-    if (inherits(filter, "FilterCatalog")) filter <- lapply(urls(filter), function(x) list(filter=x))
-    if (inherits(filter, "CrunchFilter")) filter <- list(list(filter=self(filter)))
+    if (inherits(filter, "FilterCatalog")) filter <- lapply(urls(filter), function(x) {
+        list(filter = x)
+    })
+    if (inherits(filter, "CrunchFilter")) filter <- list(list(filter = self(filter)))
 
     expr_filter <- activeFilter(dataset)
-    if (is.CrunchExpr(expr_filter)) expr_filter <- list(c(zcl(expr_filter), name = formatExpression(expr_filter)))
-    
-    if(length(filter) > 0 && !is.null(expr_filter)){
+    if (is.CrunchExpr(expr_filter)) {
+        expr_filter <- list(c(zcl(expr_filter), name = formatExpression(expr_filter)))
+    }
+
+    if(length(filter) > 0 && !is.null(expr_filter)) {
         filter <- unname(c(filter, expr_filter))
-    } else if (!is.null(expr_filter)){
+    } else if (!is.null(expr_filter)) {
         filter <- expr_filter
     }
 

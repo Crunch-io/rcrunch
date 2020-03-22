@@ -295,43 +295,43 @@ with_mock_crunch({
     test_that("tabBook filter argument with chr name", {
         expect_POST(
             tabBook(mults[[1]],
-                    filter="Public filter",
+                    filter = "Public filter",
                     data = ds, format = "json")
             ,
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
-            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter2/\"}],\"weight\":null,\"options\":[]}'
+            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter2/\"}],\"weight\":null,\"options\":[]}' # nolint
         )
     })
 
     test_that("tabBook filter argument with filter expression", {
         expect_POST(
-            tabBook(mults[[1]], 
-                    data = ds[ds$gender == 'Male',], format = "json")
+            tabBook(mults[[1]],
+                    data = ds[ds$gender == "Male",], format = "json")
             ,
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
-            '{\"filter\":[{\"function\":\"==\",\"args\":[{\"variable\":\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}],\"weight\":null,\"options\":[]}'
+            '{\"filter\":[{\"function\":\"==\",\"args\":[{\"variable\":\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}],\"weight\":null,\"options\":[]}' # nolint
         )
     })
 
     test_that("tabBook filter argument with filter object", {
         expect_POST(
             tabBook(mults[[1]],
-                    filter=f1, #mock created at top
+                    filter = f1, #mock created at top
                     data = ds, format = "json")
             ,
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
-            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter1/\"}],\"weight\":null,\"options\":[]}'
+            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter1/\"}],\"weight\":null,\"options\":[]}' # nolint
         )
     })
 
     test_that("tabBook filter argument with two chr filter names", {
         expect_POST(
             tabBook(mults[[1]],
-                    filter=c("Occasional Political Interest", "Public filter"),
+                    filter = c("Occasional Political Interest", "Public filter"),
                     data = ds, format = "json")
             ,
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
-            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter1/\"},{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter2/\"}],\"weight\":null,\"options\":[]}'
+            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter1/\"},{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter2/\"}],\"weight\":null,\"options\":[]}' # nolint
         )
     })
 
@@ -339,10 +339,10 @@ with_mock_crunch({
         expect_POST(
             tabBook(mults[[1]],
                     filter = "Public filter",
-                    data = ds[ds$gender == 'Male',], format = "json")
+                    data = ds[ds$gender == "Male",], format = "json")
             ,
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
-            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter2/\"},{\"function\":\"==\",\"args\":[{\"variable\":\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}],\"weight\":null,\"options\":[]}'
+            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter2/\"},{\"function\":\"==\",\"args\":[{\"variable\":\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}],\"weight\":null,\"options\":[]}' # nolint
         )
     })
 
@@ -350,10 +350,10 @@ with_mock_crunch({
         expect_POST(
             tabBook(mults[[1]],
                     filter = f1,
-                    data = ds[ds$gender == 'Male',], format = "json")
+                    data = ds[ds$gender == "Male",], format = "json")
             ,
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
-            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter1/\"},{\"function\":\"==\",\"args\":[{\"variable\":\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}],\"weight\":null,\"options\":[]}'
+            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter1/\"},{\"function\":\"==\",\"args\":[{\"variable\":\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}],\"weight\":null,\"options\":[]}' # nolint
         )
     })
 
