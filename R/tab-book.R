@@ -18,8 +18,8 @@
 #' @param file character local filename to write to. A default filename will be
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
-#' @param filter a [`CrunchFilter`] or a vector of names of filters defined
-#' in the dataset.
+#' @param filter a Crunch `filter` object or a vector of names 
+#' of \code{\link{filters}} defined in the dataset.
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
 #' [in the crunch API documentation](

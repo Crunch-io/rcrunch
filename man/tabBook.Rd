@@ -31,8 +31,8 @@ Default is the currently applied \code{\link{weight}}.}
 generated from the \code{multitable}'s name if one is not supplied and the
 "xlsx" format is requested. Not required for "json" format export.}
 
-\item{filter}{a \code{\link{CrunchFilter}} or a vector of names of filters defined
-in the dataset.}
+\item{filter}{a Crunch \code{filter} object or a vector of names
+of \code{\link{filters}} defined in the dataset.}
 
 \item{...}{Additional "options" passed to the tab book POST request.
 More details can be found
