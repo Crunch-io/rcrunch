@@ -8,9 +8,8 @@
 #' workbook, you'll get a TabBookResult object, containing nested CrunchCube
 #' results. You can then further format these and construct custom tab reports.
 #' @param multitable a `Multitable` object
-#' @param dataset CrunchDataset, which may have a selection of variables on the
-#' columns (ad-hoc filters are not supported, you must use existing named filter
-#' in the `filter` argument).
+#' @param dataset CrunchDataset, which may be subset with a filter expression
+#' on the rows, and a selection of variables to use on the columns.
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `dataset`, or `NULL` for unweighted results.
 #' Default is the currently applied [`weight`].
@@ -19,12 +18,12 @@
 #' @param file character local filename to write to. A default filename will be
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
+#' @param filter a [`CrunchFilter`] or a vector of names of filters defined
+#' in the dataset.
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
 #' [in the crunch API documentation](
 #' https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options)
-#' @param filter [`filter`]s or strings with a filter's name to use in the tab
-#' book. (`NULL` the default uses no filter)
 #' @return If "json" format is requested, the function returns an object of
 #' class `TabBookResult`, containing a list of `MultitableResult`
 #' objects, which themselves contain `CrunchCube`s. If "xlsx" is requested,
@@ -42,24 +41,24 @@
 #' @importFrom jsonlite fromJSON
 #' @export
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
-                    format = c("json", "xlsx"), file, ..., filter = NULL) {
-    f <- match.arg(format)
-    accept <- extToContentType(f)
+                    format = c("json", "xlsx"), file, filter = NULL, ...) {
+    fmt <- match.arg(format)
+    accept <- extToContentType(fmt)
     if (missing(file)) {
-        if (f == "json") {
+        if (fmt == "json") {
             ## We don't need a file.
             file <- NULL
         } else {
             ## Generate a reasonable filename in the current working dir
-            file <- paste(name(multitable), f, sep = ".")
+            file <- paste(name(multitable), fmt, sep = ".")
         }
     }
 
     if (!is.null(weight)) {
         weight <- self(weight)
     }
-
-    if (is.character(filter)) {
+    flt <- filter
+    if (!is.null(filter) & all(is.character(filter))) {
         filter_name <- filter
         available <- filter_name %in% names(filters(dataset))
         if (any(!available)) {
@@ -67,12 +66,20 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         }
         filter <- filters(dataset)[filter]
     }
+    if (inherits(filter, "FilterCatalog")) filter <- lapply(urls(filter), function(x) list(filter=x))
+    if (inherits(filter, "CrunchFilter")) filter <- list(list(filter=self(filter)))
 
-    if (inherits(filter, "FilterCatalog")) filter <- urls(filter)
-    if (inherits(filter, "CrunchFilter")) filter <- self(filter)
+    expr_filter <- activeFilter(dataset)
+    if (is.CrunchExpr(expr_filter)) expr_filter <- list(c(zcl(expr_filter), name = formatExpression(expr_filter)))
+    
+    if(length(filter) > 0 && !is.null(expr_filter)){
+        filter <- unname(c(filter, expr_filter))
+    } else if (!is.null(expr_filter)){
+        filter <- expr_filter
+    }
 
     body <- list(
-        filter = unname(filter),
+        filter = filter,
         weight = weight,
         options = list(...)
     )

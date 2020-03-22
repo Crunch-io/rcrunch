@@ -10,16 +10,15 @@ tabBook(
   weight = crunch::weight(dataset),
   format = c("json", "xlsx"),
   file,
-  ...,
-  filter = NULL
+  filter = NULL,
+  ...
 )
 }
 \arguments{
 \item{multitable}{a \code{Multitable} object}
 
-\item{dataset}{CrunchDataset, which may have a selection of variables on the
-columns (ad-hoc filters are not supported, you must use existing named filter
-in the \code{filter} argument).}
+\item{dataset}{CrunchDataset, which may be subset with a filter expression
+on the rows, and a selection of variables to use on the columns.}
 
 \item{weight}{a CrunchVariable that has been designated as a potential
 weight variable for \code{dataset}, or \code{NULL} for unweighted results.
@@ -32,12 +31,12 @@ Default is the currently applied \code{\link{weight}}.}
 generated from the \code{multitable}'s name if one is not supplied and the
 "xlsx" format is requested. Not required for "json" format export.}
 
+\item{filter}{a \code{\link{CrunchFilter}} or a vector of names of filters defined
+in the dataset.}
+
 \item{...}{Additional "options" passed to the tab book POST request.
 More details can be found
 \href{https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options}{in the crunch API documentation}}
-
-\item{filter}{\code{\link{filter}}s or strings with a filter's name to use in the tab
-book. (\code{NULL} the default uses no filter)}
 }
 \value{
 If "json" format is requested, the function returns an object of
