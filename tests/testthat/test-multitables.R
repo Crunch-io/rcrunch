@@ -285,7 +285,7 @@ with_mock_crunch({
     filts <- filters(ds)
     test_that("tabBook with no filter of any kind", {
         expect_POST(
-            tabBook(mults[[1]], 
+            tabBook(mults[[1]],
                     data = ds, format = "json")
             ,
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
@@ -294,7 +294,7 @@ with_mock_crunch({
     })
     test_that("tabBook filter argument with chr name", {
         expect_POST(
-            tabBook(mults[[1]], 
+            tabBook(mults[[1]],
                     filter="Public filter",
                     data = ds, format = "json")
             ,
@@ -315,7 +315,7 @@ with_mock_crunch({
 
     test_that("tabBook filter argument with filter object", {
         expect_POST(
-            tabBook(mults[[1]], 
+            tabBook(mults[[1]],
                     filter=f1, #mock created at top
                     data = ds, format = "json")
             ,
@@ -326,7 +326,7 @@ with_mock_crunch({
 
     test_that("tabBook filter argument with two chr filter names", {
         expect_POST(
-            tabBook(mults[[1]], 
+            tabBook(mults[[1]],
                     filter=c("Occasional Political Interest", "Public filter"),
                     data = ds, format = "json")
             ,
@@ -337,12 +337,23 @@ with_mock_crunch({
 
     test_that("tabBook filter argument with chr and filter expression", {
         expect_POST(
-            tabBook(mults[[1]], 
+            tabBook(mults[[1]],
                     filter = "Public filter",
                     data = ds[ds$gender == 'Male',], format = "json")
             ,
             "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
             '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter2/\"},{\"function\":\"==\",\"args\":[{\"variable\":\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}],\"weight\":null,\"options\":[]}'
+        )
+    })
+
+    test_that("tabBook filter argument with filter object and filter expression", {
+        expect_POST(
+            tabBook(mults[[1]],
+                    filter = f1,
+                    data = ds[ds$gender == 'Male',], format = "json")
+            ,
+            "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
+            '{\"filter\":[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter1/\"},{\"function\":\"==\",\"args\":[{\"variable\":\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}],\"weight\":null,\"options\":[]}'
         )
     })
 
