@@ -10,14 +10,15 @@ tabBook(
   weight = crunch::weight(dataset),
   format = c("json", "xlsx"),
   file,
+  filter = NULL,
   ...
 )
 }
 \arguments{
 \item{multitable}{a \code{Multitable} object}
 
-\item{dataset}{CrunchDataset, which may have been subsetted with a filter
-expression on the rows and a selection of variables on the columns.}
+\item{dataset}{CrunchDataset, which may be subset with a filter expression
+on the rows, and a selection of variables to use on the columns.}
 
 \item{weight}{a CrunchVariable that has been designated as a potential
 weight variable for \code{dataset}, or \code{NULL} for unweighted results.
@@ -30,7 +31,12 @@ Default is the currently applied \code{\link{weight}}.}
 generated from the \code{multitable}'s name if one is not supplied and the
 "xlsx" format is requested. Not required for "json" format export.}
 
-\item{...}{Additional "options" passed to the tab book POST request.}
+\item{filter}{a Crunch \code{filter} object or a vector of names
+of \code{\link{filters}} defined in the dataset.}
+
+\item{...}{Additional "options" passed to the tab book POST request.
+More details can be found
+\href{https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options}{in the crunch API documentation}}
 }
 \value{
 If "json" format is requested, the function returns an object of
@@ -54,7 +60,7 @@ results. You can then further format these and construct custom tab reports.
 \examples{
 \dontrun{
 m <- newMultitable(~ gender + age4 + marstat, data = ds)
-tabBook(m, ds[ds$income > 1000000, ], format = "xlsx", file = "wealthy-tab-book.xlsx")
+tabBook(m, ds, format = "xlsx", file = "wealthy-tab-book.xlsx", filter = "wealthy")
 book <- tabBook(m, ds) # Returns a TabBookResult
 tables <- prop.table(book, 2)
 }

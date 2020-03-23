@@ -1,5 +1,6 @@
 # crunch (development version)
 * https verification can be disabled during testing by setting environment variable `R_TEST_VERIFY_SSL=FALSE`
+* You can now use a named `filter` or `filter` object when using `tabbook()`. Filtering by expression in the dataset argument is also supported again.
 
 # crunch 1.26.3
 * Can now `deriveArray()` using expressions to create the subvariables.
