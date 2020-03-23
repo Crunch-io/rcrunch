@@ -11,6 +11,9 @@
 #' as well as other properties to pass about the case variable (i.e. alias,
 #'  description)
 #' @param name a character to use as the name for the interaction variable
+#' @param collapse_missings a logical indicating whether to combine all
+#' new categories that are formed from existing missing categories into
+#' a single one (defaults to `FALSE`).
 #'
 #' @return A [`VariableDefinition`] that creates the new interaction variable.
 #' @examples

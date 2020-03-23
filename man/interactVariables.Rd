@@ -12,6 +12,10 @@ as well as other properties to pass about the case variable (i.e. alias,
 description)}
 
 \item{name}{a character to use as the name for the interaction variable}
+
+\item{collapse_missings}{a logical indicating whether to combine all
+new categories that are formed from existing missing categories into
+a single one (defaults to \code{FALSE}).}
 }
 \value{
 A \code{\link{VariableDefinition}} that creates the new interaction variable.
