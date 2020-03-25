@@ -47,4 +47,3 @@ interactVariables <- function(..., name, collapse_missings = FALSE) {
 
     do.call(VariableDefinition, other_dots)
 }
-
