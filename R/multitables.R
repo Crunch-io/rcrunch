@@ -147,7 +147,7 @@ newMultitable <- function(formula, data, name, ...) {
         name <- RHS_string(formula)
     }
 
-    payload <- makeMultitablePayload(template = template, name = name)
+    payload <- makeMultitablePayload(template = template, name = name, ...)
     u <- crPOST(shojiURL(data, "catalogs", "multitables"),
         body = toJSON(payload)
     )

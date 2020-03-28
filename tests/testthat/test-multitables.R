@@ -113,7 +113,8 @@ with_mock_crunch({
         expect_POST(
             newMultitable(~ gender + mymrset,
                 data = ds,
-                name = "New multitable"
+                name = "New multitable",
+                is_public = TRUE
             ),
             "https://app.crunch.io/api/datasets/1/multitables/",
             '{"element":"shoji:entity","body":{',
@@ -123,7 +124,7 @@ with_mock_crunch({
             '{"function":"as_selected","args":[{"variable":"https://app.crunch.io/',
             'api/datasets/1/variables/mymrset/"}]}',
             "]}]",
-            ',"name":"New multitable"}}'
+            ',"name":"New multitable","is_public":true}}'
         )
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset,
