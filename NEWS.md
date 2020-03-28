@@ -1,4 +1,5 @@
 # crunch 1.27.5 (Development version)
+* You can now derive a variable directly from a logical expression (#286)
 
 # crunch 1.27.4
 * Fixes to pkgdown documentation website

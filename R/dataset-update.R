@@ -75,14 +75,6 @@ setMethod(
 #' @rdname crunch-extract
 #' @export
 setMethod(
-    "[[<-", c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"),
-    function(x, i, value) {
-        halt("Cannot currently derive a logical variable")
-    }
-)
-#' @rdname crunch-extract
-#' @export
-setMethod(
     "[[<-", c("CrunchDataset", "ANY"),
     function(x, i, value) {
         halt("Only character (name) indexing supported for [[<-")
