@@ -381,7 +381,43 @@ with_mock_crunch({
         )
     })
 
-    ## TODO: test the query shape
+    test_that("tabBook with options", {
+        expect_POST(
+            tabBook(mults[[1]],
+                    data = ds, output_format = "json", format = list(pval_colors = TRUE))
+            ,
+            "https://app.crunch.io/api/datasets/1/multitables/ed30c4/export/",
+            '{\"filter\":null,\"weight\":null,\"options\":{"format":{"pval_colors":true}}}'
+        )
+    })
+
+    test_that("tabBook warning when using format argument", {
+        expect_warning(
+            expect_POST(
+                tabBook(mults[[1]],
+                        data = ds, format = "json")
+                ,
+                "https://app.crunch.io/api/datasets/1/multitables/ed30c4/export/",
+                '{\"filter\":null,\"weight\":null,\"options\":{}}'
+            ),
+            "Use `output_format`"
+        )
+    })
+
+    test_that("tabBook warning when using legacy endpoint", {
+        with(temp.option(use.legacy.tabbook.endpoint = TRUE), {
+            expect_warning(
+                expect_POST(
+                    tabBook(mults[[1]],
+                            data = ds, output_format = "json")
+                    ,
+                    "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
+                    '{\"filter\":null,\"weight\":null,\"options\":[]}'
+                ),
+                "The legacy tabbook endpoint has been deprecated and will be removed in the future."
+            )
+        })
+    })
 
     with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
         book <- tabBook(mults[[1]], data = ds, output_format = "json")
