@@ -22,7 +22,7 @@ with_mock_crunch({
         with(reset.option("crunch.httr_config"), {
             jupyterLogin("test_token")
             cfg <- get_crunch_config()
-            expect_identical(cfg$options$cookie, "token=test_token")
+            expect_identical(cfg$headers[["Authorization"]], "Bearer test_token")
             expect_true(grepl("jupyter.crunch.io", cfg$headers[["user-agent"]]))
             expect_true(grepl("rcrunch", cfg$headers[["user-agent"]]))
         })

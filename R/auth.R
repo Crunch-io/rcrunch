@@ -84,12 +84,13 @@ crunchAuth <- function(email, password = NULL, ...) {
         }
     }
 
-    crPOST(absoluteURL("public/login/", getOption("crunch.api")),
-        body = toJSON(list(email = email, password = password, ...)),
+    out <- crPOST(absoluteURL("public/login/", getOption("crunch.api")),
+        body = toJSON(list(email = email, password = password, token = TRUE, ...)),
         status.handlers = list(`401` = function(response, user = email) {
             halt(paste("Unable to authenticate", user))
         })
     )
+    tokenAuth(out$access_token)
 }
 
 without_echo <- function(expr) {
@@ -124,7 +125,7 @@ read_input <- function(...) readline(...)
 tokenAuth <- function(token, ua = "token") {
     set_crunch_config(
         c(
-            set_cookies(token = token),
+            add_headers(Authorization = paste0("Bearer ", token)),
             add_headers(`user-agent` = crunch_user_agent(ua))
         ),
         update = TRUE
