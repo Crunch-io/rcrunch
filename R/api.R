@@ -295,7 +295,7 @@ crDownload <- function(url, file, ...) {
     ## Retry is for delay in propagating the file to the CDN
     ## TODO: consider only "retry" if `url` is in CDN (don't want to retry
     ## necessarily on every url/server response)
-    retry(crGET(url, config = write_disk(file, overwrite = TRUE)))
+    retry(crGET(url, config = c(add_headers(Authorization = ""), write_disk(file, overwrite = TRUE))))
     return(file)
 }
 
