@@ -295,7 +295,7 @@ crDownload <- function(url, file, ...) {
     ## Retry is for delay in propagating the file to the CDN
     ## TODO: consider only "retry" if `url` is in CDN (don't want to retry
     ## necessarily on every url/server response)
-    retry(crGET(url, config = c(write_disk(file, overwrite = TRUE))))
+    retry(crGET(url, config = write_disk(file, overwrite = TRUE)))
     return(file)
 }
 
@@ -308,6 +308,7 @@ featureFlag <- function(flag) {
 # Don't want Authorization header when going outside crunch domain
 #' @importFrom httr parse_url
 strip_token_if_outside <- function(url) {
-    domain <- parse_url(getOption("crunch.api"))$hostname
-    if (parse_url(url)$hostname != domain) add_headers(Authorization = "")
+    api_hostname <- parse_url(getOption("crunch.api"))$hostname
+    url_hostname <- parse_url(url)$hostname
+    if (!identical(api_hostname, url_hostname)) add_headers(Authorization = "")
 }
