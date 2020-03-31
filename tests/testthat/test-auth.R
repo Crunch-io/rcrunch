@@ -17,18 +17,6 @@ test_that("without_echo doesn't crash on this OS", {
     })
 })
 
-with_mock_crunch({
-    test_that("Jupyter helper sets up env", {
-        with(reset.option("crunch.httr_config"), {
-            jupyterLogin("test_token")
-            cfg <- get_crunch_config()
-            expect_identical(cfg$headers[["Authorization"]], "Bearer test_token")
-            expect_true(grepl("jupyter.crunch.io", cfg$headers[["user-agent"]]))
-            expect_true(grepl("rcrunch", cfg$headers[["user-agent"]]))
-        })
-    })
-})
-
 if (run.integration.tests) {
     with(test_options, {
         test_that("crunchAuth succeeds when it should and not when it shouldn't", {
