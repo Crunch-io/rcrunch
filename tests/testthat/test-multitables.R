@@ -375,7 +375,13 @@ with_mock_crunch({
             expect_POST(
                 tabBook(m, data = ds2[c("gender", "starttime")]),
                 "https://app.crunch.io/api/datasets/3/multitables/ed30c4/export/",
-                '{\"filter\":null,\"weight\":"https://app.crunch.io/api/datasets/3/variables/birthyr/",\"options\":[],"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"d7c21314ca9e453c93069168681a285c":{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]}'
+                '{\"filter\":null,',
+                '\"weight\":"https://app.crunch.io/api/datasets/3/variables/birthyr/",',
+                '\"options\":[],"where":{"function":"select","args":[{"map":',
+                '{"66ae9881e3524f7db84970d556c34552":',
+                '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+                '"d7c21314ca9e453c93069168681a285c"',
+                ':{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]}'
             ),
             "Accept: application/json"
         )
