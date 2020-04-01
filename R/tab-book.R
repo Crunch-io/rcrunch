@@ -77,29 +77,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         weight <- self(weight)
     }
 
-    if (!is.null(filter) & all(is.character(filter))) {
-        filter_name <- filter
-        available <- filter_name %in% names(filters(dataset))
-        if (any(!available)) {
-            halt("Could not find filter named: ", paste(filter_name[!available], collapse = ", "))
-        }
-        filter <- filters(dataset)[filter]
-    }
-    if (inherits(filter, "FilterCatalog")) filter <- lapply(urls(filter), function(x) {
-        list(filter = x)
-    })
-    if (inherits(filter, "CrunchFilter")) filter <- list(list(filter = self(filter)))
-
-    expr_filter <- activeFilter(dataset)
-    if (is.CrunchExpr(expr_filter)) {
-        expr_filter <- list(c(zcl(expr_filter), name = formatExpression(expr_filter)))
-    }
-
-    if(length(filter) > 0 && !is.null(expr_filter)) {
-        filter <- unname(c(filter, expr_filter))
-    } else if (!is.null(expr_filter)) {
-        filter <- expr_filter
-    }
+    filter <- standardize_tabbok_filter(dataset, filter)
 
     body <- list(
         filter = filter,
@@ -141,6 +119,35 @@ extToContentType <- function(ext) {
         pptx = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
     )
     return(mapping[[ext]])
+}
+
+# Possibly went a little overboard allowing different filter options in tabbook
+# extract out the logic here
+standardize_tabbok_filter <- function(dataset, filter) {
+    if (!is.null(filter) & all(is.character(filter))) {
+        filter_name <- filter
+        available <- filter_name %in% names(filters(dataset))
+        if (any(!available)) {
+            halt("Could not find filter named: ", paste(filter_name[!available], collapse = ", "))
+        }
+        filter <- filters(dataset)[filter]
+    }
+    if (inherits(filter, "FilterCatalog")) filter <- lapply(urls(filter), function(x) {
+        list(filter = x)
+    })
+    if (inherits(filter, "CrunchFilter")) filter <- list(list(filter = self(filter)))
+
+    expr_filter <- activeFilter(dataset)
+    if (is.CrunchExpr(expr_filter)) {
+        expr_filter <- list(c(zcl(expr_filter), name = formatExpression(expr_filter)))
+    }
+
+    if(length(filter) > 0 && !is.null(expr_filter)) {
+        filter <- unname(c(filter, expr_filter))
+    } else if (!is.null(expr_filter)) {
+        filter <- expr_filter
+    }
+    filter
 }
 
 #' TabBookResult and MultitableResult dimension
