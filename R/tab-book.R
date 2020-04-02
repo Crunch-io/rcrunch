@@ -77,7 +77,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         weight <- self(weight)
     }
 
-    filter <- standardize_tabbok_filter(dataset, filter)
+    filter <- standardize_tabbook_filter(dataset, filter)
 
     body <- list(
         filter = filter,
@@ -123,7 +123,7 @@ extToContentType <- function(ext) {
 
 # Possibly went a little overboard allowing different filter options in tabbook
 # extract out the logic here
-standardize_tabbok_filter <- function(dataset, filter) {
+standardize_tabbook_filter <- function(dataset, filter) {
     if (!is.null(filter) & all(is.character(filter))) {
         filter_name <- filter
         available <- filter_name %in% names(filters(dataset))
