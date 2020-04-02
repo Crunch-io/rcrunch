@@ -1,0 +1,17 @@
+{
+    "element":
+    "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/summary/?filter=%7B%22function%22%3A%22between%22%2C%22args%22%3A%5B%7B%22function%22%3A%22row%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22value%22%3A19%7D%2C%7B%22value%22%3A25%7D%5D%7D",
+    "value": {
+        "unweighted": {
+            "filtered": 6,
+            "total": 25
+        },
+        "variables": 6,
+        "weighted": {
+            "filtered": 6,
+            "total": 25
+        },
+        "columns": 6
+    }
+}

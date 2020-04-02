@@ -92,6 +92,13 @@ setMethod("digits<-", "CrunchVariable", function(x, value) {
     halt("digit specifications can only be set for numeric variables")
 })
 
+#' @rdname describe-entity
+#' @export
+setMethod("length", "CrunchVariable", function (x) {
+    ds <- loadDataset(datasetReference(x))
+    activeFilter(ds) <- activeFilter(x)
+    return(nrow(ds))
+})
 
 #' Split an array or multiple-response variable into its CategoricalVariables
 #'
@@ -116,11 +123,12 @@ setMethod("[", c("CrunchVariable", "CrunchExpr"), .updateActiveFilter)
 #' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchVariable", "numeric"), function(x, i, ...) {
-    i <- CrunchLogicalExpr(
-        dataset_url = datasetReference(x),
-        expression = .dispatchFilter(i)
-    )
-    return(x[i])
+    filt <- activeFilter(x)
+    if (!is.null(filt)) {
+        return(harmonizeFilters(x, filt, i))
+    } else {
+        return(x[seq_len(length(x)) %in% i])
+    }
 })
 #' @rdname crunch-extract
 #' @export

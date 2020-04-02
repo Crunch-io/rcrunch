@@ -340,4 +340,37 @@ with_test_authentication({
             expect_null(exclusion(ds))
         })
     })
+
+
+    with(test.dataset(df), {
+        ds$keep <- rep(1:4, 5)
+        exclusion(ds) <- ds$keep == 2
+        test_that("Exclusion is set", {
+            expect_identical(nrow(ds), 15L)
+        })
+
+        test_that("No problem with harmonized filters", {
+            expect_equivalent(as.vector(ds$v3),
+                              c(8, 10:12, 14:16, 18:20, 22:24, 26, 27))
+            # can subset with indexes
+            expect_equivalent(as.vector(ds$v3[c(1, 2, 3, 4)]),
+                              c(8, 10:12)) # fails because index 2 is actually excluded so is not being returned.
+            expect_equivalent(as.vector(ds$v3[c(15, 14, 13, 12)]),
+                              # The expectation is backwards (c(12, 13, 14, 15)),
+                              # because the backend always returns rows in
+                              # dataset order.
+                              c(23, 24, 26, 27))
+            # a new filter
+            ds <- ds[ds$v3 > 10]
+            expect_identical(nrow(ds), 13L)
+            # can still subset with indexes
+            expect_equivalent(as.vector(ds$v3[c(1, 2, 3, 4)]),
+                              c(11, 12, 14, 15)) # fails because index 2 and others are actually excluded so are not being returned.
+            expect_equivalent(as.vector(ds$v3[c(13, 12, 10, 9)]),
+                              # The expectation is backwards (c(12, 13, 14, 15)),
+                              # because the backend always returns rows in
+                              # dataset order.
+                              c(23, 24, 26, 27))
+        })
+    })
 })

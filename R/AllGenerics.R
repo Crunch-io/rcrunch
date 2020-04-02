@@ -236,6 +236,8 @@ setGeneric("showMissing", function(cube) standardGeneric("showMissing"))
 setGeneric("hideMissing", function(cube) standardGeneric("hideMissing"))
 setGeneric("showIfAny", function(cube) standardGeneric("showIfAny"))
 
+setGeneric("head", function(x, n=6L, ...) utils::head(x, n, ...))
+setGeneric("tail", function(x, n=6L, ...) utils::tail(x, n, ...))
 setGeneric("dim")
 setGeneric("ncol")
 setGeneric("na.omit")

@@ -64,6 +64,7 @@
 \alias{digits,CrunchVariable-method}
 \alias{digits<-,NumericVariable-method}
 \alias{digits<-,CrunchVariable-method}
+\alias{length,CrunchVariable-method}
 \alias{uniformBasis,MultipleResponseVariable-method}
 \alias{uniformBasis<-,MultipleResponseVariable-method}
 \title{Name, alias, and description for Crunch objects}
@@ -185,6 +186,8 @@ notes(x) <- value
 \S4method{digits}{NumericVariable}(x) <- value
 
 \S4method{digits}{CrunchVariable}(x) <- value
+
+\S4method{length}{CrunchVariable}(x)
 
 \S4method{uniformBasis}{MultipleResponseVariable}(x)
 

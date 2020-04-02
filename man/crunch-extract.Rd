@@ -38,6 +38,9 @@
 \alias{[,CrunchDataset,missing,ANY-method}
 \alias{[,CrunchDataset,CrunchLogicalExpr,missing-method}
 \alias{[,CrunchDataset,CrunchLogicalExpr,ANY-method}
+\alias{[,CrunchDataset,numeric,missing-method}
+\alias{harmonizeFilters}
+\alias{[,CrunchDataset,numeric,ANY-method}
 \alias{subset,CrunchDataset-method}
 \alias{[[,CrunchDataset,ANY-method}
 \alias{[[,CrunchDataset,character-method}
@@ -243,6 +246,12 @@
 \S4method{[}{CrunchDataset,CrunchLogicalExpr,missing}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{CrunchDataset,numeric,missing}(x, i, j, ..., drop = FALSE)
+
+harmonizeFilters(x, filt, i)
+
+\S4method{[}{CrunchDataset,numeric,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{subset}{CrunchDataset}(x, ...)
 
@@ -541,16 +550,9 @@
 \S4method{[}{CrunchVariable,logical,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
-\item{x}{a Crunch object (Dataset, Variable, \code{CrunchExpr}, Catalog,
-\code{CrunchCube}, etc.)}
+\item{x}{a filtered Dataset or vector}
 
-\item{i}{The elements to extract; as with R, this can generally be (1) a
-logical vector of length matching \code{x}; (2) a character vector of appropriate
-length, which can generally be URLs or also names, aliases, or other
-identifier; (3) integer indices, potentially negative, to select. Datasets
-and Variables can also be subset by \code{CrunchExpr}. Note that when subsetting
-Datasets and variables by R vectors, the input \code{i} is turned into a
-\code{CrunchExpr} so that it can be used in API queries.}
+\item{i}{A numeric vector to harmonize with that filter}
 
 \item{j}{For two-dimensional objects, elements to take from the columnar
 dimension. Note that Datasets work like \code{data.frame}s in that you can extract
@@ -571,6 +573,8 @@ a new variable, and \code{ds$var[i] <- value}, which can take R vectors and
 \code{CrunchExpr}.}
 
 \item{name}{for \code{$}, the same as \code{i} for \code{[[}}
+
+\item{filt}{the object's filter}
 }
 \value{
 \code{[} generally returns a subset of \code{x}, same class and "self" URL;
@@ -584,9 +588,18 @@ definition to a Dataset); for editing metadata attributes, these methods
 generally assume that the API request to set the changes on the server
 happens in a different method (e.g. in \code{names(variables(ds)[1:5]) <- value},
 assignment happens in the \verb{names<-} method).
+
+a properly filtered dataset or vector
 }
 \description{
 Extract and modify Crunch objects
+
+Sometimes you want to subset a filtered object using a numeric vector. In order
+to do this on a crunch object we need to first get the rows which match the filter
+and then apply the numeric vector. For instance if you have a dataset filter such
+that \code{ds_filt <- ds[ds$var == 5, ]} then \code{ds_filt[1:5]} should return the first
+five rows where \code{ds$var == 5}. This function takes a filtered object and returns
+the correctly subsetted filtered object.
 
 This function is no-op because the items are already updated on the server
 with other methods called prior to it.

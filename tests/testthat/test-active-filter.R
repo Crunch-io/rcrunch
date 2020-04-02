@@ -211,6 +211,30 @@ with_mock_crunch({
             ds$gender == "Male"
         )
     })
+
+    test_that("harmonizeFilters creates the expected filter", {
+        expected_expr <- list(
+            `function` = "and",
+            args = list(list(
+                `function` = "==",
+                args = list(list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/"),
+                            list(value = 1L)
+                )
+            ), list(
+                `function` = "in",
+                args = list(
+                    list(`function` = "row", args = list()),
+                    list(column = c(6, 10, 12, 20, 21)
+                    )
+                )
+            )
+            )
+        )
+        ds_harmonized <- harmonizeFilters(ds2, activeFilter(ds2), 1:5)
+        expect_is(ds_harmonized, "CrunchDataset")
+        expect_identical(activeFilter(ds_harmonized)@expression,
+                         expected_expr)
+    })
 })
 
 with_test_authentication({
