@@ -221,7 +221,7 @@ as.data.frame.UserCatalog <- function(x, row.names = NULL,
 #'
 #' @param x a CrunchDataset, CrunchDataFrame, or CrunchVariable
 #' @param n a single integer representing the length of the returning object.
-#' @param ... ignored
+#' @param ... passed to [`as.data.frame()`] for CrunchDataset or CrunchDataFrames, ignored for CrunchVariable
 #' @name head-tail
 #' @aliases head tail
 NULL
@@ -229,31 +229,31 @@ NULL
 #' @rdname head-tail
 #' @export
 setMethod("head", "CrunchDataset", function (x, n=6L, ...) {
-    as.data.frame(x[head(seq_len(nrow(x)), n),], force=TRUE)
+    as.data.frame(x[head(seq_len(nrow(x)), n), ], ..., force=TRUE)
 })
 
 #' @rdname head-tail
 #' @export
 head.CrunchDataFrame <- function (x, n=6L, ...) {
-    return(head(attr(x, "crunchDataset")))
+    return(head(attr(x, "crunchDataset"), n = n, ...))
 }
 
 #' @rdname head-tail
 #' @export
 setMethod("head", "CrunchVariable", function (x, n=6L, ...) {
-    as.vector(x[head(seq_len(length(x)), n)], ...)
+    as.vector(x[head(seq_len(length(x)), n)])
 })
 
 #' @rdname head-tail
 #' @export
 setMethod("tail", "CrunchDataset", function (x, n=6L, ...) {
-    as.data.frame(x[tail(seq_len(nrow(x)), n),], force=TRUE)
+    as.data.frame(x[tail(seq_len(nrow(x)), n),], ..., force=TRUE)
 })
 
 #' @rdname head-tail
 #' @export
 tail.CrunchDataFrame <- function (x, n=6L, ...) {
-    return(tail(attr(x, "crunchDataset")))
+    return(tail(attr(x, "crunchDataset"), n = n, ...))
 }
 
 #' @rdname head-tail
