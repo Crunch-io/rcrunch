@@ -1,0 +1,55 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/233501/variables/3u8sO25WHGJNGFJQ5r77nX000019/",
+    "catalogs": {
+        "parent": "/api/datasets/233501/variables/",
+        "folder": "/api/datasets/233501/folders/"
+    },
+    "fragments": {
+        "missing_rules": "/api/datasets/233501/variables/3u8sO25WHGJNGFJQ5r77nX000019/missing_rules/",
+        "user_settings": "/api/datasets/233501/variables/3u8sO25WHGJNGFJQ5r77nX000019/user_settings/",
+        "dataset": "/api/datasets/233501/"
+    },
+    "views": {
+        "frequencies": "/api/datasets/233501/variables/3u8sO25WHGJNGFJQ5r77nX000019/frequencies/",
+        "summary": "/api/datasets/233501/variables/3u8sO25WHGJNGFJQ5r77nX000019/summary/",
+        "values": "/api/datasets/233501/variables/3u8sO25WHGJNGFJQ5r77nX000019/values/",
+        "cast": "/api/datasets/233501/variables/3u8sO25WHGJNGFJQ5r77nX000019/cast/"
+    },
+    "body": {
+        "secure": false,
+        "name": "Respondent",
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "Respondent",
+        "dataset_id": "233501",
+        "owner": null,
+        "hidden": false,
+        "view": {
+            "column_width": null
+        },
+        "type": "numeric",
+        "id": "3u8sO25WHGJNGFJQ5r77nX000019",
+        "categories": [
+
+        ],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "/api/datasets/233501/"
+    }
+}

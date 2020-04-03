@@ -1,0 +1,39 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/524056/variables/?relative=on",
+    "catalogs": {
+        "private": "/api/datasets/524056/variables/private/"
+    },
+    "orders": {
+        "personal": "/api/datasets/524056/variables/personal/",
+        "weights": "/api/datasets/524056/variables/weights/",
+        "hier": "/api/datasets/524056/variables/hier/"
+    },
+    "description": "List of Variables of this dataset",
+    "index": {
+        "79fDRTlOzMCHTP6PFJuMIU000000/": {
+            "discarded": false,
+            "alias": "HouseholdSize",
+            "secure": false,
+            "name": "HouseholdSize",
+            "id": "79fDRTlOzMCHTP6PFJuMIU000000",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        },
+        "79fDRTlOzMCHTP6PFJuMIU000001/": {
+            "discarded": false,
+            "alias": "Respondent",
+            "secure": false,
+            "name": "Respondent",
+            "id": "79fDRTlOzMCHTP6PFJuMIU000001",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        }
+    }
+}

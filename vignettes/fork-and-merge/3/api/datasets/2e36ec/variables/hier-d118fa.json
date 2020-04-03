@@ -1,0 +1,30 @@
+{
+    "element": "shoji:order",
+    "self": "/api/datasets/2e36ec/variables/hier/?relative=on",
+    "description": "Hierarchical order from folder structure of dataset variables",
+    "graph": [
+        "../4s4DOtHdB8LHaoos0uOPo9000019/",
+        "../4s4DOtHdB8LHaoos0uOPo9000017/",
+        "../4s4DOtHdB8LHaoos0uOPo9000001/",
+        "../4s4DOtHdB8LHaoos0uOPo9000000/",
+        "../4s4DOtHdB8LHaoos0uOPo9000016/",
+        "../4s4DOtHdB8LHaoos0uOPo9000006/",
+        "../4s4DOtHdB8LHaoos0uOPo9000014/",
+        "../4s4DOtHdB8LHaoos0uOPo9000007/",
+        "../4s4DOtHdB8LHaoos0uOPo9000011/",
+        "../4s4DOtHdB8LHaoos0uOPo9000012/",
+        "../4s4DOtHdB8LHaoos0uOPo9000008/",
+        "../4s4DOtHdB8LHaoos0uOPo9000015/",
+        "../4s4DOtHdB8LHaoos0uOPo9000009/",
+        "../4s4DOtHdB8LHaoos0uOPo9000013/",
+        "../4s4DOtHdB8LHaoos0uOPo9000010/",
+        "../4s4DOtHdB8LHaoos0uOPo9000004/",
+        "../4s4DOtHdB8LHaoos0uOPo9000018/",
+        "../4s4DOtHdB8LHaoos0uOPo9000002/",
+        "../4s4DOtHdB8LHaoos0uOPo9000020/",
+        "../4s4DOtHdB8LHaoos0uOPo9000003/",
+        "../4s4DOtHdB8LHaoos0uOPo9000021/",
+        "../4s4DOtHdB8LHaoos0uOPo9000022/",
+        "../4s4DOtHdB8LHaoos0uOPo9000005/"
+    ]
+}

@@ -1,0 +1,55 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/233501/variables/79fDRTlOzMCHTP6PFJuMIU000000/",
+    "catalogs": {
+        "parent": "/api/datasets/233501/variables/",
+        "folder": "/api/datasets/233501/folders/be7ccd/"
+    },
+    "fragments": {
+        "missing_rules": "/api/datasets/233501/variables/79fDRTlOzMCHTP6PFJuMIU000000/missing_rules/",
+        "user_settings": "/api/datasets/233501/variables/79fDRTlOzMCHTP6PFJuMIU000000/user_settings/",
+        "dataset": "/api/datasets/233501/"
+    },
+    "views": {
+        "frequencies": "/api/datasets/233501/variables/79fDRTlOzMCHTP6PFJuMIU000000/frequencies/",
+        "summary": "/api/datasets/233501/variables/79fDRTlOzMCHTP6PFJuMIU000000/summary/",
+        "values": "/api/datasets/233501/variables/79fDRTlOzMCHTP6PFJuMIU000000/values/",
+        "cast": "/api/datasets/233501/variables/79fDRTlOzMCHTP6PFJuMIU000000/cast/"
+    },
+    "body": {
+        "secure": false,
+        "name": "HouseholdSize",
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "HouseholdSize",
+        "dataset_id": "233501",
+        "owner": null,
+        "hidden": false,
+        "view": {
+            "column_width": null
+        },
+        "type": "numeric",
+        "id": "79fDRTlOzMCHTP6PFJuMIU000000",
+        "categories": [
+
+        ],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "/api/datasets/233501/"
+    }
+}

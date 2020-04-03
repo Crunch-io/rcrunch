@@ -1,19 +1,20 @@
-structure(list(url = "/api/datasets/", status_code = 201L, headers = structure(list(
-    allow = "GET, HEAD, OPTIONS, PATCH, POST", `content-encoding` = "gzip", 
-    `content-type` = "application/json;charset=utf-8", date = "Mon, 14 May 2018 16:51:31 GMT", 
-    location = "/api/datasets/a1548c/", server = "nginx", `set-cookie` = "REDACTED", 
-    vary = "Cookie, Accept-Encoding", `x-timing` = "", `content-length` = "24", 
-    connection = "keep-alive"), class = c("insensitive", "list"
-)), all_headers = list(list(status = 201L, version = "HTTP/1.1", 
-    headers = structure(list(allow = "GET, HEAD, OPTIONS, PATCH, POST", 
-        `content-encoding` = "gzip", `content-type` = "application/json;charset=utf-8", 
-        date = "Mon, 14 May 2018 16:51:31 GMT", location = "/api/datasets/a1548c/", 
-        server = "nginx", `set-cookie` = "REDACTED", vary = "Cookie, Accept-Encoding", 
-        `x-timing` = "", `content-length` = "24", connection = "keep-alive"), class = c("insensitive", 
-    "list")))), cookies = structure(list(domain = ".crunch.io", 
-    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1557852691, class = c("POSIXct", 
-    "POSIXt")), name = "token", value = "REDACTED"), row.names = c(NA, 
--1L), class = "data.frame"), content = charToRaw("null"), date = structure(1526316691, class = c("POSIXct", 
-"POSIXt"), tzone = "GMT"), times = c(redirect = 0, namelookup = 4.5e-05, 
-connect = 4.8e-05, pretransfer = 0.000721, starttransfer = 0.00073, 
-total = 1.058085)), class = "response")
+structure(list(url = "/api/datasets/", status_code = 202L, headers = structure(list(
+    date = "Fri, 03 Apr 2020 15:59:11 GMT", `content-type` = "application/json;charset=utf-8", 
+    `content-length` = "174", location = "/api/datasets/2e36ec/", 
+    server = "nginx", `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
+    allow = "GET, HEAD, OPTIONS, PATCH, POST", `x-timing` = ""), class = c("insensitive", 
+"list")), all_headers = list(list(status = 202L, version = "HTTP/2", 
+    headers = structure(list(date = "Fri, 03 Apr 2020 15:59:11 GMT", 
+        `content-type` = "application/json;charset=utf-8", `content-length` = "174", 
+        location = "/api/datasets/2e36ec/", server = "nginx", 
+        `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
+        allow = "GET, HEAD, OPTIONS, PATCH, POST", `x-timing` = ""), class = c("insensitive", 
+    "list")))), cookies = structure(list(domain = logical(0), 
+    flag = logical(0), path = logical(0), secure = logical(0), 
+    expiration = structure(numeric(0), class = c("POSIXct", "POSIXt"
+    )), name = logical(0), value = logical(0)), row.names = integer(0), class = "data.frame"), 
+    content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/datasets/\", \"value\": \"/api/progress/\"}"), 
+    date = structure(1585929551, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 5.8e-05, 
+    connect = 6e-05, pretransfer = 0.000125, starttransfer = 0.00013, 
+    total = 1.686716)), class = "response")

@@ -1,0 +1,96 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/572853/",
+    "catalogs": {
+        "folders": "/api/datasets/572853/folders/",
+        "batches": "/api/datasets/572853/batches/",
+        "users": "/api/datasets/572853/users/",
+        "tags": "/api/datasets/572853/tags/",
+        "variables": "/api/datasets/572853/variables/",
+        "scripts": "/api/datasets/572853/scripts/",
+        "actions": "/api/datasets/572853/actions/",
+        "teams": "/api/datasets/572853/teams/",
+        "savepoints": "/api/datasets/572853/savepoints/",
+        "boxdata": "/api/datasets/572853/boxdata/",
+        "filters": "/api/datasets/572853/filters/",
+        "multitables": "/api/datasets/572853/multitables/",
+        "forks": "/api/datasets/572853/forks/",
+        "decks": "/api/datasets/572853/decks/",
+        "permissions": "/api/datasets/572853/permissions/",
+        "parent": "/api/datasets/",
+        "project": "/api/projects/personal/",
+        "variables_private": "/api/datasets/572853/variables/private/"
+    },
+    "fragments": {
+        "state": "/api/datasets/572853/state/",
+        "preferences": "/api/datasets/572853/preferences/",
+        "stream": "/api/datasets/572853/stream/",
+        "settings": "/api/datasets/572853/settings/",
+        "table": "/api/datasets/572853/table/",
+        "pk": "/api/datasets/572853/pk/",
+        "exclusion": "/api/datasets/572853/exclusion/"
+    },
+    "views": {
+        "second_order_analysis": "/api/datasets/572853/second_order_analysis/",
+        "cube": "/api/datasets/572853/cube/",
+        "export": "/api/datasets/572853/export/",
+        "summary": "/api/datasets/572853/summary/",
+        "applied_filters": "/api/datasets/572853/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "/api/users/27a158/",
+        "current_editor": "/api/users/27a158/",
+        "creation_time": "2020-04-03T16:02:24.833000",
+        "streaming": "no",
+        "owner": "/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "572853",
+        "size": {
+            "rows": 1634,
+            "unfiltered_rows": 1634,
+            "columns": 15
+        },
+        "palette": {
+            "brand": {
+                "message": "#722580",
+                "primary": "#0064a4",
+                "secondary": "#107f65"
+            }
+        },
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "Subset of the main survey, restricted to self-reported R users",
+        "end_date": null,
+        "access_time": "2020-04-03T16:02:24.659000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2020-04-03T16:02:38.092000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "/api/accounts/00001/",
+        "name": "Stack Overflow Developer Survey 2017",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/572853/variables/weights/",
+        "variables_hier": "/api/datasets/572853/variables/hier/",
+        "variables_personal": "/api/datasets/572853/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "/api/projects/378ad4/",
+        "editor_url": "/api/users/27a158/",
+        "user_url": "/api/users/27a158/"
+    }
+}
