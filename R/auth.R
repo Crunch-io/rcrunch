@@ -4,6 +4,7 @@
 logout <- function() {
     try(crGET(rootURL("logout")), silent = TRUE)
     clearCache()
+    set_crunch_config(add_headers(Authorization = ""))
     old.prompt <- getOption("crunch.old.prompt")
     if (!is.null(old.prompt)) {
         options(prompt = old.prompt, crunch.old.prompt = NULL)
