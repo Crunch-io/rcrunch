@@ -16,6 +16,7 @@ library(crunch)
 
 ```{r, results='hide', include = FALSE}
 library(httptest)
+clean_up <- envOrOption("clean.up.vignette.generation", TRUE) # Whether to delete datasets 
 start_vignette("crunch")
 login()
 ```
@@ -229,6 +230,11 @@ This vignette has gone through some of the basics of working with crunch in R in
 
 ```{r, include=FALSE}
 logout()
+if (clean_up) {
+  try(with_consent({
+    delete(ds)
+  }), silent = TRUE)
+}
 end_vignette()
 ```
 

@@ -19,7 +19,9 @@ login()
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 library(httptest)
+clean_up <- envOrOption("clean.up.vignette.generation", TRUE) # Whether to delete datasets 
 start_vignette("fork-and-merge")
+login()
 ```
 
 ```{r message=FALSE, results='hide'}
@@ -155,5 +157,14 @@ Forking and merging datasets is a great way to make changes to the data. It allo
 
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
+if (clean_up) {
+  try(with_consent({
+    delete(ds)
+    delete(forked_ds)
+    delete(wave2)
+    delete(ds_fork)
+    delete(house_ds)
+  }), silent = TRUE)
+}
 end_vignette()
 ```
