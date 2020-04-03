@@ -112,16 +112,16 @@ without_echo <- function(expr) {
 ## Pass through for test mocking
 read_input <- function(...) readline(...)
 
-#' Add an auth token as a cookie manually
+#' Add an auth token as a header manually
 #'
-#' Set the auth token rather than from a Set-Cookie response header. Also modify
+#' Set the auth token rather than from a response header. Also modify
 #' the user-agent to include the service this is coming from.
 #' @param token character auth token
 #' @param ua character optional string to add to the User-Agent request header
 #' @return Nothing; called for its side effects.
 #' @export
 #' @keywords internal
-#' @importFrom httr set_cookies
+#' @importFrom httr add_headers
 tokenAuth <- function(token, ua = "token") {
     set_crunch_config(
         c(
