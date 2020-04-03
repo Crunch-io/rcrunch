@@ -20,7 +20,7 @@ structure(list(url = "dataset_exports/test-ds.csv?Signature=SKknqNLKd2vJu3EcxKhO
         path = logical(0), secure = logical(0), expiration = structure(numeric(0), class = c("POSIXct",
         "POSIXt")), name = logical(0), value = logical(0)), .Names = c("domain",
     "flag", "path", "secure", "expiration", "name", "value"), row.names = integer(0), class = "data.frame"),
-    content = structure(httptest:::findMockFile("dataset_exports/test-ds.csv-eadc36.R-FILE"), class = "path"),
+    content = structure(httptest::find_mock_file("dataset_exports/test-ds.csv-eadc36.R-FILE"), class = "path"),
     date = structure(1515766994, class = c("POSIXct", "POSIXt"
     ), tzone = "GMT"), times = structure(c(0, 0.009498, 0.040893,
     0.121405, 0.173366, 0.173382), .Names = c("redirect", "namelookup",
