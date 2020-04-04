@@ -7,7 +7,10 @@ with_mock_crunch({
     write(content(resp, "text"), file)
   }, {
     test_that("head method works on CrunchDatasets", {
-      head_df <- head(ds[,c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")])
+      with(
+        temp.options(crunch.show.progress = FALSE),
+        head_df <- head(ds[,c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")])
+      )
       expect_is(head_df, "data.frame")
       expect_equal(nrow(head_df), 6)
       expect_identical(head_df$textVar, c("w", "n", "x", "b", "q", "s"))
