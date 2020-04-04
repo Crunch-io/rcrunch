@@ -28,6 +28,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
+  skip_on_local_backend("Vagrant host doesn't serve files correctly")
   ds <- newDatasetFromFixture("apidocs")
   ds_df <- as.data.frame(ds, force = TRUE)
   dfhead <- head(ds)
