@@ -2,6 +2,7 @@
 * https verification can be disabled during testing by setting environment variable `R_TEST_VERIFY_SSL=FALSE`
 * You can now use a named `filter` or `filter` object when using `tabbook()`. Filtering by expression in the dataset argument is also supported again.
 * `newMultiTable()` now correctly passes `...`, so arguments like `is_public` work (#424)
+* `tabBook()` by default uses a new endpoint, which allows for more options. The old endpoint is deprecated, but while the server supports it, you can still use it. See [`?tabBook`](https://crunch.io/r/crunch/reference/tabBook.html) for more details.
 
 # crunch 1.26.3
 * Can now `deriveArray()` using expressions to create the subvariables.

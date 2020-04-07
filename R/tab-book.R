@@ -13,16 +13,23 @@
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `dataset`, or `NULL` for unweighted results.
 #' Default is the currently applied [`weight`].
-#' @param format character export format: currently supported values are "json"
+#' @param output_format character export format: currently supported values are "json"
 #' (default) and "xlsx".
 #' @param file character local filename to write to. A default filename will be
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
 #' @param filter a Crunch `filter` object or a vector of names
 #' of \code{\link{filters}} defined in the dataset.
+#' @param use_legacy_endpoint Logical, indicating whether to use a 'legacy'
+#' endpoint for compatibility (this endpoint will be removed in the future).
+#' Defaults to `FALSE`, but can be set in the function, or with the environment
+#' variable `R_USE_LEGACY_TABBOOK_ENDPOINT` or R option
+#' `use.legacy.tabbook.endpoint`.
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
 #' [in the crunch API documentation](
+#' https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options)
+#' or [for the legacy endpoint](
 #' https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options)
 #' @return If "json" format is requested, the function returns an object of
 #' class `TabBookResult`, containing a list of `MultitableResult`
@@ -41,8 +48,20 @@
 #' @importFrom jsonlite fromJSON
 #' @export
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
-                    format = c("json", "xlsx"), file, filter = NULL, ...) {
-    fmt <- match.arg(format)
+                    output_format = c("json", "xlsx"), file, filter = NULL,
+                    use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
+                    ...) {
+    dots <- list(...)
+    if ("format" %in% names(dots) && is.character(dots$format)) {
+        warning(
+            "Passing string to `format` is deprecated in `tabBook()`. Use `output_format` instead."
+        )
+        fmt <- match.arg(dots$format, c("json", "xlsx"))
+        dots$format <- NULL
+    } else {
+        fmt <- match.arg(output_format)
+    }
+
     accept <- extToContentType(fmt)
     if (missing(file)) {
         if (fmt == "json") {
@@ -58,6 +77,53 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         weight <- self(weight)
     }
 
+    filter <- standardize_tabbook_filter(dataset, filter)
+
+    body <- list(
+        filter = filter,
+        weight = weight,
+        options = dots
+    )
+    ## Add this after so that if it is NULL, the "where" key isn't present
+    body$where <- variablesFilter(dataset)
+
+    if (use_legacy_endpoint) {
+        warning(
+            "The legacy tabbook endpoint has been deprecated and will be removed in the future."
+        )
+        tabbook_url <- shojiURL(multitable, "views", "tabbook")
+    } else {
+        tabbook_url <- shojiURL(multitable, "views", "export")
+    }
+
+    ## POST the query, which (after progress polling) returns a URL to download
+    result <- crPOST(tabbook_url,
+        config = add_headers(`Accept` = accept),
+        body = toJSON(body)
+    )
+    if (is.null(file)) {
+        ## Read in the tab book content and turn it into useful objects
+        out <- retry(crGET(result))
+        return(TabBookResult(out))
+    } else {
+        file <- crDownload(result, file)
+        ## (invisibly) return the filename
+        invisible(file)
+    }
+}
+
+extToContentType <- function(ext) {
+    mapping <- list(
+        json = "application/json",
+        xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        pptx = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    )
+    return(mapping[[ext]])
+}
+
+# Possibly went a little overboard allowing different filter options in tabbook
+# extract out the logic here
+standardize_tabbook_filter <- function(dataset, filter) {
     if (!is.null(filter) & all(is.character(filter))) {
         filter_name <- filter
         available <- filter_name %in% names(filters(dataset))
@@ -81,44 +147,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     } else if (!is.null(expr_filter)) {
         filter <- expr_filter
     }
-
-    body <- list(
-        filter = filter,
-        weight = weight,
-        options = list(...)
-    )
-    ## Add this after so that if it is NULL, the "where" key isn't present
-    body$where <- variablesFilter(dataset)
-
-    tabbook_url <- shojiURL(multitable, "views", "tabbook")
-    ## POST the query, which (after progress polling) returns a URL to download
-    result <- crPOST(tabbook_url,
-        config = add_headers(`Accept` = accept),
-        body = toJSON(body)
-    )
-    if (is.null(file)) {
-        ## Read in the tab book content and turn it into useful objects
-        out <- retry(crGET(result))
-        if (is.raw(out)) {
-            ## TODO: fix the content-type header from the server
-            ## See https://www.pivotaltracker.com/story/show/148554039
-            out <- fromJSON(rawToChar(out), simplifyVector = FALSE)
-        }
-        return(TabBookResult(out))
-    } else {
-        file <- crDownload(result, file)
-        ## (invisibly) return the filename
-        invisible(file)
-    }
-}
-
-extToContentType <- function(ext) {
-    mapping <- list(
-        json = "application/json",
-        xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        pptx = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-    )
-    return(mapping[[ext]])
+    filter
 }
 
 #' TabBookResult and MultitableResult dimension

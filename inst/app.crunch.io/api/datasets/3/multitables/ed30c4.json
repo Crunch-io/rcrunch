@@ -2,7 +2,8 @@
 	"element": "shoji:entity",
 	"self": "https://app.crunch.io/api/datasets/3/multitables/ed30c4/",
 	"views": {
-		"tabbook": "https://app.crunch.io/api/datasets/3/multitables/ed30c4/tabbook/"
+		"tabbook": "https://app.crunch.io/api/datasets/3/multitables/ed30c4/tabbook/",
+		"export": "https://app.crunch.io/api/datasets/3/multitables/ed30c4/export/"
 	},
 	"description": "Detail information for one multitable definition",
 	"body": {
