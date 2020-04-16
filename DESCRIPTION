@@ -40,7 +40,7 @@ Suggests:
     rstudioapi,
     spelling,
     styler,
-    testthat (>= 2.0.0),
+    testthat (>= 2.3.2.9000),
     withr
 VignetteBuilder: knitr
 Language: en-US
@@ -171,3 +171,5 @@ Collate:
     'versions.R'
     'weight.R'
     'zcl.R'
+Remotes:  
+    r-lib/testthat
