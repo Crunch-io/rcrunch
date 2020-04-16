@@ -76,18 +76,18 @@ with_test_authentication({
             categories(ds$petloc)
         )
         expect_equivalent(
-            categories(ds$derivedarray$`petloc_work#`),
+            categories(ds$derivedarray$`petloc_workX`),
             categories(ds$petloc$petloc_work)
         )
 
         # checking the petloc_work subvar since if the above tests failed,
         # we know that petloc_home is broken
         expect_equivalent(
-            as.vector(ds$derivedarray$`petloc_work#`),
+            as.vector(ds$derivedarray$`petloc_workX`),
             as.vector(ds$petloc$petloc_work)
         )
         expect_equivalent(
-            as.vector(ds$derivedarray$`petloc_work#`, mode = "id"),
+            as.vector(ds$derivedarray$`petloc_workX`, mode = "id"),
             as.vector(ds$petloc$petloc_work, mode = "id")
         )
     })
@@ -103,11 +103,11 @@ with_test_authentication({
             categories(ds$petloc)
         )
         expect_equivalent(
-            categories(ds$derivedarray$`petloc_work#`),
+            categories(ds$derivedarray$`petloc_workX`),
             categories(ds$petloc$petloc_work)
         )
         expect_equivalent(
-            categories(ds$derivedarray$`petloc_work#`),
+            categories(ds$derivedarray$`petloc_workX`),
             categories(ds$petloc$petloc_work)
         )
     })
@@ -115,11 +115,11 @@ with_test_authentication({
     test_that("changing cat ids (values+metadata) first subvar", {
         # check the first subvar
         expect_equivalent(
-            as.vector(ds$derivedarray$`petloc_home#`),
+            as.vector(ds$derivedarray$`petloc_homeX`),
             as.vector(ds$petloc$petloc_home)
         )
         expect_equivalent(
-            as.vector(ds$derivedarray$`petloc_home#`, mode = "id"),
+            as.vector(ds$derivedarray$`petloc_homeX`, mode = "id"),
             as.vector(ds$petloc$petloc_home, mode = "id")
         )
     })
@@ -127,11 +127,11 @@ with_test_authentication({
     test_that("changing cat ids (values+metadata) second subvar", {
         # check the second subvar
         expect_equivalent(
-            as.vector(ds$derivedarray$`petloc_work#`),
+            as.vector(ds$derivedarray$`petloc_workX`),
             as.vector(ds$petloc$petloc_work)
         )
         expect_equivalent(
-            as.vector(ds$derivedarray$`petloc_work#`, mode = "id"),
+            as.vector(ds$derivedarray$`petloc_workX`, mode = "id"),
             as.vector(ds$petloc$petloc_work, mode = "id")
         )
     })
@@ -210,32 +210,32 @@ with_test_authentication({
         levels(first_copy_vals) <- c("A", "B", "C", "A", "B", "C")
         levels(second_copy_vals) <- c("A", "B", "C", "A", "B", "C")
 
-        expect_equal(as.vector(ds$ca_combined$`first#`), first_copy_vals)
-        expect_equal(as.vector(ds$ca_combined$`second#`), second_copy_vals)
+        expect_equal(as.vector(ds$ca_combined$`firstX`), first_copy_vals)
+        expect_equal(as.vector(ds$ca_combined$`secondX`), second_copy_vals)
 
         # and this might be clearer in a cube of the first subvar and the
         # first_copy, this test is testing the same thing as above, with a cube
         #
         # we expect:
         # first_copy
-        # first# A B C a b c
+        # firstX A B C a b c
         #      A 6 0 0 3 0 0
         #      B 0 5 0 0 2 0
         #      C 0 0 4 0 0 1
         #
         # we get:
         # first_copy
-        # first# A B C a b c
+        # firstX A B C a b c
         #      A 6 5 4 3 0 0
         #      B 0 0 0 0 2 0
         #      C 0 0 0 0 0 1
         dims <- list(
-            `first#` = c("A", "B", "C"),
+            `firstX` = c("A", "B", "C"),
             first_copy = c("A", "B", "C", "a", "b", "c")
         )
 
         expect_equivalent(
-            as.array(crtabs(~ ca_combined[["first#"]] + first_copy, ds)),
+            as.array(crtabs(~ ca_combined[["firstX"]] + first_copy, ds)),
             cubify(
                 6, 0, 0, 3, 0, 0,
                 0, 5, 0, 0, 2, 0,

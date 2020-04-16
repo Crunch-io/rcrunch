@@ -141,7 +141,7 @@ with_mock_crunch({
         mr_var <- variables(catarray_x_mr)[[3]]
         expect_equal(
             aliases(subvariables(mr_var)),
-            c("food_opinion#", "rest_opinion#", "play_opinion#")
+            c("food_opinionX", "rest_opinionX", "play_opinionX")
         )
         expect_equal(
             names(subvariables(mr_var)),
