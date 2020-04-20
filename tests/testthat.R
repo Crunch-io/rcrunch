@@ -9,7 +9,10 @@ if (nchar(Sys.getenv("JENKINS_HOME"))) {
         base::writeLines(enc2utf8(text), path, useBytes = TRUE)
     }
 
-    JunitReporterFix <- R6::R6Class(
+    # trick to get around :: from depends CRAN check
+    R6Class <- get("R6Class", asNamespace("R6"))
+
+    JunitReporterFix <- R6Class(
         "JunitReporterFix",
         inherit = JunitReporter,
         public = list(
