@@ -331,6 +331,12 @@ setGeneric(
     halt(paste("Cannot update", class(x), "with type", class(value)))
 }
 
+#' @rdname weight
+#' @export
+setGeneric("weight", function(x) standardGeneric("weight"))
+#' @rdname weight
+#' @export
+setGeneric("weight<-", function(x, value) standardGeneric("weight<-"))
 
 # for ggplot to not copmlain when given crunchdata
 #' Fortify crunch objects for use with ggplot
