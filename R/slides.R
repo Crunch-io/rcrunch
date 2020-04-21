@@ -568,21 +568,21 @@ setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
     # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
     # once query_environment is changed to work like every other expression, the
     # following should just work:
-    # return(setEntitySlot(x, "query_environment", list("filter" = list(value@expression))))
+    # return(set_query_env_slot(x, filter = list(value@expression)))
 })
 
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("Analysis", "CrunchFilter"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
-    return(setEntitySlot(x, "query_environment", list("filter" = list(self(value)))))
+    return(set_query_env_slot(x, filter = list(self(value))))
 })
 
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
-    return(setEntitySlot(x, "query_environment", list("filter" = list())))
+    return(set_query_env_slot(x, filter = list()))
 })
 
 #' @rdname display-settings
@@ -601,3 +601,61 @@ setMethod("cubes", "CrunchDeck", function(x) {
     names(out) <- titles(x)
     return(out)
 })
+
+
+#' @rdname weight
+#' @export
+setMethod("weight", "CrunchSlide", function(x) {
+    analysis <- analyses(x)[[1]]
+    return(weight(analysis))
+})
+
+#' @rdname weight
+#' @export
+setMethod("weight<-", c("CrunchSlide", "ANY"), function(x, value) {
+    # check that there is only on analysis?
+    first_analysis <- analyses(x)[[1]]
+    weight(first_analysis) <- value
+    return(invisible(x))
+})
+
+#' @rdname weight
+#' @export
+setMethod("weight", "Analysis", function(x) {
+    wt <- x@body$query_environment$weight
+    if (length(wt) == 0) {
+        return(NULL)
+    }
+    full_ds <- loadDataset(datasetReference(VariableEntity(x)))
+    wt_pos <- which(urls(allVariables(full_ds)) == wt)
+    filt <- filter(x)
+    if (!is.null(filt)) {
+        filt <- CrunchLogicalExpr(expression = filt@body[["expression"]])
+    }
+    CrunchVariable(allVariables(full_ds)[[wt_pos]], filter = filt)
+})
+
+#' @rdname weight
+#' @export
+setMethod("weight<-", c("Analysis", "CrunchVariable"), function(x, value) {
+    if (!is.weightVariable(value)) halt(paste0("Variable '", name(value), "' is not a weightVariable"))
+    return(set_query_env_slot(x, weight = self(value)))
+})
+
+#' @rdname weight
+#' @export
+setMethod("weight<-", c("Analysis", "NULL"), function(x, value) {
+    return(set_query_env_slot(x, weight = NULL))
+})
+
+# TODO: setMethod("weight<-", c("Analysis", "CrunchVariable") method to use alias?
+
+# Want to update filter/weight components separately so that we don't
+# remove something accidentally.
+set_query_env_slot <- function(x, filter, weight) {
+    query_env <- slot(x, "body")[["query_environment"]]
+    if (!missing(filter)) query_env$filter <- filter
+    if (!missing(weight)) query_env$weight <- weight
+
+    setEntitySlot(x, "query_environment", query_env)
+}
