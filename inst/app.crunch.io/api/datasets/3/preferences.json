@@ -1,7 +1,5 @@
 {
     "element": "shoji:entity",
     "self": "https://app.crunch.io/api/datasets/3/preferences/",
-    "body": {
-        "weight": "https://app.crunch.io/api/datasets/3/variables/birthyr/"
-    }
+    "body": {}
 }

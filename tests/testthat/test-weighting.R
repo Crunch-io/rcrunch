@@ -1,43 +1,48 @@
 context("Weights")
 
 with_mock_crunch({
-    oldds <- loadDataset("test ds")
-    newds <- loadDataset("ECON.sav")
+    oldds <- loadDataset("ECON.sav")
+    newds <- loadDataset("test ds")
 
     test_that("Getting weights", {
         expect_null(weight(oldds))
-        expect_warning(
-            expect_identical(weight(newds), newds$birthyr),
-            "Variable birthyr is hidden"
-        )
+        expect_identical(weight(newds), newds$birthyr)
     })
 
     test_that("Can get weights from a subset dataset", {
-        expect_warning(
-            expect_identical(weight(newds[c("gender", "starttime")]), newds$birthyr),
-            "Variable birthyr is hidden"
-        )
+            expect_identical(weight(newds[c("gender", "starttime")]), newds$birthyr)
     })
 
     test_that("Setting weights", {
-        expect_PATCH(
-            weight(oldds) <- oldds$birthyr,
-            "https://app.crunch.io/api/datasets/1/preferences/",
-            '{"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}'
+        expect_warning(
+            expect_PATCH(
+                weight(oldds) <- oldds$birthyr,
+                "https://app.crunch.io/api/datasets/3/preferences/",
+                '{"weight":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}'
+            ),
+            "Variable birthyr is hidden"
         )
         expect_PATCH(
             weight(newds) <- NULL,
-            "https://app.crunch.io/api/datasets/3/preferences/",
+            "https://app.crunch.io/api/datasets/1/preferences/",
             '{"weight":null}'
         )
     })
     test_that("is.weight assignment method", {
-        expect_PATCH(
-            is.weight(oldds$birthyr) <- TRUE,
-            "https://app.crunch.io/api/datasets/1/preferences/",
-            '{"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}'
+        expect_warning(
+            expect_PATCH(
+                is.weight(oldds$birthyr) <- TRUE,
+                "https://app.crunch.io/api/datasets/3/preferences/",
+                '{"weight":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}'
+            ),
+            "Variable birthyr is hidden"
         )
-        expect_silent(is.weight(oldds$birthyr) <- FALSE)
+        expect_silent(
+            expect_warning(
+                is.weight(oldds$birthyr) <- FALSE,
+                "Variable birthyr is hidden"
+            )
+        )
     })
     test_that("is.weight returns false when the variable is not a weight", {
         expect_false(is.weight("character"))
@@ -45,11 +50,19 @@ with_mock_crunch({
         expect_false(is.weight(NULL))
     })
     test_that("is weight assignment errors correctly", {
-        expect_error(is.weight(oldds$birthyr) <- "char",
+        expect_error(
+            expect_warning(
+                is.weight(oldds$birthyr) <- "char",
+                "variable birthyr is hidden"
+            ),
             "is.TRUEorFALSE(value) is not TRUE",
             fixed = TRUE
         )
-        expect_error(is.weight(oldds$birthyr) <- c(TRUE, FALSE),
+        expect_error(
+            expect_warning(
+                is.weight(oldds$birthyr) <- c(TRUE, FALSE),
+                "variable birthyr is hidden"
+            ),
             "is.TRUEorFALSE(value) is not TRUE",
             fixed = TRUE
         )
@@ -57,10 +70,7 @@ with_mock_crunch({
 
     test_that("No request is made to set a weight that already is your weight", {
         expect_no_request(weight(oldds) <- NULL)
-        expect_warning(
-            expect_no_request(weight(newds) <- newds$birthyr),
-            "Variable birthyr is hidden"
-        )
+        expect_no_request(weight(newds) <- newds$birthyr)
     })
 
     test_that("Errors are properly handled when setting weight", {
@@ -81,34 +91,48 @@ with_mock_crunch({
     test_that("weightVariables can be assigned", {
         body <- paste0(
             '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets',
-            '/1/variables/weights/","description":"Order of the weight variables ', # nolint
+            '/3/variables/weights/","description":"Order of the weight variables ', # nolint
             'for this dataset","graph":',
-            '["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
+            '["https://app.crunch.io/api/datasets/3/variables/birthyr/"]} '
         )
         expect_PUT(
-            weightVariables(oldds) <- oldds$birthyr,
-            "https://app.crunch.io/api/datasets/1/variables/weights/",
+            expect_warning(
+                weightVariables(oldds) <- oldds$birthyr,
+                "variable birthyr is hidden"
+            ),
+            "https://app.crunch.io/api/datasets/3/variables/weights/",
             body
         )
         expect_PUT(
-            is.weightVariable(oldds$birthyr) <- TRUE,
-            "https://app.crunch.io/api/datasets/1/variables/weights/",
+            expect_warning(
+                is.weightVariable(oldds$birthyr) <- TRUE,
+                "variable birthyr is hidden"
+            ),
+            "https://app.crunch.io/api/datasets/3/variables/weights/",
             body
         )
     })
     test_that("is.weightVariable", {
-        expect_false(is.weightVariable(oldds$birthyr))
+        expect_false(
+            expect_warning(
+                is.weightVariable(oldds$birthyr),
+                "Variable birthyr is hidden"
+            )
+        )
     })
     test_that("is.weightVariable assignment method", {
         body <- paste0(
             '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets',
-            '/1/variables/weights/","description":"Order of the weight variables', # nolint
+            '/3/variables/weights/","description":"Order of the weight variables', # nolint
             ' for this dataset","graph":',
-            '["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
+            '["https://app.crunch.io/api/datasets/3/variables/birthyr/"]} '
         )
         expect_PUT(
-            is.weightVariable(oldds$birthyr) <- TRUE,
-            "https://app.crunch.io/api/datasets/1/variables/weights/",
+            expect_warning(
+                is.weightVariable(oldds$birthyr) <- TRUE,
+                "variable birthyr is hidden"
+            ),
+            "https://app.crunch.io/api/datasets/3/variables/weights/",
             body
         )
     })
@@ -123,12 +147,15 @@ with_mock_crunch({
             "Gender is not a numeric Crunch variable."
         )
         expect_error(
-            weightVariables(oldds) <- list(oldds$gender, oldds$birthyr),
+            expect_warning(
+                weightVariables(oldds) <- list(oldds$gender, oldds$birthyr),
+                "variable birthyr is hidden"
+            ),
             "Gender is not a numeric Crunch variable."
         )
         expect_error(
-            weightVariables(oldds) <- list(oldds$gender, oldds$textVar),
-            "Gender and Text variable ftw are not numeric Crunch variables."
+            weightVariables(oldds) <- list(oldds$gender, oldds$starttime),
+            "Gender and starttime are not numeric Crunch variables."
         )
     })
 
@@ -147,7 +174,11 @@ with_mock_crunch({
             ),
             fixed = TRUE
         )
-        expect_error(generateWeightEntry(oldds$birthyr ~ c(30, 30, 40)),
+        expect_error(
+            expect_warning(
+                generateWeightEntry(oldds$birthyr ~ c(30, 30, 40)),
+                "variable birthyr is hidden"
+            ),
             "oldds$birthyr is not a categorical Crunch variable",
             fixed = TRUE
         )
@@ -177,7 +208,7 @@ with_mock_crunch({
             `function` = "rake",
             args = list(
                 list(
-                    variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
+                    variable = "https://app.crunch.io/api/datasets/3/variables/gender/",
                     targets = list(c(1, 0.4), c(2, 0.6), c(-1, 0))
                 )
             )
@@ -190,7 +221,7 @@ with_mock_crunch({
             `function` = "rake",
             args = list(
                 list(
-                    variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
+                    variable = "https://app.crunch.io/api/datasets/3/variables/gender/",
                     targets = list(c(1, 0.4), c(2, 0.6), c(-1, 0))
                 )
             )

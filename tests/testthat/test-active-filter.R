@@ -75,16 +75,12 @@ with_mock_crunch({
     })
 
     test_that("Getting weight variable from filtered dataset is filtered", {
-        otherds <- loadDataset("ECON.sav")
-        expect_warning(
-            expect_identical(weight(otherds), otherds$birthyr),
-            "Variable birthyr is hidden"
-        )
+        otherds <- loadDataset("test ds")
+        expect_identical(weight(otherds), otherds$birthyr)
+
         otherds2 <- otherds[otherds$gender == "Male", ]
-        expect_warning(
-            expect_identical(weight(otherds2), otherds2$birthyr),
-            "Variable birthyr is hidden"
-        )
+        expect_identical(weight(otherds2), otherds2$birthyr)
+
         expect_identical(activeFilter(weight(otherds2)), otherds$gender == "Male")
     })
 
