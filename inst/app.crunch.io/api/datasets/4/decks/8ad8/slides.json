@@ -116,6 +116,43 @@
             },
             "subtitle": "",
             "title": "mymrset"
+        },
+        "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/": {
+            "analysis_url": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
+            "display_settings": {
+                "percentageDirection": {
+                    "value": "colPct"
+                },
+                "showEmpty": {
+                    "value": false
+                },
+                "showMean": {
+                    "value": true
+                },
+                "vizType": {
+                    "value": "table"
+                },
+                "countsOrPercents": {
+                    "value": "percent"
+                },
+                "decimalPlaces": {
+                    "value": 1
+                },
+                "populationMagnitude": {
+                    "value": 3
+                },
+                "showSignif": {
+                    "value": true
+                },
+                "currentTab": {
+                    "value": 0
+                },
+                "uiView": {
+                    "value": "app.datasets.analyze"
+                }
+            },
+            "subtitle": "",
+            "title": "mymrset v2"
         }
     },
     "template": "{\"query\": {\"measures\": \"Object with keyed measures functions\", \"dimensions\": \"Array of variable references\", \"weight\": \"Optional weight variable URL\"}, \"display_settings\": {}, \"query_environment\": {\"filter\": \"Array of filter urls\"}}"

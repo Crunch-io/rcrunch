@@ -40,9 +40,9 @@ with_mock_crunch({
 
     test_that("Deck metadata", {
         expect_is(main_deck, "CrunchDeck")
-        expect_equal(length(main_deck), 3)
-        expect_equal(titles(main_deck), c("birthyr", "mymrset", "mymrset"))
-        expect_equal(subtitles(main_deck), c("", "", "age"))
+        expect_equal(length(main_deck), 4)
+        expect_equal(titles(main_deck), c("birthyr", "mymrset", "mymrset", "mymrset v2"))
+        expect_equal(subtitles(main_deck), c("", "", "age", ""))
     })
 
     test_that("deck catalog show method", {
@@ -70,9 +70,9 @@ with_mock_crunch({
     })
 
     test_that("deck titles and subtitles", {
-        expect_equal(titles(main_deck), c("birthyr", "mymrset", "mymrset"))
+        expect_equal(titles(main_deck), c("birthyr", "mymrset", "mymrset", "mymrset v2"))
         expect_PATCH(
-            titles(main_deck) <- paste("slide", 1:3),
+            titles(main_deck) <- paste("slide", 1:4),
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
             '{"element":"shoji:catalog","index":{',
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/":',
@@ -80,10 +80,12 @@ with_mock_crunch({
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/5938/":',
             '{"title":"slide 2"},',
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/":',
-            '{"title":"slide 3"}}}'
+            '{"title":"slide 3"},',
+            '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/":',
+            '{"title":"slide 4"}}}'
         )
         expect_PATCH(
-            subtitles(main_deck) <- paste("slide", 1:3),
+            subtitles(main_deck) <- paste("slide", 1:4),
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
             '{"element":"shoji:catalog","index":{',
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/":',
@@ -91,7 +93,9 @@ with_mock_crunch({
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/5938/":',
             '{"subtitle":"slide 2"},',
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/":',
-            '{"subtitle":"slide 3"}}}'
+            '{"subtitle":"slide 3"},',
+            '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/":',
+            '{"subtitle":"slide 4"}}}'
         )
     })
 
@@ -164,7 +168,7 @@ with_mock_crunch({
 
     test_that("deck assignment", {
         expect_POST(
-            main_deck[[4]] <- main_deck[[1]],
+            main_deck[[5]] <- main_deck[[1]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
             '{"element":"shoji:entity",',
             '"body":{"title":"birthyr",',
@@ -207,12 +211,13 @@ with_mock_crunch({
 
     test_that("reorderSlides", {
         expect_PATCH(
-            reorderSlides(slides(main_deck), c(3, 2, 1)),
+            reorderSlides(slides(main_deck), c(4, 3, 2, 1)),
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/flat",
             '{"element":"shoji:order",',
             '"self":"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/flat/",',
             '"description":"Order of the slides on this deck",',
-            '"graph":["https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/",',
+            '"graph":["https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/",',
+            '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/",',
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/5938/",',
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/"]}'
         )
@@ -252,7 +257,7 @@ with_mock_crunch({
 
     test_that("Slide titles and subtitles", {
         expect_PATCH(
-            names(main_deck) <- c("new_name", "other_new_name", "other_new_name"),
+            names(main_deck) <- c("new_name", "other_new_name", "other_new_name", "another"),
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
             '{"element":"shoji:catalog","index":',
             '{"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/":',
@@ -260,11 +265,13 @@ with_mock_crunch({
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/5938/":',
             '{"title":"other_new_name"},',
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/":',
-            '{"title":"other_new_name"}}}'
+            '{"title":"other_new_name"},',
+            '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/":',
+            '{"title":"another"}}}'
         )
 
         expect_PATCH(
-            titles(main_deck) <- c("new_name", "other_new_name", "other_new_name"),
+            titles(main_deck) <- c("new_name", "other_new_name", "other_new_name", "another"),
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
             '{"element":"shoji:catalog","index":',
             '{"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/":',
@@ -272,7 +279,9 @@ with_mock_crunch({
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/5938/":',
             '{"title":"other_new_name"},',
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/":',
-            '{"title":"other_new_name"}}}'
+            '{"title":"other_new_name"},',
+            '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/":',
+            '{"title":"another"}}}'
         )
     })
 
@@ -448,6 +457,97 @@ with_mock_crunch({
             filter(analysis(main_deck[[3]])) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[],"weight":null}}'
+        )
+    })
+
+    test_that("weight display for slides (and analyses)", {
+        expect_identical(weight(slide), NULL)
+        expect_prints(weight(slide), "NULL")
+        # filter() on slide and analysis are identical (a shortcut when there is
+        # one analysis)
+        expect_identical(weight(slide), weight(analysis(slide)))
+
+
+        # main_deck[[4]] has a weight
+        expect_is(weight(main_deck[[4]]), "CrunchVariable")
+        # filter() on slide and analysis are identical (a shortcut when there is
+        # one analysis)
+        expect_identical(weight(main_deck[[4]]), weight(analysis(main_deck[[4]])))
+    })
+
+    test_that("weight<-something for slides (and analyses)", {
+        # through a CrunchDeck object
+        expect_PATCH(
+            weight(main_deck[[1]]) <- ds$birthyr,
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"query_environment":{"filter":[],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
+        )
+
+        expect_PATCH(
+            weight(analysis(main_deck[[1]])) <- ds$birthyr,
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"query_environment":{"filter":[],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
+        )
+
+        # through the decks catalog
+        expect_PATCH(
+            weight(decks(ds)[[2]][[1]]) <- ds$birthyr,
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"query_environment":{"filter":[],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
+        )
+
+        expect_PATCH(
+            weight(decks(ds)[[2]][[1]]) <- ds$birthyr,
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"query_environment":{"filter":[],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
+        )
+
+        expect_error(
+            weight(decks(ds)[[2]][[1]]) <- ds$mymrset,
+            "is not a weightVariable"
+        )
+    })
+
+    test_that("weight<-NULL for slides (and analyses)", {
+        expect_PATCH(
+            weight(decks(ds)[[2]][[4]]) <- NULL,
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
+            '{"query_environment":{"filter":[],"weight":null}}'
+        )
+        expect_PATCH(
+            weight(analysis(decks(ds)[[2]][[4]])) <- NULL,
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
+            '{"query_environment":{"filter":[],"weight":null}}'
+        )
+        expect_PATCH(
+            weight(main_deck[[4]]) <- NULL,
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
+            '{"query_environment":{"filter":[],"weight":null}}'
+        )
+        expect_PATCH(
+            weight(analysis(main_deck[[4]])) <- NULL,
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
+            '{"query_environment":{"filter":[],"weight":null}}'
+        )
+    })
+
+    test_that("weight<- and filter<- play nicely together", {
+        # Can add a weight when filter exists
+        expect_PATCH(
+            weight(decks(ds)[[2]][[3]]) <- ds$birthyr,
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[{"function":"in","args":[{"variable":"gender",',
+            '"dataset":"1"},{"column":[1],"type":{"function":"typeof","args":[{"variable":',
+            '"gender","dataset":"1"}]}}],"name":"Adhoc filter"}],"weight":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}'
+        )
+        # Can add a filter when weight exists
+        expect_PATCH(
+            filter(decks(ds)[[2]][[4]]) <- filters(ds)[["Public filter"]],
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
+            '{"query_environment":{"filter":["https://app.crunch.io/api/',
+            'datasets/4/filters/filter2/"],"weight":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}'
         )
     })
 
@@ -799,6 +899,37 @@ with_test_authentication({
         # remove filters
         filter(deck[[1]]) <- NULL
         filter(analysis(deck[[2]])) <- NULL
+
+        # make sure that the slides are still all the same
+        deck <- refresh(deck)
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v4, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+    })
+
+    test_that("Weight setting", {
+        ds <- refresh(ds)
+        deck <- decks(ds)[["new_name"]]
+
+        # establish that we have three slides, and their queries
+        expect_equal(length(slides(deck)), 3)
+        expect_identical(cube(deck[[1]]), crtabs(~v3, ds))
+        expect_identical(cube(deck[[2]]), crtabs(~v4, ds))
+        expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
+
+        # make a weight variable
+        ds$weight <- sample(c(.2, .8), 20, replace = TRUE)
+        is.weightVariable(ds$weight) <- TRUE
+
+        # add weights
+        weight(deck[[1]]) <- ds$weight
+
+        # check weights
+        expect_identical(weight(deck[[1]]), ds$weight)
+
+        # remove weights
+        weight(deck[[1]]) <- NULL
 
         # make sure that the slides are still all the same
         deck <- refresh(deck)

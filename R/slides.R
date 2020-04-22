@@ -638,7 +638,7 @@ setMethod("weight", "Analysis", function(x) {
 #' @rdname weight
 #' @export
 setMethod("weight<-", c("Analysis", "CrunchVariable"), function(x, value) {
-    if (!is.weightVariable(value)) halt(paste0("Variable '", name(value), "' is not a weightVariable"))
+    if (!is.weightVariable(value)) halt(paste0("Variable '", alias(value), "' is not a weightVariable"))
     return(set_query_env_slot(x, weight = self(value)))
 })
 
@@ -654,8 +654,9 @@ setMethod("weight<-", c("Analysis", "NULL"), function(x, value) {
 # remove something accidentally.
 set_query_env_slot <- function(x, filter, weight) {
     query_env <- slot(x, "body")[["query_environment"]]
-    if (!missing(filter)) query_env$filter <- filter
-    if (!missing(weight)) query_env$weight <- weight
+    # The single "[" <- list() notation allows NULLs in weight rather than just removing weight
+    if (!missing(filter)) query_env["filter"] <- list(filter)
+    if (!missing(weight)) query_env["weight"] <- list(weight)
 
     setEntitySlot(x, "query_environment", query_env)
 }
