@@ -1,0 +1,64 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/4/variables/birthyrPlus/",
+    "catalogs": {
+        "parent": "https://app.crunch.io/api/datasets/4/variables/"
+    },
+    "fragments": {
+        "missing_rules": "https://app.crunch.io/api/datasets/4/variables/birthyrPlus/missing_rules/",
+        "user_settings": "https://app.crunch.io/api/datasets/4/variables/birthyrPlus/user_settings/"
+    },
+    "views": {
+        "frequencies": "https://app.crunch.io/api/datasets/4/variables/birthyrPlus/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/4/variables/birthyrPlus/summary/",
+        "values": "https://app.crunch.io/api/datasets/4/variables/birthyrPlus/values/",
+        "cast": "https://app.crunch.io/api/datasets/4/variables/birthyrPlus/cast/"
+    },
+    "body": {
+        "name": "birthyrPlus",
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "notes": "",
+        "derived": true,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "birthyrPlus",
+        "derivation": {
+            "function": "+",
+            "args": [
+                {
+                    "variable": "../birthyr/"
+                },
+                {
+                    "value": 100
+                }
+            ],
+            "references": {
+                "alias": "birthyrPlus",
+                "name": "birthyrPlus"
+            }
+        },
+        "owner": null,
+        "dataset_id": "1",
+        "view": {
+            "column_width": null
+        },
+        "type": "numeric",
+        "id": "birthyrPlus",
+        "categories": [],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/4/"
+    }
+}

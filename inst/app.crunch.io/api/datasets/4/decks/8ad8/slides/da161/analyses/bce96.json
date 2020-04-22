@@ -1,0 +1,67 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+    "description": "Data to build a given analysis",
+    "body": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "function": "bin",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/4/variables/000002/"
+                        }
+                    ]
+                }
+            ],
+            "weight": null
+        },
+        "display_settings": {
+            "percentageDirection": {
+                "value": "colPct"
+            },
+            "showEmpty": {
+                "value": false
+            },
+            "showMean": {
+                "value": true
+            },
+            "vizType": {
+                "value": "table"
+            },
+            "countsOrPercents": {
+                "value": "percent"
+            },
+            "decimalPlaces": {
+                "value": 1
+            },
+            "populationMagnitude": {
+                "value": 3
+            },
+            "showSignif": {
+                "value": true
+            },
+            "currentTab": {
+                "value": 0
+            },
+            "uiView": {
+                "value": "app.datasets.browse"
+            }
+        },
+        "query_environment": {
+            "filter": [
+
+            ],
+            "weight": null
+        },
+        "id": "bce96"
+    }
+}

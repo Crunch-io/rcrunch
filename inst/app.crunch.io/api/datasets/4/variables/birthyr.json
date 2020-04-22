@@ -1,0 +1,40 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/4/variables/birthyr/",
+    "body": {
+        "alias": "birthyr",
+        "name": "Birth Year",
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "missing_reasons": {
+            "No Data": -1,
+            "Skipped": 1,
+            "Not Asked": 2
+        },
+        "categories": [],
+        "dataset_id": "a45d1b42dbca4b27a40c61f0e3c39723",
+        "view": {
+            "column_width": null
+        },
+        "type": "numeric",
+        "id": "f78ca47313144b57adfb495893968e70"
+    },
+    "views": {
+        "summary": "https://app.crunch.io/api/datasets/4/variables/birthyr/summary/",
+        "values": "https://app.crunch.io/api/datasets/4/variables/birthyr/values/",
+        "cast": "https://app.crunch.io/api/datasets/4/variables/birthyr/cast/"
+    },
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/4/folders/1/"
+    },
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/4/"
+    },
+    "description": "Details for a given Variable"
+}

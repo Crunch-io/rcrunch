@@ -1,0 +1,17 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/test%20ds%20deck/",
+    "index": {
+        "https://app.crunch.io/api/datasets/4/": {
+            "owner_display_name": "Fake User",
+            "name": "test ds deck",
+            "description": "",
+            "start_date":"2016-01-01",
+            "end_date":"2016-01-01",
+            "archived": false,
+            "id": "1",
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "is_published": true
+        }
+    }
+}

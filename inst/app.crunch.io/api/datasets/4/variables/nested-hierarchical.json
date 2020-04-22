@@ -1,0 +1,26 @@
+{
+    "element": "shoji:order",
+    "self": "https://app.crunch.io/api/datasets/4/variables/nested-hierarchical/",
+    "description": "Hierarchical ordering of dataset variables",
+    "graph": [
+        {
+            "Group 1": [
+                "https://app.crunch.io/api/datasets/4/variables/birthyr/",
+                {
+                    "Nested": [
+                        "https://app.crunch.io/api/datasets/4/variables/gender/",
+                        "https://app.crunch.io/api/datasets/4/variables/location/",
+                        "https://app.crunch.io/api/datasets/4/variables/mymrset/"
+                    ]
+                },
+                "https://app.crunch.io/api/datasets/4/variables/textVar/"
+            ]
+        },
+        {
+            "Group 2": [
+                "https://app.crunch.io/api/datasets/4/variables/starttime/",
+                "https://app.crunch.io/api/datasets/4/variables/catarray/"
+            ]
+        }
+    ]
+}

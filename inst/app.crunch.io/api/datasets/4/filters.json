@@ -1,0 +1,22 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/4/filters/",
+    "orders": {
+        "applied": "https://app.crunch.io/api/datasets/4/filters/applied/"
+    },
+    "description": "List of available filters for this dataset",
+    "index": {
+        "https://app.crunch.io/api/datasets/4/filters/filter1/": {
+            "is_public": false,
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "name": "Occasional Political Interest",
+            "id": "filter1"
+        },
+        "https://app.crunch.io/api/datasets/4/filters/filter2/": {
+            "is_public": true,
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "name": "Public filter",
+            "id": "filter2"
+        }
+    }
+}

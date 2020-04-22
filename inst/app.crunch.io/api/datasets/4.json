@@ -1,0 +1,46 @@
+// Test fixture for testing decks (split out from datasets/1)
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/4/",
+    "description": "Detail for a given dataset",
+    "body": {
+        // In reality, body has attributes found in the tuple too
+        "owner": "https://app.crunch.io/api/users/user1/",
+        "id": "1",
+        "name": "test ds deck",
+        "description": "",
+        "streaming": "no",
+        "start_date":"2016-01-01",
+        "end_date":"2016-01-01",
+        "archived": false,
+        "is_published": true
+    },
+    "catalogs": {
+        "variables": "https://app.crunch.io/api/datasets/4/variables/",
+        "folders": "https://app.crunch.io/api/datasets/4/folders/",
+        "savepoints": "https://app.crunch.io/api/datasets/4/savepoints/",
+        "batches": "https://app.crunch.io/api/datasets/4/batches/",
+        "permissions": "https://app.crunch.io/api/datasets/4/permissions/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "filters": "https://app.crunch.io/api/datasets/4/filters/",
+        "boxdata": "https://app.crunch.io/api/datasets/4/boxdata/",
+        "multitables": "https://app.crunch.io/api/datasets/4/multitables/",
+        "actions": "https://app.crunch.io/api/datasets/4/actions/",
+        "project": "https://app.crunch.io/api/projects/personal/",
+        "decks": "https://app.crunch.io/api/datasets/4/decks/"
+    },
+    "views": {
+        "summary": "https://app.crunch.io/api/datasets/4/summary/",
+        "cube": "https://app.crunch.io/api/datasets/4/cube/",
+        "export": "https://app.crunch.io/api/datasets/4/export/"
+    },
+    "fragments": {
+        "table": "https://app.crunch.io/api/datasets/4/table/",
+        "exclusion": "https://app.crunch.io/api/datasets/4/exclusion/",
+        "preferences": "https://app.crunch.io/api/datasets/4/preferences/",
+        "settings": "https://app.crunch.io/api/datasets/4/settings/",
+        "pk": "https://app.crunch.io/api/datasets/4/pk/",
+        "stream": "https://app.crunch.io/api/datasets/4/stream/"
+    },
+    "some_other_key": {}
+}

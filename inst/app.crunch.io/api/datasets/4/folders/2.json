@@ -1,0 +1,40 @@
+{
+    "self": "https://app.crunch.io/api/datasets/4/folders/2/",
+    "element": "shoji:catalog",
+    "size": 2,
+    "body": {
+        "name": "Group 2"
+    },
+    "index": {
+        "../../variables/starttime/": {
+            "name": "starttime",
+            "discarded": false,
+            "alias": "starttime",
+            "type": "datetime",
+            "id": "d7c21314ca9e453c93069168681a285c",
+            "description": "Interview Start Time",
+            "notes": "",
+            "resolution": "D",
+            "rollup_resolution": "s"
+        },
+        "../../variables/catarray/": {
+            "name": "Cat Array",
+            "discarded": false,
+            "alias": "catarray",
+            "type": "categorical_array",
+            "id": "qwert",
+            "description": "An array of cats",
+            "notes": "",
+            "subvariables": [
+                "../../variables/mymrset/subvariables/subvar2/",
+                "../../variables/mymrset/subvariables/subvar1/",
+                "../../variables/mymrset/subvariables/subvar3/"
+            ],
+            "subvariables_catalog": "../../variables/mymrset/subvariables/"
+        }
+    },
+    "graph": ["../../variables/starttime/", "../../variables/catarray/"],
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/4/folders/"
+    }
+}

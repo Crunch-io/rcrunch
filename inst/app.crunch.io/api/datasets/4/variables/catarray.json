@@ -1,0 +1,40 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/4/variables/catarray/",
+    "body": {
+        "alias": "catarray",
+        "format": {
+            "data": {"digits": 2},
+            "summary": {"digits": 2}
+        },
+        "missing_reasons": {"No Data": -1},
+        "categories": [
+            {"numeric_value": 0.0, "name": "A", "missing": false, "id": 1},
+            {"numeric_value": 1.0, "name": "B", "missing": false, "id": 2},
+            {"numeric_value": null, "name": "No Data", "missing": true, "id": -1}
+        ],
+        "dataset_id": "14715604be4d499fbe2445bca9f3eee0",
+        "view": {"column_width": null},
+        "type": "categorical_array",
+        "subvariables": [
+            "https://app.crunch.io/api/datasets/4/variables/mymrset/subvariables/subvar2/",
+            "https://app.crunch.io/api/datasets/4/variables/mymrset/subvariables/subvar1/",
+            "https://app.crunch.io/api/datasets/4/variables/mymrset/subvariables/subvar3/"
+        ],
+        "subvariables_catalog": "https://app.crunch.io/api/datasets/4/variables/mymrset/subvariables/",
+        "id": "qwert"
+    },
+    "views": {
+        "summary": "https://app.crunch.io/api/datasets/4/variables/mymrset/summary/",
+        "values": "https://app.crunch.io/api/datasets/4/variables/mymrset/values/"
+    },
+    "catalogs": {
+        "parent": "https://app.crunch.io/api/datasets/4/variables/",
+        "subvariables": "https://app.crunch.io/api/datasets/4/variables/mymrset/subvariables/",
+        "folder": "https://app.crunch.io/api/datasets/4/folders/2/"
+    },
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/4/"
+    },
+    "description": "Details for a given Variable"
+}
