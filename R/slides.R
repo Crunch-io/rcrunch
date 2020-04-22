@@ -638,7 +638,9 @@ setMethod("weight", "Analysis", function(x) {
 #' @rdname weight
 #' @export
 setMethod("weight<-", c("Analysis", "CrunchVariable"), function(x, value) {
-    if (!is.weightVariable(value)) halt(paste0("Variable '", alias(value), "' is not a weightVariable"))
+    if (!is.weightVariable(value)) halt(paste0(
+        "Variable '", alias(value), "' is not a weightVariable"
+    ))
     return(set_query_env_slot(x, weight = self(value)))
 })
 

@@ -480,26 +480,30 @@ with_mock_crunch({
         expect_PATCH(
             weight(main_deck[[1]]) <- ds$birthyr,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
-            '{"query_environment":{"filter":[],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
+            '{"query_environment":{"filter":[],"weight":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
         )
 
         expect_PATCH(
             weight(analysis(main_deck[[1]])) <- ds$birthyr,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
-            '{"query_environment":{"filter":[],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
+            '{"query_environment":{"filter":[],"weight":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
         )
 
         # through the decks catalog
         expect_PATCH(
             weight(decks(ds)[[2]][[1]]) <- ds$birthyr,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
-            '{"query_environment":{"filter":[],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
+            '{"query_environment":{"filter":[],"weight":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
         )
 
         expect_PATCH(
             weight(decks(ds)[[2]][[1]]) <- ds$birthyr,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
-            '{"query_environment":{"filter":[],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
+            '{"query_environment":{"filter":[],"weight":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"}'
         )
 
         expect_error(
