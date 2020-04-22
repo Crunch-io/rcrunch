@@ -36,6 +36,7 @@ logout <- function() {
 #' @export
 login <- function(email = envOrOption("crunch.email"),
                   password = envOrOption("crunch.pw"), ...) {
+    stop("I should have a traceback")
     old.prompt <- getOption("crunch.old.prompt")
     if (!is.null(old.prompt)) {
         ## We may already be logged in. Log out first.
