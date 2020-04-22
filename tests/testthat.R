@@ -26,7 +26,7 @@ if (nchar(Sys.getenv("JENKINS_HOME"))) {
         )
     )
 
-    test_check("crunch",
+    test_check("crunch", filter="auth",
         reporter = MultiReporter$new(list(
             SummaryReporter$new(),
             JunitReporterFix$new(file = file.path(Sys.getenv("WORKSPACE"), "rcrunch.xml"))

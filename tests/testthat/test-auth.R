@@ -9,6 +9,10 @@ test_that("login checks for email and password before POSTing", {
         crunchAuth(email = 1L, password = NULL),
         "Must supply a password"
     )
+
+    expect_true(
+        login()
+    )
 })
 
 test_that("without_echo doesn't crash on this OS", {
