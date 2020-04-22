@@ -1,4 +1,5 @@
 # crunch (development version)
+* You can now view and modify the weight on a slide using `weight()` and `weight()<-` (#440)
 * https verification can be disabled during testing by setting environment variable `R_TEST_VERIFY_SSL=FALSE`
 * You can now use a named `filter` or `filter` object when using `tabbook()`. Filtering by expression in the dataset argument is also supported again.
 * `newMultiTable()` now correctly passes `...`, so arguments like `is_public` work (#424)
