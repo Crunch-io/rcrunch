@@ -441,6 +441,12 @@ setGeneric(
     halt(paste("Cannot update", class(x), "with type", class(value)))
 }
 
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter", function(x, ...) standardGeneric("filter"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter<-", function(x, value) standardGeneric("filter<-"))
 #' @rdname weight
 #' @export
 setGeneric("weight", function(x) standardGeneric("weight"))

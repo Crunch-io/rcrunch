@@ -1,4 +1,5 @@
 # crunch 1.27.5 (Development version)
+* You can set the `weight` and `filter` to be the same on each slide of a deck.
 
 # crunch 1.27.4
 * Fixes to pkgdown documentation website

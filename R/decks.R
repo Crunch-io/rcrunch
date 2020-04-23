@@ -266,3 +266,24 @@ exportDeck <- function(deck, file, format = c("xlsx", "pptx", "json")) {
     )
     crDownload(dl_link, file)
 }
+
+
+#' @rdname weight
+#' @export
+setMethod("weight<-", c("CrunchDeck", "ANY"), function(x, value) {
+    lapply(seq_along(x), function(slide_num) {
+        weight(x[[slide_num]]) <- value
+    })
+
+    return(refresh(x))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter<-", c("CrunchDeck", "ANY"), function(x, value) {
+    lapply(seq_along(x), function(slide_num) {
+        filter(x[[slide_num]]) <- value
+    })
+
+    return(refresh(x))
+})
