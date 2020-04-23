@@ -1,0 +1,11 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/4/settings/",
+    "body": {
+        "viewers_can_export": false,
+        "viewers_can_change_weight": true,
+        "weight": "https://app.crunch.io/api/datasets/4/variables/birthyr/",
+        "variable_folders": true,
+        "population": {"magnitude": 3, "size": 90000000}
+    }
+}

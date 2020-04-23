@@ -1,0 +1,19 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/4/variables/textVar/",
+    "body": {
+        "alias": "textVar",
+        "type": "text"
+    },
+    "views": {
+        "summary": "https://app.crunch.io/api/datasets/4/variables/textVar/summary/",
+        "values": "https://app.crunch.io/api/datasets/4/variables/textVar/values/"
+    },
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/4/folders/1/"
+    },
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/4/"
+    },
+    "description": "Details for a given Variable"
+}

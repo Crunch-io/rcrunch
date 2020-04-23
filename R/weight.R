@@ -16,8 +16,11 @@
 #' @name weight
 #' @aliases is.weight<-
 #' @export
-weight <- function(x) {
-    stopifnot(is.dataset(x))
+NULL
+
+#' @rdname weight
+#' @export
+setMethod("weight", "CrunchDataset", function(x) {
     prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "preferences")))
     w <- prefs$weight
     if (!is.null(w)) {
@@ -29,13 +32,11 @@ weight <- function(x) {
         w <- CrunchVariable(allVariables(full_ds)[[w]], filter = activeFilter(x))
     }
     return(w)
-}
+})
 
 #' @rdname weight
 #' @export
-`weight<-` <- function(x, value) {
-    stopifnot(is.dataset(x))
-
+setMethod("weight<-", c("CrunchDataset", "ANY"), function(x, value) {
     if (is.VarDef(value)) {
         x <- addVariables(x, value)
         value <- x[[value$name]]
@@ -53,7 +54,7 @@ weight <- function(x) {
         x <- refresh(x)
     }
     return(x)
-}
+})
 
 #' @rdname weight
 #' @export

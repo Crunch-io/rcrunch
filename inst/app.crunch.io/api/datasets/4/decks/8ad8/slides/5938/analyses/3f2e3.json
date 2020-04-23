@@ -1,0 +1,72 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/5938/analyses/3f2e2/",
+    "description": "Data to build a given analysis",
+    "body": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "each": "https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"
+                },
+                {
+                    "function": "as_selected",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"
+                        }
+                    ]
+                }
+            ],
+            "weight": null
+        },
+        "display_settings": {
+            "percentageDirection": {
+                "value": "colPct"
+            },
+            "showEmpty": {
+                "value": false
+            },
+            "showMean": {
+                "value": true
+            },
+            "vizType": {
+                "value": "table"
+            },
+            "countsOrPercents": {
+                "value": "percent"
+            },
+            "decimalPlaces": {
+                "value": 1
+            },
+            "populationMagnitude": {
+                "value": 3
+            },
+            "showSignif": {
+                "value": true
+            },
+            "currentTab": {
+                "value": 0
+            },
+            "uiView": {
+                "value": "app.datasets.browse"
+            }
+        },
+        "query_environment": {
+            "filter": [
+                {
+                    "filter": "https://app.crunch.io/api/datasets/4/filters/filter1/"
+                }
+            ],
+            "weight": null
+        },
+        "id": "3f2e2"
+    }
+}
