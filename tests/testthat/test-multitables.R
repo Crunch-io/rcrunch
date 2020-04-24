@@ -157,23 +157,6 @@ with_mock_crunch({
         })
     })
 
-    test_that("importMultitable", {
-        with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
-            mtable <- newMultitable(~ gender + mymrset,
-                data = ds,
-                name = "New multitable"
-            )
-            expect_is(mtable, "Multitable")
-        })
-        expect_POST(
-            importMultitable(ds, mtable, name = "copied_multitable"),
-            "https://app.crunch.io/api/datasets/1/multitables/",
-            '{"element":"shoji:entity","body":{',
-            '"multitable":"https://app.crunch.io/api/datasets/1/multitables/4de322/",',
-            '"name":"copied_multitable"}}'
-        )
-    })
-
     test_that("multitable show method", {
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset,
@@ -657,31 +640,16 @@ with_test_authentication({
         expect_identical(names(refresh(multitables(ds))), "Yet another name")
     })
 
-    test_that("Can copy the multitable to a new multitable", {
-        m <- importMultitable(ds2, mult, name = "copied_multitable")
-        expect_identical(name(m), "copied_multitable")
-        is.public(multitables(ds2))[1] <- TRUE
-        expect_true(is.public(refresh(m)))
-        expect_identical(getShowContent(m), c(
-            paste0("Multitable ", dQuote("copied_multitable")),
-            "Column variables:",
-            "  allpets",
-            "  q1"
-        ))
-    })
 
-    test_that("importMultitable works without a name", {
-        m <- importMultitable(ds2, mult)
-        expect_identical(name(m), "Yet another name")
-    })
-
+    multitables(ds2)[["new mt"]] <- ~ country + q1
+    multitables(ds2)[["Yet another name"]] <- ~ country + q3
     mults <- multitables(ds2)
     with(consent(), {
         test_that("Multitable delete", {
             delete(mults[["Yet another name"]])
             expect_equal(length(multitables(refresh(ds2))), 1)
             expect_true(!"Yet another name" %in% names(multitables(ds2)))
-            expect_equal(names(multitables(ds2)), "copied_multitable")
+            expect_equal(names(multitables(ds2)), "new mt")
         })
     })
 
