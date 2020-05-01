@@ -112,8 +112,8 @@ test_that("subsetArrayDimension MR dimension", {
                 summary = list(digits = 0L)
             ),
             subreferences = list(
-                "rest_opinionX" = list(alias = "rest_opinionX", name = "rest_opinion"),
-                "play_opinionX" = list(alias = "play_opinionX", name = "play_opinion")
+                "rest_opinion__1" = list(alias = "rest_opinion__1", name = "rest_opinion"),
+                "play_opinion__1" = list(alias = "play_opinion__1", name = "play_opinion")
             ),
             notes = "",
             name = "opinion MR",
@@ -125,7 +125,7 @@ test_that("subsetArrayDimension MR dimension", {
                 column_width = NULL
             ),
             type = "subvariable_items",
-            subvariables = c("food_opinionX/", "rest_opinionX/", "play_opinionX/")
+            subvariables = c("food_opinion__1/", "rest_opinion__1/", "play_opinion__1/")
         )
     )
     expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[2]], 2:3, "mr_items"), expected)

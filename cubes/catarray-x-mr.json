@@ -162,15 +162,15 @@
                         },
                         "subreferences": [
                             {
-                                "alias": "food_opinionX",
+                                "alias": "food_opinion__1",
                                 "name": "food_opinion"
                             },
                             {
-                                "alias": "rest_opinionX",
+                                "alias": "rest_opinion__1",
                                 "name": "rest_opinion"
                             },
                             {
-                                "alias": "play_opinionX",
+                                "alias": "play_opinion__1",
                                 "name": "play_opinion"
                             }
                         ],
@@ -194,7 +194,7 @@
                                 "value": {
                                     "derived": false,
                                     "references": {
-                                        "alias": "food_opinionX",
+                                        "alias": "food_opinion__1",
                                         "name": "food_opinion"
                                     },
                                     "id": "000002"
@@ -206,7 +206,7 @@
                                 "value": {
                                     "derived": false,
                                     "references": {
-                                        "alias": "rest_opinionX",
+                                        "alias": "rest_opinion__1",
                                         "name": "rest_opinion"
                                     },
                                     "id": "000000"
@@ -218,7 +218,7 @@
                                 "value": {
                                     "derived": false,
                                     "references": {
-                                        "alias": "play_opinionX",
+                                        "alias": "play_opinion__1",
                                         "name": "play_opinion"
                                     },
                                     "id": "000005"
@@ -239,15 +239,15 @@
                         },
                         "subreferences": [
                             {
-                                "alias": "food_opinionX",
+                                "alias": "food_opinion__1",
                                 "name": "food_opinion"
                             },
                             {
-                                "alias": "rest_opinionX",
+                                "alias": "rest_opinion__1",
                                 "name": "rest_opinion"
                             },
                             {
-                                "alias": "play_opinionX",
+                                "alias": "play_opinion__1",
                                 "name": "play_opinion"
                             }
                         ],
