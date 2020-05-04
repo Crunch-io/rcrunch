@@ -1,0 +1,99 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/c25696/",
+    "catalogs": {
+        "folders": "/api/datasets/c25696/folders/",
+        "users": "/api/datasets/c25696/users/",
+        "views": "/api/datasets/c25696/views/",
+        "variables": "/api/datasets/c25696/variables/",
+        "actions": "/api/datasets/c25696/actions/",
+        "boxdata": "/api/datasets/c25696/boxdata/",
+        "filters": "/api/datasets/c25696/filters/",
+        "scripts": "/api/datasets/c25696/scripts/",
+        "permissions": "/api/datasets/c25696/permissions/",
+        "batches": "/api/datasets/c25696/batches/",
+        "tags": "/api/datasets/c25696/tags/",
+        "teams": "/api/datasets/c25696/teams/",
+        "savepoints": "/api/datasets/c25696/savepoints/",
+        "multitables": "/api/datasets/c25696/multitables/",
+        "forks": "/api/datasets/c25696/forks/",
+        "decks": "/api/datasets/c25696/decks/",
+        "parent": "/api/datasets/",
+        "project": "/api/projects/personal/",
+        "variables_private": "/api/datasets/c25696/variables/private/"
+    },
+    "fragments": {
+        "preferences": "/api/datasets/c25696/preferences/",
+        "stream": "/api/datasets/c25696/stream/",
+        "settings": "/api/datasets/c25696/settings/",
+        "exclusion": "/api/datasets/c25696/exclusion/",
+        "publish": "/api/datasets/c25696/publish/",
+        "state": "/api/datasets/c25696/state/",
+        "table": "/api/datasets/c25696/table/",
+        "pk": "/api/datasets/c25696/pk/",
+        "schema": "/api/datasets/c25696/schema/"
+    },
+    "views": {
+        "second_order_analysis": "/api/datasets/c25696/second_order_analysis/",
+        "cube": "/api/datasets/c25696/cube/",
+        "export": "/api/datasets/c25696/export/",
+        "summary": "/api/datasets/c25696/summary/",
+        "applied_filters": "/api/datasets/c25696/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "/api/users/27a158/",
+        "current_editor": "/api/users/27a158/",
+        "creation_time": "2020-05-04T21:39:23.363000",
+        "streaming": "no",
+        "owner": "/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "c25696",
+        "size": {
+            "rows": 1634,
+            "unfiltered_rows": 1634,
+            "columns": 14
+        },
+        "palette": {
+            "brand": {
+                "message": "#722580",
+                "primary": "#005283",
+                "secondary": "#107f65"
+            }
+        },
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "Subset of the main survey, restricted to self-reported R users",
+        "end_date": null,
+        "access_time": "2020-05-04T21:39:23.195000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2020-05-04T21:39:32.523000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "/api/accounts/00001/",
+        "name": "Stack Overflow Developer Survey 2017",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/c25696/variables/weights/",
+        "variables_hier": "/api/datasets/c25696/variables/hier/",
+        "variables_personal": "/api/datasets/c25696/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "/api/projects/378ad4/",
+        "editor_url": "/api/users/27a158/",
+        "user_url": "/api/users/27a158/"
+    }
+}

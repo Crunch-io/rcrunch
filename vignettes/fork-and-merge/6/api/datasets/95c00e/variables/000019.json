@@ -1,0 +1,55 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/95c00e/variables/000019/",
+    "catalogs": {
+        "parent": "/api/datasets/95c00e/variables/",
+        "folder": "/api/datasets/95c00e/folders/"
+    },
+    "fragments": {
+        "missing_rules": "/api/datasets/95c00e/variables/000019/missing_rules/",
+        "user_settings": "/api/datasets/95c00e/variables/000019/user_settings/",
+        "dataset": "/api/datasets/95c00e/"
+    },
+    "views": {
+        "frequencies": "/api/datasets/95c00e/variables/000019/frequencies/",
+        "summary": "/api/datasets/95c00e/variables/000019/summary/",
+        "values": "/api/datasets/95c00e/variables/000019/values/",
+        "cast": "/api/datasets/95c00e/variables/000019/cast/"
+    },
+    "body": {
+        "secure": false,
+        "name": "Respondent",
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "Respondent",
+        "dataset_id": "95c00e",
+        "owner": null,
+        "hidden": false,
+        "view": {
+            "column_width": null
+        },
+        "type": "numeric",
+        "id": "000019",
+        "categories": [
+
+        ],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "/api/datasets/95c00e/"
+    }
+}

@@ -136,13 +136,15 @@ ds_fork <- merge(ds_fork, house_ds, by = "Respondent")
 ```
 
 Before merging the fork back into the original dataset, we can check that everything went well with the join.
-
+```{r state change7, include=FALSE}
+change_state()
+```
 ```{r check new data}
 crtabs(~ TabsSpaces + HouseholdSize, ds_fork)
 ```
 
 And finally once we're comfortable that everything went as expected we can send the data to the client by merging the fork back to the original dataset.
-```{r state change7, include=FALSE}
+```{r state change8, include=FALSE}
 change_state()
 ```
 ```{r final mergeFork}
