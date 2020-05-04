@@ -5,7 +5,7 @@ setMethod("private", "VariableCatalog", function(x) private(folders(x)))
 setMethod("private", "VariableFolder", function(x) {
   url <- shojiURL(rootFolder(x), "catalogs", "secure", mustWork = FALSE)
   if (is.null(url)) return(url)
-  
+
   VariableFolder(crGET(url))
 })
 
@@ -65,7 +65,7 @@ privatizeVariables <- function(dataset, variables) {
   return(invisible(refresh(dataset)))
 }
 
-#' @rdname hide
+#' @rdname hideVariables
 #' @export
 privatiseVariables <- function(dataset, variables) {
   privatizeVariables(dataset, variables)
@@ -82,7 +82,7 @@ deprivatizeVariables <- function(dataset, variables) {
   return(invisible(refresh(dataset)))
 }
 
-#' @rdname hide
+#' @rdname hideVariables
 #' @export
 deprivatiseVariables <- function(dataset, variables) {
   deprivatizeVariables(dataset, variables)

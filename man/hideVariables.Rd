@@ -5,8 +5,10 @@
 \alias{hiddenVariables<-}
 \alias{unhideVariables}
 \alias{privatizeVariables}
+\alias{privatiseVariables}
 \alias{privateVariables<-}
 \alias{deprivatizeVariables}
+\alias{deprivatiseVariables}
 \title{Hide and unhide variables within a dataset}
 \usage{
 hideVariables(dataset, variables)
@@ -17,9 +19,13 @@ unhideVariables(dataset, variables)
 
 privatizeVariables(dataset, variables)
 
+privatiseVariables(dataset, variables)
+
 privateVariables(x) <- value
 
 deprivatizeVariables(dataset, variables)
+
+deprivatiseVariables(dataset, variables)
 }
 \arguments{
 \item{dataset}{the Dataset to modify}
