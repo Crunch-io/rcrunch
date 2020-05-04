@@ -1,0 +1,35 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/Private%20test/",
+    "description": "Datasets with a given name ",
+    "index": {
+        "https://app.crunch.io/api/datasets/5/": {
+            "size": {
+                "rows": 2,
+                "unfiltered_rows": 2,
+                "columns": 4
+            },
+            "current_editor_name": "Greg",
+            "account": "https://app.crunch.io/api/accounts/00001/",
+            "owner_name": "Greg",
+            "name": "Private test",
+            "end_date": null,
+            "streaming": "no",
+            "owner_id": "https://app.crunch.io/api/users/27a158/",
+            "current_editor": "https://app.crunch.io/api/users/27a158/",
+            "creation_time": "2020-02-21T17:26:58.786000+00:00",
+            "archived": false,
+            "view_of": null,
+            "start_date": null,
+            "modification_time": "2020-02-21T17:27:10.372000+00:00",
+            "access_time": "2020-02-21T17:35:14.924000+00:00",
+            "permissions": {
+                "edit": true,
+                "view": true
+            },
+            "is_published": true,
+            "id": "4",
+            "description": ""
+        }
+    }
+}

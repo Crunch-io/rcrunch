@@ -1,0 +1,14 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/5/folders/hidden/",
+    "index": {
+
+    },
+    "body": {
+        "name": "Hidden"
+    },
+    "graph": [
+
+    ],
+    "size": 0
+}
