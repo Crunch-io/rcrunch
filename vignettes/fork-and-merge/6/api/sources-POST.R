@@ -1,20 +1,20 @@
 structure(list(url = "/api/sources/", status_code = 201L, headers = structure(list(
-    date = "Fri, 14 Feb 2020 18:07:23 GMT", `content-type` = "application/json;charset=utf-8", 
-    `content-length` = "86", location = "/api/sources/d544cd/", 
+    date = "Mon, 04 May 2020 23:13:42 GMT", `content-type` = "application/json;charset=utf-8", 
+    `content-length` = "86", location = "/api/sources/c403ab/", 
     server = "nginx", `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
     allow = "GET, HEAD, OPTIONS, POST", `x-timing` = "", `set-cookie` = "REDACTED"), class = c("insensitive", 
 "list")), all_headers = list(list(status = 201L, version = "HTTP/2", 
-    headers = structure(list(date = "Fri, 14 Feb 2020 18:07:23 GMT", 
+    headers = structure(list(date = "Mon, 04 May 2020 23:13:42 GMT", 
         `content-type` = "application/json;charset=utf-8", `content-length` = "86", 
-        location = "/api/sources/d544cd/", server = "nginx", 
+        location = "/api/sources/c403ab/", server = "nginx", 
         `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
         allow = "GET, HEAD, OPTIONS, POST", `x-timing` = "", 
         `set-cookie` = "REDACTED"), class = c("insensitive", 
     "list")))), cookies = structure(list(domain = ".crunch.io", 
-    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1613239643, class = c("POSIXct", 
+    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1620170022, class = c("POSIXct", 
     "POSIXt")), name = "token", value = "REDACTED"), row.names = c(NA, 
 -1L), class = "data.frame"), content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/sources/\"}"), 
-    date = structure(1581703643, class = c("POSIXct", "POSIXt"
-    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.9e-05, 
-    connect = 3e-05, pretransfer = 0.000164, starttransfer = 0.00017, 
-    total = 0.58458)), class = "response")
+    date = structure(1588634022, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.7e-05, 
+    connect = 2.9e-05, pretransfer = 0.000144, starttransfer = 0.000149, 
+    total = 0.500136)), class = "response")

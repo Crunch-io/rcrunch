@@ -1,0 +1,21 @@
+{
+    "element": "shoji:order",
+    "self": "/api/datasets/c25696/variables/hier/?relative=on",
+    "description": "Hierarchical order from folder structure of dataset variables",
+    "graph": [
+        "../000019/",
+        "../000017/",
+        "../000001/",
+        "../000000/",
+        "../000016/",
+        "../d270c8/",
+        "../000004/",
+        "../000018/",
+        "../000002/",
+        "../000020/",
+        "../000003/",
+        "../000021/",
+        "../000022/",
+        "../000005/"
+    ]
+}
