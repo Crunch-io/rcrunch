@@ -97,4 +97,3 @@ hiddenVariables <- function(dataset, key = namekey(dataset)) {
         return(c())
     }
 }
-

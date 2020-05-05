@@ -390,7 +390,7 @@ copyFolders <- function(source, target) {
 variablesBelowFolder <- function(folder, namekey = "alias") {
     vars <- variables(folder)
     dirs <- folder[types(folder) %in% "folder"]
-    
+
     out <- list(
         vapply(index(vars), vget(namekey), "", USE.NAMES = FALSE),
         lapply(seq_along(dirs), function(i) variablesBelowFolder(dirs[[i]], namekey))
