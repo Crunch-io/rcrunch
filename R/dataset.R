@@ -19,7 +19,7 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
         private_dir <- privateFolder(.Object)
         if (!is.null(private_dir)) {
             private_vars <- variablesBelowFolder(private_dir, "alias")
-            .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars]
+            .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars] #nolint
         }
     }
     if (length(.Object@filter@expression) == 0) {
