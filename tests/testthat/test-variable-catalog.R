@@ -22,10 +22,10 @@ with_mock_crunch({
     })
 
     test_that("hidden getters", {
-        expect_is(hidden(varcat), "VariableFolder")
-        expect_length(hidden(varcat), 0)
+        expect_is(hiddenFolder(varcat), "VariableFolder")
+        expect_length(hiddenFolder(varcat), 0)
     })
-    
+
     test_that("active variables don't include hidden (now a dataset property)", {
         expect_identical(
             index(variables(ds)),
