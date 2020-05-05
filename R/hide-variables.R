@@ -1,37 +1,56 @@
-setMethod("hidden", "CrunchDataset", function(x) hidden(folders(x)))
+#' @rdname hide
+#' @export
+setMethod("hiddenFolder", "CrunchDataset", function(x) hiddenFolder(folders(x)))
 
-setMethod("hidden", "VariableCatalog", function(x) hidden(folders(x)))
+#' @rdname hide
+#' @export
+setMethod("hiddenFolder", "VariableCatalog", function(x) hiddenFolder(folders(x)))
 
-setMethod("hidden", "VariableFolder", function(x) {
+#' @rdname hide
+#' @export
+setMethod("hiddenFolder", "VariableFolder", function(x) {
     return(VariableFolder(crGET(shojiURL(rootFolder(x), "catalogs", "hidden"))))
 })
 
 #' Hide/Unhide or Privatize/Deprivatize Variables
-#' 
-#' Both hidden and private are hidden from most views in crunch by default. 
-#' Hidden variables can be accessed by an user, while private variables 
-#' (and all variables derived from them) are only accessible 
+#'
+#' Both hidden and private are hidden from most views in crunch by default.
+#' Hidden variables can be accessed by an user, while private variables
+#' (and all variables derived from them) are only accessible
 #' by users granted "editor" access to the dataset and so can be used to secure
 #' personally identifiable information from non-editors of a dataset.
-#' 
-#' @param x a Variable or subset of a VariableCatalog to hide or unhide
-#' @return (invisibly) the Variable or VariableCatalog, hidden or unhidden
+#'
+#' There are several ways to assign variables into these categories
+#' and access them:
+#' - `hiddenVariables()` / `privateVariabiles()` - return a character vector of variables
+#'    that are hidden/private. You can assign into the catalog to add variables or
+#'    assign to `NULL` to remove all of them.
+#' - `hideVariables()` / `privatizeVariables()` - take a character vector of variable aliases
+#'    and makes them hidden/private. (`unhideVariables()` / `deprivatizeVariables()` put them
+#'    back in the main variable catalog).
+#' - `hide()` / `privatize()` - take a `CrunchVariable` or `VariableCatalog` and
+#'    make them hidden/private. (`unhide()` / `deprivatize()` put them back in the main
+#'    variable catalog).
+#' - `hiddenFolder()` / `privateFolder()` - take a dataset and return a directory that
+#'   contains the hidden/private variables. This folder is like other `CrunchFolder`s and
+#'   so you can use [`mkdir()`] to create subfolders and [`mv()`] to move them in/out.
+#'
+#' @param x a Variable, VariableCatalog, or dataset to hide/unhide/privatize/deprivatize
 #' @name hide
 #' @aliases hide unhide privatize deprivatize
-#' @seealso [`hideVariables`] [`privateVariables`]
 NULL
 
 #' @rdname hide
 #' @export
 setMethod("hide", "CrunchVariable", function(x) {
-    .moveToFolder(hidden(rootFolder(x)), x)
+    .moveToFolder(hiddenFolder(rootFolder(x)), x)
     # TODO: should these refresh?
     invisible(x)
 })
 #' @rdname hide
 #' @export
 setMethod("hide", "VariableCatalog", function(x) {
-    .moveToFolder(hidden(rootFolder(x)), x)
+    .moveToFolder(hiddenFolder(rootFolder(x)), x)
     invisible(x)
 })
 
@@ -48,49 +67,25 @@ setMethod("unhide", "VariableCatalog", function(x) {
     invisible(x)
 })
 
-#' Hide and unhide variables within a dataset
-#' 
-#' Both hidden and private are hidden from most views in crunch by default. 
-#' Hidden variables can be accessed by an user, while private variables 
-#' (and all variables derived from them) are only accessible 
-#' by users granted "editor" access to the dataset and so can be used to secure
-#' personally identifiable information from non-editors of a dataset.
-#' 
-#' @param dataset the Dataset to modify
-#' @param x `dataset`, for `hiddenVariables<-`
-#' @param variables names or indices of variables to (un)hide
-#' @param value `variables`, for `hiddenVariables<-`
-#' @return (invisibly) `dataset` with the specified variables (un)hidden
-#' @seealso [`hide`]
+#' @rdname hide
 #' @export
 hideVariables <- function(dataset, variables) {
-    dataset <- mv(dataset, variables, hidden(dataset))
+    dataset <- mv(dataset, variables, hiddenFolder(dataset))
     return(invisible(refresh(dataset)))
 }
 
-#' @rdname hideVariables
+#' @rdname hide
 #' @export
 `hiddenVariables<-` <- function(x, value) hideVariables(x, value)
 
-#' @rdname hideVariables
+#' @rdname hide
 #' @export
 unhideVariables <- function(dataset, variables) {
     dataset <- mv(dataset, variables, folders(dataset))
     return(invisible(refresh(dataset)))
 }
 
-#' Show the names of a dataset's hidden or private variables
-#' 
-#' Both hidden and private are hidden from most views in crunch by default. 
-#' Hidden variables can be accessed by an user, while private variables 
-#' (and all variables derived from them) are only accessible 
-#' by users granted "editor" access to the dataset and so can be used to secure
-#' personally identifiable information from non-editors of a dataset.
-#' 
-#' @param dataset the Dataset
-#' @param key the Variable attribute to return. Default is "alias", following
-#' `getOption("crunch.namekey.dataset")`.
-#' @return a vector of the names of Variables marked as hidden/private.
+#' @rdname hide
 #' @export
 hiddenVariables <- function(dataset, key = namekey(dataset)) {
     hv <- dataset@hiddenVariables
@@ -102,3 +97,4 @@ hiddenVariables <- function(dataset, key = namekey(dataset)) {
         return(c())
     }
 }
+

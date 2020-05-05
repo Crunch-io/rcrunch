@@ -1,8 +1,14 @@
-setMethod("private", "CrunchDataset", function(x) private(folders(x)))
+#' @rdname hide
+#' @export
+setMethod("privateFolder", "CrunchDataset", function(x) privateFolder(folders(x)))
 
-setMethod("private", "VariableCatalog", function(x) private(folders(x)))
+#' @rdname hide
+#' @export
+setMethod("privateFolder", "VariableCatalog", function(x) privateFolder(folders(x)))
 
-setMethod("private", "VariableFolder", function(x) {
+#' @rdname hide
+#' @export
+setMethod("privateFolder", "VariableFolder", function(x) {
   url <- shojiURL(rootFolder(x), "catalogs", "secure", mustWork = FALSE)
   if (is.null(url)) return(url)
 
@@ -13,7 +19,7 @@ setMethod("private", "VariableFolder", function(x) {
 #' @rdname hide
 #' @export
 setMethod("privatize", "CrunchVariable", function(x) {
-  private_dir <- private(rootFolder(x))
+  private_dir <- privateFolder(rootFolder(x))
   if (is.null(private_dir)) {
     halt("Could not access private directory, are you an editor of this dataset?")
   }
@@ -24,7 +30,7 @@ setMethod("privatize", "CrunchVariable", function(x) {
 #' @rdname hide
 #' @export
 setMethod("privatize", "VariableCatalog", function(x) {
-  private_dir <- private(rootFolder(x))
+  private_dir <- privateFolder(rootFolder(x))
   if (is.null(private_dir)) {
     halt("Could not access private directory, are you an editor of this dataset?")
   }
@@ -58,38 +64,38 @@ deprivatise <- function(x) {
   deprivatize(x)
 }
 
-#' @rdname hideVariables
+#' @rdname hide
 #' @export
 privatizeVariables <- function(dataset, variables) {
-  dataset <- mv(dataset, variables, private(dataset))
+  dataset <- mv(dataset, variables, privateFolder(dataset))
   return(invisible(refresh(dataset)))
 }
 
-#' @rdname hideVariables
+#' @rdname hide
 #' @export
 privatiseVariables <- function(dataset, variables) {
   privatizeVariables(dataset, variables)
 }
 
-#' @rdname hideVariables
+#' @rdname hide
 #' @export
 `privateVariables<-` <- function(x, value) privatizeVariables(x, value)
 
-#' @rdname hideVariables
+#' @rdname hide
 #' @export
 deprivatizeVariables <- function(dataset, variables) {
   dataset <- mv(dataset, variables, folders(dataset))
   return(invisible(refresh(dataset)))
 }
 
-#' @rdname hideVariables
+#' @rdname hide
 #' @export
 deprivatiseVariables <- function(dataset, variables) {
   deprivatizeVariables(dataset, variables)
 }
 
 
-#' @rdname hiddenVariables
+#' @rdname hide
 #' @export
 privateVariables <- function(dataset, key = namekey(dataset)) {
   pv <- dataset@privateVariables
