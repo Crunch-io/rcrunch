@@ -34,8 +34,8 @@ logout <- function() {
 #' @param ... additional parameters passed in the authentication. Not
 #' currently supported by the Crunch API.
 #' @export
-login <- function(email = envOrOption("crunch.email"),
-                  password = envOrOption("crunch.pw"), ...) {
+login <- function(email = NULL,
+                  password = NULL, ...) {
     old.prompt <- getOption("crunch.old.prompt")
     if (!is.null(old.prompt)) {
         ## We may already be logged in. Log out first.
