@@ -59,12 +59,12 @@ login("test@yougov.com")
 #Multiple keyring passwords, attempting to log in without specified username
 login()
 
-#Username set via environment variable, 2+ saved passwords in keyring, logging in via environemnt variable matching keyring
+#Username set via environment variable, 2+ saved passwords in keyring, usernane via environemnt variable matching keyring
 Sys.setenv(R_CRUNCH_EMAIL = "test@crunch.io")
 login()
 Sys.unsetenv("R_CRUNCH_EMAIL")
 
-#Username set via environment variable, 2+ saved passwords in keyring, logging in via environemnt variable NOT matching keyring
+#Username set via environment variable, 2+ saved passwords in keyring, username via environemnt variable NOT matching keyring
 Sys.setenv(R_CRUNCH_EMAIL = "test@yougov.com")
 login()
 Sys.unsetenv("R_CRUNCH_EMAIL")
@@ -79,7 +79,35 @@ Sys.setenv(R_CRUNCH_PW = "abc123")
 login()
 Sys.unsetenv("R_CRUNCH_PW")
 
-
 #Single username saved in keyring
+Sys.setenv(R_CRUNCH_PW = "abc123")
 keyring::key_delete("crunch", username = "user@gmail.com")
+keyring::key_delete("crunch", username = "")
 login()
+Sys.unsetenv("R_CRUNCH_PW")
+
+
+
+## ==== Old use case - password and username via global environment ====
+
+# Username and password both saved
+Sys.setenv(R_CRUNCH_PW = "abc123")
+Sys.setenv(R_CRUNCH_EMAIL = "test@crunch.io")
+login()
+
+# Username only saved
+Sys.unsetenv("R_CRUNCH_PW")
+login()
+login("test@yougov.com")
+
+# Password only saved
+Sys.unsetenv("R_CRUNCH_EMAIL")
+Sys.setenv(R_CRUNCH_PW = "abc123")
+login()
+login("test@crunch.io")
+
+
+
+
+
+
