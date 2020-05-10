@@ -41,6 +41,37 @@ login <- function(email = envOrOption("crunch.email"),
         ## We may already be logged in. Log out first.
         logout()
     }
+    
+    #Check for email/username stored in global environment, .RProfile, or keyring
+    if(missing(email)){
+      email <- envOrOption("crunch.email")  #First check envOrOption to find password and username
+      
+      if(is.null(email) & requireNamespace("keyring", quietly = TRUE)){ #If nothing is found via envOrOption, check keyring
+        keyring.username <- keyring::key_list("crunch")$username
+        if(length(keyring.username) == 1 & keyring.username[1] != ""){ email <- keyring.username
+        } else if(length(keyring.username) > 1) stop("More than one saved Crunch username/email address found in keyring. Try specifying login(email = ...)")
+
+      }
+    }
+
+    #Check for password stored in global environment, .RProfile, or keyring
+    if(missing(password)){
+      password <- envOrOption("crunch.pw")  #First check envOrOption to find password and username
+      
+      if(is.null(password) & requireNamespace("keyring", quietly = TRUE)){ #If nothing is found via envOrOption, check keyring (keyring is a better behaviour, but has not been set to default for continuity)
+        n.passes <- nrow(keyring::key_list("crunch")) #Check how many saved passwords there are for the "crunch" service
+        
+        if(n.passes >= 1){ #If there is a saved password, try matching to given email address; if no email address is associated with password then try it
+          if(!is.null(email) & any(keyring::key_list("crunch")$username == email)){ password <- keyring::key_get("crunch", username = email)
+          } else if(n.passes == 1 & keyring::key_list("crunch")$username == ""){ password <- keyring::key_get("crunch")
+          } else warning("Saved Crunch passwords in keyring do not match specified email") #NB - not sure if we want this warning message - could be helpful or spammy
+        }
+      } else(warning(
+        "Retrieving saved Crunch email saved in global environment or .RProfile. This may not be secure. 
+        Consider using they \"keyring\" package and key_set(\"crunch\") to save password in encrypted format."
+      ))
+    }
+    
     crunchAuth(email = email, password = password, ...)
     options(
         prompt = paste("[crunch]", getOption("prompt")),

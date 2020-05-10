@@ -33,6 +33,7 @@ Suggests:
     devtools,
     haven,
     httptest (>= 3.0.0),
+    keyring,
     knitr,
     lintr,
     magrittr,
