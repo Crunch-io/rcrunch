@@ -12,22 +12,22 @@ logout <- function() {
 
 #' Authenticate with the Crunch API
 #'
-#' Note that you can store your Crunch account info in your .Rprofile under
-#' `crunch.email` and `crunch.pw` for convenience. If you do so, you can simply
-#' `login()` to authenticate. For running batch jobs, this could be
-#' particularly useful. However, be warned that storing your
-#' password in a plain text file such as .Rprofile is a security risk (though
-#' perhaps less so than in every .R script you write), and we
-#' cannot officially recommend that you do so.
-#'
-#' Additionally, your email and password can be stored in and read from the
-#' environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
-#'
-#' If a password is not supplied (or, if no arguments are supplied and only
-#' the `crunch.email` is specified in .Rprofile), and you are in an
-#' interactive session, you will be prompted to enter your password. At
-#' present, this is the most secure practice as your password is not stored
-#' locally.
+#' Note that you can store your Crunch account info in encrypted format via 
+#' the keyring package, with `key_set(service = "crunch",...)` 
+#' If you do so, you can simply `login()` to authenticate. For running batch jobs,
+#' this could be particularly useful. 
+#' 
+#' Your email and password can also be stored in and read from the
+#' environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW`,
+#' or from your .Rprofile under `crunch.email` and `crunch.pw`.
+#' However, environmental variables and .RProfiles files are not encrpyed, so
+#' this practice is no longer recommended. If an email or password is found in
+#' multiple locations, priority is given to 1) environmental variables, 2)
+#' .RProfile, and 3) keyring. This order of priority is for backwards compatibility,
+#' and methods 1) and 2) are no longer recommended.
+#' 
+#' If a password is not stored in any of these locations, and you are in an
+#' interactive session, you will be prompted to enter your password. 
 #'
 #' @param email the email address associated with the user's Crunch account
 #' @param password the password associated with the user's Crunch account
