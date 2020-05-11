@@ -82,11 +82,6 @@ prettyPrint2d <- function(array, row_styles = NULL, col_styles = NULL) {
 
 pad <- function(n, char = " ") strrep(char, n)
 
-# available in a more efficient implementation, with type checking in R>=3.3.0
-# TODO: when it's reasonable / other requirements require R>=3.3.0 switch to R's
-# implementation
-strrep <- function(char, n) paste0(rep(char, n), collapse = "")
-
 # Remove NAs from crayon styled strings
 nonas <- function(string, to_remove = c("NA")) {
     for (rm in to_remove) {
