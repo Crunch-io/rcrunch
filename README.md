@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![R build status](https://github.com/Crunch-io/rcrunch/workflows/R-CMD-check/badge.svg)](https://github.com/Crunch-io/rcrunch/actions)
+[![Build Status](https://travis-ci.org/Crunch-io/rcrunch.png?branch=master)](https://travis-ci.org/Crunch-io/rcrunch) 
 [![cran](https://www.r-pkg.org/badges/version-last-release/crunch)](https://cran.r-project.org/package=crunch) [![codecov](https://codecov.io/gh/Crunch-io/rcrunch/branch/master/graph/badge.svg)](https://codecov.io/gh/Crunch-io/rcrunch)
 <!-- badges: end -->
 
