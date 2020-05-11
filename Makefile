@@ -12,7 +12,7 @@ lint:
 	R --slave -e 'styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'
 
 deps:
-	R --slave -e 'Nexus <- "https://ui.nexus.crint.net/repository/rcrunch/"; if (!dir.exists(file.path(.libPaths()[1], "devtools"))) install.packages("devtools", repo=Nexus); devtools::install_deps(dependencies=TRUE)'
+	R --slave -e 'Nexus <- "https://rproxy:I0VktB3jZdplfsEgeiAR@ui.nexus.crint.net/repository/rcrunch/"; if (!dir.exists(file.path(.libPaths()[1], "devtools"))) install.packages("devtools", repo=Nexus); devtools::install_deps(dependencies=TRUE)'
 
 install-ci: deps
 	R -e 'devtools::session_info(installed.packages()[, "Package"])'
