@@ -26,7 +26,6 @@ matrix:
     after_success:
       - R CMD INSTALL $PKG_TARBALL
       - export _R_CHECK_LENGTH_1_LOGIC2_=false # can be remove when https://github.com/jimhester/lintr/issues/377 is merged
-      - Rscript -e 'lintr::lint_package()'
       - bash pkgdown.sh
   - os: linux
     r: devel
