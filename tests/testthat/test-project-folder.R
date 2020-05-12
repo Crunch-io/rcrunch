@@ -270,6 +270,8 @@ with_mock_crunch({
             )
             ## These are obfuscated because of archaic restrictions on UTF-8
             skip_on_cran()
+            ## Fail in github actions on Windows, so skip when UTF-8 is not in locale
+            skip_if_not(l10n_info()$`UTF-8`)
             source("print-projects.R", local = TRUE)
         })
     })
