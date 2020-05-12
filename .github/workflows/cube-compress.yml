@@ -1,0 +1,33 @@
+on: push
+
+name: cube-compression
+
+jobs:
+  cube-compression:
+    runs-on: macOS-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: r-lib/actions/setup-r@master
+
+      - name: Check for new changes to cube directory and commit
+        run: |
+            last_compress_commit=`git log -n 1 --pretty=format:%H -- inst/cubes.tgz`
+            files_changed=`git diff --name-only --diff-filter=ADMR ${last_compress_commit}`
+            echo "Most recent commit that touched inst/cubes.tgz: "
+            echo ${last_compress_commit}
+            echo "Number of files changed since then: "
+            echo ${files_changed} | wc -w
+            if echo ${files_changed} | grep -q inst/cubes/
+            then
+                echo "Compressing"
+            	make compress-fixtures
+                git commit inst/cubes.tgz -m 'Rebuild inst/cubes.tgz from github actions'
+                git push origin
+            else
+                echo "No changes detected."
+            fi
