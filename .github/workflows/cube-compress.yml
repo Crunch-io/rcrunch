@@ -10,18 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@master
-
       - name: Check for new changes to cube directory and commit
         run: |
             last_cube_commit=`git log -n 1 --pretty=format:%H -- inst/cubes.tgz`
             echo "git log:"
             git log -n 1 --pretty=format:%H -- inst/cubes.tgz
-            echo "\ngit diff:"
-            git diff --name-only --diff-filter=ADMR `git log -n 1 --pretty=format:%H -- inst/cubes.tgz` | grep inst/cubes/
-            git diff --name-only --diff-filter=ADMR ${#last_cube_commit}
-            echo "git diff with grep:"
-            if git diff --name-only --diff-filter=ADMR `git log -n 1 --pretty=format:%H -- inst/cubes.tgz` | grep inst/cubes/
+            git diff --name-only --diff-filter=ADMR 88c4a535013b1450e2213c0c96a8c93308fdb2a7
+            git log -n 1 --pretty=format:%H -- inst/cubes.tgz | xargs  git diff --name-only --diff-filter=ADMR $1
+            if git log -n 1 --pretty=format:%H -- inst/cubes.tgz | xargs  git diff --name-only --diff-filter=ADMR $1 | grep inst/cubes/
             then
                 echo "Compressing"
             	make compress-fixtures
