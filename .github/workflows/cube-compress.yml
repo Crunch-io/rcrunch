@@ -12,10 +12,15 @@ jobs:
 
       - uses: r-lib/actions/setup-r@master
 
-      - name: Run cube compression
-        run: make compress-fixtures
-
-      - name: Commit results
+      - name: Check for new changes to cube directory and commit
         run: |
-          git commit inst/cubes.tgz -m 'Re-build inst/cubes.tgz' || echo "No changes to commit"
-          git push origin || echo "No changes to commit"
+            last_cube_commit=`git log -n 1 --pretty=format:%H -- inst/cubes.tgz`
+            if git diff --name-only --diff-filter=ADMR @~${#last_cube_commit} | grep -q inst/cubes/
+            then
+                echo "Compressing"
+            	make compress-fixtures
+                git commit inst/cubes.tgz -m 'Re-build inst/cubes.tgz from github actions'
+                git push origin
+            else
+                echo "No changes detected."
+            fi
