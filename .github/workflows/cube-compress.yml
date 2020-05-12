@@ -12,7 +12,7 @@ jobs:
 
       - name: Check for new changes to cube directory and commit
         run: |
-            if git log -n 1 --pretty=format:%H -- inst/cubes.tgz | xargs  git diff --name-only --diff-filter=ADMR $1 | grep -q inst/cubes/
+            if git log -n 1 --pretty=format:%H -- inst/cubes.tgz | xargs git diff --name-only --diff-filter=ADMR $1 | grep -q inst/cubes/
             then
                 echo "Compressing"
             	make compress-fixtures
