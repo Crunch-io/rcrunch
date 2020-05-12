@@ -12,6 +12,7 @@ jobs:
 
       - name: Check for new changes to cube directory and commit
         run: |
+            git log -n 10  --pretty=format:'%H %ai'
             git status
             git log -n 1 --pretty=format:%H -- inst/cubes.tgz
             echo "88c4a535013b1450e2213c0c96a8c93308fdb2a7" | xargs git diff --name-only --diff-filter=ADMR $1 | grep inst/cubes/
