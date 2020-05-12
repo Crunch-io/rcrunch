@@ -13,13 +13,14 @@ jobs:
       - name: Check for new changes to cube directory and commit
         run: |
             git status
-            git log -n 1 --pretty=format:%H -- inst/cubes.tgz | xargs git diff --name-only --diff-filter=ADMR $1
-            if git log -n 1 --pretty=format:%H -- inst/cubes.tgz | xargs git diff --name-only --diff-filter=ADMR $1 | grep -q inst/cubes/
+            git log -n 1 --pretty=format:%H -- inst/cubes.tgz
+            echo "88c4a535013b1450e2213c0c96a8c93308fdb2a7" | xargs git diff --name-only --diff-filter=ADMR $1 | grep inst/cubes/
+            if echo "88c4a535013b1450e2213c0c96a8c93308fdb2a7" | xargs git diff --name-only --diff-filter=ADMR $1 | grep -q inst/cubes/
             then
                 echo "Compressing"
-            	make compress-fixtures
-                # git commit inst/cubes.tgz -m 'Re-build inst/cubes.tgz from github actions'
-                # git push origin
+            	echo "CMD: make compress-fixtures"
+                echo "CMD: git commit inst/cubes.tgz -m 'Re-build inst/cubes.tgz from github actions'"
+                echo "CMD: git push origin"
             else
                 echo "No changes detected."
             fi
