@@ -20,9 +20,7 @@ addSubvariable <- function(variable, subvariable) {
     subvar.urls <- subvariableURLs(tuple(variable))
 
     ## Do the adding
-    crPATCH(shojiURL(variable, "catalogs", "subvariables"),
-        body = toJSON(sapply(new.urls, emptyObject, simplify = FALSE))
-    )
+    crPATCH(shojiURL(variable, "catalogs", "subvariables"), body = toJSON(sapply(new.urls, emptyObject, simplify = FALSE)))
 
     ## Workaround because apparently bind/rebind isn't retaining the order
     crPATCH(self(variable),
