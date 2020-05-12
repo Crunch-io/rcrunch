@@ -17,11 +17,11 @@ jobs:
             last_cube_commit=`git log -n 1 --pretty=format:%H -- inst/cubes.tgz`
             echo "git log:"
             git log -n 1 --pretty=format:%H -- inst/cubes.tgz
-            echo "git diff:"
-            git diff --name-only --diff-filter=ADMR @~${#last_cube_commit}
-            echo "git diff with grep:"
+            echo "\ngit diff:"
             git diff --name-only --diff-filter=ADMR `git log -n 1 --pretty=format:%H -- inst/cubes.tgz` | grep inst/cubes/
-            if git diff --name-only --diff-filter=ADMR `git log -n 1 --pretty=format:%H -- inst/cubes.tgz` | grep -q inst/cubes/
+            git diff --name-only --diff-filter=ADMR ${#last_cube_commit}
+            echo "git diff with grep:"
+            if git diff --name-only --diff-filter=ADMR `git log -n 1 --pretty=format:%H -- inst/cubes.tgz` | grep inst/cubes/
             then
                 echo "Compressing"
             	make compress-fixtures
