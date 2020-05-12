@@ -42,6 +42,29 @@ setMethod("value", "Category", function(x) {
 #' @export
 setMethod("value<-", "Category", setValue)
 
+setDate <- function(x, value) {
+    # Relies on server validation for acceptable formats
+    # Consider adding strftime/strptime support if users
+    # are used to working with dates (most are probably not)
+    value_to_set <- suppressWarnings(as.character(value))
+    if (is.na(value_to_set) && !is.na(value)) {
+        halt("Category dates must be ISO date strings")
+    }
+    x[["date"]] <- value_to_set
+    return(x)
+}
+
+#' @rdname describe-entity
+#' @export
+setMethod("date", "Category", function(x) {
+    v <- as.numeric(x[["date"]])
+    return(ifelse(is.null(v), NA_character_, v))
+})
+
+#' @rdname describe-entity
+#' @export
+setMethod("date<-", "Category", setDate)
+
 #' @rdname is-na-categories
 #' @export
 setMethod("is.na", "Category", function(x) isTRUE(x$missing))

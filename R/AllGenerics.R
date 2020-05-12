@@ -52,6 +52,12 @@ setGeneric("values", function(x) standardGeneric("values"))
 #' @rdname describe-catalog
 setGeneric("values<-", function(x, value) standardGeneric("values<-"))
 
+#' @rdname describe-catalog
+#' @export
+setGeneric("dates", function(x) standardGeneric("dates"))
+#' @rdname describe-catalog
+setGeneric("dates<-", function(x, value) standardGeneric("dates<-"), signature="x")
+
 setGeneric("names")
 setGeneric("names<-")
 
@@ -83,6 +89,12 @@ setGeneric("description", function(x) standardGeneric("description"))
 #' @rdname describe-entity
 setGeneric("description<-",
     function(x, value) standardGeneric("description<-"),
+    signature = "x"
+)
+setGeneric("date", function(x) standardGeneric("date"))
+#' @rdname describe-entity
+setGeneric("date<-",
+    function(x, value) standardGeneric("date<-"),
     signature = "x"
 )
 #' @rdname describe-entity
