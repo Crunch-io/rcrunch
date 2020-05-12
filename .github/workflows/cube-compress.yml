@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth:0
+          fetch-depth: 0
 
       - name: Check for new changes to cube directory and commit
         run: |
