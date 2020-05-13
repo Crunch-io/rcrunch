@@ -60,9 +60,11 @@ If you prefer, you can set the environment variables `R_CRUNCH_EMAIL`, `R_CRUNCH
 
 See https://cran.r-project.org/bin/linux/ubuntu/README for more details.
 
-### Git hooks
+### Mock fixtures
 
-`crunch` uses a git pre-commit hook to ensure that the cube test fixtures in `inst/cubes.tgz` are always up to date. To enable this, you should either copy `hooks/pre-commit` to `.git/hooks/pre-commit` or sym-link the entire hooks directory with `ln -s ../hooks/ .git/hooks`.
+`crunch` uses GitHub Actions to to ensure that the cube test fixtures in `inst/mocks.tgz` are always up to date. Though
+you may want to enable a pre-commit hook so that there are no commits added to your branch by either copying `hooks/pre-commit` 
+to `.git/hooks/pre-commit` or sym-link the entire hooks directory with `ln -s ../hooks/ .git/hooks`.
 
 ### Contributing
 
