@@ -8,6 +8,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r options, include=FALSE}
+# Only run when we have access to data (first time building during R CMD BUILD) so
+# that we don't have to include data in package because CRAN limits install size
+knitr::opts_chunk$set(eval = dir.exists("../vignette-data"))
+```
+
 One of the main benefits of Crunch is that it lets analysts and clients work with the same datasets. Instead of emailing datasets to clients, you can update the live dataset and ensure that they will see see the most up-to-date information. The potential problem with this setup is that it can become difficult to make provisional changes to the dataset without publishing it to the client. Sometimes an analyst wants to investigate or experiment with a dataset without the risk of sending incorrect or confusing information to the end user This is why we implemented a fork-edit-merge workflow for Crunch datasets.
 
 "Fork" originates in computer version control systems and just means to take a copy of something with the intention of making some changes to the copy, and then incorporating those changes back into the original. A helpful mnemonic is to think of a path which forks off from the main road, but then rejoins it later on. To see how this works lets first upload a new dataset to Crunch.
@@ -19,7 +25,7 @@ login()
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 library(httptest)
-start_vignette("fork-and-merge")
+start_vignette("../vignette-data/fork-and-merge")
 ```
 
 ```{r message=FALSE, results='hide'}
