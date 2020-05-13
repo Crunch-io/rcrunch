@@ -4,7 +4,9 @@ doc:
 	R --slave -e 'devtools::document()'
 	git add --all man/*.Rd
 
-test:
+test: check-fixtures | test-nomockcheck
+
+test-nomockcheck:
 	R CMD INSTALL --install-tests .
 	export NOT_CRAN=true && R --slave -e 'library(httptest); options(crunch.check.updates=FALSE); system.time(devtools::test(filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
@@ -62,6 +64,12 @@ spell:
 
 covr:
 	R --slave -e 'Sys.setenv(R_TEST_USER=getOption("test.user"), R_TEST_PW=getOption("test.pw"), R_TEST_API=getOption("test.api")); library(covr); cv <- package_coverage(); df <- covr:::to_shiny_data(cv)[["file_stats"]]; cat("Line coverage:", round(100*sum(df[["Covered"]])/sum(df[["Relevant"]]), 1), "percent\\n"); shine(cv, browse=TRUE)'
+
+check-fixtures:
+	@if git log -n 1 --pretty=format:%H -- inst/mocks.tgz | xargs git diff --name-only --diff-filter=ADMR $1 | grep -q mocks/ ; then \
+	printf "\nBummer! mocks look out of date, run command 'make fixtures' to update. Or you could bypass this check with 'make test-nomockcheck'\n\n"; exit 1; \
+	else echo "Yay! mocks are already up to date!"; \
+	fi
 
 compress-fixtures:
 	R --slave -e 'tar("inst/mocks.tgz", files = "mocks", compression = "gzip")'
