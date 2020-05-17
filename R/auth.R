@@ -43,7 +43,7 @@ login <- function(email = NULL,
     }
     
     #Get username and password combo
-    login_info <- get_user_pass_combo(email = email, password = password = password)
+    login_info <- get_user_pass_combo(email = email, password = password)
         
     crunchAuth(email = login_info$email, password = login_info$password, ...)
     options(
@@ -78,7 +78,7 @@ get_user_pass_combo <- function(email, password){
       if(n.passes >= 1){ #If there is a saved password, try matching to given email address; if no email address is associated with password then try it
         if(!is.null(email) & any(keyring::key_list("crunch")$username == email)){ password <- keyring::key_get("crunch", username = email)
         } else if(n.passes == 1 & keyring::key_list("crunch")$username == ""){ password <- keyring::key_get("crunch")
-        } else if(intaractive() == TRUE) warning("Saved Crunch passwords in keyring do not match specified email") #NB - not sure if we want this warning message - could be helpful or spammy
+        } else if(interactive() == TRUE) warning("Saved Crunch passwords in keyring do not match specified email") #NB - not sure if we want this warning message - could be helpful or spammy
       }
     } else(warning(
       "Retrieving saved Crunch email saved in global environment or .RProfile. This may not be secure. Consider using they \"keyring\" package and key_set(\"crunch\") to save password in encrypted format."
