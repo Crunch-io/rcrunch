@@ -14,24 +14,64 @@
 #' @export
 addSubvariable <- function(variable, subvariable) {
     stopifnot(is.Array(variable))
-    new.urls <- addSubvarDef(variable, subvariable)
+    if (!is.derived(variable)) {
+        new.urls <- addSubvarDef(variable, subvariable)
 
-    ## Store these for post workaround
-    subvar.urls <- subvariableURLs(tuple(variable))
+        ## Store these for post workaround
+        subvar.urls <- subvariableURLs(tuple(variable))
 
-    ## Do the adding
-    crPATCH(shojiURL(variable, "catalogs", "subvariables"),
-        body = toJSON(sapply(new.urls, emptyObject, simplify = FALSE))
-    )
+        ## Do the adding
+        crPATCH(shojiURL(variable, "catalogs", "subvariables"),
+                body = toJSON(sapply(new.urls, emptyObject, simplify = FALSE))
+        )
 
-    ## Workaround because apparently bind/rebind isn't retaining the order
-    crPATCH(self(variable),
-        body = toJSON(list(subvariables = I(c(subvar.urls, new.urls))))
-    )
+        ## Workaround because apparently bind/rebind isn't retaining the order
+        crPATCH(self(variable),
+                body = toJSON(list(subvariables = I(c(subvar.urls, new.urls))))
+        )
 
-    ## Refresh and return
-    dropCache(datasetReference(variable))
-    return(invisible(refresh(variable)))
+        ## Refresh and return
+        dropCache(datasetReference(variable))
+        return(invisible(refresh(variable)))
+    } else {
+        old_deriv <- derivation(variable, absoluteURLs = FALSE)
+        old_vars_catalog <- subvariables(variable)
+
+        new_deriv <- old_deriv
+        new_deriv@expression$args[[1]]$args[[1]]$map <- c(
+            new_deriv@expression$args[[1]]$args[[1]]$map,
+            setNames(
+                lapply(subvariable, function(x) list(variable = id(x))),
+                seq_along(subvariable) + max(as.numeric(names(old_deriv@expression$args[[1]]$args[[1]]$map)))
+            )
+        )
+
+        new_deriv@expression$args[[1]]$args[[2]]$value <- c(
+            new_deriv@expression$args[[1]]$args[[2]]$value,
+            lapply(
+                seq_along(subvariable) + max(unlist(as.numeric(new_deriv@expression$args[[1]]$args[[2]]$value))),
+                function(x) as.character(x)
+            )
+        )
+
+        derivation(variable) <- new_deriv
+        # We don't get metadata from original variable like we would if we were creating
+        # subvariable during original derivation...
+        names(subvariables(variable)) <- c(
+            names(old_vars_catalog),
+            vapply(subvariable, name, character(1))
+        )
+        descriptions(subvariables(variable)) <- c(
+            descriptions(old_vars_catalog),
+            vapply(subvariable, description, character(1))
+        )
+        notes(subvariables(variable)) <- c(
+            notes(old_vars_catalog),
+            vapply(subvariable, notes, character(1))
+        )
+        dropCache(datasetReference(variable))
+        return(invisible(refresh(variable)))
+    }
 }
 
 #' @rdname addSubvariable
