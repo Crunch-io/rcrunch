@@ -157,7 +157,7 @@ setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
 setGeneric("hide", function(x) standardGeneric("hide"))
 setGeneric("unhide", function(x) standardGeneric("unhide"))
-setGeneric("derivation", function(x) standardGeneric("derivation"))
+setGeneric("derivation", function(x, ...) standardGeneric("derivation"))
 setGeneric("derivation<-", function(x, value) standardGeneric("derivation<-"))
 
 
