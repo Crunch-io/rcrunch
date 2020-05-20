@@ -34,7 +34,10 @@ addSubvariable <- function(variable, subvariable) {
         dropCache(datasetReference(variable))
         return(invisible(refresh(variable)))
     } else {
-        old_deriv <- derivation(variable, absoluteURLs = FALSE)
+        # bypass `derivation(variable)` because `select` zcl function has ids
+        # not urls and so absolutifyURL mangles url
+        # TODO: use `derivation()` when select has relative urls (pivotal ticket: ???)
+        old_deriv <- CrunchExpr(expression = entity(x)@body$derivation)
         old_vars_catalog <- subvariables(variable)
 
         new_deriv <- old_deriv
