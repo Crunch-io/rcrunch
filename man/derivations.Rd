@@ -13,7 +13,7 @@
 \alias{is.derived<-}
 \title{Get or set a derived variable's expression}
 \usage{
-\S4method{derivation}{CrunchVariable}(x, abosluteURLs = TRUE)
+\S4method{derivation}{CrunchVariable}(x)
 
 \S4method{derivation}{CrunchVariable,ANY}(x) <- value
 
@@ -29,8 +29,6 @@
 \item{value}{a \code{CrunchExpr} to be used as the derivation (for the setter
 only) or \code{NULL} to integrate a derived variable. For \code{is.derived}, \code{FALSE}
 can be used to integrate a derived variable.}
-
-\item{absoluteURLs}{Whether to convert variable URLs to absolute URLs (defaults to TRUE)}
 }
 \value{
 a \code{CrunchExpr} of the derivation for \code{derivation}; a logical for

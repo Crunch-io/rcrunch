@@ -12,7 +12,6 @@
 #' two variables.
 #'
 #' @param x a variable
-#' @param absoluteURLs Whether to convert variable URLs to absolute URLs (defaults to TRUE)
 #' @param value a `CrunchExpr` to be used as the derivation (for the setter
 #' only) or `NULL` to integrate a derived variable. For `is.derived`, `FALSE`
 #' can be used to integrate a derived variable.
@@ -49,7 +48,7 @@ NULL
 
 #' @export
 #' @rdname derivations
-setMethod("derivation", "CrunchVariable", function(x, absoluteURLs = TRUE) {
+setMethod("derivation", "CrunchVariable", function(x) {
     if (!is.derived(x)) {
         return(NULL)
     }
@@ -57,7 +56,7 @@ setMethod("derivation", "CrunchVariable", function(x, absoluteURLs = TRUE) {
     # self(x) is needed and not variableCatalog because the variables are stored
     # as '../varid/' and when absoluteURL concats them, the varid from self(x)
     # is automatically removed.
-    if (absoluteURLs) expr@expression <- absolutifyVariables(expr@expression, self(x))
+    expr@expression <- absolutifyVariables(expr@expression, self(x))
 
     return(expr)
 })
