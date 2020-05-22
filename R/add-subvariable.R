@@ -34,32 +34,31 @@ addSubvariable <- function(variable, subvariable) {
         dropCache(datasetReference(variable))
         return(invisible(refresh(variable)))
     } else {
+        if (is.VarDef(subvariable) | is.variable(subvariable)) subvariable <- list(subvariable)
+        if (is.catalog(subvariable) | is.dataset(subvariable)) subvariable <- lapply(
+            seq_along(subvariable),
+            function(var_num) subvariable[[var_num]]
+        )
         # bypass `derivation(variable)` because `select` zcl function has ids
         # not urls and so absolutifyURL mangles url
         # TODO: use `derivation()` when select has relative urls (pivotal ticket: ???)
-        old_deriv <- CrunchExpr(expression = entity(x)@body$derivation)
+        old_deriv <- CrunchExpr(expression = entity(variable)@body$derivation)
         old_vars_catalog <- subvariables(variable)
 
-        new_deriv <- old_deriv
-        new_deriv@expression$args[[1]]$args[[1]]$map <- c(
-            new_deriv@expression$args[[1]]$args[[1]]$map,
-            setNames(
-                lapply(subvariable, function(x) list(variable = id(x))),
-                seq_along(subvariable) + max(as.numeric(names(old_deriv@expression$args[[1]]$args[[1]]$map)))
-            )
-        )
-
-        new_deriv@expression$args[[1]]$args[[2]]$value <- c(
-            new_deriv@expression$args[[1]]$args[[2]]$value,
-            lapply(
-                seq_along(subvariable) + max(unlist(as.numeric(new_deriv@expression$args[[1]]$args[[2]]$value))),
-                function(x) as.character(x)
-            )
-        )
+        if (isSelectDerivation(old_deriv)) {
+            new_deriv <- addSubvarsToSelectDerivation(old_deriv, subvariable)
+        } else if (isSelectCatDerivation(old_deriv)) {
+            new_deriv <- addSubvarsToSelectCatDerivation(old_deriv, subvariable, categories(variable))
+        } else {
+            halt("Could not add subvariable because did not recognize variable derivation structure")
+        }
 
         derivation(variable) <- new_deriv
         # We don't get metadata from original variable like we would if we were creating
         # subvariable during original derivation...
+        # TODO: there should be a way to update all subreferences in a single POST, but I don't
+        # see how
+        # TODO: Also, the alias is really ugly for newly created subvariables
         names(subvariables(variable)) <- c(
             names(old_vars_catalog),
             vapply(subvariable, name, character(1))
@@ -109,4 +108,95 @@ addSubvarDef <- function(var, subvar) {
         out[!vardefs] <- urls(subvar[!vardefs])
     }
     return(as.character(out))
+}
+
+# If select derivation, can put both existing variables and var defs inside select
+isSelectDerivation <- function(deriv) {
+    deriv@expression[["function"]] == "array" &&
+        deriv@expression[["args"]][[1]][["function"]] == "select"
+}
+
+addSubvarsToSelectDerivation <- function(deriv, new_vars) {
+    new_vars <- lapply(new_vars, varUrlOrExpression)
+
+    new_deriv <- deriv
+    current_map <- new_deriv@expression$args[[1]]$args[[1]]$map
+    max_map_name <- max(as.numeric(names(current_map)))
+
+    new_deriv@expression$args[[1]]$args[[1]]$map <- c(
+        current_map,
+        setNames(new_vars, seq_along(new_vars) + max_map_name)
+    )
+
+    new_deriv@expression$args[[1]]$args[[2]]$value <- c(
+        new_deriv@expression$args[[1]]$args[[2]]$value,
+        lapply(seq_along(new_vars) + max_map_name, as.character)
+    )
+
+    new_deriv
+}
+
+
+# if select_cat derivation, existing categorical variables without selections must not add
+# any new categories to existing array. var defs cannot be checked but are assumed to also
+# have the same categories
+# TODO: this does not allow you to add a new subvar where you deliberately choose the
+# selected categories which would be nice
+isSelectCatDerivation <- function(deriv) {
+    deriv@expression[["function"]] == "select_categories" &&
+        deriv@expression[["args"]][[1]][["function"]] == "array"  &&
+        deriv@expression[["args"]][[1]][["args"]][[1]] == "select"
+}
+
+addSubvarsToSelectCatDerivation <- function(deriv, new_vars, existing_cats) {
+    new_vars_are_expressions <- vapply(new_vars, is.VarDef, logical(1))
+    checkNewSubvarCats(new_vars[!new_vars_are_expressions], existing_cats)
+    new_vars <- lapply(new_vars, varUrlOrExpression)
+
+    new_deriv <- deriv
+    current_map <- new_deriv@expression$args[[1]]$args[[1]]$args[[1]]$map
+    max_map_name <- max(as.numeric(names(current_map)))
+
+    new_deriv@expression$args[[1]]$args[[1]]$args[[1]]$map <- c(
+        current_map,
+        setNames(new_vars, seq_along(new_vars) + max_map_name
+        )
+    )
+
+    new_deriv@expression$args[[1]]$args[[1]]$args[[2]]$value <- c(
+        new_deriv@expression$args[[1]]$args[[1]]$args[[2]]$value,
+        lapply(seq_along(new_vars) + max_map_name, as.character)
+    )
+
+    new_deriv
+}
+
+varUrlOrExpression <- function(var) {
+    if (is.VarDef(var)) {
+        out <- var$derivation
+        out$references <- var[names(var) != "derivation"]
+        out
+    } else {
+        list(variable = self(var))
+    }
+}
+
+
+checkNewSubvarCats <- function(vars, cats) {
+    new_cat_names <- lapply(vars, function(var) {
+        setdiff(names(categories(var)), names(cats))
+    })
+
+    if (any(lengths(new_cat_names) > 0)) {
+        msg <- paste0(
+            "Some existing variables have categories not already present in the MR variable, so ",
+            "cannot add:\n",
+            paste(
+                vapply(vars[lengths(new_cat_names) > 0], alias, character(1)),
+                "(", vapply(new_cat_names[lengths(new_cat_names) > 0], paste, character(1)), ")",
+                collapse = ", "
+            )
+        )
+        halt(msg)
+    }
 }
