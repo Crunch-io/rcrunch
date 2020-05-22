@@ -15,70 +15,36 @@
 addSubvariable <- function(variable, subvariable) {
     stopifnot(is.Array(variable))
     if (!is.derived(variable)) {
-        new.urls <- addSubvarDef(variable, subvariable)
-
-        ## Store these for post workaround
-        subvar.urls <- subvariableURLs(tuple(variable))
-
-        ## Do the adding
-        crPATCH(shojiURL(variable, "catalogs", "subvariables"),
-                body = toJSON(sapply(new.urls, emptyObject, simplify = FALSE))
-        )
-
-        ## Workaround because apparently bind/rebind isn't retaining the order
-        crPATCH(self(variable),
-                body = toJSON(list(subvariables = I(c(subvar.urls, new.urls))))
-        )
-
-        ## Refresh and return
-        dropCache(datasetReference(variable))
-        return(invisible(refresh(variable)))
+        addSubvariablePrimary(variable, subvariable)
     } else {
-        if (is.VarDef(subvariable) | is.variable(subvariable)) subvariable <- list(subvariable)
-        if (is.catalog(subvariable) | is.dataset(subvariable)) subvariable <- lapply(
-            seq_along(subvariable),
-            function(var_num) subvariable[[var_num]]
-        )
-        # bypass `derivation(variable)` because `select` zcl function has ids
-        # not urls and so absolutifyURL mangles url
-        # TODO: use `derivation()` when select has relative urls (pivotal ticket: ???)
-        old_deriv <- CrunchExpr(expression = entity(variable)@body$derivation)
-        old_vars_catalog <- subvariables(variable)
-
-        if (isSelectDerivation(old_deriv)) {
-            new_deriv <- addSubvarsToSelectDerivation(old_deriv, subvariable)
-        } else if (isSelectCatDerivation(old_deriv)) {
-            new_deriv <- addSubvarsToSelectCatDerivation(old_deriv, subvariable, categories(variable))
-        } else {
-            halt("Could not add subvariable because did not recognize variable derivation structure")
-        }
-
-        derivation(variable) <- new_deriv
-        # We don't get metadata from original variable like we would if we were creating
-        # subvariable during original derivation...
-        # TODO: there should be a way to update all subreferences in a single POST, but I don't
-        # see how
-        # TODO: Also, the alias is really ugly for newly created subvariables
-        names(subvariables(variable)) <- c(
-            names(old_vars_catalog),
-            vapply(subvariable, name, character(1))
-        )
-        descriptions(subvariables(variable)) <- c(
-            descriptions(old_vars_catalog),
-            vapply(subvariable, description, character(1))
-        )
-        notes(subvariables(variable)) <- c(
-            notes(old_vars_catalog),
-            vapply(subvariable, notes, character(1))
-        )
-        dropCache(datasetReference(variable))
-        return(invisible(refresh(variable)))
+        addSubvariableDerived(variable, subvariable)
     }
 }
 
 #' @rdname addSubvariable
 #' @export
 addSubvariables <- addSubvariable
+
+addSubvariablePrimary <- function(variable, subvariable) {
+    new.urls <- addSubvarDef(variable, subvariable)
+
+    ## Store these for post workaround
+    subvar.urls <- subvariableURLs(tuple(variable))
+
+    ## Do the adding
+    crPATCH(shojiURL(variable, "catalogs", "subvariables"),
+            body = toJSON(sapply(new.urls, emptyObject, simplify = FALSE))
+    )
+
+    ## Workaround because apparently bind/rebind isn't retaining the order
+    crPATCH(self(variable),
+            body = toJSON(list(subvariables = I(c(subvar.urls, new.urls))))
+    )
+
+    ## Refresh and return
+    dropCache(datasetReference(variable))
+    return(invisible(refresh(variable)))
+}
 
 addSubvarDef <- function(var, subvar) {
     ## Input can be a variable, subvariable, dataset subset or
@@ -108,6 +74,49 @@ addSubvarDef <- function(var, subvar) {
         out[!vardefs] <- urls(subvar[!vardefs])
     }
     return(as.character(out))
+}
+
+
+addSubvariableDerived <- function(variable, subvariable) {
+    if (is.VarDef(subvariable) | is.variable(subvariable)) subvariable <- list(subvariable)
+    if (is.catalog(subvariable) | is.dataset(subvariable)) subvariable <- lapply(
+        seq_along(subvariable),
+        function(var_num) subvariable[[var_num]]
+    )
+    # bypass `derivation(variable)` because `select` zcl function has ids
+    # not urls and so absolutifyURL mangles url
+    # TODO: use `derivation()` when select has relative urls (pivotal ticket: ???)
+    old_deriv <- CrunchExpr(expression = entity(variable)@body$derivation)
+    old_vars_catalog <- subvariables(variable)
+
+    if (isSelectDerivation(old_deriv)) {
+        new_deriv <- addSubvarsToSelectDerivation(old_deriv, subvariable)
+    } else if (isSelectCatDerivation(old_deriv)) {
+        new_deriv <- addSubvarsToSelectCatDerivation(old_deriv, subvariable, categories(variable))
+    } else {
+        halt("Could not add subvariable because did not recognize variable derivation structure")
+    }
+
+    derivation(variable) <- new_deriv
+    # We don't get metadata from original variable like we would if we were creating
+    # subvariable during original derivation...
+    # TODO: there should be a way to update all subreferences in a single POST, but I don't
+    # see how
+    # TODO: Also, the alias is really ugly for newly created subvariables
+    names(subvariables(variable)) <- c(
+        names(old_vars_catalog),
+        vapply(subvariable, name, character(1))
+    )
+    descriptions(subvariables(variable)) <- c(
+        descriptions(old_vars_catalog),
+        vapply(subvariable, description, character(1))
+    )
+    notes(subvariables(variable)) <- c(
+        notes(old_vars_catalog),
+        vapply(subvariable, notes, character(1))
+    )
+    dropCache(datasetReference(variable))
+    return(invisible(refresh(variable)))
 }
 
 # If select derivation, can put both existing variables and var defs inside select
@@ -181,21 +190,21 @@ varUrlOrExpression <- function(var) {
     }
 }
 
-
 checkNewSubvarCats <- function(vars, cats) {
     new_cat_names <- lapply(vars, function(var) {
         setdiff(names(categories(var)), names(cats))
     })
 
     if (any(lengths(new_cat_names) > 0)) {
+        var_aliases <- vapply(vars[lengths(new_cat_names) > 0], alias, character(1))
+        cats_for_vars <- vapply(
+            new_cat_names[lengths(new_cat_names) > 0],
+            function(cats) paste(cats, collapse = ", "),
+            character(1)
+        )
         msg <- paste0(
             "Some existing variables have categories not already present in the MR variable, so ",
-            "cannot add:\n",
-            paste(
-                vapply(vars[lengths(new_cat_names) > 0], alias, character(1)),
-                "(", vapply(new_cat_names[lengths(new_cat_names) > 0], paste, character(1)), ")",
-                collapse = ", "
-            )
+            "cannot add subvariables.\n  ", paste0(var_aliases, "(", cats_for_vars, ")", collapse = ", ")
         )
         halt(msg)
     }
