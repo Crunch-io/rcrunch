@@ -57,12 +57,11 @@ test_that("Match username and password, with single saved keyring password", {
   )
   
   #Single keyring password, username specified via login, saved password for different username
-  expect_identical(
-    get_user_pass_combo(email = "test@yougov.com", password = NULL),
-    list(email = "test@yougov.com", password = NULL)
-  )
   expect_warning(
-    get_user_pass_combo(email = "test@yougov.com", password = NULL),
+    expect_identical(
+      get_user_pass_combo(email = "test@yougov.com", password = NULL),
+      list(email = "test@yougov.com", password = NULL)
+    ),
     "Saved Crunch passwords in keyring do not match specified email"
   )
   
@@ -84,12 +83,11 @@ test_that("Match username and password, with single saved keyring password", {
   #Single keyring password, username saved in system environment, saved password doesn't match specified email
   #Expected outcome - test@yougov.com, NULL, warning "Saved Crunch passwords in keyring do not match specified email"
   Sys.setenv(R_CRUNCH_EMAIL = "test@yougov.com")
-  expect_identical(
-    get_user_pass_combo(email = NULL, password = NULL),
-    list(email = "test@yougov.com", password = NULL)
-  )
   expect_warning(
-    get_user_pass_combo(email = NULL, password = NULL),
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = "test@yougov.com", password = NULL)
+    ),
     "Saved Crunch passwords in keyring do not match specified email"
   )
   Sys.unsetenv("R_CRUNCH_EMAIL")
@@ -123,15 +121,14 @@ test_that("Match username and password, with multiple saved keyring passwords", 
   )
   
   #Multiple keyring passwords, logging in with username NOT corresponding to saved password
-  expect_identical(
-    get_user_pass_combo(email = "test@yougov.com", password = NULL),
-    list(email = "test@yougov.com", password = NULL)
-  )
   expect_warning(
-    get_user_pass_combo(email = "test@yougov.com", password = NULL),
+    expect_identical(
+      get_user_pass_combo(email = "test@yougov.com", password = NULL),
+      list(email = "test@yougov.com", password = NULL)
+    ),
     "Saved Crunch passwords in keyring do not match specified email"
   )
-  
+
   #Multiple keyring passwords, attempting to log in without specified username
   expect_error(
     get_user_pass_combo(email = NULL, password = NULL),
@@ -150,12 +147,11 @@ test_that("Match username and password, with multiple saved keyring passwords", 
   #Username set via environment variable, 2+ saved passwords in keyring, username via environemnt variable NOT matching keyring
   #Expected outcome - test@yougov.com, NULL
   Sys.setenv(R_CRUNCH_EMAIL = "test@yougov.com")
-  expect_identical(
-    get_user_pass_combo(email = NULL, password = NULL),
-    list(email = "test@yougov.com", password = NULL)
-  )
   expect_warning(
-    get_user_pass_combo(email = NULL, password = NULL),
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = "test@yougov.com", password = NULL)
+    ),
     "Saved Crunch passwords in keyring do not match specified email"
   )
   Sys.unsetenv("R_CRUNCH_EMAIL")
