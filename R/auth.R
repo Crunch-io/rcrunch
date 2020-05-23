@@ -77,7 +77,7 @@ get_user_pass_combo <- function(email, password){
       
       if(n.passes >= 1){ #If there is a saved password, try matching to given email address; if no email address is associated with password then try it
         if(!is.null(email) & any(keyring::key_list("crunch")$username == email)){ password <- keyring::key_get("crunch", username = email)
-        } else if(n.passes == 1 & keyring::key_list("crunch")$username == ""){ password <- keyring::key_get("crunch")
+        } else if(n.passes == 1 & keyring::key_list("crunch")$username[1] == ""){ password <- keyring::key_get("crunch")
         } else if(interactive() == TRUE) warning("Saved Crunch passwords in keyring do not match specified email") #NB - not sure if we want this warning message - could be helpful or spammy
       }
     } else(warning(
