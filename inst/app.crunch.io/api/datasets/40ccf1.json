@@ -1,0 +1,99 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/40ccf1/",
+    "catalogs": {
+        "folders": "https://app.crunch.io/api/datasets/40ccf1/folders/",
+        "users": "https://app.crunch.io/api/datasets/40ccf1/users/",
+        "views": "https://app.crunch.io/api/datasets/40ccf1/views/",
+        "variables": "https://app.crunch.io/api/datasets/40ccf1/variables/",
+        "actions": "https://app.crunch.io/api/datasets/40ccf1/actions/",
+        "boxdata": "https://app.crunch.io/api/datasets/40ccf1/boxdata/",
+        "filters": "https://app.crunch.io/api/datasets/40ccf1/filters/",
+        "scripts": "https://app.crunch.io/api/datasets/40ccf1/scripts/",
+        "permissions": "https://app.crunch.io/api/datasets/40ccf1/permissions/",
+        "batches": "https://app.crunch.io/api/datasets/40ccf1/batches/",
+        "tags": "https://app.crunch.io/api/datasets/40ccf1/tags/",
+        "teams": "https://app.crunch.io/api/datasets/40ccf1/teams/",
+        "savepoints": "https://app.crunch.io/api/datasets/40ccf1/savepoints/",
+        "multitables": "https://app.crunch.io/api/datasets/40ccf1/multitables/",
+        "forks": "https://app.crunch.io/api/datasets/40ccf1/forks/",
+        "decks": "https://app.crunch.io/api/datasets/40ccf1/decks/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "project": "https://app.crunch.io/api/projects/personal/",
+        "variables_private": "https://app.crunch.io/api/datasets/40ccf1/variables/private/"
+    },
+    "fragments": {
+        "preferences": "https://app.crunch.io/api/datasets/40ccf1/preferences/",
+        "stream": "https://app.crunch.io/api/datasets/40ccf1/stream/",
+        "settings": "https://app.crunch.io/api/datasets/40ccf1/settings/",
+        "exclusion": "https://app.crunch.io/api/datasets/40ccf1/exclusion/",
+        "publish": "https://app.crunch.io/api/datasets/40ccf1/publish/",
+        "state": "https://app.crunch.io/api/datasets/40ccf1/state/",
+        "table": "https://app.crunch.io/api/datasets/40ccf1/table/",
+        "pk": "https://app.crunch.io/api/datasets/40ccf1/pk/",
+        "schema": "https://app.crunch.io/api/datasets/40ccf1/schema/"
+    },
+    "views": {
+        "second_order_analysis": "https://app.crunch.io/api/datasets/40ccf1/second_order_analysis/",
+        "cube": "https://app.crunch.io/api/datasets/40ccf1/cube/",
+        "export": "https://app.crunch.io/api/datasets/40ccf1/export/",
+        "summary": "https://app.crunch.io/api/datasets/40ccf1/summary/",
+        "applied_filters": "https://app.crunch.io/api/datasets/40ccf1/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "https://app.crunch.io/api/users/27a158/",
+        "current_editor": "https://app.crunch.io/api/users/27a158/",
+        "creation_time": "2020-05-22T20:48:13.905000",
+        "streaming": "no",
+        "owner": "https://app.crunch.io/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "40ccf1",
+        "size": {
+            "rows": 5,
+            "unfiltered_rows": 5,
+            "columns": 7
+        },
+        "palette": {
+            "brand": {
+                "message": "#722580",
+                "primary": "#005283",
+                "secondary": "#107f65"
+            }
+        },
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "",
+        "end_date": null,
+        "access_time": "2020-05-22T23:43:42.945000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2020-05-22T23:44:35.013000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "https://app.crunch.io/api/accounts/00001/",
+        "name": "combine into array test",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "https://app.crunch.io/api/datasets/40ccf1/variables/weights/",
+        "variables_hier": "https://app.crunch.io/api/datasets/40ccf1/variables/hier/",
+        "variables_personal": "https://app.crunch.io/api/datasets/40ccf1/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "https://app.crunch.io/api/projects/378ad4/",
+        "editor_url": "https://app.crunch.io/api/users/27a158/",
+        "user_url": "https://app.crunch.io/api/users/27a158/"
+    }
+}

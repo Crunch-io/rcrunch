@@ -1,0 +1,33 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/subvariables/",
+    "description": "Contains the subvariables for this array variable.",
+    "index": {
+        "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/subvariables/1/": {
+            "secure": false,
+            "derived": false,
+            "id": "1",
+            "description": "",
+            "scale": "interval",
+            "name": "x1",
+            "notes": "",
+            "discarded": false,
+            "alias": "x1__1",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/subvariables/2/": {
+            "secure": false,
+            "derived": false,
+            "id": "2",
+            "description": "",
+            "scale": "interval",
+            "name": "x2",
+            "notes": "",
+            "discarded": false,
+            "alias": "x2__1",
+            "hidden": false,
+            "type": "categorical"
+        }
+    }
+}

@@ -21,6 +21,59 @@ with_mock_crunch({
             fixed = TRUE
         )
     })
+
+    ds <- loadDataset("test ds addsubvars to derived")
+    test_that("Can add existing variable to derived select array", {
+        expect_PATCH(
+            ds$xcat <- addSubvariable(ds$xcat, ds["x3"]),
+            "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/",
+            '{"derivation":{"function":"array","args":[{"function":"select","args":[{"map":',
+            '{"1":{"variable":"7lgPl0MFNP5PJTxWJEStnk000000"},"2":{"variable":"7lgPl0MFNP5PJTxWJEStnk000001"},', #nolint
+            '"3":{"variable":"https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000002/"}}}', #nolint
+            ',{"value":["1","2","3"]}]}],"references":{"alias":"xcat","name":"x cat"}}}'
+        )
+    })
+    test_that("Can add existing variable to derived select_cat array", {
+        expect_PATCH(
+            ds$xmr <- addSubvariable(ds$xmr, ds["x3"]),
+            "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/",
+            '{"derivation":{"function":"select_categories","args":[{"function":"array","args":[{"function":"select"', # nolint
+            ',"args":[{"map":{"1":{"variable":"7lgPl0MFNP5PJTxWJEStnk000000"},',
+            '"2":{"variable":"7lgPl0MFNP5PJTxWJEStnk000001"},',
+            '"3":{"variable":"https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000002/"}}}', #nolint
+            ',{"value":["1","2","3"]}]}]},{"value":["Good"]}],"references":{"alias":"xmr","name":"x mr"}}}' # nolint
+        )
+    })
+    test_that("Can add VarDef to derived select array", {
+        expect_PATCH(
+            ds$xcat <- addSubvariable(ds$xcat, VarDef(as.Categorical(ds$x_text), name = "x text")),
+            "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/",
+            '{"derivation":{"function":"array","args":[{"function":"select","args":[{"map":',
+            '{"1":{"variable":"7lgPl0MFNP5PJTxWJEStnk000000"},"2":{"variable":"7lgPl0MFNP5PJTxWJEStnk000001"},', #nolint
+            '"3":{"function":"cast","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000003/"}',
+            ',{"value":"categorical"}],"references":{"name":"x text"}}}}', #nolint
+            ',{"value":["1","2","3"]}]}],"references":{"alias":"xcat","name":"x cat"}}}'
+        )
+    })
+    test_that("Can add VarDef to derived select_cat array", {
+        expect_PATCH(
+            ds$xmr <- addSubvariable(ds$xmr, VarDef(as.Categorical(ds$x_text), name = "x text")),
+            "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/",
+            '{"derivation":{"function":"select_categories","args":[{"function":"array","args":[{"function":"select"', # nolint
+            ',"args":[{"map":{"1":{"variable":"7lgPl0MFNP5PJTxWJEStnk000000"},',
+            '"2":{"variable":"7lgPl0MFNP5PJTxWJEStnk000001"},"3":{"function":',
+            '"cast","args":[{"variable":"https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000003/"},', #nolint
+            '{"value":"categorical"}],"references":{"name":"x text"}}}},{"value":["1","2","3"]}]}]}', #nolint
+            ',{"value":["Good"]}],"references":{"alias":"xmr","name":"x mr"}}}'
+        )
+    })
+    test_that("Cannot add new categories when adding existing variable to derived select_cat array", {
+        expect_error(
+            ds$xmr <- addSubvariable(ds$xmr, ds["y"]),
+            "Some existing variables have categories not already present in the MR variable"
+        )
+    })
 })
 
 with_test_authentication({
