@@ -90,9 +90,9 @@ addSubvariableDerived <- function(variable, subvariable) {
     old_vars_catalog <- subvariables(variable)
 
     if (isSelectDerivation(old_deriv)) {
-        new_deriv <- addSubvarsToSelectDerivation(old_deriv, subvariable)
+        new_deriv <- addToSelectDerivation(old_deriv, subvariable)
     } else if (isSelectCatDerivation(old_deriv)) {
-        new_deriv <- addSubvarsToSelectCatDerivation(old_deriv, subvariable, categories(variable))
+        new_deriv <- addToSelectCatDerivation(old_deriv, subvariable, categories(variable))
     } else {
         halt("Could not add subvariable because did not recognize variable derivation structure")
     }
@@ -125,7 +125,7 @@ isSelectDerivation <- function(deriv) {
         deriv@expression[["args"]][[1]][["function"]] == "select"
 }
 
-addSubvarsToSelectDerivation <- function(deriv, new_vars) {
+addToSelectDerivation <- function(deriv, new_vars) {
     new_vars <- lapply(new_vars, varUrlOrExpression)
 
     new_deriv <- deriv
@@ -157,7 +157,7 @@ isSelectCatDerivation <- function(deriv) {
         deriv@expression[["args"]][[1]][["args"]][[1]][["function"]] == "select"
 }
 
-addSubvarsToSelectCatDerivation <- function(deriv, new_vars, existing_cats) {
+addToSelectCatDerivation <- function(deriv, new_vars, existing_cats) {
     new_vars_are_expressions <- vapply(new_vars, is.VarDef, logical(1))
     checkNewSubvarCats(new_vars[!new_vars_are_expressions], existing_cats)
     new_vars <- lapply(new_vars, varUrlOrExpression)
@@ -204,7 +204,8 @@ checkNewSubvarCats <- function(vars, cats) {
         )
         msg <- paste0(
             "Some existing variables have categories not already present in the MR variable, so ",
-            "cannot add subvariables.\n  ", paste0(var_aliases, "(", cats_for_vars, ")", collapse = ", ")
+            "cannot add subvariables.\n  ",
+            paste0(var_aliases, "(", cats_for_vars, ")", collapse = ", ")
         )
         halt(msg)
     }

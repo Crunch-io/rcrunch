@@ -68,11 +68,12 @@ with_mock_crunch({
             ',{"value":["Good"]}],"references":{"alias":"xmr","name":"x mr"}}}'
         )
     })
-    test_that("Cannot add new categories when adding existing variable to derived select_cat array", {
-        expect_error(
-            ds$xmr <- addSubvariable(ds$xmr, ds["y"]),
-            "Some existing variables have categories not already present in the MR variable"
-        )
+    test_that(
+        "Cannot add new categories when adding existing variable to derived select_cat array", {
+            expect_error(
+                ds$xmr <- addSubvariable(ds$xmr, ds["y"]),
+                "Some existing variables have categories not already present in the MR variable"
+            )
     })
 })
 
