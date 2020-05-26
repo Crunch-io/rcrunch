@@ -53,7 +53,7 @@
             "discarded": false,
             "alias": "x_text",
             "hidden": false,
-            "type": "categorical"
+            "type": "text"
         },
         "7lgPl0MFNP5PJTxWJEStnk000002/": {
             "secure": false,
