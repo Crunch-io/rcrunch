@@ -64,6 +64,32 @@ test_that("Can make a VarDef with no values", {
     )
 })
 
+test_that("VarDef metadata getters work", {
+    expect_equivalent(
+        name(VarDef(name = "var", values = 1:5)),
+        "var"
+    )
+
+    expect_equivalent(
+        description(VarDef(name = "var", description = "descrip", values = 1:5)),
+        "descrip"
+    )
+
+    expect_equivalent(
+        notes(VarDef(name = "var", notes = "nt", values = 1:5)),
+        "nt"
+    )
+
+    expect_equivalent(
+        description(VarDef(name = "var", values = 1:5)),
+        ""
+    )
+
+    expect_equivalent(
+        notes(VarDef(name = "var", values = 1:5)),
+        ""
+    )
+})
 
 with_test_authentication({
     ds <- newDataset(df)

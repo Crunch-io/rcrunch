@@ -56,7 +56,7 @@ setMethod("name", "VariableDefinition", function(x) x$name)
 
 #' @rdname describe-entity
 #' @export
-setMethod("description", "VariableDefinition", function(x) x$desciption %||% "")
+setMethod("description", "VariableDefinition", function(x) x$description %||% "")
 
 #' @rdname describe-entity
 #' @export
