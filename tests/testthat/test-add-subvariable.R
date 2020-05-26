@@ -145,3 +145,61 @@ with_test_authentication({
         )
     })
 })
+
+with_test_authentication({
+    # adding to derived array
+    # TODO: Use existing fixture? Add this to fixtures?
+    levels <- c("Good", "Okay", "Bad")
+    data <- data.frame(
+        x1 = factor(c("Good", "Okay", "Bad", "Good", "Okay"), levels),
+        x2 = factor(c("Okay", "Bad", "Good", "Okay", "Okay"), levels),
+        x3 = factor(c("Bad", "Good", "Okay", "Good", "Bad"), levels),
+        x_text = c("Bad", "Good", "Okay", "Good", "Bad"),
+        stringsAsFactors = FALSE
+    )
+
+    ds <- newDataset(data, name = "add subvars to derived test")
+
+    ds$xcat <- deriveArray(ds[c('x1', 'x2')], name = "x cat")
+    ds$xmr <- deriveArray(ds[c('x1', 'x2')], name = "x mr", selections = "Good")
+
+    test_that("Can add existing variable to select-style categorical.", {
+        ds$xcat <- addSubvariable(ds$xcat, ds["x3"])
+        expect_equal(as.vector(ds$x3), as.vector(ds$xcat[[3]]))
+        expect_equal(names(subvariables(ds$xcat)), c("x1", "x2", "x3"))
+    })
+
+    test_that("Can add existing variable to select_cat-style categorical.", {
+        ds$xmr <- addSubvariable(ds$xmr, ds["x3"])
+        expect_equal(as.vector(ds$x3), as.vector(ds$xmr[[3]]))
+        expect_equal(names(subvariables(ds$xmr)), c("x1", "x2", "x3"))
+    })
+
+    test_that("Can add vardef variable to select-style categorical.", {
+        ds$xcat <- addSubvariable(
+            ds$xcat,
+            VarDef(
+                as.Categorical(ds$x_text),
+                name = "xtext",
+                description = "xt desc",
+                notes = "xt notes"
+            )
+        )
+        expect_equal(as.vector(ds$x_text), as.character(as.vector(ds$xcat[[4]])))
+        expect_equal(names(subvariables(ds$xcat)), c("x1", "x2", "x3", "xtext"))
+    })
+
+    test_that("Can add vardef variable to select_cat-style categorical.", {
+        ds$xmr <- addSubvariable(
+            ds$xmr,
+            VarDef(
+                as.Categorical(ds$x_text),
+                name = "xtext",
+                description = "xtext desc",
+                notes = "xtext notes"
+            )
+        )
+        expect_equal(as.vector(ds$x_text), as.character(as.vector(ds$xmr[[4]])))
+        expect_equal(names(subvariables(ds$xmr)), c("x1", "x2", "x3", "xtext"))
+    })
+})
