@@ -87,7 +87,6 @@ addSubvariableDerived <- function(variable, subvariable) {
     # not urls and so absolutifyURL mangles url
     # TODO: use `derivation()` when select has relative urls (pivotal ticket: ???)
     old_deriv <- CrunchExpr(expression = entity(variable)@body$derivation)
-    old_vars_catalog <- subvariables(variable)
 
     if (isSelectDerivation(old_deriv)) {
         new_deriv <- addToSelectDerivation(old_deriv, subvariable)
@@ -100,21 +99,12 @@ addSubvariableDerived <- function(variable, subvariable) {
     derivation(variable) <- new_deriv
     # We don't get metadata from original variable like we would if we were creating
     # subvariable during original derivation...
-    # TODO: there should be a way to update all subreferences in a single POST, but I don't
-    # see how
+    # TODO: It would be nice to update name in the same POST as updating derivation
+    # to ensure consistency, but I don't see how yet
     # TODO: Also, the alias is really ugly for newly created subvariables
-    names(subvariables(variable)) <- c(
-        names(old_vars_catalog),
-        vapply(subvariable, name, character(1))
-    )
-    descriptions(subvariables(variable)) <- c(
-        descriptions(old_vars_catalog),
-        vapply(subvariable, description, character(1))
-    )
-    notes(subvariables(variable)) <- c(
-        notes(old_vars_catalog),
-        vapply(subvariable, notes, character(1))
-    )
+    # TODO: Do subvars have other metadata (description/notes), do we need to copy it as well?
+    new_name_pos <- seq(length(subvariables(variable)) - length(subvariable))
+    names(subvariables(variable))[-new_name_pos] <- vapply(subvariable, name, character(1))
     dropCache(datasetReference(variable))
     return(invisible(refresh(variable)))
 }
