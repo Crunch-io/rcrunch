@@ -154,7 +154,7 @@ addSubvarsToSelectDerivation <- function(deriv, new_vars) {
 isSelectCatDerivation <- function(deriv) {
     deriv@expression[["function"]] == "select_categories" &&
         deriv@expression[["args"]][[1]][["function"]] == "array"  &&
-        deriv@expression[["args"]][[1]][["args"]][[1]] == "select"
+        deriv@expression[["args"]][[1]][["args"]][[1]][["function"]] == "select"
 }
 
 addSubvarsToSelectCatDerivation <- function(deriv, new_vars, existing_cats) {
