@@ -160,8 +160,8 @@ with_test_authentication({
 
     ds <- newDataset(data, name = "add subvars to derived test")
 
-    ds$xcat <- deriveArray(ds[c('x1', 'x2')], name = "x cat")
-    ds$xmr <- deriveArray(ds[c('x1', 'x2')], name = "x mr", selections = "Good")
+    ds$xcat <- deriveArray(ds[c("x1", "x2")], name = "x cat")
+    ds$xmr <- deriveArray(ds[c("x1", "x2")], name = "x mr", selections = "Good")
 
     test_that("Can add existing variable to select-style categorical.", {
         ds$xcat <- addSubvariable(ds$xcat, ds["x3"])
