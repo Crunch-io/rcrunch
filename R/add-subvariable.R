@@ -89,9 +89,11 @@ addSubvariableDerived <- function(variable, subvariable) {
     old_deriv <- CrunchExpr(expression = entity(variable)@body$derivation)
 
     if (isSelectDerivation(old_deriv)) {
-        new_deriv <- addToSelectDerivation(old_deriv, subvariable)
+        new_map_ids <- uniqueMapNames(old_deriv, length(subvariable))
+        new_deriv <- addToSelectDerivation(old_deriv, subvariable, new_map_ids)
     } else if (isSelectCatDerivation(old_deriv)) {
-        new_deriv <- addToSelectCatDerivation(old_deriv, subvariable, categories(variable))
+        new_map_ids <- uniqueMapNames(old_deriv, length(subvariable))
+        new_deriv <- addToSelectCatDerivation(old_deriv, subvariable, new_map_ids, categories(variable))
     } else {
         halt("Could not add subvariable because did not recognize variable derivation structure")
     }
@@ -99,7 +101,11 @@ addSubvariableDerived <- function(variable, subvariable) {
     derivation(variable) <- new_deriv
     # We don't get metadata from original variable like we would if we were creating
     # subvariable during original derivation...
-    # TODO: Also, the alias is really ugly for newly created subvariables
+    # TODO: It would be nice to update name in the same POST as updating derivation
+    # but including reference in variable's defintion does not work (yet?)
+    # nor did including a `subreferences` in PATCH
+    new_name_pos <- seq(length(subvariables(variable)) - length(subvariable))
+    names(subvariables(variable))[-new_name_pos] <- vapply(subvariable, name, character(1))
     dropCache(datasetReference(variable))
     return(invisible(refresh(variable)))
 }
@@ -110,22 +116,20 @@ isSelectDerivation <- function(deriv) {
         deriv@expression[["args"]][[1]][["function"]] %in% c("select", "make_frame")
 }
 
-addToSelectDerivation <- function(deriv, new_vars) {
+addToSelectDerivation <- function(deriv, new_vars, unique_ids) {
     new_vars <- lapply(new_vars, varUrlOrExpression)
 
     new_deriv <- deriv
     current_map <- new_deriv@expression$args[[1]]$args[[1]]$map
-    # TODO: Better unique strategy
-    max_map_name <- max(as.numeric(names(current_map)))
 
     new_deriv@expression$args[[1]]$args[[1]]$map <- c(
         current_map,
-        setNames(new_vars, seq_along(new_vars) + max_map_name)
+        setNames(new_vars, unique_ids)
     )
 
     new_deriv@expression$args[[1]]$args[[2]]$value <- c(
         new_deriv@expression$args[[1]]$args[[2]]$value,
-        lapply(seq_along(new_vars) + max_map_name, as.character)
+        as.list(unique_ids)
     )
 
     new_deriv
@@ -143,24 +147,22 @@ isSelectCatDerivation <- function(deriv) {
         deriv@expression[["args"]][[1]][["args"]][[1]][["function"]] %in% c("select", "make_frame")
 }
 
-addToSelectCatDerivation <- function(deriv, new_vars, existing_cats) {
+addToSelectCatDerivation <- function(deriv, new_vars, unique_ids, existing_cats) {
     new_vars_are_expressions <- vapply(new_vars, is.VarDef, logical(1))
     checkNewSubvarCats(new_vars[!new_vars_are_expressions], existing_cats)
     new_vars <- lapply(new_vars, varUrlOrExpression)
 
     new_deriv <- deriv
     current_map <- new_deriv@expression$args[[1]]$args[[1]]$args[[1]]$map
-    max_map_name <- max(as.numeric(names(current_map)))
 
     new_deriv@expression$args[[1]]$args[[1]]$args[[1]]$map <- c(
         current_map,
-        setNames(new_vars, seq_along(new_vars) + max_map_name
-        )
+        setNames(new_vars, unique_ids)
     )
 
     new_deriv@expression$args[[1]]$args[[1]]$args[[2]]$value <- c(
         new_deriv@expression$args[[1]]$args[[1]]$args[[2]]$value,
-        lapply(seq_along(new_vars) + max_map_name, as.character)
+        as.list(unique_ids)
     )
 
     new_deriv
@@ -198,4 +200,18 @@ checkNewSubvarCats <- function(vars, cats) {
         )
         halt(msg)
     }
+}
+
+uniqueMapNames <- function(deriv, num_needed) {
+    if (isSelectDerivation(deriv)) {
+        existing <- names(deriv@expression[["args"]][[1]][["args"]][[1]][["map"]])
+    } else if (isSelectCatDerivation(deriv)) {
+        existing <- names(deriv@expression[["args"]][[1]][["args"]][[1]][["args"]][[1]][["map"]])
+    } else {
+        stop("Unexpected derivation type")
+    }
+
+    out <- make.unique(existing, as.character(length(existing) + seq_len(num_needed)))
+    out <- out[-seq_along(existing)]
+    out
 }
