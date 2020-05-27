@@ -29,8 +29,8 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/",
             '{"derivation":{"function":"array","args":[{"function":"select","args":[{"map":',
             '{"1":{"variable":"7lgPl0MFNP5PJTxWJEStnk000000"},"2":{"variable":"7lgPl0MFNP5PJTxWJEStnk000001"},', #nolint
-            '"3":{"variable":"https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000002/"}}}', #nolint
-            ',{"value":["1","2","3"]}]}],"references":{"alias":"xcat","name":"x cat"}}}'
+            '"3":{"variable":"https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000002/",', #nolint
+            '"references":{"name":"x3"}}}},{"value":["1","2","3"]}]}],"references":{"alias":"xcat","name":"x cat"}}}' # nolint
         )
     })
     test_that("Can add existing variable to derived select_cat array", {
@@ -40,8 +40,9 @@ with_mock_crunch({
             '{"derivation":{"function":"select_categories","args":[{"function":"array","args":[{"function":"select"', # nolint
             ',"args":[{"map":{"1":{"variable":"7lgPl0MFNP5PJTxWJEStnk000000"},',
             '"2":{"variable":"7lgPl0MFNP5PJTxWJEStnk000001"},',
-            '"3":{"variable":"https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000002/"}}}', #nolint
-            ',{"value":["1","2","3"]}]}]},{"value":["Good"]}],"references":{"alias":"xmr","name":"x mr"}}}' # nolint
+            '"3":{"variable":"https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000002/",', #nolint
+            '"references":{"name":"x3"}}}},{"value":["1","2","3"]}]}]},',
+            '{"value":["Good"]}],"references":{"alias":"xmr","name":"x mr"}}}'
         )
     })
     test_that("Can add VarDef to derived select array", {
@@ -52,7 +53,7 @@ with_mock_crunch({
             '{"1":{"variable":"7lgPl0MFNP5PJTxWJEStnk000000"},"2":{"variable":"7lgPl0MFNP5PJTxWJEStnk000001"},', #nolint
             '"3":{"function":"cast","args":[{"variable":',
             '"https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000003/"}',
-            ',{"value":"categorical"}],"references":{"name":"x text"}}}}', #nolint
+            ',{"value":"categorical"}],"references":{"name":"x text"}}}}',
             ',{"value":["1","2","3"]}]}],"references":{"alias":"xcat","name":"x cat"}}}'
         )
     })

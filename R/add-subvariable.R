@@ -99,12 +99,7 @@ addSubvariableDerived <- function(variable, subvariable) {
     derivation(variable) <- new_deriv
     # We don't get metadata from original variable like we would if we were creating
     # subvariable during original derivation...
-    # TODO: It would be nice to update name in the same POST as updating derivation
-    # to ensure consistency, but I don't see how yet
     # TODO: Also, the alias is really ugly for newly created subvariables
-    # TODO: Do subvars have other metadata (description/notes), do we need to copy it as well?
-    new_name_pos <- seq(length(subvariables(variable)) - length(subvariable))
-    names(subvariables(variable))[-new_name_pos] <- vapply(subvariable, name, character(1))
     dropCache(datasetReference(variable))
     return(invisible(refresh(variable)))
 }
@@ -112,7 +107,7 @@ addSubvariableDerived <- function(variable, subvariable) {
 # If select derivation, can put both existing variables and var defs inside select
 isSelectDerivation <- function(deriv) {
     deriv@expression[["function"]] == "array" &&
-        deriv@expression[["args"]][[1]][["function"]] == "select"
+        deriv@expression[["args"]][[1]][["function"]] %in% c("select", "make_frame")
 }
 
 addToSelectDerivation <- function(deriv, new_vars) {
@@ -120,6 +115,7 @@ addToSelectDerivation <- function(deriv, new_vars) {
 
     new_deriv <- deriv
     current_map <- new_deriv@expression$args[[1]]$args[[1]]$map
+    # TODO: Better unique strategy
     max_map_name <- max(as.numeric(names(current_map)))
 
     new_deriv@expression$args[[1]]$args[[1]]$map <- c(
@@ -144,7 +140,7 @@ addToSelectDerivation <- function(deriv, new_vars) {
 isSelectCatDerivation <- function(deriv) {
     deriv@expression[["function"]] == "select_categories" &&
         deriv@expression[["args"]][[1]][["function"]] == "array"  &&
-        deriv@expression[["args"]][[1]][["args"]][[1]][["function"]] == "select"
+        deriv@expression[["args"]][[1]][["args"]][[1]][["function"]] %in% c("select", "make_frame")
 }
 
 addToSelectCatDerivation <- function(deriv, new_vars, existing_cats) {
@@ -176,7 +172,10 @@ varUrlOrExpression <- function(var) {
         out$references <- var[names(var) != "derivation"]
         out
     } else {
-        list(variable = self(var))
+        list(
+            variable = self(var),
+            references = list(name = name(var))
+        )
     }
 }
 
