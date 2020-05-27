@@ -12,17 +12,23 @@ matrix:
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
       - _R_CHECK_TESTS_NLINES_=0
+    apt_packages:
+      - libsodium-dev
   - os: linux
     r: oldrel
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
       - _R_CHECK_TESTS_NLINES_=0
+    apt_packages:
+      - libsodium-dev
   - os: linux
     r: release
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
       - _R_CHECK_TESTS_NLINES_=0
       - secure: "BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc="
+    apt_packages:
+      - libsodium-dev
     after_success:
       - Rscript -e 'covr::codecov()'
       - R CMD INSTALL $PKG_TARBALL
