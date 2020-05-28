@@ -211,7 +211,7 @@ uniqueMapNames <- function(deriv, num_needed) {
         stop("Unexpected derivation type")
     }
 
-    out <- make.unique(c(existing, as.character(length(existing) + seq_len(num_needed))))
+    out <- make.unique(c(existing, as.character(length(existing) + seq_len(num_needed))), sep = "_")
     out <- out[-seq_along(existing)]
     out
 }
