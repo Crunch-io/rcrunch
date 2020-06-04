@@ -128,19 +128,6 @@ setMethod("values", "Categories", function(x) vapply(x, value, numeric(1)))
 #' @export
 setMethod("values<-", "Categories", setValues)
 
-setDates <- function(x, value) {
-    x[] <- mapply(setDates, x[], date = value, SIMPLIFY = FALSE)
-    return(x)
-}
-
-#' @rdname describe-catalog
-#' @export
-setMethod("dates", "Categories", function(x) vapply(x, date, character(1)))
-
-#' @rdname describe-catalog
-#' @export
-setMethod("dates<-", "Categories", setDates)
-
 #' @rdname is-na-categories
 #' @aliases is-na-categories
 #' @export
@@ -261,16 +248,6 @@ is.3vl <- function(cats) {
             setequal(names(cats), c("Selected", "Other", "No Data")) &&
             sum(is.selected(cats)) == 1 &&
             sum(is.na(cats)) == 1
-    )
-}
-
-is.catdate <- function(cats) {
-    ## Infer whether these categories are from a categorical date variable.
-    if (!is.categories(cats)) {
-        cats <- categories(cats)
-    }
-    return(
-        any(dates(cats))
     )
 }
 

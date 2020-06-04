@@ -47,23 +47,41 @@ setDate <- function(x, value) {
     # Consider adding strftime/strptime support if users
     # are used to working with dates (most are probably not)
     value_to_set <- suppressWarnings(as.character(value))
-    if (is.na(value_to_set) && !is.na(value)) {
-        halt("Category dates must be ISO date strings")
-    }
     x[["date"]] <- value_to_set
     return(x)
 }
 
-#' @rdname describe-entity
 #' @export
-setMethod("date", "Category", function(x) {
-    v <- as.numeric(x[["date"]])
+setMethod("wdate", "Category", function(x) {
+    v <- as.character(x[["date"]])
     return(ifelse(is.null(v), NA_character_, v))
 })
 
 #' @rdname describe-entity
 #' @export
-setMethod("date<-", "Category", setDate)
+setMethod("wdate<-", "Category", setDate)
+
+#' @export
+setMethod("dates", "Categories", function(x) {
+    structure(vapply(x, wdate, character(1), USE.NAMES = FALSE), .Names = names(x))
+})
+
+#' @export
+setMethod("dates<-", "Categories", function(x, value) {
+    if (length(value) != length(x)) {
+        halt(
+            "You supplied ", length(value), " date values for ", length(x),
+            " Categories."
+        )
+    }
+
+    x@.Data <- mapply(function(x, value) {
+        wdate(x) <- value
+        return(x)
+    }, x = x@.Data, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
+    return(x)
+})
+
 
 #' @rdname is-na-categories
 #' @export
