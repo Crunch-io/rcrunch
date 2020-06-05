@@ -23,7 +23,7 @@ A Variable Definition, which can be used to create a new \code{CrunchVariable}
 \description{
 \code{rowDistinct()} finds the number of unique values given per row of variables in an array
 \code{CrunchVariable}. \code{flatlineResponse()} returns a \code{selection} variable that indicates
-whether the reponses are identical. When a row has all columns that are missing of the
+whether the responses are identical. When a row has all columns that are missing of the
 same type, it will return \code{Selected}, but will missing if any other number of values is missing
 (or there are multiple types of missing).
 }

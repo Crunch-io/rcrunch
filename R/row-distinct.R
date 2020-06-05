@@ -2,7 +2,7 @@
 #'
 #' `rowDistinct()` finds the number of unique values given per row of variables in an array
 #' `CrunchVariable`. `flatlineResponse()` returns a `selection` variable that indicates
-#' whether the reponses are identical. When a row has all columns that are missing of the
+#' whether the responses are identical. When a row has all columns that are missing of the
 #' same type, it will return `Selected`, but will missing if any other number of values is missing
 #' (or there are multiple types of missing).
 #'
