@@ -137,6 +137,7 @@ Collate:
     'progress.R'
     'project-folder.R'
     'projects.R'
+    'row-distinct.R'
     'search.R'
     'session.R'
     'share.R'

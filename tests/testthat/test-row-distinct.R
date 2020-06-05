@@ -1,0 +1,41 @@
+mock_as_vector <- function(...) {
+    data.frame(
+        x1 = c(letters[1:2], NA, NA),
+        x2 = c(letters[1:2], "a", NA),
+        stringsAsFactors = TRUE
+    )
+}
+
+with_mock_crunch({
+    ds <- loadDataset("test ds")
+
+    test_that("rowDistinct works (na.rm = TRUE)", {
+        expect_equal(
+            rowDistinct(ds$catarray, name = "x"),
+            VarDef(
+                as.integer(c(2, 2, 2, 1, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2)), # nolint
+                name = "x"
+            )
+        )
+    })
+
+    test_that("rowDistinct works (na.rm = FALSE)", {
+        expect_equal(
+            rowDistinct(ds$catarray, name = "x", na.rm = FALSE),
+            VarDef(
+                as.integer(c(2, 3, 2, 2, 2, 3, 2, 3, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 3, 1, 2, 1, 2, 2, 2)), # nolint
+                name = "x"
+            )
+        )
+    })
+
+    test_that("flatlineResponse works", {
+        expect_equal(
+            flatlineResponse(ds$catarray, name = "x"),
+            VarDef(
+                ds$catarray$subvar1 == ds$catarray$subvar2 & ds$catarray$subvar3 == ds$catarray$subvar2,
+                name = "x"
+            )
+        )
+    })
+})
