@@ -29,7 +29,7 @@
 #' @param ... additional arguments for `as.character` and `as.numeric`, ignored when used with
 #' Crunch variables
 #'
-#' @return a `VariableDefinition` to be used as the derivation
+#' @return a `CrunchExpr` to be used as the derivation
 #'
 #' @examples
 #' \dontrun{
