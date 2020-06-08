@@ -1,7 +1,7 @@
 #' Create variables useful for determining whether a row's values are suspicious
 #'
 #' `rowDistinct()` finds the number of unique values given per row of variables in an array
-#' `CrunchVariable`. `flatlineResponse()` returns a `selection` variable that indicates
+#' `CrunchVariable`. `straightlineResponse()` returns a `selection` variable that indicates
 #' whether the responses are identical. When a row has all columns that are missing of the
 #' same type, it will return `Selected`, but will missing if any other number of values is missing
 #' (or there are multiple types of missing).
@@ -34,7 +34,7 @@ rowDistinct <- function(x, ..., na.rm = TRUE) {
 
 #' @export
 #' @rdname rowDistinct
-flatlineResponse <- function(x, ...) {
+straightlineResponse <- function(x, ...) {
     if (!is.Array(x) & !inherits(x, "Subvariables")) halt("x must be an array variable")
     if (is.Array(x)) x <- subvariables(x)
 

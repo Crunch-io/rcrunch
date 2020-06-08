@@ -49,9 +49,9 @@ with_mock_crunch({
         expect_error(rowDistinct(ds$textvar), "x must be an array variable")
     })
 
-    test_that("flatlineResponse works", {
+    test_that("straightlineResponse works", {
         expect_equal(
-            flatlineResponse(ds$catarray, name = "x"),
+            straightlineResponse(ds$catarray, name = "x"),
             VarDef(
                 ds$catarray$subvar1 == ds$catarray$subvar2 & ds$catarray$subvar3 == ds$catarray$subvar2, #nolint
                 name = "x"
@@ -59,9 +59,9 @@ with_mock_crunch({
         )
     })
 
-    test_that("flatlineResponse works on subset of array var subvars", {
+    test_that("straightlineResponse works on subset of array var subvars", {
         expect_equal(
-            flatlineResponse(ds$catarray[c("subvar2", "subvar1")], name = "x"),
+            straightlineResponse(ds$catarray[c("subvar2", "subvar1")], name = "x"),
             VarDef(
                 ds$catarray$subvar1 == ds$catarray$subvar2,
                 name = "x"
@@ -69,13 +69,13 @@ with_mock_crunch({
         )
     })
 
-    test_that("error for non-array var flatline", {
-        expect_error(flatlineResponse(ds$textvar), "x must be an array variable")
+    test_that("error for non-array var straightline", {
+        expect_error(straightlineResponse(ds$textvar), "x must be an array variable")
     })
 
-    test_that("error single var array flatline", {
+    test_that("error single var array straightline", {
         expect_error(
-            flatlineResponse(ds$catarray["subvar1"]),
+            straightlineResponse(ds$catarray["subvar1"]),
             "Array must have more than 1 subvariable."
         )
     })

@@ -2,12 +2,12 @@
 % Please edit documentation in R/row-distinct.R
 \name{rowDistinct}
 \alias{rowDistinct}
-\alias{flatlineResponse}
+\alias{straightlineResponse}
 \title{Create variables useful for determining whether a row's values are suspicious}
 \usage{
 rowDistinct(x, ..., na.rm = TRUE)
 
-flatlineResponse(x, ...)
+straightlineResponse(x, ...)
 }
 \arguments{
 \item{x}{A \code{CrunchVariable}that is an an array, that unique values should be counted across.}
@@ -22,7 +22,7 @@ A Variable Definition, which can be used to create a new \code{CrunchVariable}
 }
 \description{
 \code{rowDistinct()} finds the number of unique values given per row of variables in an array
-\code{CrunchVariable}. \code{flatlineResponse()} returns a \code{selection} variable that indicates
+\code{CrunchVariable}. \code{straightlineResponse()} returns a \code{selection} variable that indicates
 whether the responses are identical. When a row has all columns that are missing of the
 same type, it will return \code{Selected}, but will missing if any other number of values is missing
 (or there are multiple types of missing).
