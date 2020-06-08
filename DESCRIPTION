@@ -36,7 +36,7 @@ Suggests:
     knitr,
     lintr,
     magrittr,
-    rmarkdown,
+    rmarkdown (>= 2.2.2),
     rstudioapi,
     spelling,
     styler,
@@ -172,3 +172,5 @@ Collate:
     'versions.R'
     'weight.R'
     'zcl.R'
+Remotes:  
+    rstudio/rmarkdown
