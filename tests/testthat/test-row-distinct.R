@@ -53,7 +53,7 @@ with_mock_crunch({
         expect_equal(
             flatlineResponse(ds$catarray, name = "x"),
             VarDef(
-                ds$catarray$subvar1 == ds$catarray$subvar2 & ds$catarray$subvar3 == ds$catarray$subvar2,
+                ds$catarray$subvar1 == ds$catarray$subvar2 & ds$catarray$subvar3 == ds$catarray$subvar2, #nolint
                 name = "x"
             )
         )
@@ -74,6 +74,9 @@ with_mock_crunch({
     })
 
     test_that("error single var array flatline", {
-        expect_error(flatlineResponse(ds$catarray["subvar1"]), "Array must have more than 1 subvariable.")
+        expect_error(
+            flatlineResponse(ds$catarray["subvar1"]),
+            "Array must have more than 1 subvariable."
+        )
     })
 })
