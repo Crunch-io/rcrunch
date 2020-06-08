@@ -29,22 +29,6 @@ with_mock_crunch({
         )
     })
 
-    test_that("error for array var subset for rowDistinct until #457", {
-        expect_error(
-            rowDistinct(ds$catarray[c("subvar2", "subvar1")], name = "x"),
-            "`rowDistinct` does not yet support subsets of array subvariables"
-        )
-    })
-    # test_that("rowDistinct works subset of array var subvars", {
-    #     expect_equal(
-    #         rowDistinct(ds$catarray[c("subvar2", "subvar1")], name = "x"),
-    #         VarDef(
-    #             as.integer(c(2, 2, 2, 0, 1, 1, 1, 2, 1, 1, 0, 2, 0, 0, 1, 1, 1, 2, 2, 1, 0, 1, 0, 1, 2)), # nolint
-    #             name = "x"
-    #         )
-    #     )
-    # })
-
     test_that("error for non-array var rowDistinct", {
         expect_error(rowDistinct(ds$textvar), "x must be an array variable")
     })
@@ -59,24 +43,7 @@ with_mock_crunch({
         )
     })
 
-    test_that("straightlineResponse works on subset of array var subvars", {
-        expect_equal(
-            straightlineResponse(ds$catarray[c("subvar2", "subvar1")], name = "x"),
-            VarDef(
-                ds$catarray$subvar1 == ds$catarray$subvar2,
-                name = "x"
-            )
-        )
-    })
-
     test_that("error for non-array var straightline", {
         expect_error(straightlineResponse(ds$textvar), "x must be an array variable")
-    })
-
-    test_that("error single var array straightline", {
-        expect_error(
-            straightlineResponse(ds$catarray["subvar1"]),
-            "Array must have more than 1 subvariable."
-        )
     })
 })

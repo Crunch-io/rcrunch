@@ -14,11 +14,7 @@
 #' @return A Variable Definition, which can be used to create a new `CrunchVariable`
 #' @export
 rowDistinct <- function(x, ..., na.rm = TRUE) {
-    if (!is.Array(x) & !inherits(x, "Subvariables")) halt("x must be an array variable")
-    if (inherits(x, "Subvariables")) {
-        # https://github.com/Crunch-io/rcrunch/issues/457
-        halt("`rowDistinct` does not yet support subsets of array subvariables")
-    }
+    if (!is.Array(x)) halt("x must be an array variable")
 
     if (na.rm) {
         unique_func <- function(x) length(unique(as.character(x[!is.na(x)])))
@@ -35,24 +31,15 @@ rowDistinct <- function(x, ..., na.rm = TRUE) {
 #' @export
 #' @rdname rowDistinct
 straightlineResponse <- function(x, ...) {
-    if (!is.Array(x) & !inherits(x, "Subvariables")) halt("x must be an array variable")
-    if (is.Array(x)) x <- subvariables(x)
+    if (!is.Array(x)) halt("x must be an array variable")
 
-    # Don't have variable objects (because allowing subsetting of array vars), so use urls
-    # and construct zfunc here rather than relying on `==`
-    subvar_urls <- urls(x)
-    if (length(subvar_urls) == 1) stop("Array must have more than 1 subvariable.")
+    subvar_aliases <- aliases(subvariables(x))
+    if (length(subvar_aliases) == 1) stop("Array must have more than 1 subvariable.")
     VarDef(
         Reduce(
             `&`,
-            lapply(subvar_urls[-1], function(sv) varurl_equal(sv, subvar_urls[1], x))
+            lapply(subvar_aliases[-1], function(sv) x[[sv]] == x[[subvar_aliases[1]]])
         ),
         ...
-    )
-}
-
-varurl_equal <- function(url1, url2, ref) {
-    CrunchLogicalExpr(
-        expression = zfunc("==", list(variable = url1), list(variable = url2))
     )
 }
