@@ -108,7 +108,6 @@ Collate:
     'drop-rows.R'
     'edit-lock.R'
     'export-dataset.R'
-    'expression-as-methods.R'
     'expressions.R'
     'filters.R'
     'folders.R'
