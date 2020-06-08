@@ -103,7 +103,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     )
     if (is.null(file)) {
         ## Read in the tab book content and turn it into useful objects
-        out <- retry(crGET(result))
+        out <- retry(crGET(result), wait = 0.5) #nocov
         return(TabBookResult(out))
     } else {
         file <- crDownload(result, file)
