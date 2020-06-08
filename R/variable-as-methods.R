@@ -177,9 +177,9 @@ setMethod(
     "as.Datetime", "CrunchExpr",
     function(x, format, resolution, offset) {
         # datetimes are special, so each source type must be determined
-        # resolution & offset nonmissing indicate numeric
+        # resolution non-missing indicate numeric
         # format non-missing indicates categorical/text
-        if (missing(format) & !missing(resolution) & !missing(offset)) {
+        if (missing(format) & !missing(resolution)) {
             validateResolution(resolution)
 
             args <- list("numeric_to_datetime", x, list(value = resolution))
@@ -193,8 +193,8 @@ setMethod(
         }
 
         halt(
-            "Invalid arguments to `as.Datetime`. Must provide either both `resolution` and ",
-            "`offset` for Numeric expressions or `format` for Categorical/Text expressions."
+            "Invalid arguments to `as.Datetime`. Must provide either `resolution` for Numeric ",
+            "expressions or `format` for Categorical/Text expressions."
         )
     }
 )
