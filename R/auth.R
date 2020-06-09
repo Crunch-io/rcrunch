@@ -20,10 +20,10 @@ logout <- function() {
 #' Your email and password can also be stored in and read from the
 #' environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW`,
 #' or from your .Rprofile under `crunch.email` and `crunch.pw`.
-#' However, environmental variables and .RProfiles files are not encrpyed, so
+#' However, environmental variables and `.RProfile` files are not encrypted, so
 #' this practice is no longer recommended. If an email or password is found in
 #' multiple locations, priority is given to 1) environmental variables, 2)
-#' .RProfile, and 3) keyring. This order of priority is for backwards compatibility,
+#' `.RProfile`, and 3) keyring. This order of priority is for backwards compatibility,
 #' and methods 1) and 2) are no longer recommended.
 #'
 #' If a password is not stored in any of these locations, and you are in an
