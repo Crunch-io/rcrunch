@@ -171,5 +171,3 @@ Collate:
     'versions.R'
     'weight.R'
     'zcl.R'
-Remotes:  
-     rstudio/rmarkdown
