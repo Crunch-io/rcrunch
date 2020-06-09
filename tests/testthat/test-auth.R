@@ -135,7 +135,7 @@ test_that("Match username and password, with multiple saved keyring passwords", 
     "Saved Crunch passwords in keyring do not match specified email"
   )
 
-  #Multiple keyring passwords, attempting to log in without specified username
+  # Multiple keyring passwords, attempting to log in without specified username
   expect_error(
     get_user_pass_combo(email = NULL, password = NULL),
     "More than one saved Crunch username/email address found in keyring. Try specifying login(email = ...)", # nolint
