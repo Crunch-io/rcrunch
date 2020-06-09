@@ -45,7 +45,7 @@ with_mock_auth_settings <- function(
         },
         `keyring::key_get` <- function(service, username = NULL, keyring = NULL) {
           if (is.null(username)) {
-            return(pws[1])
+            return(keyring_pws[1])
           } else if (username %in% keyring_users) {
             keyring_pws[username %in% keyring_users]
           } else {
