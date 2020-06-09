@@ -221,7 +221,9 @@ test_that("cast expressions modifies zcl expression", {
     expect_equal(
         as.Datetime(this_expr, resolution = "D", offset = "1975-01-01"),
         CrunchExpr(
-            expression = zfunc("numeric_to_datetime", this_expr, list(value = "D"), list(value = "1975-01-01"))
+            expression = zfunc(
+                "numeric_to_datetime", this_expr, list(value = "D"), list(value = "1975-01-01")
+            )
         )
     )
 
