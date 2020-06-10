@@ -1,0 +1,1 @@
+tar("inst/mocks.tgz", files = "mocks", compression = "gzip")

@@ -4,9 +4,10 @@ doc:
 	R --slave -e 'devtools::document()'
 	git add --all man/*.Rd
 
-test:
-	R CMD INSTALL --install-tests .
-	export NOT_CRAN=true && R --slave -e 'library(httptest); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
+test: compress-fixtures | test-nomockcheck
+
+test-nocompressmock:
+	export NOT_CRAN=true && R --slave -e 'library(httptest); options(crunch.check.updates=FALSE); system.time(devtools::test(filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 lint:
 	R --slave -e 'styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'
@@ -64,4 +65,4 @@ covr:
 	R --slave -e 'Sys.setenv(R_TEST_USER=getOption("test.user"), R_TEST_PW=getOption("test.pw"), R_TEST_API=getOption("test.api")); library(covr); cv <- package_coverage(); df <- covr:::to_shiny_data(cv)[["file_stats"]]; cat("Line coverage:", round(100*sum(df[["Covered"]])/sum(df[["Relevant"]]), 1), "percent\\n"); shine(cv, browse=TRUE)'
 
 compress-fixtures:
-	R --slave -e 'tar("inst/cubes.tgz", files = "cubes", compression = "gzip")'
+	Rscript 'dev-misc/compress-mocks.R'
