@@ -26,7 +26,8 @@
 #' @return `x`, with the folder at `path` guaranteed to be created, and for
 #' `mv`, containing `what` moved into it.
 #' @seealso [cd()] to select a folder by path; [rmdir()] to delete a folder;
-#' [folder()] to identify and set an object's parent folder; [base::dir.create()]
+#' [folder()] to identify and set an object's parent folder;
+#' \code{\link[base:files2]{base::dir.create()}}
 #' if you literally want to create a directory in your local file system, which
 #' `mkdir()` does not do
 #' @examples
@@ -124,8 +125,8 @@ setName <- function(object, nm) {
 #' seems unnatural.
 #' @return A `Folder` (`VariableFolder` or `ProjectFolder`)
 #' @seealso [mv()] to move entities to a folder; [rmdir()] to delete a folder;
-#' [base::setwd()] if you literally want to change your working directory in your
-#' local file system, which `cd()` does not do
+#' \code{\link[base:getwd]{base::setwd()}} if you literally want to change your working
+#' directory in your local file system, which `cd()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")
@@ -180,8 +181,8 @@ cd <- function(x, path, create = FALSE) {
 #' @inheritParams mv
 #' @return `NULL`
 #' @seealso [mv()] to move entities to a folder; [cd()] to select a folder;
-#' [base::file.remove()] if you literally want to delete a directory from your local
-#' file system, which `rmdir()` does not do
+#' \code{\link[base:files]{file.remove()}} if you literally want to delete a directory
+#' from your local file system, which `rmdir()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")

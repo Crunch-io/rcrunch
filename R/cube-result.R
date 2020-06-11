@@ -389,8 +389,8 @@ as.array.CrunchCube <- function(x, ...) cubeToArray(x, ...)
 
 #' Work with CrunchCubes, MultitableResults, and TabBookResults
 #'
-#' These functions provide an interface like [base::margin.table()] and
-#' [base::prop.table()] for the CrunchCube object. CrunchCubes contain richer
+#' These functions provide an interface like \code{\link[base:marginSums]{base::margin.table()}} and
+#' \code{\link[base:marginSums]{base::margin.table()}} for the CrunchCube object. CrunchCubes contain richer
 #' metadata than standard R `array` objects, and they also conceal certain
 #' complexity in the data structures from the user. In particular,
 #' multiple-response variables are generally represented as single dimensions in
@@ -410,10 +410,10 @@ as.array.CrunchCube <- function(x, ...) cubeToArray(x, ...)
 #'
 #' @param x a CrunchCube
 #' @param margin index, or vector of indices to generate margin for. See
-#'   [base::prop.table()]. `bases()` accepts `0` as an additional valid value
-#'   for `margin`, which yields the unweighted counts for the query.
+#'   \code{\link[base:proportions]{base::prop.table()}}. `bases()` accepts `0` as an additional
+#'   valid value for `margin`, which yields the unweighted counts for the query.
 #' @param digits For `round`, the number of decimal places to round to. See
-#'   [base::round()]
+#'   \code{\link[base:Round]{base::round()}}
 #'
 #' @return When called on CrunchCubes, these functions return an `array`.
 #'   Calling prop.table on a MultitableResult returns a list of prop.tables of
@@ -421,7 +421,8 @@ as.array.CrunchCube <- function(x, ...) cubeToArray(x, ...)
 #'   returns a list of lists of prop.tables.
 #' @name cube-computing
 #' @aliases cube-computing margin.table prop.table bases round
-#' @seealso [base::margin.table()] [base::prop.table()]
+#' @seealso \code{\link[base:marginSums]{base::margin.table()}}
+#' \code{\link[base:proportions]{base::prop.table()}}
 setGeneric("margin.table")
 #' @rdname cube-computing
 setGeneric("prop.table")

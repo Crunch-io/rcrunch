@@ -307,7 +307,7 @@ setGeneric("zcl", function(x) standardGeneric("zcl"))
 #' toJSON methods for Crunch objects
 #'
 #' `crunch` uses the `jsonlite` package for JSON serialization and
-#'  deserialization. Unfortunately, [jsonlite::toJSON()]
+#'  deserialization. Unfortunately, \code{\link[jsonlite:fromJSON]{jsonlite::toJSON()}}
 #' does not allow for defining S4 methods for other object types. So,
 #' `crunch::toJSON` wraps `jsonprep`, which exists to translate
 #' objects to base R objects, which `jsonlite::toJSON` can handle.
@@ -320,7 +320,7 @@ setGeneric("zcl", function(x) standardGeneric("zcl"))
 #' @return `jsonprep` returns a base R object that `jsonlite::toJSON`
 #' can handle. `toJSON` returns the JSON-serialized character object.
 #' @name tojson-crunch
-#' @seealso [jsonlite::toJSON()]
+#' @seealso \code{\link[jsonlite:fromJSON]{jsonlite::toJSON()}}
 #' @aliases jsonprep
 #' @export
 setGeneric("jsonprep", function(x, ...) standardGeneric("jsonprep"))

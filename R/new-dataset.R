@@ -166,9 +166,10 @@ writePreparedData <- function(data, metadata = attr(data, "metadata"), file) {
 #'
 #' @param x A data.frame or similar CSV-writable object
 #' @param file character destination to write the gzipped CSV to
-#' @param na See [`utils::write.csv`]. This just changes the default
-#' to a Crunch-friendly empty string.
-#' @param row.names logical: write out row names? See [`utils::write.csv`].
+#' @param na See \code{\link[utils:write.table]{utils::write.csv()}}. This just changes
+#' the default to a Crunch-friendly empty string.
+#' @param row.names logical: write out row names? See
+#' \code{\link[utils:write.table]{utils::write.csv()}}.
 #' @param ... Additional arguments passed to `write.csv`.
 #' @return A csv file written to dist
 #' @importFrom utils write.csv

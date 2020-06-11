@@ -31,7 +31,7 @@ and "spss".}
 \item{categorical}{character: export categorical values to CSV as category
 "name" (default) or "id". Ignored by the SPSS exporter.}
 
-\item{na}{Similar to the argument in \code{\link[utils:write.table]{utils::write.table()}}, 'na'
+\item{na}{Similar to the argument in \code{\link[utils:write.table]{utils::write.csv()}}, 'na'
 lets you control how missing values are written into the CSV file.
 Supported values are:
 \enumerate{
