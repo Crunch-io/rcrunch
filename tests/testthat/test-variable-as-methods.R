@@ -173,6 +173,70 @@ with_mock_crunch({
     })
 })
 
+test_that("cast expressions modifies zcl expression", {
+    # simple expression, which we'll reuse even if it wouldn't actually work in
+    # a real cast
+    this_expr <- CrunchExpr(expression = zfunc("now"))
+
+    expect_equal(
+        as.Numeric(this_expr),
+        CrunchExpr(expression = zfunc("cast", this_expr, "numeric"))
+    )
+
+    expect_equal(
+        as.Text(this_expr),
+        CrunchExpr(expression = zfunc("cast", this_expr, "text"))
+    )
+
+    expect_equal(
+        as.Text(this_expr, format = "%Y-%m-%d %H:%M:%S"),
+        CrunchExpr(
+            expression = zfunc("format_datetime", this_expr, list(value = "%Y-%m-%d %H:%M:%S"))
+        )
+    )
+
+    expect_equal(
+        as.Categorical(this_expr),
+        CrunchExpr(expression = zfunc("cast", this_expr, "categorical"))
+    )
+
+    expect_equal(
+        as.Categorical(this_expr, format = "%Y-%m-%d %H:%M:%S"),
+        CrunchExpr(
+            expression = zfunc(
+                "cast",
+                zfunc("format_datetime", this_expr, list(value = "%Y-%m-%d %H:%M:%S")),
+                "categorical"
+            )
+        )
+    )
+
+    expect_equal(
+        as.Datetime(this_expr, format = "%Y-%m-%d %H:%M:%S"),
+        CrunchExpr(
+            expression = zfunc("parse_datetime", this_expr, list(value = "%Y-%m-%d %H:%M:%S"))
+        )
+    )
+
+    expect_equal(
+        as.Datetime(this_expr, resolution = "D", offset = "1975-01-01"),
+        CrunchExpr(
+            expression = zfunc(
+                "numeric_to_datetime", this_expr, list(value = "D"), list(value = "1975-01-01")
+            )
+        )
+    )
+
+    expect_error(as.Datetime(this_expr), "Invalid arguments to `as.Datetime`")
+
+    # R base aliases
+    expect_equal(as.Numeric(this_expr), as.numeric(this_expr))
+    expect_equal(as.Text(this_expr), as.character(this_expr))
+})
+
+
+
+
 with_test_authentication({
     ds <- newDataset(df)
     # make a text variable with numbers
@@ -315,6 +379,26 @@ with_test_authentication({
         expect_equivalent(
             as.array(cube),
             cubify(10, 11, dims = list(v4 = list("B", "C")))
+        )
+    })
+
+    test_that("categorical expression to numeric", {
+        ds$v3_gt_ten_num <- as.Numeric(ds$v3 > 10)
+        expect_true(is.derived(ds$v3_gt_ten_num))
+        expect_true(is.Numeric(ds$v3_gt_ten_num))
+        expect_equal(
+            as.vector(ds$v3_gt_ten_num),
+            as.numeric(as.vector(ds$v3 > 10))
+        )
+    })
+
+    test_that("numeric expression to text", {
+        ds$v3_plus_one_text <- as.Text(ds$v3 + 1)
+        expect_true(is.derived(ds$v3_plus_one_text))
+        expect_true(is.Text(ds$v3_plus_one_text))
+        expect_equal(
+            as.vector(ds$v3_plus_one_text),
+            sprintf("%1.1f", as.vector(ds$v3 + 1))
         )
     })
 })
