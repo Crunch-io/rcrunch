@@ -56,8 +56,8 @@ returns a list of lists of prop.tables.
 }
 \description{
 These functions provide an interface like \code{\link[base:marginSums]{base::margin.table()}} and
-\code{\link[base:proportions]{base::prop.table()}} for the CrunchCube object. CrunchCubes contain richer
-metadata than standard R \code{array} objects, and they also conceal certain
+\code{\link[base:proportions]{base::prop.table()}} for the CrunchCube object. CrunchCubes
+contain richer metadata than standard R \code{array} objects, and they also conceal certain
 complexity in the data structures from the user. In particular,
 multiple-response variables are generally represented as single dimensions in
 result tables, but in the actual data, they may comprise two dimensions.
