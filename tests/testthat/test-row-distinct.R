@@ -1,11 +1,3 @@
-mock_as_vector <- function(...) {
-    data.frame(
-        x1 = c(letters[1:2], NA, NA),
-        x2 = c(letters[1:2], "a", NA),
-        stringsAsFactors = TRUE
-    )
-}
-
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
