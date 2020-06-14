@@ -83,7 +83,6 @@ test_that("Match username and password with no saved password", {
 test_that("Match username and password, with single saved keyring password", {
 
   #Single Keyring password, username specified via login, saved password matches specified username
-  keyring::key_set_with_value("crunch", username = "test@crunch.io", password = "abc123")
   with_mock_auth_settings(
     opt_crunch_email = "test@crunch.io",
     opt_crunch_pw = "abc123",
