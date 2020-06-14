@@ -97,12 +97,11 @@ test_that("Match username and password, with single saved keyring password", {
   with_mock_auth_settings(
     keyring_users = "test@crunch.io",
     keyring_pws = "abc123",
-    expect_warning(
-      expect_identical(
-        get_user_pass_combo(email = "test@yougov.com", password = NULL),
-        list(email = "test@yougov.com", password = NULL)
+    expect_identical(
+      suppressWarnings(
+        get_user_pass_combo(email = "test@yougov.com", password = NULL)
       ),
-      "Saved Crunch passwords in keyring do not match specified email"
+      list(email = "test@yougov.com", password = NULL)
     )
   )
 
@@ -134,12 +133,11 @@ test_that("Match username and password, with single saved keyring password", {
     keyring_users = "test@crunch.io",
     keyring_pws = "abc123",
     env_r_crunch_email = "test@yougov.com",
-    expect_warning(
-      expect_identical(
-        get_user_pass_combo(email = NULL, password = NULL),
-        list(email = "test@yougov.com", password = NULL)
+    expect_identical(
+      suppressWarnings(
+        get_user_pass_combo(email = NULL, password = NULL)
       ),
-      "Saved Crunch passwords in keyring do not match specified email"
+      list(email = "test@yougov.com", password = NULL)
     )
   )
 
@@ -181,12 +179,11 @@ test_that("Match username and password, with multiple saved keyring passwords", 
   with_mock_auth_settings(
     keyring_users = c("user@gmail.com", "test@crunch.io"),
     keyring_pws = c("foobar", "abc123"),
-    expect_warning(
-      expect_identical(
-        get_user_pass_combo(email = "test@yougov.com", password = NULL),
-        list(email = "test@yougov.com", password = NULL)
+    expect_identical(
+      suppressWarnings(
+        get_user_pass_combo(email = "test@yougov.com", password = NULL)
       ),
-      "Saved Crunch passwords in keyring do not match specified email"
+      list(email = "test@yougov.com", password = NULL)
     )
   )
 
@@ -219,12 +216,11 @@ test_that("Match username and password, with multiple saved keyring passwords", 
     keyring_users = c("user@gmail.com", "test@crunch.io"),
     keyring_pws = c("foobar", "abc123"),
     env_r_crunch_email = "test@yougov.com",
-    expect_warning(
-      expect_identical(
-        get_user_pass_combo(email = NULL, password = NULL),
-        list(email = "test@yougov.com", password = NULL)
+    expect_identical(
+      suppressWarnings(
+        get_user_pass_combo(email = NULL, password = NULL)
       ),
-      "Saved Crunch passwords in keyring do not match specified email"
+      list(email = "test@yougov.com", password = NULL)
     )
   )
 })
