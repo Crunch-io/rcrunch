@@ -36,18 +36,20 @@ with_mock_auth_settings <- function(
       env_vars,
       with_mock(
         `keyring::key_list` = function(service = NULL, keyring = NULL) {
-          if (is.null(keyring_users)) {
+          if (is.null(keyring_users) & is.null(keyring_pws)) {
             data.frame(service = character(0), username = character(0), stringsAsFactors = FALSE)
+          } else if(is.null(keyring_users)){
+            data.frame(service = service, username = "", stringsAsFactors = FALSE)
           } else {
             data.frame(service = service, username = keyring_users, stringsAsFactors = FALSE)
           }
 
         },
-        `keyring::key_get` <- function(service, username = NULL, keyring = NULL) {
+        `keyring::key_get` = function(service, username = NULL, keyring = NULL) {
           if (is.null(username)) {
             return(keyring_pws[1])
           } else if (username %in% keyring_users) {
-            keyring_pws[username %in% keyring_users]
+            keyring_pws[username == keyring_users]
           } else {
             stop("Could not find password for email")
           }
@@ -78,194 +80,229 @@ test_that("Match username and password with no saved password", {
   )
 })
 
-# test_that("Match username and password, with single saved keyring password", {
-#
-#   #Single Keyring password, username specified via login, saved password matches specified username
-#   keyring::key_set_with_value("crunch", username = "test@crunch.io", password = "abc123")
-#   expect_identical(
-#     get_user_pass_combo(email = "test@crunch.io", password = NULL),
-#     list(email = "test@crunch.io", password = "abc123")
-#   )
-#
-#   #Single keyring password, username specified via login, saved password for different username
-#   expect_warning(
-#     expect_identical(
-#       get_user_pass_combo(email = "test@yougov.com", password = NULL),
-#       list(email = "test@yougov.com", password = NULL)
-#     ),
-#     "Saved Crunch passwords in keyring do not match specified email"
-#   )
-#
-#   #Single keyring password, username saved in keyring
-#   expect_identical(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     list(email = "test@crunch.io", password = "abc123")
-#   )
-#
-#   #Single keyring password, username saved in system environment, saved password matches
-#   # specified email
-#   #expected outcome - test@crunch.io, abc123
-#   Sys.setenv(R_CRUNCH_EMAIL = "test@crunch.io")
-#   expect_identical(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     list(email = "test@crunch.io", password = "abc123")
-#   )
-#   Sys.unsetenv("R_CRUNCH_EMAIL")
-#
-#   #Single keyring password, username saved in system environment, saved password doesn't match
-#   # specified email
-#   # Expected outcome - test@yougov.com, NULL, warning "Saved Crunch passwords in keyring do not
-#   # match specified email"
-#   Sys.setenv(R_CRUNCH_EMAIL = "test@yougov.com")
-#   expect_warning(
-#     expect_identical(
-#       get_user_pass_combo(email = NULL, password = NULL),
-#       list(email = "test@yougov.com", password = NULL)
-#     ),
-#     "Saved Crunch passwords in keyring do not match specified email"
-#   )
-#   Sys.unsetenv("R_CRUNCH_EMAIL")
-#
-#   #Single keyring password, no saved username
-#   keyring::key_delete("crunch")
-#   keyring::key_set_with_value("crunch", password = "abc123")
-#   expect_identical(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     list(email = NULL, password = "abc123")
-#   )
-#
-#   #Clean up
-#   keyring::key_delete("crunch")
-# })
-#
-#
-# test_that("Match username and password, with multiple saved keyring passwords", {
-#   ## ==== Multiple saved passwords ====
-#
-#   #Multiple keyring passwords, logging in with username corresponding to saved password
-#   keyring::key_set_with_value("crunch", username = "user@gmail.com", password = "foobar")
-#   keyring::key_set_with_value("crunch", username = "test@crunch.io", password = "abc123")
-#   expect_identical(
-#     get_user_pass_combo(email = "user@gmail.com", password = NULL),
-#     list(email = "user@gmail.com", password = "foobar")
-#   )
-#   expect_identical(
-#     get_user_pass_combo(email = "test@crunch.io", password = NULL),
-#     list(email = "test@crunch.io", password = "abc123")
-#   )
-#
-#   #Multiple keyring passwords, logging in with username NOT corresponding to saved password
-#   expect_warning(
-#     expect_identical(
-#       get_user_pass_combo(email = "test@yougov.com", password = NULL),
-#       list(email = "test@yougov.com", password = NULL)
-#     ),
-#     "Saved Crunch passwords in keyring do not match specified email"
-#   )
-#
-#   # Multiple keyring passwords, attempting to log in without specified username
-#   expect_error(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     "More than one saved Crunch username/email address found in keyring. Try specifying login(email = ...)", # nolint
-#     fixed = TRUE
-#   )
-#
-#   # Username set via environment variable, 2+ saved passwords in keyring, usernane via environemnt
-#   # variable matching keyring
-#   Sys.setenv(R_CRUNCH_EMAIL = "test@crunch.io")
-#   expect_identical(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     list(email = "test@crunch.io", password = "abc123")
-#   )
-#   Sys.unsetenv("R_CRUNCH_EMAIL")
-#
-#   # Username set via environment variable, 2+ saved passwords in keyring, username via environemnt
-#   # variable NOT matching keyring
-#   # Expected outcome - test@yougov.com, NULL
-#   Sys.setenv(R_CRUNCH_EMAIL = "test@yougov.com")
-#   expect_warning(
-#     expect_identical(
-#       get_user_pass_combo(email = NULL, password = NULL),
-#       list(email = "test@yougov.com", password = NULL)
-#     ),
-#     "Saved Crunch passwords in keyring do not match specified email"
-#   )
-#   Sys.unsetenv("R_CRUNCH_EMAIL")
-#
-#   #Clean up
-#   keyring::key_delete("crunch", username = "user@gmail.com")
-#   keyring::key_delete("crunch", username = "test@crunch.io")
-#
-# })
-#
-# test_that("Match username and password, with password saved in RProfile or global environmnent and username in keyring", { # nolint
-#
-#   keyring::key_set_with_value("crunch", username = "user@gmail.com", password = "foobar")
-#   keyring::key_set_with_value("crunch", username = "test@crunch.io", password = "abc123")
-#
-#   #Mutliple usernames saved in keyring
-#   Sys.setenv(R_CRUNCH_PW = "abc123")
-#   expect_error(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     "More than one saved Crunch username/email address found in keyring. Try specifying login(email = ...)", # nolint
-#     fixed = TRUE
-#   )
-#   Sys.unsetenv("R_CRUNCH_PW")
-#
-#   #Single username saved in keyring
-#   Sys.setenv(R_CRUNCH_PW = "abc123")
-#   keyring::key_delete("crunch", username = "user@gmail.com")
-#   expect_identical(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     list(email = "test@crunch.io", password = "abc123")
-#   )
-#   Sys.unsetenv("R_CRUNCH_PW")
-#
-#   #Clean up
-#   keyring::key_delete("crunch", username = "test@crunch.io")
-# })
-#
-#
-# test_that(
-#   "Match username and password, with password and username saved in RProfile or global environemnt", { #nolint
-#
-#   Sys.setenv(R_CRUNCH_PW = "abc123")
-#   Sys.setenv(R_CRUNCH_EMAIL = "test@crunch.io")
-#
-#   expect_identical(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     list(email = "test@crunch.io", password = "abc123")
-#   )
-#
-#   # Username only saved
-#   Sys.unsetenv("R_CRUNCH_PW")
-#   expect_identical(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     list(email = "test@crunch.io", password = NULL)
-#   )
-#   expect_identical(
-#     get_user_pass_combo(email = "test@yougov.com", password = NULL),
-#     list(email = "test@yougov.com", password = NULL)
-#   )
-#
-#   # Password only saved
-#   Sys.unsetenv("R_CRUNCH_EMAIL")
-#   Sys.setenv(R_CRUNCH_PW = "abc123")
-#   #Expected value - NULL, abc123
-#   expect_identical(
-#     get_user_pass_combo(email = NULL, password = NULL),
-#     list(email = NULL, password = "abc123")
-#   )
-#
-#   #Expected value: test@crunch.io, abc123, warning if interactive
-#   expect_identical(
-#     get_user_pass_combo(email = "test@crunch.io", password = NULL),
-#     list(email = "test@crunch.io", password = "abc123")
-#   )
-#
-#   #Clean up
-#   Sys.unsetenv("R_CRUNCH_PW")
-# })
+test_that("Match username and password, with single saved keyring password", {
+
+  #Single Keyring password, username specified via login, saved password matches specified username
+  keyring::key_set_with_value("crunch", username = "test@crunch.io", password = "abc123")
+  with_mock_auth_settings(
+    opt_crunch_email = "test@crunch.io",
+    opt_crunch_pw = "abc123",
+    expect_identical(
+      get_user_pass_combo(email = "test@crunch.io", password = NULL),
+      list(email = "test@crunch.io", password = "abc123")
+    )
+  )
+
+  #Single keyring password, username specified via login, saved password for different username
+  with_mock_auth_settings(
+    keyring_users = "test@crunch.io",
+    keyring_pws = "abc123",
+    expect_warning(
+      expect_identical(
+        get_user_pass_combo(email = "test@yougov.com", password = NULL),
+        list(email = "test@yougov.com", password = NULL)
+      ),
+      "Saved Crunch passwords in keyring do not match specified email"
+    )
+  )
+
+  #Single keyring password, username saved in keyring
+  with_mock_auth_settings(
+    keyring_users = "test@crunch.io",
+    keyring_pws = "abc123",
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = "test@crunch.io", password = "abc123")
+    )
+  )
+
+  #Single keyring password, username saved in system environment, saved password matches
+  # specified email
+  with_mock_auth_settings(
+    keyring_users = "test@crunch.io",
+    keyring_pws = "abc123",
+    env_r_crunch_email = "test@crunch.io",
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = "test@crunch.io", password = "abc123")
+    )
+  )
+
+  #Single keyring password, username saved in system environment, saved password doesn't match
+  # specified email
+  with_mock_auth_settings(
+    keyring_users = "test@crunch.io",
+    keyring_pws = "abc123",
+    env_r_crunch_email = "test@yougov.com",
+    expect_warning(
+      expect_identical(
+        get_user_pass_combo(email = NULL, password = NULL),
+        list(email = "test@yougov.com", password = NULL)
+      ),
+      "Saved Crunch passwords in keyring do not match specified email"
+    )
+  )
+
+  #Single keyring password, no saved username
+  with_mock_auth_settings(
+    keyring_users = NULL,
+    keyring_pws = "abc123",
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = NULL, password = "abc123")
+    )
+  )
+
+})
+
+
+test_that("Match username and password, with multiple saved keyring passwords", {
+  ## ==== Multiple saved passwords ====
+
+  #Multiple keyring passwords, logging in with username corresponding to saved password
+  with_mock_auth_settings(
+    keyring_users = c("user@gmail.com", "test@crunch.io"),
+    keyring_pws = c("foobar", "abc123"),
+    expect_identical(
+      get_user_pass_combo(email = "user@gmail.com", password = NULL),
+      list(email = "user@gmail.com", password = "foobar")
+    )
+  )
+  with_mock_auth_settings(
+    keyring_users = c("user@gmail.com", "test@crunch.io"),
+    keyring_pws = c("foobar", "abc123"),
+    expect_identical(
+      get_user_pass_combo(email = "test@crunch.io", password = NULL),
+      list(email = "test@crunch.io", password = "abc123")
+    )
+  )
+
+  #Multiple keyring passwords, logging in with username NOT corresponding to saved password
+  with_mock_auth_settings(
+    keyring_users = c("user@gmail.com", "test@crunch.io"),
+    keyring_pws = c("foobar", "abc123"),
+    expect_warning(
+      expect_identical(
+        get_user_pass_combo(email = "test@yougov.com", password = NULL),
+        list(email = "test@yougov.com", password = NULL)
+      ),
+      "Saved Crunch passwords in keyring do not match specified email"
+    )
+  )
+
+  # Multiple keyring passwords, attempting to log in without specified username
+  with_mock_auth_settings(
+    keyring_users = c("user@gmail.com", "test@crunch.io"),
+    keyring_pws = c("foobar", "abc123"),
+    expect_error(
+      get_user_pass_combo(email = NULL, password = NULL),
+      "More than one saved Crunch username/email address found in keyring. Try specifying login(email = ...)", # nolint
+      fixed = TRUE
+    )
+  )
+
+  # Username set via environment variable, 2+ saved passwords in keyring, usernane via environemnt
+  # variable matching keyring
+  with_mock_auth_settings(
+    keyring_users = c("user@gmail.com", "test@crunch.io"),
+    keyring_pws = c("foobar", "abc123"),
+    env_r_crunch_email = "test@crunch.io",
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = "test@crunch.io", password = "abc123")
+    )
+  )
+
+  # Username set via environment variable, 2+ saved passwords in keyring, username via environemnt
+  # variable NOT matching keyring
+  with_mock_auth_settings(
+    keyring_users = c("user@gmail.com", "test@crunch.io"),
+    keyring_pws = c("foobar", "abc123"),
+    env_r_crunch_email = "test@yougov.com",
+    expect_warning(
+      expect_identical(
+        get_user_pass_combo(email = NULL, password = NULL),
+        list(email = "test@yougov.com", password = NULL)
+      ),
+      "Saved Crunch passwords in keyring do not match specified email"
+    )
+  )
+})
+
+
+test_that("Match username and password, with password saved in RProfile or global environmnent and username in keyring", { # nolint
+
+  #Mutliple usernames saved in keyring
+  with_mock_auth_settings(
+    keyring_users = c("user@gmail.com", "test@crunch.io"),
+    keyring_pws = c("foobar", "abc123"),
+    env_r_crunch_pw = "abc123",
+    expect_error(
+      get_user_pass_combo(email = NULL, password = NULL),
+      "More than one saved Crunch username/email address found in keyring. Try specifying login(email = ...)", # nolint
+      fixed = TRUE
+    )
+  )
+
+  #Single username saved in keyring
+  with_mock_auth_settings(
+    keyring_users = "test@crunch.io",
+    keyring_pws = "abc123",
+    env_r_crunch_pw = "abc123",
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = "test@crunch.io", password = "abc123")
+    )
+  )
+})
+
+
+test_that(
+  "Match username and password, with password and username saved in RProfile or global environemnt", { #nolint
+
+  #Username and password saved
+  with_mock_auth_settings(
+    env_r_crunch_email = "test@crunch.io",
+    env_r_crunch_pw = "abc123",
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = "test@crunch.io", password = "abc123")
+    )
+  )
+
+  # Username only saved
+  with_mock_auth_settings(
+    env_r_crunch_email = "test@crunch.io",
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = "test@crunch.io", password = NULL)
+    )
+  )
+  with_mock_auth_settings(
+    env_r_crunch_email = "test@crunch.io",
+    expect_identical(
+      get_user_pass_combo(email = "test@yougov.com", password = NULL),
+      list(email = "test@yougov.com", password = NULL)
+    )
+  )
+
+  # Password only saved
+  with_mock_auth_settings(
+    env_r_crunch_pw = "abc123",
+    expect_identical(
+      get_user_pass_combo(email = NULL, password = NULL),
+      list(email = NULL, password = "abc123")
+    )
+  )
+  # Will generate warning if interactive
+  with_mock_auth_settings(
+    env_r_crunch_pw = "abc123",
+    expect_identical(
+      get_user_pass_combo(email = "test@crunch.io", password = NULL),
+      list(email = "test@crunch.io", password = "abc123")
+    )
+  )
+})
 
 
 test_that("without_echo doesn't crash on this OS", {
