@@ -4,11 +4,7 @@
 \alias{login}
 \title{Authenticate with the Crunch API}
 \usage{
-login(
-  email = envOrOption("crunch.email"),
-  password = envOrOption("crunch.pw"),
-  ...
-)
+login(email = NULL, password = NULL, ...)
 }
 \arguments{
 \item{email}{the email address associated with the user's Crunch account}
@@ -19,21 +15,21 @@ login(
 currently supported by the Crunch API.}
 }
 \description{
-Note that you can store your Crunch account info in your .Rprofile under
-\code{crunch.email} and \code{crunch.pw} for convenience. If you do so, you can simply
-\code{login()} to authenticate. For running batch jobs, this could be
-particularly useful. However, be warned that storing your
-password in a plain text file such as .Rprofile is a security risk (though
-perhaps less so than in every .R script you write), and we
-cannot officially recommend that you do so.
+Note that you can store your Crunch account info in encrypted format via
+the keyring package, with \code{key_set(service = "crunch",...)}
+If you do so, you can simply \code{login()} to authenticate. For running batch jobs,
+this could be particularly useful.
 }
 \details{
-Additionally, your email and password can be stored in and read from the
-environmental variables \code{R_CRUNCH_EMAIL} and \code{R_CRUNCH_PW} respectively.
+Your email and password can also be stored in and read from the
+environmental variables \code{R_CRUNCH_EMAIL} and \code{R_CRUNCH_PW},
+or from your .Rprofile under \code{crunch.email} and \code{crunch.pw}.
+However, environmental variables and \code{.RProfile} files are not encrypted, so
+this practice is no longer recommended. If an email or password is found in
+multiple locations, priority is given to 1) environmental variables, 2)
+\code{.RProfile}, and 3) keyring. This order of priority is for backwards compatibility,
+and methods 1) and 2) are no longer recommended.
 
-If a password is not supplied (or, if no arguments are supplied and only
-the \code{crunch.email} is specified in .Rprofile), and you are in an
-interactive session, you will be prompted to enter your password. At
-present, this is the most secure practice as your password is not stored
-locally.
+If a password is not stored in any of these locations, and you are in an
+interactive session, you will be prompted to enter your password.
 }
