@@ -81,7 +81,10 @@ ExprConstructor <- function(operator) {
     ## Based on the operator function, make either CrunchExpr or CrunchLogicalExpr
     logics <- c(
         "in", "<", ">", ">=", "<=", "==", "!=", "and", "or", "not",
-        "is_missing", "duplicates", "selected", "not_selected"
+        "is_missing", "duplicates", "selected", "not_selected",
+        "between", "=><=", "all", "any", "is_none_of_the_above",
+        "contains", "icontains", "~=", "is_valid", "any_missing",
+        "all_valid", "all_missing"
     )
     if (operator %in% logics) {
         Constructor <- CrunchLogicalExpr
@@ -370,6 +373,32 @@ setMethod("duplicated", "CrunchVariable", function(x, incomparables = FALSE, ...
 setMethod("duplicated", "CrunchExpr", function(x, incomparables = FALSE, ...) {
     zfuncExpr("duplicates", x)
 })
+
+
+#' "extra" logical methods for Crunch objects
+#'
+#' @param x `CrunchVariable` or `CrunchExpr`
+#' @return A `CrunchLogicalExpr` that evaluates `TRUE` for all repeated
+#' entries after the first occurrence of a value.
+#' @name duplicated
+#' @seealso [base::duplicated()]
+#' @aliases duplicated
+#' @export
+NULL
+
+#' @rdname duplicated
+#' @export
+setMethod("duplicated", "CrunchVariable", function(x, incomparables = FALSE, ...) {
+    zfuncExpr("duplicates", x)
+})
+
+#' @rdname duplicated
+#' @export
+setMethod("duplicated", "CrunchExpr", function(x, incomparables = FALSE, ...) {
+    zfuncExpr("duplicates", x)
+})
+
+
 
 #' @rdname crunch-is
 #' @export
