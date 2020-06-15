@@ -174,18 +174,12 @@ setMethod("!", "CrunchExpr", function(x) zfuncExpr("not", x))
             end <- head(table, 1)
         }
 
-        return(zfunc(
-            "between",
+        return(between(
             x,
             beg,
-            end + 1
+            end,
+            c(TRUE, TRUE)
         ))
-        ## Add 1 because "between" by default doesn't include the upper
-        ## bound and explicitly overriding that is failing. See #112089103.
-        ## When that is fixed, we can do the following:
-        # rep(TRUE, 2L))) ## Inclusive on both sides
-        ## TODO: ^ shipped so we can unhack this, but note that it should be
-        ## as.zcl(value=rep(TRUE, 2L)) # not "column"
     } else {
         return(zfunc(ifelse(length(table) == 1L, "==", "in"), x, table))
     }
@@ -375,30 +369,24 @@ setMethod("duplicated", "CrunchExpr", function(x, incomparables = FALSE, ...) {
 })
 
 
-#' "extra" logical methods for Crunch objects
+#' "extra" logical method for CrunchLogicalExpr
 #'
-#' @param x `CrunchVariable` or `CrunchExpr`
-#' @return A `CrunchLogicalExpr` that evaluates `TRUE` for all repeated
-#' entries after the first occurrence of a value.
-#' @name duplicated
-#' @seealso [base::duplicated()]
-#' @aliases duplicated
-#' @export
+#' @param x a CrunchVariable or CrunchExpr
+#' @return a CrunchLogicalExpr
+#' @name extralogical
 NULL
 
-#' @rdname duplicated
+#' @rdname extralogical
 #' @export
-setMethod("duplicated", "CrunchVariable", function(x, incomparables = FALSE, ...) {
-    zfuncExpr("duplicates", x)
+setMethod("between", "CrunchVariable", function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
+    zfuncExpr("between", x, lower, upper, inclusive)
 })
 
-#' @rdname duplicated
+#' @rdname extralogical
 #' @export
-setMethod("duplicated", "CrunchExpr", function(x, incomparables = FALSE, ...) {
-    zfuncExpr("duplicates", x)
+setMethod("between", "CrunchExpr", function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
+    zfuncExpr("between", x, lower, upper, inclusive)
 })
-
-
 
 #' @rdname crunch-is
 #' @export

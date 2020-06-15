@@ -253,6 +253,9 @@ setGeneric("measures", function(x) standardGeneric("measures"))
 setGeneric("subset")
 setGeneric("which", signature = "x")
 
+
+setGeneric("between", function(x, lower, upper, inclusive = c(TRUE, FALSE)) standardGeneric("between"))
+
 #' Extract and modify Crunch objects
 #'
 #'
