@@ -4,9 +4,9 @@ doc:
 	R --slave -e 'devtools::document()'
 	git add --all man/*.Rd
 
-test: compress-fixtures | test-nomockcheck
+test: compress-fixtures | test-no-compress-fixtures
 
-test-nocompressmock:
+test-no-compress-fixtures:
 	export NOT_CRAN=true && R --slave -e 'library(httptest); options(crunch.check.updates=FALSE); system.time(devtools::test(filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 lint:
@@ -18,7 +18,7 @@ deps:
 install-ci: deps
 	R -e 'devtools::session_info(installed.packages()[, "Package"])'
 
-test-ci:
+test-ci: compress-fixtures |
 	R --slave -e 'library(covr); to_cobertura(package_coverage(quiet=FALSE))'
 
 clean:
