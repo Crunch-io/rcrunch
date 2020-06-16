@@ -378,15 +378,109 @@ NULL
 
 #' @rdname extralogical
 #' @export
-setMethod("between", "CrunchVariable", function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
+between <- function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
     zfuncExpr("between", x, lower, upper, inclusive)
+}
+
+#' @rdname extralogical
+#' @export
+setMethod("all", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
+    if (length(list(...)) > 0) halt("crunch::all() only works on arrays so can only take a single argument")
+    if (!isFALSE(na.rm)) warning("na.rm ignored by crunch::all()")
+    zfuncExpr("all", x, ...)
 })
 
 #' @rdname extralogical
 #' @export
-setMethod("between", "CrunchExpr", function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
-    zfuncExpr("between", x, lower, upper, inclusive)
+setMethod("any", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
+    if (length(list(...)) > 0) halt("crunch::any() only works on arrays so can only take a single argument")
+    if (!isFALSE(na.rm)) warning("na.rm ignored by crunch::any()")
+    zfuncExpr("any", x)
 })
+
+#' @rdname extralogical
+#' @export
+isNoneAbove <- function(x) {
+    zfuncExpr("is_none_of_the_above", x)
+}
+
+#' @rdname extralogical
+#' @export
+textContains <- function(x, regex, ignore_case = FALSE) {
+    func_name <- if (ignore_case) "icontains" else "contains"
+    zfuncExpr(func_name, x, regex)
+}
+
+#' @rdname extralogical
+#' @export
+setMethod("anyNA", "CrunchVarOrExpr", function(x, recursive = FALSE) {
+    if (!isFALSE(recursive)) warning("recursive ignored by crunch::anyNA()")
+    zfuncExpr("any_missing", x)
+})
+
+#' @rdname extralogical
+#' @export
+allNA <- function(x) {
+    zfuncExpr("all_missing", x)
+}
+
+#' @rdname extralogical
+#' @export
+allValid <- function(x) {
+    zfuncExpr("all_valid", x)
+}
+
+
+#' "extra" method for handling selected categories in crunch variables
+#'
+#' @param x a CrunchVariable or CrunchExpr
+#' @return a CrunchExpr
+#' @name extraselections
+NULL
+
+#' @rdname extraselections
+#' @export
+asSelected <- function(x) {
+    zfuncExpr("as_selected", x)
+}
+
+#' @rdname extraselections
+#' @export
+selectedDepth <- function(x) {
+    zfuncExpr("selected_depth", x)
+}
+
+#' @rdname extraselections
+#' @export
+arraySelections <- function(x) {
+    zfuncExpr("selections", x)
+}
+
+#' miscellaneous expressions for crunch database
+#'
+#' @param x a CrunchVariable or CrunchExpr
+#' @return a CrunchExpr
+#' @name miscexpr
+NULL
+
+#' @rdname miscexpr
+#' @export
+charLength <- function(x) {
+    zfuncExpr("char_length", x)
+}
+
+#' @rdname miscexpr
+#' @export
+unmissing <- function(x) {
+    zfuncExpr("unmissing", x)
+}
+
+#' @rdname miscexpr
+#' @export
+normalize <- function(x) {
+    zfuncExpr("normalize", x)
+}
+
 
 #' @rdname crunch-is
 #' @export
