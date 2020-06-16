@@ -254,8 +254,6 @@ setGeneric("subset")
 setGeneric("which", signature = "x")
 
 
-setGeneric("between", function(x, lower, upper, inclusive = c(TRUE, FALSE)) standardGeneric("between"))
-
 #' Extract and modify Crunch objects
 #'
 #'

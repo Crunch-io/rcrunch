@@ -143,6 +143,8 @@ MultipleResponseVariable <- setClass("MultipleResponseVariable",
     contains = "CategoricalArrayVariable"
 )
 
+setClassUnion("CrunchVarOrExpr", c("CrunchVariable", "CrunchExpr"))
+
 #' Organize Variables within a Dataset
 #'
 #' Variables in the Crunch web application can be viewed in an ordered,

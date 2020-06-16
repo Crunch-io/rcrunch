@@ -2,13 +2,31 @@
 % Please edit documentation in R/expressions.R
 \name{extralogical}
 \alias{extralogical}
-\alias{between,CrunchVariable-method}
-\alias{between,CrunchExpr-method}
+\alias{between}
+\alias{all,CrunchVarOrExpr-method}
+\alias{any,CrunchVarOrExpr-method}
+\alias{isNoneAbove}
+\alias{textContains}
+\alias{anyNA,CrunchVarOrExpr-method}
+\alias{allNA}
+\alias{allValid}
 \title{"extra" logical method for CrunchLogicalExpr}
 \usage{
-\S4method{between}{CrunchVariable}(x, lower, upper, inclusive = c(TRUE, FALSE))
+between(x, lower, upper, inclusive = c(TRUE, FALSE))
 
-\S4method{between}{CrunchExpr}(x, lower, upper, inclusive = c(TRUE, FALSE))
+\S4method{all}{CrunchVarOrExpr}(x, ..., na.rm = FALSE)
+
+\S4method{any}{CrunchVarOrExpr}(x, ..., na.rm = FALSE)
+
+isNoneAbove(x)
+
+textContains(x, regex, ignore_case = FALSE)
+
+\S4method{anyNA}{CrunchVarOrExpr}(x, recursive = FALSE)
+
+allNA(x)
+
+allValid(x)
 }
 \arguments{
 \item{x}{a CrunchVariable or CrunchExpr}
