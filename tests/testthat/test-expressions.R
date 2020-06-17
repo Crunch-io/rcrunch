@@ -21,7 +21,7 @@ test_that(".dispatchFilter uses right numeric function", {
         paste0(
             '{"function":"between","args":[{"function":"row",',
             '"args":[]},{"value":4},',
-            '{"value":7}]}'
+            '{"value":6},{"value":[true,true]}]}'
         )
     )
 })

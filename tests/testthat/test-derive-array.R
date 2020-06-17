@@ -10,7 +10,7 @@ with_mock_crunch({
             ),
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"derivation":{"function":"select_categories","args":',
-            '[{"function":"array","args":[{"function":"select","args":',
+            '[{"function":"array","args":[{"function":"make_frame","args":',
             '[{"map":{"1":{"variable":"https://app.crunch.io/api/datasets',
             '/1/variables/gender/"}}},{"value":["1"]}]}]},{"value":', # nolint
             '["Female"]}]},"name":"derivedMR","alias":"derived_mr"}'

@@ -6,6 +6,9 @@
 \alias{==}
 \alias{!=}
 \alias{!}
+\alias{crunchDifftime}
+\alias{datetimeFromCols}
+\alias{\%ornm\%}
 \alias{!,CrunchExpr-method}
 \alias{\%in\%,CategoricalVariable,character-method}
 \alias{\%in\%,CategoricalVariable,factor-method}
@@ -21,11 +24,38 @@
 \alias{!=,CategoricalVariable,numeric-method}
 \alias{!=,CategoricalVariable,character-method}
 \alias{!=,CategoricalVariable,factor-method}
-\alias{is.na,CrunchVariable-method}
+\alias{is.na,CrunchVarOrExpr-method}
+\alias{is.valid}
 \alias{bin}
+\alias{tiered}
+\alias{makeFrame}
+\alias{selectCategories}
+\alias{between}
+\alias{all,CrunchVarOrExpr-method}
+\alias{any,CrunchVarOrExpr-method}
+\alias{isNoneAbove}
+\alias{textContains}
+\alias{anyNA,CrunchVarOrExpr-method}
+\alias{allNA}
+\alias{allValid}
+\alias{completeCases}
+\alias{is.selected,CrunchVarOrExpr-method}
+\alias{is.notSelected}
+\alias{asSelected}
+\alias{selectedDepth}
+\alias{arraySelections}
+\alias{charLength}
+\alias{unmissing}
+\alias{normalize}
 \title{Construct Crunch Expressions}
 \usage{
 x \%in\% table
+
+crunchDifftime(e1, e2, resolution = NULL)
+
+datetimeFromCols(year, month, day, hour = NULL, minute = NULL, second = NULL)
+
+e1 \%ornm\% e2
 
 \S4method{!}{CrunchExpr}(x)
 
@@ -57,9 +87,53 @@ x \%in\% table
 
 \S4method{!=}{CategoricalVariable,factor}(e1, e2)
 
-\S4method{is.na}{CrunchVariable}(x)
+\S4method{is.na}{CrunchVarOrExpr}(x)
+
+is.valid(x)
 
 bin(x)
+
+tiered(x, tiers)
+
+makeFrame(x)
+
+selectCategories(x, categories, collapse = TRUE)
+
+between(x, lower, upper, inclusive = c(TRUE, FALSE))
+
+\S4method{all}{CrunchVarOrExpr}(x, ..., na.rm = FALSE)
+
+\S4method{any}{CrunchVarOrExpr}(x, ..., na.rm = FALSE)
+
+isNoneAbove(x)
+
+textContains(x, regex, ignore_case = FALSE)
+
+\S4method{anyNA}{CrunchVarOrExpr}(x, recursive = FALSE)
+
+allNA(x)
+
+allValid(x)
+
+completeCases(x)
+
+\S4method{is.selected}{CrunchVarOrExpr}(x)
+
+is.notSelected(x)
+
+asSelected(x)
+
+selectedDepth(x)
+
+arraySelections(x)
+
+charLength(x)
+
+unmissing(x)
+
+normalize(x)
+
+makeFrame(x)
 }
 \arguments{
 \item{x}{an input}
@@ -77,7 +151,80 @@ Most functions return a CrunchExpr or CrunchLogicalExpr.
 \description{
 Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
 encapsulate derivations of Crunch variables, which are only evaluated when
-passed to a function like \code{as.vector}. They allow you to compose
+passed to a function like \code{VarDef()} \code{as.vector()}. They allow you to compose
 functional expressions of variables and evaluate them against the server
-only when appropriate.
+only when appropriate. Crunch uses \code{selection} roughly equivalent to base R's
+logical, where \code{selected} in Crunch is \code{TRUE} in R, \code{other} is \code{FALSE}, and
+\verb{No data} is \code{NA}, the rcrunch documentation may switch between these conventions.
+
+Logical expressions
+\itemize{
+\item These logical operators \code{==}, \code{!=}, \code{&}, \code{|}, \code{!},\code{\%in\%}  work the same way as their
+base R counterparts
+\item \code{is.selected(x)}, \code{is.notSelected(x)} return \code{CrunchLogicalExpr} whether a value is (or is not) in
+a selected category (missing data is considered not selected, unlike \code{!} which preserves missing)
+\item \code{any(x)} and \code{all(x)} work rowwise on \code{MultipleResponse} Variables (and expressions), though \code{na.rm}
+is not implemented for \code{all(x)}.
+\verb{\%ornm\%} is similar tos \code{|}, but where "not selected" beats "missing" (so \code{FALSE \%ornm\% NA} is
+\code{FALSE} instead of \code{NA} as it would be with \code{FALSE | NA})
+\item \code{isNoneAbove(x)} is equivalent to \code{!any(x)}
+}
+
+Comparisons
+\itemize{
+\item Comparison operators \code{<}, \code{<=}, \code{>}, \code{>=} work the same way as their base R counterparts.
+\item \code{between(x, lower, upper, inclusive)} to provide lower and upper bounds in a single
+expression.
+\item \code{textContains(x, regex, ignore_case)} looks for the regular expression pattern \code{regex} in a \code{TextVariable} (or
+expression) \code{x} and returns a \code{CrunchLogicalExpr} indicating if it was found.
+}
+
+Missing data expressions
+\itemize{
+\item \code{is.na(x)}, \code{is.valid(x)} return \code{CrunchLogicalExpr} whether a single variable (or expression that creates one)
+is misssing (or not missing).
+\item \code{anyNA(x)}, \code{allNA(x)}, \code{allValid(x)} return \code{CrunchLogicalExpr} whether all/any values in an array
+variable (or expression that creates one) are missing (or not).
+\item \code{completeCases(x)} returns an expression that is "selected" if all cases are non-missing,
+"missing" if they are all missing, and "other" otherwise.
+}
+
+Selection expressions
+\itemize{
+\item \code{selectCategories(x, selections, collapse = TRUE)} takes a categorical variable (or array)
+and marks categories as selected. \code{selections} should be a list of category names or values.
+If \code{collapse} is \code{TRUE}, (the default), it collapses the categories to "selected", "other"
+and "missing", but it is \code{FALSE}, then the old categories are preserved.
+\item \code{asSelected(x)} returns an expression that condenses a categorical into 3 categories ("selected", "other"
+or "missing")
+\item \code{selectedDepth(x)} returns an expression that creates a numeric variable that counts the number of selections
+across rows of an array variable (or expression that creates one)
+\item \code{arraySelections(x)} returns an expression that takes an array and creates an array with each vaiable
+condensed to "selected", "other" or "missing" and an extra subvariable "\strong{any}" that indicates whether
+any is selected.
+}
+
+Array expressions
+\itemize{
+\item \code{makeFrame(x)} an expression that creates an array from existing variables or expressions, see
+\code{deriveArray()} for more details
+\item \code{tiered(x, tiers)} collapses a categorical array to the first value of tiers that is found
+(\code{tiers} use the category ids only, so is for advanced use only).
+}
+
+Miscellaneous expressions
+\itemize{
+\item \code{bin(x)} returns a column's values binned into equidistant bins.
+\item \code{charLength(x)} returns a numeric value indicating the length of a string (or missing reason)
+in a \code{TextVariable} (or expression that creates one)
+\item \code{unmissing(x)} for a \code{NumericVariable} (or expression that creates one) return the values of
+the data, ignoring the ones set to missing.
+\item \code{normalize(x)} for a \code{NumericVariable} (or rexpression that creates one) return values normalized
+so that the sum of all values is equal to the number of observations.
+\item \code{crunchDifftime(e1, e2, resolution)} Gets the difference between two datetimes as a number with
+specified resolution units (one of \code{c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")}).
+\item \code{datetimeFromCols(year, month, day, hours, minutes, seconds)} create a \code{Datetime} variable from numeric variables
+or expressions (\code{year}, \code{month}, and \code{day} are required, but \code{hours}, \code{minutes}, and \code{seconds} are
+optional)
+}
 }
