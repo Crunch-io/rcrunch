@@ -28,7 +28,6 @@
 \alias{is.valid}
 \alias{bin}
 \alias{tiered}
-\alias{makeFrame}
 \alias{selectCategories}
 \alias{between}
 \alias{all,CrunchVarOrExpr-method}
@@ -95,9 +94,7 @@ bin(x)
 
 tiered(x, tiers)
 
-makeFrame(x)
-
-selectCategories(x, categories, collapse = TRUE)
+selectCategories(x, selections, collapse = TRUE)
 
 between(x, lower, upper, inclusive = c(TRUE, FALSE))
 
@@ -132,8 +129,6 @@ charLength(x)
 unmissing(x)
 
 normalize(x)
-
-makeFrame(x)
 }
 \arguments{
 \item{x}{an input}
@@ -214,6 +209,9 @@ Array expressions
 
 Miscellaneous expressions
 \itemize{
+\item \code{makeCaseExpr(..., cases, data = NULL)} Create a categorical variable from
+a set of logical expressions (cases). See \code{makeCaseVariable()} for more
+details.
 \item \code{bin(x)} returns a column's values binned into equidistant bins.
 \item \code{charLength(x)} returns a numeric value indicating the length of a string (or missing reason)
 in a \code{TextVariable} (or expression that creates one)
