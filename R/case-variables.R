@@ -4,7 +4,9 @@
 #' variables. These are evaluated in the order they are supplied in the list
 #' as the `cases` argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE
 #' fashion); the first one that matches selects the corresponding value from
-#' the case list.
+#' the case list. `caseExpr()` is a version that returns an expression that
+#' could be used when creating comoplex variables, see \code{\link{expressions}} for
+#' more details.
 #'
 #' There are two ways to specify cases, but you must pick only one (note these
 #' two will produce the same case variable):
@@ -69,20 +71,39 @@ makeCaseVariable <- function(..., cases, data = NULL, name) {
     ## Gather the new variable's metadata fields (and possibly expressions)
     # -1 to remove the list primative
     dots <- as.list(substitute(list(...)))[-1L]
-    casevar <- lapply(dots, evalSide, dat = data, eval_env = parent.frame())
-    casevar$name <- name
+    dots <- lapply(dots, evalSide, dat = data, eval_env = parent.frame())
     is_expr <- function(x) {
         inherits(x, "CrunchLogicalExpr") || x %in% magic_else_string
     }
-    exprs <- Filter(is_expr, casevar)
+
+    args <- c(list(data = data), Filter(is_expr, dots))
+    if (!missing(cases)) {
+        cases <- evalSide(substitute(cases), data, parent.frame())
+        args$cases <- cases
+    }
+    derivation <- do.call(caseExpr, args)
+    meta <- Filter(Negate(is_expr), dots)
+
+    do.call(VarDef, c(meta, list(name = name, data = derivation)))
+}
+
+#' @rdname makeCaseVariable
+#' @export
+caseExpr <- function(..., cases, data = NULL) {
+    # TODO: Kind of stinks that we have to do this non-std eval twice, is there a better way?
+    # (once here, but also in `makeCaseVariable()`)
+    ## Gather the new variable's expressions
+    # -1 to remove the list primative
+    dots <- as.list(substitute(list(...)))[-1L]
+    exprs <- lapply(dots, evalSide, dat = data, eval_env = parent.frame())
+
     if (length(exprs) > 0) {
         if (missing(cases)) {
             ## Remove the expressions from the variable definition
-            casevar <- Filter(Negate(is_expr), casevar)
             cases <- mapply(function(e, n) list(
-                    name = n,
-                    expression = e
-                ),
+                name = n,
+                expression = e
+            ),
             e = exprs, n = names(exprs),
             SIMPLIFY = FALSE, USE.NAMES = FALSE
             )
@@ -117,15 +138,12 @@ makeCaseVariable <- function(..., cases, data = NULL, name) {
     new_cat_ids <- vapply(cases, vget("id"), integer(1))
     new_cat <- list(column = I(new_cat_ids), type = new_cat_type)
 
-    casevar$derivation <- zfunc("case", new_cat)
-
-    # add case_expressions, remove nulls (should only be from the else case)
+    # remove nulls from case expressions (should only be from the else case)
     case_exprs <- lapply(cases, function(x) zcl(x$expression))
     case_exprs <- Filter(Negate(is.null), case_exprs)
-    casevar$derivation$args <- c(casevar$derivation$args, case_exprs)
-
-    class(casevar) <- "VariableDefinition"
-    return(casevar)
+    # TODO: ensure filters are the same
+    derivation <- do.call(zfunc, c(list("case", new_cat), case_exprs))
+    CrunchExpr(expression = derivation)
 }
 
 magic_else_string <- "else"

@@ -2,9 +2,12 @@
 % Please edit documentation in R/case-variables.R
 \name{makeCaseVariable}
 \alias{makeCaseVariable}
+\alias{caseExpr}
 \title{Make a case variable}
 \usage{
 makeCaseVariable(..., cases, data = NULL, name)
+
+caseExpr(..., cases, data = NULL)
 }
 \arguments{
 \item{...}{a sequence of named expressions to use as cases as well as other
@@ -28,7 +31,9 @@ The \code{makeCaseVariable} function derives a variable using values from other
 variables. These are evaluated in the order they are supplied in the list
 as the \code{cases} argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE
 fashion); the first one that matches selects the corresponding value from
-the case list.
+the case list. \code{caseExpr()} is a version that returns an expression that
+could be used when creating comoplex variables, see \code{\link{expressions}} for
+more details.
 }
 \details{
 There are two ways to specify cases, but you must pick only one (note these
