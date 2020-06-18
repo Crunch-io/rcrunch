@@ -498,12 +498,13 @@ makeFrame <- function(x) {
     }
 
     subvarids <- as.character(seq_along(x))
-    derivation <- zfunc("array", zfunc(
+    expression <- zfunc("array", zfunc(
         "make_frame",
         list(map = structure(x, .Names = subvarids)),
         list(value = I(subvarids))
     ))
-    derivation
+    # TODO: compare subvar filters and send if equal (and error otherwise)
+    CrunchExpr(expression = expression)
 }
 
 #' @rdname expressions
