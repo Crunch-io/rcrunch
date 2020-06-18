@@ -1185,7 +1185,7 @@ with_test_authentication({
         rep("Lizards", 25),
         rep("Rocks", 5),
         rep(NA, 10)
-    ))
+    ), stringsAsFactors = TRUE)
 
     ds <- newDataset(df)
 
