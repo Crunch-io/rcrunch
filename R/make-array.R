@@ -247,13 +247,12 @@ buildDelimRegex <- function(str, delim) {
 #' @rdname makeArray
 #' @export
 deriveArray <- function(subvariables, name, selections, ...) {
-    derivation <- makeFrame(subvariables)
+    expression <- makeFrame(subvariables)
 
     if (!missing(selections)) {
-        derivation <- selectCategories(derivation, selections, collapse = FALSE)
+        expression <- selectCategories(expression, selections, collapse = FALSE)
     }
-    if (is.Expr(derivation)) derivation <- derivation@expression
-    return(VariableDefinition(derivation = derivation, name = name, ...))
+    return(VariableDefinition(expression, name = name, ...))
 }
 
 
