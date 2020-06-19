@@ -52,7 +52,6 @@ with_mock_crunch({
 
         ##################### EXPECTED OUTPUT ######################################
         basic_output <- list(
-            name = "new_var",
             derivation = list(
                 `function` = "case",
                 args = list(
@@ -91,14 +90,14 @@ with_mock_crunch({
                                 `function` = ">",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -1.4998629)
+                                    structure(list(value = -1.4998629), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -0.4424)
+                                    structure(list(value = -0.4424), class = "zcl")
                                 )
                             )
                         )
@@ -110,14 +109,14 @@ with_mock_crunch({
                                 `function` = ">",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -0.4424)
+                                    structure(list(value = -0.4424), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 0.6119)
+                                    structure(list(value = 0.6119), class = "zcl")
                                 )
                             )
                         )
@@ -129,25 +128,25 @@ with_mock_crunch({
                                 `function` = ">",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 0.6119)
+                                    structure(list(value = 0.6119), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 1.6693629)
+                                    structure(list(value = 1.6693629), class = "zcl")
                                 )
                             )
                         )
                     )
                 )
-            )
+            ),
+            name = "new_var"
         )
 
 
         right_false <- list(
-            name = "new_var",
             derivation = list(
                 `function` = "case",
                 args = list(
@@ -186,13 +185,13 @@ with_mock_crunch({
                                 `function` = ">=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -1.4998629)
+                                    structure(list(value = -1.4998629), class = "zcl")
                                 )
                             ), list(
                                 `function` = "<",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -0.4424)
+                                    structure(list(value = -0.4424), class = "zcl")
                                 )
                             )
                         )
@@ -204,14 +203,14 @@ with_mock_crunch({
                                 `function` = ">=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -0.4424)
+                                    structure(list(value = -0.4424), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 0.6119)
+                                    structure(list(value = 0.6119), class = "zcl")
                                 )
                             )
                         )
@@ -223,23 +222,23 @@ with_mock_crunch({
                                 `function` = ">=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 0.6119)
+                                    structure(list(value = 0.6119), class = "zcl")
                                 )
                             ), list(
                                 `function` = "<",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 1.6693629)
+                                    structure(list(value = 1.6693629), class = "zcl")
                                 )
                             )
                         )
                     )
                 )
-            )
+            ),
+            name = "new_var"
         )
 
         set_breaks <- list(
-            name = "new_var",
             derivation = list(
                 `function` = "case",
                 args = list(
@@ -272,14 +271,14 @@ with_mock_crunch({
                                 `function` = ">=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -1.4967)
+                                    structure(list(value = -1.4967), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 0)
+                                    structure(list(value = 0), class = "zcl")
                                 )
                             )
                         )
@@ -291,24 +290,24 @@ with_mock_crunch({
                                 `function` = ">=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 0)
+                                    structure(list(value = 0), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 1.6662)
+                                    structure(list(value = 1.6662), class = "zcl")
                                 )
                             )
                         )
                     )
                 )
-            )
+            ),
+            name = "new_var"
         )
 
         dig_lab <- list(
-            name = "new_var",
             derivation = list(
                 `function` = "case",
                 args = list(
@@ -347,14 +346,14 @@ with_mock_crunch({
                                 `function` = ">",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -1.4998629)
+                                    structure(list(value = -1.4998629), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -0.4424)
+                                    structure(list(value = -0.4424), class = "zcl")
                                 )
                             )
                         )
@@ -366,14 +365,14 @@ with_mock_crunch({
                                 `function` = ">",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = -0.4424)
+                                    structure(list(value = -0.4424), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 0.6119)
+                                    structure(list(value = 0.6119), class = "zcl")
                                 )
                             )
                         )
@@ -385,20 +384,21 @@ with_mock_crunch({
                                 `function` = ">",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 0.6119)
+                                    structure(list(value = 0.6119), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), # nolint
-                                    list(value = 1.6693629)
+                                    structure(list(value = 1.6693629), class = "zcl")
                                 )
                             )
                         )
                     )
                 )
-            )
+            ),
+            name = "new_var"
         )
 
 
