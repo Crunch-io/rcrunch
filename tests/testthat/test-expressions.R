@@ -228,6 +228,197 @@ with_mock_crunch({
         expect_true(is.logical(vals))
         expect_equal(which(ds$birthyr == 1945 | ds$birthyr < 1941), 4:20)
     })
+
+    test_that("crunchDifftime expr", {
+        expr <- crunchDifftime(ds$starttime, ds$starttime)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "difftime")
+
+        expect_error(crunchDifftime(ds$gender, ds$gender), "Datetime")
+    })
+
+    test_that("datetimeFromCols expr", {
+        expr <- datetimeFromCols(ds$birthyr, ds$birthyr, ds$birthyr)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "datetime")
+
+        expect_error(datetimeFromCols(ds$gender, ds$gender, ds$gender), "Numeric")
+    })
+
+    test_that("%ornm% expr", {
+        expr <- (ds$birthyr == 1945) %ornm% (ds$birthyr < 1941)
+        expect_is(expr, "CrunchLogicalExpr")
+        expect_equal(expr@expression[["function"]], "ornm")
+    })
+
+    test_that("is.valid expr", {
+        expr <- is.valid(ds$birthyr)
+        expect_is(expr, "CrunchLogicalExpr")
+        expect_equal(expr@expression[["function"]], "is_valid")
+    })
+
+    test_that("makeFrame expr", {
+        expr <- makeFrame(ds["gender", "location"])
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "array")
+        expect_equal(expr@expression[["args"]][[1]][["function"]], "make_frame")
+    })
+
+    test_that("selectCategories expr", {
+        expr <- selectCategories(ds$gender, "Male")
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "as_selected")
+        expect_equal(expr@expression[["args"]][[1]][["function"]], "select_categories")
+    })
+
+    test_that("all expr", {
+        expr <- all(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "all")
+
+        expect_error(all(ds$gender), "Array")
+        expect_warning(all(ds$mymrset, na.rm = TRUE), "na.rm")
+    })
+
+    test_that("between expr", {
+        expr <- between(ds$birthyr, 3, 5)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "between")
+
+        expect_error(between(ds$gender, 3, 5), "Numeric")
+    })
+
+    test_that("all expr", {
+        expr <- all(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "all")
+
+        expect_error(all(ds$gender), "Array")
+        expect_error(all(ds$mymrset, ds$gender), "single argument")
+        expect_warning(all(ds$mymrset, na.rm = TRUE), "na.rm")
+    })
+
+    test_that("any expr", {
+        expr <- any(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "any")
+
+        expect_error(any(ds$birthyr), "Array")
+        expect_error(any(ds$mymrset, ds$gender), "single argument")
+    })
+
+    test_that("isNoneAbove expr", {
+        expr <- isNoneAbove(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "is_none_of_the_above")
+
+        expect_error(isNoneAbove(ds$gender), "Array")
+    })
+
+    test_that("textContains expr", {
+        expr <- textContains(ds$textVar, "^[ABC]")
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "contains")
+
+        expect_error(textContains(ds$gender), "Text")
+    })
+
+    test_that("anyNA expr", {
+        expr <- anyNA(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "any_missing")
+
+        expect_error(anyNA(ds$gender), "Array")
+        expect_warning(anyNA(ds$mymrset, recursive = TRUE), "recursive")
+    })
+
+    test_that("allNA expr", {
+        expr <- allNA(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "all_missing")
+
+        expect_error(anyNA(ds$gender), "Array")
+    })
+
+    test_that("allValid expr", {
+        expr <- allValid(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "all_valid")
+
+        expect_error(allValid(ds$gender), "Array")
+    })
+
+    test_that("completeCases expr", {
+        expr <- completeCases(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "complete_cases")
+
+        expect_error(completeCases(ds$gender), "Array")
+    })
+
+    test_that("is.selected expr", {
+        expr <- is.selected(ds$gender)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "selected")
+
+        expect_error(is.selected(ds$birthyr), "Categorical")
+    })
+
+    test_that("is.notSelected expr", {
+        expr <- is.notSelected(ds$gender)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "not_selected")
+
+        expect_error(is.notSelected(ds$birthyr), "Categorical")
+    })
+
+    test_that("asSelected expr", {
+        expr <- asSelected(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "as_selected")
+
+        expect_error(asSelected(ds$birthyr), "Multiple Response")
+    })
+
+    test_that("selectedDepth expr", {
+        expr <- selectedDepth(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "selected_depth")
+
+        expect_error(selectedDepth(ds$gender), "Multiple Response")
+    })
+
+    test_that("arraySelections expr", {
+        expr <- arraySelections(ds$mymrset)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "selections")
+
+        expect_error(arraySelections(ds$gender), "Multiple Response")
+    })
+
+    test_that("charLength expr", {
+        expr <- charLength(ds$textVar)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "char_length")
+
+        expect_error(charLength(ds$gender), "Text")
+    })
+
+    test_that("unmissing expr", {
+        expr <- unmissing(ds$birthyr)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "unmissing")
+
+        expect_error(unmissing(ds$gender), "Numeric")
+    })
+
+    test_that("normalize expr", {
+        expr <- normalize(ds$birthyr)
+        expect_is(expr, "CrunchExpr")
+        expect_equal(expr@expression[["function"]], "normalize")
+
+        expect_error(normalize(ds$gender), "Numeric")
+    })
 })
 
 with_test_authentication({

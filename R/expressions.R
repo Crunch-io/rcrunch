@@ -137,7 +137,7 @@ setMethod("-", c("DatetimeVariable", "DatetimeVariable"), crunch.ops("difftime")
 crunchDifftime <- function(e1, e2, resolution = NULL) {
     isVarButNotType(e1, "Datetime", "crunchDifftime")
     isVarButNotType(e2, "Datetime", "crunchDifftime")
-    crunch.ops("difftime", resolution)
+    crunch.ops("difftime", resolution)(e1, e2)
 }
 
 #' @rdname expressions-internal
@@ -160,7 +160,7 @@ datetimeFromCols <- function(year, month, day, hour = NULL, minute = NULL, secon
 #' @rdname expressions-internal
 #' @export
 `%ornm%` <- function(e1, e2) {
-    crunch.ops("ornm")
+    crunch.ops("ornm")(e1, e2)
 }
 
 setMethod("&", c("CrunchExpr", "CrunchExpr"), crunch.ops("and"))
@@ -603,7 +603,7 @@ allValid <- function(x) {
 #' @export
 completeCases <- function(x) {
     isVarButNotType(x, "Array", "completeCases")
-    zfuncExpr("completeCases", x)
+    zfuncExpr("complete_cases", x)
 }
 
 #' @rdname expressions-internal
@@ -623,7 +623,7 @@ is.notSelected <- function(x) {
 #' @rdname expressions-internal
 #' @export
 asSelected <- function(x) {
-    isVarButNotType(x, "Multiple Response", "asSelected")
+    isVarButNotType(x, c("Categorical", "Categorical Array", "Multiple Response"), "asSelected")
     zfuncExpr("as_selected", x)
 }
 
@@ -671,18 +671,22 @@ is.CrunchExpr <- function(x) inherits(x, "CrunchExpr")
 #' @export
 is.Expr <- is.CrunchExpr
 
-isVarButNotType <- function(x, type, caller) {
-    type_check <- switch(
-        type,
-        "Numeric" = is.Numeric,
-        "Text" = is.Text,
-        "Datetime" = is.Datetime,
-        "Categorical" = is.Categorical,
-        "Array" = is.Array,
-        "Categorical Array" = is.CategoricalArray,
-        "Multiple Response" = is.MultipleResponse
-    )
-    if (is.variable(x) & !type_check(x)) {
-        halt("variable must be of type '", type, "' for ", caller, "().")
+isVarButNotType <- function(x, types, caller) {
+    type_check <- lapply(types, function(type) {
+        switch(
+            type,
+            "Numeric" = is.Numeric,
+            "Text" = is.Text,
+            "Datetime" = is.Datetime,
+            "Categorical" = is.Categorical,
+            "Array" = is.Array,
+            "Categorical Array" = is.CategoricalArray,
+            "Multiple Response" = is.MultipleResponse,
+            halt("bad type check ", type)
+        )
+    })
+    if (is.variable(x) && !any(vapply(type_check, function(func) func(x), logical(1)))) {
+        type_str <- paste0("'", types, "'", collapse = ",")
+        halt("variable must be of type '", type_str, "' for ", caller, "().")
     }
 }
