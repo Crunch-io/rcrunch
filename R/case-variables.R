@@ -5,7 +5,7 @@
 #' as the `cases` argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE
 #' fashion); the first one that matches selects the corresponding value from
 #' the case list. `caseExpr()` is a version that returns an expression that
-#' could be used when creating comoplex variables, see \code{\link{expressions}} for
+#' could be used when creating complex variables, see \code{\link{expressions}} for
 #' more details.
 #'
 #' There are two ways to specify cases, but you must pick only one (note these

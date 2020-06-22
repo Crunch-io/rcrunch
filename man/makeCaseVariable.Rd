@@ -32,7 +32,7 @@ variables. These are evaluated in the order they are supplied in the list
 as the \code{cases} argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE
 fashion); the first one that matches selects the corresponding value from
 the case list. \code{caseExpr()} is a version that returns an expression that
-could be used when creating comoplex variables, see \code{\link{expressions}} for
+could be used when creating complex variables, see \code{\link{expressions}} for
 more details.
 }
 \details{
