@@ -224,5 +224,6 @@ specified resolution units (one of \code{c("Y", "Q", "M", "W", "D", "h", "m", "s
 \item \code{datetimeFromCols(year, month, day, hours, minutes, seconds)} create a \code{Datetime} variable from numeric variables
 or expressions (\code{year}, \code{month}, and \code{day} are required, but \code{hours}, \code{minutes}, and \code{seconds} are
 optional)
+\item \code{rollup(x, resolution)} sets the resolution of a datetime variable or expression, see \code{rollup()}
 }
 }
