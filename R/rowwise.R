@@ -13,6 +13,7 @@
 #'
 #' @return A Variable Definition, which can be used to create a new `CrunchVariable`
 #' @export
+#' @seealso [`rowCount()`] for other row-wise functions
 rowDistinct <- function(x, ..., na.rm = TRUE) {
     if (!is.Array(x)) halt("x must be an array variable")
 
@@ -42,4 +43,39 @@ straightlineResponse <- function(x, ...) {
         ),
         ...
     )
+}
+
+
+#' Create variables based on row-wise functions for crunch Multiple Response Variables
+#'
+#' Quickly generate new variables that are based on row-wise summaries of Multiple Response
+#' Variables.
+#'
+#' @param x A crunch variable or expression
+#' @param ... name, description, alias, and other metadata passed to [`VarDef()`]
+#' @seealso [`expresions()`] for the more flexible expressions that power
+#' these functions and [`rowDistinct()`] for other row-wise functions
+#'
+#' @return A Variable Definition
+#' @export
+rowCount <- function(x, ...) {
+    VarDef(selectedDepth(x), ...)
+}
+
+#' @rdname rowCount
+#' @export
+rowAny <- function(x, ...) {
+    VarDef(any(x), ...)
+}
+
+#' @rdname rowCount
+#' @export
+rowAll <- function(x, ...) {
+    VarDef(all(x), ...)
+}
+
+#' @rdname rowCount
+#' @export
+rowAnyNA <- function(x, ...) {
+    VarDef(anyNA(x), ...)
 }
