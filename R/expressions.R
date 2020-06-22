@@ -70,6 +70,7 @@
 #'  - `datetimeFromCols(year, month, day, hours, minutes, seconds)` create a `Datetime` variable from numeric variables
 #'    or expressions (`year`, `month`, and `day` are required, but `hours`, `minutes`, and `seconds` are
 #'    optional)
+#'  - `rollup(x, resolution)` sets the resolution of a datetime variable or expression, see `rollup()`
 #'
 #' @param x an input
 #' @param e1 an input
