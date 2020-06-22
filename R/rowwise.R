@@ -46,6 +46,47 @@ straightlineResponse <- function(x, ...) {
 }
 
 
+#' Create a categorical variable using tiers of a Categorical Array
+#'
+#' Collapses a categorical array to the first value of tiers that is found.
+#'
+#' @param x A Categorical Array variable
+#' @param tiers A vector of ids, category names, or values
+#' @param ... Metadata like name or description that is passed to [`VarDef()`]
+#' @param tier_type Specify how `tiers` are identifying the categories, if left `NULL`,
+#' the default, assumes that a numeric vector is ids and a character vector is names.
+#'
+#' @return A Variable Defintiion
+#' @export
+tieredVar <- function(x, tiers, ..., tier_type = NULL) {
+    if (is.Expr(x)) {
+        halt("`tieredVar()` only works on Categorical arrays, use the `tiers()` expressions")
+    }
+    if (!is.CA(x)) halt("x must be a Categorical Array.")
+
+    if (is.null(tier_type)) {
+        tier_type <- if (is.character(tiers)) "names" else "ids"
+    } else {
+        tier_type <- match.arg(tier_type, c("ids", "names", "values"))
+    }
+
+    cats <- switch(
+        tier_type,
+        "ids" = ids(categories(x)),
+        "names" = names(categories(x)),
+        "values" = values(categories(x)),
+        halt("Unexpected tier_type '", tier_type, "'")
+    )
+    matches <- match(tiers, cats)
+    if (any(is.na(matches))) {
+        halt("Could not find tiers ", paste(tiers[is.na(matches)], collapse = ", "), " in ",  tier_type)
+    }
+
+    ids <- ids(categories(x))[matches]
+
+    VarDef(tiered(x, ids), ...)
+}
+
 #' Create variables based on row-wise functions for crunch Multiple Response Variables
 #'
 #' Quickly generate new variables that are based on row-wise summaries of Multiple Response

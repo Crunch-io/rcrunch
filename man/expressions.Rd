@@ -79,7 +79,8 @@ Array expressions
 \item \code{makeFrame(x)} an expression that creates an array from existing variables or expressions, see
 \code{deriveArray()} for more details
 \item \code{tiered(x, tiers)} collapses a categorical array to the first value of tiers that is found
-(\code{tiers} use the category ids only, so is for advanced use only).
+(\code{tiers} use the category ids only, so is for advanced use only, \code{\link[=tieredVar]{tieredVar()}} is a nicer
+interface, but does not provide an expression, nor work on expressions).
 }
 
 Miscellaneous expressions

@@ -234,7 +234,8 @@ zfuncExpr <- function(fun, x, ...) {
 #'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions, see
 #'    `deriveArray()` for more details
 #'  - `tiered(x, tiers)` collapses a categorical array to the first value of tiers that is found
-#'    (`tiers` use the category ids only, so is for advanced use only).
+#'    (`tiers` use the category ids only, so is for advanced use only, [`tieredVar()`] is a nicer
+#'    interface, but does not provide an expression, nor work on expressions).
 #'
 #' Miscellaneous expressions
 #'  - `makeCaseExpr(..., cases, data = NULL)` Create a categorical variable from
@@ -410,7 +411,10 @@ bin <- function(x) zfuncExpr("bin", x)
 
 #' @rdname expressions-internal
 #' @export
-tiered <- function(x, tiers) zfuncExpr("tiered", x, list(value = I(tiers)))
+tiered <- function(x, tiers) {
+    isVarButNotType(x, "Array", "tiered")
+    zfuncExpr("tiered", x, list(value = I(tiers)))
+}
 
 #' @rdname crunch-extract
 #' @export
