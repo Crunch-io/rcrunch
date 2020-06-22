@@ -2,165 +2,40 @@
 % Please edit documentation in R/expressions.R
 \name{expressions}
 \alias{expressions}
-\alias{\%in\%}
-\alias{==}
-\alias{!=}
-\alias{!}
-\alias{crunchDifftime}
-\alias{datetimeFromCols}
-\alias{\%ornm\%}
-\alias{!,CrunchExpr-method}
-\alias{\%in\%,CategoricalVariable,character-method}
-\alias{\%in\%,CategoricalVariable,factor-method}
-\alias{\%in\%,TextVariable,character-method}
-\alias{\%in\%,NumericVariable,numeric-method}
-\alias{\%in\%,DatetimeVariable,Date-method}
-\alias{\%in\%,DatetimeVariable,POSIXt-method}
-\alias{\%in\%,DatetimeVariable,character-method}
-\alias{\%in\%,CategoricalVariable,numeric-method}
-\alias{==,CategoricalVariable,numeric-method}
-\alias{==,CategoricalVariable,character-method}
-\alias{==,CategoricalVariable,factor-method}
-\alias{!=,CategoricalVariable,numeric-method}
-\alias{!=,CategoricalVariable,character-method}
-\alias{!=,CategoricalVariable,factor-method}
-\alias{is.na,CrunchVarOrExpr-method}
-\alias{is.valid}
-\alias{bin}
-\alias{tiered}
-\alias{selectCategories}
-\alias{between}
-\alias{all,CrunchVarOrExpr-method}
-\alias{any,CrunchVarOrExpr-method}
-\alias{isNoneAbove}
-\alias{textContains}
-\alias{anyNA,CrunchVarOrExpr-method}
-\alias{allNA}
-\alias{allValid}
-\alias{completeCases}
-\alias{is.selected,CrunchVarOrExpr-method}
-\alias{is.notSelected}
-\alias{asSelected}
-\alias{selectedDepth}
-\alias{arraySelections}
-\alias{charLength}
-\alias{unmissing}
-\alias{normalize}
-\title{Construct Crunch Expressions}
+\alias{crunchdbFunc}
+\alias{makeFrame}
+\title{Construct Crunch Expressions from Crunch Database Functions}
 \usage{
-x \%in\% table
+crunchdbFunc(fun, x, ...)
 
-crunchDifftime(e1, e2, resolution = NULL)
-
-datetimeFromCols(year, month, day, hour = NULL, minute = NULL, second = NULL)
-
-e1 \%ornm\% e2
-
-\S4method{!}{CrunchExpr}(x)
-
-\S4method{\%in\%}{CategoricalVariable,character}(x, table)
-
-\S4method{\%in\%}{CategoricalVariable,factor}(x, table)
-
-\S4method{\%in\%}{TextVariable,character}(x, table)
-
-\S4method{\%in\%}{NumericVariable,numeric}(x, table)
-
-\S4method{\%in\%}{DatetimeVariable,Date}(x, table)
-
-\S4method{\%in\%}{DatetimeVariable,POSIXt}(x, table)
-
-\S4method{\%in\%}{DatetimeVariable,character}(x, table)
-
-\S4method{\%in\%}{CategoricalVariable,numeric}(x, table)
-
-\S4method{==}{CategoricalVariable,numeric}(e1, e2)
-
-\S4method{==}{CategoricalVariable,character}(e1, e2)
-
-\S4method{==}{CategoricalVariable,factor}(e1, e2)
-
-\S4method{!=}{CategoricalVariable,numeric}(e1, e2)
-
-\S4method{!=}{CategoricalVariable,character}(e1, e2)
-
-\S4method{!=}{CategoricalVariable,factor}(e1, e2)
-
-\S4method{is.na}{CrunchVarOrExpr}(x)
-
-is.valid(x)
-
-bin(x)
-
-tiered(x, tiers)
-
-selectCategories(x, selections, collapse = TRUE)
-
-between(x, lower, upper, inclusive = c(TRUE, FALSE))
-
-\S4method{all}{CrunchVarOrExpr}(x, ..., na.rm = FALSE)
-
-\S4method{any}{CrunchVarOrExpr}(x, ..., na.rm = FALSE)
-
-isNoneAbove(x)
-
-textContains(x, regex, ignore_case = FALSE)
-
-\S4method{anyNA}{CrunchVarOrExpr}(x, recursive = FALSE)
-
-allNA(x)
-
-allValid(x)
-
-completeCases(x)
-
-\S4method{is.selected}{CrunchVarOrExpr}(x)
-
-is.notSelected(x)
-
-asSelected(x)
-
-selectedDepth(x)
-
-arraySelections(x)
-
-charLength(x)
-
-unmissing(x)
-
-normalize(x)
+makeFrame(x)
 }
 \arguments{
-\item{x}{an input}
+\item{fun}{The name of the crunch database function to call}
 
-\item{table}{For \code{\%in\%}. See \code{\link[base:match]{base::match()}}}
+\item{x}{An input, a crunch variable, expression or R object}
 
-\item{e1}{an input}
-
-\item{e2}{an input}
-}
-\value{
-Most functions return a CrunchExpr or CrunchLogicalExpr.
-\code{as.vector} returns an R vector.
+\item{...}{Other arguments passed to the database function}
 }
 \description{
 Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
-encapsulate derivations of Crunch variables, which are only evaluated when
-passed to a function like \code{VarDef()} \code{as.vector()}. They allow you to compose
-functional expressions of variables and evaluate them against the server
-only when appropriate. Crunch uses \code{selection} roughly equivalent to base R's
-logical, where \code{selected} in Crunch is \code{TRUE} in R, \code{other} is \code{FALSE}, and
-\verb{No data} is \code{NA}, the rcrunch documentation may switch between these conventions.
-
+encapsulate derivations of Crunch variables, possibly composed of other functions
+which are only evaluated when sent to the server when creating a variable using \code{\link[=VarDef]{VarDef()}}
+or using \code{\link[=as.vector]{as.vector()}} to get data. The crunch database functions can be found in the
+\href{https://docs.crunch.io/object-reference/object-reference.html}{Crunch API Reference},
+and can be called directly via \code{crunchdbFunc()}m but many have also been wrapped
+in native R functions, and are described in the details section below.
+}
+\details{
 Logical expressions
 \itemize{
 \item These logical operators \code{==}, \code{!=}, \code{&}, \code{|}, \code{!},\code{\%in\%}  work the same way as their
 base R counterparts
 \item \code{is.selected(x)}, \code{is.notSelected(x)} return \code{CrunchLogicalExpr} whether a value is (or is not) in
 a selected category (missing data is considered not selected, unlike \code{!} which preserves missing)
-\item \code{any(x)} and \code{all(x)} work rowwise on \code{MultipleResponse} Variables (and expressions), though \code{na.rm}
+\item \code{any(x)} and \code{all(x)} work row-wise on \code{MultipleResponse} Variables (and expressions), though \code{na.rm}
 is not implemented for \code{all(x)}.
-\verb{\%ornm\%} is similar tos \code{|}, but where "not selected" beats "missing" (so \code{FALSE \%ornm\% NA} is
+\verb{\%ornm\%} is similar to \code{|}, but where "not selected" beats "missing" (so \code{FALSE \%ornm\% NA} is
 \code{FALSE} instead of \code{NA} as it would be with \code{FALSE | NA})
 \item \code{isNoneAbove(x)} is equivalent to \code{!any(x)}
 }
@@ -177,7 +52,7 @@ expression) \code{x} and returns a \code{CrunchLogicalExpr} indicating if it was
 Missing data expressions
 \itemize{
 \item \code{is.na(x)}, \code{is.valid(x)} return \code{CrunchLogicalExpr} whether a single variable (or expression that creates one)
-is misssing (or not missing).
+is missing (or not missing).
 \item \code{anyNA(x)}, \code{allNA(x)}, \code{allValid(x)} return \code{CrunchLogicalExpr} whether all/any values in an array
 variable (or expression that creates one) are missing (or not).
 \item \code{completeCases(x)} returns an expression that is "selected" if all cases are non-missing,
@@ -194,7 +69,7 @@ and "missing", but it is \code{FALSE}, then the old categories are preserved.
 or "missing")
 \item \code{selectedDepth(x)} returns an expression that creates a numeric variable that counts the number of selections
 across rows of an array variable (or expression that creates one)
-\item \code{arraySelections(x)} returns an expression that takes an array and creates an array with each vaiable
+\item \code{arraySelections(x)} returns an expression that takes an array and creates an array with each variable
 condensed to "selected", "other" or "missing" and an extra subvariable "\strong{any}" that indicates whether
 any is selected.
 }
@@ -217,7 +92,7 @@ details.
 in a \code{TextVariable} (or expression that creates one)
 \item \code{unmissing(x)} for a \code{NumericVariable} (or expression that creates one) return the values of
 the data, ignoring the ones set to missing.
-\item \code{normalize(x)} for a \code{NumericVariable} (or rexpression that creates one) return values normalized
+\item \code{normalize(x)} for a \code{NumericVariable} (or expression that creates one) return values normalized
 so that the sum of all values is equal to the number of observations.
 \item \code{crunchDifftime(e1, e2, resolution)} Gets the difference between two datetimes as a number with
 specified resolution units (one of \code{c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")}).

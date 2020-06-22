@@ -1,85 +1,16 @@
-#' Construct Crunch Expressions
+#' Crunch expressions internal
 #'
-#' @description
-#' Crunch Expressions, i.e. `CrunchExpr` and `CrunchLogicalExpr`,
-#' encapsulate derivations of Crunch variables, which are only evaluated when
-#' passed to a function like `VarDef()` `as.vector()`. They allow you to compose
-#' functional expressions of variables and evaluate them against the server
-#' only when appropriate. Crunch uses `selection` roughly equivalent to base R's
-#' logical, where `selected` in Crunch is `TRUE` in R, `other` is `FALSE`, and
-#' `No data` is `NA`, the rcrunch documentation may switch between these conventions.
+#' See [`expressions`] for more details.
 #'
-#' Logical expressions
-#' - These logical operators `==`, `!=`, `&`, `|`, `!`,`%in%`  work the same way as their
-#'   base R counterparts
-#'  - `is.selected(x)`, `is.notSelected(x)` return `CrunchLogicalExpr` whether a value is (or is not) in
-#'  a selected category (missing data is considered not selected, unlike `!` which preserves missing)
-#' - `any(x)` and `all(x)` work rowwise on `MultipleResponse` Variables (and expressions), though `na.rm`
-#'   is not implemented for `all(x)`.
-#'   `%ornm%` is similar tos `|`, but where "not selected" beats "missing" (so `FALSE %ornm% NA` is
-#'   `FALSE` instead of `NA` as it would be with `FALSE | NA`)
-#' - `isNoneAbove(x)` is equivalent to `!any(x)`
-#'
-#' Comparisons
-#' - Comparison operators `<`, `<=`, `>`, `>=` work the same way as their base R counterparts.
-#' - `between(x, lower, upper, inclusive)` to provide lower and upper bounds in a single
-#'   expression.
-#' - `textContains(x, regex, ignore_case)` looks for the regular expression pattern `regex` in a `TextVariable` (or
-#'   expression) `x` and returns a `CrunchLogicalExpr` indicating if it was found.
-#'
-#' Missing data expressions
-#' - `is.na(x)`, `is.valid(x)` return `CrunchLogicalExpr` whether a single variable (or expression that creates one)
-#'   is misssing (or not missing).
-#' - `anyNA(x)`, `allNA(x)`, `allValid(x)` return `CrunchLogicalExpr` whether all/any values in an array
-#'   variable (or expression that creates one) are missing (or not).
-#' - `completeCases(x)` returns an expression that is "selected" if all cases are non-missing,
-#'    "missing" if they are all missing, and "other" otherwise.
-#'
-#' Selection expressions
-#'  - `selectCategories(x, selections, collapse = TRUE)` takes a categorical variable (or array)
-#'     and marks categories as selected. `selections` should be a list of category names or values.
-#'     If `collapse` is `TRUE`, (the default), it collapses the categories to "selected", "other"
-#'     and "missing", but it is `FALSE`, then the old categories are preserved.
-#'  - `asSelected(x)` returns an expression that condenses a categorical into 3 categories ("selected", "other"
-#'     or "missing")
-#'  - `selectedDepth(x)` returns an expression that creates a numeric variable that counts the number of selections
-#'    across rows of an array variable (or expression that creates one)
-#'  - `arraySelections(x)` returns an expression that takes an array and creates an array with each vaiable
-#'    condensed to "selected", "other" or "missing" and an extra subvariable "__any__" that indicates whether
-#'    any is selected.
-#'
-#' Array expressions
-#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions, see
-#'    `deriveArray()` for more details
-#'  - `tiered(x, tiers)` collapses a categorical array to the first value of tiers that is found
-#'    (`tiers` use the category ids only, so is for advanced use only).
-#'
-#' Miscellaneous expressions
-#'  - `makeCaseExpr(..., cases, data = NULL)` Create a categorical variable from
-#'    a set of logical expressions (cases). See `makeCaseVariable()` for more
-#'    details.
-#'  - `bin(x)` returns a column's values binned into equidistant bins.
-#'  - `charLength(x)` returns a numeric value indicating the length of a string (or missing reason)
-#'     in a `TextVariable` (or expression that creates one)
-#'  - `unmissing(x)` for a `NumericVariable` (or expression that creates one) return the values of
-#'    the data, ignoring the ones set to missing.
-#'  - `normalize(x)` for a `NumericVariable` (or rexpression that creates one) return values normalized
-#'    so that the sum of all values is equal to the number of observations.
-#'  - `crunchDifftime(e1, e2, resolution)` Gets the difference between two datetimes as a number with
-#'    specified resolution units (one of `c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")`).
-#'  - `datetimeFromCols(year, month, day, hours, minutes, seconds)` create a `Datetime` variable from numeric variables
-#'    or expressions (`year`, `month`, and `day` are required, but `hours`, `minutes`, and `seconds` are
-#'    optional)
-#'  - `rollup(x, resolution)` sets the resolution of a datetime variable or expression, see `rollup()`
-#'
-#' @param x an input
-#' @param e1 an input
-#' @param e2 an input
-#' @param table For \code{\%in\%}. See [base::match()]
+#' @param x,e1,e2 inputs
+#' @param table,na.rm,selections,upper,lower,inclusive,regex,ignore_case,selections,collapse,tiers,
+#' cases,data,resolution,year,month,day,hours,minutes,seconds
+#' Other parameters used in some functions, see details of [`expressions`] for more details.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
 #' `as.vector` returns an R vector.
-#' @aliases expressions %in% == != !
-#' @name expressions
+#' @aliases expressions-internal %in% == != !
+#' @name expressions-internal
+#' @keywords internal
 setGeneric("%in%")
 # TODO: figure this out.
 # Can't "roxygen" these because check says
@@ -201,7 +132,7 @@ for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
 
 setMethod("-", c("DatetimeVariable", "DatetimeVariable"), crunch.ops("difftime"))
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 crunchDifftime <- function(e1, e2, resolution = NULL) {
     isVarButNotType(e1, "Datetime", "crunchDifftime")
@@ -209,7 +140,7 @@ crunchDifftime <- function(e1, e2, resolution = NULL) {
     crunch.ops("difftime", resolution)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 datetimeFromCols <- function(year, month, day, hour = NULL, minute = NULL, second = NULL) {
     isVarButNotType(year, "Numeric", "datetimeFromCols")
@@ -226,7 +157,7 @@ datetimeFromCols <- function(year, month, day, hour = NULL, minute = NULL, secon
     return(out)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 `%ornm%` <- function(e1, e2) {
     crunch.ops("ornm")
@@ -249,7 +180,87 @@ zfuncExpr <- function(fun, x, ...) {
     return(out)
 }
 
-#' @rdname expressions
+#' Construct Crunch Expressions from Crunch Database Functions
+#'
+#' Crunch Expressions, i.e. `CrunchExpr` and `CrunchLogicalExpr`,
+#' encapsulate derivations of Crunch variables, possibly composed of other functions
+#' which are only evaluated when sent to the server when creating a variable using [`VarDef()`]
+#' or using [`as.vector()`] to get data. The crunch database functions can be found in the
+#' [Crunch API Reference](https://docs.crunch.io/object-reference/object-reference.html),
+#' and can be called directly via `crunchdbFunc()`m but many have also been wrapped
+#'  in native R functions, and are described in the details section below.
+#'
+#'
+#' Logical expressions
+#' - These logical operators `==`, `!=`, `&`, `|`, `!`,`%in%`  work the same way as their
+#'   base R counterparts
+#'  - `is.selected(x)`, `is.notSelected(x)` return `CrunchLogicalExpr` whether a value is (or is not) in
+#'  a selected category (missing data is considered not selected, unlike `!` which preserves missing)
+#' - `any(x)` and `all(x)` work row-wise on `MultipleResponse` Variables (and expressions), though `na.rm`
+#'   is not implemented for `all(x)`.
+#'   `%ornm%` is similar to `|`, but where "not selected" beats "missing" (so `FALSE %ornm% NA` is
+#'   `FALSE` instead of `NA` as it would be with `FALSE | NA`)
+#' - `isNoneAbove(x)` is equivalent to `!any(x)`
+#'
+#' Comparisons
+#' - Comparison operators `<`, `<=`, `>`, `>=` work the same way as their base R counterparts.
+#' - `between(x, lower, upper, inclusive)` to provide lower and upper bounds in a single
+#'   expression.
+#' - `textContains(x, regex, ignore_case)` looks for the regular expression pattern `regex` in a `TextVariable` (or
+#'   expression) `x` and returns a `CrunchLogicalExpr` indicating if it was found.
+#'
+#' Missing data expressions
+#' - `is.na(x)`, `is.valid(x)` return `CrunchLogicalExpr` whether a single variable (or expression that creates one)
+#'   is missing (or not missing).
+#' - `anyNA(x)`, `allNA(x)`, `allValid(x)` return `CrunchLogicalExpr` whether all/any values in an array
+#'   variable (or expression that creates one) are missing (or not).
+#' - `completeCases(x)` returns an expression that is "selected" if all cases are non-missing,
+#'    "missing" if they are all missing, and "other" otherwise.
+#'
+#' Selection expressions
+#'  - `selectCategories(x, selections, collapse = TRUE)` takes a categorical variable (or array)
+#'     and marks categories as selected. `selections` should be a list of category names or values.
+#'     If `collapse` is `TRUE`, (the default), it collapses the categories to "selected", "other"
+#'     and "missing", but it is `FALSE`, then the old categories are preserved.
+#'  - `asSelected(x)` returns an expression that condenses a categorical into 3 categories ("selected", "other"
+#'     or "missing")
+#'  - `selectedDepth(x)` returns an expression that creates a numeric variable that counts the number of selections
+#'    across rows of an array variable (or expression that creates one)
+#'  - `arraySelections(x)` returns an expression that takes an array and creates an array with each variable
+#'    condensed to "selected", "other" or "missing" and an extra subvariable "__any__" that indicates whether
+#'    any is selected.
+#'
+#' Array expressions
+#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions, see
+#'    `deriveArray()` for more details
+#'  - `tiered(x, tiers)` collapses a categorical array to the first value of tiers that is found
+#'    (`tiers` use the category ids only, so is for advanced use only).
+#'
+#' Miscellaneous expressions
+#'  - `makeCaseExpr(..., cases, data = NULL)` Create a categorical variable from
+#'    a set of logical expressions (cases). See `makeCaseVariable()` for more
+#'    details.
+#'  - `bin(x)` returns a column's values binned into equidistant bins.
+#'  - `charLength(x)` returns a numeric value indicating the length of a string (or missing reason)
+#'     in a `TextVariable` (or expression that creates one)
+#'  - `unmissing(x)` for a `NumericVariable` (or expression that creates one) return the values of
+#'    the data, ignoring the ones set to missing.
+#'  - `normalize(x)` for a `NumericVariable` (or expression that creates one) return values normalized
+#'    so that the sum of all values is equal to the number of observations.
+#'  - `crunchDifftime(e1, e2, resolution)` Gets the difference between two datetimes as a number with
+#'    specified resolution units (one of `c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")`).
+#'  - `datetimeFromCols(year, month, day, hours, minutes, seconds)` create a `Datetime` variable from numeric variables
+#'    or expressions (`year`, `month`, and `day` are required, but `hours`, `minutes`, and `seconds` are
+#'    optional)
+#'  - `rollup(x, resolution)` sets the resolution of a datetime variable or expression, see `rollup()`
+#'
+#' @name expressions
+#' @param fun The name of the crunch database function to call
+#' @param x An input, a crunch variable, expression or R object
+#' @param ... Other arguments passed to the database function
+crunchdbFunc <- zfuncExpr
+
+#' @rdname expressions-internal
 #' @export
 setMethod("!", "CrunchExpr", function(x) zfuncExpr("not", x))
 
@@ -287,13 +298,13 @@ setMethod("!", "CrunchExpr", function(x) zfuncExpr("not", x))
 
 .inCrunch <- function(x, table) zfuncExpr("selected", math.exp(x, r2zcl(I(table)), "in"))
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod(
     "%in%", c("CategoricalVariable", "character"),
     function(x, table) .inCrunch(x, n2i(table, categories(x), strict = FALSE))
 )
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod(
     "%in%", c("CategoricalVariable", "factor"),
@@ -305,22 +316,22 @@ for (i in seq_along(.sigs)) {
     setMethod("%in%", .sigs[[i]], .inCrunch)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("%in%", c("TextVariable", "character"), .inCrunch)
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("%in%", c("NumericVariable", "numeric"), .inCrunch)
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("%in%", c("DatetimeVariable", "Date"), .inCrunch)
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("%in%", c("DatetimeVariable", "POSIXt"), .inCrunch)
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("%in%", c("DatetimeVariable", "character"), .inCrunch)
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("%in%", c("CategoricalVariable", "numeric"), .inCrunch)
 
@@ -338,7 +349,7 @@ for (i in c("==", "!=")) {
     setMethod(i, c("CrunchVariable", "CrunchExpr"), crunch.ops(i))
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("==", c("CategoricalVariable", "numeric"), function(e1, e2) {
     if (length(e2) == 0) {
@@ -349,20 +360,20 @@ setMethod("==", c("CategoricalVariable", "numeric"), function(e1, e2) {
     return(math.exp(e1, e2, "=="))
 })
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("==", c("CategoricalVariable", "character"), function(e1, e2) {
     e2 <- n2i(e2, categories(e1), strict = FALSE)
     return(e1 == e2)
 })
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod(
     "==", c("CategoricalVariable", "factor"),
     function(e1, e2) e1 == as.character(e2)
 )
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("!=", c("CategoricalVariable", "numeric"), function(e1, e2) {
     if (length(e2) == 0) {
@@ -372,32 +383,32 @@ setMethod("!=", c("CategoricalVariable", "numeric"), function(e1, e2) {
     }
     return(math.exp(e1, e2, "!="))
 })
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("!=", c("CategoricalVariable", "character"), function(e1, e2) {
     e2 <- n2i(e2, categories(e1), strict = FALSE)
     return(e1 != e2)
 })
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod(
     "!=", c("CategoricalVariable", "factor"),
     function(e1, e2) e1 != as.character(e2)
 )
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("is.na", "CrunchVarOrExpr", function(x) zfuncExpr("is_missing", x))
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 is.valid <- function(x) zfuncExpr("is_valid", x)
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 bin <- function(x) zfuncExpr("bin", x)
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 tiered <- function(x, tiers) zfuncExpr("tiered", x, list(value = I(tiers)))
 
@@ -476,7 +487,7 @@ setMethod("duplicated", "CrunchExpr", function(x, incomparables = FALSE, ...) {
     zfuncExpr("duplicates", x)
 })
 
-#' @rdname makeArray
+#' @rdname expressions
 #' @export
 makeFrame <- function(x) {
     ## Get subvariable URLs
@@ -507,11 +518,14 @@ makeFrame <- function(x) {
         list(map = structure(x, .Names = subvarids)),
         list(value = I(subvarids))
     ))
-    # TODO: compare subvar filters and send if equal (and error otherwise)
+    # TODO: filters are not preserved in makeFrame expressions because
+    # they aren't preserved in `VarDefs` which expressions are wrapped in
+    # when forming variables... I believe this will only affect someone trying to
+    # `as.vector()` an array, which also doesn't currently work so leave it for now.
     CrunchExpr(expression = expression)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 selectCategories <- function(x, selections, collapse = TRUE) {
     out <- zfuncExpr("select_categories", x, list(value = I(selections)))
@@ -519,14 +533,14 @@ selectCategories <- function(x, selections, collapse = TRUE) {
     out
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 between <- function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
     isVarButNotType(x, "Numeric", "between")
     zfuncExpr("between", x, lower, upper, list(value = I(inclusive)))
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("all", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
     isVarButNotType(x, "Array", "all")
@@ -535,7 +549,7 @@ setMethod("all", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
     zfuncExpr("all", x, ...)
 })
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("any", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
     isVarButNotType(x, "Array", "any")
@@ -544,14 +558,14 @@ setMethod("any", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
     zfuncExpr(func_name, x)
 })
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 isNoneAbove <- function(x) {
     isVarButNotType(x, "Array", "isNoneAbove")
     zfuncExpr("is_none_of_the_above", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 textContains <- function(x, regex, ignore_case = FALSE) {
     isVarButNotType(x, "Text", "textContains")
@@ -559,7 +573,7 @@ textContains <- function(x, regex, ignore_case = FALSE) {
     zfuncExpr(func_name, x, regex)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("anyNA", "CrunchVarOrExpr", function(x, recursive = FALSE) {
     isVarButNotType(x, "Array", "anyNA")
@@ -567,77 +581,77 @@ setMethod("anyNA", "CrunchVarOrExpr", function(x, recursive = FALSE) {
     zfuncExpr("any_missing", x)
 })
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 allNA <- function(x) {
     isVarButNotType(x, "Array", "all_missing")
     zfuncExpr("all_missing", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 allValid <- function(x) {
     isVarButNotType(x, "Array", "allValid")
     zfuncExpr("all_valid", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 completeCases <- function(x) {
     isVarButNotType(x, "Array", "completeCases")
     zfuncExpr("completeCases", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 setMethod("is.selected", "CrunchVarOrExpr", function(x) {
     isVarButNotType(x, "Categorical", "is.selected")
     zfuncExpr("selected", x)
 })
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 is.notSelected <- function(x) {
     isVarButNotType(x, "Categorical", "is.notSelected")
     zfuncExpr("not_selected", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 asSelected <- function(x) {
     isVarButNotType(x, "Multiple Response", "asSelected")
     zfuncExpr("as_selected", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 selectedDepth <- function(x) {
     isVarButNotType(x, "Multiple Response", "selectedDepth")
     zfuncExpr("selected_depth", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 arraySelections <- function(x) {
     isVarButNotType(x, "Multiple Response", "arraySelections")
     zfuncExpr("selections", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 charLength <- function(x) {
     isVarButNotType(x, "Text", "charLength")
     zfuncExpr("char_length", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 unmissing <- function(x) {
     isVarButNotType(x, "Numeric", "unmissing")
     zfuncExpr("unmissing", x)
 }
 
-#' @rdname expressions
+#' @rdname expressions-internal
 #' @export
 normalize <- function(x) {
     isVarButNotType(x, "Numeric", "normalize")
