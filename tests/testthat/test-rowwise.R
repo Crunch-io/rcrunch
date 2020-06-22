@@ -38,4 +38,32 @@ with_mock_crunch({
     test_that("error for non-array var straightline", {
         expect_error(straightlineResponse(ds$textvar), "x must be an array variable")
     })
+
+    test_that("rowCount creates correct vardef", {
+        expect_equal(
+            rowCount(ds$mymrset, name = "row count"),
+            VarDef(crunchdbFunc("selected_depth", ds$mymrset), name = "row count")
+        )
+    })
+
+    test_that("rowAny creates correct vardef", {
+        expect_equal(
+            rowAny(ds$mymrset, name = "row any"),
+            VarDef(crunchdbFunc("any", ds$mymrset), name = "row any")
+        )
+    })
+
+    test_that("rowAll creates correct vardef", {
+        expect_equal(
+            rowAll(ds$mymrset, name = "row all"),
+            VarDef(crunchdbFunc("all", ds$mymrset), name = "row all")
+        )
+    })
+
+    test_that("rowAnyNA creates correct vardef", {
+        expect_equal(
+            rowAnyNA(ds$mymrset, name = "row any missing"),
+            VarDef(crunchdbFunc("any_missing", ds$mymrset), name = "row any missing")
+        )
+    })
 })
