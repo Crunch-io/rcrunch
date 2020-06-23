@@ -4,12 +4,14 @@
 \alias{tieredVar}
 \title{Create a categorical variable using tiers of a Categorical Array}
 \usage{
-tieredVar(x, tiers, ..., tier_type = NULL)
+tieredVar(x, tiers, name, ..., tier_type = NULL)
 }
 \arguments{
 \item{x}{A Categorical Array variable}
 
 \item{tiers}{A vector of ids, category names, or values}
+
+\item{name}{a character to use as the name of the case variable to create}
 
 \item{...}{Metadata like name or description that is passed to \code{\link[=VarDef]{VarDef()}}}
 
