@@ -5,14 +5,16 @@
 \alias{straightlineResponse}
 \title{Create variables useful for determining whether a row's values are suspicious}
 \usage{
-rowDistinct(x, ..., na.rm = TRUE)
+rowDistinct(x, name, ..., na.rm = TRUE)
 
-straightlineResponse(x, ...)
+straightlineResponse(x, name, ...)
 }
 \arguments{
 \item{x}{A \code{CrunchVariable}that is an an array, that unique values should be counted across.}
 
-\item{...}{Optional attributes, like \code{name}, to set on the new variable (passed to \code{VarDef()})}
+\item{name}{a character to use as the name of the case variable to create}
+
+\item{...}{Optional attributes, like \code{description}, to set on the new variable (passed to \code{VarDef()})}
 
 \item{na.rm}{Whether to count missing data as a separate category (all missing categories will be
 lumped together)}

@@ -7,18 +7,20 @@
 \alias{rowAnyNA}
 \title{Create variables based on row-wise functions for crunch Multiple Response Variables}
 \usage{
-rowCount(x, ...)
+rowCount(x, name, ...)
 
-rowAny(x, ...)
+rowAny(x, name, ...)
 
-rowAll(x, ...)
+rowAll(x, name, ...)
 
-rowAnyNA(x, ...)
+rowAnyNA(x, name, ...)
 }
 \arguments{
 \item{x}{A crunch variable or expression}
 
-\item{...}{name, description, alias, and other metadata passed to \code{\link[=VarDef]{VarDef()}}}
+\item{name}{a character to use as the name of the case variable to create}
+
+\item{...}{description, alias, and other metadata passed to \code{\link[=VarDef]{VarDef()}}}
 }
 \value{
 A Variable Definition
