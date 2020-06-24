@@ -109,6 +109,7 @@ Collate:
     'edit-lock.R'
     'export-dataset.R'
     'expressions.R'
+    'fill-variable.R'
     'filters.R'
     'folders.R'
     'fork-and-merge.R'

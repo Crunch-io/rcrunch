@@ -7,7 +7,7 @@
 \usage{
 makeCaseVariable(..., cases, data = NULL, name)
 
-caseExpr(..., cases, data = NULL)
+caseExpr(..., cases)
 }
 \arguments{
 \item{...}{a sequence of named expressions to use as cases as well as other
