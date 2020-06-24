@@ -238,9 +238,12 @@ zfuncExpr <- function(fun, x, ...) {
 #'    interface, but does not provide an expression, nor work on expressions).
 #'
 #' Miscellaneous expressions
-#'  - `makeCaseExpr(..., cases, data = NULL)` Create a categorical variable from
-#'    a set of logical expressions (cases). See `makeCaseVariable()` for more
-#'    details.
+#'  - `caseExpr(..., cases)` Create a categorical variable from
+#'    a set of logical expressions that when met are assigned to a category. See
+#'    [`makeCaseVariable()`] for more details.
+#'  - `fillExpr(..., fills)` Create a categorical variable by assigning existing categories
+#'     to be filled in by values from another categorical variable See [`makeFillVariable()`]
+#'     for more details.
 #'  - `bin(x)` returns a column's values binned into equidistant bins.
 #'  - `charLength(x)` returns a numeric value indicating the length of a string (or missing reason)
 #'     in a `TextVariable` (or expression that creates one)

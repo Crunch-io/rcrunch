@@ -85,9 +85,12 @@ interface, but does not provide an expression, nor work on expressions).
 
 Miscellaneous expressions
 \itemize{
-\item \code{makeCaseExpr(..., cases, data = NULL)} Create a categorical variable from
-a set of logical expressions (cases). See \code{makeCaseVariable()} for more
-details.
+\item \code{caseExpr(..., cases)} Create a categorical variable from
+a set of logical expressions that when met are assigned to a category. See
+\code{\link[=makeCaseVariable]{makeCaseVariable()}} for more details.
+\item \code{fillExpr(..., fills)} Create a categorical variable by assigning existing categories
+to be filled in by values from another categorical variable See \code{\link[=makeFillVariable]{makeFillVariable()}}
+for more details.
 \item \code{bin(x)} returns a column's values binned into equidistant bins.
 \item \code{charLength(x)} returns a numeric value indicating the length of a string (or missing reason)
 in a \code{TextVariable} (or expression that creates one)

@@ -76,7 +76,7 @@ makeCaseVariable <- function(..., cases, data = NULL, name) {
         inherits(x, "CrunchLogicalExpr") || x %in% magic_else_string
     }
 
-    args <- c(list(data = data), Filter(is_expr, dots))
+    args <- Filter(is_expr, dots)
     if (!missing(cases)) {
         cases <- evalSide(substitute(cases), data, parent.frame())
         args$cases <- cases
@@ -89,13 +89,8 @@ makeCaseVariable <- function(..., cases, data = NULL, name) {
 
 #' @rdname makeCaseVariable
 #' @export
-caseExpr <- function(..., cases, data = NULL) {
-    # TODO: Kind of stinks that we have to do this non-std eval twice, is there a better way?
-    # (once here, but also in `makeCaseVariable()`)
-    ## Gather the new variable's expressions
-    # -1 to remove the list primative
-    dots <- as.list(substitute(list(...)))[-1L]
-    exprs <- lapply(dots, evalSide, dat = data, eval_env = parent.frame())
+caseExpr <- function(..., cases) {
+    exprs <- list(...)
 
     if (length(exprs) > 0) {
         if (missing(cases)) {
