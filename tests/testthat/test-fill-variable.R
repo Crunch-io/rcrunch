@@ -2,7 +2,7 @@ context("fill variable")
 
 with_mock_crunch({
     basic_fill_expr <- paste0(
-        '{"function":"fill","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+        '{"function":"fill","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},', #nolint
         '{"map":{"1":{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"}}}]}'
     )
 

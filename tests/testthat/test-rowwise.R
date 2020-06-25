@@ -42,7 +42,7 @@ with_mock_crunch({
     test_that("tieredVar creates correct vardef", {
         expect_equal(
             tieredVar(ds$catarray, c(2, 1), name = "tiered var"),
-            VarDef(crunchdbFunc("tiered", ds$catarray, list(value = I(c(2, 1)))), name = "tiered var")
+            VarDef(crunchdbFunc("tiered", ds$catarray, list(value = I(c(2, 1)))), name = "tiered var") #nolint
         )
 
         expect_error(

@@ -8,10 +8,10 @@
 #'
 #' @param x A `CrunchVariable`that is an an array, that unique values should be counted across.
 #' @param name a character to use as the name of the case variable to create
-#' @param ... Optional attributes, like `description`, to set on the new variable (passed to `VarDef()`)
-#' @param na.rm Whether to count missing data as a separate category (all missing categories will be
-#' lumped together)
-#'
+#' @param ... Optional attributes, like `description`, to set on the new variable (passed to
+#'   `VarDef()`)
+#' @param na.rm Whether to count missing data as a separate category (all missing categories will
+#'   be lumped together)
 #' @return A Variable Definition, which can be used to create a new `CrunchVariable`
 #' @export
 #' @seealso [`rowCount()`] for other row-wise functions
@@ -83,7 +83,12 @@ tieredVar <- function(x, tiers, name, ..., tier_type = NULL) {
     )
     matches <- match(tiers, cats)
     if (any(is.na(matches))) {
-        halt("Could not find tiers ", paste(tiers[is.na(matches)], collapse = ", "), " in ",  tier_type)
+        halt(
+            "Could not find tiers ",
+            paste(tiers[is.na(matches)], collapse = ", "),
+            " in ",
+            tier_type
+        )
     }
 
     ids <- ids(categories(x))[matches]
