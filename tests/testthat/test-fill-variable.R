@@ -1,42 +1,62 @@
 context("fill variable")
 
 with_mock_crunch({
+    basic_fill_expr <- paste0(
+        '{"function":"fill","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+        '{"map":{"1":{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"}}}]}'
+    )
+
+    expr_fill_expr <- paste0(
+        '{"function":"fill","args":[{"function":"as_selected","args":',
+        '[{"function":"select_categories","args":',
+        '[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+        '{"value":["Male"]}]}]},{"map":',
+        '{"1":{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"}}}]}'
+    )
+
+
     ds <- loadDataset("test ds")
 
     test_that("fillExpr works on existing variable with ids in list", {
         expect_equal(
-            fillExpr(ds$gender, list(list(id = 1, fill = ds$location))),
-            zfuncExpr("fill", ds$gender, list(map = list("1" = zcl(ds$location))))
+            unclass(toJSON(
+                fillExpr(ds$gender, list(list(id = 1, fill = ds$location)))@expression
+            )),
+            basic_fill_expr
         )
     })
 
     test_that("fillExpr works on existing variable with names in list", {
         expect_equal(
-            fillExpr(ds$gender, list(list(name = "Male", fill = ds$location))),
-            zfuncExpr("fill", ds$gender, list(map = list("1" = zcl(ds$location))))
+            unclass(toJSON(
+                fillExpr(ds$gender, list(list(name = "Male", fill = ds$location)))@expression
+            )),
+            basic_fill_expr
         )
     })
 
     test_that("fillExpr works on existing variable with values in list", {
         expect_equal(
-            fillExpr(ds$gender, list(list(value = 1, fill = ds$location))),
-            zfuncExpr("fill", ds$gender, list(map = list("1" = zcl(ds$location))))
+            unclass(toJSON(
+                fillExpr(ds$gender, list(list(value = 1, fill = ds$location)))@expression
+            )),
+            basic_fill_expr
         )
     })
 
     test_that("fillExpr works on existing variable with names in named arguments", {
         expect_equal(
-            fillExpr(ds$gender, Male = ds$location),
-            zfuncExpr("fill", ds$gender, list(map = list("1" = zcl(ds$location))))
+            unclass(toJSON(fillExpr(ds$gender, Male = ds$location)@expression)),
+            basic_fill_expr
         )
     })
 
     test_that("fillExpr works on expression with ids in list", {
         expect_equal(
-            fillExpr(selectCategories(ds$gender, "Male"), list(list(id = 1, fill = ds$location))),
-            zfuncExpr(
-                "fill", selectCategories(ds$gender, "Male"), list(map = list("1" = zcl(ds$location)))
-            )
+            unclass(toJSON(
+                fillExpr(selectCategories(ds$gender, "Male"), list(list(id = 1, fill = ds$location)))@expression #nolint
+            )),
+            expr_fill_expr
         )
     })
 
