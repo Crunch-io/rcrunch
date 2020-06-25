@@ -237,6 +237,19 @@ zfuncExpr <- function(fun, x, ...) {
 #'  - `tiered(x, tiers)` collapses a categorical array to the first value of tiers that is found
 #'    (`tiers` use the category ids only, so is for advanced use only, [`tieredVar()`] is a nicer
 #'    interface, but does not provide an expression, nor work on expressions).
+#'  - `alterCategoriesExpr(x, categories = NULL, category_order = NULL, subvariables = NULL)`
+#'     Change the category names, order, or subvariable names of categorical or Array variables
+#'      (can only modify existing ones, not add or remove categories or subvariables). `categories`
+#'     is a `Categories` object or a list of lists, each with a `name` indicating the new name, as
+#'     well as an `id` or `old_name` to identify which category to modify.
+#'     `category_order` is either a numeric vector indicating category ids or a character vector
+#'     indicating the names of the categories in the order they should be displayed
+#'     (note that all categories must be specified). `subvariables` is  a list of lists, each with
+#'     a `name` to rename the subvariable and an `alias`, `old_nam` or `id` to identify the subvariable.
+#'     When `x` is an expression, all categories and subvariables must be identified by `id`.
+#'  - `arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))` Take a subset of an existing
+#'    array variable, identifying the subvars by alias, name, or id (if `x` is an expression,
+#'    you must use id).
 #'
 #' Miscellaneous expressions
 #'  - `caseExpr(..., cases)` Create a categorical variable from
@@ -261,10 +274,6 @@ zfuncExpr <- function(fun, x, ...) {
 #'    or expressions (`year`, `month`, and `day` are required, but `hours`, `minutes`, and `seconds` are
 #'    optional)
 #'  - `rollup(x, resolution)` sets the resolution of a datetime variable or expression, see `rollup()`
-#'  - `alterCategoriesExpr(x, categories, category_order, subvariables)` Change the category names,
-#'     order, or subvariable names of categorical or Array variables (can only modify existing ones, not add
-#'     or remove categories or subvariables). `categories`is a `Categories` object or a list of lists,
-#'     each with a name indicating the new name, as well as an id or
 #'
 #' @name expressions
 #' @param fun The name of the crunch database function to call
@@ -745,6 +754,32 @@ alterCategoriesExpr <- function(x, categories = NULL, category_order = NULL, sub
 
         zfuncExpr("alter_categories", x, list(value = I(args)))
     }
+}
+
+#' @rdname expressions-internal
+#' @export
+arraySubsetExpr <- function(x, subvars, subvar_id = c("alias", "name", "id")) {
+    isVarButNotType(x, "Array", "arraySubsetExpr")
+    subvar_id <- match.arg(subvar_id)
+    if (subvar_id != "id") {
+        if (!is.variable(x)) halt("Must subset by id when subsetting an expression")
+
+        if (subvar_id == "alias") {
+            matches <- match(subvars, aliases(subvariables(x)))
+        } else if (subvar_id == "name") {
+            matches <- match(subvars, names(subvariables(x)))
+        }
+
+        if (any(is.na(matches))) {
+            halt(
+                "Could not find subvariables with ", subvar_id, " ",
+                paste0("'", subvars[is.na(matches)], "'", collapse = ",")
+            )
+        }
+        subvars <- ids(subvariables(x))[matches]
+    }
+
+    zfuncExpr("array_subset", x, list(value = I(subvars)))
 }
 
 #' @rdname crunch-is

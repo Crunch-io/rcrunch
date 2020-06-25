@@ -81,6 +81,19 @@ Array expressions
 \item \code{tiered(x, tiers)} collapses a categorical array to the first value of tiers that is found
 (\code{tiers} use the category ids only, so is for advanced use only, \code{\link[=tieredVar]{tieredVar()}} is a nicer
 interface, but does not provide an expression, nor work on expressions).
+\item \code{alterCategoriesExpr(x, categories = NULL, category_order = NULL, subvariables = NULL)}
+Change the category names, order, or subvariable names of categorical or Array variables
+(can only modify existing ones, not add or remove categories or subvariables). \code{categories}
+is a \code{Categories} object or a list of lists, each with a \code{name} indicating the new name, as
+well as an \code{id} or \code{old_name} to identify which category to modify.
+\code{category_order} is either a numeric vector indicating category ids or a character vector
+indicating the names of the categories in the order they should be displayed
+(note that all categories must be specified). \code{subvariables} is  a list of lists, each with
+a \code{name} to rename the subvariable and an \code{alias}, \code{old_nam} or \code{id} to identify the subvariable.
+When \code{x} is an expression, all categories and subvariables must be identified by \code{id}.
+\item \code{arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))} Take a subset of an existing
+array variable, identifying the subvars by alias, name, or id (if \code{x} is an expression,
+you must use id).
 }
 
 Miscellaneous expressions
