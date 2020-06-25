@@ -24,7 +24,7 @@ test-ci: compress-fixtures |
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); lapply(urls(datasets()), crDELETE)'
 
-build: doc
+build: doc | compress-fixtures
 	R CMD build .
 
 check: build
