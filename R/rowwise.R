@@ -60,7 +60,7 @@ straightlineResponse <- function(x, name, ...) {
 #' @param tier_type Specify how `tiers` are identifying the categories, if left `NULL`,
 #' the default, assumes that a numeric vector is ids and a character vector is names.
 #'
-#' @return A Variable Defintiion
+#' @return A Variable Definition
 #' @export
 tieredVar <- function(x, tiers, name, ..., tier_type = NULL) {
     if (is.Expr(x)) {
@@ -99,7 +99,7 @@ tieredVar <- function(x, tiers, name, ..., tier_type = NULL) {
 #' @param x A crunch variable or expression
 #' @param name a character to use as the name of the case variable to create
 #' @param ... description, alias, and other metadata passed to [`VarDef()`]
-#' @seealso [`expresions()`] for the more flexible expressions that power
+#' @seealso [`expressions`] for the more flexible expressions that power
 #' these functions and [`rowDistinct()`] for other row-wise functions
 #'
 #' @return A Variable Definition

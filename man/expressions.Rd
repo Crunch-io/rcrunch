@@ -92,7 +92,7 @@ indicating the names of the categories in the order they should be displayed
 a \code{name} to rename the subvariable and an \code{alias}, \code{old_nam} or \code{id} to identify the subvariable.
 When \code{x} is an expression, all categories and subvariables must be identified by \code{id}.
 \item \code{arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))} Take a subset of an existing
-array variable, identifying the subvars by alias, name, or id (if \code{x} is an expression,
+array variable, identifying the subvariables by alias, name, or id (if \code{x} is an expression,
 you must use id).
 }
 

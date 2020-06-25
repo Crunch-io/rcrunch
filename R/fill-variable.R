@@ -12,7 +12,7 @@
 #'   matched to the existing categories
 #' @param data (optional) a crunch dataset to use. Specifying this means you don't have to put `dataset$`
 #'   in front of each variable name
-#' @param name A character ot use as the name of the variable to create
+#' @param name A character to use as the name of the variable to create
 #'
 #' @return A [`VariableDefinition`] that will create the new fill variable when assigned into the Dataset.
 #' @export
@@ -42,7 +42,7 @@
 #' makeFillVariable(v1, "dog" = v2, data = ds, name = "new fill")
 #' }
 makeFillVariable <- function(x, fills, ..., data = NULL, name) {
-    x <- evalSide(substitute(x), dat = data, eval_env = parent.frame())
+    x <- evalSide(substitute(x), data = data, eval_env = parent.frame())
     dots <- as.list(substitute(list(...)))[-1L]
     dots <- lapply(dots, evalSide, dat = data, eval_env = parent.frame())
     is_expr_or_var <- function(x) {

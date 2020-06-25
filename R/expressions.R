@@ -248,7 +248,7 @@ zfuncExpr <- function(fun, x, ...) {
 #'     a `name` to rename the subvariable and an `alias`, `old_nam` or `id` to identify the subvariable.
 #'     When `x` is an expression, all categories and subvariables must be identified by `id`.
 #'  - `arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))` Take a subset of an existing
-#'    array variable, identifying the subvars by alias, name, or id (if `x` is an expression,
+#'    array variable, identifying the subvariables by alias, name, or id (if `x` is an expression,
 #'    you must use id).
 #'
 #' Miscellaneous expressions

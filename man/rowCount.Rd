@@ -30,6 +30,6 @@ Quickly generate new variables that are based on row-wise summaries of Multiple 
 Variables.
 }
 \seealso{
-\code{\link[=expresions]{expresions()}} for the more flexible expressions that power
+\code{\link{expressions}} for the more flexible expressions that power
 these functions and \code{\link[=rowDistinct]{rowDistinct()}} for other row-wise functions
 }
