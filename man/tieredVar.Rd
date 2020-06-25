@@ -19,7 +19,7 @@ tieredVar(x, tiers, name, ..., tier_type = NULL)
 the default, assumes that a numeric vector is ids and a character vector is names.}
 }
 \value{
-A Variable Defintiion
+A Variable Definition
 }
 \description{
 Collapses a categorical array to the first value of tiers that is found.

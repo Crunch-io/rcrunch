@@ -22,7 +22,7 @@ matched to the existing categories}
 \item{data}{(optional) a crunch dataset to use. Specifying this means you don't have to put \verb{dataset$}
 in front of each variable name}
 
-\item{name}{A character ot use as the name of the variable to create}
+\item{name}{A character to use as the name of the variable to create}
 }
 \value{
 A \code{\link{VariableDefinition}} that will create the new fill variable when assigned into the Dataset.
