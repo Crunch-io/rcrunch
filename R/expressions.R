@@ -569,7 +569,7 @@ between <- function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
 setMethod("all", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
     isVarButNotType(x, "Array", "all")
     if (length(list(...)) > 0) halt("crunch::all() only works on arrays so can only take a single argument")
-    if (!isFALSE(na.rm)) warning("na.rm ignored by crunch::all()")
+    if (na.rm) warning("na.rm ignored by crunch::all()")
     zfuncExpr("all", x, ...)
 })
 
@@ -601,7 +601,7 @@ textContains <- function(x, regex, ignore_case = FALSE) {
 #' @export
 setMethod("anyNA", "CrunchVarOrExpr", function(x, recursive = FALSE) {
     isVarButNotType(x, "Array", "anyNA")
-    if (!isFALSE(recursive)) warning("recursive ignored by crunch::anyNA()")
+    if (recursive) warning("recursive ignored by crunch::anyNA()")
     zfuncExpr("any_missing", x)
 })
 
