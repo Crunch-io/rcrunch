@@ -161,7 +161,7 @@ with_test_authentication({
         ds <- newDataset(df)
 
         test_that("There are no hidden variables to start", {
-            expect_equivalent(index(hidden(ds)), list())
+            expect_equivalent(index(hiddenFolder(ds)), list())
             expect_identical(hiddenVariables(ds), c())
         })
 
@@ -169,7 +169,7 @@ with_test_authentication({
         test_that("hideVariables hides by alias", {
             expect_identical(names(ds)[1:2], c("v1", "v4"))
             expect_identical(hiddenVariables(ds), c("v2", "v3"))
-            expect_length(hidden(ds), 2)
+            expect_length(hiddenFolder(ds), 2)
             expect_length(variables(ds), ncol(df) - 2)
             expect_identical(dim(ds), c(nrow(df), ncol(df) - 2L))
         })

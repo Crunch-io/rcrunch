@@ -33,7 +33,7 @@ can handle. \code{toJSON} returns the JSON-serialized character object.
 }
 \description{
 \code{crunch} uses the \code{jsonlite} package for JSON serialization and
-deserialization. Unfortunately, \code{\link[jsonlite:toJSON]{jsonlite::toJSON()}}
+deserialization. Unfortunately, \code{\link[jsonlite:fromJSON]{jsonlite::toJSON()}}
 does not allow for defining S4 methods for other object types. So,
 \code{crunch::toJSON} wraps \code{jsonprep}, which exists to translate
 objects to base R objects, which \code{jsonlite::toJSON} can handle.
@@ -42,5 +42,5 @@ methods for it if you have other
 objects that you want to successfully serialize to JSON.
 }
 \seealso{
-\code{\link[jsonlite:toJSON]{jsonlite::toJSON()}}
+\code{\link[jsonlite:fromJSON]{jsonlite::toJSON()}}
 }

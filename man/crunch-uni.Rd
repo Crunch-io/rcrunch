@@ -57,5 +57,6 @@ DatetimeVariable}
 Univariate statistics on Crunch objects
 }
 \seealso{
-\code{\link[base:mean]{base::mean()}} \code{\link[stats:sd]{stats::sd()}} \code{\link[stats:median]{stats::median()}} \code{\link[base:min]{base::min()}} \code{\link[base:max]{base::max()}}
+\code{\link[base:mean]{base::mean()}} \code{\link[stats:sd]{stats::sd()}} \code{\link[stats:median]{stats::median()}} \code{\link[base:Extremes]{base::min()}}
+\code{\link[base:Extremes]{base::max()}}
 }

@@ -1,0 +1,25 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/c25696/folders/hidden/",
+    "index": {
+        "../../variables/000022/": {
+            "discarded": true,
+            "alias": "WantWorkLanguage",
+            "secure": false,
+            "name": "WantWorkLanguage",
+            "id": "000022",
+            "type": "text",
+            "notes": "",
+            "derived": false,
+            "hidden": true,
+            "description": "Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?"
+        }
+    },
+    "body": {
+        "name": "Hidden"
+    },
+    "graph": [
+        "../../variables/000022/"
+    ],
+    "size": 1
+}

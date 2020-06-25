@@ -42,11 +42,11 @@ bases(x, margin = NULL)
 \item{x}{a CrunchCube}
 
 \item{margin}{index, or vector of indices to generate margin for. See
-\code{\link[base:prop.table]{base::prop.table()}}. \code{bases()} accepts \code{0} as an additional valid value
-for \code{margin}, which yields the unweighted counts for the query.}
+\code{\link[base:proportions]{base::prop.table()}}. \code{bases()} accepts \code{0} as an additional
+valid value for \code{margin}, which yields the unweighted counts for the query.}
 
 \item{digits}{For \code{round}, the number of decimal places to round to. See
-\code{\link[base:round]{base::round()}}}
+\code{\link[base:Round]{base::round()}}}
 }
 \value{
 When called on CrunchCubes, these functions return an \code{array}.
@@ -55,9 +55,9 @@ the CrunchCubes it contains. Likewise, prop.table on a TabBookResult
 returns a list of lists of prop.tables.
 }
 \description{
-These functions provide an interface like \code{\link[base:margin.table]{base::margin.table()}} and
-\code{\link[base:prop.table]{base::prop.table()}} for the CrunchCube object. CrunchCubes contain richer
-metadata than standard R \code{array} objects, and they also conceal certain
+These functions provide an interface like \code{\link[base:marginSums]{base::margin.table()}} and
+\code{\link[base:proportions]{base::prop.table()}} for the CrunchCube object. CrunchCubes
+contain richer metadata than standard R \code{array} objects, and they also conceal certain
 complexity in the data structures from the user. In particular,
 multiple-response variables are generally represented as single dimensions in
 result tables, but in the actual data, they may comprise two dimensions.
@@ -76,5 +76,6 @@ argument to work like \code{margin.table}, or with \code{margin=0} gives all cel
 counts.
 }
 \seealso{
-\code{\link[base:margin.table]{base::margin.table()}} \code{\link[base:prop.table]{base::prop.table()}}
+\code{\link[base:marginSums]{base::margin.table()}}
+\code{\link[base:proportions]{base::prop.table()}}
 }

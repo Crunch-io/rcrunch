@@ -1,0 +1,93 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/5/",
+    "catalogs": {
+        "folders": "https://app.crunch.io/api/datasets/5/folders/",
+        "batches": "https://app.crunch.io/api/datasets/5/batches/",
+        "users": "https://app.crunch.io/api/datasets/5/users/",
+        "tags": "https://app.crunch.io/api/datasets/5/tags/",
+        "variables": "https://app.crunch.io/api/datasets/5/variables/",
+        "scripts": "https://app.crunch.io/api/datasets/5/scripts/",
+        "actions": "https://app.crunch.io/api/datasets/5/actions/",
+        "teams": "https://app.crunch.io/api/datasets/5/teams/",
+        "savepoints": "https://app.crunch.io/api/datasets/5/savepoints/",
+        "boxdata": "https://app.crunch.io/api/datasets/5/boxdata/",
+        "filters": "https://app.crunch.io/api/datasets/5/filters/",
+        "multitables": "https://app.crunch.io/api/datasets/5/multitables/",
+        "forks": "https://app.crunch.io/api/datasets/5/forks/",
+        "decks": "https://app.crunch.io/api/datasets/5/decks/",
+        "permissions": "https://app.crunch.io/api/datasets/5/permissions/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "project": "https://app.crunch.io/api/projects/personal/",
+        "variables_private": "https://app.crunch.io/api/datasets/5/variables/private/"
+    },
+    "fragments": {
+        "state": "https://app.crunch.io/api/datasets/5/state/",
+        "preferences": "https://app.crunch.io/api/datasets/5/preferences/",
+        "stream": "https://app.crunch.io/api/datasets/5/stream/",
+        "settings": "https://app.crunch.io/api/datasets/5/settings/",
+        "table": "https://app.crunch.io/api/datasets/5/table/",
+        "pk": "https://app.crunch.io/api/datasets/5/pk/",
+        "exclusion": "https://app.crunch.io/api/datasets/5/exclusion/"
+    },
+    "views": {
+        "second_order_analysis": "https://app.crunch.io/api/datasets/5/second_order_analysis/",
+        "cube": "https://app.crunch.io/api/datasets/5/cube/",
+        "export": "https://app.crunch.io/api/datasets/5/export/",
+        "summary": "https://app.crunch.io/api/datasets/5/summary/",
+        "applied_filters": "https://app.crunch.io/api/datasets/5/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "https://app.crunch.io/api/users/27a158/",
+        "current_editor": "https://app.crunch.io/api/users/27a158/",
+        "creation_time": "2020-02-21T18:05:02.386000",
+        "streaming": "no",
+        "owner": "https://app.crunch.io/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "4",
+        "size": {
+            "rows": 2,
+            "unfiltered_rows": 2,
+            "columns": 3
+        },
+        "palette": {
+
+        },
+        "script": null,
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "",
+        "end_date": null,
+        "access_time": "2020-02-21T18:05:02.120000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2020-02-21T18:05:13.561000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "https://app.crunch.io/api/accounts/00001/",
+        "name": "Private test",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "https://app.crunch.io/api/datasets/5/variables/weights/",
+        "variables_hier": "https://app.crunch.io/api/datasets/5/variables/hier/",
+        "variables_personal": "https://app.crunch.io/api/datasets/5/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "https://app.crunch.io/api/projects/378ad4/",
+        "editor_url": "https://app.crunch.io/api/users/27a158/",
+        "user_url": "https://app.crunch.io/api/users/27a158/"
+    }
+}

@@ -26,12 +26,12 @@ skip_on_local_env <- function(message) {
 }
 
 decompress_fixtures <- function(dest = tempdir()) {
-    untar(find_file("cubes.tgz"), exdir = tempdir())
+    untar(find_file("mocks.tgz"), exdir = tempdir())
 }
 
 cubePath <- function(filename) {
     # check the temp place
-    file <- file.path(tempdir(), filename)
+    file <- file.path(tempdir(), "mocks", filename)
 
     # if it's not there, see if it's in the package this should only be needed
     # for backwards compatibility wit hchild packages
@@ -82,7 +82,7 @@ cubify <- function(..., dims) {
 with_mock_crunch <- function(expr) {
     opts <- temp.options(
         crunch.api = "https://app.crunch.io/api/",
-        httptest.mock.paths = c(".", "../inst/", system.file(package = "crunch"))
+        httptest.mock.paths = c(".", "../mocks/", file.path(tempdir(), "mocks"))
     )
     with(
         opts,

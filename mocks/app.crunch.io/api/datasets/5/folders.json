@@ -1,0 +1,47 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/5/folders/",
+    "catalogs": {
+        "personal": "https://app.crunch.io/api/datasets/5/variables/personal/",
+        "hidden": "https://app.crunch.io/api/datasets/5/folders/hidden/",
+        "trash": "https://app.crunch.io/api/datasets/5/folders/trash/",
+        "parents": "https://app.crunch.io/api/datasets/5/folders/parents/",
+        "secure": "https://app.crunch.io/api/datasets/5/folders/secure/"
+    },
+    "description": "This is the variables' folder root",
+    "index": {
+        "../variables/height_inches/": {
+            "discarded": false,
+            "alias": "height_inches",
+            "secure": false,
+            "name": "height_inches",
+            "id": "000001",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        },
+        "../variables/gender/": {
+            "secure": false,
+            "derived": false,
+            "id": "000000",
+            "description": "",
+            "scale": "interval",
+            "name": "gender",
+            "notes": "",
+            "discarded": false,
+            "alias": "gender",
+            "hidden": false,
+            "type": "categorical"
+        }
+    },
+    "body": {
+        "name": "Root"
+    },
+    "graph": [
+        "../variables/height_inches/",
+        "../variables/gender/"
+    ],
+    "size": 2
+}

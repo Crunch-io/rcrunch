@@ -1,0 +1,58 @@
+{
+    "self": "https://app.crunch.io/api/datasets/1streaming/folders/",
+    "element": "shoji:catalog",
+    "catalogs": {
+        "hidden": "https://app.crunch.io/api/datasets/1streaming/folders/hidden/"
+    },
+    "size": 2,
+    "body": {
+        "name": ""
+    },
+    "index": {
+        "../variables/gender/": {
+            "name": "Gender",
+            "discarded": false,
+            "alias": "gender",
+            "type": "categorical",
+            "id": "66ae9881e3524f7db84970d556c34552",
+            "description": "Gender"
+        },
+        "../variables/starttime/": {
+            "name": "starttime",
+            "discarded": false,
+            "alias": "starttime",
+            "type": "datetime",
+            "id": "d7c21314ca9e453c93069168681a285c",
+            "description": "Interview Start Time",
+            "resolution": "D",
+            "rollup_resolution": "s"
+        },
+        "../variables/mymrset/": {
+            "name": "mymerset",
+            "discarded": false,
+            "alias": "mymrset",
+            "type": "multiple_response",
+            "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
+            "description": "Please select all that apply",
+            "subvariables": [
+                "./mymrset/subvariables/subvar2/",
+                "./mymrset/subvariables/subvar4/"
+            ],
+            "subvariables_catalog": "https://app.crunch.io/api/datasets/1streaming/variables/mymrset/subvariables/"
+        },
+        "../variables/mymrset2/": {
+            "name": "mymrset Combined",
+            "discarded": false,
+            "derived": true,
+            "alias": "mymrset2",
+            "type": "categorical_array",
+            "id": "12345",
+            "description": "Please select all that apply",
+            "subvariables": [
+                "https://app.crunch.io/api/datasets/1streaming/variables/subvar3/"
+            ],
+            "subvariables_catalog": "https://app.crunch.io/api/datasets/1streaming/variables/mymrset2/subvariables/"
+        }
+    },
+    "graph": ["../variables/gender/", "../variables/starttime/"]
+}

@@ -4,7 +4,8 @@
 #' DatetimeVariable
 #' @param ... additional arguments to summary statistic function
 #' @param na.rm logical: exclude missings?
-#' @seealso [base::mean()] [stats::sd()] [stats::median()] [base::min()] [base::max()]
+#' @seealso [base::mean()] [stats::sd()] [stats::median()] \code{\link[base:Extremes]{base::min()}}
+#' \code{\link[base:Extremes]{base::max()}}
 #' @name crunch-uni
 #' @aliases mean sd median min max
 setGeneric("mean")

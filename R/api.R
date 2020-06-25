@@ -16,7 +16,7 @@ crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(),
         if (!is.null(payload)) try(cat("\n", payload, "\n"), silent = TRUE)
     }
     FUN <- get(http.verb, envir = asNamespace("httpcache"))
-    x <- FUN(url, ..., config = c(get_crunch_config(), config))
+    x <- FUN(url, ..., config = c(get_crunch_config(), config, strip_token_if_outside(url)))
     out <- handleAPIresponse(x, special.statuses = status.handlers)
     return(out)
 }
@@ -303,4 +303,12 @@ featureFlag <- function(flag) {
     url <- sessionURL("feature_flag", "views")
     f <- crGET(url, query = list(feature_name = flag))
     return(isTRUE(f$active))
+}
+
+# Don't want Authorization header when going outside crunch domain
+#' @importFrom httr parse_url
+strip_token_if_outside <- function(url) {
+    api_hostname <- parse_url(getOption("crunch.api"))$hostname
+    url_hostname <- parse_url(url)$hostname
+    if (!identical(api_hostname, url_hostname)) add_headers(Authorization = "")
 }

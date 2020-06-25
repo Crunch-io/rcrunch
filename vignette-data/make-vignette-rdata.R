@@ -162,5 +162,5 @@ sub_snowdon <- subtotals(ds$snowdenleakapp)
 sub_con <- subtotals(ds$congapp)
 sub_crtab <- crtabs(~congapp + gender, ds)
 
-save.image(file="../vignettes/vignettes.RData")
+save.image(file="../vignettes/vignettes.RData", version = 2)
 with_consent(delete(ds)) ## cleanup

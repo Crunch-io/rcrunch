@@ -5,6 +5,7 @@
 * `newMultiTable()` now correctly passes `...`, so arguments like `is_public` work (#424)
 * `tabBook()` by default uses a new endpoint, which allows for more options. The old endpoint is deprecated, but while the server supports it, you can still use it. See [`?tabBook`](https://crunch.io/r/crunch/reference/tabBook.html) for more details.
 * `importMultitable()` has been removed because it was deprecated on the server.
+* `hiddenVariables()` works when the hidden variables folder has subdirectories (#372).
 
 # crunch 1.26.3
 * Can now `deriveArray()` using expressions to create the subvariables.

@@ -1,0 +1,99 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/3bd1a3/",
+    "catalogs": {
+        "folders": "/api/datasets/3bd1a3/folders/",
+        "users": "/api/datasets/3bd1a3/users/",
+        "views": "/api/datasets/3bd1a3/views/",
+        "variables": "/api/datasets/3bd1a3/variables/",
+        "actions": "/api/datasets/3bd1a3/actions/",
+        "boxdata": "/api/datasets/3bd1a3/boxdata/",
+        "filters": "/api/datasets/3bd1a3/filters/",
+        "scripts": "/api/datasets/3bd1a3/scripts/",
+        "permissions": "/api/datasets/3bd1a3/permissions/",
+        "batches": "/api/datasets/3bd1a3/batches/",
+        "tags": "/api/datasets/3bd1a3/tags/",
+        "teams": "/api/datasets/3bd1a3/teams/",
+        "savepoints": "/api/datasets/3bd1a3/savepoints/",
+        "multitables": "/api/datasets/3bd1a3/multitables/",
+        "forks": "/api/datasets/3bd1a3/forks/",
+        "decks": "/api/datasets/3bd1a3/decks/",
+        "parent": "/api/datasets/",
+        "project": "/api/projects/personal/",
+        "variables_private": "/api/datasets/3bd1a3/variables/private/"
+    },
+    "fragments": {
+        "preferences": "/api/datasets/3bd1a3/preferences/",
+        "stream": "/api/datasets/3bd1a3/stream/",
+        "settings": "/api/datasets/3bd1a3/settings/",
+        "exclusion": "/api/datasets/3bd1a3/exclusion/",
+        "publish": "/api/datasets/3bd1a3/publish/",
+        "state": "/api/datasets/3bd1a3/state/",
+        "table": "/api/datasets/3bd1a3/table/",
+        "pk": "/api/datasets/3bd1a3/pk/",
+        "schema": "/api/datasets/3bd1a3/schema/"
+    },
+    "views": {
+        "second_order_analysis": "/api/datasets/3bd1a3/second_order_analysis/",
+        "cube": "/api/datasets/3bd1a3/cube/",
+        "export": "/api/datasets/3bd1a3/export/",
+        "summary": "/api/datasets/3bd1a3/summary/",
+        "applied_filters": "/api/datasets/3bd1a3/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "/api/users/27a158/",
+        "current_editor": "/api/users/27a158/",
+        "creation_time": "2020-05-04T23:13:40.763000",
+        "streaming": "no",
+        "owner": "/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "3bd1a3",
+        "size": {
+            "rows": 1634,
+            "unfiltered_rows": 1634,
+            "columns": 2
+        },
+        "palette": {
+            "brand": {
+                "message": "#722580",
+                "primary": "#005283",
+                "secondary": "#107f65"
+            }
+        },
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "",
+        "end_date": null,
+        "access_time": "2020-05-04T23:13:40.411000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2020-05-04T23:13:43.139000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "/api/accounts/00001/",
+        "name": "House Size",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/3bd1a3/variables/weights/",
+        "variables_hier": "/api/datasets/3bd1a3/variables/hier/",
+        "variables_personal": "/api/datasets/3bd1a3/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "/api/projects/378ad4/",
+        "editor_url": "/api/users/27a158/",
+        "user_url": "/api/users/27a158/"
+    }
+}

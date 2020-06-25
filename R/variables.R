@@ -52,7 +52,12 @@ setDatasetVariables <- function(x, value) {
 
 #' @rdname variables
 #' @export
-setMethod("variables", "CrunchDataset", function(x) active(allVariables(x)))
+setMethod("variables", "CrunchDataset", function(x) {
+    variables <- allVariables(x)
+    variables <- variables[!(aliases(variables) %in% hiddenVariables(x, "alias"))]
+    variables <- variables[!(aliases(variables) %in% privateVariables(x, "alias"))]
+    variables
+})
 #' @rdname variables
 #' @export
 setMethod(

@@ -47,6 +47,6 @@ ds \%>\%
 }
 \seealso{
 \code{\link[=mv]{mv()}} to move entities to a folder; \code{\link[=rmdir]{rmdir()}} to delete a folder;
-\code{\link[base:setwd]{base::setwd()}} if you literally want to change your working directory in your
-local file system, which \code{cd()} does not do
+\code{\link[base:getwd]{base::setwd()}} if you literally want to change your working
+directory in your local file system, which \code{cd()} does not do
 }

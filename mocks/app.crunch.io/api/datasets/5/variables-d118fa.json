@@ -1,0 +1,52 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/5/variables/?relative=on",
+    "catalogs": {
+        "private": "https://app.crunch.io/api/datasets/5/variables/private/"
+    },
+    "orders": {
+        "personal": "https://app.crunch.io/api/datasets/5/variables/personal/",
+        "weights": "https://app.crunch.io/api/datasets/5/variables/weights/",
+        "hier": "https://app.crunch.io/api/datasets/5/variables/hier/"
+    },
+    "description": "List of Variables of this dataset",
+    "index": {
+        "height_inches/": {
+            "discarded": false,
+            "alias": "height_inches",
+            "secure": false,
+            "name": "height_inches",
+            "id": "000001",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        },
+        "id/": {
+            "discarded": false,
+            "alias": "id",
+            "secure": true,
+            "name": "ID Number",
+            "id": "000002",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        },
+        "gender/": {
+            "secure": false,
+            "derived": false,
+            "id": "000000",
+            "description": "",
+            "scale": "interval",
+            "name": "gender",
+            "notes": "",
+            "discarded": false,
+            "alias": "gender",
+            "hidden": false,
+            "type": "categorical"
+        }
+    }
+}
