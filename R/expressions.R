@@ -4,7 +4,8 @@
 #'
 #' @param x,e1,e2 inputs
 #' @param table,na.rm,selections,upper,lower,inclusive,regex,ignore_case,selections,collapse,tiers,
-#' cases,data,resolution,year,month,day,hours,minutes,seconds
+#' cases,data,resolution,year,month,day,hours,minutes,seconds,min,max,categories,category_order,
+#' subvariables
 #' Other parameters used in some functions, see details of [`expressions`] for more details.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
 #' `as.vector` returns an R vector.
@@ -251,12 +252,19 @@ zfuncExpr <- function(fun, x, ...) {
 #'    the data, ignoring the ones set to missing.
 #'  - `normalize(x)` for a `NumericVariable` (or expression that creates one) return values normalized
 #'    so that the sum of all values is equal to the number of observations.
+#'  - `trim(x, min, max)` for a `NumericVariable` (or expression that creates one) return values that
+#'    where all values less than `min` have been replaced with `min` and all values greater than
+#'    `max` have been
 #'  - `crunchDifftime(e1, e2, resolution)` Gets the difference between two datetimes as a number with
 #'    specified resolution units (one of `c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")`).
 #'  - `datetimeFromCols(year, month, day, hours, minutes, seconds)` create a `Datetime` variable from numeric variables
 #'    or expressions (`year`, `month`, and `day` are required, but `hours`, `minutes`, and `seconds` are
 #'    optional)
 #'  - `rollup(x, resolution)` sets the resolution of a datetime variable or expression, see `rollup()`
+#'  - `alterCategoriesExpr(x, categories, category_order, subvariables)` Change the category names,
+#'     order, or subvariable names of categorical or Array variables (can only modify existing ones, not add
+#'     or remove categories or subvariables). `categories`is a `Categories` object or a list of lists,
+#'     each with a name indicating the new name, as well as an id or
 #'
 #' @name expressions
 #' @param fun The name of the crunch database function to call
@@ -665,6 +673,79 @@ normalize <- function(x) {
     zfuncExpr("normalize", x)
 }
 
+#' @rdname expressions-internal
+#' @export
+trim <- function(x, min, max) {
+    isVarButNotType(x, "Numeric", "trim")
+    zfuncExpr("trim", x, min, max)
+}
+
+#' @rdname expressions-internal
+#' @export
+alterCategoriesExpr <- function(x, categories = NULL, category_order = NULL, subvariables = NULL) {
+    isVarButNotType(x, "Array", "alterCategoriesExpr")
+
+    if (is.categories(categories)) {
+        categories <- lapply(categories, unclass)
+    }
+    if (!is.null(categories)) {
+        old_names <- if (is.variable(x)) setNames(as.list(ids(categories(x))), names(categories(x))) else NULL
+
+        categories <- lapply(categories, function(cat) {
+            if ("id" %in% names(cat)) {
+                cat[!names(cat) %in% "selected"]
+            } else if ("old_name" %in% names(cat)) {
+                if (is.null(old_names)) halt("Must use category ids when modifying categories of an expression")
+                id <- getElement(old_names, cat$old_name)
+                if (is.null(id)) halt("Could not find category with old name '", cat$old_name, "'")
+                c(list(id = id), cat[!names(cat) %in% c("selected", "old_name")])
+            } else {
+                halt("Must specify either id or old_name for each category update")
+            }
+        })
+    }
+
+    if (is.character(category_order)) {
+        if (!is.variable(x)) halt("Must use category ids when reordering categories of an expression")
+
+        matches <- match(category_order, names(categories(x)))
+        if (any(is.na(matches))) {
+            halt(
+                "Categories ",
+                paste0("'", category_order[is.na(matches)], "'", collapse = ","),
+                " not found in data,"
+            )
+        }
+        category_order <- ids(categories(x))[matches]
+    }
+
+    if (!is.null(subvariables)) {
+        old_aliases <- if (is.variable(x)) setNames(as.list(ids(subvariables(x))), aliases(subvariables(x))) else NULL
+        old_names <- if (is.variable(x)) setNames(as.list(ids(subvariables(x))), names(subvariables(x))) else NULL
+        subvariables <- lapply(subvariables, function(sv) {
+            if (!"name" %in% names(sv)) halt("All subvariables must have a name to update")
+            if ("id" %in% names(sv)) {
+                list(id = as.character(sv$id), name = sv$name)
+            } else if (is.null(old_aliases)) {
+                halt("Must use subvariable ids when modifying subvariable names of an expression")
+            } else if ("alias" %in% names(sv)) {
+                id <- getElement(old_aliases, sv$alias)
+                if (is.null(id)) halt("Could not find subvariable with alias '", sv$alias, "'")
+                list(id = id, name = sv$name)
+            } else if ("old_name" %in% names(sv)) {
+                id <- getElement(old_names, sv$old_name)
+                if (is.null(id)) halt("Could not find subvariable with old name '", sv$old_name, "'")
+                list(id = id, name = sv$name)
+            }
+        })
+        args <- list()
+        if (!is.null(categories)) args$categories <- categories
+        if (!is.null(order)) args$order <- category_order
+        if (!is.null(subvariables)) args$subvariables <- subvariables
+
+        zfuncExpr("alter_categories", x, list(value = I(args)))
+    }
+}
 
 #' @rdname crunch-is
 #' @export

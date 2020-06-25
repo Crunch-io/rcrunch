@@ -98,6 +98,9 @@ in a \code{TextVariable} (or expression that creates one)
 the data, ignoring the ones set to missing.
 \item \code{normalize(x)} for a \code{NumericVariable} (or expression that creates one) return values normalized
 so that the sum of all values is equal to the number of observations.
+\item \code{trim(x, min, max)} for a \code{NumericVariable} (or expression that creates one) return values that
+where all values less than \code{min} have been replaced with \code{min} and all values greater than
+\code{max} have been
 \item \code{crunchDifftime(e1, e2, resolution)} Gets the difference between two datetimes as a number with
 specified resolution units (one of \code{c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")}).
 \item \code{datetimeFromCols(year, month, day, hours, minutes, seconds)} create a \code{Datetime} variable from numeric variables
