@@ -686,6 +686,55 @@ with_mock_crunch({
             "Could not find subvariable with alias 'XYZ'"
         )
     })
+
+    test_that("arraySubsetExpr", {
+        # aliases
+        expr <- arraySubsetExpr(ds$catarray, c("subvar1", "subvar3"), "alias")
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"array_subset","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
+                '{"value":["subvar1","subvar3"]}]}'
+            )
+        )
+
+        # names
+        expr <- arraySubsetExpr(ds$catarray, c("Second", "Last"), "name")
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"array_subset","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
+                '{"value":["subvar1","subvar3"]}]}'
+            )
+        )
+
+        # ids
+        expr <- arraySubsetExpr(ds$catarray, c("subvar1", "subvar3"), "id")
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"array_subset","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
+                '{"value":["subvar1","subvar3"]}]}'
+            )
+        )
+
+        # fail
+        expect_error(
+            arraySubsetExpr(ds$catarray, c("XYZ", "subvar3"), "alias"),
+            "Could not find subvariables with alias 'XYZ'"
+        )
+
+        # fail
+        expect_error(
+            arraySubsetExpr(asSelected(ds$catarray), c("subvar1", "subvar2"), "alias"),
+            "Must subset by id when subsetting an expression"
+        )
+
+        expect_error(arraySubsetExpr(ds$gender), "Array")
+    })
 })
 
 with_test_authentication({

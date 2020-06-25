@@ -48,6 +48,7 @@
 \alias{normalize}
 \alias{trim}
 \alias{alterCategoriesExpr}
+\alias{arraySubsetExpr}
 \title{Crunch expressions internal}
 \usage{
 x \%in\% table
@@ -140,11 +141,14 @@ alterCategoriesExpr(
   category_order = NULL,
   subvariables = NULL
 )
+
+arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))
 }
 \arguments{
 \item{x, e1, e2}{inputs}
 
-\item{table, na.rm, selections, upper, lower, inclusive, regex, ignore_case, selections, collapse, tiers, }{cases,data,resolution,year,month,day,hours,minutes,seconds,min,max
+\item{table, na.rm, selections, upper, lower, inclusive, regex, ignore_case, selections, collapse, tiers, }{cases,data,resolution,year,month,day,hours,minutes,seconds,min,max,categories,category_order,
+subvariables
 Other parameters used in some functions, see details of \code{\link{expressions}} for more details.}
 }
 \value{
