@@ -118,7 +118,6 @@ caseExpr <- function(..., cases) {
         )
     }
 
-    cases <- evalSide(substitute(cases), data, parent.frame())
     cases <- ensureValidCases(cases)
 
     # create the new categorical variable
