@@ -195,61 +195,64 @@ zfuncExpr <- function(fun, x, ...) {
 #' Logical expressions
 #' - These logical operators `==`, `!=`, `&`, `|`, `!`,`%in%`  work the same way as their
 #'   base R counterparts
-#'  - `is.selected(x)`, `is.notSelected(x)` return `CrunchLogicalExpr` whether a value is (or is not) in
-#'  a selected category (missing data is considered not selected, unlike `!` which preserves missing)
-#' - `any(x)` and `all(x)` work row-wise on `MultipleResponse` Variables (and expressions), though `na.rm`
-#'   is not implemented for `all(x)`.
-#'   `%ornm%` is similar to `|`, but where "not selected" beats "missing" (so `FALSE %ornm% NA` is
-#'   `FALSE` instead of `NA` as it would be with `FALSE | NA`)
+#'  - `is.selected(x)`, `is.notSelected(x)` return `CrunchLogicalExpr` whether a value is (or
+#'   is not) in a selected category (missing data is considered not selected, unlike `!` which
+#'   preserves missing)
+#' - `any(x)` and `all(x)` work row-wise on `MultipleResponse` Variables (and expressions),
+#'   though `na.rm` is not implemented for `all(x)`.
+#'   `%ornm%` is similar to `|`, but where "not selected" beats "missing" (so `FALSE %ornm% NA`
+#'    is `FALSE` instead of `NA` as it would be with `FALSE | NA`)
 #' - `isNoneAbove(x)` is equivalent to `!any(x)`
 #'
 #' Comparisons
 #' - Comparison operators `<`, `<=`, `>`, `>=` work the same way as their base R counterparts.
 #' - `between(x, lower, upper, inclusive)` to provide lower and upper bounds in a single
 #'   expression.
-#' - `textContains(x, regex, ignore_case)` looks for the regular expression pattern `regex` in a `TextVariable` (or
-#'   expression) `x` and returns a `CrunchLogicalExpr` indicating if it was found.
+#' - `textContains(x, regex, ignore_case)` looks for the regular expression pattern `regex` in
+#'   a `TextVariable` (or expression) `x` and returns a `CrunchLogicalExpr` indicating if it was
+#'   found.
 #'
 #' Missing data expressions
-#' - `is.na(x)`, `is.valid(x)` return `CrunchLogicalExpr` whether a single variable (or expression that creates one)
-#'   is missing (or not missing).
-#' - `anyNA(x)`, `allNA(x)`, `allValid(x)` return `CrunchLogicalExpr` whether all/any values in an array
-#'   variable (or expression that creates one) are missing (or not).
+#' - `is.na(x)`, `is.valid(x)` return `CrunchLogicalExpr` whether a single variable (or expression
+#'   that creates one) is missing (or not missing).
+#' - `anyNA(x)`, `allNA(x)`, `allValid(x)` return `CrunchLogicalExpr` whether all/any values in an
+#'   array variable (or expression that creates one) are missing (or not).
 #' - `completeCases(x)` returns an expression that is "selected" if all cases are non-missing,
 #'    "missing" if they are all missing, and "other" otherwise.
 #'
 #' Selection expressions
 #'  - `selectCategories(x, selections, collapse = TRUE)` takes a categorical variable (or array)
-#'     and marks categories as selected. `selections` should be a list of category names or values.
-#'     If `collapse` is `TRUE`, (the default), it collapses the categories to "selected", "other"
-#'     and "missing", but it is `FALSE`, then the old categories are preserved.
-#'  - `asSelected(x)` returns an expression that condenses a categorical into 3 categories ("selected", "other"
-#'     or "missing")
-#'  - `selectedDepth(x)` returns an expression that creates a numeric variable that counts the number of selections
-#'    across rows of an array variable (or expression that creates one)
-#'  - `arraySelections(x)` returns an expression that takes an array and creates an array with each variable
-#'    condensed to "selected", "other" or "missing" and an extra subvariable "__any__" that indicates whether
-#'    any is selected.
+#'     and marks categories as selected. `selections` should be a list of category names or
+#'     values. If `collapse` is `TRUE`, (the default), it collapses the categories to "selected",
+#'      "other" and "missing", but it is `FALSE`, then the old categories are preserved.
+#'  - `asSelected(x)` returns an expression that condenses a categorical into 3 categories
+#'    ("selected", "other" or "missing")
+#'  - `selectedDepth(x)` returns an expression that creates a numeric variable that counts the
+#'    number of selections across rows of an array variable (or expression that creates one)
+#'  - `arraySelections(x)` returns an expression that takes an array and creates an array with
+#'    each variable condensed to "selected", "other" or "missing" and an extra subvariable
+#'    "__any__" that indicates whether any is selected.
 #'
 #' Array expressions
-#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions, see
-#'    `deriveArray()` for more details
+#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions,
+#'    see `deriveArray()` for more details
 #'  - `tiered(x, tiers)` collapses a categorical array to the first value of tiers that is found
 #'    (`tiers` use the category ids only, so is for advanced use only, [`tieredVar()`] is a nicer
 #'    interface, but does not provide an expression, nor work on expressions).
 #'  - `alterCategoriesExpr(x, categories = NULL, category_order = NULL, subvariables = NULL)`
 #'     Change the category names, order, or subvariable names of categorical or Array variables
-#'      (can only modify existing ones, not add or remove categories or subvariables). `categories`
-#'     is a `Categories` object or a list of lists, each with a `name` indicating the new name, as
-#'     well as an `id` or `old_name` to identify which category to modify.
+#'     (can only modify existing ones, not add or remove categories or subvariables).
+#'     `categories` is a `Categories` object or a list of lists, each with a `name` indicating
+#'     the new name, as well as an `id` or `old_name` to identify which category to modify.
 #'     `category_order` is either a numeric vector indicating category ids or a character vector
 #'     indicating the names of the categories in the order they should be displayed
 #'     (note that all categories must be specified). `subvariables` is  a list of lists, each with
-#'     a `name` to rename the subvariable and an `alias`, `old_nam` or `id` to identify the subvariable.
-#'     When `x` is an expression, all categories and subvariables must be identified by `id`.
-#'  - `arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))` Take a subset of an existing
-#'    array variable, identifying the subvariables by alias, name, or id (if `x` is an expression,
-#'    you must use id).
+#'     a `name` to rename the subvariable and an `alias`, `old_nam` or `id` to identify the
+#'     subvariable. When `x` is an expression, all categories and subvariables must be identified
+#'     by `id`.
+#'  - `arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))` Take a subset of an
+#'    existing array variable, identifying the subvariables by alias, name, or id (if `x` is
+#'    an expression, you must use id).
 #'
 #' Miscellaneous expressions
 #'  - `caseExpr(..., cases)` Create a categorical variable from
@@ -263,17 +266,18 @@ zfuncExpr <- function(fun, x, ...) {
 #'     in a `TextVariable` (or expression that creates one)
 #'  - `unmissing(x)` for a `NumericVariable` (or expression that creates one) return the values of
 #'    the data, ignoring the ones set to missing.
-#'  - `normalize(x)` for a `NumericVariable` (or expression that creates one) return values normalized
-#'    so that the sum of all values is equal to the number of observations.
-#'  - `trim(x, min, max)` for a `NumericVariable` (or expression that creates one) return values that
-#'    where all values less than `min` have been replaced with `min` and all values greater than
-#'    `max` have been
-#'  - `crunchDifftime(e1, e2, resolution)` Gets the difference between two datetimes as a number with
-#'    specified resolution units (one of `c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")`).
-#'  - `datetimeFromCols(year, month, day, hours, minutes, seconds)` create a `Datetime` variable from numeric variables
-#'    or expressions (`year`, `month`, and `day` are required, but `hours`, `minutes`, and `seconds` are
-#'    optional)
-#'  - `rollup(x, resolution)` sets the resolution of a datetime variable or expression, see `rollup()`
+#'  - `normalize(x)` for a `NumericVariable` (or expression that creates one) return values
+#'    normalized so that the sum of all values is equal to the number of observations.
+#'  - `trim(x, min, max)` for a `NumericVariable` (or expression that creates one) return values
+#'    that where all values less than `min` have been replaced with `min` and all values greater
+#'    than `max` have been
+#'  - `crunchDifftime(e1, e2, resolution)` Gets the difference between two datetimes as a number
+#'     with specified resolution units (one of `c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")`).
+#'  - `datetimeFromCols(year, month, day, hours, minutes, seconds)` create a `Datetime` variable
+#'    from numeric variables or expressions (`year`, `month`, and `day` are required, but `hours`,
+#'    `minutes`, and `seconds` are optional)
+#'  - `rollup(x, resolution)` sets the resolution of a datetime variable or expression, see
+#'    [`resolution()`]
 #'
 #' @name expressions
 #' @param fun The name of the crunch database function to call
@@ -568,7 +572,9 @@ between <- function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
 #' @export
 setMethod("all", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
     isVarButNotType(x, "Array", "all")
-    if (length(list(...)) > 0) halt("crunch::all() only works on arrays so can only take a single argument")
+    if (length(list(...)) > 0) {
+        halt("crunch::all() only works on arrays so can only take a single argument")
+    }
     if (na.rm) warning("na.rm ignored by crunch::all()")
     zfuncExpr("all", x, ...)
 })
@@ -577,7 +583,9 @@ setMethod("all", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
 #' @export
 setMethod("any", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
     isVarButNotType(x, "Array", "any")
-    if (length(list(...)) > 0) halt("crunch::any() only works on arrays so can only take a single argument")
+    if (length(list(...)) > 0) {
+        halt("crunch::any() only works on arrays so can only take a single argument")
+    }
     func_name <- if (na.rm) "anynm" else "any"
     zfuncExpr(func_name, x)
 })
@@ -643,7 +651,11 @@ is.notSelected <- function(x) {
 #' @rdname expressions-internal
 #' @export
 asSelected <- function(x) {
-    isVarButNotType(x, c("Categorical", "Categorical Array", "Multiple Response"), "asSelected")
+    isVarButNotType(
+        x,
+        c("Categorical", "Categorical Array", "Multiple Response"),
+        "asSelected"
+    )
     zfuncExpr("as_selected", x)
 }
 
@@ -691,31 +703,58 @@ trim <- function(x, min, max) {
 
 #' @rdname expressions-internal
 #' @export
-alterCategoriesExpr <- function(x, categories = NULL, category_order = NULL, subvariables = NULL) {
+alterCategoriesExpr <- function(
+    x,
+    categories = NULL,
+    category_order = NULL,
+    subvariables = NULL
+) {
     isVarButNotType(x, "Array", "alterCategoriesExpr")
 
-    if (is.categories(categories)) {
-        categories <- lapply(categories, unclass)
+    args <- list()
+    if (!is.null(categories)) args$categories <- alter_cats_get_cat_ids(x, categories)
+    if (!is.null(order)) args$order <- alter_cats_get_order_ids(x, category_order)
+    if (!is.null(subvariables)) {
+        args$subvariables <- alter_cats_get_subvar_ids(x, subvariables)
     }
-    if (!is.null(categories)) {
-        old_names <- if (is.variable(x)) setNames(as.list(ids(categories(x))), names(categories(x))) else NULL
 
-        categories <- lapply(categories, function(cat) {
-            if ("id" %in% names(cat)) {
-                cat[!names(cat) %in% "selected"]
-            } else if ("old_name" %in% names(cat)) {
-                if (is.null(old_names)) halt("Must use category ids when modifying categories of an expression")
-                id <- getElement(old_names, cat$old_name)
-                if (is.null(id)) halt("Could not find category with old name '", cat$old_name, "'")
-                c(list(id = id), cat[!names(cat) %in% c("selected", "old_name")])
-            } else {
-                halt("Must specify either id or old_name for each category update")
+    zfuncExpr("alter_categories", x, list(value = I(args)))
+}
+
+alter_cats_get_cat_ids <- function(x, categories) {
+    if (is.null(categories)) return(categories)
+
+    if (is.variable(x)) {
+        old_names <- setNames(as.list(ids(categories(x))), names(categories(x)))
+    } else {
+        old_names <- NULL
+    }
+
+    categories <- lapply(categories, function(cat) {
+        if ("id" %in% names(cat)) {
+            cat[!names(cat) %in% "selected"]
+        } else if ("old_name" %in% names(cat)) {
+            if (is.null(old_names)) {
+                halt("Must use category ids when modifying categories of an expression")
             }
-        })
-    }
+            id <- getElement(old_names, cat$old_name)
+            if (is.null(id)) {
+                halt("Could not find category with old name '", cat$old_name, "'")
+            }
+            c(list(id = id), cat[!names(cat) %in% c("selected", "old_name")])
+        } else {
+            halt("Must specify either id or old_name for each category update")
+        }
+    })
+}
 
-    if (is.character(category_order)) {
-        if (!is.variable(x)) halt("Must use category ids when reordering categories of an expression")
+alter_cats_get_order_ids <- function(x, category_order) {
+    if (is.null(category_order) | is.numeric(category_order)) {
+        category_order
+    } else if (is.character(category_order)) {
+        if (!is.variable(x)) {
+            halt("Must use category ids when reordering categories of an expression")
+        }
 
         matches <- match(category_order, names(categories(x)))
         if (any(is.na(matches))) {
@@ -725,35 +764,43 @@ alterCategoriesExpr <- function(x, categories = NULL, category_order = NULL, sub
                 " not found in data,"
             )
         }
-        category_order <- ids(categories(x))[matches]
+        ids(categories(x))[matches]
+    } else {
+        halt("Expected category_order to be numeric vector of ids or character vector of names")
+    }
+}
+
+alter_cats_get_subvar_ids <- function(x, subvariables) {
+    if (is.null(subvariables)) return(subvariables)
+
+    if (is.variable(x)) {
+        old_aliases <- setNames(as.list(ids(subvariables(x))), aliases(subvariables(x)))
+        old_names <- setNames(as.list(ids(subvariables(x))), names(subvariables(x)))
+    } else {
+        old_aliases <- NULL
+        old_names <- NULL
     }
 
-    if (!is.null(subvariables)) {
-        old_aliases <- if (is.variable(x)) setNames(as.list(ids(subvariables(x))), aliases(subvariables(x))) else NULL
-        old_names <- if (is.variable(x)) setNames(as.list(ids(subvariables(x))), names(subvariables(x))) else NULL
-        subvariables <- lapply(subvariables, function(sv) {
-            if (!"name" %in% names(sv)) halt("All subvariables must have a name to update")
-            if ("id" %in% names(sv)) {
-                list(id = as.character(sv$id), name = sv$name)
-            } else if (is.null(old_aliases)) {
-                halt("Must use subvariable ids when modifying subvariable names of an expression")
-            } else if ("alias" %in% names(sv)) {
-                id <- getElement(old_aliases, sv$alias)
-                if (is.null(id)) halt("Could not find subvariable with alias '", sv$alias, "'")
-                list(id = id, name = sv$name)
-            } else if ("old_name" %in% names(sv)) {
-                id <- getElement(old_names, sv$old_name)
-                if (is.null(id)) halt("Could not find subvariable with old name '", sv$old_name, "'")
-                list(id = id, name = sv$name)
+    lapply(subvariables, function(sv) {
+        if (!"name" %in% names(sv)) halt("All subvariables must have a name to update")
+        if ("id" %in% names(sv)) {
+            list(id = as.character(sv$id), name = sv$name)
+        } else if (is.null(old_aliases)) {
+            halt("Must use subvariable ids when modifying subvariable names of an expression")
+        } else if ("alias" %in% names(sv)) {
+            id <- getElement(old_aliases, sv$alias)
+            if (is.null(id)) {
+                halt("Could not find subvariable with alias '", sv$alias, "'")
             }
-        })
-        args <- list()
-        if (!is.null(categories)) args$categories <- categories
-        if (!is.null(order)) args$order <- category_order
-        if (!is.null(subvariables)) args$subvariables <- subvariables
-
-        zfuncExpr("alter_categories", x, list(value = I(args)))
-    }
+            list(id = id, name = sv$name)
+        } else if ("old_name" %in% names(sv)) {
+            id <- getElement(old_names, sv$old_name)
+            if (is.null(id)) {
+                halt("Could not find subvariable with old name '", sv$old_name, "'")
+            }
+            list(id = id, name = sv$name)
+        }
+    })
 }
 
 #' @rdname expressions-internal

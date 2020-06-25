@@ -10,11 +10,12 @@
 #'   If x is an expression, the fills must be an id
 #' @param ... A sequence of named expressions or variables to use as fills, where the name will be
 #'   matched to the existing categories
-#' @param data (optional) a crunch dataset to use. Specifying this means you don't have to put `dataset$`
-#'   in front of each variable name
+#' @param data (optional) a crunch dataset to use. Specifying this means you don't have to put
+#'   `dataset$` in front of each variable name
 #' @param name A character to use as the name of the variable to create
 #'
-#' @return A [`VariableDefinition`] that will create the new fill variable when assigned into the Dataset.
+#' @return A [`VariableDefinition`] that will create the new fill variable when assigned into
+#'   the Dataset.
 #' @export
 #'
 #' @examples
