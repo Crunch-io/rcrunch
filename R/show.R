@@ -208,13 +208,14 @@ formatVersionCatalog <- function(x, from = Sys.time()) {
     return(data.frame(Name = names(x), Timestamp = ts, stringsAsFactors = FALSE))
 }
 
-.operators <- c("+", "-", "*", "/", "<", ">", ">=", "<=", "==", "!=", "&", "|", "%in%")
+.operators <- c("+", "-", "*", "/", "<", ">", ">=", "<=", "==", "!=", "&", "|", "%in%", "%ornm%")
 .funcs.z2r <- list(
     and = "&",
     or = "|",
     is_missing = "is.na",
     `in` = "%in%",
-    duplicates = "duplicated"
+    duplicates = "duplicated",
+    ornm = "%ornm%"
 )
 
 formatExpression <- function(expr) {
@@ -293,7 +294,9 @@ formatExpressionArgs <- function(args) {
 formatExpressionValue <- function(val, cats = NULL) {
     val <- expressionValue(val)
     if (length(cats)) {
-        val <- i2n(val, cats)
+        val_id_replace <- try(i2n(val, cats), silent = TRUE)
+        if (!inherits(val_id_replace, "try-error")) val <- val_id_replace
+        val
     } else {
         ## TODO: iterate over, replace {?:-1} with NA
     }
