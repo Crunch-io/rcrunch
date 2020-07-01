@@ -19,13 +19,14 @@ If x is an expression, the fills must be an id}
 \item{...}{A sequence of named expressions or variables to use as fills, where the name will be
 matched to the existing categories}
 
-\item{data}{(optional) a crunch dataset to use. Specifying this means you don't have to put \verb{dataset$}
-in front of each variable name}
+\item{data}{(optional) a crunch dataset to use. Specifying this means you don't have to put
+\verb{dataset$} in front of each variable name}
 
 \item{name}{A character to use as the name of the variable to create}
 }
 \value{
-A \code{\link{VariableDefinition}} that will create the new fill variable when assigned into the Dataset.
+A \code{\link{VariableDefinition}} that will create the new fill variable when assigned into
+the Dataset.
 }
 \description{
 Given a categorical variable, assign one or more categories to be filled in by
@@ -34,20 +35,10 @@ remain unchanged).
 }
 \examples{
 \dontrun{
-makeCaseVariable(case1 = ds$v1 == 1, case2 = ds$v2 == 2, name = "new case")
-makeCaseVariable(
-    cases = list(
-        list(expression = ds$v1 == 1, name = "case1"),
-        list(expression = ds$v2 == 2, name = "case2")
-    ),
-    name = "new case"
-)
-
-# different ways to specify else cases
 makeFillVariable(
     ds$v1,
     fills = list(
-        list(fill = ds$v1, name = "dog")
+        list(fill = ds$v2, name = "dog")
     ),
     name = "new fill"
 )
