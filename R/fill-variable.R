@@ -20,20 +20,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' makeCaseVariable(case1 = ds$v1 == 1, case2 = ds$v2 == 2, name = "new case")
-#' makeCaseVariable(
-#'     cases = list(
-#'         list(expression = ds$v1 == 1, name = "case1"),
-#'         list(expression = ds$v2 == 2, name = "case2")
-#'     ),
-#'     name = "new case"
-#' )
-#'
-#' # different ways to specify else cases
 #' makeFillVariable(
 #'     ds$v1,
 #'     fills = list(
-#'         list(fill = ds$v1, name = "dog")
+#'         list(fill = ds$v2, name = "dog")
 #'     ),
 #'     name = "new fill"
 #' )
