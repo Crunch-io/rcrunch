@@ -283,6 +283,7 @@ zfuncExpr <- function(fun, x, ...) {
 #' @param fun The name of the crunch database function to call
 #' @param x An input, a crunch variable, expression or R object
 #' @param ... Other arguments passed to the database function
+#' @export
 crunchdbFunc <- zfuncExpr
 
 #' @rdname expressions-internal
