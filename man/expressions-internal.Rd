@@ -27,7 +27,7 @@
 \alias{is.na,CrunchVarOrExpr-method}
 \alias{is.valid}
 \alias{bin}
-\alias{tiered}
+\alias{tieredExpr}
 \alias{selectCategories}
 \alias{between}
 \alias{all,CrunchVarOrExpr-method}
@@ -95,7 +95,7 @@ is.valid(x)
 
 bin(x)
 
-tiered(x, tiers)
+tieredExpr(x, tiers)
 
 selectCategories(x, selections, collapse = TRUE)
 
