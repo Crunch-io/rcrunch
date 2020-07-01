@@ -373,6 +373,7 @@ for (i in c("==", "!=")) {
     setMethod(i, c("CrunchVariable", "CrunchVariable"), crunch.ops(i))
     setMethod(i, c("CrunchExpr", "CrunchVariable"), crunch.ops(i))
     setMethod(i, c("CrunchVariable", "CrunchExpr"), crunch.ops(i))
+    setMethod(i, c("CrunchExpr", "CrunchExpr"), crunch.ops(i))
 }
 
 #' @rdname expressions-internal
@@ -436,9 +437,30 @@ bin <- function(x) zfuncExpr("bin", x)
 
 #' @rdname expressions-internal
 #' @export
-tiered <- function(x, tiers) {
+tieredExpr <- function(x, tiers) {
     isVarButNotType(x, "Array", "tiered")
-    zfuncExpr("tiered", x, list(value = I(tiers)))
+
+    if (is.null(names(tiers)) && is.numeric(tiers)) names(tiers) <- rep("id", length(tiers))
+    if (is.null(names(tiers)) && is.character(tiers)) names(tiers) <- rep("name", length(tiers))
+
+    if (is.variable(x)) {
+        cats <- categories(x)
+        ids <- mapply(names(tiers), tiers, FUN = function(type, tier) {
+            matches <- switch(
+                type,
+                "id" = ids(categories(x)) == tier,
+                "name" = names(categories(x)) == tier,
+                "value" = values(categories(x)) == tier,
+                halt("Unexpected tier_type '", type, "'")
+            )
+            if (!any(matches)) halt("Cound find tier ", tier, " in ", type)
+            if (sum(matches) > 0) halt("tier ", tier, " is not unique ", type)
+            ids(categories(x)[matches])
+        }, SIMPLIFY = FALSE)
+    }
+    cats <- categories(x)
+
+    zfuncExpr("tiered", x, list(value = I(as.numeric(tiers))))
 }
 
 #' @rdname crunch-extract
@@ -710,7 +732,7 @@ alterCategoriesExpr <- function(
     category_order = NULL,
     subvariables = NULL
 ) {
-    isVarButNotType(x, "Array", "alterCategoriesExpr")
+    isVarButNotType(x, c("Array", "Categorical"), "alterCategoriesExpr")
 
     args <- list()
     if (!is.null(categories)) args$categories <- alter_cats_get_cat_ids(x, categories)
