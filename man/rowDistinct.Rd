@@ -14,10 +14,11 @@ straightlineResponse(x, name, ...)
 
 \item{name}{a character to use as the name of the case variable to create}
 
-\item{...}{Optional attributes, like \code{description}, to set on the new variable (passed to \code{VarDef()})}
+\item{...}{Optional attributes, like \code{description}, to set on the new variable (passed to
+\code{VarDef()})}
 
-\item{na.rm}{Whether to count missing data as a separate category (all missing categories will be
-lumped together)}
+\item{na.rm}{Whether to count missing data as a separate category (all missing categories will
+be lumped together)}
 }
 \value{
 A Variable Definition, which can be used to create a new \code{CrunchVariable}
