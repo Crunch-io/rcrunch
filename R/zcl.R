@@ -48,7 +48,20 @@ setMethod("zcl", "CrunchFilter", function(x) x@body$expression)
 
 zfunc <- function(func, ...) {
     ## Wrapper that creates ZCL function syntax
-    return(list(`function` = func, args = lapply(list(...), zcl)))
+    dots <- lapply(list(...), zcl)
+    if (is.null(names(dots))) {
+        unnamed_dots <- dots
+        named_dots <- NULL
+    } else {
+        unnamed_dots <- dots[names(dots) == ""]
+        named_dots <- dots[names(dots) != ""]
+    }
+
+    out <- list(`function` = func)
+    if (!is.null(unnamed_dots)) out["args"] <- list(unnamed_dots)
+    if (!is.null(named_dots)) out["kwargs"] <- list(named_dots)
+
+    return(out)
 }
 
 # check if a template or query has a particular ZCL function somewhere in it recursively.

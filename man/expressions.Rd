@@ -31,12 +31,13 @@ Logical expressions
 \itemize{
 \item These logical operators \code{==}, \code{!=}, \code{&}, \code{|}, \code{!},\code{\%in\%}  work the same way as their
 base R counterparts
-\item \code{is.selected(x)}, \code{is.notSelected(x)} return \code{CrunchLogicalExpr} whether a value is (or is not) in
-a selected category (missing data is considered not selected, unlike \code{!} which preserves missing)
-\item \code{any(x)} and \code{all(x)} work row-wise on \code{MultipleResponse} Variables (and expressions), though \code{na.rm}
-is not implemented for \code{all(x)}.
-\verb{\%ornm\%} is similar to \code{|}, but where "not selected" beats "missing" (so \code{FALSE \%ornm\% NA} is
-\code{FALSE} instead of \code{NA} as it would be with \code{FALSE | NA})
+\item \code{is.selected(x)}, \code{is.notSelected(x)} return \code{CrunchLogicalExpr} whether a value is (or
+is not) in a selected category (missing data is considered not selected, unlike \code{!} which
+preserves missing)
+\item \code{any(x)} and \code{all(x)} work row-wise on \code{MultipleResponse} Variables (and expressions),
+though \code{na.rm} is not implemented for \code{all(x)}.
+\verb{\%ornm\%} is similar to \code{|}, but where "not selected" beats "missing" (so \code{FALSE \%ornm\% NA}
+is \code{FALSE} instead of \code{NA} as it would be with \code{FALSE | NA})
 \item \code{isNoneAbove(x)} is equivalent to \code{!any(x)}
 }
 
@@ -45,16 +46,17 @@ Comparisons
 \item Comparison operators \code{<}, \code{<=}, \code{>}, \code{>=} work the same way as their base R counterparts.
 \item \code{between(x, lower, upper, inclusive)} to provide lower and upper bounds in a single
 expression.
-\item \code{textContains(x, regex, ignore_case)} looks for the regular expression pattern \code{regex} in a \code{TextVariable} (or
-expression) \code{x} and returns a \code{CrunchLogicalExpr} indicating if it was found.
+\item \code{textContains(x, regex, ignore_case)} looks for the regular expression pattern \code{regex} in
+a \code{TextVariable} (or expression) \code{x} and returns a \code{CrunchLogicalExpr} indicating if it was
+found.
 }
 
 Missing data expressions
 \itemize{
-\item \code{is.na(x)}, \code{is.valid(x)} return \code{CrunchLogicalExpr} whether a single variable (or expression that creates one)
-is missing (or not missing).
-\item \code{anyNA(x)}, \code{allNA(x)}, \code{allValid(x)} return \code{CrunchLogicalExpr} whether all/any values in an array
-variable (or expression that creates one) are missing (or not).
+\item \code{is.na(x)}, \code{is.valid(x)} return \code{CrunchLogicalExpr} whether a single variable (or expression
+that creates one) is missing (or not missing).
+\item \code{anyNA(x)}, \code{allNA(x)}, \code{allValid(x)} return \code{CrunchLogicalExpr} whether all/any values in an
+array variable (or expression that creates one) are missing (or not).
 \item \code{completeCases(x)} returns an expression that is "selected" if all cases are non-missing,
 "missing" if they are all missing, and "other" otherwise.
 }
@@ -62,38 +64,39 @@ variable (or expression that creates one) are missing (or not).
 Selection expressions
 \itemize{
 \item \code{selectCategories(x, selections, collapse = TRUE)} takes a categorical variable (or array)
-and marks categories as selected. \code{selections} should be a list of category names or values.
-If \code{collapse} is \code{TRUE}, (the default), it collapses the categories to "selected", "other"
-and "missing", but it is \code{FALSE}, then the old categories are preserved.
-\item \code{asSelected(x)} returns an expression that condenses a categorical into 3 categories ("selected", "other"
-or "missing")
-\item \code{selectedDepth(x)} returns an expression that creates a numeric variable that counts the number of selections
-across rows of an array variable (or expression that creates one)
-\item \code{arraySelections(x)} returns an expression that takes an array and creates an array with each variable
-condensed to "selected", "other" or "missing" and an extra subvariable "\strong{any}" that indicates whether
-any is selected.
+and marks categories as selected. \code{selections} should be a list of category names or
+values. If \code{collapse} is \code{TRUE}, (the default), it collapses the categories to "selected",
+"other" and "missing", but it is \code{FALSE}, then the old categories are preserved.
+\item \code{asSelected(x)} returns an expression that condenses a categorical into 3 categories
+("selected", "other" or "missing")
+\item \code{selectedDepth(x)} returns an expression that creates a numeric variable that counts the
+number of selections across rows of an array variable (or expression that creates one)
+\item \code{arraySelections(x)} returns an expression that takes an array and creates an array with
+each variable condensed to "selected", "other" or "missing" and an extra subvariable
+"\strong{any}" that indicates whether any is selected.
 }
 
 Array expressions
 \itemize{
-\item \code{makeFrame(x)} an expression that creates an array from existing variables or expressions, see
-\code{deriveArray()} for more details
+\item \code{makeFrame(x)} an expression that creates an array from existing variables or expressions,
+see \code{deriveArray()} for more details
 \item \code{tiered(x, tiers)} collapses a categorical array to the first value of tiers that is found
 (\code{tiers} use the category ids only, so is for advanced use only, \code{\link[=tieredVar]{tieredVar()}} is a nicer
 interface, but does not provide an expression, nor work on expressions).
 \item \code{alterCategoriesExpr(x, categories = NULL, category_order = NULL, subvariables = NULL)}
 Change the category names, order, or subvariable names of categorical or Array variables
-(can only modify existing ones, not add or remove categories or subvariables). \code{categories}
-is a \code{Categories} object or a list of lists, each with a \code{name} indicating the new name, as
-well as an \code{id} or \code{old_name} to identify which category to modify.
+(can only modify existing ones, not add or remove categories or subvariables).
+\code{categories} is a \code{Categories} object or a list of lists, each with a \code{name} indicating
+the new name, as well as an \code{id} or \code{old_name} to identify which category to modify.
 \code{category_order} is either a numeric vector indicating category ids or a character vector
 indicating the names of the categories in the order they should be displayed
 (note that all categories must be specified). \code{subvariables} is  a list of lists, each with
-a \code{name} to rename the subvariable and an \code{alias}, \code{old_nam} or \code{id} to identify the subvariable.
-When \code{x} is an expression, all categories and subvariables must be identified by \code{id}.
-\item \code{arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))} Take a subset of an existing
-array variable, identifying the subvariables by alias, name, or id (if \code{x} is an expression,
-you must use id).
+a \code{name} to rename the subvariable and an \code{alias}, \code{old_nam} or \code{id} to identify the
+subvariable. When \code{x} is an expression, all categories and subvariables must be identified
+by \code{id}.
+\item \code{arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))} Take a subset of an
+existing array variable, identifying the subvariables by alias, name, or id (if \code{x} is
+an expression, you must use id).
 }
 
 Miscellaneous expressions
@@ -109,16 +112,17 @@ for more details.
 in a \code{TextVariable} (or expression that creates one)
 \item \code{unmissing(x)} for a \code{NumericVariable} (or expression that creates one) return the values of
 the data, ignoring the ones set to missing.
-\item \code{normalize(x)} for a \code{NumericVariable} (or expression that creates one) return values normalized
-so that the sum of all values is equal to the number of observations.
-\item \code{trim(x, min, max)} for a \code{NumericVariable} (or expression that creates one) return values that
-where all values less than \code{min} have been replaced with \code{min} and all values greater than
-\code{max} have been
-\item \code{crunchDifftime(e1, e2, resolution)} Gets the difference between two datetimes as a number with
-specified resolution units (one of \code{c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")}).
-\item \code{datetimeFromCols(year, month, day, hours, minutes, seconds)} create a \code{Datetime} variable from numeric variables
-or expressions (\code{year}, \code{month}, and \code{day} are required, but \code{hours}, \code{minutes}, and \code{seconds} are
-optional)
-\item \code{rollup(x, resolution)} sets the resolution of a datetime variable or expression, see \code{rollup()}
+\item \code{normalize(x)} for a \code{NumericVariable} (or expression that creates one) return values
+normalized so that the sum of all values is equal to the number of observations.
+\item \code{trim(x, min, max)} for a \code{NumericVariable} (or expression that creates one) return values
+that where all values less than \code{min} have been replaced with \code{min} and all values greater
+than \code{max} have been
+\item \code{crunchDifftime(e1, e2, resolution)} Gets the difference between two datetimes as a number
+with specified resolution units (one of \code{c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")}).
+\item \code{datetimeFromCols(year, month, day, hours, minutes, seconds)} create a \code{Datetime} variable
+from numeric variables or expressions (\code{year}, \code{month}, and \code{day} are required, but \code{hours},
+\code{minutes}, and \code{seconds} are optional)
+\item \code{rollup(x, resolution)} sets the resolution of a datetime variable or expression, see
+\code{\link[=resolution]{resolution()}}
 }
 }
