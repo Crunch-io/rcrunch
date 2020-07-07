@@ -40,3 +40,38 @@ survey questions that ask how the respondent would rate a tv show from
 1-5. Array variables allow you to display all of their ratings in a compact
 table rather than a set of distinct variables.
 }
+\examples{
+\dontrun{
+# Derive an array from 3 existing variables (leaves the old variables in the dataset)
+ds$enjoy_array <- deriveArray(ds[c("enjoy1", "enjoy2", "enjoy3)], name = "Array of brand enjoyment")
+
+# Derive an MR from 3 existing variables (again, leaves the old variables in the dataset)
+ds$enjoy_array <- deriveArray(
+  ds[c("enjoy1", "enjoy2", "enjoy3)],
+  name = "Array of brand enjoyment",
+  selections = c("Love it", "Like it")
+)
+
+# You can also derive an MR from Variable Definitions to make arrays out of transformations
+# of existing variables.
+ds$overlapping_age <- deriveArray(
+  list(
+    VarDef(ds$age < 18, name = "Kids"),
+    VarDef(ds$age >= 13 & ds$age < 20, name = "Teenagers"),
+    VarDef(ds$age >= 18 & ds$age < 30, name = "Young adults"),
+    VarDef(ds$age >= 18, name = "Adults"),
+  ),
+  name = "Overlapping age MR"
+)
+
+# `makeArray()` and `makeMR()` are like `deriveArray()`but only take existing variables
+# and moves them so that they only exist within the array.
+ds$enjoy_array <- makeArray(ds[c("enjoy1", "enjoy2", "enjoy3)], name = "Array of brand enjoyment")
+
+ds$enjoy_array <- makeMR(
+  ds[c("enjoy1", "enjoy2", "enjoy3)],
+  name = "Array of brand enjoyment",
+  selections = c("Love it", "Like it")
+)
+}
+}
