@@ -1,4 +1,5 @@
 FROM rstudio/r-base:3.6-bionic
+ARG RPROXY_CREDS
 ENV R_LIB=/home/jenkins/R/master
 ENV R_LIBS=${R_LIB}
 USER root
@@ -10,7 +11,7 @@ COPY --chown=jenkins:jenkins . /home/jenkins/
 WORKDIR /home/jenkins/
 RUN echo 'local({\n\
     r <- getOption("repos")\n\
-    r["Nexus"] <- "https://rproxy:I0VktB3jZdplfsEgeiAR@ui.nexus.crint.net/repository/rcrunch/"\n\
+    r["Nexus"] <- "https://'${RPROXY_CREDS}'@ui.nexus.crint.net/repository/rcrunch/"\n\
     options(repos = r)\n\
 })'> /usr/lib/R/etc/Rprofile.site
 RUN make install-ci
