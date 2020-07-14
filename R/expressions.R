@@ -868,11 +868,11 @@ alterArrayExpr <- function(x, add = NULL, order = NULL, remove = NULL, subrefere
 
 new_array_ids <- function(array, num) {
     if (is.variable(array)) {
-        existing_ids <- ids(subvariables(ds$alter))
+        existing_ids <- ids(subvariables(array))
     } else {
         existing_ids <- try({
-            xflat <- unlist(x)
-            unlist(xflat)[grepl("\\.map\\.", names(xflat))]
+            arrayflat <- unlist(array)
+            unlist(arrayflat)[grepl("\\.map\\.", names(arrayflat))]
         }, silent = TRUE)
         if (inherits(existing_ids, "try-error")) existing_ids <- c()
     }
