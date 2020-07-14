@@ -622,8 +622,8 @@ with_mock_crunch({
     test_that("alterCategoriesExpr - expr: names (failures)", {
         # Wrong var type
         expect_error(
-            alterCategoriesExpr(ds$gender, list(list(id = 1, name = "AAA"))),
-            "Array"
+            alterCategoriesExpr(ds$birthyr, list(list(id = 1, name = "AAA"))),
+            "'Array', 'Categorical'"
         )
 
         # Rely on names when have an expression

@@ -147,9 +147,9 @@ datetimeFromCols <- function(year, month, day, hour = NULL, minute = NULL, secon
     isVarButNotType(year, "Numeric", "datetimeFromCols")
     isVarButNotType(month, "Numeric", "datetimeFromCols")
     isVarButNotType(day, "Numeric", "datetimeFromCols")
-    isVarButNotType(hour, "Numeric", "datetimeFromCols")
-    isVarButNotType(minute, "Numeric", "datetimeFromCols")
-    isVarButNotType(second, "Numeric", "datetimeFromCols")
+    if (!is.null(hour)) isVarButNotType(hour, "Numeric", "datetimeFromCols")
+    if (!is.null(minute)) isVarButNotType(minute, "Numeric", "datetimeFromCols")
+    if (!is.null(second)) isVarButNotType(second, "Numeric", "datetimeFromCols")
 
     ex <- zfunc("datetime", year, month, day, hour, minute, second)
     ds.url <- unique(unlist(lapply(list(year, month, day), datasetReference))) %||% ""
@@ -445,20 +445,19 @@ tieredExpr <- function(x, tiers) {
 
     if (is.variable(x)) {
         cats <- categories(x)
-        ids <- mapply(names(tiers), tiers, FUN = function(type, tier) {
+        tiers <- mapply(names(tiers), tiers, FUN = function(type, tier) {
             matches <- switch(
                 type,
-                "id" = ids(categories(x)) == tier,
-                "name" = names(categories(x)) == tier,
-                "value" = values(categories(x)) == tier,
+                "id" = ids(cats) %in% tier,
+                "name" = names(cats) %in% tier,
+                "value" = values(cats) %in% tier,
                 halt("Unexpected tier_type '", type, "'")
             )
-            if (!any(matches)) halt("Cound find tier ", tier, " in ", type)
-            if (sum(matches) > 0) halt("tier ", tier, " is not unique ", type)
-            ids(categories(x)[matches])
+            if (!any(matches)) halt("Could not find tier ", tier, " in ", type)
+            if (sum(matches) > 1) halt("tier ", tier, " is not unique ", type)
+            ids(cats)[matches]
         }, SIMPLIFY = FALSE)
     }
-    cats <- categories(x)
 
     zfuncExpr("tiered", x, list(value = I(as.numeric(tiers))))
 }
@@ -891,6 +890,9 @@ is.CrunchExpr <- function(x) inherits(x, "CrunchExpr")
 is.Expr <- is.CrunchExpr
 
 isVarButNotType <- function(x, types, caller) {
+    if (is.null(x)) halt(
+        "Expected a crunch variable or expression but got `NULL`, did you misspell a variable?"
+    )
     type_check <- lapply(types, function(type) {
         switch(
             type,
@@ -905,7 +907,7 @@ isVarButNotType <- function(x, types, caller) {
         )
     })
     if (is.variable(x) && !any(vapply(type_check, function(func) func(x), logical(1)))) {
-        type_str <- paste0("'", types, "'", collapse = ",")
-        halt("variable must be of type '", type_str, "' for ", caller, "().")
+        type_str <- paste0("'", types, "'", collapse = ", ")
+        halt("variable must be of type ", type_str, " for ", caller, "().")
     }
 }
