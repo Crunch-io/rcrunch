@@ -1,11 +1,21 @@
-# crunch (development version)
-* You can now view and modify the weight on a slide using `weight()` and `weight()<-` (#440)
-* https verification can be disabled during testing by setting environment variable `R_TEST_VERIFY_SSL=FALSE`
-* You can now use a named `filter` or `filter` object when using `tabbook()`. Filtering by expression in the dataset argument is also supported again.
-* `newMultiTable()` now correctly passes `...`, so arguments like `is_public` work (#424)
+# crunch 1.27.0
+
+## New features
+* You can now mark variables private (and remove their private status)
 * `tabBook()` by default uses a new endpoint, which allows for more options. The old endpoint is deprecated, but while the server supports it, you can still use it. See [`?tabBook`](https://crunch.io/r/crunch/reference/tabBook.html) for more details.
-* `importMultitable()` has been removed because it was deprecated on the server.
+* You can now view and modify the weight on a slide using `weight()` and `weight()<-` (#440)
+* You can now use a named `filter` or `filter` object when using `tabbook()`. Filtering by expression in the dataset argument is also supported again.
+* You can now cast crunch expressions to other variable types without saving as a variable first. 
+
+## Bug fixes
+* `newMultiTable()` now correctly passes `...`, so arguments like `is_public` work (#424)
 * `hiddenVariables()` works when the hidden variables folder has subdirectories (#372).
+
+## Internal Changes & Deprecations
+* `importMultitable()` has been removed because it was deprecated on the server.
+* crunch now uses folders for hidden 
+* https verification can be disabled during testing by setting environment variable `R_TEST_VERIFY_SSL=FALSE`
+* All mock test files are compressed
 
 # crunch 1.26.3
 * Can now `deriveArray()` using expressions to create the subvariables.
