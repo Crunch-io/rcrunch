@@ -6,7 +6,7 @@ function(response) {
     if (response$url == "https://app.crunch.io/api/public/login/") {
         response$request$options[["postfields"]] <- NULL
     }
-    out <- response %>%
+    response %>%
         redact_auth() %>%
         gsub_response("([0-9a-f]{6})[0-9a-f]{26}", "\\1") %>% ## Prune UUIDs
         gsub_response("[0-9A-Za-z]{22}([0-9]{6})", "\\1") %>% # UUIDs in variables now too
@@ -14,7 +14,4 @@ function(response) {
             "https.//app.crunch.io/api/progress/[^\"].*?/",
             "https://app.crunch.io/api/progress/"
         )
-
-    if (grepl("%20", out$request$url) | grepl(" ", out$request$url)) browser()
-    out
 }
