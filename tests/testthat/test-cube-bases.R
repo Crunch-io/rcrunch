@@ -30,7 +30,7 @@ with_mock_crunch({
     ds <- loadDataset("test ds")
     m <- multitables(ds)[[1]]
     with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
-        book1 <- tabBook(m, data = ds, format = "json")
+        book1 <- tabBook(m, data = ds, output_format = "json")
     })
 
     test_that("bases methods exist for TabBookResult and MultitableResult", {
