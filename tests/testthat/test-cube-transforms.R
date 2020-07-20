@@ -1257,11 +1257,7 @@ with_test_authentication({
                 "Rocks+Birds (incl. missing)"
             ))
         )
-        trans_pets <- showTransforms(ds$pets)
 
-        expect_is(trans_pets, "array")
-        expect_equal(dim(trans_pets), 10)
-        expect_equivalent(trans_pets, cat_show_trans)
 
         skip_on_local_env("Pretty formatting isn't exactly the same in many terminals")
         expect_prints(
@@ -1283,6 +1279,10 @@ with_test_authentication({
             ),
             fixed = TRUE
         )
+
+        expect_is(trans_pets, "array")
+        expect_equal(dim(trans_pets), 10)
+        expect_equivalent(trans_pets, cat_show_trans)
     })
 
     test_that("showTransforms works on a variable", {
