@@ -26,7 +26,7 @@ skip_on_local_env <- function(message) {
 }
 
 decompress_fixtures <- function(dest = tempdir()) {
-    untar(find_file("mocks.tgz"), exdir = tempdir())
+    untar(system.file("mocks.tgz", package = "crunch"), exdir = tempdir())
 }
 
 cubePath <- function(filename) {
@@ -246,3 +246,6 @@ crunch_test_teardown_check <- function() {
     cat("Total teardown: ")
     print(get("cleanup.runtime", envir = globalenv()))
 }
+
+# Make compressed fixtures available to downstream packages
+decompress_fixtures()
