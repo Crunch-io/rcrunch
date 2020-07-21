@@ -50,6 +50,11 @@ test_that("from8601 returns Date class if given only dates", {
     expect_identical(from8601(c("2015-02-12", NA)), as.Date(c("2015-02-12", NA)))
 })
 
+test_that("from8601 works for month & year resolution (converts to first day)", {
+    expect_identical(from8601("2015-02"), as.Date("2015-02-01"))
+    expect_identical(from8601(c("2015", NA)), as.Date(c("2015-01-01", NA)))
+})
+
 
 test_that("default date formater", {
     expect_error(

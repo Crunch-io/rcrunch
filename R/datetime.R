@@ -6,6 +6,18 @@ from8601 <- function(x) {
         return(as.Date(x))
     }
 
+    if (all(grepl("^[0-9]{4}-[0-9]{2}$", na.omit(x)))) {
+        ## return Date (of first of month) if resolution == M
+        x[!is.na(x)] <- paste0(x[!is.na(x)], "-01")
+        return(as.Date(x))
+    }
+
+    if (all(grepl("^[0-9]{4}$", na.omit(x)))) {
+        ## return Date (of first of year) if resolution == Y
+        x[!is.na(x)] <- paste0(x[!is.na(x)], "-01-01")
+        return(as.Date(x))
+    }
+
     ## Check for timezone
     if (any(grepl("+", x, fixed = TRUE))) {
         ## First, strip out the : in the time zone
