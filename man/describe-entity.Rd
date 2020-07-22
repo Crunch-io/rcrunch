@@ -24,12 +24,14 @@
 \alias{id}
 \alias{value}
 \alias{value<-}
+\alias{wdate<-}
 \alias{name,AbstractCategory-method}
 \alias{name<-,AbstractCategory-method}
 \alias{name<-,NULL-method}
 \alias{id,AbstractCategory-method}
 \alias{value,Category-method}
 \alias{value<-,Category-method}
+\alias{wdate<-,Category-method}
 \alias{name,CrunchDataset-method}
 \alias{name<-,CrunchDataset-method}
 \alias{description,CrunchDataset-method}
@@ -82,6 +84,8 @@ description(x)
 
 description(x) <- value
 
+wdate(x) <- value
+
 startDate(x)
 
 startDate(x) <- value
@@ -117,6 +121,8 @@ notes(x) <- value
 \S4method{value}{Category}(x)
 
 \S4method{value}{Category}(x) <- value
+
+\S4method{wdate}{Category}(x) <- value
 
 \S4method{name}{CrunchDataset}(x)
 

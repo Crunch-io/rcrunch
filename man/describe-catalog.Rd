@@ -19,6 +19,8 @@
 \alias{ids<-}
 \alias{values}
 \alias{values<-}
+\alias{dates}
+\alias{dates<-}
 \alias{names,AbstractCategories-method}
 \alias{names<-,AbstractCategories-method}
 \alias{ids,AbstractCategories-method}
@@ -86,6 +88,10 @@ ids(x) <- value
 values(x)
 
 values(x) <- value
+
+dates(x)
+
+dates(x) <- value
 
 \S4method{names}{AbstractCategories}(x)
 
