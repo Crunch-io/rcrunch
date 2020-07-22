@@ -6,29 +6,29 @@ with_mock_crunch({
 
     test_that("cut labels are generated correcty", {
         expect_identical(
-            generateCutLabels(5, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
+            generateNumCutLabels(5, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
             c("[2.1111,3)", "[3,4)", "[4,5)")
         )
         expect_identical(
-            generateCutLabels(2, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
+            generateNumCutLabels(2, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
             c("[2.1,3)", "[3,4)", "[4,5)")
         )
         expect_identical(
-            generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE),
+            generateNumCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE),
             c("[2,3)", "[3,4)", "[4,5)")
         )
         expect_identical(
-            generateCutLabels(5, c(2.111111, 3, 4, 5), 4, TRUE, TRUE),
+            generateNumCutLabels(5, c(2.111111, 3, 4, 5), 4, TRUE, TRUE),
             c("[2.1111,3]", "(3,4]", "(4,5]")
         )
         expect_identical(
-            generateCutLabels(5, c(2.111111, 3, 4, 5), 4, FALSE, TRUE),
+            generateNumCutLabels(5, c(2.111111, 3, 4, 5), 4, FALSE, TRUE),
             c("[2.1111,3)", "[3,4)", "[4,5]")
         )
         # if the breaks are all the same at up to 12 decimal points
-        # generateCutLabels will use Range_n lagles.
+        # generateNumCutLabels will use Range_n lagles.
         expect_identical(
-            generateCutLabels(
+            generateNumCutLabels(
                 5,
                 c(
                     2.111111111111, 2.111111111112,

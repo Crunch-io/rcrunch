@@ -3,6 +3,7 @@
 \name{crunch-cut}
 \alias{crunch-cut}
 \alias{cut,NumericVariable-method}
+\alias{cut,DatetimeVariable-method}
 \title{Cut a numeric Crunch variable}
 \usage{
 \S4method{cut}{NumericVariable}(
@@ -16,6 +17,8 @@
   ordered_result = FALSE,
   ...
 )
+
+\S4method{cut}{DatetimeVariable}(x, breaks, labels = NULL, dates = NULL, name, ...)
 }
 \arguments{
 \item{x}{A Crunch \code{NumericVariable}}

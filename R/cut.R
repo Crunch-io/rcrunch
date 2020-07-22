@@ -90,7 +90,7 @@ setMethod("cut", "NumericVariable", function(x,
     }
     # Autogenerate labels if not supplied
     if (is.null(labels)) {
-        labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
+        labels <- generateNumCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
         halt(
             "There are ",
@@ -136,7 +136,7 @@ setMethod("cut", "NumericVariable", function(x,
 #' @return
 #' A character vector of labels
 #' @keywords internal
-generateCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
+generateNumCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
     for (dig in dig.lab:max(12L, dig.lab)) {
         ## 0+ avoids printing signed zeros as "-0"
         ch.br <- formatC(0 + breaks, digits = dig, width = 1L)
@@ -163,4 +163,132 @@ generateCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
         }
     }
     return(labels)
+}
+
+
+#' @rdname crunch-cut
+#' @export
+setMethod("cut", "DatetimeVariable", function(
+    x,
+    breaks,
+    labels = NULL,
+    dates = NULL,
+    name,
+    ...
+) {
+    if (length(breaks) == 1 && is.numeric(breaks)) {
+        halt(
+            "breaks must be a vector of cutpoints or a string interval specification, ",
+            "cutting into a number of intervals is not supported for crunch DatetimeVariables."
+        )
+    }
+    if (is.character(breaks)) {
+        break_points <- as.Date(levels(cut(
+            c(as.Date(min(x)), as.Date(max(x))),
+            breaks = breaks
+        )))
+        break_points <- extend_seq(break_points, breaks)
+    } else {
+        break_points <- breaks
+    }
+
+    if (is.null(dates)) dates <- generateCatdates(breaks, break_points)
+    if (is.null(labels)) labels <- generateDateCutLabels(breaks, break_points)
+
+    if (right && !is.character(breaks)) {
+        `%c1%` <- function(x, y) x <= y
+        `%c2%` <- function(x, z) x > z
+    } else {
+        `%c1%` <- function(x, y) x < y
+        `%c2%` <- function(x, z) x >= z
+    }
+
+    cases <- vector("list", length = length(break_points) - 1)
+
+    for (i in 2:length(break_points)) {
+        cases[[i - 1]] <- x %c1% break_points[i - 1] & x %c2% break_points[i]
+    }
+    case_list <- lapply(
+        seq_along(cases),
+        function(x) list(expression = cases[[x]], name = labels[x], date = dates[x])
+    )
+    makeCaseVariable(cases = case_list, name = name, ...)
+})
+
+generateCatdates <- function(breaks, break_points) {
+    if (is.character(breaks)) {
+        break_spec <- parse_break_units(breaks)
+
+        if (break_spec$quantity == 1) {
+            catdate_string_formatter <- switch(
+                break_spec$unit,
+                "day" = format(x, "%Y-%m-%d"),
+                "DSTday" = format(x, "%Y-%m-%d"),
+                "week" = isoweekyear,
+                "month" = function(x) format(x, "%Y-%m"),
+                "year" = function(x) format(x, "%Y"),
+                halt("Unexpected break unit: ", dQuote(break_spec$unit))
+            )
+
+            catdates <- catdate_string_formatter(break_points)
+        } else {
+            starts <- break_points
+            ends <- extend_seq(break_points[-1], breaks) - as.difftime(1, units = "days")
+            catdates <- paste(format(starts, "%Y-%m-%d"), format(ends, "%Y-%m-%d"), sep = ",")
+        }
+    } else {
+        catdates <- paste(
+            format(break_points[-length(break_points)], "%Y-%m-%d"),
+            format(break_points[-1]  - as.difftime(1, units = "days"), "%Y-%m-%d"),
+            sep = ","
+        )
+    }
+    catdates
+}
+
+extend_seq <- function(x, by) {
+    c(x[-length(x)], seq(x[length(x)], by = by, length.out = 2))
+}
+
+generateDateCutLabels <- function(breaks, break_points) {
+    if (is.character(breaks)) {
+        starts <- break_points
+        ends <- c(
+            break_points[c(-1, -length(break_points))],
+            seq(break_points[length(break_points)], by = breaks, length.out = 2)
+        ) - as.difftime(1, units = "days")
+        labels <- paste(format(starts, "%Y/%m/%d"), format(ends, "%Y/%m/%d"), sep = " - ")
+    } else {
+        labels <- paste(
+            format(break_points[-length(break_points)], "%Y/%m/%d"),
+            format(break_points[-1], "%Y/%m/%d") - as.difftime(1, units = "days"),
+            sep = " - "
+        )
+    }
+    labels
+}
+
+parse_break_units <- function(x) {
+    split <- strsplit(x, " ")
+    if (length(split) == 1) {
+        out <- list(quantity = 1, unit = split)
+    } else {
+        out <- list(quantity = as.numeric(split[1]), unit = split[2])
+    }
+    out$unit <- gsub("s$", "", out$unit)
+    out
+}
+
+isoweekyear <- function(x) {
+    year <- as.numeric(format(x, "%Y"))
+    isoweek <- as.numeric(format(x, "%V"))
+    month <- as.numeric(format(x, "%m"))
+
+    wrong_year_low <- isoweek > 51 & month == 1
+    wrong_year_high <- isoweek == 1 & month == 12
+
+    year[wrong_year_low] <- year[wrong_year_low] - 1
+    year[wrong_year_high] <- year[wrong_year_high] + 1
+
+    paste0(year, "-W", sprintf("%02d", isoweek))
 }
