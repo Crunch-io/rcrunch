@@ -125,7 +125,7 @@ caseExpr <- function(..., cases) {
         value = list(
             class = "categorical",
             categories = lapply(cases, function(case) {
-                case[c("id", "name", "numeric_value", "missing")]
+                case[c("id", "name", "numeric_value", "missing", "date")]
             })
         )
     )
@@ -205,7 +205,7 @@ ensureValidCase <- function(case) {
 
     defaults <- list(
         id = NULL, name = NULL, expression = NULL,
-        numeric_value = NULL, missing = FALSE
+        numeric_value = NULL, missing = FALSE, date = NULL
     )
     wrong_case_names <- setdiff(names(case), names(defaults))
     if (is.null(wrong_case_names) || "" %in% names(case)) {
@@ -243,6 +243,9 @@ ensureValidCase <- function(case) {
     }
     if (!is.character(case$name)) {
         halt("a case's name must be a character")
+    }
+    if (!is.character(case$date)) {
+        halt("a case's date must be a character")
     }
 
     if (is_else_case(case)) {
