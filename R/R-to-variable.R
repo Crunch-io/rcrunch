@@ -82,6 +82,7 @@ setMethod("toVariable", "POSIXt", function(x, ...) {
         substr(values, 1, 20),
         as.character(round(as.numeric(substr(values, 21, 26)) / 10))
     )
+    values[is.na(x)] <- ""
 
     return(VariableDefinition(
         values = values,
