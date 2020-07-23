@@ -52,35 +52,14 @@ setDate <- function(x, value) {
 }
 
 #' @export
-setMethod("wdate", "Category", function(x) {
+setMethod("dates", "Category", function(x) {
     v <- as.character(x[["date"]])
     return(ifelse(is.null(v), NA_character_, v))
 })
 
 #' @rdname describe-entity
 #' @export
-setMethod("wdate<-", "Category", setDate)
-
-#' @export
-setMethod("dates", "Categories", function(x) {
-    structure(vapply(x, wdate, character(1), USE.NAMES = FALSE), .Names = names(x))
-})
-
-#' @export
-setMethod("dates<-", "Categories", function(x, value) {
-    if (length(value) != length(x)) {
-        halt(
-            "You supplied ", length(value), " date values for ", length(x),
-            " Categories."
-        )
-    }
-
-    x@.Data <- mapply(function(x, value) {
-        wdate(x) <- value
-        return(x)
-    }, x = x@.Data, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
-    return(x)
-})
+setMethod("dates<-", "Category", setDate)
 
 
 #' @rdname is-na-categories

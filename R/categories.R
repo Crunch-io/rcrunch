@@ -120,6 +120,11 @@ setValues <- function(x, value) {
     return(x)
 }
 
+setDates <- function(x, value) {
+    x[] <- mapply(setDate, x[], value = value, SIMPLIFY = FALSE)
+    return(x)
+}
+
 #' @rdname describe-catalog
 #' @export
 setMethod("values", "Categories", function(x) vapply(x, value, numeric(1)))
@@ -127,6 +132,14 @@ setMethod("values", "Categories", function(x) vapply(x, value, numeric(1)))
 #' @rdname describe-catalog
 #' @export
 setMethod("values<-", "Categories", setValues)
+
+#' @export
+setMethod("dates", "Categories", function(x) {
+    structure(vapply(x, dates, character(1), USE.NAMES = FALSE), .Names = names(x))
+})
+
+#' @export
+setMethod("dates<-", "Categories", setDates)
 
 #' @rdname is-na-categories
 #' @aliases is-na-categories

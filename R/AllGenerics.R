@@ -91,12 +91,6 @@ setGeneric("description<-",
     function(x, value) standardGeneric("description<-"),
     signature = "x"
 )
-setGeneric("wdate", function(x) standardGeneric("wdate"))
-#' @rdname describe-entity
-setGeneric("wdate<-",
-    function(x, value) standardGeneric("wdate<-"),
-    signature = "x"
-)
 #' @rdname describe-entity
 setGeneric("startDate", function(x) standardGeneric("startDate"))
 #' @rdname describe-entity
