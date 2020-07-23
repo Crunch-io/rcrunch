@@ -35,8 +35,6 @@
 #' @param ... further arguments passed to [makeCaseVariable]
 #' @return a Crunch [`VariableDefinition`]. Assign it into the dataset to create
 #' it as a derived variable on the server.
-#' @name crunch-cut
-#' @aliases crunch-cut
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("mtcars")
@@ -50,9 +48,6 @@
 #'     name = "Age (4 category)"
 #' )
 #' }
-NULL
-
-#' @rdname crunch-cut
 #' @export
 setMethod("cut", "NumericVariable", function(x,
                                              breaks,
@@ -166,7 +161,54 @@ generateNumCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
 }
 
 
-#' @rdname crunch-cut
+#' Cut a Datetime Crunch variable
+#'
+#' `crunch::cut()` is equivalent to `base::cut()` except that it operates on
+#' Crunch variables instead of in-memory R objects. The function takes a Datetime
+#' variable and derives a new categorical variable from it based on the `breaks`
+#' argument. You can either break the variable into evenly spaced categories by
+#' specifying an interval using a string that defines a period or a vector containing
+#' the start and end point of each category. For example, specifying
+#' `breaks = "2 weeks"` will break the datetime data into 2 week size bins
+#' while `breaks = as.Date(c("2020-01-01", "2020-01-15" "2020-02-01"))`
+#' will recode the data into two groups based on
+#' whether the numeric vector falls between January 1st and 14th or 15th and 31st.
+#' @param x A Crunch `DatetimeVariable`
+#' @param breaks Either a numeric vector of two or more unique cut point datetimes
+#' or a single string giving the interval size into which `x` is to be
+#' cut with a number optionally at the beginning nd "day", "weeks", "months",
+#' a "quarters" or "years". If specifying cut points, values that are less than
+#' the smallest value in `breaks` or greater than the largest value in `breaks`
+#' will be marked missing in the resulting categorical variable.
+#' @param labels A character vector representing the labels for the levels of
+#' the resulting categories. The length of the labels argument should be the
+#' same as the number of categories, which is one fewer than the number of
+#' breaks. If not specified, labels are constructed with a formatting like
+#'  "YYYY/MM/DD - YYYY/MM/DD" (for example ("2020/01/01 - 2020/01/14"))
+#' @param dates (Optionally) A character vector with the date strings that should
+#' be associated with the resulting categories. These dates can have the form
+#' "YYYY-MM-DD", "YYYY-MM", "YYYY", "YYYY-WXX" (where XX is the ISO week number) or
+#' "YYYY-MM-DD,YYYY-MM-DDD". If left `NULL`, it will be created from the categories.
+#' @param name The name of the resulting Crunch variable as a character string.
+#' @param right logical, indicating if the intervals should be closed on the
+#' right (and open on the left) or vice versa. This only applies if giving a
+#' vector of break points.
+#' @param ... further arguments passed to [makeCaseVariable]
+#' @return a Crunch [`VariableDefinition`]. Assign it into the dataset to create
+#' it as a derived variable on the server.
+#' @examples
+#' \dontrun{
+#' ds <- loadDataset("example")
+#' ds$month_cat <- cut(ds$date, breaks = "month", name = "monthly"),
+#' ds$four_weeks_cat <- cut(ds$date, breaks = "4 weeks", name = "four week categorical date"),
+#'
+#' ds$wave_cat <- cut(
+#'     ds$date,
+#'     as.Date(c("2020-01-01", "2020-02-15", "2020-04-01", "2020-05-15")),
+#'     labels = c("wave1", "wave2", "wave3"),
+#'     name = "wave var"
+#'   )
+#' }
 #' @export
 setMethod("cut", "DatetimeVariable", function(
     x,
