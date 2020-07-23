@@ -22,6 +22,7 @@
 \alias{query<-,Analysis,formula-method}
 \alias{cube,Analysis-method}
 \alias{filter,Analysis-method}
+\alias{filter,ANY-method}
 \alias{filter<-,Analysis,CrunchLogicalExpr-method}
 \alias{filter<-,Analysis,CrunchFilter-method}
 \alias{filter<-,Analysis,NULL-method}
@@ -39,7 +40,7 @@ cube(x)
 
 cubes(x)
 
-filter(x, value)
+filter(x, ...)
 
 filter(x) <- value
 
@@ -51,7 +52,7 @@ filter(x) <- value
 
 \S4method{analysis}{CrunchSlide,Analysis}(x) <- value
 
-\S4method{filter}{CrunchSlide}(x)
+\S4method{filter}{CrunchSlide}(x, ...)
 
 \S4method{filter}{CrunchSlide,ANY}(x) <- value
 
@@ -67,7 +68,9 @@ filter(x) <- value
 
 \S4method{cube}{Analysis}(x)
 
-\S4method{filter}{Analysis}(x)
+\S4method{filter}{Analysis}(x, ...)
+
+\S4method{filter}{ANY}(x, ...)
 
 \S4method{filter}{CrunchSlide,ANY}(x) <- value
 

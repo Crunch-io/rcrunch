@@ -43,7 +43,7 @@ setGeneric("cube", function(x) standardGeneric("cube"))
 setGeneric("cubes", function(x) standardGeneric("cubes"))
 #' @rdname analysis-methods
 #' @export
-setGeneric("filter", function(x, value) standardGeneric("filter"))
+setGeneric("filter", function(x, ...) standardGeneric("filter"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("filter<-", function(x, value) standardGeneric("filter<-"))
@@ -350,7 +350,7 @@ setMethod("analysis<-", c("CrunchSlide", "Analysis"), function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter", "CrunchSlide", function(x) {
+setMethod("filter", "CrunchSlide", function(x, ...) {
     analysis <- analyses(x)[[1]]
     return(filter(analysis))
 })
@@ -537,7 +537,7 @@ wrapDisplaySettings <- function(settings) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter", "Analysis", function(x) {
+setMethod("filter", "Analysis", function(x, ...) {
     filt <- x@body$query_environment$filter
     if (length(filt) == 0) {
         return(NULL)
@@ -549,6 +549,17 @@ setMethod("filter", "Analysis", function(x) {
         adhoc_expr <- CrunchExpr(expression = fixAdhocFilterExpression(filt[[1]]))
         return(adhoc_expr)
     }
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter", "ANY", function(x, ...) {
+    if ("dplyr" %in% .packages()) {
+        func <- get("filter", asNamespace("dplyr"))
+    } else {
+        func <- stats::filter
+    }
+    func(.data = x, ...)
 })
 
 #' @rdname analysis-methods
