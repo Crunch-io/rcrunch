@@ -196,6 +196,7 @@ setMethod("cut", "DatetimeVariable", function(
     if (is.null(dates)) dates <- generateCatdates(breaks, break_points)
     if (is.null(labels)) labels <- generateDateCutLabels(breaks, break_points)
 
+    # the brekas are set up in a way that they are left-oriented
     if (right && !is.character(breaks)) {
         `%c1%` <- function(x, y) x <= y
         `%c2%` <- function(x, z) x > z
@@ -240,7 +241,7 @@ generateCatdates <- function(breaks, break_points) {
     } else {
         catdates <- paste(
             format(break_points[-length(break_points)], "%Y-%m-%d"),
-            format(break_points[-1]  - as.difftime(1, units = "days"), "%Y-%m-%d"),
+            format(break_points[-1] - as.difftime(1, units = "days"), "%Y-%m-%d"),
             sep = ","
         )
     }
@@ -262,7 +263,7 @@ generateDateCutLabels <- function(breaks, break_points) {
     } else {
         labels <- paste(
             format(break_points[-length(break_points)], "%Y/%m/%d"),
-            format(break_points[-1], "%Y/%m/%d") - as.difftime(1, units = "days"),
+            format(break_points[-1] - as.difftime(1, units = "days"), "%Y/%m/%d"),
             sep = " - "
         )
     }
@@ -270,7 +271,7 @@ generateDateCutLabels <- function(breaks, break_points) {
 }
 
 parse_break_units <- function(x) {
-    split <- strsplit(x, " ")
+    split <- strsplit(x, " ")[[1]]
     if (length(split) == 1) {
         out <- list(quantity = 1, unit = split)
     } else {
