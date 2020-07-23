@@ -184,7 +184,7 @@ setMethod("cut", "DatetimeVariable", function(
     }
     if (is.character(breaks)) {
         break_points <- as.Date(levels(cut(
-            c(as.Date(min(x)), as.Date(max(x))),
+            c(as.Date(min(x, na.rm = TRUE)), as.Date(max(x, na.rm = TRUE))),
             breaks = breaks
         )))
         break_points <- extend_seq(break_points, breaks)
