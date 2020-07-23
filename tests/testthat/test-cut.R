@@ -65,19 +65,22 @@ with_mock_crunch({
                                         id = 1L,
                                         name = "one",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     ),
                                     list(
                                         id = 2L,
                                         name = "two",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     ),
                                     list(
                                         id = 3L,
                                         name = "three",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     )
                                 )
                             )
@@ -160,19 +163,22 @@ with_mock_crunch({
                                         id = 1L,
                                         name = "one",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     ),
                                     list(
                                         id = 2L,
                                         name = "two",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     ),
                                     list(
                                         id = 3L,
                                         name = "three",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     )
                                 )
                             )
@@ -252,13 +258,15 @@ with_mock_crunch({
                                         id = 1L,
                                         name = "one",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     ),
                                     list(
                                         id = 2L,
                                         name = "two",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     )
                                 )
                             )
@@ -321,19 +329,22 @@ with_mock_crunch({
                                         id = 1L,
                                         name = "(-1.5,-0.44]",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     ),
                                     list(
                                         id = 2L,
                                         name = "(-0.44,0.61]",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     ),
                                     list(
                                         id = 3L,
                                         name = "(0.61,1.7]",
                                         numeric_value = NULL,
-                                        missing = FALSE
+                                        missing = FALSE,
+                                        date = NULL
                                     )
                                 )
                             )
@@ -468,6 +479,158 @@ with_mock_crunch({
                 right = TRUE
             ),
             paste0(sQuote("breaks"), " must be unique")
+        )
+    })
+
+
+    test_that("isoweekyear gets weeks dates right", {
+        expect_equal(
+            isoweekyear(as.Date(c("2020-01-01", "2020-01-08"))),
+            c("2020-W01", "2020-W02")
+        )
+        # crossing year boundary
+        expect_equal(
+            isoweekyear(as.Date(c("2016-01-01", "2017-01-01", "2019-12-30"))),
+            c("2015-W53", "2016-W52", "2020-W01")
+        )
+    })
+
+    test_that("parse_break_units works", {
+        expect_equal(parse_break_units("month"), list(quantity = 1, unit = "month"))
+        expect_equal(parse_break_units("weeks"), list(quantity = 1, unit = "week"))
+        expect_equal(parse_break_units("7 days"), list(quantity = 7, unit = "day"))
+    })
+
+    test_that("cut date catdates are correct", {
+        expect_equal(
+            generateCatdates(
+                "week",
+                as.Date(c("2020-02-03", "2020-02-10", "2020-02-18"))
+                ),
+            c("2020-W06", "2020-W07", "2020-W08")
+        )
+
+        expect_equal(
+            generateCatdates(
+                "month",
+                as.Date(c("2020-02-03", "2020-03-10", "2020-04-18"))
+            ),
+            c("2020-02", "2020-03", "2020-04")
+        )
+
+        date_seq <- as.POSIXct(
+            c("2020-01-01 00:01:00", "2020-01-04 00:01:00", "2020-01-08 00:01:00"),
+            tz = "UTC"
+        )
+        expect_equal(
+            generateCatdates(date_seq, date_seq),
+            c("2020-01-01,2020-01-03", "2020-01-04,2020-01-07")
+        )
+    })
+
+    test_that("cut date labels are correct", {
+        expect_equal(
+            generateDateCutLabels(
+                "week",
+                as.Date(c("2020-02-03", "2020-02-10", "2020-02-18"))
+            ),
+            c("2020/02/03 - 2020/02/09", "2020/02/10 - 2020/02/17", "2020/02/18 - 2020/02/24")
+        )
+
+        expect_equal(
+            generateDateCutLabels(
+                "month",
+                as.Date(c("2020-02-01", "2020-03-01", "2020-04-01"))
+            ),
+            c("2020/02/01 - 2020/02/29", "2020/03/01 - 2020/03/31", "2020/04/01 - 2020/04/30")
+        )
+
+        date_seq <- as.POSIXct(
+            c("2020-01-01 00:01:00", "2020-01-04 00:01:00", "2020-01-08 00:01:00"),
+            tz = "UTC"
+        )
+        expect_equal(
+            generateDateCutLabels(date_seq, date_seq),
+            c("2020/01/01 - 2020/01/03", "2020/01/04 - 2020/01/07")
+        )
+    })
+
+    test_that("cut date returns expected output", {
+        ds_catdate <- loadDataset("cat date test")
+
+        simple_date_cut <- structure(list(
+            name = "cut month",
+            derivation = list(
+                `function` = "case",
+                args = list(
+                    list(
+                        column = structure(1:2, class = "AsIs"),
+                        type = list(
+                            value = list(
+                                class = "categorical",
+                                categories = list(
+                                    list(
+                                        id = 1L,
+                                        name = "2020/01/01 - 2020/01/31",
+                                        numeric_value = NULL,
+                                        missing = FALSE,
+                                        date = "2020-01"
+                                    ),
+                                    list(
+                                        id = 2L,
+                                        name = "2020/02/01 - 2020/02/29",
+                                        numeric_value = NULL,
+                                        missing = FALSE,
+                                        date = "2020-02"
+                                    )
+                                )
+                            )
+                        )
+                    ), list(
+                        `function` = "and",
+                        args = list(
+                            list(
+                                `function` = ">=",
+                                args = list(
+                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"),
+                                    structure(list(value = "2020-01-01"), class = "zcl")
+                                )
+                            ),
+                            list(
+                                `function` = "<",
+                                args = list(
+                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"),
+                                    structure(list(value = "2020-02-01"), class = "zcl")
+                                )
+                            )
+                        )
+                    ),
+                    list(
+                        `function` = "and",
+                        args = list(
+                            list(
+                                `function` = ">=",
+                                args = list(
+                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"),
+                                    structure(list(value = "2020-02-01"), class = "zcl")
+                                    )
+                                ),
+                            list(
+                                `function` = "<",
+                                args = list(
+                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"),
+                                    structure(list(value = "2020-03-01"), class = "zcl")
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            ), class = "VariableDefinition")
+
+        expect_equal(
+            cut(ds_catdate$true_date, "month", name = "cut month"),
+            simple_date_cut
         )
     })
 })

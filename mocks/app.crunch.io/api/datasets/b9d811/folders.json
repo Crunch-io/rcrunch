@@ -1,0 +1,63 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/b9d811/folders/",
+    "catalogs": {
+        "personal": "https://app.crunch.io/api/datasets/b9d811/variables/personal/",
+        "hidden": "https://app.crunch.io/api/datasets/b9d811/folders/hidden/",
+        "trash": "https://app.crunch.io/api/datasets/b9d811/folders/trash/",
+        "parents": "https://app.crunch.io/api/datasets/b9d811/folders/parents/",
+        "secure": "https://app.crunch.io/api/datasets/b9d811/folders/secure/"
+    },
+    "description": "This is the variables' folder root",
+    "index": {
+        "../variables/000001/": {
+            "secure": false,
+            "derived": false,
+            "rollup_resolution": null,
+            "id": "000001",
+            "description": "",
+            "name": "true_date",
+            "resolution": "ms",
+            "notes": "",
+            "discarded": false,
+            "alias": "true_date",
+            "hidden": false,
+            "type": "datetime"
+        },
+        "../variables/2a8866/": {
+            "secure": false,
+            "derived": false,
+            "id": "2a8866",
+            "description": "",
+            "scale": "interval",
+            "name": "cat_not_set (copy)",
+            "notes": "",
+            "discarded": false,
+            "alias": "cat_set",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "../variables/000000/": {
+            "secure": false,
+            "derived": false,
+            "id": "000000",
+            "description": "",
+            "scale": "interval",
+            "name": "cat_not_set",
+            "notes": "",
+            "discarded": false,
+            "alias": "cat_not_set",
+            "hidden": false,
+            "type": "categorical"
+        }
+    },
+    "body": {
+        "name": "Root"
+    },
+    "graph": [
+        "../variables/000001/",
+        "../variables/000000/",
+        "../variables/2a8866/"
+    ],
+    "size": 3
+}

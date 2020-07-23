@@ -244,7 +244,7 @@ ensureValidCase <- function(case) {
     if (!is.character(case$name)) {
         halt("a case's name must be a character")
     }
-    if (!is.character(case$date)) {
+    if (!is.null(case$date) && !is.character(case$date)) {
         halt("a case's date must be a character")
     }
 

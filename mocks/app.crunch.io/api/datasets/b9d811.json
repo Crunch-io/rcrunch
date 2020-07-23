@@ -1,0 +1,113 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/b9d811/",
+    "catalogs": {
+        "folders": "https://app.crunch.io/api/datasets/b9d811/folders/",
+        "users": "https://app.crunch.io/api/datasets/b9d811/users/",
+        "views": "https://app.crunch.io/api/datasets/b9d811/views/",
+        "variables": "https://app.crunch.io/api/datasets/b9d811/variables/",
+        "actions": "https://app.crunch.io/api/datasets/b9d811/actions/",
+        "boxdata": "https://app.crunch.io/api/datasets/b9d811/boxdata/",
+        "filters": "https://app.crunch.io/api/datasets/b9d811/filters/",
+        "scripts": "https://app.crunch.io/api/datasets/b9d811/scripts/",
+        "permissions": "https://app.crunch.io/api/datasets/b9d811/permissions/",
+        "batches": "https://app.crunch.io/api/datasets/b9d811/batches/",
+        "tags": "https://app.crunch.io/api/datasets/b9d811/tags/",
+        "teams": "https://app.crunch.io/api/datasets/b9d811/teams/",
+        "savepoints": "https://app.crunch.io/api/datasets/b9d811/savepoints/",
+        "multitables": "https://app.crunch.io/api/datasets/b9d811/multitables/",
+        "forks": "https://app.crunch.io/api/datasets/b9d811/forks/",
+        "decks": "https://app.crunch.io/api/datasets/b9d811/decks/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "project": "https://app.crunch.io/api/projects/personal/",
+        "variables_private": "https://app.crunch.io/api/datasets/b9d811/variables/private/"
+    },
+    "fragments": {
+        "preferences": "https://app.crunch.io/api/datasets/b9d811/preferences/",
+        "stream": "https://app.crunch.io/api/datasets/b9d811/stream/",
+        "settings": "https://app.crunch.io/api/datasets/b9d811/settings/",
+        "exclusion": "https://app.crunch.io/api/datasets/b9d811/exclusion/",
+        "publish": "https://app.crunch.io/api/datasets/b9d811/publish/",
+        "state": "https://app.crunch.io/api/datasets/b9d811/state/",
+        "table": "https://app.crunch.io/api/datasets/b9d811/table/",
+        "pk": "https://app.crunch.io/api/datasets/b9d811/pk/",
+        "schema": "https://app.crunch.io/api/datasets/b9d811/schema/"
+    },
+    "views": {
+        "second_order_analysis": "https://app.crunch.io/api/datasets/b9d811/second_order_analysis/",
+        "cube": "https://app.crunch.io/api/datasets/b9d811/cube/",
+        "export": "https://app.crunch.io/api/datasets/b9d811/export/",
+        "summary": "https://app.crunch.io/api/datasets/b9d811/summary/",
+        "applied_filters": "https://app.crunch.io/api/datasets/b9d811/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "https://app.crunch.io/api/users/27a158/",
+        "current_editor": "https://app.crunch.io/api/users/27a158/",
+        "creation_time": "2020-07-23T15:16:46.607000",
+        "streaming": "no",
+        "owner": "https://app.crunch.io/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "b9d811",
+        "size": {
+            "rows": 6,
+            "unfiltered_rows": 6,
+            "columns": 3
+        },
+        "palette": {
+            "brand": {
+                "message": "#722580",
+                "primary": "#005283",
+                "secondary": "#107f65"
+            },
+            "analysis": [
+                {
+                    "default": true,
+                    "palette": [
+                        "#340043",
+                        "#640083",
+                        "#9100bf",
+                        "#c300ff",
+                        "#e17fff"
+                    ],
+                    "type": "qualitative",
+                    "name": "purple palette"
+                }
+            ]
+        },
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "",
+        "end_date": null,
+        "access_time": "2020-07-23T15:16:46.231000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2020-07-23T15:16:55.906000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "https://app.crunch.io/api/accounts/00001/",
+        "name": "cat date test",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "https://app.crunch.io/api/datasets/b9d811/variables/weights/",
+        "variables_hier": "https://app.crunch.io/api/datasets/b9d811/variables/hier/",
+        "variables_personal": "https://app.crunch.io/api/datasets/b9d811/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "https://app.crunch.io/api/projects/378ad4/",
+        "editor_url": "https://app.crunch.io/api/users/27a158/",
+        "user_url": "https://app.crunch.io/api/users/27a158/"
+    }
+}
