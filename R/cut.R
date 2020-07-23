@@ -174,6 +174,7 @@ setMethod("cut", "DatetimeVariable", function(
     labels = NULL,
     dates = NULL,
     name,
+    right = FALSE,
     ...
 ) {
     if (length(breaks) == 1 && is.numeric(breaks)) {
@@ -206,7 +207,7 @@ setMethod("cut", "DatetimeVariable", function(
     cases <- vector("list", length = length(break_points) - 1)
 
     for (i in 2:length(break_points)) {
-        cases[[i - 1]] <- x %c1% break_points[i - 1] & x %c2% break_points[i]
+        cases[[i - 1]] <- x %c2% break_points[i - 1] & x %c1% break_points[i]
     }
     case_list <- lapply(
         seq_along(cases),
@@ -222,8 +223,8 @@ generateCatdates <- function(breaks, break_points) {
         if (break_spec$quantity == 1) {
             catdate_string_formatter <- switch(
                 break_spec$unit,
-                "day" = format(x, "%Y-%m-%d"),
-                "DSTday" = format(x, "%Y-%m-%d"),
+                "day" = function(x) format(x, "%Y-%m-%d"),
+                "DSTday" = function(x) format(x, "%Y-%m-%d"),
                 "week" = isoweekyear,
                 "month" = function(x) format(x, "%Y-%m"),
                 "year" = function(x) format(x, "%Y"),
