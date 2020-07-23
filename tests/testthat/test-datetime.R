@@ -61,7 +61,7 @@ test_that("default date formater", {
         datetimeFormater("not a resolution"),
         paste0(
             dQuote("resolution"), " is invalid. Valid values are ",
-            serialPaste(c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms"),
+            serialPaste(c("Y", "Q", "3M", "M", "W", "D", "h", "m", "s", "ms"),
                 collapse = "or"
             )
         )
@@ -161,7 +161,7 @@ with_mock_crunch({
             resolution(ds$starttime) <- "invalid_rollup",
             paste0(
                 dQuote("resolution"),
-                " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms"
+                " is invalid. Valid values are Y, Q, 3M, M, W, D, h, m, s, or ms"
             )
         )
         expect_no_request(resolution(ds$starttime) <- "D")
@@ -184,7 +184,7 @@ with_mock_crunch({
             rollupResolution(ds$starttime) <- "invalid_rollup",
             paste0(
                 dQuote("resolution"),
-                " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms"
+                " is invalid. Valid values are Y, Q, 3M, M, W, D, h, m, s, or ms"
             )
         )
     })

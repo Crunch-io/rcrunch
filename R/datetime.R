@@ -118,7 +118,7 @@ rollupResolution <- function(x) {
 
 # validate that rollup resolutions are what are allowed by Crunch
 validateResolution <- function(resolution) {
-    valid_res <- c("Y", "Q", "M", "3M", "W", "D", "h", "m", "s", "ms")
+    valid_res <- c("Y", "Q", "3M", "M",  "W", "D", "h", "m", "s", "ms")
 
     if (!is.null(resolution) && !(resolution %in% valid_res)) {
         halt(
