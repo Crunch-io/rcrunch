@@ -125,7 +125,8 @@ caseExpr <- function(..., cases) {
         value = list(
             class = "categorical",
             categories = lapply(cases, function(case) {
-                case[c("id", "name", "numeric_value", "missing", "date")]
+                date_name <- if ("date" %in% names(case)) "date" else NULL
+                case[c("id", "name", "numeric_value", "missing", date_name)]
             })
         )
     )
@@ -178,6 +179,12 @@ ensureValidCases <- function(cases) {
             "there are duplicate condition expressions provided: ",
             serialPaste(vapply(all_exprs, formatExpression, character(1)))
         )
+    }
+
+
+    all_dates <- lapply(cases, vget("date"))
+    if (all(lengths(all_dates) == 0)) {
+        cases <- lapply(cases, function(case) modifyList(case, list(date = NULL)))
     }
 
     return(cases)

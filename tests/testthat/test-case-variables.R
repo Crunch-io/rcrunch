@@ -83,8 +83,7 @@ with_mock_crunch({
         else_case <- list(name = "Dudes", expression = "else")
         else_case_out <- list(
             id = NULL, name = "Dudes",
-            numeric_value = NULL, missing = FALSE,
-            date = NULL
+            numeric_value = NULL, missing = FALSE, date = NULL
         )
         expect_equal(ensureValidCase(else_case), else_case_out)
     })
@@ -102,13 +101,11 @@ with_mock_crunch({
                             categories = list(
                                 list(
                                     id = 1, name = "Dudes",
-                                    numeric_value = NULL, missing = FALSE,
-                                    date = NULL
+                                    numeric_value = NULL, missing = FALSE
                                 ),
                                 list(
                                     id = 2, name = "Old women",
-                                    numeric_value = NULL, missing = FALSE,
-                                    date = NULL
+                                    numeric_value = NULL, missing = FALSE
                                 )
                             )
                         )
@@ -248,7 +245,7 @@ with_mock_crunch({
     test_that("makeCaseVariable works with an else pre-specified", {
         case_output$derivation$args[[1]]$column[[3]] <- 5L
         case_output$derivation$args[[1]]$type$value$categories[[3]] <- list(
-            id = 5L, name = "Other", numeric_value = NULL, missing = FALSE, date = NULL
+            id = 5L, name = "Other", numeric_value = NULL, missing = FALSE
         )
         expect_json_equivalent(
             makeCaseVariable(
@@ -266,7 +263,7 @@ with_mock_crunch({
     test_that("makeCaseVariable has a number of ways to specify else", {
         case_output$derivation$args[[1]]$column[[3]] <- 3L
         case_output$derivation$args[[1]]$type$value$categories[[3]] <- list(
-            id = 3L, name = "Other", numeric_value = NULL, missing = FALSE, date = NULL
+            id = 3L, name = "Other", numeric_value = NULL, missing = FALSE
         )
         expect_json_equivalent(
             makeCaseVariable(

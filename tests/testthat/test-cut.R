@@ -65,22 +65,19 @@ with_mock_crunch({
                                         id = 1L,
                                         name = "one",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     ),
                                     list(
                                         id = 2L,
                                         name = "two",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     ),
                                     list(
                                         id = 3L,
                                         name = "three",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     )
                                 )
                             )
@@ -163,22 +160,19 @@ with_mock_crunch({
                                         id = 1L,
                                         name = "one",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     ),
                                     list(
                                         id = 2L,
                                         name = "two",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     ),
                                     list(
                                         id = 3L,
                                         name = "three",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     )
                                 )
                             )
@@ -258,15 +252,13 @@ with_mock_crunch({
                                         id = 1L,
                                         name = "one",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     ),
                                     list(
                                         id = 2L,
                                         name = "two",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     )
                                 )
                             )
@@ -329,22 +321,19 @@ with_mock_crunch({
                                         id = 1L,
                                         name = "(-1.5,-0.44]",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     ),
                                     list(
                                         id = 2L,
                                         name = "(-0.44,0.61]",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     ),
                                     list(
                                         id = 3L,
                                         name = "(0.61,1.7]",
                                         numeric_value = NULL,
-                                        missing = FALSE,
-                                        date = NULL
+                                        missing = FALSE
                                     )
                                 )
                             )
