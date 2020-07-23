@@ -245,10 +245,13 @@ test_that("toVariable handles POSIX datetimes (and timezones)", {
         )
     )
 
+    # We store times as UTC when they go between R and crunch's database, but we assume
+    # they actually refer to local times, so when we convert a variable of eg 5AM central
+    # time it gets stored as 5AM UTC
     expect_equivalent(
         toVariable(as.POSIXct(numtime, origin = "1970-01-01", tz = "America/Chicago")),
         list(
-            values = "2016-01-31T11:01:57.123", type = "datetime",
+            values = "2016-01-31T05:01:57.123", type = "datetime",
             resolution = "ms"
         )
     )
@@ -256,7 +259,7 @@ test_that("toVariable handles POSIX datetimes (and timezones)", {
     expect_equivalent(
         toVariable(as.POSIXct(numtime, origin = "1970-01-01", tz = "America/New_York")),
         list(
-            values = "2016-01-31T11:01:57.123", type = "datetime",
+            values = "2016-01-31T06:01:57.123", type = "datetime",
             resolution = "ms"
         )
     )

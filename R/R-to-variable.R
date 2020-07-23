@@ -77,7 +77,12 @@ setMethod("toVariable", "Date", function(x, ...) {
 setMethod("toVariable", "POSIXt", function(x, ...) {
     # R uses truncation rather than rounding for formatting ms, so numeric
     # precision can cause us to be off. Get 4 digits and round them
-    values <- strftime(x, "%Y-%m-%dT%H:%M:%OS4", tz = "UTC")
+
+    # Upload as local time, even though it will be converted to UTC in crunch's database
+    # this means the "print" value of the date (eg when we get the date back, it'll be
+    # stored as UTC, so 1AM CST becomes 1AM UTC)
+    tzone <- attr(x, "tzone")
+    values <- strftime(x, "%Y-%m-%dT%H:%M:%OS4", tz = tzone)
     values <- paste0(
         substr(values, 1, 20),
         as.character(round(as.numeric(substr(values, 21, 26)) / 10))
