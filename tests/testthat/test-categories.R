@@ -41,6 +41,18 @@ with_mock_crunch({
         ), "Invalid category names: must be unique")
     })
 
+    test_that("fill in category id when missing", {
+        expect_equal(
+            Categories(list(name = "A"), list(name = "B")),
+            Categories(list(id = 1L, name = "A"), list(id = 2L, name = "B"))
+        )
+
+        expect_equal(
+            Categories(list(name = "A", id = 2L), list(name = "B")),
+            Categories(list(id = 2L, name = "A"), list(id = 1L, name = "B"))
+        )
+    })
+
     test_that("category slicers", {
         expect_true(is.categories(cats[1]))
         expect_equal(cats[c("Female", "Male")], cats[c(2, 1)])

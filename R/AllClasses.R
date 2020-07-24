@@ -314,7 +314,27 @@ setClass("Categories", contains = "AbstractCategories")
 
 #' @rdname Categories
 #' @export
-Categories <- GenericConstructor("Categories")
+Categories <- function(..., data = NULL) {
+    # Fill in ids if missing
+    if (is.null(data)) data <- list(...)
+
+    # use try because we haven't validated that they're category-like yet
+    used_ids <- try(vapply(data, function(x) x$id %||% NA, numeric(1)), silent = TRUE)
+    if (!inherits(used_ids, "try-error") && any(is.na(used_ids))) {
+        all_ids <- used_ids
+        all_ids[is.na(used_ids)] <- setdiff(
+            seq_along(data),
+            used_ids
+        )[seq_len(sum(is.na(used_ids)))]
+
+        data <- mapply(function(cat, used_id, all_id) {
+            if (is.na(used_id)) cat$id <- all_id
+            cat
+        }, data, used_ids, all_ids, SIMPLIFY = FALSE)
+    }
+
+    new("Categories", data)
+}
 
 #' @rdname Categories
 #' @export
