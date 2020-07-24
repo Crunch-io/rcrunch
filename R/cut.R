@@ -172,7 +172,7 @@ generateNumCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
 #' `breaks = "2 weeks"` will break the datetime data into 2 week size bins
 #' while `breaks = as.Date(c("2020-01-01", "2020-01-15" "2020-02-01"))`
 #' will recode the data into two groups based on
-#' whether the numeric vector falls between January 1st and 14th or 15th and 31st.
+#' whether the numeric vector falls between January 1 and 14 or January 15 and 31
 #' @param x A Crunch `DatetimeVariable`
 #' @param breaks Either a numeric vector of two or more unique cut point datetimes
 #' or a single string giving the interval size into which `x` is to be
@@ -187,8 +187,8 @@ generateNumCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
 #'  "YYYY/MM/DD - YYYY/MM/DD" (for example ("2020/01/01 - 2020/01/14"))
 #' @param dates (Optionally) A character vector with the date strings that should
 #' be associated with the resulting categories. These dates can have the form
-#' "YYYY-MM-DD", "YYYY-MM", "YYYY", "YYYY-WXX" (where XX is the ISO week number) or
-#' "YYYY-MM-DD,YYYY-MM-DDD". If left `NULL`, it will be created from the categories.
+#' "YYYY-MM-DD", "YYYY-MM", "YYYY", "YYYY-WXX" (where "XX" is the ISO week number) or
+#' "YYYY-MM-DD,YYYY-MM-DD". If left `NULL`, it will be created from the categories.
 #' @param name The name of the resulting Crunch variable as a character string.
 #' @param right logical, indicating if the intervals should be closed on the
 #' right (and open on the left) or vice versa. This only applies if giving a

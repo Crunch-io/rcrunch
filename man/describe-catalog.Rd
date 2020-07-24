@@ -28,6 +28,8 @@
 \alias{ids<-,Categories-method}
 \alias{values,Categories-method}
 \alias{values<-,Categories-method}
+\alias{dates,Categories-method}
+\alias{dates<-,Categories-method}
 \alias{names.CrunchDataFrame}
 \alias{names,CrunchCube-method}
 \alias{aliases,CrunchCube-method}
@@ -106,6 +108,10 @@ dates(x) <- value
 \S4method{values}{Categories}(x)
 
 \S4method{values}{Categories}(x) <- value
+
+\S4method{dates}{Categories}(x)
+
+\S4method{dates}{Categories}(x) <- value
 
 \method{names}{CrunchDataFrame}(x)
 

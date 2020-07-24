@@ -133,11 +133,13 @@ setMethod("values", "Categories", function(x) vapply(x, value, numeric(1)))
 #' @export
 setMethod("values<-", "Categories", setValues)
 
+#' @rdname describe-catalog
 #' @export
 setMethod("dates", "Categories", function(x) {
     structure(vapply(x, dates, character(1), USE.NAMES = FALSE), .Names = names(x))
 })
 
+#' @rdname describe-catalog
 #' @export
 setMethod("dates<-", "Categories", setDates)
 

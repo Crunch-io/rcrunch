@@ -24,8 +24,8 @@ breaks. If not specified, labels are constructed with a formatting like
 
 \item{dates}{(Optionally) A character vector with the date strings that should
 be associated with the resulting categories. These dates can have the form
-"YYYY-MM-DD", "YYYY-MM", "YYYY", "YYYY-WXX" (where XX is the ISO week number) or
-"YYYY-MM-DD,YYYY-MM-DDD". If left \code{NULL}, it will be created from the categories.}
+"YYYY-MM-DD", "YYYY-MM", "YYYY", "YYYY-WXX" (where "XX" is the ISO week number) or
+"YYYY-MM-DD,YYYY-MM-DD". If left \code{NULL}, it will be created from the categories.}
 
 \item{name}{The name of the resulting Crunch variable as a character string.}
 
@@ -49,7 +49,7 @@ the start and end point of each category. For example, specifying
 \code{breaks = "2 weeks"} will break the datetime data into 2 week size bins
 while \verb{breaks = as.Date(c("2020-01-01", "2020-01-15" "2020-02-01"))}
 will recode the data into two groups based on
-whether the numeric vector falls between January 1st and 14th or 15th and 31st.
+whether the numeric vector falls between January 1 and 14 or January 15 and 31
 }
 \examples{
 \dontrun{

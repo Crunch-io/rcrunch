@@ -51,6 +51,7 @@ setDate <- function(x, value) {
     return(x)
 }
 
+#' @rdname describe-entity
 #' @export
 setMethod("dates", "Category", function(x) {
     v <- as.character(x[["date"]])
