@@ -581,14 +581,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"), # nolint
                                     structure(list(value = "2020-01-01"), class = "zcl")
                                 )
                             ),
                             list(
                                 `function` = "<",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"), # nolint
                                     structure(list(value = "2020-02-01"), class = "zcl")
                                 )
                             )
@@ -600,14 +600,14 @@ with_mock_crunch({
                             list(
                                 `function` = ">=",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"), # nolint
                                     structure(list(value = "2020-02-01"), class = "zcl")
                                     )
                                 ),
                             list(
                                 `function` = "<",
                                 args = list(
-                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"),
+                                    list(variable = "https://app.crunch.io/api/datasets/b9d811/variables/000001/"), # nolint
                                     structure(list(value = "2020-03-01"), class = "zcl")
                                     )
                                 )
