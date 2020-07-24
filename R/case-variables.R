@@ -124,12 +124,12 @@ caseExpr <- function(..., cases) {
     new_cat_type <- list(
         value = list(
             class = "categorical",
-            categories = unname(lapply(cases, function(case) {
+            categories = lapply(cases, function(case) {
                 case[c("id", "name", "numeric_value", "missing")]
-            }))
+            })
         )
     )
-    new_cat_ids <- unname(vapply(cases, vget("id"), integer(1)))
+    new_cat_ids <- vapply(cases, vget("id"), integer(1))
     new_cat <- list(column = I(new_cat_ids), type = new_cat_type)
 
     # remove nulls from case expressions (should only be from the else case)

@@ -61,7 +61,7 @@ makeCaseWhenVariable <- function(..., data = NULL, formulas = NULL, name) {
     formula_dots <- vapply(dots, function(x) inherits(x, "formula"), logical(1))
 
     args <- list(
-        data = caseWhenExpr(data = data, formulas = c(formulas, dots[formula_dots])),
+        data = caseWhenExpr(data = data, formulas = c(formulas, unname(dots[formula_dots]))),
         name = name
     )
     args <- c(args, dots[!formula_dots])
