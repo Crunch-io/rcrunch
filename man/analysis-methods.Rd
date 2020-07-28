@@ -84,6 +84,8 @@ filter(x) <- value
 \item{x}{a \code{CrunchSlide}, \code{AnalysisCatalog}, or \code{Analysis}}
 
 \item{value}{for the setter, a query}
+
+\item{...}{ignored}
 }
 \value{
 an \code{AnalysisCatalog}, \code{Analysis}, \code{Cube}, or \code{Filter}

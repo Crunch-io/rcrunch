@@ -11,6 +11,7 @@
 #'
 #' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
 #' @param value for the setter, a query
+#' @param ... ignored
 #'
 #' @return an `AnalysisCatalog`, `Analysis`, `Cube`, or `Filter`
 #' @rdname analysis-methods
