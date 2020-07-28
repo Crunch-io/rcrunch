@@ -561,7 +561,7 @@ setMethod("filter", "ANY", function(x, ...) {
             return(func(x, ...))
         }
     }
-    halt("No method found for filter for object of type ", dQuote(getClass(x)))
+    halt("No method found for filter for object of type ", dQuote(methods::getClass(x)))
 })
 
 #' @rdname analysis-methods
