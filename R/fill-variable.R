@@ -14,7 +14,7 @@
 #'   `dataset$` in front of each variable name
 #'
 #' @return A `CrunchExpression` that assigns
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{

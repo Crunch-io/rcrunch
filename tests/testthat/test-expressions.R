@@ -352,20 +352,6 @@ with_mock_crunch({
     })
 
 
-    test_that("textContains expr", {
-        expr <- textContains(ds$textVar, "^[ABC]")
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"contains","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/textVar/"},', # nolint
-                '{"value":"^[ABC]"}]}'
-            )
-        )
-
-        expect_error(textContains(ds$gender), "Text")
-    })
-
     test_that("anyNA expr", {
         expr <- anyNA(ds$mymrset)
         expect_is(expr, "CrunchExpr")
@@ -466,19 +452,6 @@ with_mock_crunch({
         )
 
         expect_error(nchar(ds$gender), "Text")
-    })
-
-    test_that("crunchNormalize expr", {
-        expr <- crunchNormalize(ds$birthyr)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"normalize","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}' # nolint
-            )
-        )
-
-        expect_error(crunchNormalize(ds$gender), "Numeric")
     })
 
     test_that("trim expr", {

@@ -205,9 +205,6 @@ zfuncExpr <- function(fun, x, ...) {
 #' - Comparison operators `<`, `<=`, `>`, `>=` work the same way as their base R counterparts.
 #' - `crunchBetween(x, lower, upper, inclusive)` to provide lower and upper bounds in a single
 #'   expression.
-#' - `textContains(x, regex, ignore_case)` looks for the regular expression pattern `regex` in
-#'   a `TextVariable` (or expression) `x` and returns a `CrunchLogicalExpr` indicating if it was
-#'   found.
 #'
 #' Missing data expressions
 #' - `is.na(x)`, `is.valid(x)` return `CrunchLogicalExpr` whether a single variable (or expression
@@ -252,16 +249,11 @@ zfuncExpr <- function(fun, x, ...) {
 #'  - `caseExpr(..., cases)` Create a categorical variable from
 #'    a set of logical expressions that when met are assigned to a category. See
 #'    [`makeCaseVariable()`] for more details.
-#'  - `fillExpr(..., fills)` Create a categorical variable by assigning existing categories
-#'     to be filled in by values from another categorical variable See [`fillExpr()`]
-#'     for more details.
 #'  - `bin(x)` returns a column's values binned into equidistant bins.
 #'  - `nchar(x)` returns a numeric value indicating the length of a string (or missing reason)
 #'     in a `TextVariable` (or expression that creates one)
 #'  - `unmissing(x)` for a `NumericVariable` (or expression that creates one) return the values of
 #'    the data, ignoring the ones set to missing.
-#'  - `crunchNormalize(x)` for a `NumericVariable` (or expression that creates one) return values
-#'    normalized so that the sum of all values is equal to the number of observations.
 #'  - `trim(x, min, max)` for a `NumericVariable` (or expression that creates one) return values
 #'    that where all values less than `min` have been replaced with `min` and all values greater
 #'    than `max` have been
@@ -543,14 +535,6 @@ setMethod("any", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
 
 #' @rdname expressions-internal
 #' @export
-textContains <- function(x, regex, ignore_case = FALSE) {
-    isVarButNotType(x, "Text", "textContains")
-    func_name <- if (ignore_case) "icontains" else "contains"
-    zfuncExpr(func_name, x, regex)
-}
-
-#' @rdname expressions-internal
-#' @export
 setMethod("anyNA", "CrunchVarOrExpr", function(x, recursive = FALSE) {
     isVarButNotType(x, "Array", "anyNA")
     if (recursive) warning("recursive ignored by crunch::anyNA()")
@@ -618,13 +602,6 @@ setMethod("nchar", c("CrunchVarOrExpr"), function(x, type = "chars", allowNA = F
 
     zfuncExpr("char_length", x)
 })
-
-#' @rdname expressions-internal
-#' @export
-crunchNormalize <- function(x) {
-    isVarButNotType(x, "Numeric", "crunchNormalize")
-    zfuncExpr("normalize", x)
-}
 
 #' @rdname expressions-internal
 #' @export

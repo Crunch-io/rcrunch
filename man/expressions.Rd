@@ -40,9 +40,6 @@ Comparisons
 \item Comparison operators \code{<}, \code{<=}, \code{>}, \code{>=} work the same way as their base R counterparts.
 \item \code{crunchBetween(x, lower, upper, inclusive)} to provide lower and upper bounds in a single
 expression.
-\item \code{textContains(x, regex, ignore_case)} looks for the regular expression pattern \code{regex} in
-a \code{TextVariable} (or expression) \code{x} and returns a \code{CrunchLogicalExpr} indicating if it was
-found.
 }
 
 Missing data expressions
@@ -95,16 +92,11 @@ Miscellaneous expressions
 \item \code{caseExpr(..., cases)} Create a categorical variable from
 a set of logical expressions that when met are assigned to a category. See
 \code{\link[=makeCaseVariable]{makeCaseVariable()}} for more details.
-\item \code{fillExpr(..., fills)} Create a categorical variable by assigning existing categories
-to be filled in by values from another categorical variable See \code{\link[=fillExpr]{fillExpr()}}
-for more details.
 \item \code{bin(x)} returns a column's values binned into equidistant bins.
 \item \code{nchar(x)} returns a numeric value indicating the length of a string (or missing reason)
 in a \code{TextVariable} (or expression that creates one)
 \item \code{unmissing(x)} for a \code{NumericVariable} (or expression that creates one) return the values of
 the data, ignoring the ones set to missing.
-\item \code{crunchNormalize(x)} for a \code{NumericVariable} (or expression that creates one) return values
-normalized so that the sum of all values is equal to the number of observations.
 \item \code{trim(x, min, max)} for a \code{NumericVariable} (or expression that creates one) return values
 that where all values less than \code{min} have been replaced with \code{min} and all values greater
 than \code{max} have been

@@ -31,7 +31,6 @@
 \alias{crunchBetween}
 \alias{all,CrunchVarOrExpr-method}
 \alias{any,CrunchVarOrExpr-method}
-\alias{textContains}
 \alias{anyNA,CrunchVarOrExpr-method}
 \alias{allNA}
 \alias{complete.cases,CrunchVarOrExpr-method}
@@ -40,7 +39,6 @@
 \alias{selectedDepth}
 \alias{arraySelections}
 \alias{nchar,CrunchVarOrExpr-method}
-\alias{crunchNormalize}
 \alias{trim}
 \alias{alterCategoriesExpr}
 \alias{arraySubsetExpr}
@@ -99,8 +97,6 @@ crunchBetween(x, lower, upper, inclusive = c(TRUE, FALSE))
 
 \S4method{any}{CrunchVarOrExpr}(x, ..., na.rm = FALSE)
 
-textContains(x, regex, ignore_case = FALSE)
-
 \S4method{anyNA}{CrunchVarOrExpr}(x, recursive = FALSE)
 
 allNA(x)
@@ -116,8 +112,6 @@ selectedDepth(x)
 arraySelections(x)
 
 \S4method{nchar}{CrunchVarOrExpr}(x, type = "chars", allowNA = FALSE, keepNA = NA)
-
-crunchNormalize(x)
 
 trim(x, min, max)
 
