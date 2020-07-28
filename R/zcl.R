@@ -53,7 +53,7 @@ zfunc <- function(func, ...) {
         unnamed_dots <- dots
         named_dots <- NULL
     } else {
-        unnamed_dots <- dots[names(dots) == ""]
+        unnamed_dots <- unname(dots[names(dots) == ""])
         named_dots <- dots[names(dots) != ""]
     }
 

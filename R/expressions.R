@@ -544,7 +544,7 @@ setMethod("anyNA", "CrunchVarOrExpr", function(x, recursive = FALSE) {
 #' @rdname expressions-internal
 #' @export
 allNA <- function(x) {
-    isVarButNotType(x, "Array", "all_missing")
+    isVarButNotType(x, "Array", "allNA")
     zfuncExpr("all_missing", x)
 }
 
@@ -736,36 +736,6 @@ arraySubsetExpr <- function(x, subvars, subvar_id = c("alias", "name", "id")) {
     }
 
     zfuncExpr("array_subset", x, list(value = I(subvars)))
-}
-
-alterArrayExpr <- function(x, add = NULL, order = NULL, remove = NULL, subreferences = NULL) {
-    isVarButNotType(x, "Array", "alterArray")
-    add_ids <- if (is.null(names(add))) new_array_ids(x, length(add)) else names(add)
-
-    add <- setNames(lapply(add, zcl), add_ids)
-
-    zfuncExpr(
-        "alter_array",
-        x,
-        add = list(map = add),
-        order = list(value = order),
-        subreferences = list(value = subreferences)
-    )
-}
-
-new_array_ids <- function(array, num) {
-    if (is.variable(array)) {
-        existing_ids <- ids(subvariables(array))
-    } else {
-        existing_ids <- try({
-            arrayflat <- unlist(array)
-            unlist(arrayflat)[grepl("\\.map\\.", names(arrayflat))]
-        }, silent = TRUE)
-        if (inherits(existing_ids, "try-error")) existing_ids <- c()
-    }
-
-    max_numeric <- suppressWarnings(max(c(as.numeric(existing_ids), 0), na.rm = TRUE))
-    as.character(max_numeric + seq_len(num))
 }
 
 #' @rdname crunch-is

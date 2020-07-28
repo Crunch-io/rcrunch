@@ -240,7 +240,10 @@ with_mock_crunch({
             )
         )
 
-        expect_error(crunchDifftime(ds$gender, ds$gender), "Datetime")
+        expect_error(
+            crunchDifftime(ds$gender, ds$gender),
+            "variable must be of type 'Datetime' for crunchDifftime"
+        )
     })
 
     test_that("datetimeFromCols expr", {
@@ -255,7 +258,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(datetimeFromCols(ds$gender, ds$gender, ds$gender), "Numeric")
+        expect_error(datetimeFromCols(ds$gender, ds$gender, ds$gender), "variable must be of type 'Numeric' for datetimeFromCols")
     })
 
     test_that("%ornm% expr", {
@@ -319,7 +322,7 @@ with_mock_crunch({
                 '{"value":3},{"value":5},{"value":[true,false]}]}'
             )
         )
-        expect_error(crunchBetween(ds$gender, 3, 5), "Numeric")
+        expect_error(crunchBetween(ds$gender, 3, 5), "variable must be of type 'Numeric' for crunchBetween")
     })
 
     test_that("all expr", {
@@ -332,8 +335,8 @@ with_mock_crunch({
             )
         )
 
-        expect_error(all(ds$gender), "Array")
-        expect_error(all(ds$mymrset, ds$gender), "single argument")
+        expect_error(all(ds$gender), "variable must be of type 'Array' for all")
+        expect_error(all(ds$mymrset, ds$gender), "all.+only works on arrays so can only take a single argument")
         expect_warning(all(ds$mymrset, na.rm = TRUE), "na.rm")
     })
 
@@ -347,8 +350,8 @@ with_mock_crunch({
             )
         )
 
-        expect_error(any(ds$birthyr), "Array")
-        expect_error(any(ds$mymrset, ds$gender), "single argument")
+        expect_error(any(ds$birthyr), "variable must be of type 'Array' for any")
+        expect_error(any(ds$mymrset, ds$gender), "any.+only works on arrays so can only take a single argument")
     })
 
 
@@ -361,8 +364,8 @@ with_mock_crunch({
                 '{"function":"any_missing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
             )
         )
-        expect_error(anyNA(ds$gender), "Array")
-        expect_warning(anyNA(ds$mymrset, recursive = TRUE), "recursive")
+        expect_error(anyNA(ds$gender), "variable must be of type 'Array' for anyNA")
+        expect_warning(anyNA(ds$mymrset, recursive = TRUE), "recursive ignored by crunch::anyNA")
     })
 
     test_that("allNA expr", {
@@ -374,7 +377,7 @@ with_mock_crunch({
                 '{"function":"all_missing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
             )
         )
-        expect_error(anyNA(ds$gender), "Array")
+        expect_error(allNA(ds$gender), "variable must be of type 'Array' for allNA")
     })
 
     test_that("complete.cases expr", {
@@ -387,7 +390,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(complete.cases(ds$gender), "Array")
+        expect_error(complete.cases(ds$gender), "variable must be of type 'Array' for complete.cases")
     })
 
     test_that("is.selected expr", {
@@ -399,7 +402,7 @@ with_mock_crunch({
                 '{"function":"selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]}' # nolint
             )
         )
-        expect_error(is.selected(ds$birthyr), "Categorical")
+        expect_error(is.selected(ds$birthyr), "variable must be of type 'Categorical' for is.selected")
     })
 
     test_that("asSelected expr", {
@@ -412,7 +415,13 @@ with_mock_crunch({
             )
         )
 
-        expect_error(asSelected(ds$birthyr), "Multiple Response")
+        expect_error(
+            asSelected(ds$birthyr),
+            paste0(
+                "variable must be of type 'Categorical', 'Categorical Array', ",
+                "'Multiple Response' for asSelected"
+                )
+        )
     })
 
     test_that("selectedDepth expr", {
@@ -425,7 +434,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(selectedDepth(ds$gender), "Multiple Response")
+        expect_error(selectedDepth(ds$gender), "variable must be of type 'Multiple Response' for selectedDepth")
     })
 
     test_that("arraySelections expr", {
@@ -438,7 +447,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(arraySelections(ds$gender), "Multiple Response")
+        expect_error(arraySelections(ds$gender), "variable must be of type 'Multiple Response' for arraySelections")
     })
 
     test_that("nchar expr", {
@@ -451,7 +460,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(nchar(ds$gender), "Text")
+        expect_error(nchar(ds$gender), "variable must be of type 'Text' for nchar")
     })
 
     test_that("trim expr", {
@@ -465,7 +474,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(trim(ds$gender), "Numeric")
+        expect_error(trim(ds$gender), "variable must be of type 'Numeric' for trim")
     })
 
     test_that("alterCategoriesExpr - var: ids", {
@@ -546,7 +555,7 @@ with_mock_crunch({
         # Wrong var type
         expect_error(
             alterCategoriesExpr(ds$birthyr, list(list(id = 1, name = "AAA"))),
-            "'Array', 'Categorical'"
+            "variable must be of type 'Array', 'Categorical' for alterCategoriesExpr"
         )
 
         # Rely on names when have an expression
@@ -656,7 +665,7 @@ with_mock_crunch({
             "Must subset by id when subsetting an expression"
         )
 
-        expect_error(arraySubsetExpr(ds$gender), "Array")
+        expect_error(arraySubsetExpr(ds$gender), "variable must be of type 'Array' for arraySubsetExpr")
     })
 })
 

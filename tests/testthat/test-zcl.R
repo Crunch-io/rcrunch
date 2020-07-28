@@ -36,4 +36,25 @@ with_mock_crunch({
         expect_true(has.function(func, "case"))
         expect_true(has.function(func, "cube_mean"))
     })
+
+    test_that("named and unnamed keywords passed correctly", {
+        func <- zfunc(
+            "alter_array",
+            ds$mymrset,
+            add = list(map = list("5" = list(variable = self(ds$gender))))
+        )
+
+        expect_equal(
+            func,
+            list(
+                `function` = "alter_array",
+                args = list(
+                    list(variable = "https://app.crunch.io/api/datasets/1/variables/mymrset/")
+                ),
+                kwargs = list(
+                    add = list(map = list(`5` = list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/")))
+                )
+            )
+        )
+    })
 })
