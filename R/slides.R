@@ -555,12 +555,13 @@ setMethod("filter", "Analysis", function(x, ...) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter", "ANY", function(x, ...) {
-    if ("dplyr" %in% .packages()) {
-        func <- get("filter", asNamespace("dplyr"))
-    } else {
-        func <- stats::filter
+    for (searchpath in search()) {
+        func <- get("filter", as.environment(searchpath))
+        if (!identical(func, crunch::filter)) {
+            return(func(x, ...))
+        }
     }
-    func(x, ...)
+    halt("No method found for filter for object of type ", dQuote(getClass(x)))
 })
 
 #' @rdname analysis-methods
