@@ -560,7 +560,7 @@ setMethod("filter", "ANY", function(x, ...) {
     } else {
         func <- stats::filter
     }
-    func(.data = x, ...)
+    func(x, ...)
 })
 
 #' @rdname analysis-methods
