@@ -48,25 +48,6 @@ straightlineResponse <- function(x, name, ...) {
     )
 }
 
-
-#' Create a categorical variable using tiers of a Categorical Array
-#'
-#' Collapses a categorical array to the first value of tiers that is found.
-#'
-#' @param x A Categorical Array variable
-#' @param tiers A vector of ids, category names, or values. Can pass a named
-#'   vector, where the names indicate the type, or if there are no names, then
-#'   numeric values are assumed to be ids and characters are assumed to be names.
-#' @param name a character to use as the name of the case variable to create
-#' @param ... Metadata like name or description that is passed to [`VarDef()`]
-
-#'
-#' @return A Variable Definition
-#' @export
-tieredVar <- function(x, tiers, name, ...) {
-    VarDef(tieredExpr(x, tiers), name = name, ...)
-}
-
 #' Create variables based on row-wise functions for crunch Multiple Response Variables
 #'
 #' Quickly generate new variables that are based on row-wise summaries of Multiple Response

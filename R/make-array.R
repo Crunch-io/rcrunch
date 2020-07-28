@@ -256,6 +256,46 @@ deriveArray <- function(subvariables, name, selections, ...) {
 }
 
 
+#' @rdname expressions-internal
+#' @export
+makeFrame <- function(x) {
+    ## Get subvariable URLs
+    if (is.dataset(x)) {
+        ## as in, if the list of variables is a [ extraction from a Dataset
+        x <- allVariables(x)
+    }
+
+    # if it's a list, it could contain variable definitions:
+    if (is.list(x)) {
+        x <- x[lengths(x) > 0] # remove NULLs (from eg slider)
+        x <- lapply(x, function(sv) {
+            if (is.VarDef(sv)) {
+                out <- sv$derivation
+                out$references <- sv[names(sv) != "derivation"]
+                out
+            } else {
+                list(variable = urls(sv))
+            }
+        })
+    } else { # but ShojiCatalogs don't give their urls when lapplying, so treat differently
+        x <- lapply(urls(x), function(sv) list(variable = sv))
+    }
+
+    subvarids <- as.character(seq_along(x))
+    expression <- zfunc("array", zfunc(
+        "make_frame",
+        list(map = structure(x, .Names = subvarids)),
+        list(value = I(subvarids))
+    ))
+    # TODO: filters are not preserved in makeFrame expressions because
+    # they aren't preserved in `VarDefs` which expressions are wrapped in
+    # when forming variables... I believe this will only affect someone trying to
+    # `as.vector()` an array, which also doesn't currently work so leave it for now.
+    CrunchExpr(expression = expression)
+}
+
+
+
 #' Rearrange array subvariables
 #'
 #' Sometimes it is useful to group subvariables across arrays in order to

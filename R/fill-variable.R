@@ -1,4 +1,4 @@
-#' Fill a variable from another
+#' Expression to fill a variable from another
 #'
 #' Given a categorical variable, assign one or more categories to be filled in by
 #' another existing variable or crunch expression. (Categories not filled in will
@@ -12,50 +12,26 @@
 #'   matched to the existing categories
 #' @param data (optional) a crunch dataset to use. Specifying this means you don't have to put
 #'   `dataset$` in front of each variable name
-#' @param name A character to use as the name of the variable to create
 #'
-#' @return A [`VariableDefinition`] that will create the new fill variable when assigned into
-#'   the Dataset.
+#' @return A `CrunchExpression` that assigns
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' makeFillVariable(
+#' fillExpr(
 #'     ds$v1,
 #'     fills = list(
 #'         list(fill = ds$v2, name = "dog")
-#'     ),
-#'     name = "new fill"
+#'     )
 #' )
-#' makeFillVariable(v1, "dog" = ds$v2, name = "new fill")
+#' fillExpr(v1, "dog" = ds$v2)
 #'
 #' # the dataset can be specified with data=
-#' makeFillVariable(v1, "dog" = v2, data = ds, name = "new fill")
+#' fillExpr(v1, "dog" = v2, data = ds)
 #' }
-makeFillVariable <- function(x, fills, ..., data = NULL, name) {
-    x <- evalSide(substitute(x), data = data, eval_env = parent.frame())
+fillExpr <- function(x, fills, ..., data = NULL) {
     dots <- as.list(substitute(list(...)))[-1L]
-    dots <- lapply(dots, evalSide, dat = data, eval_env = parent.frame())
-    is_expr_or_var <- function(x) {
-        is.Expr(x) || is.variable(x)
-    }
 
-    args <- Filter(is_expr_or_var, dots)
-    args$x <- x
-    if (!missing(fills)) {
-        fills <- evalSide(substitute(fills), data, parent.frame())
-        args$fills <- fills
-    }
-    derivation <- do.call(fillExpr, args)
-    meta <- Filter(Negate(is_expr_or_var), dots)
-
-    do.call(VarDef, c(meta, list(name = name, data = derivation)))
-}
-
-#' @rdname makeFillVariable
-#' @export
-fillExpr <- function(x, fills, ...) {
-    dots <- list(...)
     if (length(dots) == 0 & missing(fills)) {
         halt("Must pass either named arguments to ... or a list to fills")
     }
@@ -63,11 +39,16 @@ fillExpr <- function(x, fills, ...) {
         halt("Cannot pass both named arguments to ... and a list to fills")
     }
 
+    x <- evalSide(substitute(x), data = data, eval_env = parent.frame())
+
     if (length(dots) > 0) {
+        dots <- lapply(dots, evalSide, dat = data, eval_env = parent.frame())
         fills <- lapply(
             seq_along(dots),
             function(dot_num) list(name = names(dots)[dot_num], fill = dots[[dot_num]])
         )
+    } else {
+        fills <- evalSide(substitute(fills), data, parent.frame())
     }
 
     fill_map <- lapply(fills, conform_fill_list)

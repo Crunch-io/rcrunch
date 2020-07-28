@@ -195,18 +195,15 @@ zfuncExpr <- function(fun, x, ...) {
 #' Logical expressions
 #' - These logical operators `==`, `!=`, `&`, `|`, `!`,`%in%`  work the same way as their
 #'   base R counterparts
-#'  - `is.selected(x)`, `is.notSelected(x)` return `CrunchLogicalExpr` whether a value is (or
-#'   is not) in a selected category (missing data is considered not selected, unlike `!` which
-#'   preserves missing)
+#'  - `is.selected(x)` return `CrunchLogicalExpr` whether a value is in a selected category
 #' - `any(x)` and `all(x)` work row-wise on `MultipleResponse` Variables (and expressions),
 #'   though `na.rm` is not implemented for `all(x)`.
 #'   `%ornm%` is similar to `|`, but where "not selected" beats "missing" (so `FALSE %ornm% NA`
 #'    is `FALSE` instead of `NA` as it would be with `FALSE | NA`)
-#' - `isNoneAbove(x)` is equivalent to `!any(x)`
 #'
 #' Comparisons
 #' - Comparison operators `<`, `<=`, `>`, `>=` work the same way as their base R counterparts.
-#' - `between(x, lower, upper, inclusive)` to provide lower and upper bounds in a single
+#' - `crunchBetween(x, lower, upper, inclusive)` to provide lower and upper bounds in a single
 #'   expression.
 #' - `textContains(x, regex, ignore_case)` looks for the regular expression pattern `regex` in
 #'   a `TextVariable` (or expression) `x` and returns a `CrunchLogicalExpr` indicating if it was
@@ -215,9 +212,9 @@ zfuncExpr <- function(fun, x, ...) {
 #' Missing data expressions
 #' - `is.na(x)`, `is.valid(x)` return `CrunchLogicalExpr` whether a single variable (or expression
 #'   that creates one) is missing (or not missing).
-#' - `anyNA(x)`, `allNA(x)`, `allValid(x)` return `CrunchLogicalExpr` whether all/any values in an
-#'   array variable (or expression that creates one) are missing (or not).
-#' - `completeCases(x)` returns an expression that is "selected" if all cases are non-missing,
+#' - `anyNA(x)`, `allNA(x)` return `CrunchLogicalExpr` whether any/all values in an
+#'   array variable (or expression that creates one) are missing.
+#' - `complete.cases(x)` returns an expression that is "selected" if all cases are non-missing,
 #'    "missing" if they are all missing, and "other" otherwise.
 #'
 #' Selection expressions
@@ -236,9 +233,6 @@ zfuncExpr <- function(fun, x, ...) {
 #' Array expressions
 #'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions,
 #'    see `deriveArray()` for more details
-#'  - `tiered(x, tiers)` collapses a categorical array to the first value of tiers that is found
-#'    (`tiers` use the category ids only, so is for advanced use only, [`tieredVar()`] is a nicer
-#'    interface, but does not provide an expression, nor work on expressions).
 #'  - `alterCategoriesExpr(x, categories = NULL, category_order = NULL, subvariables = NULL)`
 #'     Change the category names, order, or subvariable names of categorical or Array variables
 #'     (can only modify existing ones, not add or remove categories or subvariables).
@@ -259,14 +253,14 @@ zfuncExpr <- function(fun, x, ...) {
 #'    a set of logical expressions that when met are assigned to a category. See
 #'    [`makeCaseVariable()`] for more details.
 #'  - `fillExpr(..., fills)` Create a categorical variable by assigning existing categories
-#'     to be filled in by values from another categorical variable See [`makeFillVariable()`]
+#'     to be filled in by values from another categorical variable See [`fillExpr()`]
 #'     for more details.
 #'  - `bin(x)` returns a column's values binned into equidistant bins.
-#'  - `charLength(x)` returns a numeric value indicating the length of a string (or missing reason)
+#'  - `nchar(x)` returns a numeric value indicating the length of a string (or missing reason)
 #'     in a `TextVariable` (or expression that creates one)
 #'  - `unmissing(x)` for a `NumericVariable` (or expression that creates one) return the values of
 #'    the data, ignoring the ones set to missing.
-#'  - `normalize(x)` for a `NumericVariable` (or expression that creates one) return values
+#'  - `crunchNormalize(x)` for a `NumericVariable` (or expression that creates one) return values
 #'    normalized so that the sum of all values is equal to the number of observations.
 #'  - `trim(x, min, max)` for a `NumericVariable` (or expression that creates one) return values
 #'    that where all values less than `min` have been replaced with `min` and all values greater
@@ -435,33 +429,6 @@ is.valid <- function(x) zfuncExpr("is_valid", x)
 #' @export
 bin <- function(x) zfuncExpr("bin", x)
 
-#' @rdname expressions-internal
-#' @export
-tieredExpr <- function(x, tiers) {
-    isVarButNotType(x, "Array", "tiered")
-
-    if (is.null(names(tiers)) && is.numeric(tiers)) names(tiers) <- rep("id", length(tiers))
-    if (is.null(names(tiers)) && is.character(tiers)) names(tiers) <- rep("name", length(tiers))
-
-    if (is.variable(x)) {
-        cats <- categories(x)
-        tiers <- mapply(names(tiers), tiers, FUN = function(type, tier) {
-            matches <- switch(
-                type,
-                "id" = ids(cats) %in% tier,
-                "name" = names(cats) %in% tier,
-                "value" = values(cats) %in% tier,
-                halt("Unexpected tier_type '", type, "'")
-            )
-            if (!any(matches)) halt("Could not find tier ", tier, " in ", type)
-            if (sum(matches) > 1) halt("tier ", tier, " is not unique ", type)
-            ids(cats)[matches]
-        }, SIMPLIFY = FALSE)
-    }
-
-    zfuncExpr("tiered", x, list(value = I(as.numeric(tiers))))
-}
-
 #' @rdname crunch-extract
 #' @export
 setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
@@ -537,44 +504,6 @@ setMethod("duplicated", "CrunchExpr", function(x, incomparables = FALSE, ...) {
     zfuncExpr("duplicates", x)
 })
 
-#' @rdname expressions
-#' @export
-makeFrame <- function(x) {
-    ## Get subvariable URLs
-    if (is.dataset(x)) {
-        ## as in, if the list of variables is a [ extraction from a Dataset
-        x <- allVariables(x)
-    }
-
-    # if it's a list, it could contain variable definitions:
-    if (is.list(x)) {
-        x <- x[lengths(x) > 0] # remove NULLs (from eg slider)
-        x <- lapply(x, function(sv) {
-            if (is.VarDef(sv)) {
-                out <- sv$derivation
-                out$references <- sv[names(sv) != "derivation"]
-                out
-            } else {
-                list(variable = urls(sv))
-            }
-        })
-    } else { # but ShojiCatalogs don't give their urls when lapplying, so treat differently
-        x <- lapply(urls(x), function(sv) list(variable = sv))
-    }
-
-    subvarids <- as.character(seq_along(x))
-    expression <- zfunc("array", zfunc(
-        "make_frame",
-        list(map = structure(x, .Names = subvarids)),
-        list(value = I(subvarids))
-    ))
-    # TODO: filters are not preserved in makeFrame expressions because
-    # they aren't preserved in `VarDefs` which expressions are wrapped in
-    # when forming variables... I believe this will only affect someone trying to
-    # `as.vector()` an array, which also doesn't currently work so leave it for now.
-    CrunchExpr(expression = expression)
-}
-
 #' @rdname expressions-internal
 #' @export
 selectCategories <- function(x, selections, collapse = TRUE) {
@@ -585,8 +514,8 @@ selectCategories <- function(x, selections, collapse = TRUE) {
 
 #' @rdname expressions-internal
 #' @export
-between <- function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
-    isVarButNotType(x, "Numeric", "between")
+crunchBetween <- function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
+    isVarButNotType(x, "Numeric", "crunchBetween")
     zfuncExpr("between", x, lower, upper, list(value = I(inclusive)))
 }
 
@@ -614,13 +543,6 @@ setMethod("any", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
 
 #' @rdname expressions-internal
 #' @export
-isNoneAbove <- function(x) {
-    isVarButNotType(x, "Array", "isNoneAbove")
-    zfuncExpr("is_none_of_the_above", x)
-}
-
-#' @rdname expressions-internal
-#' @export
 textContains <- function(x, regex, ignore_case = FALSE) {
     isVarButNotType(x, "Text", "textContains")
     func_name <- if (ignore_case) "icontains" else "contains"
@@ -644,17 +566,14 @@ allNA <- function(x) {
 
 #' @rdname expressions-internal
 #' @export
-allValid <- function(x) {
-    isVarButNotType(x, "Array", "allValid")
-    zfuncExpr("all_valid", x)
-}
+setMethod("complete.cases", c("CrunchVarOrExpr"), function(x, ...) {
+    isVarButNotType(x, "Array", "complete.cases")
+    if (length(list(...)) > 0) {
+        halt("crunch::complete.cases() only works on arrays so can only take a single argument")
+    }
 
-#' @rdname expressions-internal
-#' @export
-completeCases <- function(x) {
-    isVarButNotType(x, "Array", "completeCases")
     zfuncExpr("complete_cases", x)
-}
+})
 
 #' @rdname expressions-internal
 #' @export
@@ -662,13 +581,6 @@ setMethod("is.selected", "CrunchVarOrExpr", function(x) {
     isVarButNotType(x, "Categorical", "is.selected")
     zfuncExpr("selected", x)
 })
-
-#' @rdname expressions-internal
-#' @export
-is.notSelected <- function(x) {
-    isVarButNotType(x, "Categorical", "is.notSelected")
-    zfuncExpr("not_selected", x)
-}
 
 #' @rdname expressions-internal
 #' @export
@@ -697,22 +609,20 @@ arraySelections <- function(x) {
 
 #' @rdname expressions-internal
 #' @export
-charLength <- function(x) {
-    isVarButNotType(x, "Text", "charLength")
+setMethod("nchar", c("CrunchVarOrExpr"), function(x, type = "chars", allowNA = FALSE, keepNA = NA) {
+    isVarButNotType(x, "Text", "nchar")
+
+    if (type != "chars") warning("type argument ignored in `crunch::nchar()`")
+    if (allowNA) warning("allowNA argument ignored in `crunch::nchar()`")
+    if (!is.na(keepNA)) warning("keepNA argument ignored in `crunch::nchar()`")
+
     zfuncExpr("char_length", x)
-}
+})
 
 #' @rdname expressions-internal
 #' @export
-unmissing <- function(x) {
-    isVarButNotType(x, "Numeric", "unmissing")
-    zfuncExpr("unmissing", x)
-}
-
-#' @rdname expressions-internal
-#' @export
-normalize <- function(x) {
-    isVarButNotType(x, "Numeric", "normalize")
+crunchNormalize <- function(x) {
+    isVarButNotType(x, "Numeric", "crunchNormalize")
     zfuncExpr("normalize", x)
 }
 

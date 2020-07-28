@@ -39,35 +39,6 @@ with_mock_crunch({
         expect_error(straightlineResponse(ds$textvar), "x must be an array variable")
     })
 
-    test_that("tieredVar creates correct vardef", {
-        expect_equal(
-            tieredVar(ds$catarray, c(2, 1), name = "tiered var"),
-            VarDef(crunchdbFunc("tiered", ds$catarray, list(value = I(c(2, 1)))), name = "tiered var") #nolint
-        )
-
-        expect_error(
-            tieredVar(ds$birthyr, c(2, 1), name = "tiered var"),
-            "must be of type 'Array' for tiered"
-        )
-
-        expect_error(
-            tieredVar(ds$catarray, c(3, 1), name = "tiered var"),
-            "3 in id"
-        )
-    })
-
-    test_that("tieredVar type specifications work", {
-        expect_equal(
-            tieredVar(ds$catarray, c(2, 1), name = "tiered var"),
-            tieredVar(ds$catarray, c("B", "A"), name = "tiered var")
-        )
-
-        expect_equal(
-            tieredVar(ds$catarray, c(value = 1, value = 0), name = "tiered var"),
-            tieredVar(ds$catarray, c("B", "A"), name = "tiered var")
-        )
-    })
-
     test_that("rowCount creates correct vardef", {
         expect_equal(
             rowCount(ds$mymrset, name = "row count"),

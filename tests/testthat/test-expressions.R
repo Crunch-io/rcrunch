@@ -309,8 +309,8 @@ with_mock_crunch({
         )
     })
 
-    test_that("between expr", {
-        expr <- between(ds$birthyr, 3, 5)
+    test_that("crunchBetween expr", {
+        expr <- crunchBetween(ds$birthyr, 3, 5)
         expect_is(expr, "CrunchExpr")
         expect_equal(
             unclass(toJSON(expr@expression)),
@@ -319,7 +319,7 @@ with_mock_crunch({
                 '{"value":3},{"value":5},{"value":[true,false]}]}'
             )
         )
-        expect_error(between(ds$gender, 3, 5), "Numeric")
+        expect_error(crunchBetween(ds$gender, 3, 5), "Numeric")
     })
 
     test_that("all expr", {
@@ -351,18 +351,6 @@ with_mock_crunch({
         expect_error(any(ds$mymrset, ds$gender), "single argument")
     })
 
-    test_that("isNoneAbove expr", {
-        expr <- isNoneAbove(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"is_none_of_the_above","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
-            )
-        )
-
-        expect_error(isNoneAbove(ds$gender), "Array")
-    })
 
     test_that("textContains expr", {
         expr <- textContains(ds$textVar, "^[ABC]")
@@ -403,21 +391,8 @@ with_mock_crunch({
         expect_error(anyNA(ds$gender), "Array")
     })
 
-    test_that("allValid expr", {
-        expr <- allValid(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"all_valid","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
-            )
-        )
-
-        expect_error(allValid(ds$gender), "Array")
-    })
-
-    test_that("completeCases expr", {
-        expr <- completeCases(ds$mymrset)
+    test_that("complete.cases expr", {
+        expr <- complete.cases(ds$mymrset)
         expect_is(expr, "CrunchExpr")
         expect_equal(
             unclass(toJSON(expr@expression)),
@@ -426,7 +401,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(completeCases(ds$gender), "Array")
+        expect_error(complete.cases(ds$gender), "Array")
     })
 
     test_that("is.selected expr", {
@@ -439,19 +414,6 @@ with_mock_crunch({
             )
         )
         expect_error(is.selected(ds$birthyr), "Categorical")
-    })
-
-    test_that("is.notSelected expr", {
-        expr <- is.notSelected(ds$gender)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"not_selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]}' # nolint
-            )
-        )
-
-        expect_error(is.notSelected(ds$birthyr), "Categorical")
     })
 
     test_that("asSelected expr", {
@@ -493,8 +455,8 @@ with_mock_crunch({
         expect_error(arraySelections(ds$gender), "Multiple Response")
     })
 
-    test_that("charLength expr", {
-        expr <- charLength(ds$textVar)
+    test_that("nchar expr", {
+        expr <- nchar(ds$textVar)
         expect_is(expr, "CrunchExpr")
         expect_equal(
             unclass(toJSON(expr@expression)),
@@ -503,23 +465,11 @@ with_mock_crunch({
             )
         )
 
-        expect_error(charLength(ds$gender), "Text")
+        expect_error(nchar(ds$gender), "Text")
     })
 
-    test_that("unmissing expr", {
-        expr <- unmissing(ds$birthyr)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"unmissing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}' # nolint
-            )
-        )
-        expect_error(unmissing(ds$gender), "Numeric")
-    })
-
-    test_that("normalize expr", {
-        expr <- normalize(ds$birthyr)
+    test_that("crunchNormalize expr", {
+        expr <- crunchNormalize(ds$birthyr)
         expect_is(expr, "CrunchExpr")
         expect_equal(
             unclass(toJSON(expr@expression)),
@@ -528,7 +478,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(normalize(ds$gender), "Numeric")
+        expect_error(crunchNormalize(ds$gender), "Numeric")
     })
 
     test_that("trim expr", {

@@ -3,12 +3,9 @@
 \name{expressions}
 \alias{expressions}
 \alias{crunchdbFunc}
-\alias{makeFrame}
 \title{Construct Crunch Expressions from Crunch Database Functions}
 \usage{
 crunchdbFunc(fun, x, ...)
-
-makeFrame(x)
 }
 \arguments{
 \item{fun}{The name of the crunch database function to call}
@@ -31,20 +28,17 @@ Logical expressions
 \itemize{
 \item These logical operators \code{==}, \code{!=}, \code{&}, \code{|}, \code{!},\code{\%in\%}  work the same way as their
 base R counterparts
-\item \code{is.selected(x)}, \code{is.notSelected(x)} return \code{CrunchLogicalExpr} whether a value is (or
-is not) in a selected category (missing data is considered not selected, unlike \code{!} which
-preserves missing)
+\item \code{is.selected(x)} return \code{CrunchLogicalExpr} whether a value is in a selected category
 \item \code{any(x)} and \code{all(x)} work row-wise on \code{MultipleResponse} Variables (and expressions),
 though \code{na.rm} is not implemented for \code{all(x)}.
 \verb{\%ornm\%} is similar to \code{|}, but where "not selected" beats "missing" (so \code{FALSE \%ornm\% NA}
 is \code{FALSE} instead of \code{NA} as it would be with \code{FALSE | NA})
-\item \code{isNoneAbove(x)} is equivalent to \code{!any(x)}
 }
 
 Comparisons
 \itemize{
 \item Comparison operators \code{<}, \code{<=}, \code{>}, \code{>=} work the same way as their base R counterparts.
-\item \code{between(x, lower, upper, inclusive)} to provide lower and upper bounds in a single
+\item \code{crunchBetween(x, lower, upper, inclusive)} to provide lower and upper bounds in a single
 expression.
 \item \code{textContains(x, regex, ignore_case)} looks for the regular expression pattern \code{regex} in
 a \code{TextVariable} (or expression) \code{x} and returns a \code{CrunchLogicalExpr} indicating if it was
@@ -55,9 +49,9 @@ Missing data expressions
 \itemize{
 \item \code{is.na(x)}, \code{is.valid(x)} return \code{CrunchLogicalExpr} whether a single variable (or expression
 that creates one) is missing (or not missing).
-\item \code{anyNA(x)}, \code{allNA(x)}, \code{allValid(x)} return \code{CrunchLogicalExpr} whether all/any values in an
-array variable (or expression that creates one) are missing (or not).
-\item \code{completeCases(x)} returns an expression that is "selected" if all cases are non-missing,
+\item \code{anyNA(x)}, \code{allNA(x)} return \code{CrunchLogicalExpr} whether any/all values in an
+array variable (or expression that creates one) are missing.
+\item \code{complete.cases(x)} returns an expression that is "selected" if all cases are non-missing,
 "missing" if they are all missing, and "other" otherwise.
 }
 
@@ -80,9 +74,6 @@ Array expressions
 \itemize{
 \item \code{makeFrame(x)} an expression that creates an array from existing variables or expressions,
 see \code{deriveArray()} for more details
-\item \code{tiered(x, tiers)} collapses a categorical array to the first value of tiers that is found
-(\code{tiers} use the category ids only, so is for advanced use only, \code{\link[=tieredVar]{tieredVar()}} is a nicer
-interface, but does not provide an expression, nor work on expressions).
 \item \code{alterCategoriesExpr(x, categories = NULL, category_order = NULL, subvariables = NULL)}
 Change the category names, order, or subvariable names of categorical or Array variables
 (can only modify existing ones, not add or remove categories or subvariables).
@@ -105,14 +96,14 @@ Miscellaneous expressions
 a set of logical expressions that when met are assigned to a category. See
 \code{\link[=makeCaseVariable]{makeCaseVariable()}} for more details.
 \item \code{fillExpr(..., fills)} Create a categorical variable by assigning existing categories
-to be filled in by values from another categorical variable See \code{\link[=makeFillVariable]{makeFillVariable()}}
+to be filled in by values from another categorical variable See \code{\link[=fillExpr]{fillExpr()}}
 for more details.
 \item \code{bin(x)} returns a column's values binned into equidistant bins.
-\item \code{charLength(x)} returns a numeric value indicating the length of a string (or missing reason)
+\item \code{nchar(x)} returns a numeric value indicating the length of a string (or missing reason)
 in a \code{TextVariable} (or expression that creates one)
 \item \code{unmissing(x)} for a \code{NumericVariable} (or expression that creates one) return the values of
 the data, ignoring the ones set to missing.
-\item \code{normalize(x)} for a \code{NumericVariable} (or expression that creates one) return values
+\item \code{crunchNormalize(x)} for a \code{NumericVariable} (or expression that creates one) return values
 normalized so that the sum of all values is equal to the number of observations.
 \item \code{trim(x, min, max)} for a \code{NumericVariable} (or expression that creates one) return values
 that where all values less than \code{min} have been replaced with \code{min} and all values greater
