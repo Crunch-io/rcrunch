@@ -83,13 +83,13 @@ with_mock_crunch({
         expect_error(
             combine(ds$birthyr),
             paste0(
-                "Cannot combine ", dQuote("Birth Year"), ": must be type ",
-                "categorical, categorical_array, or multiple_response"
+                "Cannot combine ", dQuote("Birth Year"), ": must be a ",
+                "Categorical, Categorical Array, or Multiple Response"
             )
         )
         expect_error(
             combine(ds$starttime),
-            "categorical, categorical_array, or multiple_response"
+            "Categorical, Categorical Array, or Multiple Response"
         )
     })
 

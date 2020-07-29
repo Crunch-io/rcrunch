@@ -38,4 +38,11 @@ with_mock_crunch({
     test_that("error for non-array var straightline", {
         expect_error(straightlineResponse(ds$textvar), "x must be an array variable")
     })
+
+    test_that("rowCount creates correct vardef", {
+        expect_equal(
+            rowCount(ds$mymrset, name = "row count"),
+            VarDef(crunchdbFunc("selected_depth", ds$mymrset), name = "row count")
+        )
+    })
 })

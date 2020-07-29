@@ -7,7 +7,7 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.27.1
+Version: 1.27.2
 Authors@R: c(
     person("Greg", "Freedman Ellis", role = c("aut", "cre"), email = "greg@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
@@ -45,7 +45,7 @@ Suggests:
 VignetteBuilder: knitr
 Language: en-US
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 LazyData: true
 Collate:
@@ -109,6 +109,7 @@ Collate:
     'edit-lock.R'
     'export-dataset.R'
     'expressions.R'
+    'fill-variable.R'
     'filters.R'
     'folders.R'
     'fork-and-merge.R'
@@ -138,7 +139,7 @@ Collate:
     'progress.R'
     'project-folder.R'
     'projects.R'
-    'row-distinct.R'
+    'rowwise.R'
     'search.R'
     'session.R'
     'share.R'

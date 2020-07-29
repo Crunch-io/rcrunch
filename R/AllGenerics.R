@@ -253,6 +253,7 @@ setGeneric("measures", function(x) standardGeneric("measures"))
 setGeneric("subset")
 setGeneric("which", signature = "x")
 
+
 #' Extract and modify Crunch objects
 #'
 #'
