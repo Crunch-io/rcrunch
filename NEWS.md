@@ -1,4 +1,9 @@
-# crunch 1.27.1 (Development version)
+# crunch 1.27.2 (Development version)
+
+# crunch 1.27.1
+* Add several new `expressions` that let you create derived variables in more flexible ways than was previously possible.
+
+* `crunch::filter()` now falls back to the next `filter` on your searchpath when no method is defined.
 
 # crunch 1.27.0
 
