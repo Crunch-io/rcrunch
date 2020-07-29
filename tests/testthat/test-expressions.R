@@ -349,8 +349,8 @@ with_mock_crunch({
         expect_warning(all(ds$mymrset, na.rm = TRUE), "na.rm")
     })
 
-    test_that("any expr", {
-        expr <- any(ds$mymrset)
+    test_that("rowAny expr", {
+        expr <- rowAny(ds$mymrset)
         expect_is(expr, "CrunchExpr")
         expect_equal(
             unclass(toJSON(expr@expression)),
@@ -360,15 +360,11 @@ with_mock_crunch({
         )
 
         expect_error(any(ds$birthyr), "variable must be of type 'Array' for any")
-        expect_error(
-            any(ds$mymrset, ds$gender),
-            "any.+only works on arrays so can only take a single argument"
-        )
     })
 
 
-    test_that("anyNA expr", {
-        expr <- anyNA(ds$mymrset)
+    test_that("rowAnyNA expr", {
+        expr <- rowAnyNA(ds$mymrset)
         expect_is(expr, "CrunchExpr")
         expect_equal(
             unclass(toJSON(expr@expression)),
@@ -376,12 +372,11 @@ with_mock_crunch({
                 '{"function":"any_missing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
             )
         )
-        expect_error(anyNA(ds$gender), "variable must be of type 'Array' for anyNA")
-        expect_warning(anyNA(ds$mymrset, recursive = TRUE), "recursive ignored by crunch::anyNA")
+        expect_error(rowAnyNA(ds$gender), "variable must be of type 'Array' for rowAnyNA")
     })
 
-    test_that("allNA expr", {
-        expr <- allNA(ds$mymrset)
+    test_that("rowAllNA expr", {
+        expr <- rowAllNA(ds$mymrset)
         expect_is(expr, "CrunchExpr")
         expect_equal(
             unclass(toJSON(expr@expression)),
@@ -389,7 +384,7 @@ with_mock_crunch({
                 '{"function":"all_missing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
             )
         )
-        expect_error(allNA(ds$gender), "variable must be of type 'Array' for allNA")
+        expect_error(allNA(ds$gender), "variable must be of type 'Array' for rowAllNA")
     })
 
     test_that("complete.cases expr", {

@@ -64,21 +64,3 @@ straightlineResponse <- function(x, name, ...) {
 rowCount <- function(x, name, ...) {
     VarDef(selectedDepth(x), name = name, ...)
 }
-
-#' @rdname rowCount
-#' @export
-rowAny <- function(x, name, ...) {
-    VarDef(any(x), name = name, ...)
-}
-
-#' @rdname rowCount
-#' @export
-rowAll <- function(x, name, ...) {
-    VarDef(all(x), name = name, ...)
-}
-
-#' @rdname rowCount
-#' @export
-rowAnyNA <- function(x, name, ...) {
-    VarDef(anyNA(x), name = name, ...)
-}

@@ -29,10 +29,10 @@
 \alias{bin}
 \alias{selectCategories}
 \alias{crunchBetween}
-\alias{all,CrunchVarOrExpr-method}
-\alias{any,CrunchVarOrExpr-method}
-\alias{anyNA,CrunchVarOrExpr-method}
-\alias{allNA}
+\alias{rowAll}
+\alias{rowAny}
+\alias{rowAnyNA}
+\alias{rowAllNA}
 \alias{complete.cases,CrunchVarOrExpr-method}
 \alias{is.selected,CrunchVarOrExpr-method}
 \alias{asSelected}
@@ -93,13 +93,13 @@ selectCategories(x, selections, collapse = TRUE)
 
 crunchBetween(x, lower, upper, inclusive = c(TRUE, FALSE))
 
-\S4method{all}{CrunchVarOrExpr}(x, ..., na.rm = FALSE)
+rowAll(x, na.rm = FALSE)
 
-\S4method{any}{CrunchVarOrExpr}(x, ..., na.rm = FALSE)
+rowAny(x, na.rm = FALSE)
 
-\S4method{anyNA}{CrunchVarOrExpr}(x, recursive = FALSE)
+rowAnyNA(x)
 
-allNA(x)
+rowAllNA(x)
 
 \S4method{complete.cases}{CrunchVarOrExpr}(x, ...)
 

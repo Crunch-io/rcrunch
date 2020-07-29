@@ -29,7 +29,7 @@ Logical expressions
 \item These logical operators \code{==}, \code{!=}, \code{&}, \code{|}, \code{!},\code{\%in\%}  work the same way as their
 base R counterparts
 \item \code{is.selected(x)} return \code{CrunchLogicalExpr} whether a value is in a selected category
-\item \code{any(x)} and \code{all(x)} work row-wise on \code{MultipleResponse} Variables (and expressions),
+\item \code{rowAny(x)} and \code{rowAll(x)} work row-wise on \code{MultipleResponse} Variables (and expressions),
 though \code{na.rm} is not implemented for \code{all(x)}.
 \verb{\%ornm\%} is similar to \code{|}, but where "not selected" beats "missing" (so \code{FALSE \%ornm\% NA}
 is \code{FALSE} instead of \code{NA} as it would be with \code{FALSE | NA})
@@ -46,7 +46,7 @@ Missing data expressions
 \itemize{
 \item \code{is.na(x)}, \code{is.valid(x)} return \code{CrunchLogicalExpr} whether a single variable (or expression
 that creates one) is missing (or not missing).
-\item \code{anyNA(x)}, \code{allNA(x)} return \code{CrunchLogicalExpr} whether any/all values in an
+\item \code{rowAnyNA(x)}, \code{rowAllNA(x)} return \code{CrunchLogicalExpr} whether any/all values in an
 array variable (or expression that creates one) are missing.
 \item \code{complete.cases(x)} returns an expression that is "selected" if all cases are non-missing,
 "missing" if they are all missing, and "other" otherwise.

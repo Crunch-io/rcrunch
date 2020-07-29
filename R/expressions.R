@@ -196,7 +196,7 @@ zfuncExpr <- function(fun, x, ...) {
 #' - These logical operators `==`, `!=`, `&`, `|`, `!`,`%in%`  work the same way as their
 #'   base R counterparts
 #'  - `is.selected(x)` return `CrunchLogicalExpr` whether a value is in a selected category
-#' - `any(x)` and `all(x)` work row-wise on `MultipleResponse` Variables (and expressions),
+#' - `rowAny(x)` and `rowAll(x)` work row-wise on `MultipleResponse` Variables (and expressions),
 #'   though `na.rm` is not implemented for `all(x)`.
 #'   `%ornm%` is similar to `|`, but where "not selected" beats "missing" (so `FALSE %ornm% NA`
 #'    is `FALSE` instead of `NA` as it would be with `FALSE | NA`)
@@ -209,7 +209,7 @@ zfuncExpr <- function(fun, x, ...) {
 #' Missing data expressions
 #' - `is.na(x)`, `is.valid(x)` return `CrunchLogicalExpr` whether a single variable (or expression
 #'   that creates one) is missing (or not missing).
-#' - `anyNA(x)`, `allNA(x)` return `CrunchLogicalExpr` whether any/all values in an
+#' - `rowAnyNA(x)`, `rowAllNA(x)` return `CrunchLogicalExpr` whether any/all values in an
 #'   array variable (or expression that creates one) are missing.
 #' - `complete.cases(x)` returns an expression that is "selected" if all cases are non-missing,
 #'    "missing" if they are all missing, and "other" otherwise.
@@ -513,38 +513,30 @@ crunchBetween <- function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
 
 #' @rdname expressions-internal
 #' @export
-setMethod("all", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
-    isVarButNotType(x, "Array", "all")
-    if (length(list(...)) > 0) {
-        halt("crunch::all() only works on arrays so can only take a single argument")
-    }
-    if (na.rm) warning("na.rm ignored by crunch::all()")
+rowAll <- function(x, na.rm = FALSE) {
+    isVarButNotType(x, "Array", "rowAll")
     zfuncExpr("all", x, ...)
-})
+}
 
 #' @rdname expressions-internal
 #' @export
-setMethod("any", c("CrunchVarOrExpr", "ANY"), function(x, ..., na.rm = FALSE) {
-    isVarButNotType(x, "Array", "any")
-    if (length(list(...)) > 0) {
-        halt("crunch::any() only works on arrays so can only take a single argument")
-    }
+rowAny <- function(x, na.rm = FALSE) {
+    isVarButNotType(x, "Array", "rowAny")
     func_name <- if (na.rm) "anynm" else "any"
     zfuncExpr(func_name, x)
-})
+}
 
 #' @rdname expressions-internal
 #' @export
-setMethod("anyNA", "CrunchVarOrExpr", function(x, recursive = FALSE) {
-    isVarButNotType(x, "Array", "anyNA")
-    if (recursive) warning("recursive ignored by crunch::anyNA()")
+rowAnyNA <- function(x) {
+    isVarButNotType(x, "Array", "rowAnyNA")
     zfuncExpr("any_missing", x)
-})
+}
 
 #' @rdname expressions-internal
 #' @export
-allNA <- function(x) {
-    isVarButNotType(x, "Array", "allNA")
+rowAllNA <- function(x) {
+    isVarButNotType(x, "Array", "rowAllNA")
     zfuncExpr("all_missing", x)
 }
 

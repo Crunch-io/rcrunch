@@ -2,18 +2,9 @@
 % Please edit documentation in R/rowwise.R
 \name{rowCount}
 \alias{rowCount}
-\alias{rowAny}
-\alias{rowAll}
-\alias{rowAnyNA}
 \title{Create variables based on row-wise functions for crunch Multiple Response Variables}
 \usage{
 rowCount(x, name, ...)
-
-rowAny(x, name, ...)
-
-rowAll(x, name, ...)
-
-rowAnyNA(x, name, ...)
 }
 \arguments{
 \item{x}{A crunch variable or expression}
