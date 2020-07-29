@@ -515,7 +515,7 @@ crunchBetween <- function(x, lower, upper, inclusive = c(TRUE, FALSE)) {
 #' @export
 rowAll <- function(x, na.rm = FALSE) {
     isVarButNotType(x, "Array", "rowAll")
-    zfuncExpr("all", x, ...)
+    zfuncExpr("all", x)
 }
 
 #' @rdname expressions-internal

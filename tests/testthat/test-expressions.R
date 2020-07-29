@@ -331,8 +331,8 @@ with_mock_crunch({
         )
     })
 
-    test_that("all expr", {
-        expr <- all(ds$mymrset)
+    test_that("rowAll expr", {
+        expr <- rowAll(ds$mymrset)
         expect_is(expr, "CrunchExpr")
         expect_equal(
             unclass(toJSON(expr@expression)),
@@ -341,12 +341,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(all(ds$gender), "variable must be of type 'Array' for all")
-        expect_error(
-            all(ds$mymrset, ds$gender),
-            "all.+only works on arrays so can only take a single argument"
-            )
-        expect_warning(all(ds$mymrset, na.rm = TRUE), "na.rm")
+        expect_error(rowAll(ds$gender), "variable must be of type 'Array' for rowAll")
     })
 
     test_that("rowAny expr", {
@@ -359,7 +354,7 @@ with_mock_crunch({
             )
         )
 
-        expect_error(any(ds$birthyr), "variable must be of type 'Array' for any")
+        expect_error(rowAny(ds$birthyr), "variable must be of type 'Array' for rowAny")
     })
 
 
@@ -384,7 +379,7 @@ with_mock_crunch({
                 '{"function":"all_missing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
             )
         )
-        expect_error(allNA(ds$gender), "variable must be of type 'Array' for rowAllNA")
+        expect_error(rowAllNA(ds$gender), "variable must be of type 'Array' for rowAllNA")
     })
 
     test_that("complete.cases expr", {
