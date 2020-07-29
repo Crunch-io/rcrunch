@@ -52,7 +52,7 @@ with_mock_crunch({
                     list(variable = "https://app.crunch.io/api/datasets/1/variables/mymrset/")
                 ),
                 kwargs = list(
-                    add = list(map = list(`5` = list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/")))
+                    add = list(map = list(`5` = list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/"))) # nolint
                 )
             )
         )
