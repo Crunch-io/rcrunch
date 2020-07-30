@@ -5,7 +5,7 @@
 #' side is where to get the value if the condition on the left-hand side is
 #' true. This must be either a Crunch Categorical variable or a Category.
 #'
-#' @param ... formulas where the left hand side is a CrunchExpression (or `TRUE`
+#' @param ... formulas where the left hand side is a `CrunchLogicalExpression` (or `TRUE`
 #'   to indicate the "else" case that will be met if all the other expression are
 #'   not met) and the right hand side is a CrunchVariable that should be filled in,
 #'   a `Category` object describing the Category it should be used, a string

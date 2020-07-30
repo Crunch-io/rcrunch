@@ -10,7 +10,7 @@ makeCaseWhenVariable(..., data = NULL, formulas = NULL, name)
 caseWhenExpr(..., data = NULL, formulas = NULL)
 }
 \arguments{
-\item{...}{formulas where the left hand side is a CrunchExpression (or \code{TRUE}
+\item{...}{formulas where the left hand side is a \code{CrunchLogicalExpression} (or \code{TRUE}
 to indicate the "else" case that will be met if all the other expression are
 not met) and the right hand side is a CrunchVariable that should be filled in,
 a \code{Category} object describing the Category it should be used, a string

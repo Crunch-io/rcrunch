@@ -38,8 +38,8 @@ with_mock_crunch({
         expect_equal(
             unclass(toJSON(
                 caseWhenExpr(
-                    between(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
-                    between(ds$birthyr, 1980, 1990) ~ ds$gender,
+                    crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                    crunchBetween(ds$birthyr, 1980, 1990) ~ ds$gender,
                     TRUE ~ Category(name = "Missed Q", missing = TRUE)
                 )@expression
             )),
@@ -61,14 +61,14 @@ with_mock_crunch({
     test_that("caseWhenExpr handles formulas argument", {
         expect_equal(
             caseWhenExpr(
-                between(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
-                between(ds$birthyr, 1980, 1990) ~ ds$gender,
+                crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                crunchBetween(ds$birthyr, 1980, 1990) ~ ds$gender,
                 TRUE ~ Category(name = "Missed Q", missing = TRUE)
             ),
             caseWhenExpr(
                 formulas = list(
-                    between(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
-                    between(ds$birthyr, 1980, 1990) ~ ds$gender,
+                    crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                    crunchBetween(ds$birthyr, 1980, 1990) ~ ds$gender,
                     TRUE ~ Category(name = "Missed Q", missing = TRUE)
                 )
             )
@@ -78,14 +78,14 @@ with_mock_crunch({
     test_that("caseWhenExpr handles data argument", {
         expect_equal(
             caseWhenExpr(
-                between(birthyr, 1970, 1980) ~ Category(name = "Hello"),
-                between(birthyr, 1980, 1990) ~ gender,
+                crunchBetween(birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                crunchBetween(birthyr, 1980, 1990) ~ gender,
                 TRUE ~ Category(name = "Missed Q", missing = TRUE),
                 data = ds
             ),
             caseWhenExpr(
-                between(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
-                between(ds$birthyr, 1980, 1990) ~ ds$gender,
+                crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                crunchBetween(ds$birthyr, 1980, 1990) ~ ds$gender,
                 TRUE ~ Category(name = "Missed Q", missing = TRUE)
             )
         )
@@ -94,15 +94,15 @@ with_mock_crunch({
     test_that("makeCaseWhenVariable handles data argument", {
         expect_equal(
             makeCaseWhenVariable(
-                between(birthyr, 1970, 1980) ~ Category(name = "Hello"),
-                between(birthyr, 1980, 1990) ~ gender,
+                crunchBetween(birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                crunchBetween(birthyr, 1980, 1990) ~ gender,
                 TRUE ~ Category(name = "Missed Q", missing = TRUE),
                 data = ds,
                 name = "test"
             ),
             makeCaseWhenVariable(
-                between(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
-                between(ds$birthyr, 1980, 1990) ~ ds$gender,
+                crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                crunchBetween(ds$birthyr, 1980, 1990) ~ ds$gender,
                 TRUE ~ Category(name = "Missed Q", missing = TRUE),
                 name = "test"
             )
@@ -112,16 +112,16 @@ with_mock_crunch({
     test_that("makeCaseWhenVariable correctly separates dots", {
         expect_equal(
             makeCaseWhenVariable(
-                between(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
-                between(ds$birthyr, 1980, 1990) ~ ds$gender,
+                crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                crunchBetween(ds$birthyr, 1980, 1990) ~ ds$gender,
                 TRUE ~ Category(name = "Missed Q", missing = TRUE),
                 name = "test",
                 description = "desc"
             ),
             VarDef(
                 caseWhenExpr(
-                    between(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
-                    between(ds$birthyr, 1980, 1990) ~ ds$gender,
+                    crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                    crunchBetween(ds$birthyr, 1980, 1990) ~ ds$gender,
                     TRUE ~ Category(name = "Missed Q", missing = TRUE)
                 ),
                 name = "test",
