@@ -676,7 +676,7 @@ with_mock_crunch({
         # fail
         expect_error(
             arraySubsetExpr(asSelected(ds$catarray), c("subvar1", "subvar2"), "alias"),
-            "Must subset by id when subsetting an expression"
+            "Must provide subvariable ids when x is an expression"
         )
 
         expect_error(
