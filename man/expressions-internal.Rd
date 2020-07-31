@@ -41,6 +41,7 @@
 \alias{nchar,CrunchVarOrExpr-method}
 \alias{trim}
 \alias{alterCategoriesExpr}
+\alias{alterArrayExpr}
 \alias{arraySubsetExpr}
 \alias{makeFrame}
 \title{Crunch expressions internal}
@@ -120,6 +121,15 @@ alterCategoriesExpr(
   categories = NULL,
   category_order = NULL,
   subvariables = NULL
+)
+
+alterArrayExpr(
+  x,
+  add = NULL,
+  order = NULL,
+  remove = NULL,
+  remove_id = c("alias", "name", "id"),
+  subreferences = NULL
 )
 
 arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))
