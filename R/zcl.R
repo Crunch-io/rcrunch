@@ -45,6 +45,17 @@ setOldClass("zcl")
 setMethod("zcl", "zcl", function(x) x)
 setMethod("zcl", "list", function(x) x) ## is this a good idea?
 setMethod("zcl", "CrunchFilter", function(x) x@body$expression)
+setMethod("zcl", "VariableDefinition", function(x) {
+    non_ref_names <- c("derivation", "values", "type", "categories", "resolution")
+    if ("derivation" %in% names(x)) {
+        out <- x$derivation
+    } else {
+        halt("zcl functions only work on existing crunch variables")
+    }
+    references <- x[!names(x) %in% non_ref_names]
+    if (length(references) > 0) out$references <- references
+    out
+})
 
 zfunc <- function(func, ...) {
     ## Wrapper that creates ZCL function syntax
