@@ -268,15 +268,7 @@ makeFrame <- function(x) {
     # if it's a list, it could contain variable definitions:
     if (is.list(x)) {
         x <- x[lengths(x) > 0] # remove NULLs (from eg slider)
-        x <- lapply(x, function(sv) {
-            if (is.VarDef(sv)) {
-                out <- sv$derivation
-                out$references <- sv[names(sv) != "derivation"]
-                out
-            } else {
-                list(variable = urls(sv))
-            }
-        })
+        x <- lapply(x, zcl)
     } else { # but ShojiCatalogs don't give their urls when lapplying, so treat differently
         x <- lapply(urls(x), function(sv) list(variable = sv))
     }

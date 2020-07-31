@@ -224,7 +224,7 @@ with_mock_crunch({
                         `function` = "make_frame",
                         args = list(list(
                             map = list(
-                                c(zcl(ds$gender == "Male"), references = list(name = "male"))
+                                c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
                             )
                         ), list(value = I("1")))
                     ))
