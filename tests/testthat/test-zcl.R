@@ -62,7 +62,7 @@ with_mock_crunch({
         expect_equal(
             zcl(VarDef(ds$gender, name = "x")),
             list(
-                variable = "https://app.crunch.io/api/datasets/1/variables/gender",
+                variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
                 references = list(name = "x")
             )
         )
