@@ -709,12 +709,12 @@ with_mock_crunch({
         )
 
         expect_equal(
-            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "subvar2", remove_id = "alias")@expression)),
+            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "subvar2", remove_id = "alias")@expression)), #nolint
             unclass(toJSON(expr@expression))
         )
 
         expect_equal(
-            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "First", remove_id = "name")@expression)),
+            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "First", remove_id = "name")@expression)),  #nolint
             unclass(toJSON(expr@expression))
         )
     })
