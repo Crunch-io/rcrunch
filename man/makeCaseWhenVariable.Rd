@@ -5,9 +5,9 @@
 \alias{caseWhenExpr}
 \title{Create a variable from categorical variables or categories based on conditions}
 \usage{
-makeCaseWhenVariable(..., data = NULL, formulas = NULL, name)
+makeCaseWhenVariable(..., data = NULL, cases = NULL, name)
 
-caseWhenExpr(..., data = NULL, formulas = NULL)
+caseWhenExpr(..., data = NULL, cases = NULL)
 }
 \arguments{
 \item{...}{formulas where the left hand side is a \code{CrunchLogicalExpression} (or \code{TRUE}
@@ -21,9 +21,12 @@ non-formula arguments will be passed to \verb{[VarDef()]}}
 \item{data}{A CrunchDataset to use if variable aliases are left bare in the
 formulas.}
 
-\item{formulas}{A list of formulas that match the description in \code{...}}
+\item{cases}{A list of formulas that match the description in \code{...} or a list of
+lists with named items, "expression" (like the left-hand side of the formulas above),
+"fill" for a variable to fill in, or "name", "id", and other items that describe a
+category.}
 
-\item{name}{For \code{maekCaseWhenVariable()} the name of the variable to create.}
+\item{name}{For \code{makeCaseWhenVariable()} the name of the variable to create.}
 }
 \value{
 \code{makeCaseWhenVariable()} returns a \code{VariableDefinition} and
@@ -69,6 +72,15 @@ ds$brand_x_prefer_high <- VarDef(
        c("Best", "Very Good")
    ),
    name = "brand x preference selected"
+)
+
+# Using lists in `cases` argument can be helpful when working programmatically
+fill_var <- ds$x
+fill_condition <- ds$skipped_x != "Yes"
+
+ds$rebased_x2 <- makeCaseWhenVariable(
+   cases = list(list(fill = fill_var, expression = fill_condition)),
+   name = "rebased x 2"
 )
 }
 }

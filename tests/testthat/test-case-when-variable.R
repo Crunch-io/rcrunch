@@ -57,7 +57,7 @@ with_mock_crunch({
         )
     })
 
-    test_that("caseWhenExpr handles formulas argument", {
+    test_that("caseWhenExpr handles formulas in cases argument", {
         expect_equal(
             caseWhenExpr(
                 crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
@@ -65,10 +65,37 @@ with_mock_crunch({
                 TRUE ~ Category(name = "Missed Q", missing = TRUE)
             ),
             caseWhenExpr(
-                formulas = list(
+                cases = list(
                     crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
                     crunchBetween(ds$birthyr, 1980, 1990) ~ ds$gender,
                     TRUE ~ Category(name = "Missed Q", missing = TRUE)
+                )
+            )
+        )
+    })
+
+    test_that("caseWhenExpr handles lists in cases argument", {
+        expect_equal(
+            caseWhenExpr(
+                crunchBetween(ds$birthyr, 1970, 1980) ~ Category(name = "Hello"),
+                crunchBetween(ds$birthyr, 1980, 1990) ~ ds$gender,
+                TRUE ~ Category(name = "Missed Q", missing = TRUE)
+            ),
+            caseWhenExpr(
+                cases = list(
+                    list(
+                        expression = crunchBetween(ds$birthyr, 1970, 1980),
+                        name = "Hello"
+                    ),
+                    list(
+                        expression = crunchBetween(ds$birthyr, 1980, 1990),
+                        fill = ds$gender
+                    ),
+                    list(
+                        expression = TRUE,
+                        name = "Missed Q",
+                        missing = TRUE
+                    )
                 )
             )
         )

@@ -14,8 +14,11 @@
 #'   non-formula arguments will be passed to `[VarDef()]`
 #' @param data A CrunchDataset to use if variable aliases are left bare in the
 #'   formulas.
-#' @param formulas A list of formulas that match the description in `...`
-#' @param name For `maekCaseWhenVariable()` the name of the variable to create.
+#' @param cases A list of formulas that match the description in `...` or a list of
+#'   lists with named items, "expression" (like the left-hand side of the formulas above),
+#'   "fill" for a variable to fill in, or "name", "id", and other items that describe a
+#'   category.
+#' @param name For `makeCaseWhenVariable()` the name of the variable to create.
 #'
 #' @return `makeCaseWhenVariable()` returns a `VariableDefinition` and
 #'   `caseWhenExpr()` returns an expression
@@ -55,13 +58,22 @@
 #'    ),
 #'    name = "brand x preference selected"
 #' )
+#'
+#' # Using lists in `cases` argument can be helpful when working programmatically
+#' fill_var <- ds$x
+#' fill_condition <- ds$skipped_x != "Yes"
+#'
+#' ds$rebased_x2 <- makeCaseWhenVariable(
+#'    cases = list(list(fill = fill_var, expression = fill_condition)),
+#'    name = "rebased x 2"
+#' )
 #' }
-makeCaseWhenVariable <- function(..., data = NULL, formulas = NULL, name) {
+makeCaseWhenVariable <- function(..., data = NULL, cases = NULL, name) {
     dots <- list(...)
     formula_dots <- vapply(dots, function(x) inherits(x, "formula"), logical(1))
 
     args <- list(
-        data = caseWhenExpr(data = data, formulas = c(formulas, unname(dots[formula_dots]))),
+        data = caseWhenExpr(data = data, cases = c(cases, unname(dots[formula_dots]))),
         name = name
     )
     args <- c(args, dots[!formula_dots])
@@ -71,9 +83,9 @@ makeCaseWhenVariable <- function(..., data = NULL, formulas = NULL, name) {
 
 #' @export
 #' @rdname makeCaseWhenVariable
-caseWhenExpr <- function(..., data = NULL, formulas = NULL) {
-    formulas <- c(formulas, list(...))
-    case_fills <- lapply(formulas, parse_case_when_formula, data = data)
+caseWhenExpr <- function(..., data = NULL, cases = NULL) {
+    cases <- unname(c(cases, list(...)))
+    case_fills <- lapply(cases, parse_case_when_formula, data = data)
 
     # Get set of unique IDs that fill in for when IDs are missing
     used_ids <- vapply(case_fills, function(x) x$id %||% NA, numeric(1))
@@ -109,6 +121,11 @@ caseWhenExpr <- function(..., data = NULL, formulas = NULL) {
 }
 
 parse_case_when_formula <- function(formula, data) {
+    if (is.list(formula)) {
+        if (identical(formula$expression, TRUE)) formula$expression <- "else"
+        return(formula)
+    }
+
     if (length(formula) != 3) {
         halt(
             "The condition provided must be a proper formula: ",
