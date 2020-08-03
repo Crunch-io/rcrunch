@@ -5,7 +5,7 @@
 #' @param x,e1,e2 inputs
 #' @param table,na.rm,selections,upper,lower,inclusive,regex,ignore_case,selections,collapse,tiers,
 #' cases,data,resolution,year,month,day,hours,minutes,seconds,min,max,categories,category_order,
-#' subvariables
+#' subvariables,remove,remove_id,subreferences,subreferences_id
 #' Other parameters used in some functions, see details of [`expressions`] for more details.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
 #' `as.vector` returns an R vector.
