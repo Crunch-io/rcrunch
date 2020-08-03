@@ -633,6 +633,108 @@ with_mock_crunch({
         )
     })
 
+
+    test_that("alterArrayExpr - add var and order", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            add = list("4" = ds$gender),
+            order = c("gender", "4", "subvar1", "subvar3"),
+            order_id = "id"
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"add":{"map":{"4":{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/gender/"}}},',
+                '"order":{"value":["gender","4","subvar1","subvar3"]}}}'
+            )
+        )
+    })
+
+    test_that("alterArrayExpr - add var and order by new alias", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            add = list("4" = VarDef(alias = "new_gender", ds$gender)),
+            order = c("subvar2", "new_gender", "subvar1", "subvar3")
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"add":{"map":{"4":{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/gender/",',
+                '"references":{"alias":"new_gender"}}}},',
+                '"order":{"value":["gender","4","subvar1","subvar3"]}}}'
+            )
+        )
+    })
+
+    test_that("alterArrayExpr - add var no order", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            add = list(ds$gender),
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"add":{"map":{"1":{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/gender/"}}},',
+                '"order":{"value":["gender","subvar1","subvar3","1"]}}}'
+            )
+        )
+    })
+
+    test_that("alterArrayExpr - remove var", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            remove = "gender",
+            remove_id = "id"
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"remove":{"value":["gender"]}}}'
+            )
+        )
+
+        expect_equal(
+            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "subvar2", remove_id = "alias")@expression)),
+            unclass(toJSON(expr@expression))
+        )
+
+        expect_equal(
+            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "First", remove_id = "name")@expression)),
+            unclass(toJSON(expr@expression))
+        )
+    })
+
+    test_that("alterArrayExpr - subreferences", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            subreferences = list("subvar2" = list(name = "new name"))
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"subreferences":{"value":{"gender":{"name":"new name"}}}}}'
+            )
+        )
+    })
+
     test_that("arraySubsetExpr", {
         # aliases
         expr <- arraySubsetExpr(ds$catarray, c("subvar1", "subvar3"), "alias")
