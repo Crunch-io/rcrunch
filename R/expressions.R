@@ -710,30 +710,41 @@ alterArrayExpr <- function(
     x,
     add = NULL,
     order = NULL,
+    order_id = c("alias", "name", "id"),
     remove = NULL,
     remove_id = c("alias", "name", "id"),
-    subreferences = NULL
+    subreferences = NULL,
+    subreferences_id = c("alias", "name", "id")
 ) {
     isVarButNotType(x, "Array", "alterArrayExpr")
     remove_id <- match.arg(remove_id)
+    order_id <- match.arg(order_id)
+    subreferences_id <- match.arg(subreferences_id)
 
-    add_ids <- if (is.null(names(add))) new_array_ids(x, length(add)) else names(add)
-    add <- setNames(lapply(add, zcl), add_ids)
+    if (!is.null(add)) {
+        if (is.variable(add) || is.VarDef(add)) add <- list(add)
+        add_ids <- if (is.null(names(add))) new_array_ids(x, length(add)) else names(add)
+        add <- setNames(lapply(add, zcl), add_ids)
 
-    if (is.null(order) && !is.null(add)) {
-        if (!is.variable(x)) {
-            halt("Must set order when adding subvariables to an expression")
+        if (is.null(order)) {
+            if (!is.variable(x)) {
+                halt("Must set order when adding subvariables to an expression")
+            }
+            order <- c(ids(subvariables(x)), add_ids)
+            order_id <- "id"
         }
-        order <- c(ids(subvariables(x)), add_ids)
     }
 
-    remove <- match_subvar_to_id(x, remove, remove_id)
+    if (!is.null(order)) {
+        order <- match_subvar_to_id(x, order, order_id, add)
+    }
 
+    remove <- match_subvar_to_id(x, remove, remove_id, add)
+    if (!is.null(subreferences)) {
+        names(subreferences) <- match_subvar_to_id(x, names(subreferences), subreferences_id, add)
+    }
 
-    args <- list(
-        fun = "alter_array",
-        x = x
-    )
+    args <- list(fun = "alter_array", x = x)
 
     if (!is.null(add)) args$add <- list(map = I(add))
     if (!is.null(order)) args$order <- list(value = I(order))
@@ -768,19 +779,29 @@ arraySubsetExpr <- function(x, subvars, subvar_id = c("alias", "name", "id")) {
     zfuncExpr("array_subset", x, list(value = I(subvars)))
 }
 
-match_subvar_to_id <- function(x, subvars, id_type = c("alias", "name", "id")) {
-    if (is.null(subvars)) return()
+match_subvar_to_id <- function(x, subvars, id_type = c("alias", "name", "id"), add = NULL) {
+    if (is.null(subvars)) return(subvars)
     id_type <- match.arg(id_type)
+
+    if (!is.null(add)) {
+        add_refs <- list(
+            ids = names(add),
+            aliases = vapply(add, function(x) x$references$alias %||% "", ""),
+            names = vapply(add, function(x) x$references$name %||% "", "")
+        )
+    } else {
+        add_refs <- list(ids = NULL, aliases = NULL, names = NULL)
+    }
 
     if (id_type == "id") {
         if (!is.variable(x)) return(subvars) # no validation possible
-        matches <- match(subvars, ids(subvariables(x)))
+        matches <- match(subvars, c(ids(subvariables(x)), add_refs$ids))
     } else if (!is.variable(x)) {
         halt("Must provide subvariable ids when x is an expression")
     } else if (id_type == "alias") {
-        matches <- match(subvars, aliases(subvariables(x)))
+        matches <- match(subvars, c(aliases(subvariables(x)), add_refs$aliases))
     } else if (id_type == "name") {
-        matches <- match(subvars, names(subvariables(x)))
+        matches <- match(subvars, c(names(subvariables(x)), add_refs$names))
     }
 
     if (any(is.na(matches))) {
@@ -789,7 +810,7 @@ match_subvar_to_id <- function(x, subvars, id_type = c("alias", "name", "id")) {
             paste0("'", subvars[is.na(matches)], "'", collapse = ",")
         )
     }
-    ids(subvariables(x))[matches]
+    c(ids(subvariables(x)), add_refs$ids)[matches]
 }
 
 #' @rdname crunch-is
