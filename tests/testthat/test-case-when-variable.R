@@ -14,8 +14,7 @@ with_mock_crunch({
                 '{"id":1,"name":"casefill__internal1","numeric_value":null,"missing":false}',
                 ']}}},{"function":">","args":[{"variable"',
                 ':"https://app.crunch.io/api/datasets/1/variables/birthyr/"},{"value":1970}]}]}',
-                ',{"map":{"1":{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"',
-                '}}}]}'
+                ',{"map":{"1":{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}}}]}' # nolint
             )
         )
     })
