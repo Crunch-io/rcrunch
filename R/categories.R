@@ -251,6 +251,70 @@ is.3vl <- function(cats) {
     )
 }
 
+updateCategoriesDerivation <- function(x, value) {
+    old_cats <- categories(x)
+
+    if (!setequal(ids(old_cats), ids(value))) {
+        halt("Updating categories must preserve the same ids for derived variables")
+    }
+
+    cat_changes <- lapply(ids(value), function(cat_id) {
+        old <- old_cats[[which(ids(old_cats) == cat_id)]]
+        new <- value[[which(ids(value) == cat_id)]]
+        defaults <- list(
+            numeric_value = NA_real_, missing = FALSE, selected = FALSE, date = NA_character_
+        )
+
+        old <- modifyList(defaults, unclass(old))
+        new <- modifyList(defaults, unclass(new))
+
+        changed <- vapply(names(new), function(attr) {
+            !isTRUE(all.equal(old[[attr]], new[[attr]])) && !(is.na(old[[attr]]) && is.null(new[[attr]])) && !(is.null(old[[attr]]) && is.na(new[[attr]]))
+        }, logical(1))
+
+        new[names(new) == "id" | changed]
+    })
+
+    # We'll use `selectCategories()` for selection changes, but `alterCategories()` for everything else
+    sel_changes <- vapply(cat_changes, function(x) x$selected %||% NA, logical(1))
+    names(sel_changes) <- names(value)
+    sel_changes <- sel_changes[!is.na(sel_changes)]
+
+    nonsel_changes <- lapply(cat_changes, function(x) {
+        names <- setdiff(names(x), "selected")
+        if (identical(names, "id")) return(NULL)
+
+        x[names]
+    })
+    nonsel_changes <- nonsel_changes[lengths(nonsel_changes) > 0]
+    if (length(nonsel_changes) == 0) nonsel_changes <- NULL
+
+    old_order <- ids(old_cats)
+    new_order <- ids(value)
+    if (identical(old_order, new_order)) new_order <- NULL
+
+
+    # can't use derivation because it mangles urls for array subvariables
+    derivation <- CrunchExpr(expression = entity(x)@body$derivation)
+    if (!is.null(nonsel_changes) || !is.null(new_order)) {
+        derivation <- alterCategoriesExpr(
+            derivation,
+            categories = unname(nonsel_changes),
+            category_order = new_order
+        )
+    }
+    if (length(sel_changes) > 0) {
+        current_sels <- ids(old_cats[is.selected(old_cats)])
+        drop_sels <- names(sel_changes[!sel_changes])
+        add_sels <- names(sel_changes[sel_changes])
+        new_sels <- c(setdiff(current_sels, drop_sels), add_sels)
+
+        derivation <- selectCategories(derivation, new_sels, collapse = FALSE)
+    }
+    derivation(x) <- derivation
+    x
+}
+
 #' Get and set Categories on Variables
 #'
 #' @param x a Variable
@@ -303,7 +367,12 @@ setMethod(
 setMethod(
     "categories<-", c("CategoricalVariable", "Categories"),
     function(x, value) {
-        ent <- setEntitySlot(entity(x), "categories", value)
+        if (!is.derived(x)) {
+            ent <- setEntitySlot(entity(x), "categories", value)
+        } else {
+            x <- updateCategoriesDerivation(x, value)
+        }
+
         dropCache(cubeURL(x))
         return(x)
     }
@@ -313,7 +382,11 @@ setMethod(
 setMethod(
     "categories<-", c("CategoricalArrayVariable", "Categories"),
     function(x, value) {
-        ent <- setEntitySlot(entity(x), "categories", value)
+        if (!is.derived(x)) {
+            ent <- setEntitySlot(entity(x), "categories", value)
+        } else {
+            x <- updateCategoriesDerivation(x, value)
+        }
         lapply(subvariableURLs(tuple(x)), dropCache) ## Subvariables will update too
         dropCache(cubeURL(x))
         return(x)
