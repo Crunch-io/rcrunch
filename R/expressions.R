@@ -613,8 +613,12 @@ alterCategoriesExpr <- function(
     isVarButNotType(x, c("Array", "Categorical"), "alterCategoriesExpr")
 
     args <- list(fun = "alter_categories", x)
-    if (!is.null(categories)) args$categories <- list(value = alter_cats_get_cat_ids(x, categories)) # nolint
-    if (!is.null(category_order)) args$order <- list(value = alter_cats_get_order_ids(x, category_order))
+    if (!is.null(categories)) {
+        args$categories <- list(value = alter_cats_get_cat_ids(x, categories))
+    }
+    if (!is.null(category_order)) {
+        args$order <- list(value = alter_cats_get_order_ids(x, category_order))
+    }
     if (!is.null(subvariables)) {
         args$subvariables <- list(value = alter_cats_get_subvar_ids(x, subvariables))
     }
