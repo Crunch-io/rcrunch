@@ -502,9 +502,9 @@ with_mock_crunch({
         expect_equal(
             unclass(toJSON(expr@expression)),
             paste0(
-                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
-                '{"value":{"categories":[{"id":1,"name":"AAA"}],"order":[2,1,-1],',
-                '"subvariables":[{"id":"subvar1","name":"ZZZ"}]}}]}'
+                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
+                '"kwargs":{"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},', #nolint
+                '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
             )
         )
     })
@@ -521,9 +521,9 @@ with_mock_crunch({
         expect_equal(
             unclass(toJSON(expr@expression)),
             paste0(
-                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
-                '{"value":{"categories":[{"id":1,"name":"AAA"}],"order":[2,1,-1],',
-                '"subvariables":[{"id":"subvar1","name":"ZZZ"}]}}]}'
+                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
+                '"kwargs":{"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},', #nolint
+                '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
             )
         )
     })
@@ -538,8 +538,8 @@ with_mock_crunch({
         expect_equal(
             unclass(toJSON(expr@expression)),
             paste0(
-                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
-                '{"value":{"subvariables":[{"id":"subvar1","name":"ZZZ"}]}}]}'
+                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
+                '"kwargs":{"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
             )
         )
     })
@@ -558,9 +558,9 @@ with_mock_crunch({
                 '{"function":"alter_categories","args":[{"function":"as_selected","args":',
                 '[{"function":"select_categories","args":',
                 '[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},',
-                '{"value":["A"]}]}]},',
-                '{"value":{"categories":[{"id":1,"name":"AAA"}],"order":[2,1,-1],',
-                '"subvariables":[{"id":"subvar1","name":"ZZZ"}]}}]}'
+                '{"value":["A"]}]}]}],"kwargs":{',
+                '"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},',
+                '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
             )
         )
     })
