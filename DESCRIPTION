@@ -66,6 +66,7 @@ Collate:
     'auth.R'
     'batches.R'
     'case-variables.R'
+    'case-when-variable.R'
     'categories.R'
     'category.R'
     'change-category-id.R'
