@@ -3,11 +3,11 @@
 \name{makeCaseWhenVariable}
 \alias{makeCaseWhenVariable}
 \alias{caseWhenExpr}
-\title{Create a variable from categorical variables or categories based on conditions}
+\title{Create a categorical or numeric variable based on conditions}
 \usage{
-makeCaseWhenVariable(..., data = NULL, cases = NULL, name)
+makeCaseWhenVariable(..., data = NULL, cases = NULL, name, type = NULL)
 
-caseWhenExpr(..., data = NULL, cases = NULL)
+caseWhenExpr(..., data = NULL, cases = NULL, type = NULL)
 }
 \arguments{
 \item{...}{formulas where the left hand side is a \code{CrunchLogicalExpression} (or \code{TRUE}
@@ -27,6 +27,9 @@ lists with named items, "expression" (like the left-hand side of the formulas ab
 category.}
 
 \item{name}{For \code{makeCaseWhenVariable()} the name of the variable to create.}
+
+\item{type}{The type of the variable to output (either "categorical" or "numeric"), only
+required if all fills are expressions and so their type cannot be guessed automatically.}
 }
 \value{
 \code{makeCaseWhenVariable()} returns a \code{VariableDefinition} and
@@ -36,7 +39,9 @@ category.}
 Conditions are specified using a series of formulas: the left-hand side is
 the condition that must be true (a \code{CrunchLogicalExpr}) and the right-hand
 side is where to get the value if the condition on the left-hand side is
-true. This must be either a Crunch Categorical variable or a Category.
+true. When creating a categorical variable, the right-hand side must be
+a \code{Category} or a categorical \code{CrunchVariable} or \code{CrunchExpression}, while
+for numeric variables it is a single number or variable or expression.
 }
 \examples{
 \dontrun{

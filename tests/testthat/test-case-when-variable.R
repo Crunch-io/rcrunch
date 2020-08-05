@@ -57,6 +57,22 @@ with_mock_crunch({
         )
     })
 
+    test_that("caseWhenExpr works with numbers in rhs", {
+        expect_equal(
+            unclass(toJSON(
+                caseWhenExpr(ds$birthyr > 1970 ~ 10)@expression
+            )),
+            paste0(
+                '{"function":"numeric_fill","args":[{"function":"case","args":[{"column":[1],"type":{', #nolint
+                '"value":{"class":"categorical","categories":[',
+                '{"id":1,"name":"casefill__internal1","numeric_value":null,"missing":false}',
+                ']}}},{"function":">","args":[{"variable"',
+                ':"https://app.crunch.io/api/datasets/1/variables/birthyr/"},{"value":1970}]}]}',
+                ',{"map":{"1":{"value":10,"type":"numeric"}}}]}'
+            )
+        )
+    })
+
     test_that("caseWhenExpr handles formulas in cases argument", {
         expect_equal(
             caseWhenExpr(
@@ -169,10 +185,10 @@ with_mock_crunch({
         )
 
         expect_error(
-            makeCaseWhenVariable(ds$birthyr > 1980 ~ 1),
+            makeCaseWhenVariable(ds$birthyr > 1980 ~ list(x = 1)),
             paste0(
                 "The right-hand side provided must be a Category, CrunchVariable ",
-                "string, or `NA`:"
+                "string, number, or `NA`:"
             )
         )
     })

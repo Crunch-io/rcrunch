@@ -1,9 +1,11 @@
-#' Create a variable from categorical variables or categories based on conditions
+#' Create a categorical or numeric variable based on conditions
 #'
 #' Conditions are specified using a series of formulas: the left-hand side is
 #' the condition that must be true (a `CrunchLogicalExpr`) and the right-hand
 #' side is where to get the value if the condition on the left-hand side is
-#' true. This must be either a Crunch Categorical variable or a Category.
+#' true. When creating a categorical variable, the right-hand side must be
+#' a `Category` or a categorical `CrunchVariable` or `CrunchExpression`, while
+#' for numeric variables it is a single number or variable or expression.
 #'
 #' @param ... formulas where the left hand side is a `CrunchLogicalExpression` (or `TRUE`
 #'   to indicate the "else" case that will be met if all the other expression are
@@ -18,8 +20,9 @@
 #'   lists with named items, "expression" (like the left-hand side of the formulas above),
 #'   "fill" for a variable to fill in, or "name", "id", and other items that describe a
 #'   category.
+#' @param type The type of the variable to output (either "categorical" or "numeric"), only
+#' required if all fills are expressions and so their type cannot be guessed automatically.
 #' @param name For `makeCaseWhenVariable()` the name of the variable to create.
-#'
 #' @return `makeCaseWhenVariable()` returns a `VariableDefinition` and
 #'   `caseWhenExpr()` returns an expression
 #' @export
@@ -69,13 +72,14 @@
 #'    name = "x2 among aware"
 #' )
 #' }
-makeCaseWhenVariable <- function(..., data = NULL, cases = NULL, name) {
+makeCaseWhenVariable <- function(..., data = NULL, cases = NULL, name, type = NULL) {
     dots <- list(...)
     formula_dots <- vapply(dots, function(x) inherits(x, "formula"), logical(1))
 
     args <- list(
         data = caseWhenExpr(data = data, cases = c(cases, unname(dots[formula_dots]))),
-        name = name
+        name = name,
+        type = type
     )
     args <- c(args, dots[!formula_dots])
 
@@ -84,7 +88,7 @@ makeCaseWhenVariable <- function(..., data = NULL, cases = NULL, name) {
 
 #' @export
 #' @rdname makeCaseWhenVariable
-caseWhenExpr <- function(..., data = NULL, cases = NULL) {
+caseWhenExpr <- function(..., data = NULL, cases = NULL, type = NULL) {
     cases <- unname(c(cases, list(...)))
     case_fills <- lapply(cases, parse_case_when_formula, data = data)
 
@@ -118,7 +122,7 @@ caseWhenExpr <- function(..., data = NULL, cases = NULL) {
         list(fill = case_fill$fill, id = case_ids[cf_num])
     })
 
-    fillExpr(caseExpr(cases = cases), fills = fills)
+    fillExpr(caseExpr(cases = cases), fills = fills, type = type)
 }
 
 parse_case_when_formula <- function(formula, data) {
@@ -150,12 +154,14 @@ parse_case_when_formula <- function(formula, data) {
         rhs <- lapply(rhs, identity)
     } else if (is.character(rhs)) {
         rhs <- list(name = rhs)
+    } else if (is.numeric(rhs)) {
+        rhs <- list(fill = rhs)
     } else if (is.na(rhs)) {
         list(name = "No Data", missing = TRUE)
     } else {
         halt(
             "The right-hand side provided must be a Category, CrunchVariable ",
-            "string, or `NA`: ", dQuote(RHS_string(formula))
+            "string, number, or `NA`: ", dQuote(RHS_string(formula))
         )
     }
 
