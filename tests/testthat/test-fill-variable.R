@@ -14,6 +14,17 @@ with_mock_crunch({
         '{"1":{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"}}}]}'
     )
 
+    basic_fill_num_expr <- paste0(
+        '{"function":"numeric_fill","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},', #nolint
+        '{"map":{"1":{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}}}]}'
+    )
+
+    expr_fill_num_expr <- paste0(
+        '{"function":"numeric_fill","args":[{"variable":',
+        '"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+        '{"map":{"1":{"function":"+","args":[{"variable":',
+        '"https://app.crunch.io/api/datasets/1/variables/birthyr/"},{"value":10}]}}}]}'
+    )
 
     ds <- loadDataset("test ds")
 
@@ -106,6 +117,59 @@ with_mock_crunch({
                 list(list(value = 1, fill = ds$location))
             ),
             "must specify id when categories are not available"
+        )
+    })
+
+    test_that("fillExpr uses fill_numeric for numeric var", {
+        expect_equal(
+            unclass(toJSON(
+                fillExpr(ds$gender, list(list(id = 1, fill = ds$birthyr)))@expression
+            )),
+            basic_fill_num_expr
+        )
+    })
+
+    test_that("fillExpr uses fill_numeric for expression + fill_type='numeric'", {
+        expect_equal(
+            unclass(toJSON(
+                fillExpr(
+                    ds$gender,
+                    list(list(id = 1, fill = ds$birthyr + 10)),
+                    type = "numeric"
+                )@expression
+            )),
+            expr_fill_num_expr
+        )
+    })
+
+    test_that("fillExpr fails with mixed types", {
+        expect_error(
+            fillExpr(
+                ds$gender,
+                list(list(id = 1, fill = ds$birthyr), list(id = 2, fill = ds$location))
+            ),
+            "Fills must all be of the same type"
+        )
+    })
+
+    test_that("fillExpr fails with wrong type specified", {
+        expect_error(
+            fillExpr(
+                ds$gender,
+                list(list(id = 1, fill = ds$birthyr)),
+                type = "categorical"
+            ),
+            "Fills must all be of type .categorical."
+        )
+    })
+
+    test_that("fillExpr fails with expresions and no type specified", {
+        expect_error(
+            fillExpr(
+                ds$gender,
+                list(list(id = 1, fill = ds$birthyr + 10))
+            ),
+            "If all fills are expressions, must provide the `type`"
         )
     })
 })

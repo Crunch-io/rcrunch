@@ -2,7 +2,7 @@
 #'
 #' Given a categorical variable, assign one or more categories to be filled in by
 #' another existing variable or crunch expression. (Categories not filled in will
-#' remain unchanged).
+#' remain unchanged ).
 #'
 #' @param x a Categorical (Array) variable
 #' @param fills a list of lists that each have a "fill" item that is a variable or expression
@@ -12,8 +12,9 @@
 #'   matched to the existing categories
 #' @param data (optional) a crunch dataset to use. Specifying this means you don't have to put
 #'   `dataset$` in front of each variable name
-#'
-#' @return A `CrunchExpression` that assigns
+#' @param type The type of the variable to output (either "categorical" or "numeric"), only
+#' required if all fills are expressions and so their type cannot be guessed automatically.
+#' @return A `CrunchExpression` that assigns categories to filling variables
 #' @keywords internal
 #'
 #' @examples
@@ -29,7 +30,7 @@
 #' # the dataset can be specified with data=
 #' fillExpr(v1, "dog" = v2, data = ds)
 #' }
-fillExpr <- function(x, fills, ..., data = NULL) {
+fillExpr <- function(x, fills, ..., data = NULL, type = NULL) {
     dots <- as.list(substitute(list(...)))[-1L]
 
     if (length(dots) == 0 & missing(fills)) {
@@ -50,13 +51,46 @@ fillExpr <- function(x, fills, ..., data = NULL) {
     } else {
         fills <- evalSide(substitute(fills), data, parent.frame())
     }
-
     fill_map <- lapply(fills, conform_fill_list)
+    type <- validate_fill_types(fills, type)
     categories <- if (is.variable(x)) categories(x) else NULL
     names(fill_map) <- vapply(fills, conform_fill_id, categories = categories, "")
 
+    func_name <- if (type == "numeric") "numeric_fill" else "fill"
 
-    zfuncExpr("fill", x, list(map = fill_map))
+    zfuncExpr(func_name, x, list(map = fill_map))
+}
+
+validate_fill_types <- function(fills, type) {
+    actual_fill_types <- vapply(fills, function(x) {
+        if (is.variable(x$fill)) {
+            return(type(x$fill))
+        } else if (is.numeric(x$fill)) {
+            return("numeric")
+        } else {
+            return(NA_character_)
+        }
+    }, character(1))
+
+    unique_fill_types <- unique(actual_fill_types[!is.na(actual_fill_types)])
+
+    if (!is.null(type) && length(unique_fill_types) == 0) {
+        return(type)
+    }
+
+    if (!is.null(type) && any(unique_fill_types != type)) {
+        halt("Fills must all be of type ", dQuote(type))
+    }
+
+    if (length(unique_fill_types) > 1) {
+        halt("Fills must all be of the same type")
+    }
+
+    if (length(unique_fill_types) == 0) {
+        halt("If all fills are expressions, must provide the `type`")
+    }
+
+    unique_fill_types
 }
 
 conform_fill_list <- function(x) {
@@ -64,7 +98,11 @@ conform_fill_list <- function(x) {
         halt("All fills must have a fill variable or expression")
     }
 
-    zcl(x$fill)
+    out <- zcl(x$fill)
+    # Possibly a bug in zcl, but need to send type with numeric_fill when
+    # sending a value
+    if (is.numeric(x$fill)) out$type <- "numeric"
+    out
 }
 
 conform_fill_id <- function(x, categories) {
