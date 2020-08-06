@@ -38,7 +38,7 @@ with_mock_auth_settings <- function(
         `keyring::key_list` = function(service = NULL, keyring = NULL) {
           if (is.null(keyring_users) & is.null(keyring_pws)) {
             data.frame(service = character(0), username = character(0), stringsAsFactors = FALSE)
-          } else if(is.null(keyring_users)){
+          } else if(is.null(keyring_users)) {
             data.frame(service = service, username = "", stringsAsFactors = FALSE)
           } else {
             data.frame(service = service, username = keyring_users, stringsAsFactors = FALSE)
