@@ -45,6 +45,7 @@ for numeric variables it is a single number or variable or expression.
 }
 \examples{
 \dontrun{
+# Creating categorical variables
 ds$new_var <- makeCaseWhenVariable(
    ds$x \%in\% c("a", "b") ~ ds$y, # can fill with a variable
    ds$x \%in\% c("c", "d") ~ Category(name = "c or d", numeric_value = 10), # or a Category
@@ -65,6 +66,19 @@ ds$x_among_aware <- makeCaseWhenVariable(
    ds$aware_x == "Yes" ~ ds$x,
    TRUE ~ Category(name = "(Not aware)", missing = TRUE),
    name = "x (among respondents aware of x)"
+)
+
+ds$new_num_var <- makeCaseWhenVariable(
+  ds$x \%in\% c("a", "b") ~ ds$z, # LHS as before, RHS can be numeric variables,
+  ds$x == "c" ~ ds$z * 10, # expressions,
+  ds$x == "d" ~ 100, # or numbers
+  name = "New numeric variable"
+)
+
+ds$capped_z <- makeCaseWhenVariable(
+  ds$z > 10 ~ 10,
+  TRUE ~ ds$z,
+  name = "Capped z"
 )
 
 # caseWhenExpr can be used inside other expressions
