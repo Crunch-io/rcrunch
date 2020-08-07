@@ -56,31 +56,32 @@ ds$brand_x_pref <- makeCaseWhenVariable(
    name = "brand x preference"
 )
 
-ds$rebased_x <- makeCaseWhenVariable(
-   ds$skipped_x != "Yes" ~ ds$x,
-   name = "rebased x"
+ds$x_among_aware <- makeCaseWhenVariable(
+   ds$aware_x == "Yes" ~ ds$x,
+   TRUE ~ Category(name = "(Not aware)", missing = TRUE),
+   name = "x (among respondents aware of x)"
 )
 
 # caseWhenExpr can be used inside other expressions
 ds$brand_x_prefer_high <- VarDef(
    selectCategories(
        caseWhenExpr(
-           ds$brand[[1]] == "Brand X" ~ ds$pref[[1]],
-           ds$brand[[2]] == "Brand X" ~ ds$pref[[2]],
-           ds$brand[[3]] == "Brand X" ~ ds$pref[[3]]
+           ds$brand_shown[[1]] == "Brand X" ~ ds$ratings[[1]],
+           ds$brand_shown[[2]] == "Brand X" ~ ds$ratings[[2]],
+           ds$brand_shown[[3]] == "Brand X" ~ ds$ratings[[3]]
        ),
        c("Best", "Very Good")
    ),
-   name = "brand x preference selected"
+   name = "Rate X highly"
 )
 
 # Using lists in `cases` argument can be helpful when working programmatically
-fill_var <- ds$x
-fill_condition <- ds$skipped_x != "Yes"
+source_var <- ds$x
+inclusion_condition <- ds$skipped_x != "Yes"
 
-ds$rebased_x2 <- makeCaseWhenVariable(
-   cases = list(list(fill = fill_var, expression = fill_condition)),
-   name = "rebased x 2"
+ds$x2_among_aware <- makeCaseWhenVariable(
+   cases = list(list(fill = source_var, expression = inclusion_condition)),
+   name = "x2 among aware"
 )
 }
 }
