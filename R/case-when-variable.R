@@ -61,8 +61,8 @@
 #' )
 #'
 #' # Using lists in `cases` argument can be helpful when working programmatically
-#' fill_var <- ds$x
-#' fill_condition <- ds$skipped_x != "Yes"
+#' source_var <- ds$x
+#' inclusion_condition <- ds$skipped_x != "Yes"
 #'
 #' ds$rebased_x2 <- makeCaseWhenVariable(
 #'    cases = list(list(fill = fill_var, expression = fill_condition)),
