@@ -60,7 +60,7 @@ with_mock_crunch({
     test_that("caseWhenExpr works with numbers in rhs", {
         expect_equal(
             unclass(toJSON(
-                caseWhenExpr(ds$birthyr > 1970 ~ 10)@expression
+                caseWhenExpr(ds$birthyr < 1970 ~ 1970)@expression
             )),
             paste0(
                 '{"function":"numeric_fill","args":[{"function":"case","args":[{"column":[1],"type":{', #nolint
