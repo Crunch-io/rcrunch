@@ -41,9 +41,10 @@
 #'    name = "brand x preference"
 #' )
 #'
-#' ds$rebased_x <- makeCaseWhenVariable(
-#'    ds$skipped_x != "Yes" ~ ds$x,
-#'    name = "rebased x"
+#' ds$x_among_aware <- makeCaseWhenVariable(
+#'    ds$aware_x == "Yes" ~ ds$x,
+#'    TRUE ~ Category(name = "(Not aware)", missing = TRUE),
+#'    name = "x (among respondents aware of x)"
 #' )
 #'
 #' # caseWhenExpr can be used inside other expressions
