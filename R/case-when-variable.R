@@ -64,9 +64,9 @@
 #' source_var <- ds$x
 #' inclusion_condition <- ds$skipped_x != "Yes"
 #'
-#' ds$rebased_x2 <- makeCaseWhenVariable(
-#'    cases = list(list(fill = fill_var, expression = fill_condition)),
-#'    name = "rebased x 2"
+#' ds$x2_among_aware <- makeCaseWhenVariable(
+#'    cases = list(list(fill = source_var, expression = inclusion_condition)),
+#'    name = "x2 among aware"
 #' )
 #' }
 makeCaseWhenVariable <- function(..., data = NULL, cases = NULL, name) {
