@@ -165,14 +165,14 @@ with_mock_crunch({
 
         expect_error(
             makeCaseWhenVariable(ds$gender ~ ds$gender),
-            "The left-hand side provided must be a logical or a CrunchLogicalExpr: \"ds.gender\""
+            "The left-hand side provided must be a logical or a CrunchLogicalExpr: .ds.gender."
         )
 
         expect_error(
             makeCaseWhenVariable(ds$birthyr > 1980 ~ 1),
             paste0(
                 "The right-hand side provided must be a Category, CrunchVariable ",
-                "string, or `NA`: \"1\""
+                "string, or `NA`: .1."
             )
         )
     })
