@@ -51,13 +51,13 @@
 #' ds$brand_x_prefer_high <- VarDef(
 #'    selectCategories(
 #'        caseWhenExpr(
-#'            ds$brand[[1]] == "Brand X" ~ ds$pref[[1]],
-#'            ds$brand[[2]] == "Brand X" ~ ds$pref[[2]],
-#'            ds$brand[[3]] == "Brand X" ~ ds$pref[[3]]
+#'            ds$brand_shown[[1]] == "Brand X" ~ ds$ratings[[1]],
+#'            ds$brand_shown[[2]] == "Brand X" ~ ds$ratings[[2]],
+#'            ds$brand_shown[[3]] == "Brand X" ~ ds$ratings[[3]]
 #'        ),
 #'        c("Best", "Very Good")
 #'    ),
-#'    name = "brand x preference selected"
+#'    name = "Rate X highly"
 #' )
 #'
 #' # Using lists in `cases` argument can be helpful when working programmatically
