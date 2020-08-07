@@ -226,10 +226,6 @@ zfuncExpr <- function(fun, x, ...) {
 #'  - `arraySelections(x)` returns an expression that takes an array and creates an array with
 #'    each variable condensed to "selected", "other" or "missing" and an extra subvariable
 #'    "__any__" that indicates whether any is selected.
-#'
-#' Array expressions
-#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions,
-#'    see `deriveArray()` for more details
 #'  - `alterCategoriesExpr(x, categories = NULL, category_order = NULL, subvariables = NULL)`
 #'     Change the category names, order, or subvariable names of categorical or Array variables
 #'     (can only modify existing ones, not add or remove categories or subvariables).
@@ -241,9 +237,31 @@ zfuncExpr <- function(fun, x, ...) {
 #'     a `name` to rename the subvariable and an `alias`, `old_nam` or `id` to identify the
 #'     subvariable. When `x` is an expression, all categories and subvariables must be identified
 #'     by `id`.
+#'
+#' Array expressions
+#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions,
+#'    see `deriveArray()` for more details
 #'  - `arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))` Take a subset of an
 #'    existing array variable, identifying the subvariables by alias, name, or id (if `x` is
 #'    an expression, you must use id).
+#'  - ```
+#'     alterArrayExpr(
+#'       x,
+#'       add = NULL,
+#'       order = NULL,
+#'       order_id = c("alias", "name", "id"),
+#'       remove = NULL,
+#'       remove_id = c("alias", "name", "id"),
+#'       subreferences = NULL,
+#'       subreferences_id = c("alias", "name", "id")
+#'    )
+#'    ```
+#'    Add, reorder, remove or rename subvariables on an an array variable `x`. The `add` argument is
+#'    a list of variables or expressions, optionally named with the id they should have. `order`
+#'    and `remove` are vectors of aliases, names or ids (specify which with `order_id`/`remove_id`).
+#'    The `subreferences` object is a list of lists that are named the alias, name, or id (again
+#'    specify which with `subreferences_id`) with metadata information like name and alias in the
+#'    list.
 #'
 #' Miscellaneous expressions
 #'  - `caseExpr(..., cases)` Create a categorical variable from

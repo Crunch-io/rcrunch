@@ -65,12 +65,6 @@ number of selections across rows of an array variable (or expression that create
 \item \code{arraySelections(x)} returns an expression that takes an array and creates an array with
 each variable condensed to "selected", "other" or "missing" and an extra subvariable
 "\strong{any}" that indicates whether any is selected.
-}
-
-Array expressions
-\itemize{
-\item \code{makeFrame(x)} an expression that creates an array from existing variables or expressions,
-see \code{deriveArray()} for more details
 \item \code{alterCategoriesExpr(x, categories = NULL, category_order = NULL, subvariables = NULL)}
 Change the category names, order, or subvariable names of categorical or Array variables
 (can only modify existing ones, not add or remove categories or subvariables).
@@ -82,9 +76,33 @@ indicating the names of the categories in the order they should be displayed
 a \code{name} to rename the subvariable and an \code{alias}, \code{old_nam} or \code{id} to identify the
 subvariable. When \code{x} is an expression, all categories and subvariables must be identified
 by \code{id}.
+}
+
+Array expressions
+\itemize{
+\item \code{makeFrame(x)} an expression that creates an array from existing variables or expressions,
+see \code{deriveArray()} for more details
 \item \code{arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))} Take a subset of an
 existing array variable, identifying the subvariables by alias, name, or id (if \code{x} is
 an expression, you must use id).
+\item \preformatted{ alterArrayExpr(
+   x,
+   add = NULL,
+   order = NULL,
+   order_id = c("alias", "name", "id"),
+   remove = NULL,
+   remove_id = c("alias", "name", "id"),
+   subreferences = NULL,
+   subreferences_id = c("alias", "name", "id")
+)
+}
+
+Add, reorder, remove or rename subvariables on an an array variable \code{x}. The \code{add} argument is
+a list of variables or expressions, optionally named with the id they should have. \code{order}
+and \code{remove} are vectors of aliases, names or ids (specify which with \code{order_id}/\code{remove_id}).
+The \code{subreferences} object is a list of lists that are named the alias, name, or id (again
+specify which with \code{subreferences_id}) with metadata information like name and alias in the
+list.
 }
 
 Miscellaneous expressions
