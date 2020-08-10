@@ -1,4 +1,7 @@
 # crunch 1.27.2 (Development version)
+* Added `makeCaseWhenVariable()` that helps with many common recoding needs.
+* Added `alterArrayExpr()` which allows adding, removing, reordering and renaming subvariables
+  in a derived Array.
 
 # crunch 1.27.1
 * Add several new `expressions` that let you create derived variables in more flexible ways than was previously possible.

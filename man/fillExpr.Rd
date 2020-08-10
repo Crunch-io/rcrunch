@@ -4,7 +4,7 @@
 \alias{fillExpr}
 \title{Expression to fill a variable from another}
 \usage{
-fillExpr(x, fills, ..., data = NULL)
+fillExpr(x, fills, ..., data = NULL, type = NULL)
 }
 \arguments{
 \item{x}{a Categorical (Array) variable}
@@ -18,14 +18,17 @@ matched to the existing categories}
 
 \item{data}{(optional) a crunch dataset to use. Specifying this means you don't have to put
 \verb{dataset$} in front of each variable name}
+
+\item{type}{The type of the variable to output (either "categorical" or "numeric"), only
+required if all fills are expressions and so their type cannot be guessed automatically.}
 }
 \value{
-A \code{CrunchExpression} that assigns
+A \code{CrunchExpression} that assigns categories to filling variables
 }
 \description{
 Given a categorical variable, assign one or more categories to be filled in by
 another existing variable or crunch expression. (Categories not filled in will
-remain unchanged).
+remain unchanged ).
 }
 \examples{
 \dontrun{
