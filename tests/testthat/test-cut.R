@@ -548,7 +548,6 @@ with_mock_crunch({
         ds_catdate <- loadDataset("cat date test")
 
         simple_date_cut <- structure(list(
-            name = "cut month",
             derivation = list(
                 `function` = "case",
                 args = list(
@@ -614,7 +613,8 @@ with_mock_crunch({
                             )
                         )
                     )
-                )
+                ),
+            name = "cut month"
             ), class = "VariableDefinition")
 
         expect_equal(
