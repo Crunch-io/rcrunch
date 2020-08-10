@@ -159,7 +159,7 @@ with_mock_crunch({
                 list(list(id = 1, fill = ds$birthyr)),
                 type = "categorical"
             ),
-            "Fills must all be of type .categorical."
+            "Fills must all be of type"
         )
     })
 
