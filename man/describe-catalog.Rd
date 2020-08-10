@@ -19,6 +19,8 @@
 \alias{ids<-}
 \alias{values}
 \alias{values<-}
+\alias{dates}
+\alias{dates<-}
 \alias{names,AbstractCategories-method}
 \alias{names<-,AbstractCategories-method}
 \alias{ids,AbstractCategories-method}
@@ -26,6 +28,8 @@
 \alias{ids<-,Categories-method}
 \alias{values,Categories-method}
 \alias{values<-,Categories-method}
+\alias{dates,Categories-method}
+\alias{dates<-,Categories-method}
 \alias{names.CrunchDataFrame}
 \alias{names,CrunchCube-method}
 \alias{aliases,CrunchCube-method}
@@ -87,6 +91,10 @@ values(x)
 
 values(x) <- value
 
+dates(x)
+
+dates(x) <- value
+
 \S4method{names}{AbstractCategories}(x)
 
 \S4method{names}{AbstractCategories}(x) <- value
@@ -100,6 +108,10 @@ values(x) <- value
 \S4method{values}{Categories}(x)
 
 \S4method{values}{Categories}(x) <- value
+
+\S4method{dates}{Categories}(x)
+
+\S4method{dates}{Categories}(x) <- value
 
 \method{names}{CrunchDataFrame}(x)
 

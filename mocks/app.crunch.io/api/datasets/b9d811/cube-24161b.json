@@ -1,0 +1,106 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/b9d811/cube/?query=%7B%22dimensions%22%3A%5B%5D%2C%22measures%22%3A%7B%22q%22%3A%7B%22function%22%3A%22cube_max%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2Fb9d811%2Fvariables%2F000001%2F%22%7D%5D%7D%7D%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "q": {
+                    "function": "cube_max",
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/b9d811/variables/000001/"
+                        }
+                    ]
+                }
+            },
+            "dimensions": [
+
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+
+            ],
+            "missing": 1,
+            "measures": {
+                "q": {
+                    "data": [
+                        "2020-02-15T04:20:00.000"
+                    ],
+                    "n_missing": 1,
+                    "metadata": {
+                        "derived": false,
+                        "references": {
+                            "description": "",
+                            "format": {
+                                "data": "%Y-%m-%d",
+                                "summary": "%Y-%m-%d"
+                            },
+                            "notes": "",
+                            "name": "true_date",
+                            "alias": "true_date",
+                            "view": {
+                                "column_width": null
+                            }
+                        },
+                        "type": {
+                            "missing_rules": {
+
+                            },
+                            "resolution": "ms",
+                            "class": "datetime",
+                            "missing_reasons": {
+                                "No Data": -1
+                            }
+                        }
+                    }
+                }
+            },
+            "n": 6,
+            "filter_stats": {
+                "filtered_complete": {
+                    "unweighted": {
+                        "selected": 6,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 6,
+                        "other": 0,
+                        "missing": 0
+                    }
+                },
+                "filtered": {
+                    "unweighted": {
+                        "selected": 6,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 6,
+                        "other": 0,
+                        "missing": 0
+                    }
+                }
+            },
+            "unfiltered": {
+                "unweighted_n": 6,
+                "weighted_n": 6
+            },
+            "filtered": {
+                "unweighted_n": 6,
+                "weighted_n": 6
+            },
+            "counts": [
+                6
+            ],
+            "element": "crunch:cube"
+        }
+    }
+}

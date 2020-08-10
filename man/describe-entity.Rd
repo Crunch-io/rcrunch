@@ -30,6 +30,8 @@
 \alias{id,AbstractCategory-method}
 \alias{value,Category-method}
 \alias{value<-,Category-method}
+\alias{dates,Category-method}
+\alias{dates<-,Category-method}
 \alias{name,CrunchDataset-method}
 \alias{name<-,CrunchDataset-method}
 \alias{description,CrunchDataset-method}
@@ -117,6 +119,10 @@ notes(x) <- value
 \S4method{value}{Category}(x)
 
 \S4method{value}{Category}(x) <- value
+
+\S4method{dates}{Category}(x)
+
+\S4method{dates}{Category}(x) <- value
 
 \S4method{name}{CrunchDataset}(x)
 

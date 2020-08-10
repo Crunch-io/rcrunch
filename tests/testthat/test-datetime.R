@@ -50,13 +50,18 @@ test_that("from8601 returns Date class if given only dates", {
     expect_identical(from8601(c("2015-02-12", NA)), as.Date(c("2015-02-12", NA)))
 })
 
+test_that("from8601 works for month & year resolution (converts to first day)", {
+    expect_identical(from8601("2015-02"), as.Date("2015-02-01"))
+    expect_identical(from8601(c("2015", NA)), as.Date(c("2015-01-01", NA)))
+})
+
 
 test_that("default date formater", {
     expect_error(
         datetimeFormater("not a resolution"),
         paste0(
             dQuote("resolution"), " is invalid. Valid values are ",
-            serialPaste(c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms"),
+            serialPaste(c("Y", "Q", "3M", "M", "W", "D", "h", "m", "s", "ms"),
                 collapse = "or"
             )
         )
@@ -156,7 +161,7 @@ with_mock_crunch({
             resolution(ds$starttime) <- "invalid_rollup",
             paste0(
                 dQuote("resolution"),
-                " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms"
+                " is invalid. Valid values are Y, Q, 3M, M, W, D, h, m, s, or ms"
             )
         )
         expect_no_request(resolution(ds$starttime) <- "D")
@@ -179,7 +184,7 @@ with_mock_crunch({
             rollupResolution(ds$starttime) <- "invalid_rollup",
             paste0(
                 dQuote("resolution"),
-                " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms"
+                " is invalid. Valid values are Y, Q, 3M, M, W, D, h, m, s, or ms"
             )
         )
     })

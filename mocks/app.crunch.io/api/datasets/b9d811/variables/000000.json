@@ -1,0 +1,77 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/b9d811/variables/000000/",
+    "catalogs": {
+        "parent": "https://app.crunch.io/api/datasets/b9d811/variables/",
+        "folder": "https://app.crunch.io/api/datasets/b9d811/folders/"
+    },
+    "fragments": {
+        "user_settings": "https://app.crunch.io/api/datasets/b9d811/variables/000000/user_settings/",
+        "dataset": "https://app.crunch.io/api/datasets/b9d811/"
+    },
+    "views": {
+        "frequencies": "https://app.crunch.io/api/datasets/b9d811/variables/000000/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/b9d811/variables/000000/summary/",
+        "values": "https://app.crunch.io/api/datasets/b9d811/variables/000000/values/",
+        "cast": "https://app.crunch.io/api/datasets/b9d811/variables/000000/cast/"
+    },
+    "body": {
+        "secure": false,
+        "name": "cat_not_set",
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "cat_not_set",
+        "dataset_id": "b9d811",
+        "owner": null,
+        "hidden": false,
+        "view": {
+            "show_numeric_values": false,
+            "include_missing": false,
+            "show_counts": false,
+            "column_width": null
+        },
+        "type": "categorical",
+        "id": "000000",
+        "categories": [
+            {
+                "numeric_value": 1,
+                "missing": false,
+                "id": 1,
+                "name": "wave1"
+            },
+            {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "wave2"
+            },
+            {
+                "numeric_value": 3,
+                "missing": false,
+                "id": 3,
+                "name": "wave3"
+            },
+            {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+            }
+        ],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/b9d811/"
+    }
+}
