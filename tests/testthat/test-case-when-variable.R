@@ -66,7 +66,7 @@ with_mock_crunch({
                 '{"function":"numeric_fill","args":[{"function":"case","args":[{"column":[1],"type":{', #nolint
                 '"value":{"class":"categorical","categories":[',
                 '{"id":1,"name":"casefill__internal1","numeric_value":null,"missing":false}',
-                ']}}},{"function":">","args":[{"variable"',
+                ']}}},{"function":"<","args":[{"variable"',
                 ':"https://app.crunch.io/api/datasets/1/variables/birthyr/"},{"value":1970}]}]}',
                 ',{"map":{"1":{"value":1970,"type":"numeric"}}}]}'
             )
