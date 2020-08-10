@@ -1,0 +1,160 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/",
+    "catalogs": {
+        "subvariables": "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/subvariables/",
+        "parent": "https://app.crunch.io/api/datasets/40ccf1/variables/",
+        "folder": "https://app.crunch.io/api/datasets/40ccf1/folders/"
+    },
+    "fragments": {
+        "user_settings": "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/user_settings/",
+        "dataset": "https://app.crunch.io/api/datasets/40ccf1/"
+    },
+    "views": {
+        "frequencies": "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/summary/",
+        "values": "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/values/",
+        "cast": "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/cast/"
+    },
+    "body": {
+        "uniform_basis": false,
+        "secure": false,
+        "name": "x mr",
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "subreferences": {
+            "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/subvariables/1/": {
+                "description": "",
+                "format": {
+                    "summary": {
+                        "digits": 0
+                    }
+                },
+                "notes": "",
+                "name": "x1",
+                "alias": "x1__2",
+                "view": {
+                    "show_counts": false,
+                    "show_numeric_values": false,
+                    "include_missing": false,
+                    "column_width": null
+                }
+            },
+            "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/subvariables/2/": {
+                "description": "",
+                "format": {
+                    "summary": {
+                        "digits": 0
+                    }
+                },
+                "notes": "",
+                "name": "x2",
+                "alias": "x2__2",
+                "view": {
+                    "show_counts": false,
+                    "show_numeric_values": false,
+                    "include_missing": false,
+                    "column_width": null
+                }
+            }
+        },
+        "notes": "",
+        "derived": true,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "xmr",
+        "derivation": {
+            "function": "select_categories",
+            "args": [
+                {
+                    "function": "array",
+                    "args": [
+                        {
+                            "function": "select",
+                            "args": [
+                                {
+                                    "map": {
+                                        "1": {
+                                            "variable": "7lgPl0MFNP5PJTxWJEStnk000000"
+                                        },
+                                        "2": {
+                                            "variable": "7lgPl0MFNP5PJTxWJEStnk000001"
+                                        }
+                                    }
+                                },
+                                {
+                                    "value": [
+                                        "1",
+                                        "2"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": [
+                        "Good"
+                    ]
+                }
+            ],
+            "references": {
+                "alias": "xmr",
+                "name": "x mr"
+            }
+        },
+        "dataset_id": "40ccf1",
+        "owner": null,
+        "subvariables": [
+            "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/subvariables/1/",
+            "https://app.crunch.io/api/datasets/40ccf1/variables/e0999e/subvariables/2/"
+        ],
+        "hidden": false,
+        "view": {
+            "show_counts": false,
+            "include_noneoftheabove": false,
+            "include_missing": false,
+            "column_width": null
+        },
+        "type": "multiple_response",
+        "id": "e0999e",
+        "categories": [
+            {
+                "numeric_value": 1,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "Good"
+            },
+            {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "Okay"
+            },
+            {
+                "numeric_value": 3,
+                "missing": false,
+                "id": 3,
+                "name": "Bad"
+            },
+            {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+            }
+        ],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/40ccf1/"
+    }
+}

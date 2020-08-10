@@ -49,3 +49,16 @@ is.VariableDefinition <- function(x) inherits(x, "VariableDefinition")
 is.VarDef <- is.VariableDefinition
 
 setOldClass("VariableDefinition")
+
+#' @rdname describe-entity
+#' @export
+setMethod("name", "VariableDefinition", function(x) x$name)
+
+#' @rdname describe-entity
+#' @export
+setMethod("description", "VariableDefinition", function(x) x$description %||% "")
+
+#' @rdname describe-entity
+#' @export
+setMethod("notes", "VariableDefinition", function(x) x$notes %||% "")
+setMethod("notes", "VariableDefinition", function(x) x$notes %||% "")

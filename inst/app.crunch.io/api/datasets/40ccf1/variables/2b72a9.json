@@ -1,0 +1,147 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/",
+    "catalogs": {
+        "subvariables": "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/subvariables/",
+        "parent": "https://app.crunch.io/api/datasets/40ccf1/variables/",
+        "folder": "https://app.crunch.io/api/datasets/40ccf1/folders/"
+    },
+    "fragments": {
+        "user_settings": "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/user_settings/",
+        "dataset": "https://app.crunch.io/api/datasets/40ccf1/"
+    },
+    "views": {
+        "frequencies": "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/summary/",
+        "values": "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/values/",
+        "cast": "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/cast/"
+    },
+    "body": {
+        "secure": false,
+        "name": "x cat",
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "subreferences": {
+            "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/subvariables/1/": {
+                "description": "",
+                "format": {
+                    "summary": {
+                        "digits": 0
+                    }
+                },
+                "notes": "",
+                "name": "x1",
+                "alias": "x1__1",
+                "view": {
+                    "show_counts": false,
+                    "column_width": null,
+                    "include_missing": false,
+                    "show_numeric_values": false
+                }
+            },
+            "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/subvariables/2/": {
+                "description": "",
+                "format": {
+                    "summary": {
+                        "digits": 0
+                    }
+                },
+                "notes": "",
+                "name": "x2",
+                "alias": "x2__1",
+                "view": {
+                    "show_counts": false,
+                    "column_width": null,
+                    "include_missing": false,
+                    "show_numeric_values": false
+                }
+            }
+        },
+        "notes": "",
+        "derived": true,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "xcat",
+        "derivation": {
+            "function": "array",
+            "args": [
+                {
+                    "function": "select",
+                    "args": [
+                        {
+                            "map": {
+                                "1": {
+                                    "variable": "7lgPl0MFNP5PJTxWJEStnk000000"
+                                },
+                                "2": {
+                                    "variable": "7lgPl0MFNP5PJTxWJEStnk000001"
+                                }
+                            }
+                        },
+                        {
+                            "value": [
+                                "1",
+                                "2"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "references": {
+                "alias": "xcat",
+                "name": "x cat"
+            }
+        },
+        "dataset_id": "40ccf1",
+        "owner": null,
+        "subvariables": [
+            "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/subvariables/1/",
+            "https://app.crunch.io/api/datasets/40ccf1/variables/2b72a9/subvariables/2/"
+        ],
+        "hidden": false,
+        "view": {
+            "show_counts": false,
+            "include_missing": false,
+            "column_width": null
+        },
+        "type": "categorical_array",
+        "id": "2b72a9",
+        "categories": [
+            {
+                "numeric_value": 1,
+                "id": 1,
+                "name": "Good",
+                "missing": false
+            },
+            {
+                "numeric_value": 2,
+                "id": 2,
+                "name": "Okay",
+                "missing": false
+            },
+            {
+                "numeric_value": 3,
+                "id": 3,
+                "name": "Bad",
+                "missing": false
+            },
+            {
+                "numeric_value": null,
+                "id": -1,
+                "name": "No Data",
+                "missing": true
+            }
+        ],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/40ccf1/"
+    }
+}

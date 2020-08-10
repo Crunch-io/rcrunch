@@ -271,10 +271,74 @@ deleteSubvariables <- function(variable, to.delete) {
         halt("Must confirm deleting subvariable(s)")
     }
 
-    lapply(delete.these, crDELETE)
+    if (!is.derived(variable)) {
+        lapply(delete.these, crDELETE)
+    } else {
+        deleteSubvariablesDerived(variable, delete.these)
+    }
     invisible(refresh(variable))
 }
 
 #' @rdname deleteSubvariables
 #' @export
 deleteSubvariable <- deleteSubvariables
+
+deleteSubvariablesDerived <- function(variable, delete_urls) {
+    # server doesn't automatically organize metadata for us so get
+    # names/aliases we'll want after deleting
+    subvars <- subvariables(variable)
+    non_deleted_names <- names(subvars)[-match(delete_urls, urls(subvars))]
+    non_deleted_aliases <- aliases(subvars)[-match(delete_urls, urls(subvars))]
+    delete_ids <- regmatches(delete_urls, gregexpr("([^/]+)/$", delete_urls))
+    delete_ids <- substr(delete_ids, 1, nchar(delete_ids) - 1) # remove trailing slash
+    # bypass `derivation(variable)` because `select` zcl function has ids
+    # not urls and so absolutifyURL mangles url
+    # TODO: use `derivation()` when select has relative urls (pivotal ticket: ???)
+    old_deriv <- CrunchExpr(expression = entity(variable)@body$derivation)
+
+    if (isSelectDerivation(old_deriv)) {
+        new_deriv <- removeSelectDerivation(old_deriv, delete_ids)
+    } else if (isSelectCatDerivation(old_deriv)) {
+        new_deriv <- removeSelectCatDerivation(old_deriv, delete_ids)
+    }
+    derivation(variable) <- new_deriv
+    variable <- refresh(variable)
+    aliases(subvariables(variable)) <- non_deleted_aliases
+    names(subvariables(variable)) <- non_deleted_names
+}
+
+removeSelectDerivation <- function(deriv, looking_for) {
+    remove_pos <- match(
+        looking_for,
+        names(deriv@expression[["args"]][[1]][["args"]][[1]][["map"]])
+    )
+    deriv@expression[["args"]][[1]][["args"]][[1]][["map"]] <-
+        deriv@expression[["args"]][[1]][["args"]][[1]][["map"]][-remove_pos]
+
+    remove_pos <- match(
+        looking_for,
+        unlist(deriv@expression[["args"]][[1]][["args"]][[2]][["value"]])
+    )
+    deriv@expression[["args"]][[1]][["args"]][[2]][["value"]] <-
+        deriv@expression[["args"]][[1]][["args"]][[2]][["value"]][-remove_pos]
+
+    deriv
+}
+
+removeSelectCatDerivation <- function(deriv, looking_for) {
+    remove_pos <- match(
+        looking_for,
+        names(deriv@expression[["args"]][[1]][["args"]][[1]][["args"]][[1]][["map"]])
+    )
+    deriv@expression[["args"]][[1]][["args"]][[1]][["args"]][[1]][["map"]] <-
+        deriv@expression[["args"]][[1]][["args"]][[1]][["args"]][[1]][["map"]][-remove_pos]
+
+    remove_pos <- match(
+        looking_for,
+        names(deriv@expression[["args"]][[1]][["args"]][[1]][["args"]][[2]][["value"]])
+    )
+    deriv@expression[["args"]][[1]][["args"]][[1]][["args"]][[2]][["value"]] <-
+        deriv@expression[["args"]][[1]][["args"]][[1]][["args"]][[2]][["value"]][-remove_pos]
+
+    deriv
+}

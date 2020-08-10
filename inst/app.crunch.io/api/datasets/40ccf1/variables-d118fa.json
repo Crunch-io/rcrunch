@@ -1,0 +1,116 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/40ccf1/variables/?relative=on",
+    "catalogs": {
+        "private": "https://app.crunch.io/api/datasets/40ccf1/variables/private/"
+    },
+    "orders": {
+        "personal": "https://app.crunch.io/api/datasets/40ccf1/variables/personal/",
+        "weights": "https://app.crunch.io/api/datasets/40ccf1/variables/weights/",
+        "hier": "https://app.crunch.io/api/datasets/40ccf1/variables/hier/"
+    },
+    "description": "List of Variables of this dataset",
+    "index": {
+        "7lgPl0MFNP5PJTxWJEStnk000004/": {
+            "secure": false,
+            "derived": false,
+            "id": "7lgPl0MFNP5PJTxWJEStnk000004",
+            "description": "",
+            "scale": "interval",
+            "name": "y",
+            "notes": "",
+            "discarded": false,
+            "alias": "y",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "2b72a9/": {
+            "secure": false,
+            "derived": true,
+            "subvariables": [
+                "2b72a9/subvariables/1/",
+                "2b72a9/subvariables/2/"
+            ],
+            "id": "2b72a9",
+            "description": "",
+            "subvariables_catalog": "2b72a9/subvariables/",
+            "scale": "interval",
+            "name": "x cat",
+            "notes": "",
+            "discarded": false,
+            "alias": "xcat",
+            "hidden": false,
+            "type": "categorical_array"
+        },
+        "7lgPl0MFNP5PJTxWJEStnk000003/": {
+            "secure": false,
+            "derived": false,
+            "id": "7lgPl0MFNP5PJTxWJEStnk000003",
+            "description": "",
+            "scale": "interval",
+            "name": "x_text",
+            "notes": "",
+            "discarded": false,
+            "alias": "x_text",
+            "hidden": false,
+            "type": "text"
+        },
+        "7lgPl0MFNP5PJTxWJEStnk000002/": {
+            "secure": false,
+            "derived": false,
+            "id": "7lgPl0MFNP5PJTxWJEStnk000002",
+            "description": "",
+            "scale": "interval",
+            "name": "x3",
+            "notes": "",
+            "discarded": false,
+            "alias": "x3",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "7lgPl0MFNP5PJTxWJEStnk000000/": {
+            "secure": false,
+            "derived": false,
+            "id": "7lgPl0MFNP5PJTxWJEStnk000000",
+            "description": "",
+            "scale": "interval",
+            "name": "x1",
+            "notes": "",
+            "discarded": false,
+            "alias": "x1",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "e0999e/": {
+            "secure": false,
+            "derived": true,
+            "subvariables": [
+                "e0999e/subvariables/1/",
+                "e0999e/subvariables/2/"
+            ],
+            "id": "e0999e",
+            "description": "",
+            "subvariables_catalog": "e0999e/subvariables/",
+            "uniform_basis": false,
+            "name": "x mr",
+            "notes": "",
+            "discarded": false,
+            "alias": "xmr",
+            "hidden": false,
+            "type": "multiple_response"
+        },
+        "7lgPl0MFNP5PJTxWJEStnk000001/": {
+            "secure": false,
+            "derived": false,
+            "id": "7lgPl0MFNP5PJTxWJEStnk000001",
+            "description": "",
+            "scale": "interval",
+            "name": "x2",
+            "notes": "",
+            "discarded": false,
+            "alias": "x2",
+            "hidden": false,
+            "type": "categorical"
+        }
+    }
+}

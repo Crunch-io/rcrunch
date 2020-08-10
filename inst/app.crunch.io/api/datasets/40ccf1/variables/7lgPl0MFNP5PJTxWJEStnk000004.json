@@ -1,0 +1,89 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000004/",
+    "catalogs": {
+        "parent": "https://app.crunch.io/api/datasets/40ccf1/variables/",
+        "folder": "https://app.crunch.io/api/datasets/40ccf1/folders/"
+    },
+    "fragments": {
+        "user_settings": "https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000004/user_settings/",
+        "dataset": "https://app.crunch.io/api/datasets/40ccf1/"
+    },
+    "views": {
+        "frequencies": "https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000004/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000004/summary/",
+        "values": "https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000004/values/",
+        "cast": "https://app.crunch.io/api/datasets/40ccf1/variables/7lgPl0MFNP5PJTxWJEStnk000004/cast/"
+    },
+    "body": {
+        "secure": false,
+        "name": "y",
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "y",
+        "dataset_id": "40ccf1",
+        "owner": null,
+        "hidden": false,
+        "view": {
+            "show_numeric_values": false,
+            "include_missing": false,
+            "show_counts": false,
+            "column_width": null
+        },
+        "type": "categorical",
+        "id": "7lgPl0MFNP5PJTxWJEStnk000004",
+        "categories": [
+            {
+                "numeric_value": 1,
+                "id": 1,
+                "name": "a",
+                "missing": false
+            },
+            {
+                "numeric_value": 2,
+                "id": 2,
+                "name": "b",
+                "missing": false
+            },
+            {
+                "numeric_value": 3,
+                "id": 3,
+                "name": "c",
+                "missing": false
+            },
+            {
+                "numeric_value": 4,
+                "id": 4,
+                "name": "d",
+                "missing": false
+            },
+            {
+                "numeric_value": 5,
+                "id": 5,
+                "name": "e",
+                "missing": false
+            },
+            {
+                "numeric_value": null,
+                "id": -1,
+                "name": "No Data",
+                "missing": true
+            }
+        ],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/40ccf1/"
+    }
+}
