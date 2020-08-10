@@ -193,3 +193,52 @@ with_mock_crunch({
         )
     })
 })
+
+with_test_authentication({
+    ds <- newDataset(df)
+
+    test_that("casewhen works for categorical variable", {
+        ds$case_when_cat <- makeCaseWhenVariable(
+            ds$v3 <= 10 ~ Category(name = "new cat", numeric_value = 5),
+            ds$v3 <= 15 ~ ds$v4,
+            TRUE ~ "else category",
+            name = "case when categorical"
+        )
+
+        expect_equal(
+            as.vector(ds$case_when_cat),
+            factor(
+                c(
+                    "new cat", "new cat", "new cat",
+                    "C", "B", "C", "B", "C",
+                    rep("else category", 12)
+                ),
+                c("new cat", "else category", "B", "C")
+            )
+        )
+
+        expect_equal(
+            names(cateogries(ds$case_when_cat)),
+            c("new cat", "else category", "B", "C")
+        )
+
+        expect_equal(values(cateogries(ds$case_when_cat)["new cat"]), 5)
+
+        expect_equal(name(ds$case_when_cat), "case when categorical")
+    })
+
+    test_that("casewhen works for numeric variable", {
+        ds$case_when_num <- makeCaseWhenVariable(
+            ds$v3 <= 10 ~ 10,
+            ds$v4 == "B" ~ ds$v3,
+            name = "case when numeric"
+        )
+
+        expect_equal(
+            as.vector(ds$case_when_num),
+            c(10, 10, 10, NA, 12, NA, 14, NA, 16, NA, 18, NA, 20, NA, 22, NA, 24, NA, 26, NA)
+        )
+
+        expect_equal(name(ds$case_when_num), "case when numeric")
+    })
+})
