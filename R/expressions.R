@@ -5,7 +5,7 @@
 #' @param x,e1,e2 inputs
 #' @param table,na.rm,selections,upper,lower,inclusive,regex,ignore_case,selections,collapse,tiers,
 #' cases,data,resolution,year,month,day,hours,minutes,seconds,min,max,categories,category_order,
-#' subvariables
+#' subvariables,remove,remove_id,subreferences,subreferences_id
 #' Other parameters used in some functions, see details of [`expressions`] for more details.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
 #' `as.vector` returns an R vector.
@@ -226,10 +226,6 @@ zfuncExpr <- function(fun, x, ...) {
 #'  - `arraySelections(x)` returns an expression that takes an array and creates an array with
 #'    each variable condensed to "selected", "other" or "missing" and an extra subvariable
 #'    "__any__" that indicates whether any is selected.
-#'
-#' Array expressions
-#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions,
-#'    see `deriveArray()` for more details
 #'  - `alterCategoriesExpr(x, categories = NULL, category_order = NULL, subvariables = NULL)`
 #'     Change the category names, order, or subvariable names of categorical or Array variables
 #'     (can only modify existing ones, not add or remove categories or subvariables).
@@ -241,9 +237,31 @@ zfuncExpr <- function(fun, x, ...) {
 #'     a `name` to rename the subvariable and an `alias`, `old_nam` or `id` to identify the
 #'     subvariable. When `x` is an expression, all categories and subvariables must be identified
 #'     by `id`.
+#'
+#' Array expressions
+#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions,
+#'    see `deriveArray()` for more details
 #'  - `arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))` Take a subset of an
 #'    existing array variable, identifying the subvariables by alias, name, or id (if `x` is
 #'    an expression, you must use id).
+#'  - ```
+#'     alterArrayExpr(
+#'       x,
+#'       add = NULL,
+#'       order = NULL,
+#'       order_id = c("alias", "name", "id"),
+#'       remove = NULL,
+#'       remove_id = c("alias", "name", "id"),
+#'       subreferences = NULL,
+#'       subreferences_id = c("alias", "name", "id")
+#'    )
+#'    ```
+#'    Add, reorder, remove or rename subvariables on an an array variable `x`. The `add` argument is
+#'    a list of variables or expressions, optionally named with the id they should have. `order`
+#'    and `remove` are vectors of aliases, names or ids (specify which with `order_id`/`remove_id`).
+#'    The `subreferences` object is a list of lists that are named the alias, name, or id (again
+#'    specify which with `subreferences_id`) with metadata information like name and alias in the
+#'    list.
 #'
 #' Miscellaneous expressions
 #'  - `caseExpr(..., cases)` Create a categorical variable from
@@ -612,14 +630,17 @@ alterCategoriesExpr <- function(
 ) {
     isVarButNotType(x, c("Array", "Categorical"), "alterCategoriesExpr")
 
-    args <- list()
-    if (!is.null(categories)) args$categories <- alter_cats_get_cat_ids(x, categories)
-    if (!is.null(order)) args$order <- alter_cats_get_order_ids(x, category_order)
-    if (!is.null(subvariables)) {
-        args$subvariables <- alter_cats_get_subvar_ids(x, subvariables)
+    args <- list(fun = "alter_categories", x)
+    if (!is.null(categories)) {
+        args$categories <- list(value = alter_cats_get_cat_ids(x, categories))
     }
-
-    zfuncExpr("alter_categories", x, list(value = I(args)))
+    if (!is.null(category_order)) {
+        args$order <- list(value = alter_cats_get_order_ids(x, category_order))
+    }
+    if (!is.null(subvariables)) {
+        args$subvariables <- list(value = alter_cats_get_subvar_ids(x, subvariables))
+    }
+    do.call(zfuncExpr, args)
 }
 
 alter_cats_get_cat_ids <- function(x, categories) {
@@ -706,28 +727,111 @@ alter_cats_get_subvar_ids <- function(x, subvariables) {
 
 #' @rdname expressions-internal
 #' @export
+alterArrayExpr <- function(
+    x,
+    add = NULL,
+    order = NULL,
+    order_id = c("alias", "name", "id"),
+    remove = NULL,
+    remove_id = c("alias", "name", "id"),
+    subreferences = NULL,
+    subreferences_id = c("alias", "name", "id")
+) {
+    isVarButNotType(x, "Array", "alterArrayExpr")
+    remove_id <- match.arg(remove_id)
+    order_id <- match.arg(order_id)
+    subreferences_id <- match.arg(subreferences_id)
+
+    if (!is.null(add)) {
+        if (is.variable(add) || is.VarDef(add)) add <- list(add)
+        add_ids <- if (is.null(names(add))) new_array_ids(x, length(add)) else names(add)
+        add <- setNames(lapply(add, zcl), add_ids)
+
+        if (is.null(order)) {
+            if (!is.variable(x)) {
+                halt("Must set order when adding subvariables to an expression")
+            }
+            order <- c(ids(subvariables(x)), add_ids)
+            order_id <- "id"
+        }
+    }
+
+    if (!is.null(order)) {
+        order <- match_subvar_to_id(x, order, order_id, add)
+    }
+
+    remove <- match_subvar_to_id(x, remove, remove_id, add)
+    if (!is.null(subreferences)) {
+        names(subreferences) <- match_subvar_to_id(x, names(subreferences), subreferences_id, add)
+    }
+
+    args <- list(fun = "alter_array", x = x)
+
+    if (!is.null(add)) args$add <- list(map = I(add))
+    if (!is.null(order)) args$order <- list(value = I(order))
+    if (!is.null(remove)) args$remove <- list(value = I(remove))
+    if (!is.null(subreferences)) args$subreferences <- list(value = I(subreferences))
+
+    do.call(zfuncExpr, args)
+}
+
+new_array_ids <- function(array, num) {
+    if (is.variable(array)) {
+        existing_ids <- ids(subvariables(array))
+    } else {
+        existing_ids <- try({
+            arrayflat <- unlist(array)
+            unlist(arrayflat)[grepl("\\.map\\.", names(arrayflat))]
+        }, silent = TRUE)
+        if (inherits(existing_ids, "try-error")) existing_ids <- c()
+    }
+
+    max_numeric <- suppressWarnings(max(c(as.numeric(existing_ids), 0), na.rm = TRUE))
+    as.character(max_numeric + seq_len(num))
+}
+
+#' @rdname expressions-internal
+#' @export
 arraySubsetExpr <- function(x, subvars, subvar_id = c("alias", "name", "id")) {
     isVarButNotType(x, "Array", "arraySubsetExpr")
     subvar_id <- match.arg(subvar_id)
-    if (subvar_id != "id") {
-        if (!is.variable(x)) halt("Must subset by id when subsetting an expression")
-
-        if (subvar_id == "alias") {
-            matches <- match(subvars, aliases(subvariables(x)))
-        } else if (subvar_id == "name") {
-            matches <- match(subvars, names(subvariables(x)))
-        }
-
-        if (any(is.na(matches))) {
-            halt(
-                "Could not find subvariables with ", subvar_id, " ",
-                paste0("'", subvars[is.na(matches)], "'", collapse = ",")
-            )
-        }
-        subvars <- ids(subvariables(x))[matches]
-    }
+    subvars <- match_subvar_to_id(x, subvars, subvar_id)
 
     zfuncExpr("array_subset", x, list(value = I(subvars)))
+}
+
+match_subvar_to_id <- function(x, subvars, id_type = c("alias", "name", "id"), add = NULL) {
+    if (is.null(subvars)) return(subvars)
+    id_type <- match.arg(id_type)
+
+    if (!is.null(add)) {
+        add_refs <- list(
+            ids = names(add),
+            aliases = vapply(add, function(x) x$references$alias %||% "", ""),
+            names = vapply(add, function(x) x$references$name %||% "", "")
+        )
+    } else {
+        add_refs <- list(ids = NULL, aliases = NULL, names = NULL)
+    }
+
+    if (id_type == "id") {
+        if (!is.variable(x)) return(subvars) # no validation possible
+        matches <- match(subvars, c(ids(subvariables(x)), add_refs$ids))
+    } else if (!is.variable(x)) {
+        halt("Must provide subvariable ids when x is an expression")
+    } else if (id_type == "alias") {
+        matches <- match(subvars, c(aliases(subvariables(x)), add_refs$aliases))
+    } else if (id_type == "name") {
+        matches <- match(subvars, c(names(subvariables(x)), add_refs$names))
+    }
+
+    if (any(is.na(matches))) {
+        halt(
+            "Could not find subvariables with ", id_type, " ",
+            paste0("'", subvars[is.na(matches)], "'", collapse = ",")
+        )
+    }
+    c(ids(subvariables(x)), add_refs$ids)[matches]
 }
 
 #' @rdname crunch-is

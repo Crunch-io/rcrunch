@@ -502,9 +502,9 @@ with_mock_crunch({
         expect_equal(
             unclass(toJSON(expr@expression)),
             paste0(
-                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
-                '{"value":{"categories":[{"id":1,"name":"AAA"}],"order":[2,1,-1],',
-                '"subvariables":[{"id":"subvar1","name":"ZZZ"}]}}]}'
+                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
+                '"kwargs":{"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},', #nolint
+                '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
             )
         )
     })
@@ -521,9 +521,9 @@ with_mock_crunch({
         expect_equal(
             unclass(toJSON(expr@expression)),
             paste0(
-                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
-                '{"value":{"categories":[{"id":1,"name":"AAA"}],"order":[2,1,-1],',
-                '"subvariables":[{"id":"subvar1","name":"ZZZ"}]}}]}'
+                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
+                '"kwargs":{"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},', #nolint
+                '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
             )
         )
     })
@@ -538,8 +538,8 @@ with_mock_crunch({
         expect_equal(
             unclass(toJSON(expr@expression)),
             paste0(
-                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
-                '{"value":{"subvariables":[{"id":"subvar1","name":"ZZZ"}]}}]}'
+                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
+                '"kwargs":{"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
             )
         )
     })
@@ -558,9 +558,9 @@ with_mock_crunch({
                 '{"function":"alter_categories","args":[{"function":"as_selected","args":',
                 '[{"function":"select_categories","args":',
                 '[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},',
-                '{"value":["A"]}]}]},',
-                '{"value":{"categories":[{"id":1,"name":"AAA"}],"order":[2,1,-1],',
-                '"subvariables":[{"id":"subvar1","name":"ZZZ"}]}}]}'
+                '{"value":["A"]}]}]}],"kwargs":{',
+                '"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},',
+                '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
             )
         )
     })
@@ -633,6 +633,108 @@ with_mock_crunch({
         )
     })
 
+
+    test_that("alterArrayExpr - add var and order", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            add = list("4" = ds$gender),
+            order = c("gender", "4", "subvar1", "subvar3"),
+            order_id = "id"
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"add":{"map":{"4":{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/gender/"}}},',
+                '"order":{"value":["gender","4","subvar1","subvar3"]}}}'
+            )
+        )
+    })
+
+    test_that("alterArrayExpr - add var and order by new alias", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            add = list("4" = VarDef(alias = "new_gender", ds$gender)),
+            order = c("subvar2", "new_gender", "subvar1", "subvar3")
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"add":{"map":{"4":{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/gender/",',
+                '"references":{"alias":"new_gender"}}}},',
+                '"order":{"value":["gender","4","subvar1","subvar3"]}}}'
+            )
+        )
+    })
+
+    test_that("alterArrayExpr - add var no order", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            add = list(ds$gender),
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"add":{"map":{"1":{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/gender/"}}},',
+                '"order":{"value":["gender","subvar1","subvar3","1"]}}}'
+            )
+        )
+    })
+
+    test_that("alterArrayExpr - remove var", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            remove = "gender",
+            remove_id = "id"
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"remove":{"value":["gender"]}}}'
+            )
+        )
+
+        expect_equal(
+            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "subvar2", remove_id = "alias")@expression)), #nolint
+            unclass(toJSON(expr@expression))
+        )
+
+        expect_equal(
+            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "First", remove_id = "name")@expression)),  #nolint
+            unclass(toJSON(expr@expression))
+        )
+    })
+
+    test_that("alterArrayExpr - subreferences", {
+        expr <- alterArrayExpr(
+            ds$mymrset,
+            subreferences = list("subvar2" = list(name = "new name"))
+        )
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"alter_array","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                '"kwargs":{"subreferences":{"value":{"gender":{"name":"new name"}}}}}'
+            )
+        )
+    })
+
     test_that("arraySubsetExpr", {
         # aliases
         expr <- arraySubsetExpr(ds$catarray, c("subvar1", "subvar3"), "alias")
@@ -676,7 +778,7 @@ with_mock_crunch({
         # fail
         expect_error(
             arraySubsetExpr(asSelected(ds$catarray), c("subvar1", "subvar2"), "alias"),
-            "Must subset by id when subsetting an expression"
+            "Must provide subvariable ids when x is an expression"
         )
 
         expect_error(

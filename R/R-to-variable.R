@@ -42,7 +42,7 @@ setGeneric("toVariable", function(x, ...) standardGeneric("toVariable"))
 
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "CrunchExpr", function(x, ...) {
+setMethod("toVariable", "CrunchVarOrExpr", function(x, ...) {
     structure(list(derivation = zcl(x), ...), class = "VariableDefinition")
 })
 
