@@ -3,7 +3,7 @@ ARG RPROXY_CREDS
 ENV R_LIB=/home/jenkins/R/master
 ENV R_LIBS=${R_LIB}
 USER root
-RUN apt-get update && apt-get install build-essential libssl-dev libcurl4-gnutls-dev libxml2-dev -y
+RUN apt-get update && apt-get install build-essential libssl-dev libcurl4-gnutls-dev libxml2-dev libsodium-dev -y
 # Add the user/group jenkins
 RUN groupadd --gid 991 jenkins \
     && useradd --uid 997 --gid jenkins --shell /bin/bash --create-home -d /home/jenkins jenkins
