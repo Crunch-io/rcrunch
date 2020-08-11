@@ -91,7 +91,6 @@ get_user_pass_combo <- function(email, password) {
         } else if (n.passes == 1 & keyring::key_list("crunch")$username[1] == "") {
           password <- keyring::key_get("crunch")
         } else if (interactive() == TRUE) {
-          #NB - not sure if we want this warning message - could be helpful or spammy
           warning("Saved Crunch passwords in keyring do not match specified email")
         }
       }
