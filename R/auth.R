@@ -95,11 +95,12 @@ get_user_pass_combo <- function(email, password) {
         }
       }
     } else {
-      warning(paste0(
-        "Retrieving saved Crunch email saved in global environment or .RProfile. This may not ",
-        "be secure. Consider using they \"keyring\" package and key_set(\"crunch\") to save ",
-        "password in encrypted format."
-      ))
+      # Check with customer success team before enabling this warning
+      # warning(paste0(
+      #   "Retrieving saved Crunch email saved in global environment or .RProfile. This may not ",
+      #   "be secure. Consider using they \"keyring\" package and key_set(\"crunch\") to save ",
+      #   "password in encrypted format."
+      # ))
     }
   }
 
