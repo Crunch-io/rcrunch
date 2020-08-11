@@ -244,4 +244,16 @@ with_test_authentication({
         expect_identical(name(dsz), "df")
         expect_valid_df_import(dsz)
     })
+
+    test_that("data.frame with missing data in datetime & date columns", {
+        input <- data.frame(
+            date = c(as.Date("2020-01-01"), NA),
+            datetime = as.POSIXlt(c(NA, "2020-01-01 01:05:00"), tz = "UTC")
+        )
+        ds <- newDataset(input, "missing vals datetimes")
+        expect_is(ds$date, "DatetimeVariable")
+        expect_equal(as.vector(ds$date), input$date)
+        expect_is(ds$datetime, "DatetimeVariable")
+        expect_equal(as.vector(ds$datetime), input$datetime)
+    })
 })

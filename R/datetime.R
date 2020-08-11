@@ -6,6 +6,18 @@ from8601 <- function(x) {
         return(as.Date(x))
     }
 
+    if (all(grepl("^[0-9]{4}-[0-9]{2}$", na.omit(x)))) {
+        ## return Date (of first of month) if resolution == M
+        x[!is.na(x)] <- paste0(x[!is.na(x)], "-01")
+        return(as.Date(x))
+    }
+
+    if (all(grepl("^[0-9]{4}$", na.omit(x)))) {
+        ## return Date (of first of year) if resolution == Y
+        x[!is.na(x)] <- paste0(x[!is.na(x)], "-01-01")
+        return(as.Date(x))
+    }
+
     ## Check for timezone
     if (any(grepl("+", x, fixed = TRUE))) {
         ## First, strip out the : in the time zone
@@ -106,7 +118,7 @@ rollupResolution <- function(x) {
 
 # validate that rollup resolutions are what are allowed by Crunch
 validateResolution <- function(resolution) {
-    valid_res <- c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")
+    valid_res <- c("Y", "Q", "3M", "M",  "W", "D", "h", "m", "s", "ms")
 
     if (!is.null(resolution) && !(resolution %in% valid_res)) {
         halt(

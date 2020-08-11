@@ -52,6 +52,12 @@ setGeneric("values", function(x) standardGeneric("values"))
 #' @rdname describe-catalog
 setGeneric("values<-", function(x, value) standardGeneric("values<-"))
 
+#' @rdname describe-catalog
+#' @export
+setGeneric("dates", function(x) standardGeneric("dates"))
+#' @rdname describe-catalog
+setGeneric("dates<-", function(x, value) standardGeneric("dates<-"), signature = "x")
+
 setGeneric("names")
 setGeneric("names<-")
 
@@ -155,8 +161,13 @@ setGeneric("subtotalArray", function(x, ...) standardGeneric("subtotalArray"))
 setGeneric("type", function(x) standardGeneric("type"))
 setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
+setGeneric("hiddenFolder", function(x) standardGeneric("hiddenFolder"))
+setGeneric("privateFolder", function(x) standardGeneric("privateFolder"))
 setGeneric("hide", function(x) standardGeneric("hide"))
 setGeneric("unhide", function(x) standardGeneric("unhide"))
+setGeneric("privatize", function(x) standardGeneric("privatize"))
+setGeneric("deprivatize", function(x) standardGeneric("deprivatize"))
+
 setGeneric("derivation", function(x) standardGeneric("derivation"))
 setGeneric("derivation<-", function(x, value) standardGeneric("derivation<-"))
 
@@ -187,7 +198,6 @@ setGeneric("entity", function(x) standardGeneric("entity"))
 setGeneric("index", function(x) standardGeneric("index"))
 setGeneric("index<-", function(x, value) standardGeneric("index<-"))
 setGeneric("active", function(x) standardGeneric("active"))
-setGeneric("hidden", function(x) standardGeneric("hidden"))
 setGeneric("archived", function(x) standardGeneric("archived"))
 setGeneric("imported", function(x) standardGeneric("imported"))
 setGeneric("pending", function(x) standardGeneric("pending"))
@@ -249,6 +259,7 @@ setGeneric("measures", function(x) standardGeneric("measures"))
 setGeneric("subset")
 setGeneric("which", signature = "x")
 
+
 #' Extract and modify Crunch objects
 #'
 #'
@@ -303,7 +314,7 @@ setGeneric("zcl", function(x) standardGeneric("zcl"))
 #' toJSON methods for Crunch objects
 #'
 #' `crunch` uses the `jsonlite` package for JSON serialization and
-#'  deserialization. Unfortunately, [jsonlite::toJSON()]
+#'  deserialization. Unfortunately, \code{\link[jsonlite:fromJSON]{jsonlite::toJSON()}}
 #' does not allow for defining S4 methods for other object types. So,
 #' `crunch::toJSON` wraps `jsonprep`, which exists to translate
 #' objects to base R objects, which `jsonlite::toJSON` can handle.
@@ -316,7 +327,7 @@ setGeneric("zcl", function(x) standardGeneric("zcl"))
 #' @return `jsonprep` returns a base R object that `jsonlite::toJSON`
 #' can handle. `toJSON` returns the JSON-serialized character object.
 #' @name tojson-crunch
-#' @seealso [jsonlite::toJSON()]
+#' @seealso \code{\link[jsonlite:fromJSON]{jsonlite::toJSON()}}
 #' @aliases jsonprep
 #' @export
 setGeneric("jsonprep", function(x, ...) standardGeneric("jsonprep"))

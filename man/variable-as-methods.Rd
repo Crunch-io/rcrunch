@@ -12,6 +12,12 @@
 \alias{as.Datetime,CrunchVariable-method}
 \alias{as.double.CrunchVariable}
 \alias{as.character.CrunchVariable}
+\alias{as.Numeric,CrunchExpr-method}
+\alias{as.Text,CrunchExpr-method}
+\alias{as.Categorical,CrunchExpr-method}
+\alias{as.Datetime,CrunchExpr-method}
+\alias{as.double.CrunchExpr}
+\alias{as.character.CrunchExpr}
 \title{as.* methods for variables}
 \usage{
 \S4method{as.Numeric}{CrunchVariable}(x)
@@ -25,6 +31,18 @@
 \method{as.double}{CrunchVariable}(x, ...)
 
 \method{as.character}{CrunchVariable}(x, ...)
+
+\S4method{as.Numeric}{CrunchExpr}(x)
+
+\S4method{as.Text}{CrunchExpr}(x, format)
+
+\S4method{as.Categorical}{CrunchExpr}(x, format)
+
+\S4method{as.Datetime}{CrunchExpr}(x, format = "\%Y-\%m-\%d \%H:\%M:\%S", resolution, offset)
+
+\method{as.double}{CrunchExpr}(x, ...)
+
+\method{as.character}{CrunchExpr}(x, ...)
 }
 \arguments{
 \item{x}{a Crunch variable to derive and convert to a new type}
@@ -50,7 +68,7 @@ not supplied, Crunch's default of 1970-01-01 00:00:00 will be used.}
 Crunch variables}
 }
 \value{
-a \code{VariableDefinition} to be used as the derivation
+a \code{CrunchExpr} to be used as the derivation
 }
 \description{
 Use the as.* family of functions to make a derived copy of a variable that

@@ -1,0 +1,33 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/95c00e/variables/8c1843/subvariables/",
+    "description": "Contains the subvariables for this array variable.",
+    "index": {
+        "/api/datasets/95c00e/variables/8c1843/subvariables/000014/": {
+            "secure": false,
+            "derived": false,
+            "id": "000014",
+            "description": "",
+            "scale": "interval",
+            "name": "ImportantHiringTechExp",
+            "notes": "",
+            "discarded": false,
+            "alias": "ImportantHiringTechExp",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "/api/datasets/95c00e/variables/8c1843/subvariables/000012/": {
+            "secure": false,
+            "derived": false,
+            "id": "000012",
+            "description": "",
+            "scale": "interval",
+            "name": "ImportantHiringPMExp",
+            "notes": "",
+            "discarded": false,
+            "alias": "ImportantHiringPMExp",
+            "hidden": false,
+            "type": "categorical"
+        }
+    }
+}

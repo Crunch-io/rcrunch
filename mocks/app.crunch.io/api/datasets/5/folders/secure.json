@@ -1,0 +1,25 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/5/folders/secure/",
+    "index": {
+        "../../variables/id/": {
+            "discarded": false,
+            "alias": "id",
+            "secure": true,
+            "name": "ID Number",
+            "id": "000002",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "hidden": false,
+            "description": ""
+        }
+    },
+    "body": {
+        "name": "Secure"
+    },
+    "graph": [
+        "../../variables/id/"
+    ],
+    "size": 1
+}

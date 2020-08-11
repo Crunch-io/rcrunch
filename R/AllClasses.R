@@ -143,6 +143,8 @@ MultipleResponseVariable <- setClass("MultipleResponseVariable",
     contains = "CategoricalArrayVariable"
 )
 
+setClassUnion("CrunchVarOrExpr", c("CrunchVariable", "CrunchExpr"))
+
 #' Organize Variables within a Dataset
 #'
 #' Variables in the Crunch web application can be viewed in an ordered,
@@ -221,11 +223,15 @@ CrunchDataset <- setClass("CrunchDataset",
     contains = c("ShojiObject"),
     slots = c(
         variables = "VariableCatalog",
+        hiddenVariables = "VariableCatalog",
+        privateVariables = "VariableCatalog",
         filter = "CrunchLogicalExpr",
         tuple = "DatasetTuple"
     ),
     prototype = prototype(
         variables = VariableCatalog(),
+        hiddenVariables = VariableCatalog(),
+        privateVariables = VariableCatalog(),
         filter = CrunchLogicalExpr(),
         tuple = DatasetTuple()
     )
@@ -285,8 +291,21 @@ AbstractCategory <- GenericConstructor("AbstractCategory")
 #' CategoricalVariables, as well as the array types composed from
 #' Categoricals, contain Categories. Categories are a subclass of list that
 #' contains only Category objects. Category objects are themselves subclasses of
-#' lists and contain the following fields: "name", "id", "numeric_value",
-#' "missing", and optionally "selected".
+#' lists and contain the following fields:
+#' - "name": The name of the category, must be unique within a set of categories
+#' - "id": An integer that uniquely identifies the category
+#' - "numeric_value": A numeric value associated with the category (defaults to NA
+#'   meaning that no value is associated, *not* that the category is missing)
+#' - "missing": Logical indicating whether the category should be considered missing
+#'   (defaults to `FALSE`)
+#' - "selected": Logical indicating whether the category is selected or not (defaults
+#'   to `FALSE`)
+#' - "date": A string indicating a day or range of days that should be associated with the
+#'    category. Accepted formats are "YYYY-MM-DD" ("2020-01-01") for a day,
+#'    "YYYY-WXX" ("2020-W01") for an ISO week (a week that starts on a Monday,
+#'     with the first week of the year being the first week with more than 4 days in it),
+#'    "YYYY-MM" ("2020-01") for a month, "YYYY" ("2020") for a year, or
+#'    "YYYY-MM-DD,YYYY-MM-DD" ("2020-01-01,2020-01-10") for a range of days.
 #'
 #' @param data For the constructor functions `Category` and
 #' `Categories`, you can either pass in attributes via `...` or you
@@ -308,7 +327,27 @@ setClass("Categories", contains = "AbstractCategories")
 
 #' @rdname Categories
 #' @export
-Categories <- GenericConstructor("Categories")
+Categories <- function(..., data = NULL) {
+    # Fill in ids if missing
+    if (is.null(data)) data <- list(...)
+
+    # use try because we haven't validated that they're category-like yet
+    used_ids <- try(vapply(data, function(x) x$id %||% NA, numeric(1)), silent = TRUE)
+    if (!inherits(used_ids, "try-error") && any(is.na(used_ids))) {
+        all_ids <- used_ids
+        all_ids[is.na(used_ids)] <- setdiff(
+            seq_along(data),
+            used_ids
+        )[seq_len(sum(is.na(used_ids)))]
+
+        data <- mapply(function(cat, used_id, all_id) {
+            if (is.na(used_id)) cat$id <- all_id
+            cat
+        }, data, used_ids, all_ids, SIMPLIFY = FALSE)
+    }
+
+    new("Categories", data)
+}
 
 #' @rdname Categories
 #' @export

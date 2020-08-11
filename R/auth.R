@@ -139,12 +139,13 @@ crunchAuth <- function(email, password = NULL, ...) {
         }
     }
 
-    crPOST(absoluteURL("public/login/", getOption("crunch.api")),
-        body = toJSON(list(email = email, password = password, ...)),
+    out <- crPOST(absoluteURL("public/login/", getOption("crunch.api")),
+        body = toJSON(list(email = email, password = password, token = TRUE, ...)),
         status.handlers = list(`401` = function(response, user = email) {
             halt(paste("Unable to authenticate", user))
         })
     )
+    tokenAuth(out$access_token)
 }
 
 without_echo <- function(expr) {
@@ -166,20 +167,19 @@ without_echo <- function(expr) {
 ## Pass through for test mocking
 read_input <- function(...) readline(...)
 
-#' Add an auth token as a cookie manually
+#' Add an auth token manually
 #'
-#' Set the auth token rather than from a Set-Cookie response header. Also modify
+#' Set the auth token with a token you provide. Also modify
 #' the user-agent to include the service this is coming from.
 #' @param token character auth token
 #' @param ua character optional string to add to the User-Agent request header
 #' @return Nothing; called for its side effects.
 #' @export
 #' @keywords internal
-#' @importFrom httr set_cookies
 tokenAuth <- function(token, ua = "token") {
     set_crunch_config(
         c(
-            set_cookies(token = token),
+            add_headers(Authorization = paste0("Bearer ", token)),
             add_headers(`user-agent` = crunch_user_agent(ua))
         ),
         update = TRUE

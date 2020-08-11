@@ -4,26 +4,27 @@ doc:
 	R --slave -e 'devtools::document()'
 	git add --all man/*.Rd
 
-test:
-	R CMD INSTALL --install-tests .
-	export NOT_CRAN=true && R --slave -e 'library(httptest); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
+test: compress-fixtures | test-no-compress-fixtures
+
+test-no-compress-fixtures:
+	export NOT_CRAN=true && R --slave -e 'library(httptest); options(crunch.check.updates=FALSE); system.time(devtools::test(filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 lint:
 	R --slave -e 'styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'
 
 deps:
-	R --slave -e 'Nexus <- "https://ui.nexus.crint.net/repository/rcrunch/"; if (!dir.exists(file.path(.libPaths()[1], "devtools"))) install.packages("devtools", repo=Nexus); devtools::install_deps(dependencies=TRUE)'
+	R --slave -e 'Nexus <- "https://rproxy:I0VktB3jZdplfsEgeiAR@ui.nexus.crint.net/repository/rcrunch/"; if (!dir.exists(file.path(.libPaths()[1], "devtools"))) install.packages("devtools", repo=Nexus); devtools::install_deps(dependencies=TRUE)'
 
 install-ci: deps
 	R -e 'devtools::session_info(installed.packages()[, "Package"])'
 
-test-ci:
+test-ci: compress-fixtures |
 	R --slave -e 'library(covr); to_cobertura(package_coverage(quiet=FALSE))'
 
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); lapply(urls(datasets()), crDELETE)'
 
-build: doc
+build: doc | compress-fixtures
 	R CMD build .
 
 check: build
@@ -64,4 +65,4 @@ covr:
 	R --slave -e 'Sys.setenv(R_TEST_USER=getOption("test.user"), R_TEST_PW=getOption("test.pw"), R_TEST_API=getOption("test.api")); library(covr); cv <- package_coverage(); df <- covr:::to_shiny_data(cv)[["file_stats"]]; cat("Line coverage:", round(100*sum(df[["Covered"]])/sum(df[["Relevant"]]), 1), "percent\\n"); shine(cv, browse=TRUE)'
 
 compress-fixtures:
-	R --slave -e 'tar("inst/cubes.tgz", files = "cubes", compression = "gzip")'
+	Rscript 'dev-misc/compress-mocks.R'

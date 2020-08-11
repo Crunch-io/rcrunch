@@ -2,7 +2,7 @@
 % Please edit documentation in R/R-to-variable.R
 \name{toVariable}
 \alias{toVariable}
-\alias{toVariable,CrunchExpr-method}
+\alias{toVariable,CrunchVarOrExpr-method}
 \alias{toVariable,character-method}
 \alias{toVariable,numeric-method}
 \alias{toVariable,factor-method}
@@ -19,7 +19,7 @@
 \usage{
 toVariable(x, ...)
 
-\S4method{toVariable}{CrunchExpr}(x, ...)
+\S4method{toVariable}{CrunchVarOrExpr}(x, ...)
 
 \S4method{toVariable}{character}(x, ...)
 

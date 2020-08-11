@@ -16,15 +16,6 @@ setMethod("initialize", "VariableCatalog", function(.Object, ...) {
     return(.Object)
 })
 
-.discardedTuple <- function(x) isTRUE(x[["discarded"]])
-.secureTuple <- function(x) isTRUE(x[["secure"]])
-
-setMethod("active", "VariableCatalog", function(x) {
-    index(x) <- Filter(Negate(.discardedTuple), index(x))
-    index(x) <- Filter(Negate(.secureTuple), index(x))
-    return(x)
-})
-
 #' @rdname crunch-extract
 #' @export
 setMethod("[[", c("VariableCatalog", "numeric"), function(x, i, ...) {

@@ -247,45 +247,46 @@ buildDelimRegex <- function(str, delim) {
 #' @rdname makeArray
 #' @export
 deriveArray <- function(subvariables, name, selections, ...) {
+    expression <- makeFrame(subvariables)
+
+    if (!missing(selections)) {
+        expression <- selectCategories(expression, selections, collapse = FALSE)
+    }
+    return(VariableDefinition(expression, name = name, ...))
+}
+
+
+#' @rdname expressions-internal
+#' @export
+makeFrame <- function(x) {
     ## Get subvariable URLs
-    if (is.dataset(subvariables)) {
+    if (is.dataset(x)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
-        subvariables <- allVariables(subvariables)
+        x <- allVariables(x)
     }
 
     # if it's a list, it could contain variable definitions:
-    if (is.list(subvariables)) {
-        subvariables <- subvariables[lengths(subvariables) > 0] # remove NULLs (from eg slider)
-        subvariables <- lapply(subvariables, function(x) {
-            if (is.VarDef(x)) {
-                out <- x$derivation
-                out$references <- x[names(x) != "derivation"]
-                out
-            } else {
-                list(variable = urls(x))
-            }
-        })
+    if (is.list(x)) {
+        x <- x[lengths(x) > 0] # remove NULLs (from eg slider)
+        x <- lapply(x, zcl)
     } else { # but ShojiCatalogs don't give their urls when lapplying, so treat differently
-        subvariables <- lapply(urls(subvariables), function(x) list(variable = x))
+        x <- lapply(urls(x), function(sv) list(variable = sv))
     }
 
-    subvarids <- as.character(seq_along(subvariables))
-    derivation <- zfunc("array", zfunc(
-        "select",
-        list(map = structure(subvariables,
-            .Names = subvarids
-        )),
+    subvarids <- as.character(seq_along(x))
+    expression <- zfunc("array", zfunc(
+        "make_frame",
+        list(map = structure(x, .Names = subvarids)),
         list(value = I(subvarids))
     ))
-
-    if (!missing(selections)) {
-        # if there are selections, wrap the array function inside of a
-        # select_categories function
-        derivation <- zfunc("select_categories", derivation, list(value = I(selections)))
-    }
-
-    return(VariableDefinition(derivation = derivation, name = name, ...))
+    # TODO: filters are not preserved in makeFrame expressions because
+    # they aren't preserved in `VarDefs` which expressions are wrapped in
+    # when forming variables... I believe this will only affect someone trying to
+    # `as.vector()` an array, which also doesn't currently work so leave it for now.
+    CrunchExpr(expression = expression)
 }
+
+
 
 #' Rearrange array subvariables
 #'

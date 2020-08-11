@@ -1,0 +1,37 @@
+// Test fixture used everywhere
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/streaming-no-msg/",
+    "description": "Detail for a given dataset",
+    "body": {
+        // In reality, body has attributes found in the tuple too
+        "owner": "https://app.crunch.io/api/users/user1/",
+        "id": "dataset1",
+        "streaming": "streaming"
+    },
+    "catalogs": {
+        "variables": "https://app.crunch.io/api/datasets/streaming-no-msg/variables/",
+        "folders": "https://app.crunch.io/api/datasets/streaming-no-msg/folders/",
+        "savepoints": "https://app.crunch.io/api/datasets/streaming-no-msg/savepoints/",
+        "batches": "https://app.crunch.io/api/datasets/streaming-no-msg/batches/",
+        "permissions": "https://app.crunch.io/api/datasets/streaming-no-msg/permissions/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "filters": "https://app.crunch.io/api/datasets/streaming-no-msg/filters/",
+        "boxdata": "https://app.crunch.io/api/datasets/streaming-no-msg/boxdata/",
+        "multitables": "https://app.crunch.io/api/datasets/streaming-no-msg/multitables/",
+        "actions": "https://app.crunch.io/api/datasets/streaming-no-msg/actions/"
+    },
+    "views": {
+        "summary": "https://app.crunch.io/api/datasets/streaming-no-msg/summary/",
+        "cube": "https://app.crunch.io/api/datasets/streaming-no-msg/cube/",
+        "export": "https://app.crunch.io/api/datasets/streaming-no-msg/export/"
+    },
+    "fragments": {
+        "table": "https://app.crunch.io/api/datasets/streaming-no-msg/table/",
+        "preferences": "https://app.crunch.io/api/datasets/streaming-no-msg/preferences/",
+        "settings": "https://app.crunch.io/api/datasets/streaming-no-msg/settings/",
+        "pk": "https://app.crunch.io/api/datasets/streaming-no-msg/pk/",
+        "stream": "https://app.crunch.io/api/datasets/streaming-no-msg/stream/"
+    },
+    "some_other_key": {}
+}

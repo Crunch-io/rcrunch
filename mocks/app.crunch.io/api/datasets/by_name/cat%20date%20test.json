@@ -1,0 +1,35 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/cat%20date%20test/",
+    "description": "Datasets with a given name ",
+    "index": {
+        "https://app.crunch.io/api/datasets/b9d811/": {
+            "size": {
+                "rows": 6,
+                "unfiltered_rows": 6,
+                "columns": 3
+            },
+            "current_editor_name": "Greg",
+            "account": "https://app.crunch.io/api/accounts/00001/",
+            "owner_name": "Greg",
+            "name": "cat date test",
+            "end_date": null,
+            "streaming": "no",
+            "owner_id": "https://app.crunch.io/api/users/27a158/",
+            "current_editor": "https://app.crunch.io/api/users/27a158/",
+            "creation_time": "2020-07-23T15:16:46.607000+00:00",
+            "archived": false,
+            "view_of": null,
+            "start_date": null,
+            "modification_time": "2020-07-23T15:16:55.906000+00:00",
+            "access_time": "2020-07-23T15:16:46.231000+00:00",
+            "permissions": {
+                "edit": true,
+                "view": true
+            },
+            "is_published": true,
+            "id": "b9d811",
+            "description": ""
+        }
+    }
+}

@@ -16,3 +16,4 @@ docs/
 \.Rprofile
 revdep/
 *.RData
+inst/mocks.tgz

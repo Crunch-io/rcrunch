@@ -47,72 +47,88 @@
 #' @export
 #' @importFrom utils modifyList
 combine <- function(variable, combinations = list(), ...) {
-    ## Validate inputs
-    valid_types <- c("categorical", "categorical_array", "multiple_response")
-    if (!(type(variable) %in% valid_types)) {
+    if (is.MR(variable)) {
+        out <- combineResponses(variable, combinations, ...)
+    } else if (is.Categorical(variable) | is.CategoricalArray(variable)) {
+        out <- combineCategories(variable, combinations, ...)
+    } else {
         halt(
-            "Cannot combine ", dQuote(name(variable)), ": must be type ",
-            "categorical, categorical_array, or multiple_response"
+            "Cannot combine ", dQuote(name(variable)), ": must be a ",
+            "Categorical, Categorical Array, or Multiple Response Variable"
         )
+    }
+    out
+}
+
+#' @export
+#' @rdname combine
+combineCategories <- function(variable, combinations = list(), ...) {
+    if (!(is.Categorical(variable) | is.CategoricalArray(variable) | is.Expr(variable))) {
+        halt("combineResponses() is only available for Multiple Response variables")
     }
     if (!is.list(combinations) || !all(vapply(combinations, is.list, logical(1)))) {
         halt("'combinations' must be a list of combination specifications")
     }
 
     ## Get basic variable metadata
-    newvar <- copyVariableReferences(variable)
-    newvar$alias <- NULL ## Let server specify, or specify in ..., or on <-
-    newvar <- modifyList(newvar, list(...))
-    newvar$type <- NULL ## Type is function of the derivation
+    meta <- copyVariableReferences(variable)
+    meta$alias <- NULL ## Let server specify, or specify in ..., or on <-
+    meta <- modifyList(meta, list(...))
+    meta$type <- NULL ## Type is function of the derivation
 
-    ## Construct expr
-    if (type(variable) == "multiple_response") {
-        combs <- combResps(subvariables(variable), combinations)
-        newvar$derivation <- zfunc(
-            "combine_responses",
-            zcl(variable), list(value = combs)
+    # TODO: combineCategoriesExpr (would require figuring out category names from expression)
+    combs <- combCats(categories(variable), combinations)
+    expression <- zfuncExpr(
+        "combine_categories",
+        variable, list(value = I(combs))
+    )
+    ## Give default name based on number of categories
+    if (identical(meta$name, name(variable))) {
+        nvalidcats <- length(Filter(
+            Negate(function(x) isTRUE(x$missing)),
+            expression@expression$args[[2]]$value
+        ))
+        meta$name <- paste0(
+            meta$name, " (", nvalidcats,
+            ifelse(nvalidcats == 1, " category)", " categories)")
         )
-        ## Give default name based on number of responses
-        if (identical(newvar$name, name(variable))) {
-            nvalidresps <- length(newvar$derivation$args[[2]]$value)
-            newvar$name <- paste0(
-                newvar$name, " (", nvalidresps,
-                ifelse(nvalidresps == 1, " response)", " responses)")
-            )
-        }
-    } else {
-        combs <- combCats(categories(variable), combinations)
-        newvar$derivation <- zfunc(
-            "combine_categories",
-            zcl(variable), list(value = combs)
-        )
-        ## Give default name based on number of categories
-        if (identical(newvar$name, name(variable))) {
-            nvalidcats <- length(Filter(
-                Negate(function(x) isTRUE(x$missing)),
-                newvar$derivation$args[[2]]$value
-            ))
-            newvar$name <- paste0(
-                newvar$name, " (", nvalidcats,
-                ifelse(nvalidcats == 1, " category)", " categories)")
-            )
-        }
     }
-    class(newvar) <- "VariableDefinition"
-    return(newvar)
+    do.call(VarDef, c(meta, list(expression)))
 }
 
 #' @export
 #' @rdname combine
-combineCategories <- combine
-
-#' @export
-#' @rdname combine
 combineResponses <- function(variable, combinations = list(), ...) {
-    if (!is.MR(variable)) {
+    if (!(is.MR(variable) | is.Expr(variable))) {
         halt("combineResponses() is only available for Multiple Response variables")
     }
-    combine(variable, combinations, ...)
+    if (!is.list(combinations) || !all(vapply(combinations, is.list, logical(1)))) {
+        halt("'combinations' must be a list of combination specifications")
+    }
+
+    ## Get basic variable metadata
+    meta <- copyVariableReferences(variable)
+    meta$alias <- NULL ## Let server specify, or specify in ..., or on <-
+    meta <- modifyList(meta, list(...))
+    meta$type <- NULL ## Type is function of the derivation
+
+    combs <- combResps(subvariables(variable), combinations)
+
+    # TODO: combineResponsesExpr (would require figuring out MR names from expression)
+    expression <- zfuncExpr(
+        "combine_responses",
+        variable, list(value = I(combs))
+    )
+    ## Give default name based on number of responses
+    if (identical(meta$name, name(variable))) {
+        nvalidresps <- length(expression@expression$args[[2]]$value)
+        meta$name <- paste0(
+            meta$name, " (", nvalidresps,
+            ifelse(nvalidresps == 1, " response)", " responses)")
+        )
+    }
+
+    do.call(VarDef, c(meta, list(expression)))
 }
 
 combCats <- function(cats, combs) {

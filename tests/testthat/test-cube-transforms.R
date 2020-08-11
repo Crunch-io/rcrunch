@@ -1185,7 +1185,7 @@ with_test_authentication({
         rep("Lizards", 25),
         rep("Rocks", 5),
         rep(NA, 10)
-    ))
+    ), stringsAsFactors = TRUE)
 
     ds <- newDataset(df)
 
@@ -1257,7 +1257,7 @@ with_test_authentication({
                 "Rocks+Birds (incl. missing)"
             ))
         )
-        trans_pets <- showTransforms(ds$pets)
+        capture.output(trans_pets <- showTransforms(ds$pets))
 
         expect_is(trans_pets, "array")
         expect_equal(dim(trans_pets), 10)

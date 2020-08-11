@@ -41,6 +41,18 @@ with_mock_crunch({
         ), "Invalid category names: must be unique")
     })
 
+    test_that("fill in category id when missing", {
+        expect_equal(
+            Categories(list(name = "A"), list(name = "B")),
+            Categories(list(id = 1L, name = "A"), list(id = 2L, name = "B"))
+        )
+
+        expect_equal(
+            Categories(list(name = "A", id = 2L), list(name = "B")),
+            Categories(list(id = 2L, name = "A"), list(id = 1L, name = "B"))
+        )
+    })
+
     test_that("category slicers", {
         expect_true(is.categories(cats[1]))
         expect_equal(cats[c("Female", "Male")], cats[c(2, 1)])
@@ -358,6 +370,27 @@ with_mock_crunch({
     })
     test_that("c(Categories, Categories)", {
         expect_true(is.categories(c(cats, cats2)))
+    })
+
+
+    ds_catdate <- loadDataset("cat date test")
+    cats <- categories(ds_catdate$cat_set)
+
+    test_that("catdates getters/setters", {
+        expect_equal(dates(cats[[1]]), "2020-01")
+        expect_equal(
+            dates(cats),
+            c("wave1" = "2020-01", "wave2" = "2020-02", "wave3" = "2020-03", "No Data" = NA)
+        )
+
+        dates(cats)[[1]] <- "2019-12"
+        expect_equal(dates(cats[[1]]), "2019-12")
+
+        dates(cats) <- c("2019-01", "2019-02", "2019-03", NA)
+        expect_equal(
+            dates(cats),
+            c("wave1" = "2019-01", "wave2" = "2019-02", "wave3" = "2019-03", "No Data" = NA)
+        )
     })
 })
 

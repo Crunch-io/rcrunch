@@ -1,0 +1,56 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/b9d811/variables/?relative=on",
+    "catalogs": {
+        "applied": "https://app.crunch.io/api/datasets/b9d811/variables/applied/",
+        "private": "https://app.crunch.io/api/datasets/b9d811/variables/private/"
+    },
+    "orders": {
+        "personal": "https://app.crunch.io/api/datasets/b9d811/variables/personal/",
+        "weights": "https://app.crunch.io/api/datasets/b9d811/variables/weights/",
+        "hier": "https://app.crunch.io/api/datasets/b9d811/variables/hier/"
+    },
+    "description": "List of Variables of this dataset",
+    "index": {
+        "000001/": {
+            "secure": false,
+            "derived": false,
+            "rollup_resolution": null,
+            "id": "000001",
+            "description": "",
+            "name": "true_date",
+            "resolution": "ms",
+            "notes": "",
+            "discarded": false,
+            "alias": "true_date",
+            "hidden": false,
+            "type": "datetime"
+        },
+        "2a8866/": {
+            "secure": false,
+            "derived": false,
+            "id": "2a8866",
+            "description": "",
+            "scale": "interval",
+            "name": "cat_not_set (copy)",
+            "notes": "",
+            "discarded": false,
+            "alias": "cat_set",
+            "hidden": false,
+            "type": "categorical"
+        },
+        "000000/": {
+            "secure": false,
+            "derived": false,
+            "id": "000000",
+            "description": "",
+            "scale": "interval",
+            "name": "cat_not_set",
+            "notes": "",
+            "discarded": false,
+            "alias": "cat_not_set",
+            "hidden": false,
+            "type": "categorical"
+        }
+    }
+}

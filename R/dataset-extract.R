@@ -148,8 +148,11 @@ setMethod("[[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALS
     out <- allVariables(x)[[findVariablesInDataset(x, i)]]
     if (!is.null(out)) {
         out <- CrunchVariable(out, filter = activeFilter(x))
-        if (tuple(out)$discarded && getOption("crunch.warn.hidden", TRUE)) {
+        if (alias(out) %in% hiddenVariables(x, "alias") && getOption("crunch.warn.hidden", TRUE)) {
             warning("Variable ", alias(out), " is hidden", call. = FALSE)
+        }
+        if (alias(out) %in% privateVariables(x, "alias") && getOption("crunch.warn.private", TRUE)) { # nolint
+            warning("Variable ", alias(out), " is private", call. = FALSE)
         }
     }
     return(out)

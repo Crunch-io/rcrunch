@@ -45,10 +45,34 @@ setOldClass("zcl")
 setMethod("zcl", "zcl", function(x) x)
 setMethod("zcl", "list", function(x) x) ## is this a good idea?
 setMethod("zcl", "CrunchFilter", function(x) x@body$expression)
+setMethod("zcl", "VariableDefinition", function(x) {
+    non_ref_names <- c("derivation", "values", "type", "categories", "resolution")
+    if ("derivation" %in% names(x)) {
+        out <- x$derivation
+    } else {
+        halt("zcl functions only work on existing crunch variables")
+    }
+    references <- x[!names(x) %in% non_ref_names]
+    if (length(references) > 0) out$references <- references
+    out
+})
 
 zfunc <- function(func, ...) {
     ## Wrapper that creates ZCL function syntax
-    return(list(`function` = func, args = lapply(list(...), zcl)))
+    dots <- lapply(list(...), zcl)
+    if (is.null(names(dots))) {
+        unnamed_dots <- dots
+        named_dots <- NULL
+    } else {
+        unnamed_dots <- unname(dots[names(dots) == ""])
+        named_dots <- dots[names(dots) != ""]
+    }
+
+    out <- list(`function` = func)
+    if (!is.null(unnamed_dots)) out["args"] <- list(unnamed_dots)
+    if (!is.null(named_dots)) out["kwargs"] <- list(named_dots)
+
+    return(out)
 }
 
 # check if a template or query has a particular ZCL function somewhere in it recursively.

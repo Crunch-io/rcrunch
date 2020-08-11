@@ -9,20 +9,29 @@ matrix:
   include:
   - os: linux
     r: 3.4
+    warnings_are_errors: false
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
       - _R_CHECK_TESTS_NLINES_=0
+      - _R_CHECK_RD_XREFS_=false
     apt_packages:
        - libsodium-dev
     before_script:
        - Rscript -e 'devtools::install_github("rstudio/rmarkdown")'
+    before_script:
+      - Rscript -e 'devtools::install_github("rstudio/rmarkdown")'
+      - Rscript 'dev-misc/compress-mocks.R'
   - os: linux
     r: oldrel
+    warnings_are_errors: false
     env:
       - _R_CHECK_LENGTH_1_LOGIC2_=true
       - _R_CHECK_TESTS_NLINES_=0
+      - _R_CHECK_RD_XREFS_=false
     apt_packages:
        - libsodium-dev
+    before_script:
+      - Rscript 'dev-misc/compress-mocks.R'
   - os: linux
     r: release
     env:
@@ -31,6 +40,8 @@ matrix:
       - secure: "BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc="
     apt_packages:
        - libsodium-dev
+    before_script:
+      - Rscript 'dev-misc/compress-mocks.R'
     after_success:
       - Rscript -e 'covr::codecov()'
       - R CMD INSTALL $PKG_TARBALL
@@ -44,6 +55,8 @@ matrix:
       - _R_CHECK_TESTS_NLINES_=0
     apt_packages:
        - libsodium-dev
+    before_script:
+      - Rscript 'dev-misc/compress-mocks.R'
   - os: windows
     language: shell
     env:
@@ -53,6 +66,8 @@ matrix:
       - _R_CHECK_TESTS_NLINES_=0
     before_install:
       - source .travis.win.install.sh
+    before_script:
+      - Rscript 'dev-misc/compress-mocks.R'
     script:
       - R.exe CMD build . --no-manual
       - R.exe CMD check $PKG_TARBALL --no-manual --as-cran --install-args=--build

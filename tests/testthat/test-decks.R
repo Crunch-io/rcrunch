@@ -726,6 +726,13 @@ with_mock_crunch({
     })
 })
 
+test_that("filter gets pass through method on non-crunch objects", {
+    expect_equal(
+        crunch::filter(1:100, rep(1, 3)),
+        stats::filter(1:100, rep(1, 3))
+    )
+})
+
 with_test_authentication({
     ds <- newDataset(df)
     test_that("decks can be created", {

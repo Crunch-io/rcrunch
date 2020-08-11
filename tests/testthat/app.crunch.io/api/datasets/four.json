@@ -5,6 +5,7 @@
         "batches": "https://app.crunch.io/api/datasets/four/batches/",
         "users": "https://app.crunch.io/api/datasets/four/users/",
         "variables": "https://app.crunch.io/api/datasets/four/variables/",
+        "folders": "https://app.crunch.io/api/datasets/four/folders/",
         "actions": "https://app.crunch.io/api/datasets/four/actions/",
         "savepoints": "https://app.crunch.io/api/datasets/four/savepoints/",
         "boxdata": "https://app.crunch.io/api/datasets/four/boxdata/",

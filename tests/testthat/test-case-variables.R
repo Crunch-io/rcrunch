@@ -9,7 +9,8 @@ with_mock_crunch({
             id = NULL, name = "Dudes",
             expression = ds$gender == "Male",
             numeric_value = NULL,
-            missing = FALSE
+            missing = FALSE,
+            date = NULL
         )
         expect_equal(ensureValidCase(case), case_out)
         expect_error(ensureValidCase("case"), "A case must be a list")
@@ -63,6 +64,14 @@ with_mock_crunch({
             "a case's missing must be a logical"
         )
         expect_error(
+            ensureValidCase(list(
+                name = "name",
+                expression = CrunchLogicalExpr(),
+                date = 2
+            )),
+            "a case's date must be a character"
+        )
+        expect_error(
             ensureValidCase(list(not_right = "not")),
             paste(
                 "each case must have at most an id, name, expression,",
@@ -74,7 +83,7 @@ with_mock_crunch({
         else_case <- list(name = "Dudes", expression = "else")
         else_case_out <- list(
             id = NULL, name = "Dudes",
-            numeric_value = NULL, missing = FALSE
+            numeric_value = NULL, missing = FALSE, date = NULL
         )
         expect_equal(ensureValidCase(else_case), else_case_out)
     })
