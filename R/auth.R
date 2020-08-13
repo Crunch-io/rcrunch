@@ -13,7 +13,7 @@ logout <- function() {
 #' Authenticate with the Crunch API
 #'
 #' Note that you can store your Crunch account info in encrypted format via
-#' the keyring package, with `key_set(service = "crunch",...)`
+#' the keyring package, with `key_set(service = "crunch", "<USERNAME>", ...)`
 #' If you do so, you can simply `login()` to authenticate. For running batch jobs,
 #' this could be particularly useful.
 #'

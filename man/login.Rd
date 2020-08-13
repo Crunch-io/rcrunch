@@ -16,7 +16,7 @@ currently supported by the Crunch API.}
 }
 \description{
 Note that you can store your Crunch account info in encrypted format via
-the keyring package, with \code{key_set(service = "crunch",...)}
+the keyring package, with \code{key_set(service = "crunch", "<USERNAME>", ...)}
 If you do so, you can simply \code{login()} to authenticate. For running batch jobs,
 this could be particularly useful.
 }
