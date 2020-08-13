@@ -36,7 +36,7 @@ Crunch.io password for xkcd@crunch.io: *enter your password here*
 
 If you use an OAuth provider, such as Google, to log into the Crunch web application, you'll need to first set a Crunch password for use here. Do `resetPassword("xkcd@crunch.io")` with your email address, and you'll receive an email with password setting instructions.  
 
-Your email and Crunch password can be set either as R `options` in your .Rprofile (`crunch.email` and `crunch.pw`) or as environment variables (`R_CRUNCH_EMAIL` and `R_CRUNCH_PW`) so that you can simply `login()`. See `?login` for details.
+Your email and Crunch password can be set via the `keyring` package, `options` in your .Rprofile (`crunch.email` and `crunch.pw`) or as environment variables (`R_CRUNCH_EMAIL` and `R_CRUNCH_PW`) so that you can simply `login()`. See `?login` for details.
 
 ## Datasets
 
