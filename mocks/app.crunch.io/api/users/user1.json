@@ -17,7 +17,7 @@
         "account_url": "https://app.crunch.io/api/accounts/account1/"
     },
     "fragments": {
-        "expropriate": "https://app.crunch.io/api/users/user1/expropriate/"
+        "reassign": "https://app.crunch.io/api/users/user1/reassign/"
     },
     "some_other_key": {}
 }

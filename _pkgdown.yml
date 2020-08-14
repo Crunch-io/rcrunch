@@ -212,7 +212,7 @@ reference:
   - share
   - 'members<-,CrunchTeam,MemberCatalog-method'
   - unshare
-  - expropriateUser
+  - reassignUser
   - team
 - title: Utility
   contents:

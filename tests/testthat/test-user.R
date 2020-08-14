@@ -59,20 +59,20 @@ with_mock_crunch({
         )
     })
 
-    test_that("expropriateUser", {
-        expect_error(expropriateUser(
+    test_that("reassignUser", {
+        expect_error(reassignUser(
             "fake.user@example.com",
             "william.user@example.io"
         ), "Must confirm")
 
         expect_POST(
             with_consent({
-                expropriateUser(
+                reassignUser(
                     "fake.user@example.com",
                     "william.user@example.io"
                 )
             }),
-            "https://app.crunch.io/api/users/user1/expropriate/",
+            "https://app.crunch.io/api/users/user1/reassign/",
             '{"element":"shoji:entity","body":{"owner":"william.user@example.io"}}'
         )
     })
