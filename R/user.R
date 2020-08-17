@@ -99,14 +99,14 @@ setMethod("[[", c("UserCatalog", "character"), function(x, i, ...) {
 #' If you want to transfer all teams, projects, and datasets owned by one user
 #' to another you can with `reassignUser`. To have permission to use
 #' `reassignUser` you must be an account admin and be from the same account
-#' as the user who is being reassignd. This is useful if a user leaves your
+#' as the user who is being reassigned. This is useful if a user leaves your
 #' organization and you want to transfer all of the teams, projects, and
 #' datasets they own to someone else.
 #'
 #' The user given in `to` will become the owner of all of the teams, projects,
 #' and datasets that were previously owned by the user given in `from`.
 #'
-#' Expropriating requires confirmation. In an interactive session, you will be
+#' Reassigning requires confirmation. In an interactive session, you will be
 #' asked to confirm. To avoid that prompt, or to reassign datasets from a
 #' non-interactive session, wrap the call in [with_consent()] to give your
 #' permission to reassign
