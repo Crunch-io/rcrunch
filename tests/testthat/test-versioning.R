@@ -103,7 +103,7 @@ with_test_authentication({
     description(ds$v3) <- "The third variable in the dataset"
 
     # 2. Edit dataset metadata
-    description(ds) <- "A dataset for testing"
+    # No longer supported
 
     # 3. Reorder variables
     ordering(ds) <- VariableOrder(
@@ -125,7 +125,6 @@ with_test_authentication({
             description(ds$v3),
             "The third variable in the dataset"
         )
-        expect_identical(description(ds), "A dataset for testing")
         expect_identical(as.vector(ds$v7), df$v3 - 6)
         expect_equivalent(as.vector(ds$v8), rep(1:5, 4))
         expect_identical(
@@ -142,7 +141,6 @@ with_test_authentication({
             description(ds$v3),
             "The third variable in the dataset"
         )
-        expect_identical(description(ds), "A dataset for testing")
         expect_identical(as.vector(ds$v7), df$v3 - 6)
         expect_equivalent(as.vector(ds$v8), rep(1:5, 4))
         expect_identical(

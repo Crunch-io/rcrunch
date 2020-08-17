@@ -53,7 +53,6 @@ expect_valid_df_revert <- function(ds) {
     expect_true(is.Text(ds[["v2"]]))
     expect_identical(name(ds$v2), "v2")
     expect_true(is.Numeric(ds[["v3"]]))
-    expect_identical(description(ds$v3), "")
     expect_equivalent(
         as.array(crtabs(mean(v3) ~ v4, data = ds)),
         tapply(df$v3, df$v4, mean, na.rm = TRUE)
