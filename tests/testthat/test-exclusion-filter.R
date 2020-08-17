@@ -327,14 +327,18 @@ with_test_authentication({
             expect_identical(nrow(ds), 20L)
         })
 
-        ds <- refresh(ds)
-        ds$keep <- rep(1:4, 5)
-        exclusion(ds) <- ds$keep == 2
+
         test_that("Exclusion is set", {
+            ds <- refresh(ds)
+            ds$keep <- rep(1:4, 5)
+            exclusion(ds) <- ds$keep == 2
+
             expect_identical(nrow(ds), 15L)
         })
-        ds <- restoreVersion(ds, 1)
+
         test_that("No problem reverting to before exclusion var made", {
+            ds <- restoreVersion(ds, 1)
+
             expect_valid_apidocs_import(ds)
             expect_null(ds$keep)
             expect_null(exclusion(ds))
