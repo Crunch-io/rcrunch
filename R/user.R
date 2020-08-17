@@ -94,12 +94,12 @@ setMethod("[[", c("UserCatalog", "character"), function(x, i, ...) {
     do.call("callNextMethod", dots)
 })
 
-#' Expropriate all Crunch objects from a user
+#' Reassign all Crunch objects from a user
 #'
 #' If you want to transfer all teams, projects, and datasets owned by one user
-#' to another you can with `expropriateUser`. To have permission to use
-#' `expropriateUser` you must be an account admin and be from the same account
-#' as the user who is being expropriated. This is useful if a user leaves your
+#' to another you can with `reassignUser`. To have permission to use
+#' `reassignUser` you must be an account admin and be from the same account
+#' as the user who is being reassignd. This is useful if a user leaves your
 #' organization and you want to transfer all of the teams, projects, and
 #' datasets they own to someone else.
 #'
@@ -107,17 +107,17 @@ setMethod("[[", c("UserCatalog", "character"), function(x, i, ...) {
 #' and datasets that were previously owned by the user given in `from`.
 #'
 #' Expropriating requires confirmation. In an interactive session, you will be
-#' asked to confirm. To avoid that prompt, or to expropriate datasets from a
+#' asked to confirm. To avoid that prompt, or to reassign datasets from a
 #' non-interactive session, wrap the call in [with_consent()] to give your
-#' permission to expropriate
+#' permission to reassign
 #'
-#' @param from a character of the email address of the user to expropriate from
+#' @param from a character of the email address of the user to reassign from
 #' @param to a character of the email address of the user who should be the new
 #' owner
 #'
 #' @return `NULL` if successful
 #' @export
-expropriateUser <- function(from, to) {
+reassignUser <- function(from, to) {
     if (!askForPermission(paste0(
         "This will transfer ownership of all teams, ",
         "projects, and datasets from ", dQuote(from),
@@ -127,7 +127,7 @@ expropriateUser <- function(from, to) {
     }
     u <- getAccountUserCatalog()
     from <- UserEntity(crGET(urls(u)[emails(u) == from]))
-    crPOST(shojiURL(from, "fragments", "expropriate"),
+    crPOST(shojiURL(from, "fragments", "reassign"),
         body = toJSON(wrapEntity(owner = to))
     )
 }
