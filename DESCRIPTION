@@ -142,6 +142,7 @@ Collate:
     'project-folder.R'
     'projects.R'
     'rowwise.R'
+    's3_register.R'
     'search.R'
     'session.R'
     'share.R'

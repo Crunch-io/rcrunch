@@ -349,17 +349,18 @@ setGeneric("weight", function(x) standardGeneric("weight"))
 #' @export
 setGeneric("weight<-", function(x, value) standardGeneric("weight<-"))
 
-# for ggplot to not copmlain when given crunchdata
+# for ggplot to not complain when given crunchdata
 #' Fortify crunch objects for use with ggplot
 #'
 #' @param model model or other R object to convert to data frame
 #' @param data original dataset, if needed
 #' @param ... other arguments passed to methods
 #' @name fortify
-#' @export fortify.CrunchDataFrame
 #' @keywords internal
 fortify.CrunchDataFrame <- function(model, data, ...) model
 
+
 #' @rdname fortify
-#' @export fortify.CrunchDataset
-fortify.CrunchDataset <- function(model, data, ...) model
+fortify.CrunchDataset <- function(model, data, ...) {
+    as.data.frame(model)
+}

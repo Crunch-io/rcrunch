@@ -18,6 +18,8 @@ NULL
 
 #' @importFrom httr config add_headers
 .onLoad <- function(lib, pkgname = "crunch") {
+    s3_register("ggplot2::fortify", "CrunchDataFrame", fortify.CrunchDataFrame)
+    s3_register("ggplot2::fortify", "CrunchDataset", fortify.CrunchDataset)
     setIfNotAlready(
         crunch.api = "https://app.crunch.io/api/",
         httpcache.on = TRUE,
