@@ -218,11 +218,11 @@ with_test_authentication({
         )
 
         expect_equal(
-            names(cateogries(ds$case_when_cat)),
-            c("new cat", "else category", "B", "C")
+            names(categories(ds$case_when_cat)),
+            c("new cat", "else category", "No Data", "B", "C")
         )
 
-        expect_equal(values(cateogries(ds$case_when_cat)["new cat"]), 5)
+        expect_equal(values(categories(ds$case_when_cat)["new cat"]), 5)
 
         expect_equal(name(ds$case_when_cat), "case when categorical")
     })
