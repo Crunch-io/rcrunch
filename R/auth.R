@@ -50,7 +50,7 @@ login <- function(email = NULL,
         prompt = paste("[crunch]", getOption("prompt")),
         crunch.old.prompt = getOption("prompt")
     )
-    message("Logged into crunch.io as ", email)
+    message("Logged into crunch.io as ", login_info$email)
     ## Return a Session object
     invisible(session())
 }
