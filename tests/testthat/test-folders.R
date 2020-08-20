@@ -204,7 +204,7 @@ with_mock_crunch({
         expect_PATCH(
             ds %>% cd("Group 2") %>% setName("Group 2 New Name"),
             "https://app.crunch.io/api/datasets/1/folders/2/",
-            '{"name":"Group 2 New Name"}'
+            '{"element":"shoji:catalog","body":{"name":"Group 2 New Name"}}'
         )
 
         # but also trying to move only sends name changes
