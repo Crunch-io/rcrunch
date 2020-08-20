@@ -20,5 +20,6 @@ x modified accordingly.
 Variable Folders require an extra list(body = ...)
 compared to other places where we use \code{setEntitySlot()}
 is used. This may be a bug, see pivotal:
+https://www.pivotaltracker.com/n/projects/2172644/stories/174429283
 }
 \keyword{internal}
