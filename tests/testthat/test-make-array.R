@@ -252,6 +252,15 @@ with_test_authentication({
 
     whereas("Testing dichotomizing and undichotomizing", {
         ds <- newDataset(mrdf)
+
+        # Explicitly cast mr_1, mr_2 and mr_3 to categorical, before binding.
+        # This is needed because we support both categorical and numerical arrays,
+        # and leaving the constituent variables as numeric would result in
+        # creating a numeric array.
+        cast.these <- grep("mr_", names(ds))
+        ds[cast.these] <- lapply(ds[cast.these], castVariable, "categorical")
+
+        # Now proceed to creating a categorical array from categorical variables.
         ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")], name = "arrayVar")
         var <- ds$arrayVar
         test_that("setup to make MultipleResponse from CategoricalArray", {
