@@ -1,10 +1,3 @@
-init.sortCatalog <- function(.Object, ...) {
-    ## Sort a ShojiCatalog by the object's "names" (as defined by its names method)
-    .Object <- callNextMethod(.Object, ...)
-    .Object@index <- .Object@index[order(names(.Object))]
-    return(.Object)
-}
-
 setMethod("initialize", "DatasetCatalog", init.sortCatalog)
 
 setMethod("active", "DatasetCatalog", function(x) {

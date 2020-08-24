@@ -27,7 +27,8 @@
         "multitables": "https://app.crunch.io/api/datasets/1/multitables/",
         "actions": "https://app.crunch.io/api/datasets/1/actions/",
         "project": "https://app.crunch.io/api/projects/personal/",
-        "decks": "https://app.crunch.io/api/datasets/1/decks/"
+        "decks": "https://app.crunch.io/api/datasets/1/decks/",
+        "scripts": "https://app.crunch.io/api/datasets/1/scripts/"
     },
     "views": {
         "summary": "https://app.crunch.io/api/datasets/1/summary/",
