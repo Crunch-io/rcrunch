@@ -128,7 +128,7 @@ crunchAuth <- function(email, password = NULL, ...) {
     if (is.null(password)) {
         if (is.interactive()) {
             prompt <- paste0("Crunch.io password for ", email, ": ")
-            if ("rstudioapi" %in% rownames(installed.packages()) &&
+            if (requireNamespace("rstudioapi", quietly = TRUE) &&
                 rstudioapi::hasFun("askForPassword")) {
                 password <- rstudioapi::askForPassword(prompt)
             } else {

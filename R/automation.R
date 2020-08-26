@@ -93,7 +93,7 @@ setMethod("undoScript", "ScriptCatalog", function(x, index, ...) {
 
 #' @rdname automation-undo
 #' @export
-setMethod("undoScript", "Dataset", function(x, index, ...) {
+setMethod("undoScript", "CrunchDataset", function(x, index, ...) {
     undoScript(scripts(x)[[index]])
 })
 
@@ -111,7 +111,7 @@ setMethod("revertScript", "ScriptCatalog", function(x, index, ...) {
 
 #' @rdname automation-undo
 #' @export
-setMethod("revertScript", "Dataset", function(x, index, ...) {
+setMethod("revertScript", "CrunchDataset", function(x, index, ...) {
     revertScript(scripts(x)[[index]])
 })
 
@@ -129,7 +129,7 @@ setMethod("scriptSavepoint", "ScriptCatalog", function(x, index, ...) {
 
 #' @rdname automation-undo
 #' @export
-setMethod("scriptSavepoint", "Dataset", function(x, index, ...) {
+setMethod("scriptSavepoint", "CrunchDataset", function(x, index, ...) {
     scriptSavepoint(scripts(x)[[index]])
 })
 
@@ -168,23 +168,21 @@ setMethod("scriptSavepoint", "Dataset", function(x, index, ...) {
 #' script_info <- scripts(ds)
 #' script_info
 #'
-#' # And even get the version information from the checkpoint before running
-#' ds <- restoreVersion(ds, scriptCheckpointVersion(script_info[[1]]))
-#'
 #'
 #' }
 #' @export
 #' @seealso [`automation-undo`] & [`script-catalog`]
 runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(script)) {
+    reset_automation_error_env()
     stopifnot(is.dataset(dataset))
     stopifnot(is.character(script))
     if (length(script) != 1) halt("Can only run automation on a single script")
 
     if (is_file) {
-        script <- readChar(
-            file(script, open = "rt", encoding = "UTF-8"),
-            file.info(script)$size
-        )
+        automation_error_env$file <- script
+        script <- paste(readLines(script, encoding = "UTF-8", warn = FALSE), collapse = "\n")
+    } else {
+        automation_error_env$file <- NULL
     }
 
     crPOST(
@@ -195,20 +193,40 @@ runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(s
     invisible(refresh(dataset))
 }
 
-
-#' @rdname runCrunchAutomation
-#' @export
-crunchAutomationFailure <- function() {
-    as.list(crunch_automation_error_env)
-}
-
 string_is_file_like <- function(x) {
     !grepl("\\n", x) & # no new lines
         grepl("\\.[[:alnum:]]+$", x) # ends with a file extension ('.' + any num of letters/nums)
 }
 
 # Where we store error information from crunch automation
-crunch_automation_error_env <- new.env(parent = emptyenv())
+automation_error_env <- new.env(parent = emptyenv())
+
+reset_automation_error_env <- function() {
+    rm(list = ls(envir = automation_error_env), envir = automation_error_env)
+}
+
+#' @rdname runCrunchAutomation
+#' @export
+crunchAutomationFailure <- function() {
+    out <- as.list(automation_error_env)
+    if (!is.null(out$file) && rstudio_markers_available()) {
+        markers <- data.frame(
+            type = "error",
+            file = out$file,
+            line = out$errors$line,
+            column = ifelse(is.na(out$errors$column), 1, out$errors$column),
+            message = out$errors$message
+        )
+        rstudioapi::sourceMarkers("crunchAutomation", markers, autoSelect = "first")
+    } else {
+        message(automation_errors_text(out$errors))
+    }
+    invisible(out)
+}
+
+rstudio_markers_available <- function() {
+    requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::hasFun("sourceMarkers")
+}
 
 #' @importFrom jsonlite fromJSON
 #' @importFrom httr http_status content
@@ -219,7 +237,7 @@ crunchAutomationErrorHandler <- function(response) {
     if (!is.error(automation_messages)) {
         # dig into the response to get the script as we sent it to the server
         request_body <- fromJSON(rawToChar(response$request$options$postfields))
-        crunch_automation_error_env$script <- request_body$body$body
+        automation_error_env$script <- request_body$body$body
 
         # And convert the full information of the error messages into a data.frame
         automation_error_cols <- c("column", "command", "line", "message")
@@ -231,23 +249,39 @@ crunchAutomationErrorHandler <- function(response) {
                 setNames(as.data.frame(out, stringsAsFactors = FALSE), automation_error_cols)
             }
         )
-        crunch_automation_error_env$errors <- do.call(
+
+        errors <- do.call(
             function(...) rbind(..., stringsAsFactors = FALSE),
             errors
         )
 
-        automation_messages <- vapply(
-            automation_messages,
-            function(e_msg) paste0(" - ", e_msg$message),
-            character(1)
-        )
+        automation_error_env$errors <- errors
 
         msg <- paste(
             "Crunch Automation Error\n",
-            paste(automation_messages, collapse = "\n"),
+            automation_errors_text(errors, 5),
             "\n\nRun command `crunchAutomationFailure()` for more information.",
             sep = ""
         )
     }
     halt(msg)
+}
+
+automation_errors_text <- function(errors, display_num = Inf) {
+    orig_num_errors <- nrow(errors)
+    if (orig_num_errors - display_num > 0) {
+        errors <- errors[seq_len(display_num), ]
+    }
+
+    out <- paste0(
+        " - ",
+        ifelse(is.na(errors$line), "", paste0("(line ", errors$line, ") ")),
+        errors$message,
+        collapse = "\n"
+    )
+
+    if (orig_num_errors - display_num > 0) {
+        out <- paste0(out, "\n - ... (Showing first ", display_num, " of ", orig_num_errors, " errors)")
+    }
+    out
 }

@@ -47,9 +47,6 @@ crunchAutomationFailure()
 script_info <- scripts(ds)
 script_info
 
-# And even get the version information from the checkpoint before running
-ds <- restoreVersion(ds, scriptCheckpointVersion(script_info[[1]]))
-
 
 }
 }

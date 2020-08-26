@@ -3,32 +3,32 @@
 \name{automation-undo}
 \alias{automation-undo}
 \alias{undoScript,ScriptCatalog-method}
-\alias{undoScript,Dataset-method}
+\alias{undoScript,CrunchDataset-method}
 \alias{revertScript,Script-method}
 \alias{revertScript,ScriptCatalog-method}
-\alias{revertScript,Dataset-method}
+\alias{revertScript,CrunchDataset-method}
 \alias{scriptSavepoint,Script-method}
 \alias{scriptSavepoint,ScriptCatalog-method}
-\alias{scriptSavepoint,Dataset-method}
+\alias{scriptSavepoint,CrunchDataset-method}
 \title{Undo behavior of a Crunch Automation Script}
 \usage{
 \S4method{undoScript}{Script}(x, ...)
 
 \S4method{undoScript}{ScriptCatalog}(x, index, ...)
 
-\S4method{undoScript}{Dataset}(x, index, ...)
+\S4method{undoScript}{CrunchDataset}(x, index, ...)
 
 \S4method{revertScript}{Script}(x, ...)
 
 \S4method{revertScript}{ScriptCatalog}(x, index, ...)
 
-\S4method{revertScript}{Dataset}(x, index, ...)
+\S4method{revertScript}{CrunchDataset}(x, index, ...)
 
 \S4method{scriptSavepoint}{Script}(x, ...)
 
 \S4method{scriptSavepoint}{ScriptCatalog}(x, index, ...)
 
-\S4method{scriptSavepoint}{Dataset}(x, index, ...)
+\S4method{scriptSavepoint}{CrunchDataset}(x, index, ...)
 }
 \arguments{
 \item{x}{A \code{Script}, \code{ScriptCatalog}, or \code{CrunchDataset} object}
