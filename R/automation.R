@@ -60,7 +60,7 @@ is.script <- function(x) inherits(x, "Script")
 #' @rdname automation-undo
 #' @export
 setMethod("undoScript", c("CrunchDataset", "Script"), function(dataset, x) {
-    crDELETE(self(x))
+    crDELETE(shojiURL(x, "catalogs", "output"))
     invisible(refresh(dataset))
 })
 

@@ -101,11 +101,11 @@ with_mock_crunch({
     test_that("query shape - undoScript", {
         expect_DELETE(
             undoScript(ds, 1),
-            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb"
+            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/output/"
         )
         expect_DELETE(
             undoScript(ds, scripts(ds)[[1]]),
-            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb"
+            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/output/"
         )
     })
 
@@ -205,11 +205,12 @@ with_mock_crunch({
 with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
 
-    test_that("We can run a simple automation script", {
+    test_that("We can run a simple automation script and then undo it", {
         ds <- runCrunchAutomation(
             ds,
             'CREATE LOGICAL q1 == "Cat" OR q1 == "Dog" AS mammal;'
         )
+
         expect_identical(
             names(categories(ds$mammal)),
             c("Selected", "Other", "No Data")
@@ -228,6 +229,9 @@ with_test_authentication({
                   dimnames = list(combined_pets = c("Selected", "Other"))
             )
         )
+
+        ds <- undoScript(ds, scripts(ds)[[1]])
+        expect_false("mammal" %in% names(ds))
     })
 
     test_that("Failures work okay", {
@@ -239,5 +243,15 @@ with_test_authentication({
         expect_is(errors$errors, "data.frame")
         expect_equal(names(errors$errors), c("column", "command", "line", "message"))
         expect_true(!is.na(errors$errors$message))
+    })
+
+    test_that("We can revert a simple script", {
+        ds <- runCrunchAutomation(
+            ds,
+            'CREATE LOGICAL q1 == "Cat" AS cat_lgl;'
+        )
+        expect_true("cat_lgl" %in% names(ds))
+        ds <- revertScript(ds, scripts(ds)[[1]])
+        expect_false("cat_lgl" %in% names(ds))
     })
 })
