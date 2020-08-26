@@ -93,14 +93,6 @@ with_mock_crunch({
 
     test_that("query shape - script savepoint version", {
         expect_GET(
-            scriptSavepoint(ds, 1),
-            "https://app.crunch.io/api/datasets/1/savepoints/v2/"
-        )
-        expect_GET(
-            scriptSavepoint(scripts(ds), 1),
-            "https://app.crunch.io/api/datasets/1/savepoints/v2/"
-        )
-        expect_GET(
             scriptSavepoint(scripts(ds)[[1]]),
             "https://app.crunch.io/api/datasets/1/savepoints/v2/"
         )
@@ -112,11 +104,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/scripts/3cb2fb"
         )
         expect_DELETE(
-            undoScript(scripts(ds), 1),
-            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb"
-        )
-        expect_DELETE(
-            undoScript(scripts(ds)[[1]], 1),
+            undoScript(ds, scripts(ds)[[1]]),
             "https://app.crunch.io/api/datasets/1/scripts/3cb2fb"
         )
     })
@@ -127,11 +115,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/revert"
         )
         expect_POST(
-            revertScript(scripts(ds), 1),
-            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/revert"
-        )
-        expect_POST(
-            revertScript(scripts(ds)[[1]], 1),
+            revertScript(ds, scripts(ds)[[1]]),
             "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/revert"
         )
     })
@@ -224,10 +208,8 @@ with_test_authentication({
     test_that("We can run a simple automation script", {
         ds <- runCrunchAutomation(
             ds,
-            'CREATE LOGICAL q1 == "Cat" OR q1 == "Dog" AS mammal NAME "Mammal";'
+            'CREATE LOGICAL q1 == "Cat" OR q1 == "Dog" AS mammal;'
         )
-        expect_equal(name(ds$mammal), "Mammal")
-
         expect_identical(
             names(categories(ds$mammal)),
             c("Selected", "Other", "No Data")

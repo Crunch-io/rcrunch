@@ -43,10 +43,8 @@ ds <- runCrunchAutomation(ds, "RENAME v1 TO age;")
 # But more details are available with function:
 crunchAutomationFailure()
 
-# After a successful, can look at scripts
-script_info <- scripts(ds)
-script_info
-
+# After a successful run, can look at scripts
+scripts(ds)
 
 }
 }

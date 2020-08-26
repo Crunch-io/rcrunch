@@ -57,81 +57,36 @@ setMethod("scriptBody", "Script", function(x) {
 is.script <- function(x) inherits(x, "Script")
 
 
-#' Undo behavior of a Crunch Automation Script
-#'
-#' There are two ways to revert the output of a script:
-#' - `undoScript()` - A "softer" delete of a script's created artifacts and variables, or
-#' - `revertScript()` - A "harder" revert that returns the dataset to the state it was before
-#'   running such script.
-#'
-#' The difference between both is that a hard revert restores the dataset, as it drops all
-#' ensuing scripts and their output (artifacts and variables), while an undo only deletes the
-#' artifacts and variables created by this script, but changes made by other scripts and this
-#' script's record will remain in place.
-#'
-#' The function `scriptSavepoint()` gets the version object
-#'
-#' @param x A `Script`, `ScriptCatalog`, or `CrunchDataset` object
-#' @param index Index of script to use (if `x` is not a script)
-#'
-#' @return For `undoScript()` and `revertSctipt()`, invisibly return the updated dataset.
-#' For `scriptSavePoint()` a version list object that can be used in [`restoreVersion()`].
+#' @rdname automation-undo
 #' @export
-#' @name automation-undo
-#' @seealso [`runCrunchAutomation()`] & [`script-catalog`]
-#' @export
-setMethod("undoScript", "Script", function(x, ...) {
+setMethod("undoScript", c("CrunchDataset", "Script"), function(dataset, x) {
     crDELETE(self(x))
     invisible(refresh(dataset))
 })
 
 #' @rdname automation-undo
 #' @export
-setMethod("undoScript", "ScriptCatalog", function(x, index, ...) {
-    undoScript(x[[index]])
+setMethod("undoScript", c("CrunchDataset", "ANY"), function(dataset, x) {
+    undoScript(dataset, scripts(dataset)[[x]])
 })
 
 #' @rdname automation-undo
 #' @export
-setMethod("undoScript", "CrunchDataset", function(x, index, ...) {
-    undoScript(scripts(x)[[index]])
-})
-
-#' @rdname automation-undo
-#' @export
-setMethod("revertScript", "Script", function(x, ...) {
+setMethod("revertScript", c("CrunchDataset", "Script"), function(dataset, x) {
     crPOST(shojiURL(x, "fragments", "revert"))
     invisible(refresh(dataset))
 })
 
 #' @rdname automation-undo
 #' @export
-setMethod("revertScript", "ScriptCatalog", function(x, index, ...) {
-    revertScript(x[[index]])
+setMethod("revertScript", c("CrunchDataset", "ANY"), function(dataset, x) {
+    revertScript(dataset, scripts(dataset)[[x]])
 })
 
 #' @rdname automation-undo
 #' @export
-setMethod("revertScript", "CrunchDataset", function(x, index, ...) {
-    revertScript(scripts(x)[[index]])
-})
-
-#' @rdname automation-undo
-#' @export
-setMethod("scriptSavepoint", "Script", function(x, ...) {
+setMethod("scriptSavepoint", "Script", function(x) {
     return(crGET(shojiURL(x, "views", "savepoint"))$body)
-})
-
-#' @rdname automation-undo
-#' @export
-setMethod("scriptSavepoint", "ScriptCatalog", function(x, index, ...) {
-    scriptSavepoint(x[[index]])
-})
-
-#' @rdname automation-undo
-#' @export
-setMethod("scriptSavepoint", "CrunchDataset", function(x, index, ...) {
-    scriptSavepoint(scripts(x)[[index]])
 })
 
 #' Run a crunch automation script
@@ -224,13 +179,13 @@ rstudio_markers_available <- function() {
 }
 
 # nocov start
-make_rstudio_markers <- function(automation_errors) {
+make_rstudio_markers <- function(errors) {
     markers <- data.frame(
         type = "error",
-        file = automation_errors$file,
-        line = ifelse(is.na(automation_errors$errors$line), 1, automation_errors$errors$line),
-        column = ifelse(is.na(automation_errors$errors$column), 1, automation_errors$errors$column),
-        message = automation_errors$errors$message
+        file = errors$file,
+        line = ifelse(is.na(errors$errors$line), 1, errors$errors$line),
+        column = ifelse(is.na(errors$errors$column), 1, errors$errors$column),
+        message = errors$errors$message
     )
     rstudioapi::sourceMarkers("crunchAutomation", markers)
 }
