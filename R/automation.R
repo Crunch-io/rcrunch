@@ -118,7 +118,7 @@ setMethod("revertScript", "CrunchDataset", function(x, index, ...) {
 #' @rdname automation-undo
 #' @export
 setMethod("scriptSavepoint", "Script", function(x, ...) {
-    crPOST(shojiURL(x, "views", "revert"))
+    return(crGET(shojiURL(x, "views", "savepoint"))$body)
 })
 
 #' @rdname automation-undo
