@@ -166,7 +166,10 @@ with_mock_crunch({
 
     test_that("Can interpret information from 2 script failures", {
         expect_error(
-            runCrunchAutomation(ds2, "RENAME wrong_var_name TO age;\nRENAME wrong_var_name2 TO age;"),
+            runCrunchAutomation(
+                ds2,
+                "RENAME wrong_var_name TO age;\nRENAME wrong_var_name2 TO age;"
+            ),
             "Crunch Automation Error"
         )
 
@@ -247,11 +250,12 @@ with_test_authentication({
 
     test_that("Failures work okay", {
         expect_error(
-            ds <- runCrunchAutomation(ds, 'FAKE CRUNCH AUTOMATION COMMAND'),
+            ds <- runCrunchAutomation(ds, "FAKE CRUNCH AUTOMATION COMMAND"),
             "Crunch Automation Error"
         )
         expect_message(errors <- crunchAutomationFailure())
         expect_is(errors$errors, "data.frame")
         expect_equal(names(errors$errors), c("column", "command", "line", "message"))
+        expect_true(!is.na(errors$errors$message))
     })
 })

@@ -228,7 +228,7 @@ make_rstudio_markers <- function(automation_errors) {
     markers <- data.frame(
         type = "error",
         file = automation_errors$file,
-        line = automation_errors$errors$line,
+        line = ifelse(is.na(automation_errors$errors$line), 1, automation_errors$errors$line),
         column = ifelse(is.na(automation_errors$errors$column), 1, automation_errors$errors$column),
         message = automation_errors$errors$message
     )
@@ -288,7 +288,10 @@ automation_errors_text <- function(errors, display_num = Inf) {
     )
 
     if (orig_num_errors - display_num > 0) {
-        out <- paste0(out, "\n - ... (Showing first ", display_num, " of ", orig_num_errors, " errors)")
+        out <- paste0(
+            out,
+            "\n - ... (Showing first ", display_num, " of ", orig_num_errors, " errors)"
+        )
     }
     out
 }
