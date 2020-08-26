@@ -9,7 +9,8 @@ test_that("string_is_file_like behaves", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- loadDataset("test ds") # 1 successful script
+    ds2 <- loadDataset("ECON.sav") # no successful scripts
 
     script_text <- paste(
         "RENAME starttime TO interviewtime;",
@@ -31,6 +32,12 @@ with_mock_crunch({
             '{"element":"shoji:entity",',
             '"body":{"body":"', script_text_from_request, '"}}'
         )
+
+        # Make sure this doesn't fail when there's no error
+        expect_message(crunchAutomationFailure(), NA)
+        # or when reset
+        reset_automation_error_env()
+        expect_message(crunchAutomationFailure(), NA)
     })
 
     test_that("Query shape is right when coming from a file", {
@@ -84,29 +91,72 @@ with_mock_crunch({
         )
     })
 
-    test_that("Can get script checkpoint version", {
+    test_that("query shape - script savepoint version", {
         expect_GET(
-            scriptCheckpointVersion(scripts(ds)[[1]]),
+            scriptSavepoint(ds, 1),
+            "https://app.crunch.io/api/datasets/1/savepoints/v2/"
+        )
+        expect_GET(
+            scriptSavepoint(scripts(ds), 1),
+            "https://app.crunch.io/api/datasets/1/savepoints/v2/"
+        )
+        expect_GET(
+            scriptSavepoint(scripts(ds)[[1]]),
             "https://app.crunch.io/api/datasets/1/savepoints/v2/"
         )
     })
 
+    test_that("query shape - undoScript", {
+        expect_DELETE(
+            undoScript(ds, 1),
+            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb"
+        )
+        expect_DELETE(
+            undoScript(scripts(ds), 1),
+            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb"
+        )
+        expect_DELETE(
+            undoScript(scripts(ds)[[1]], 1),
+            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb"
+        )
+    })
 
-    ds2 <- loadDataset("ECON.sav")
+    test_that("query shape - revertScript", {
+        expect_POST(
+            revertScript(ds, 1),
+            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/revert"
+        )
+        expect_POST(
+            revertScript(scripts(ds), 1),
+            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/revert"
+        )
+        expect_POST(
+            revertScript(scripts(ds)[[1]], 1),
+            "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/revert"
+        )
+    })
 
-    test_that("Can interpret information from a script failure", {
+    test_that("Can interpret information from 1 script failure", {
         expect_error(
             runCrunchAutomation(ds2, "RENAME wrong_var_name TO age;"),
-            "Crunch Automation Error. Run `crunchAutomationFailure()"
+            "Crunch Automation Error"
+        )
+
+
+        expect_message(
+            failures <- crunchAutomationFailure(),
+            "- \\(line 1\\) Variables wrong_var_name don't exist in the specified source"
         )
 
         expect_equal(
-            crunchAutomationFailure(),
+            failures,
             list(
+                file = NULL,
                 errors = data.frame(
-                    message = "Variables wrong_var_name don't exist in the specified source",
+                    column = NA,
                     command = 1L,
-                    line = 1,
+                    line = 1L,
+                    message = "Variables wrong_var_name don't exist in the specified source",
                     stringsAsFactors = FALSE
                 ),
                 script = "RENAME wrong_var_name TO age;"
@@ -114,7 +164,40 @@ with_mock_crunch({
         )
     })
 
-    # TODO: Add multi-error error message
+    test_that("Can interpret information from 2 script failures", {
+        expect_error(
+            runCrunchAutomation(ds2, "RENAME wrong_var_name TO age;\nRENAME wrong_var_name2 TO age;"),
+            "Crunch Automation Error"
+        )
+
+
+        expect_message(
+            failures <- crunchAutomationFailure(),
+            paste(
+                "\\(line 1\\) Variables wrong_var_name don't exist in the specified source.+",
+                "\\(line 2\\) Variables wrong_var_name2 don't exist in the specified source",
+                collapse = ""
+            )
+        )
+
+        expect_equal(
+            failures,
+            list(
+                file = NULL,
+                errors = data.frame(
+                    column = c(NA, NA),
+                    command = c(1L, 2L),
+                    line = c(1L, 2L),
+                    message = c(
+                        "Variables wrong_var_name don't exist in the specified source",
+                        "Variables wrong_var_name2 don't exist in the specified source"
+                    ),
+                    stringsAsFactors = FALSE
+                ),
+                script = "RENAME wrong_var_name TO age;\nRENAME wrong_var_name2 TO age;"
+            )
+        )
+    })
 })
 
 # TODO: Integration tests?

@@ -1,9 +1,17 @@
 {
     "element": "shoji:entity",
-    "self": "https://app.crunch.io/api/datasets/c3cbe0/scripts/3cb2fb/",
+    "self": "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/",
+    "catalogs": {
+        "output": "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/output/"
+    },
+    "fragments": {
+        "revert": "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/revert/"
+    },
     "body": {
         "body": "RENAME starttime TO interviewtime; \nSET EXCLUSION birthyr > 2000;",
-        "creation_time": "2020-05-06T17:36:27.238000+00:00"
+        "items_created": 0,
+        "creation_time": "2020-05-06T17:36:27.237000+00:00",
+        "mutations": true
     },
     "views": {
         "savepoint": "https://app.crunch.io/api/datasets/1/savepoints/v2/"

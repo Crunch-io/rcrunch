@@ -100,7 +100,8 @@ setMethod("undoScript", "CrunchDataset", function(x, index, ...) {
 #' @rdname automation-undo
 #' @export
 setMethod("revertScript", "Script", function(x, ...) {
-    crPOST(shojiURL(x, "views", "revert"))
+    crPOST(shojiURL(x, "fragments", "revert"))
+    invisible(refresh(dataset))
 })
 
 #' @rdname automation-undo
@@ -164,10 +165,8 @@ setMethod("scriptSavepoint", "CrunchDataset", function(x, index, ...) {
 #' # But more details are available with function:
 #' crunchAutomationFailure()
 #'
-#' # After a successful, can look at scripts
-#' script_info <- scripts(ds)
-#' script_info
-#'
+#' # After a successful run, can look at scripts
+#' scripts(ds)
 #'
 #' }
 #' @export
@@ -209,15 +208,11 @@ reset_automation_error_env <- function() {
 #' @export
 crunchAutomationFailure <- function() {
     out <- as.list(automation_error_env)
+
+    if (is.null(out) || is.null(out$errors)) return(invisible(out))
+
     if (!is.null(out$file) && rstudio_markers_available()) {
-        markers <- data.frame(
-            type = "error",
-            file = out$file,
-            line = out$errors$line,
-            column = ifelse(is.na(out$errors$column), 1, out$errors$column),
-            message = out$errors$message
-        )
-        rstudioapi::sourceMarkers("crunchAutomation", markers, autoSelect = "first")
+        make_rstudio_markers(out)
     } else {
         message(automation_errors_text(out$errors))
     }
@@ -226,6 +221,17 @@ crunchAutomationFailure <- function() {
 
 rstudio_markers_available <- function() {
     requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::hasFun("sourceMarkers")
+}
+
+make_rstudio_markers <- function(automation_errors) {
+    markers <- data.frame(
+        type = "error",
+        file = automation_errors$file,
+        line = automation_errors$errors$line,
+        column = ifelse(is.na(automation_errors$errors$column), 1, automation_errors$errors$column),
+        message = automation_errors$errors$message
+    )
+    rstudioapi::sourceMarkers("crunchAutomation", markers)
 }
 
 #' @importFrom jsonlite fromJSON
