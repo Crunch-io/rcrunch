@@ -223,6 +223,7 @@ rstudio_markers_available <- function() {
     requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::hasFun("sourceMarkers")
 }
 
+# nocov start
 make_rstudio_markers <- function(automation_errors) {
     markers <- data.frame(
         type = "error",
@@ -233,7 +234,7 @@ make_rstudio_markers <- function(automation_errors) {
     )
     rstudioapi::sourceMarkers("crunchAutomation", markers)
 }
-
+# nocov end
 #' @importFrom jsonlite fromJSON
 #' @importFrom httr http_status content
 crunchAutomationErrorHandler <- function(response) {

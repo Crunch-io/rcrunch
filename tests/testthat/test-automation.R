@@ -198,10 +198,60 @@ with_mock_crunch({
             )
         )
     })
+
+    test_that("error truncation works", {
+        expect_equal(
+            automation_errors_text(
+                data.frame(
+                    column = NA,
+                    command = 1:3,
+                    line = 1:3,
+                    message = c("Error 1", "Error 2", "Error 3")
+                ),
+                2
+            ),
+            " - (line 1) Error 1\n - (line 2) Error 2\n - ... (Showing first 2 of 3 errors)"
+        )
+    })
 })
 
-# TODO: Integration tests?
-# with_test_authentication({
-#     whereas("", {
-#     })
-# })
+with_test_authentication({
+    ds <- newDatasetFromFixture("apidocs")
+
+    test_that("We can run a simple automation script", {
+        ds <- runCrunchAutomation(
+            ds,
+            'CREATE LOGICAL q1 == "Cat" OR q1 == "Dog" AS mammal NAME "Mammal";'
+        )
+        expect_equal(name(ds$mammal), "Mammal")
+
+        expect_identical(
+            names(categories(ds$mammal)),
+            c("Selected", "Other", "No Data")
+        )
+        expect_equivalent(
+            as.array(crtabs(~q1, data = ds)),
+            array(c(6, 4, 3),
+                  dim = 3,
+                  dimnames = list(q1 = c("Cat", "Dog", "Bird"))
+            )
+        )
+        expect_equivalent(
+            as.array(crtabs(~mammal, data = ds)),
+            array(c(10, 3),
+                  dim = 2,
+                  dimnames = list(combined_pets = c("Selected", "Other"))
+            )
+        )
+    })
+
+    test_that("Failures work okay", {
+        expect_error(
+            ds <- runCrunchAutomation(ds, 'FAKE CRUNCH AUTOMATION COMMAND'),
+            "Crunch Automation Error"
+        )
+        expect_message(errors <- crunchAutomationFailure())
+        expect_is(errors$errors, "data.frame")
+        expect_equal(names(errors$errors), c("column", "command", "line", "message"))
+    })
+})
