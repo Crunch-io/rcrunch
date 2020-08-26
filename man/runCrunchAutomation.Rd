@@ -53,3 +53,6 @@ ds <- restoreVersion(ds, scriptCheckpointVersion(script_info[[1]]))
 
 }
 }
+\seealso{
+\code{\link{automation-undo}} & \code{\link{script-catalog}}
+}

@@ -14,6 +14,7 @@ setMethod("initialize", "ScriptCatalog", init.sortCatalog)
 #' Script entities.
 #' @name script-catalog
 #' @aliases scripts
+#' @seealso [`runCrunchAutomation()`] & [`automation-undo`]
 NULL
 
 #' @rdname script-catalog
@@ -55,19 +56,82 @@ setMethod("scriptBody", "Script", function(x) {
 #' @export
 is.script <- function(x) inherits(x, "Script")
 
-#' Get the version saved prior to running a crunch automation script
+
+#' Undo behavior of a Crunch Automation Script
 #'
-#' Get the version associated with the dataset right before a crunch
-#' automation script was run.
+#' There are two ways to revert the output of a script:
+#' - `undoScript()` - A "softer" delete of a script's created artifacts and variables, or
+#' - `revertScript()` - A "harder" revert that returns the dataset to the state it was before
+#'   running such script.
 #'
-#' @param x A `Script` object
+#' The difference between both is that a hard revert restores the dataset, as it drops all
+#' ensuing scripts and their output (artifacts and variables), while an undo only deletes the
+#' artifacts and variables created by this script, but changes made by other scripts and this
+#' script's record will remain in place.
 #'
-#' @return A version list object that can be used in [`restoreVersion()`]
+#' The function `scriptSavepoint()` gets the version object
+#'
+#' @param x A `Script`, `ScriptCatalog`, or `CrunchDataset` object
+#' @param index Index of script to use (if `x` is not a script)
+#'
+#' @return For `undoScript()` and `revertSctipt()`, invisibly return the updated dataset.
+#' For `scriptSavePoint()` a version list object that can be used in [`restoreVersion()`].
 #' @export
-scriptCheckpointVersion <- function(x) {
-    stopifnot(is.script(x))
-    return(crGET(shojiURL(x, "views", "savepoint"))$body)
-}
+#' @name automation-undo
+#' @seealso [`runCrunchAutomation()`] & [`script-catalog`]
+#' @export
+setMethod("undoScript", "Script", function(x, ...) {
+    crDELETE(self(x))
+    invisible(refresh(dataset))
+})
+
+#' @rdname automation-undo
+#' @export
+setMethod("undoScript", "ScriptCatalog", function(x, index, ...) {
+    undoScript(x[[index]])
+})
+
+#' @rdname automation-undo
+#' @export
+setMethod("undoScript", "Dataset", function(x, index, ...) {
+    undoScript(scripts(x)[[index]])
+})
+
+#' @rdname automation-undo
+#' @export
+setMethod("revertScript", "Script", function(x, ...) {
+    crPOST(shojiURL(x, "views", "revert"))
+})
+
+#' @rdname automation-undo
+#' @export
+setMethod("revertScript", "ScriptCatalog", function(x, index, ...) {
+    revertScript(x[[index]])
+})
+
+#' @rdname automation-undo
+#' @export
+setMethod("revertScript", "Dataset", function(x, index, ...) {
+    revertScript(scripts(x)[[index]])
+})
+
+#' @rdname automation-undo
+#' @export
+setMethod("scriptSavepoint", "Script", function(x, ...) {
+    crPOST(shojiURL(x, "views", "revert"))
+})
+
+#' @rdname automation-undo
+#' @export
+setMethod("scriptSavepoint", "ScriptCatalog", function(x, index, ...) {
+    scriptSavepoint(x[[index]])
+})
+
+#' @rdname automation-undo
+#' @export
+setMethod("scriptSavepoint", "Dataset", function(x, index, ...) {
+    scriptSavepoint(scripts(x)[[index]])
+})
 
 #' Run a crunch automation script
 #'
@@ -110,14 +174,17 @@ scriptCheckpointVersion <- function(x) {
 #'
 #' }
 #' @export
+#' @seealso [`automation-undo`] & [`script-catalog`]
 runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(script)) {
     stopifnot(is.dataset(dataset))
     stopifnot(is.character(script))
     if (length(script) != 1) halt("Can only run automation on a single script")
 
     if (is_file) {
-        # base R doesn't have a way to read a file as a single string
-        script <- paste(readLines(script, encoding = "UTF-8"), collapse = "\n")
+        script <- readChar(
+            file(script, open = "rt", encoding = "UTF-8"),
+            file.info(script)$size
+        )
     }
 
     crPOST(
@@ -143,7 +210,6 @@ string_is_file_like <- function(x) {
 # Where we store error information from crunch automation
 crunch_automation_error_env <- new.env(parent = emptyenv())
 
-
 #' @importFrom jsonlite fromJSON
 #' @importFrom httr http_status content
 crunchAutomationErrorHandler <- function(response) {
@@ -156,25 +222,31 @@ crunchAutomationErrorHandler <- function(response) {
         crunch_automation_error_env$script <- request_body$body$body
 
         # And convert the full information of the error messages into a data.frame
+        automation_error_cols <- c("column", "command", "line", "message")
         errors <- lapply(
             automation_messages,
-            function(x) as.data.frame(x, stringsAsFactors = FALSE)
+            function(x) {
+                # ensure consistent columns
+                out <- lapply(automation_error_cols, function(col) x[[col]] %||% NA)
+                setNames(as.data.frame(out, stringsAsFactors = FALSE), automation_error_cols)
+            }
         )
         crunch_automation_error_env$errors <- do.call(
-            function(x) rbind(x, stringsAsFactors = FALSE),
+            function(...) rbind(..., stringsAsFactors = FALSE),
             errors
         )
 
         automation_messages <- vapply(
             automation_messages,
-            function(e_msg) paste0("\n - ", e_msg$message),
+            function(e_msg) paste0(" - ", e_msg$message),
             character(1)
         )
 
         msg <- paste(
-            "Crunch Automation Error. Run `crunchAutomationFailure() for more information.",
-            paste(automation_messages, collapse = ""),
-            sep = ": "
+            "Crunch Automation Error\n",
+            paste(automation_messages, collapse = "\n"),
+            "\n\nRun command `crunchAutomationFailure()` for more information.",
+            sep = ""
         )
     }
     halt(msg)

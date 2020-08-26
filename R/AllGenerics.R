@@ -240,6 +240,9 @@ setGeneric("is.weightVariable<-", function(x, value) standardGeneric("is.weightV
 setGeneric("is.weight<-", function(x, value) standardGeneric("is.weight<-"))
 setGeneric("whichCatalogEntry", function(x, i, ...) standardGeneric("whichCatalogEntry"))
 setGeneric("scripts", function(x) standardGeneric("scripts"))
+setGeneric("undoScript", function(x, ...) standardGeneric("undoScript"))
+setGeneric("revertScript", function(x, ...) standardGeneric("revertScript"))
+setGeneric("scriptSavepoint", function(x, ...) standardGeneric("scriptSavepoint"))
 
 setGeneric("owner", function(x) standardGeneric("owner"))
 setGeneric("owner<-", function(x, value) standardGeneric("owner<-"))

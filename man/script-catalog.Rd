@@ -18,3 +18,6 @@ Script entities.
 \description{
 Crunch Automation scripts entities for a dataset
 }
+\seealso{
+\code{\link[=runCrunchAutomation]{runCrunchAutomation()}} & \code{\link{automation-undo}}
+}
