@@ -12,11 +12,12 @@ with_mock_crunch({
     ds <- loadDataset("test ds") # 1 successful script
     ds2 <- loadDataset("ECON.sav") # no successful scripts
 
-    script_text <- paste(
-        "RENAME starttime TO interviewtime;",
-        "SET EXCLUSION birthyr > 2000;",
-        sep = " \n"
+    script_text_vector <- c(
+        "RENAME starttime TO interviewtime; ",
+        "SET EXCLUSION birthyr > 2000;"
     )
+
+    script_text <- paste(script_text_vector, collapse = "\n")
 
     temp <- tempfile(fileext = ".txt")
     writeLines(script_text, temp)
@@ -58,6 +59,16 @@ with_mock_crunch({
         )
     })
 
+    test_that("Query shape is right when coming from vector", {
+        expect_POST(
+            fixed = TRUE,
+            runCrunchAutomation(ds, script_text_vector),
+            "https://app.crunch.io/api/datasets/1/scripts/",
+            '{"element":"shoji:entity",',
+            '"body":{"body":"', script_text_from_request, '"}}'
+        )
+    })
+
     test_that("Can retrieve a non-empty scripts catalog", {
         ds_scripts <- scripts(ds)
         expect_is(ds_scripts, "ScriptCatalog")
@@ -69,6 +80,7 @@ with_mock_crunch({
         expect_equal(scriptBody(ds_scripts), script_text)
         # On single script
         expect_is(ds_scripts[[1]], "Script")
+        expect_true(is.script(ds_scripts[[1]]))
         expect_equal(
             timestamps(ds_scripts[[1]]),
             as.POSIXlt("2020-05-06 17:36:27.237 UTC", tz = "UTC")

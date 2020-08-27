@@ -130,7 +130,7 @@ runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(s
     reset_automation_error_env()
     stopifnot(is.dataset(dataset))
     stopifnot(is.character(script))
-    if (length(script) != 1) halt("Can only run automation on a single script")
+    if (length(script) != 1) script <- paste(script, collapse = "\n")
 
     if (is_file) {
         automation_error_env$file <- script
