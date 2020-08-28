@@ -185,7 +185,8 @@ make_rstudio_markers <- function(errors) {
         file = errors$file,
         line = ifelse(is.na(errors$errors$line), 1, errors$errors$line),
         column = ifelse(is.na(errors$errors$column), 1, errors$errors$column),
-        message = errors$errors$message
+        message = errors$errors$message,
+        stringsAsFactors = FALSE
     )
     rstudioapi::sourceMarkers("crunchAutomation", markers)
 }
