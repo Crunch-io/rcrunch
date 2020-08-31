@@ -1,0 +1,10 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/1/scripts/",
+    "index": {
+        "https://app.crunch.io/api/datasets/1/scripts/3cb2fb/": {
+            "body": "RENAME starttime TO interviewtime; \nSET EXCLUSION birthyr > 2000;",
+            "creation_time": "2020-05-06T17:36:27.238000+00:00"
+        }
+    }
+}

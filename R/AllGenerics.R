@@ -20,7 +20,7 @@
 #' @return Getters return the character object in the specified slot; setters
 #' return `x` duly modified.
 #' @aliases describe-catalog aliases aliases<- descriptions descriptions<-
-#' types emails timestamps names names<-
+#' types emails timestamps scriptBody names names<-
 #' @seealso [`Subvariables`] [`Categories`] [base::names()]
 #' `vignette("variables", package="crunch")`
 #' @rdname describe-catalog
@@ -51,6 +51,7 @@ setGeneric("ids<-", function(x, value) standardGeneric("ids<-"))
 setGeneric("values", function(x) standardGeneric("values"))
 #' @rdname describe-catalog
 setGeneric("values<-", function(x, value) standardGeneric("values<-"))
+setGeneric("scriptBody", function(x) standardGeneric("scriptBody"))
 
 #' @rdname describe-catalog
 #' @export
@@ -238,6 +239,35 @@ setGeneric("weightVariables<-", function(x, value) standardGeneric("weightVariab
 setGeneric("is.weightVariable<-", function(x, value) standardGeneric("is.weightVariable<-"))
 setGeneric("is.weight<-", function(x, value) standardGeneric("is.weight<-"))
 setGeneric("whichCatalogEntry", function(x, i, ...) standardGeneric("whichCatalogEntry"))
+setGeneric("scripts", function(x) standardGeneric("scripts"))
+
+#' Undo behavior of a Crunch Automation Script
+#'
+#' There are two ways to revert the output of a script:
+#' - `undoScript()` - A "softer" delete of a script's created artifacts and variables, or
+#' - `revertScript()` - A "harder" revert that returns the dataset to the state it was before
+#'   running such script.
+#'
+#' The difference between both is that a hard revert restores the dataset, as it drops all
+#' ensuing scripts and their output (artifacts and variables), while an undo only deletes the
+#' artifacts and variables created by this script, but changes made by other scripts and this
+#' script's record will remain in place.
+#'
+#' The function `scriptSavepoint()` gets the version object
+#'
+#' @param dataset A `CrunchDataset`
+#' @param x A `Script` or index for a `ScriptCatalog` (generally a number)
+#' @return For `undoScript()` and `revertSctipt()`, invisibly return the updated dataset.
+#' For `scriptSavePoint()` a version list object that can be used in [`restoreVersion()`].
+#' @name automation-undo
+#' @aliases undoScript
+#' @seealso [`runCrunchAutomation()`] & [`script-catalog`]
+#' @export
+setGeneric("undoScript", function(dataset, x) standardGeneric("undoScript"))
+#' @rdname automation-undo
+setGeneric("revertScript", function(dataset, x) standardGeneric("revertScript"))
+#' @rdname automation-undo
+setGeneric("scriptSavepoint", function(x) standardGeneric("scriptSavepoint"))
 
 setGeneric("owner", function(x) standardGeneric("owner"))
 setGeneric("owner<-", function(x, value) standardGeneric("owner<-"))
