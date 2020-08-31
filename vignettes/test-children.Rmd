@@ -1,0 +1,165 @@
+---
+title: "Testing child packages"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Testing child packages}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette is written for authors of packages that depend on crunch, who want
+to use similar testing infrastructure as the main crunch package. The crunch
+package itself has a long, evolutionary history, so not all of this advice applies 
+directly to developing for rcrunch itself 
+([more details at bottom of this document](#rcrunch-specific)). 
+
+When testing code that relies on an API, there are two broad categories of testing:
+
+- **Integration testing** - The tests call to the server each time they are run. 
+  While this is nice in theory, it can cause problems because test code can
+  overload the servers because of how frequently they need to run which will not only
+  cause your tests to fail, but negatively affect all users of the API.
+- **Mock testing** - Rather than actually call the server, the tests use "mocks"
+  of what should be returned by the server. This allows tests to be run more 
+  quickly and without stressing the server. The hard part is creating these mocks,
+  but rcrunch has tools that try to make this as easy as possible.
+
+
+## Integration testing strategy
+We do not advise that child packages run integration tests. If you feel you need them, 
+please contact the Crunch team and we may be able to grant you access to the 
+Crunch.io test server and help you write tests that use that.
+
+
+## Mock testing strategy
+Mock tests for the crunch package are tested using the httptest package, which was 
+written while the author worked at Crunch.io and so is tailored to our situation quite
+well. Before continuing, I highly recommend reading the vignettes for that package:
+
+- [httptest: A Test Environment for HTTP Requests in R](https://enpiar.com/r/httptest/articles/httptest.html)
+- [Redacting and Modifying Recorded Requests](https://enpiar.com/r/httptest/articles/redacting.html)
+
+
+### Step 1: Capture requests (ideally, reproducibly)
+The httptest package has functions `start_capturing()` and `stop_capturing()`
+that allow it to save the results of API calls that you make in 
+a way that it will be able to replay later, while you're testing. You'll
+want to capture all the requests needed to run the test and save them
+in the `testthat` folder of your package so that your tests have access to
+them. If you've already written the test & function, you can run that same
+code inside of httptest's capturing mechanism. However, if you're trying
+to write your tests before you've written the function, you'll need to 
+plan out what crunch functions you will need to run so that you can
+capture them.
+
+It is a really good idea to save this code in a reproducible state
+so that you can rerun it if your code changes, or if the crunch API 
+changes. To make it reproducible, I recommend:
+
+1) Saving the script in your package, a good place is in the testthat
+   folder, at the level above where the fixtures are saved.
+2) Deleting existing mock files if they already exist.
+3) Either creating the dataset in the script, or at least starting from 
+   a dataset in a project stored in a place that everyone who works on
+   the package have access to.
+
+Putting that altogether, here's an example of a script. It could be saved
+for example in a file "tests/testthat/captured/generate_1.R".
+```{r, eval = FALSE}
+library(crunch)
+library(httptest)
+
+login()
+
+# Delete mock files if they already exist
+try(unlink("tests/testthat/captured/1/", recursive = TRUE))
+
+# Reproducibly create a dataset each time
+ds <- newDataset(
+  data.frame(y1 = factor(c("Yes", "Yes", "No", NA, levels = c("Yes", "No")))), 
+  "test1 awesometabs"
+)
+
+httpcache::clearCache() # Best practice to reset cache
+start_capturing("tests/testthat/captured/1/") # start capturing
+
+# Inside of the capture, be sure to load the dataset again
+ds <- loadDataset("test1 awesometabs")
+# Run function we're testing
+awesome_tabs(ds, ~y1)
+
+stop_capturing() # stop capturing
+with_consent(delete(ds)) # And to avoid accumulating junk, delete the dataset when we're done
+```
+
+
+### Step 2: Use fixtures in tests
+The crunch package has a function called `with_api_fixture()` that takes a
+directory and an expression and tells httptest to use the directory for 
+mock files. Inside of that expression you put standard testthat tests
+using `testthat::test_that()` and the expectation functions.
+
+Putting that together, here's an example test for our `awesometabs` function
+using the fixture we made above
+```{r, eval = FALSE}
+library(crunch)
+
+# note that tests are run starting from `tests/testthat` dir
+# so the path doesn't include those parts
+with_api_fixture("captured/1/", { 
+    test_that("basic example", {
+        ds <- loadDataset("test1 awesometabs")
+
+        expect_equal(
+            awesome_tabs(ds, ~y1),
+            "Yes:2 - No:1 - NA:1"
+        )
+    })
+})
+```
+
+### Step 3: Keep up to date
+Your test fixtures can get out of date for two reasons:
+
+1) You've updated your function and so it makes different calls to the crunch server, or 
+2) The crunch.io team made changes to the API and so the returned values aren't the same or
+   the way that rcrunch calls the API changed. 
+
+In both of these circumstances you'll need to update your fixtures, which is why saving them
+in reproducible scripts is so nice. You can just rerun the scripts and the fixtures should
+be updated.
+
+
+## Troubleshooting
+The most common error that comes from the httptest package is that it can't find the 
+mock file related to the request you've tried to make. The error message will look
+something like this:
+`GET https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/ (app.crunch.io/api/geodata/8684c6.json)`
+
+This error message means that httptest could not find the file `app.crunch.io/api/geodata/8684c6.json`,
+which is what it expected to find, given that one of the functions called 
+`GET` on `https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/`.
+
+This can happen if your test fixtures didn't contain an API call that they should have
+1) Maybe you missed a function that you needed (did you remember to loadDataset inside of the capturing
+   block?) 
+2) Maybe you changed your code, or maybe the crunch package did, in which case rerunning the fixture
+   generating code would help
+3) ??? - Other problems do come up, especially regarding incorrect redaction, but it's hard to predict
+   so if you're stuck, please contact us.
+
+
+## Why doesn't rcrunch follow this advice? {#rcrunch-specific}
+The rcrunch package does not follow this advice very well. Mainly, the fixtures are not generated 
+in a reproducible way. The main reasons for this are that 1) sometimes the tests were written
+in rcrunch before the API had been written, and so they were hand-written, and 2) there is a
+space limit for R packages on CRAN, so the tests are written to use existing test files as 
+much as possible, making it hard to have a reproducible script that creates the dataset
+in exactly the state that is captured for rcrunch's mock tests.

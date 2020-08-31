@@ -17,3 +17,4 @@ docs/
 revdep/
 *.RData
 inst/mocks.tgz
+inst/doc
