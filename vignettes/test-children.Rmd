@@ -39,31 +39,31 @@ Crunch.io test server and help you write tests that use that.
 
 
 ## Mock testing strategy
-Mock tests for the crunch package are tested using the httptest package, which was 
+Mock tests for the crunch package are tested using the `httptest` package, which was 
 written while the author worked at Crunch.io and so is tailored to our situation quite
 well. Before continuing, I highly recommend reading the vignettes for that package:
 
-- [httptest: A Test Environment for HTTP Requests in R](https://enpiar.com/r/httptest/articles/httptest.html)
+- [`httptest`: A Test Environment for HTTP Requests in R](https://enpiar.com/r/httptest/articles/httptest.html)
 - [Redacting and Modifying Recorded Requests](https://enpiar.com/r/httptest/articles/redacting.html)
 
 
 ### Step 1: Capture requests (ideally, reproducibly)
-The httptest package has functions `start_capturing()` and `stop_capturing()`
+The `httptest` package has functions `start_capturing()` and `stop_capturing()`
 that allow it to save the results of API calls that you make in 
 a way that it will be able to replay later, while you're testing. You'll
 want to capture all the requests needed to run the test and save them
 in the `testthat` folder of your package so that your tests have access to
 them. If you've already written the test & function, you can run that same
-code inside of httptest's capturing mechanism. However, if you're trying
+code inside of `httptest`'s capturing mechanism. However, if you're trying
 to write your tests before you've written the function, you'll need to 
-plan out what crunch functions you will need to run so that you can
+plan out what `crunch` functions you will need to run so that you can
 capture them.
 
 It is a really good idea to save this code in a reproducible state
 so that you can rerun it if your code changes, or if the crunch API 
 changes. To make it reproducible, I recommend:
 
-1) Saving the script in your package, a good place is in the testthat
+1) Saving the script in your package, a good place is in the `testthat`
    folder, at the level above where the fixtures are saved.
 2) Deleting existing mock files if they already exist.
 3) Either creating the dataset in the script, or at least starting from 
@@ -71,7 +71,7 @@ changes. To make it reproducible, I recommend:
    the package have access to.
 
 Putting that altogether, here's an example of a script. It could be saved
-for example in a file "tests/testthat/captured/generate_1.R".
+for example in a file `"tests/testthat/captured/generate_1.R"`.
 ```{r, eval = FALSE}
 library(crunch)
 library(httptest)
@@ -101,9 +101,9 @@ with_consent(delete(ds)) # And to avoid accumulating junk, delete the dataset wh
 
 
 ### Step 2: Use fixtures in tests
-The crunch package has a function called `with_api_fixture()` that takes a
-directory and an expression and tells httptest to use the directory for 
-mock files. Inside of that expression you put standard testthat tests
+The `crunch` package has a function called `with_api_fixture()` that takes a
+directory and an expression and tells `httptest` to use the directory for 
+mock files. Inside of that expression you put standard `testthat` tests
 using `testthat::test_that()` and the expectation functions.
 
 Putting that together, here's an example test for our `awesometabs` function
@@ -130,7 +130,7 @@ Your test fixtures can get out of date for two reasons:
 
 1) You've updated your function and so it makes different calls to the crunch server, or 
 2) The crunch.io team made changes to the API and so the returned values aren't the same or
-   the way that rcrunch calls the API changed. 
+   the way that `rcrunch` calls the API changed. 
 
 In both of these circumstances you'll need to update your fixtures, which is why saving them
 in reproducible scripts is so nice. You can just rerun the scripts and the fixtures should
@@ -138,28 +138,28 @@ be updated.
 
 
 ## Troubleshooting
-The most common error that comes from the httptest package is that it can't find the 
+The most common error that comes from the `httptest` package is that it can't find the 
 mock file related to the request you've tried to make. The error message will look
 something like this:
 `GET https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/ (app.crunch.io/api/geodata/8684c6.json)`
 
-This error message means that httptest could not find the file `app.crunch.io/api/geodata/8684c6.json`,
+This error message means that `httptest` could not find the file `app.crunch.io/api/geodata/8684c6.json`,
 which is what it expected to find, given that one of the functions called 
 `GET` on `https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/`.
 
 This can happen if your test fixtures didn't contain an API call that they should have
-1) Maybe you missed a function that you needed (did you remember to loadDataset inside of the capturing
+1) Maybe you missed a function that you needed (did you remember to `loadDataset` inside of the capturing
    block?) 
-2) Maybe you changed your code, or maybe the crunch package did, in which case rerunning the fixture
+2) Maybe you changed your code, or maybe the `crunch` package did, in which case rerunning the fixture
    generating code would help
 3) ??? - Other problems do come up, especially regarding incorrect redaction, but it's hard to predict
    so if you're stuck, please contact us.
 
 
-## Why doesn't rcrunch follow this advice? {#rcrunch-specific}
-The rcrunch package does not follow this advice very well. Mainly, the fixtures are not generated 
+## Why doesn't `rcrunch` follow this advice? {#rcrunch-specific}
+The `rcrunch` package does not follow this advice very well. Mainly, the fixtures are not generated 
 in a reproducible way. The main reasons for this are that 1) sometimes the tests were written
-in rcrunch before the API had been written, and so they were hand-written, and 2) there is a
+in `rcrunch` before the API had been written, and so they were hand-written, and 2) there is a
 space limit for R packages on CRAN, so the tests are written to use existing test files as 
 much as possible, making it hard to have a reproducible script that creates the dataset
-in exactly the state that is captured for rcrunch's mock tests.
+in exactly the state that is captured for `rcrunch` mock tests.

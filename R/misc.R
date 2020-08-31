@@ -310,7 +310,7 @@ pluralize <- function(string, count) {
 
 #' Test helper
 #'
-#' Helpers for using httptest & crunch to write mock tests for
+#' Helpers for using `httptest` & crunch to write mock tests for
 #' your package.
 #'
 #' @param fixture_path Path to fixtures that have been stored by

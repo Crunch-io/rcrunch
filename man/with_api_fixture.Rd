@@ -13,7 +13,7 @@ with_api_fixture(fixture_path, expr)
 \item{expr}{An expression (or multiple if wrapped in brackets \verb{\{}, \verb{\}})}
 }
 \description{
-Helpers for using httptest & crunch to write mock tests for
+Helpers for using \code{httptest} & crunch to write mock tests for
 your package.
 }
 \keyword{internal}
