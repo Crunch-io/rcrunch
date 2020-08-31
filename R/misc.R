@@ -307,3 +307,27 @@ pluralize <- function(string, count) {
     # Naive conditional pluralization
     ifelse(count == 1, string, paste0(string, "s"))
 }
+
+#' Test helper
+#'
+#' Helpers for using httptest & crunch to write mock tests for
+#' your package.
+#'
+#' @param fixture_path Path to fixtures that have been stored by
+#' `httptest:::capture_requests()`
+#' @param expr An expression (or multiple if wrapped in brackets `{`, `}`)
+#'
+#' @export
+#' @keywords internal
+with_api_fixture <- function(fixture_path, expr) {
+    with(
+        crunch::temp.options(
+            crunch.api = "https://app.crunch.io/api/",
+            httptest.mock.paths = fixture_path,
+            crunch.show.progress = FALSE
+        ),
+        httptest::with_mock_api(
+            expr
+        )
+    )
+}
