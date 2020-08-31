@@ -7,7 +7,7 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.27.3
+Version: 1.27.4
 Authors@R: c(
     person("Greg", "Freedman Ellis", role = c("aut", "cre"), email = "greg@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
