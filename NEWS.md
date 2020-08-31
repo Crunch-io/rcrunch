@@ -1,4 +1,4 @@
-# crunch 1.27.2 (Development version)
+# crunch 1.27.2
 * Previously defined `expropriateUser()` function is now accessed through the function call `reassignUser()`. Functionality of the call has not changed.
 * Added `makeCaseWhenVariable()` that helps with many common recoding needs.
 * Added `alterArrayExpr()` which allows adding, removing, reordering and renaming subvariables
