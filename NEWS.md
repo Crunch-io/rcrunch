@@ -1,6 +1,9 @@
-# crunch 1.27.3 (Development version)
-* Previously defined `expropriateUser()` function is now accessed through the function call `reassignUser()`. Functionality of the call has not changed.
+# crunch 1.27.4 (Development version)
 * Renaming variable folders via `setName()` is fixed (#487)
+
+# crunch 1.27.3
+* Added support for crunch automation, see `?runCrunchAutomation` for more information
+* Previously defined `expropriateUser()` function is now accessed through the function call `reassignUser()`. Functionality of the call has not changed.
 
 # crunch 1.27.2
 * Added `makeCaseWhenVariable()` that helps with many common recoding needs.

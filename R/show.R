@@ -190,6 +190,31 @@ showOrderGroup <- function(x, index, key = "name") {
 
 formatVersionCatalog <- function(x, from = Sys.time()) {
     ts <- timestamps(x)
+    ts <- .ts_format(ts, from)
+    return(data.frame(Name = names(x), Timestamp = ts, stringsAsFactors = FALSE))
+}
+
+formatScriptCatalog <- function(x, from = Sys.time(), body_width = 20) {
+    ts <- timestamps(x)
+    ts <- .ts_format(ts, from)
+
+    scriptBody <- vapply(scriptBody(x), function(script) {
+        if (nchar(script) > body_width) {
+            paste0(strtrim(script, max(body_width - 3, 0)), "...")
+        } else {
+            script
+        }
+    }, character(1))
+
+    return(data.frame(
+        Timestamp = ts,
+        scriptBody = scriptBody,
+        stringsAsFactors = FALSE,
+        row.names = NULL
+    ))
+}
+
+.ts_format <- function(ts, from = NULL) {
     if (!is.null(from)) {
         ts <- vapply(seq_along(ts), function(a) {
             ## Grab dates by sequence because POSIXt is a list internally
@@ -205,7 +230,7 @@ formatVersionCatalog <- function(x, from = Sys.time()) {
             return(out)
         }, character(1))
     }
-    return(data.frame(Name = names(x), Timestamp = ts, stringsAsFactors = FALSE))
+    return(ts)
 }
 
 .operators <- c("+", "-", "*", "/", "<", ">", ">=", "<=", "==", "!=", "&", "|", "%in%", "%ornm%")
@@ -393,6 +418,7 @@ setMethod(
 )
 setMethod("getShowContent", "ShojiCatalog", function(x) as.data.frame(x))
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
+setMethod("getShowContent", "ScriptCatalog", formatScriptCatalog)
 setMethod(
     "getShowContent", "MemberCatalog",
     function(x) {
