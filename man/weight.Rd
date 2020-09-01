@@ -8,13 +8,14 @@
 \alias{weight,Analysis-method}
 \alias{weight<-,Analysis,CrunchVariable-method}
 \alias{weight<-,Analysis,NULL-method}
-\alias{is.weight<-}
 \alias{weight,CrunchDataset-method}
 \alias{weight<-,CrunchDataset,ANY-method}
 \alias{is.weight}
 \alias{is.weight<-,NumericVariable-method}
 \title{Dataset weights}
 \usage{
+is.weight(x) <- value
+
 weight(x)
 
 weight(x) <- value

@@ -237,7 +237,26 @@ setGeneric("rootFolder", function(x) standardGeneric("rootFolder"))
 setGeneric("weightVariables", function(x) standardGeneric("weightVariables"))
 setGeneric("weightVariables<-", function(x, value) standardGeneric("weightVariables<-"))
 setGeneric("is.weightVariable<-", function(x, value) standardGeneric("is.weightVariable<-"))
+
+#' Dataset weights
+#'
+#' `weight` lets you view and set your user's currently applied weight on the
+#' server. `weightVariables` lets you view all of the variables that have been
+#' designated as valid to use as weights.
+#' @param x a Dataset
+#' @param value a Variable, VariableDefinition, or `NULL`. If a
+#' VariableDefinition is passed, the variable will first be created and then set
+#' as the datasets weight. Set to `NULL` to remove existing weights from the
+#' dataset.
+#' @return For the `weight` getter, a Variable if there is a weight, else
+#' NULL. For the setter, x, modified accordingly. `weightVariables` returns
+#' the aliases (or names, according to `options(crunch.namekey.dataset)`),
+#' of the variables designated as weights.
+#' @seealso [weightVariables()] [makeWeight()]
+#' @name weight
+#' @export
 setGeneric("is.weight<-", function(x, value) standardGeneric("is.weight<-"))
+
 setGeneric("whichCatalogEntry", function(x, i, ...) standardGeneric("whichCatalogEntry"))
 setGeneric("scripts", function(x) standardGeneric("scripts"))
 
