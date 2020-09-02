@@ -1,4 +1,5 @@
 # crunch 1.27.4 (Development version)
+* Fixes to pkgdown documentation website
 
 # crunch 1.27.3
 * Added support for crunch automation, see `?runCrunchAutomation` for more information

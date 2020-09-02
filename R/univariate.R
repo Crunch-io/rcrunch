@@ -14,9 +14,6 @@ setGeneric("sd")
 #' @rdname crunch-uni
 setGeneric("median")
 
-setGeneric("min")
-setGeneric("max")
-
 .summary.stat <- function(x, stat, na.rm = FALSE, ...) {
     query <- list(
         query = toJSON(list(

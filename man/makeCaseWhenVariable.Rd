@@ -58,7 +58,7 @@ ds$new_var <- makeCaseWhenVariable(
 ds$brand_x_pref <- makeCaseWhenVariable(
    ds$brand[[1]] == "Brand X" ~ ds$pref[[1]],
    ds$brand[[2]] == "Brand X" ~ ds$pref[[2]],
-   ds$brand[[3]] == "Brand X" ~ ds$pref[[3]]
+   ds$brand[[3]] == "Brand X" ~ ds$pref[[3]],
    name = "brand x preference"
 )
 

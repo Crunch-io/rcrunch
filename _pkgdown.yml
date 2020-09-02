@@ -101,12 +101,17 @@ reference:
   - combine
   - copyVariable
   - makeCaseVariable
-  - crunch-cut
+  - makeCaseWhenVariable
+  - 'cut,NumericVariable-method'
+  - 'cut,DatetimeVariable-method'
   - interactVariables
   - conditionalTransform
   - makeWeight
   - variable-as-methods
   - which
+  - rowCount
+  - rowDistinct
+  - slideCategories
 - title: Array variables
   contents:
   - Subvariables-class
@@ -129,6 +134,11 @@ reference:
   - setNames
   - copyFolders
   - copyOrder
+- title: Crunch Automation
+  contents:
+  - runCrunchAutomation
+  - automation-undo
+  - script-catalog
 - title: Analysis
   contents:
   - crtabs
@@ -145,7 +155,6 @@ reference:
   - multitable-catalog
   - newFilter
   - newMultitable
-  - importMultitable
   - table
   - 'as.vector,CrunchExpr-method'
   - dimension-comparison
@@ -221,7 +230,6 @@ reference:
   - describe-catalog
   - refresh
   - webApp
-  - crunch-length
   - catalog-dataframes
   - shoji-index
   - consent
