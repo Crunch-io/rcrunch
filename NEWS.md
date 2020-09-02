@@ -1,3 +1,5 @@
+# crunch 1.27.5 (Development version)
+
 # crunch 1.27.4
 * Fixes to pkgdown documentation website
 
