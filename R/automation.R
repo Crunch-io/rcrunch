@@ -130,14 +130,14 @@ runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(s
     reset_automation_error_env()
     stopifnot(is.dataset(dataset))
     stopifnot(is.character(script))
-    if (length(script) != 1) script <- paste(script, collapse = "\n")
 
     if (is_file) {
         automation_error_env$file <- script
-        script <- paste(readLines(script, encoding = "UTF-8", warn = FALSE), collapse = "\n")
+        script <- readLines(script, encoding = "UTF-8", warn = FALSE)
     } else {
         automation_error_env$file <- NULL
     }
+    if (length(script) != 1) script <- paste(script, collapse = "\n")
 
     crPOST(
         shojiURL(dataset, "catalogs", "scripts"),
@@ -148,8 +148,10 @@ runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(s
 }
 
 string_is_file_like <- function(x) {
-    !grepl("\\n", x) & # no new lines
-        grepl("\\.[[:alnum:]]+$", x) # ends with a file extension ('.' + any num of letters/nums)
+    length(x) == 1 && # length 1 string
+        !grepl("\\n", x) && # no new lines
+        # ends with a file extension ('.' + any num of letters/nums) or exists
+        (grepl("\\.[[:alnum:]]+$", x) || file.exists(x))
 }
 
 # Where we store error information from crunch automation
@@ -220,12 +222,20 @@ crunchAutomationErrorHandler <- function(response) {
 
         automation_error_env$errors <- errors
 
-        msg <- paste(
-            "Crunch Automation Error\n",
-            automation_errors_text(errors, 5),
-            "\n\nRun command `crunchAutomationFailure()` for more information.",
-            sep = ""
-        )
+        error_items <- automation_errors_text(errors, 5)
+
+        # only provides more information if truncated or if RStudio source
+        # markers are available
+        if (
+            attr(error_items, "truncated") ||
+            (!is.null(automation_error_env$file) && rstudio_markers_available())
+        ) {
+            more_info_text <- "\n\nRun command `crunchAutomationFailure()` for more information."
+        } else {
+            more_info_text <- NULL
+        }
+
+        msg <- paste("Crunch Automation Error\n", error_items, more_info_text, sep = "")
     }
     halt(msg)
 }
@@ -248,6 +258,9 @@ automation_errors_text <- function(errors, display_num = Inf) {
             out,
             "\n - ... (Showing first ", display_num, " of ", orig_num_errors, " errors)"
         )
+        attr(out, "truncated") <- TRUE
+    } else {
+        attr(out, "truncated") <- FALSE
     }
     out
 }
