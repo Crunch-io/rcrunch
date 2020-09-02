@@ -97,6 +97,8 @@ values(x)
 
 values(x) <- value
 
+scriptBody(x)
+
 dates(x)
 
 dates(x) <- value

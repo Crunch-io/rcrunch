@@ -1,3 +1,23 @@
+#' Dataset weights
+#'
+#' `weight` lets you view and set your user's currently applied weight on the
+#' server. `weightVariables` lets you view all of the variables that have been
+#' designated as valid to use as weights.
+#' @param x a Dataset
+#' @param value a Variable, VariableDefinition, or `NULL`. If a
+#' VariableDefinition is passed, the variable will first be created and then set
+#' as the datasets weight. Set to `NULL` to remove existing weights from the
+#' dataset.
+#' @return For the `weight` getter, a Variable if there is a weight, else
+#' NULL. For the setter, x, modified accordingly. `weightVariables` returns
+#' the aliases (or names, according to `options(crunch.namekey.dataset)`),
+#' of the variables designated as weights.
+#' @seealso [weightVariables()] [makeWeight()]
+#' @name weight
+#' @aliases is.weight<-
+#' @export
+NULL
+
 #' @rdname weight
 #' @export
 setMethod("weight", "CrunchDataset", function(x) {
@@ -59,17 +79,6 @@ setMethod("is.weight<-", "NumericVariable", function(x, value) {
     }
     return(x)
 })
-
-#' Get a dataset's weightVariables
-#'
-#' @param x a CrunchDataset
-#' @return `weightVariables` returns a character vector of the aliases of the
-#' variables that are eligible to be used as weights.
-#' @seealso [weight()] [makeWeight()] [modifyWeightVariables()]
-#' @name weightVariables
-#'
-#' @export
-NULL
 
 #' @rdname weightVariables
 #' @export

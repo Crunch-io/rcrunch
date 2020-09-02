@@ -44,7 +44,6 @@
 #' @param after character or numeric if `position` is "relative", then the
 #' category name or id to position the subtotal or heading after. If not supplied
 #' this defaults to the last of the `categories` supplied to `Subtotal`.
-#'
 #' @examples
 #' \dontrun{
 #' # given a variable ds$opinion, with categories: Strongly Agree, Somewhat
