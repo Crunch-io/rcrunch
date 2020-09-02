@@ -3,6 +3,6 @@
     "self": "https://app.crunch.io/api/progress/",
     "value": {
         "progress": -1,
-        "message": "Education, Commerce, and, uh, oops."
+        "message": "progress returned -1"
     }
 }
