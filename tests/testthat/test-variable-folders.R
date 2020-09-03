@@ -76,7 +76,7 @@ with_mock_crunch({
         expect_PATCH(
             name(folders(ds)[[1]]) <- "First",
             "https://app.crunch.io/api/datasets/1/folders/1/",
-            '{"name":"First"}'
+            '{"element":"shoji:catalog","body":{"name":"First"}}'
         )
     })
     test_that("But top-level folder doesn't have a name and you can't set it", {

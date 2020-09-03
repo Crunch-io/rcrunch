@@ -11,6 +11,13 @@ setMethod("folderExtraction", "ProjectFolder", function(x, tuple) {
 
 #' @rdname describe-entity
 #' @export
+setMethod(
+    "name<-", "ProjectFolder",
+    function(x, value) setEntitySlot(x, "name", value)
+)
+
+#' @rdname describe-entity
+#' @export
 setMethod("name", "ProjectFolder", function(x) {
     ## Warning: bad code smell
     if (identical(self(x), sessionURL("projects"))) {

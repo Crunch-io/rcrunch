@@ -10,6 +10,13 @@ folders <- function(x) {
     return(VariableFolder(crGET(shojiURL(x, "catalogs", "folders"))))
 }
 
+#' @rdname describe-entity
+#' @export
+setMethod(
+    "name<-", "VariableFolder",
+    function(x, value) setEntitySlotWrapBody(x, "name", value)
+)
+
 #' @export
 #' @rdname describe-catalog
 setMethod("aliases", "VariableFolder", function(x) getIndexSlot(x, "alias"))

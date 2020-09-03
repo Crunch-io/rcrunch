@@ -114,13 +114,6 @@ createFolder <- function(where, name, index, ...) {
     crPOST(self(where), body = toJSON(bod))
 }
 
-#' @rdname describe-entity
-#' @export
-setMethod(
-    "name<-", "ShojiFolder",
-    function(x, value) setEntitySlot(x, "name", value)
-)
-
 #' Change the order of entities in folder
 #'
 #' @param folder A `VariableFolder` or other `*Folder` object
