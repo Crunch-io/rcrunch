@@ -90,4 +90,5 @@ crunchBox(ds[c("var1", "var2", "var3")],
 }
 \seealso{
 \code{\link[=preCrunchBoxCheck]{preCrunchBoxCheck()}} to provide guidance on what you're including in the
+CrunchBox
 }

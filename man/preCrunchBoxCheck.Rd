@@ -15,7 +15,8 @@ Invisibly, the dataset. Called for side-effect of printing things.
 \description{
 CrunchBoxes allows you to share data with the world in a simple, easy to embed format.
 However, not all datasets naturally translate to the CrunchBox format. This
-function checks your dataset to see if it
+function checks your dataset to see if it has variable & category definitions
+that will work well with the CrunchBox format.
 }
 \seealso{
 \code{\link{CrunchBox}}
