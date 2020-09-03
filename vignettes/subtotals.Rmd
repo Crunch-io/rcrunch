@@ -3,7 +3,7 @@ title: "Subtotals and Headings"
 description: "Modify subtotals and headings from R"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Subtotals}
+  %\VignetteIndexEntry{Subtotals and Headings}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

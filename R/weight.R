@@ -80,17 +80,6 @@ setMethod("is.weight<-", "NumericVariable", function(x, value) {
     return(x)
 })
 
-#' Get a dataset's weightVariables
-#'
-#' @param x a CrunchDataset
-#' @return `weightVariables` returns a character vector of the aliases of the
-#' variables that are eligible to be used as weights.
-#' @seealso [weight()] [makeWeight()] [modifyWeightVariables()]
-#' @name weightVariables
-#'
-#' @export
-NULL
-
 #' @rdname weightVariables
 #' @export
 setMethod(

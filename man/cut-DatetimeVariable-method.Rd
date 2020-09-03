@@ -54,8 +54,8 @@ whether the numeric vector falls between January 1 and 14 or January 15 and 31
 \examples{
 \dontrun{
 ds <- loadDataset("example")
-ds$month_cat <- cut(ds$date, breaks = "month", name = "monthly"),
-ds$four_weeks_cat <- cut(ds$date, breaks = "4 weeks", name = "four week categorical date"),
+ds$month_cat <- cut(ds$date, breaks = "month", name = "monthly")
+ds$four_weeks_cat <- cut(ds$date, breaks = "4 weeks", name = "four week categorical date")
 
 ds$wave_cat <- cut(
     ds$date,

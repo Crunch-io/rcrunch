@@ -3,7 +3,7 @@ title: "Fork and Merge a Dataset"
 description: "How to safely edit a live dataset"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Forking and Merging}
+  %\VignetteIndexEntry{Fork and Merge a Dataset}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

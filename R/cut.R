@@ -199,8 +199,8 @@ generateNumCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("example")
-#' ds$month_cat <- cut(ds$date, breaks = "month", name = "monthly"),
-#' ds$four_weeks_cat <- cut(ds$date, breaks = "4 weeks", name = "four week categorical date"),
+#' ds$month_cat <- cut(ds$date, breaks = "month", name = "monthly")
+#' ds$four_weeks_cat <- cut(ds$date, breaks = "4 weeks", name = "four week categorical date")
 #'
 #' ds$wave_cat <- cut(
 #'     ds$date,
