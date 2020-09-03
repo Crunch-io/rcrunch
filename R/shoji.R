@@ -92,7 +92,7 @@ setEntitySlot <- function(x, i, value) {
 #' Variable Folders require an extra list(body = ...)
 #' compared to other places where we use `setEntitySlot()`
 #' is used. This may be a bug, see pivotal:
-#' https://www.pivotaltracker.com/n/projects/2172644/stories/174429283
+#' <https://www.pivotaltracker.com/n/projects/2172644/stories/174429283>
 #'
 #' @param x a ShojiObject or subclass thereof
 #' @param i character the slot name to update
