@@ -74,10 +74,13 @@ with_mock_crunch({
         )
     })
 
-    test_that("What happens when you try to derive a logical", {
-        expect_error(
+    test_that("derive from logical expression issues correct POST", {
+        expect_POST(
             ds$kids <- ds$birthyr > 2000,
-            "Cannot currently derive a logical variable"
+            "https://app.crunch.io/api/datasets/1/variables/",
+            '{"derivation":{"function":">","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
+            '{"value":2000}]},"name":"kids","alias":"kids"}'
         )
     })
 })
@@ -105,6 +108,14 @@ with_test_authentication({
 
     test_that("derivation returns NULL if the variable is not derived", {
         expect_null(derivation(ds$v3))
+    })
+
+    ds$v3l <- ds$v3 > 10
+    test_that("can derive a logical expression", {
+        expect_true(is.derived(ds$v3l))
+        expect_true(is.Categorical(ds$v3l))
+        expect_prints(derivation(ds$v3l), "Crunch expression: v3 > 10")
+        expect_equivalent(as.vector(ds$v3l), df$v3 > 10)
     })
 
     test_that("derivation()<- can change a derived variable", {

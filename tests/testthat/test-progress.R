@@ -109,7 +109,7 @@ with_mock_crunch({
                     expect_message(
                         expect_error(
                             handleAPIresponse(fakeProg("https://app.crunch.io/api/progress2/")),
-                            paste("Education, Commerce, and, uh, oops."),
+                            paste("progress returned -1"),
                             fixed = TRUE
                         ),
                         "Result URL: https://app.crunch.io/api/datasets/"

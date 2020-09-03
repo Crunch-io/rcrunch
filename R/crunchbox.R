@@ -52,6 +52,7 @@
 #' }
 #'
 #' @seealso [`preCrunchBoxCheck()`] to provide guidance on what you're including in the
+#' CrunchBox
 #' @aliases crunchBox CrunchBox
 #' @export
 #' @importFrom grDevices col2rgb colors rgb
@@ -176,7 +177,8 @@ boxTooBig <- function(nvars, nfilters) {
 #'
 #' CrunchBoxes allows you to share data with the world in a simple, easy to embed format.
 #' However, not all datasets naturally translate to the CrunchBox format. This
-#' function checks your dataset to see if it
+#' function checks your dataset to see if it has variable & category definitions
+#' that will work well with the CrunchBox format.
 #'
 #' @param dataset CrunchDataset, potentially subsetted on variables
 #' @return Invisibly, the dataset. Called for side-effect of printing things.

@@ -46,7 +46,6 @@
 \alias{[[<-,CrunchDataset,character,missing,CrunchVariable-method}
 \alias{[[<-,CrunchDataset,ANY,missing,CrunchVariable-method}
 \alias{[[<-,CrunchDataset,character,missing,ANY-method}
-\alias{[[<-,CrunchDataset,character,missing,CrunchLogicalExpr-method}
 \alias{[[<-,CrunchDataset,ANY,ANY,ANY-method}
 \alias{[[<-,CrunchDataset,character,missing,NULL-method}
 \alias{[[<-,CrunchDataset,ANY,missing,NULL-method}
@@ -260,8 +259,6 @@
 \S4method{[[}{CrunchDataset,ANY,missing,CrunchVariable}(x, i) <- value
 
 \S4method{[[}{CrunchDataset,character,missing,ANY}(x, i) <- value
-
-\S4method{[[}{CrunchDataset,character,missing,CrunchLogicalExpr}(x, i) <- value
 
 \S4method{[[}{CrunchDataset,ANY,ANY,ANY}(x, i) <- value
 
