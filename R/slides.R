@@ -42,12 +42,6 @@ setGeneric("cube", function(x) standardGeneric("cube"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("cubes", function(x) standardGeneric("cubes"))
-#' @rdname analysis-methods
-#' @export
-setGeneric("filter", function(x, ...) standardGeneric("filter"))
-#' @rdname analysis-methods
-#' @export
-setGeneric("filter<-", function(x, value) standardGeneric("filter<-"))
 
 #' Get or set a slide's display settings
 #'
