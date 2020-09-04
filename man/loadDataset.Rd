@@ -8,7 +8,8 @@ loadDataset(
   dataset,
   kind = c("active", "all", "archived"),
   project = NULL,
-  refresh = FALSE
+  refresh = FALSE,
+  labelSpecialVars = TRUE
 )
 }
 \arguments{

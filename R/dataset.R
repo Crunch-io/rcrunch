@@ -1,4 +1,4 @@
-setMethod("initialize", "CrunchDataset", function(.Object, ...) {
+setMethod("initialize", "CrunchDataset", function(.Object, ..., labelSpecialVars = TRUE) {
     .Object <- callNextMethod(.Object, ...)
     if (is.null(.Object@variables@self)) {
         # This is only NULL when instantiating a fresh dataset object. If
@@ -9,17 +9,22 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
         # TODO: you could use this check to make lazy the fetching of variables
         .Object@variables <- getDatasetVariables(.Object)
 
-        # Hidden variables now require folder transversal, so we do this up front
-        # so that we don't have to hit API whenever we want a list of active variables
-        hidden_dir <- hiddenFolder(.Object)
-        hidden_vars <- variablesBelowFolder(hidden_dir, "alias")
-        .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% hidden_vars]
+        if (labelSpecialVars) {
+            # Hidden variables now require folder transversal, so we do this up front
+            # so that we don't have to hit API whenever we want a list of active variables
+            hidden_dir <- hiddenFolder(.Object)
+            hidden_vars <- variablesBelowFolder(hidden_dir, "alias")
+            .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% hidden_vars]
 
-        # Secure variables also accessed via folder transversal
-        private_dir <- privateFolder(.Object)
-        if (!is.null(private_dir)) {
-            private_vars <- variablesBelowFolder(private_dir, "alias")
-            .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars] #nolint
+            # Secure variables also accessed via folder transversal
+            private_dir <- privateFolder(.Object)
+            if (!is.null(private_dir)) {
+                private_vars <- variablesBelowFolder(private_dir, "alias")
+                .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars] #nolint
+            }
+        } else {
+            .Object@hiddenVariables <- .Object@variables[FALSE]
+            .Object@privateVariables <- .Object@variables[FALSE]
         }
     }
     if (length(.Object@filter@expression) == 0) {

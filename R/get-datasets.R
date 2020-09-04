@@ -152,7 +152,8 @@ listDatasets <- function(kind = c("active", "all", "archived"),
 loadDataset <- function(dataset,
                         kind = c("active", "all", "archived"),
                         project = NULL,
-                        refresh = FALSE) {
+                        refresh = FALSE,
+                        labelSpecialVars = TRUE) {
     if (inherits(dataset, "DatasetTuple")) {
         return(entity(dataset))
     }
@@ -163,7 +164,7 @@ loadDataset <- function(dataset,
     if (is.character(dataset)) {
         if (is.crunchURL(dataset)) {
             ## Just load it, no other querying needed
-            return(loadDatasetFromURL(dataset))
+            return(loadDatasetFromURL(dataset, labelSpecialVars = labelSpecialVars))
         }
         ## See if "dataset" is a path or name
         found <- lookupDataset(dataset, project = project)
@@ -195,7 +196,8 @@ loadDataset <- function(dataset,
         return(loadDataset(
             dsname,
             kind = kind,
-            project = project
+            project = project,
+            labelSpecialVars = labelSpecialVars
         ))
     } else {
         halt(
@@ -214,13 +216,13 @@ is.crunchURL <- function(x) {
     is.character(x) && length(x) == 1L && grepl("^http|^/api/", x) # nolint
 }
 
-loadDatasetFromURL <- function(url) {
+loadDatasetFromURL <- function(url, labelSpecialVars = TRUE) {
     ## Load dataset without touching a dataset catalog
     if (!grepl("/api/", url)) { # nolint
         ## It's a web app URL, probably. Turn it into an API URL
         url <- datasetReference(url)
     }
-    dataset <- CrunchDataset(crGET(url))
+    dataset <- CrunchDataset(crGET(url), labelSpecialVars = labelSpecialVars)
     tuple(dataset) <- DatasetTuple(
         entity_url = self(dataset),
         body = dataset@body,
