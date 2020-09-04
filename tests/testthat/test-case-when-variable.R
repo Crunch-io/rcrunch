@@ -195,50 +195,61 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- newDataset(
+        data.frame(
+            fav_brand1 = factor(
+                c("Coke", "Diet Coke", "Diet Pepsi", "Coke", "Pepsi", "Water"),
+                c("Coke", "Diet Coke", "Pepsi", "Diet Pepsi", "Water")
+            ),
+            fav_brand2 = factor(
+                c("Diet Coke", "Pepsi", "Coke", "Diet Coke", "Diet Pepsi", "Pepsi"),
+                c("Coke", "Diet Coke", "Pepsi", "Diet Pepsi", "Water")
+            ),
+            rating1 = c(9, 9, 7, 9, 8, 10),
+            rating2 = c(7, 2, 7, 8, 6, 3),
+            stringsAsFactors = FALSE
+        )
+    )
 
     test_that("casewhen works for categorical variable", {
-        ds$case_when_cat <- makeCaseWhenVariable(
-            ds$v3 <= 10 ~ Category(name = "new cat", numeric_value = 5),
-            ds$v3 <= 15 ~ ds$v4,
-            TRUE ~ "else category",
-            name = "case when categorical"
+        ds$coke_rival <- makeCaseWhenVariable(
+            ds$fav_brand1 %in% c("Coke", "Diet Coke") &
+                ds$fav_brand2 %in% c("Coke", "Diet Coke") ~ "Coke loyal",
+            ds$fav_brand1 %in% c("Coke", "Diet Coke") ~ ds$fav_brand2,
+            ds$fav_brand2 %in% c("Coke", "Diet Coke") ~ ds$fav_brand1,
+            TRUE ~ Category(name = "Never interested", missing = TRUE),
+            name = "Rival soda for those with Coke products in top 2"
         )
 
         expect_equal(
-            as.vector(ds$case_when_cat),
+            as.vector(ds$coke_rival),
             factor(
-                c(
-                    "new cat", "new cat", "new cat",
-                    "C", "B", "C", "B", "C",
-                    rep("else category", 12)
-                ),
-                c("new cat", "else category", "B", "C")
+                c("Coke loyal", "Pepsi", "Diet Pepsi", "Coke loyal", NA, NA),
+                c("Coke loyal", "Coke", "Diet Coke", "Pepsi", "Diet Pepsi", "Water")
             )
         )
 
         expect_equal(
-            names(categories(ds$case_when_cat)),
-            c("new cat", "else category", "No Data", "B", "C")
+            names(categories(ds$coke_rival)),
+            c("Coke loyal", "Never interested", "No Data", "Coke", "Diet Coke", "Pepsi", "Diet Pepsi", "Water") #nolint
         )
 
-        expect_equal(values(categories(ds$case_when_cat)["new cat"]), 5)
-
-        expect_equal(name(ds$case_when_cat), "case when categorical")
+        expect_equal(name(ds$coke_rival), "Rival soda for those with Coke products in top 2")
     })
 
     test_that("casewhen works for numeric variable", {
-        ds$case_when_num <- makeCaseWhenVariable(
-            ds$v3 <= 10 ~ 10,
-            ds$v4 == "B" ~ ds$v3,
-            name = "case when numeric"
+        ds$coke_score <- makeCaseWhenVariable(
+            ds$fav_brand1 == "Coke" ~ ds$rating1,
+            ds$fav_brand2 == "Coke" ~ ds$rating2,
+            ds$fav_brand1 == "Diet Coke" | ds$fav_brand2 == "Diet Coke" ~ 5,
+            name = "Coke score"
         )
 
         expect_equal(
-            as.vector(ds$case_when_num),
-            c(10, 10, 10, NA, 12, NA, 14, NA, 16, NA, 18, NA, 20, NA, 22, NA, 24, NA, 26, NA)
+            as.vector(ds$coke_score),
+            c(9, 5, 7, 9, NA, NA)
         )
 
-        expect_equal(name(ds$case_when_num), "case when numeric")
+        expect_equal(name(ds$coke_score), "Coke score")
     })
 })
