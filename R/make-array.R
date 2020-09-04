@@ -12,9 +12,12 @@
 #' Dataset subset which contains only the Variables to bind.
 #' @param name character, the name that the new Categorical Array variable
 #' should have.
-#' @param selections character, for `makeMR` and `deriveArray` the names of the
-#' categories to mark as the dichotomous selections. Required for
-#' `makeMR`; optional for `deriveArray`; ignored in `makeArray`.
+#' @param selections character (preferred, indicating the names of the
+#' categories), or numeric (indicating the IDs of the categories
+#' in the combined array, which may not be the same as in the original
+#' variables - also note that a category's ID is not the same thing
+#' as its `numeric_value`). Required for `makeMR`; optional for
+#' `deriveArray`; ignored in `makeArray`.
 #' @param numeric Logical indicating whether the array should be a numeric
 #' array or categorical array. `NULL` the default will guess numeric if
 #' all variables are known to be numeric and categorical if all are
