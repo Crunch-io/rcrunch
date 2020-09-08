@@ -46,6 +46,16 @@ well. Before continuing, I highly recommend reading the vignettes for that packa
 - [`httptest`: A Test Environment for HTTP Requests in R](https://enpiar.com/r/httptest/articles/httptest.html)
 - [Redacting and Modifying Recorded Requests](https://enpiar.com/r/httptest/articles/redacting.html)
 
+Another strategy for generating mock tests is to use the 
+[`mockr` packages](https://krlmlr.github.io/mockr/) (this function used to live 
+in `testthat` itself, but will be deprecated in the next version of `testthat` at 
+the time of writing this). 
+
+The `with_mock()` approach has the advantage that there are fewer moving parts to go
+wrong. However, this approach has the disadvantage that it allows your mocks to be 
+completely divorced from the crunch API and rcrunch package. Therefore it will be harder
+for your tests to get updated in the event that the behavior of rcrunch changes.
+
 
 ### Step 1: Capture requests (ideally, reproducibly)
 The `httptest` package has functions `start_capturing()` and `stop_capturing()`
@@ -72,6 +82,12 @@ changes. To make it reproducible, I recommend:
 
 Putting that altogether, here's an example of a script. It could be saved
 for example in a file `"tests/testthat/captured/generate_1.R"`.
+
+Before running, it's generally best to start from a clean R session
+(or if you're not worried about 
+[Jenny Bryan coming into your office and burning your computer down](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/), 
+you could use `rm(list = ls())`). 
+
 ```{r, eval = FALSE}
 library(crunch)
 library(httptest)
