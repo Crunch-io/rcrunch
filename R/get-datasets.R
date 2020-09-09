@@ -137,6 +137,9 @@ listDatasets <- function(kind = c("active", "all", "archived"),
 #' project only.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is `FALSE`.
+#' @param labelSpecialVars logical: should the dataset load the hidden/private
+#' variables so that they can be separated out of the default view of the dataset?
+#' Default is `TRUE`.
 #' @return An object of class `CrunchDataset`.
 #'
 #' @examples
@@ -192,7 +195,7 @@ loadDataset <- function(dataset,
                 labelSpecialVars = labelSpecialVars
             )
         } else {
-            halt("Unexpected Dataset collection type: ", dbQuote(class(found)))
+            halt("Unexpected Dataset collection type: ", dQuote(class(found)))
         }
 
         return(out)

@@ -30,6 +30,10 @@ project only.}
 
 \item{refresh}{logical: should the function check the Crunch API for new
 datasets? Default is \code{FALSE}.}
+
+\item{labelSpecialVars}{logical: should the dataset load the hidden/private
+variables so that they can be separated out of the default view of the dataset?
+Default is \code{TRUE}.}
 }
 \value{
 An object of class \code{CrunchDataset}.
