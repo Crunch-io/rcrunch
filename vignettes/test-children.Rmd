@@ -52,9 +52,11 @@ in `testthat` itself, but will be deprecated in the next version of `testthat` a
 the time of writing this). 
 
 The `with_mock()` approach has the advantage that there are fewer moving parts to go
-wrong. However, this approach has the disadvantage that it allows your mocks to be 
-completely divorced from the crunch API and rcrunch package. Therefore it will be harder
-for your tests to get updated in the event that the behavior of rcrunch changes.
+wrong. However, following the steps in this vignette to create your mocks will allow
+you to create them in a reproducible way so that if the crunch R package or API change 
+you will be able to regenerate the mocks automatically. While it's possible to create
+such a system using `with_mock()` directly, doing so will likely create a system
+with just as many points of failure as the httptest approach.
 
 
 ### Step 1: Capture requests (ideally, reproducibly)
