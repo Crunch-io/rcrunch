@@ -1,4 +1,4 @@
-setMethod("initialize", "CrunchDataset", function(.Object, ...) {
+setMethod("initialize", "CrunchDataset", function(.Object, ..., labelSpecialVars = TRUE) {
     .Object <- callNextMethod(.Object, ...)
     if (is.null(.Object@variables@self)) {
         # This is only NULL when instantiating a fresh dataset object. If
@@ -8,34 +8,29 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
         #
         # TODO: you could use this check to make lazy the fetching of variables
         .Object@variables <- getDatasetVariables(.Object)
+
+        if (labelSpecialVars) {
+            # Hidden variables require folder traversal, so we do this up front
+            # so that we don't have to hit API whenever we want a list of active variables
+            hidden_dir <- hiddenFolder(.Object)
+            hidden_vars <- variablesBelowFolder(hidden_dir, "alias")
+            .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% hidden_vars]
+
+            # Secure variables also accessed via folder transversal
+            private_dir <- privateFolder(.Object)
+            if (!is.null(private_dir)) {
+                private_vars <- variablesBelowFolder(private_dir, "alias")
+                .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars] #nolint
+            }
+        } else {
+            .Object@hiddenVariables <- NULL
+            .Object@privateVariables <- NULL
+        }
     }
     if (length(.Object@filter@expression) == 0) {
         # Likewise for preserving filters
         activeFilter(.Object) <- NULL
     }
-    return(.Object)
-})
-
-setMethod("initialize", "CrunchDatasetEager", function(.Object, ...) {
-    .Object <- callNextMethod(.Object, ...)
-
-    # Hidden variables require folder traversal, so we do this up front
-    # so that we don't have to hit API whenever we want a list of active variables
-    hidden_dir <- hiddenFolder(.Object)
-    hidden_vars <- variablesBelowFolder(hidden_dir, "alias")
-    .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% hidden_vars]
-
-    # Secure variables also accessed via folder transversal
-    private_dir <- privateFolder(.Object)
-    if (!is.null(private_dir)) {
-        private_vars <- variablesBelowFolder(private_dir, "alias")
-        .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars] #nolint
-    }
-    return(.Object)
-})
-
-setMethod("initialize", "CrunchDatasetLazy", function(.Object, ...) {
-    .Object <- callNextMethod(.Object, ...)
     return(.Object)
 })
 
@@ -59,6 +54,12 @@ getNrow <- function(dataset) {
 #' @return logical
 #' @export
 is.dataset <- function(x) inherits(x, "CrunchDataset")
+
+#' @rdname crunch-is
+#' @export
+is.lazyDataset <- function(x) {
+    is.dataset(x) && is.null(x@hiddenVariables)
+}
 
 #' @rdname describe-entity
 #' @export
@@ -296,7 +297,7 @@ setMethod("refresh", "CrunchDataset", function(x) {
     url <- self(x)
     dropCache(url)
     dropOnly(shojiURL(x, "catalogs", "parent"))
-    out <- loadDatasetFromURL(url, labelSpecialVars = inherits(x, "CrunchDatasetEager"))
+    out <- loadDatasetFromURL(url, labelSpecialVars = !is.lazyDataset(x))
     ## Because dataset may have changed catalogs, check this cache too
     dropOnly(shojiURL(out, "catalogs", "parent"))
 

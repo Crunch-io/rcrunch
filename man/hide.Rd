@@ -20,8 +20,7 @@
 \alias{hideVariables}
 \alias{hiddenVariables<-}
 \alias{unhideVariables}
-\alias{hiddenVariables,CrunchDatasetEager-method}
-\alias{hiddenVariables,CrunchDatasetLazy-method}
+\alias{hiddenVariables,CrunchDataset-method}
 \alias{privateFolder,CrunchDataset-method}
 \alias{privateFolder,VariableCatalog-method}
 \alias{privateFolder,VariableFolder-method}
@@ -36,8 +35,7 @@
 \alias{privateVariables<-}
 \alias{deprivatizeVariables}
 \alias{deprivatiseVariables}
-\alias{privateVariables,CrunchDatasetEager-method}
-\alias{privateVariables,CrunchDatasetLazy-method}
+\alias{privateVariables,CrunchDataset-method}
 \title{Hide/Unhide or Privatize/Deprivatize Variables}
 \usage{
 hiddenFolder(x)
@@ -76,9 +74,7 @@ hiddenVariables(x) <- value
 
 unhideVariables(dataset, variables)
 
-\S4method{hiddenVariables}{CrunchDatasetEager}(dataset, key = namekey(dataset))
-
-\S4method{hiddenVariables}{CrunchDatasetLazy}(dataset, key = namekey(dataset))
+\S4method{hiddenVariables}{CrunchDataset}(dataset, key = namekey(dataset))
 
 \S4method{privateFolder}{CrunchDataset}(x)
 
@@ -108,9 +104,7 @@ deprivatizeVariables(dataset, variables)
 
 deprivatiseVariables(dataset, variables)
 
-\S4method{privateVariables}{CrunchDatasetEager}(dataset, key = namekey(dataset))
-
-\S4method{privateVariables}{CrunchDatasetLazy}(dataset, key = namekey(dataset))
+\S4method{privateVariables}{CrunchDataset}(dataset, key = namekey(dataset))
 }
 \arguments{
 \item{x}{a Variable, VariableCatalog, or dataset to hide/unhide/privatize/deprivatize}

@@ -52,17 +52,13 @@ setDatasetVariables <- function(x, value) {
 
 #' @rdname variables
 #' @export
-setMethod("variables", "CrunchDatasetEager", function(x) {
-    variables <- allVariables(x)
-    variables <- variables[!(aliases(variables) %in% hiddenVariables(x, "alias"))]
-    variables <- variables[!(aliases(variables) %in% privateVariables(x, "alias"))]
-    variables
-})
-# Default is to get all Variables
-#' @rdname variables
-#' @export
 setMethod("variables", "CrunchDataset", function(x) {
-    allVariables(x)
+    variables <- allVariables(x)
+    if (!is.lazyDataset(x)) {
+        variables <- variables[!(aliases(variables) %in% hiddenVariables(x, "alias"))]
+        variables <- variables[!(aliases(variables) %in% privateVariables(x, "alias"))]
+    }
+    variables
 })
 #' @rdname variables
 #' @export

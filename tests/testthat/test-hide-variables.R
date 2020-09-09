@@ -158,7 +158,7 @@ with_mock_crunch({
     # lazily loaded crunch datasets can't access which variables
     # are hidden directly, but can change hidden status
     ds <- loadDataset("ECON.sav", labelSpecialVars = FALSE)
-    expect_true(inherits(ds, "CrunchDatasetLazy"))
+    expect_true(is.lazyDataset(ds))
     expect_warning(
         hiddenVariables(ds),
         "Hidden variables were not loaded"

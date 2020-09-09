@@ -145,7 +145,7 @@ with_mock_crunch({
 
     test_that("loadDataset by name can be lazy", {
         ds <- loadDataset("test ds", labelSpecialVars = FALSE)
-        expect_true(inherits(ds, "CrunchDatasetLazy"))
+        expect_true(is.lazyDataset(ds))
     })
 
     test_that("loadDataset by URL can be lazy", {
@@ -153,7 +153,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/four/",
             labelSpecialVars = FALSE
         )
-        expect_true(inherits(ds, "CrunchDatasetLazy"))
+        expect_true(is.lazyDataset(ds))
     })
 
     test_that("loadDataset by path can be lazy", {
@@ -161,7 +161,7 @@ with_mock_crunch({
             "Project One/Project Two/ECON.sav",
             labelSpecialVars = FALSE
         )
-        expect_true(inherits(ds, "CrunchDatasetLazy"))
+        expect_true(is.lazyDataset(ds))
     })
 
     test_that("loadDataset error handling", {

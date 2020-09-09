@@ -6,6 +6,7 @@
 \alias{is.VarDef}
 \alias{is.script}
 \alias{is.dataset}
+\alias{is.lazyDataset}
 \alias{is.CrunchExpr}
 \alias{is.Expr}
 \alias{is.Geodata}
@@ -30,6 +31,8 @@ is.VarDef(x)
 is.script(x)
 
 is.dataset(x)
+
+is.lazyDataset(x)
 
 is.CrunchExpr(x)
 

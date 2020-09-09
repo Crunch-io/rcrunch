@@ -97,9 +97,15 @@ deprivatiseVariables <- function(dataset, variables) {
 
 #' @rdname hide
 #' @export
-setMethod(
-  "privateVariables", "CrunchDatasetEager",
-  function(dataset, key = namekey(dataset)) {
+setMethod("privateVariables", "CrunchDataset", function(dataset, key = namekey(dataset)) {
+  if (is.lazyDataset(dataset)) {
+    warning(paste0(
+      "Private variables were not loaded. Reload dataset with option ",
+      "`labelSpecialVars` set to `TRUE`"
+    ))
+    return(c())
+  }
+
   pv <- dataset@privateVariables
   if (length(pv)) {
     return(sort(vapply(index(pv), vget(key), character(1),
@@ -109,15 +115,3 @@ setMethod(
     return(c())
   }
 })
-
-#' @rdname hide
-#' @export
-setMethod(
-  "privateVariables", "CrunchDatasetLazy",
-  function(dataset, key = namekey(dataset)) {
-    warning(paste0(
-      "Private variables were not loaded. Reload dataset with option ",
-      "`labelSpecialVars` set to `TRUE`"
-    ))
-    return(c())
-  })

@@ -204,6 +204,8 @@ VariableCatalog <- setClass("VariableCatalog",
     slots = c(order = "VariableOrder")
 )
 
+setClassUnion("VariableCatalogOrNULL", c("VariableCatalog", "NULL"))
+
 DatasetCatalog <- setClass("DatasetCatalog", contains = "ShojiCatalog")
 BatchCatalog <- setClass("BatchCatalog", contains = "ShojiCatalog")
 PermissionCatalog <- setClass("PermissionCatalog", contains = "ShojiCatalog")
@@ -216,68 +218,27 @@ ForkCatalog <- setClass("ForkCatalog", contains = "ShojiCatalog")
 MultitableCatalog <- setClass("MultitableCatalog", contains = "ShojiCatalog")
 ScriptCatalog <- setClass("ScriptCatalog", contains = "ShojiCatalog")
 
-# We don't actually want to load a CrunchDataset directly
-# so it's a VIRTUAL class and the constructor chooses between
-# the two subclasses
-
 #' Crunch Datasets
-#'
-#' An S4 class that contains a Crunch data. Generally you'll want to
-#' use [`loadDataset()`] to create one.
-#'
-#' @param ... Passed to `CrunchDataset` subclass initialize functions
-#' @param labelSpecialVars Whether to separate hidden & secure variables
-#'   from the main set of variables (setting `FALSE` can speed up loading
-#'   but the list of hidden & secure variables won't be available)
 #'
 #' @rdname CrunchDataset
 #' @export CrunchDataset
-CrunchDataset <- function(..., labelSpecialVars = TRUE) {
-    if (labelSpecialVars) {
-        CrunchDatasetEager(...)
-    } else {
-        CrunchDatasetLazy(...)
-    }
-}
-
-#' @rdname CrunchDataset
 #' @exportClass CrunchDataset
-setClass("CrunchDataset",
-    contains = c("ShojiObject", "VIRTUAL"),
+CrunchDataset <- setClass("CrunchDataset",
+    contains = c("ShojiObject"),
     slots = c(
         variables = "VariableCatalog",
+        hiddenVariables = "VariableCatalogOrNULL",
+        privateVariables = "VariableCatalogOrNULL",
         filter = "CrunchLogicalExpr",
         tuple = "DatasetTuple"
     ),
     prototype = prototype(
         variables = VariableCatalog(),
+        hiddenVariables = VariableCatalog(),
+        privateVariables = VariableCatalog(),
         filter = CrunchLogicalExpr(),
         tuple = DatasetTuple()
     )
-)
-
-# Subclass that loads hidden & private variables eagerly
-#' @rdname CrunchDataset
-#' @exportClass CrunchDatasetEager
-CrunchDatasetEager <- setClass("CrunchDatasetEager",
-    contains = c("CrunchDataset"),
-    slots = c(
-        hiddenVariables = "VariableCatalog",
-        privateVariables = "VariableCatalog"
-    ),
-    prototype = prototype(
-        hiddenVariables = VariableCatalog(),
-        privateVariables = VariableCatalog()
-    )
-)
-
-# Subclass that doesn't load hidden/private variables
-# maybe could just use the super class, but this way
-# the method dispatch is on the same level
-#' @rdname CrunchDataset
-#' @exportClass CrunchDatasetLazy
-CrunchDatasetLazy <- setClass("CrunchDatasetLazy",
-    contains = c("CrunchDataset")
 )
 
 DeckCatalog <- setClass("DeckCatalog", contains = "ShojiCatalog")
