@@ -177,12 +177,24 @@ loadDataset <- function(dataset,
         if (length(found) == 0) {
             halt(dQuote(dataset), " not found")
         }
-        ## This odd selecting behavior handles the multiple matches case
-        out <- found[[names(found)[1]]]
-        if (!is.dataset(out)) {
-            ## There is inconsistency btw DatasetCatalog and ProjectFolder
-            out <- entity(out)
+        ## DatasetCatalog and ProjectFolder subsetting are slightly different,
+        ## plus we want to be able to pass `labelSpecialVars`
+        if (inherits(found, "DatasetCatalog")) {
+            first_found <- found[[1]]
+            out <- as.dataset(
+                crGET(first_found@entity_url),
+                tuple = first_found,
+                labelSpecialVars = labelSpecialVars
+            )
+        } else if (inherits(found, "ProjectFolder")) {
+            out <- loadDatasetFromURL(
+                names(found@index)[1],
+                labelSpecialVars = labelSpecialVars
+            )
+        } else {
+            halt("Unexpected Dataset collection type: ", dbQuote(class(found)))
         }
+
         return(out)
     } else if (is.whole(dataset)) {
         warning(
@@ -222,7 +234,9 @@ loadDatasetFromURL <- function(url, labelSpecialVars = TRUE) {
         ## It's a web app URL, probably. Turn it into an API URL
         url <- datasetReference(url)
     }
+
     dataset <- CrunchDataset(crGET(url), labelSpecialVars = labelSpecialVars)
+
     tuple(dataset) <- DatasetTuple(
         entity_url = self(dataset),
         body = dataset@body,

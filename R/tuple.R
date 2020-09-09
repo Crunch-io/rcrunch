@@ -82,7 +82,10 @@ setMethod("entity", "CrunchVariable", function(x) {
 #' @rdname tuple-methods
 #' @export
 setMethod("entity", "DatasetTuple", function(x) {
-    return(as.dataset(crGET(x@entity_url), tuple = x))
+    return(as.dataset(
+        crGET(x@entity_url),
+        tuple = x
+    ))
 })
 
 #' @rdname tuple-methods

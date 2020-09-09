@@ -8,6 +8,8 @@
 \alias{unhide}
 \alias{privatize}
 \alias{deprivatize}
+\alias{hiddenVariables}
+\alias{privateVariables}
 \alias{hiddenFolder,CrunchDataset-method}
 \alias{hiddenFolder,VariableCatalog-method}
 \alias{hiddenFolder,VariableFolder-method}
@@ -18,7 +20,8 @@
 \alias{hideVariables}
 \alias{hiddenVariables<-}
 \alias{unhideVariables}
-\alias{hiddenVariables}
+\alias{hiddenVariables,CrunchDatasetEager-method}
+\alias{hiddenVariables,CrunchDatasetLazy-method}
 \alias{privateFolder,CrunchDataset-method}
 \alias{privateFolder,VariableCatalog-method}
 \alias{privateFolder,VariableFolder-method}
@@ -33,7 +36,8 @@
 \alias{privateVariables<-}
 \alias{deprivatizeVariables}
 \alias{deprivatiseVariables}
-\alias{privateVariables}
+\alias{privateVariables,CrunchDatasetEager-method}
+\alias{privateVariables,CrunchDatasetLazy-method}
 \title{Hide/Unhide or Privatize/Deprivatize Variables}
 \usage{
 hiddenFolder(x)
@@ -47,6 +51,10 @@ unhide(x)
 privatize(x)
 
 deprivatize(x)
+
+hiddenVariables(dataset, key = namekey(dataset))
+
+privateVariables(dataset, key = namekey(dataset))
 
 \S4method{hiddenFolder}{CrunchDataset}(x)
 
@@ -68,7 +76,9 @@ hiddenVariables(x) <- value
 
 unhideVariables(dataset, variables)
 
-hiddenVariables(dataset, key = namekey(dataset))
+\S4method{hiddenVariables}{CrunchDatasetEager}(dataset, key = namekey(dataset))
+
+\S4method{hiddenVariables}{CrunchDatasetLazy}(dataset, key = namekey(dataset))
 
 \S4method{privateFolder}{CrunchDataset}(x)
 
@@ -98,19 +108,21 @@ deprivatizeVariables(dataset, variables)
 
 deprivatiseVariables(dataset, variables)
 
-privateVariables(dataset, key = namekey(dataset))
+\S4method{privateVariables}{CrunchDatasetEager}(dataset, key = namekey(dataset))
+
+\S4method{privateVariables}{CrunchDatasetLazy}(dataset, key = namekey(dataset))
 }
 \arguments{
 \item{x}{a Variable, VariableCatalog, or dataset to hide/unhide/privatize/deprivatize}
 
 \item{dataset}{A dataset}
 
+\item{key}{(for \code{hiddenVariables()} / \code{privateVariables()} the Variable attribute to
+return. Default is "alias", following \code{getOption("crunch.namekey.dataset")}.}
+
 \item{variables}{Variables to change status of}
 
 \item{value}{Replacement values for assignment methods.}
-
-\item{key}{(for \code{hiddenVariables()} / \code{privateVariables()} the Variable attribute to
-return. Default is "alias", following \code{getOption("crunch.namekey.dataset")}.}
 }
 \description{
 Both hidden and private are hidden from most views in crunch by default.

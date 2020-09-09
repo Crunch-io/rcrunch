@@ -92,13 +92,27 @@ unhideVariables <- function(dataset, variables) {
 
 #' @rdname hide
 #' @export
-hiddenVariables <- function(dataset, key = namekey(dataset)) {
+setMethod(
+    "hiddenVariables", "CrunchDatasetEager",
+    function(dataset, key = namekey(dataset)) {
     hv <- dataset@hiddenVariables
     if (length(hv)) {
         return(sort(vapply(index(hv), vget(key), character(1),
-            USE.NAMES = FALSE
+                           USE.NAMES = FALSE
         )))
     } else {
         return(c())
     }
-}
+})
+
+#' @rdname hide
+#' @export
+setMethod(
+    "hiddenVariables", "CrunchDatasetLazy",
+    function(dataset, key = namekey(dataset)) {
+    warning(paste0(
+        "Hidden variables were not loaded. Reload dataset with option ",
+        "`labelSpecialVars` set to `TRUE`"
+    ))
+    return(c())
+})

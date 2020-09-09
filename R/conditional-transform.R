@@ -186,7 +186,7 @@ makeConditionalValues <- function(formulas, data, else_condition) {
             "specifying cases or use the data argument to specify a dataset."
         )
     }
-    n_rows <- nrow(CrunchDataset(crGET(ds_refs)))
+    n_rows <- nrow(CrunchDatasetLazy(crGET(ds_refs)))
 
     # grab booleans for cases
     case_indices <- lapply(cases, which)

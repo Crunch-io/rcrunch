@@ -8,6 +8,7 @@
 \alias{allVariables<-}
 \alias{variables,CubeDims-method}
 \alias{variables,CrunchCube-method}
+\alias{variables,CrunchDatasetEager-method}
 \alias{variables,CrunchDataset-method}
 \alias{variables<-,CrunchDataset,VariableCatalog-method}
 \alias{allVariables,CrunchDataset-method}
@@ -27,6 +28,8 @@ allVariables(x) <- value
 \S4method{variables}{CubeDims}(x)
 
 \S4method{variables}{CrunchCube}(x)
+
+\S4method{variables}{CrunchDatasetEager}(x)
 
 \S4method{variables}{CrunchDataset}(x)
 

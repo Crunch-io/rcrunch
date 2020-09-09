@@ -194,6 +194,16 @@ setGeneric("unhide", function(x) standardGeneric("unhide"))
 setGeneric("privatize", function(x) standardGeneric("privatize"))
 #' @rdname hide
 setGeneric("deprivatize", function(x) standardGeneric("deprivatize"))
+#' @rdname hide
+setGeneric(
+    "hiddenVariables",
+    function(dataset, key = namekey(dataset)) standardGeneric("hiddenVariables")
+)
+#' @rdname hide
+setGeneric(
+    "privateVariables",
+    function(dataset, key = namekey(dataset)) standardGeneric("privateVariables")
+)
 
 #' @rdname derivations
 setGeneric("derivation", function(x) standardGeneric("derivation"))
