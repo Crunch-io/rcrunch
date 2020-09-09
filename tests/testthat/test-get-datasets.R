@@ -143,6 +143,27 @@ with_mock_crunch({
         expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/datasets/by_name/", logs))
     })
 
+    test_that("loadDataset by name can be lazy", {
+        ds <- loadDataset("test ds", labelSpecialVars = FALSE)
+        expect_true(inherits(ds, "CrunchDatasetLazy"))
+    })
+
+    test_that("loadDataset by URL can be lazy", {
+        ds <- loadDataset(
+            "https://app.crunch.io/api/datasets/four/",
+            labelSpecialVars = FALSE
+        )
+        expect_true(inherits(ds, "CrunchDatasetLazy"))
+    })
+
+    test_that("loadDataset by path can be lazy", {
+        ds <- loadDataset(
+            "Project One/Project Two/ECON.sav",
+            labelSpecialVars = FALSE
+        )
+        expect_true(inherits(ds, "CrunchDatasetLazy"))
+    })
+
     test_that("loadDataset error handling", {
         expect_error(
             loadDataset("not a dataset"),

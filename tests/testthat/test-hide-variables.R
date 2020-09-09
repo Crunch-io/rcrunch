@@ -154,6 +154,22 @@ with_mock_crunch({
         )
         expect_no_request(unhide(ds$gender))
     })
+
+    # lazily loaded crunch datasets can't access which variables
+    # are hidden directly, but can change hidden status
+    ds <- loadDataset("ECON.sav", labelSpecialVars = FALSE)
+    expect_true(inherits(ds, "CrunchDatasetLazy"))
+    expect_warning(
+        hiddenVariables(ds),
+        "Hidden variables were not loaded"
+    )
+
+    test_that("hideVariables with one variable to hide", {
+        expect_PATCH(
+            ds <- hideVariables(ds, "gender"),
+            hide_gender
+        )
+    })
 })
 
 with_test_authentication({
