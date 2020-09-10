@@ -14,7 +14,7 @@ setMethod("initialize", "CrunchDataset", function(.Object, ..., labelSpecialVars
             # so that we don't have to hit API whenever we want a list of active variables
             hidden_dir <- hiddenFolder(.Object)
             hidden_vars <- variablesBelowFolder(hidden_dir, "alias")
-            .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% hidden_vars]
+            .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% hidden_vars] #nolint
 
             # Secure variables also accessed via folder transversal
             private_dir <- privateFolder(.Object)
