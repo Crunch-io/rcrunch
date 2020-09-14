@@ -199,7 +199,7 @@ with_mock_crunch({
     })
 
     test_that("error truncation works", {
-        expected <-" - (line 1) Error 1\n - (line 2) Error 2\n - ... (Showing first 2 of 3 errors)"
+        expected <- " - (line 1) Error 1\n - (line 2) Error 2\n - ... (Showing first 2 of 3 errors)"
         attr(expected, "truncated") <- TRUE
 
         expect_equal(
