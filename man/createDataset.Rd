@@ -11,7 +11,7 @@ createDataset(name, body, ...)
 required.}
 
 \item{body}{list correctly formatted metadata definition for a dataset. See
-the \href{http://docs.crunch.io}{Crunch API documentation}.}
+the \href{https://docs.crunch.io}{Crunch API documentation}.}
 
 \item{...}{additional arguments for the POST to create the dataset, such as
 "description".}

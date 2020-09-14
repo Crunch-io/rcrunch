@@ -30,5 +30,5 @@ handlers.
 }
 \description{
 These methods let you communicate with the Crunch API, for more background
-see \href{http://crunch.io/r/crunch/articles/crunch-internals.html}{Crunch Internals}.
+see \href{https://crunch.io/r/crunch/articles/crunch-internals.html}{Crunch Internals}.
 }

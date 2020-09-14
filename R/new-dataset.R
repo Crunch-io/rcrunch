@@ -65,7 +65,7 @@ newDataset <- function(x, name = NULL, ...) {
 #' @param name character, the name to give the new Crunch dataset. This is
 #' required.
 #' @param body list correctly formatted metadata definition for a dataset. See
-#' the [Crunch API documentation](http://docs.crunch.io).
+#' the [Crunch API documentation](https://docs.crunch.io).
 #' @param ... additional arguments for the POST to create the dataset, such as
 #' "description".
 #' @return An object of class CrunchDataset.

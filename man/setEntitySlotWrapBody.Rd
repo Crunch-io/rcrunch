@@ -19,7 +19,6 @@ x modified accordingly.
 \description{
 Variable Folders require an extra list(body = ...)
 compared to other places where we use \code{setEntitySlot()}
-is used. This may be a bug, see pivotal:
-\url{https://www.pivotaltracker.com/n/projects/2172644/stories/174429283}
+is used. This may be a bug, see pivotal url in comments.
 }
 \keyword{internal}

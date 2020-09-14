@@ -24,7 +24,7 @@ crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(),
 #' HTTP methods for communicating with the Crunch API
 #'
 #' These methods let you communicate with the Crunch API, for more background
-#' see [Crunch Internals](http://crunch.io/r/crunch/articles/crunch-internals.html).
+#' see [Crunch Internals](https://crunch.io/r/crunch/articles/crunch-internals.html).
 #'
 #' @param ... see [`crunchAPI`] for details. `url` is the first
 #' named argument and is required; `body` is also required for PUT,

@@ -18,6 +18,6 @@ If successful, an object of class SearchResults
 \description{
 \code{searchDatasets} searches datasets' metadata for matches to the \code{query}
 argument. This search will include variable names, aliases, categories, but not the content
-of text variables. See \href{http://docs.crunch.io/#search}{the API Documentation} for
+of text variables. See \href{https://docs.crunch.io/#search}{the API Documentation} for
 more information about searching Crunch.
 }
