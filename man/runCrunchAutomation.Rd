@@ -2,12 +2,12 @@
 % Please edit documentation in R/automation.R
 \name{runCrunchAutomation}
 \alias{runCrunchAutomation}
-\alias{crunchAutomationFailure}
+\alias{showScriptErrors}
 \title{Run a crunch automation script}
 \usage{
 runCrunchAutomation(dataset, script, is_file = string_is_file_like(script))
 
-crunchAutomationFailure()
+showScriptErrors()
 }
 \arguments{
 \item{dataset}{A crunch dataset}
@@ -21,7 +21,7 @@ by specifying \code{TRUE} for a file, and \code{FALSE} for a string.}
 }
 \value{
 For \code{runCrunchAutomation()}: an updated dataset (invisibly),
-For \code{crunchAutomationFailure()}, when run after a failure, a list with two items:
+For \code{showScriptErrors()}, when run after a failure, a list with two items:
 \code{script}: that contains the script string sent to the server and \code{errors} which is a
 \code{data.frame} with details about the errors sent from the server.
 }
@@ -41,7 +41,7 @@ ds <- runCrunchAutomation(ds, "RENAME v1 TO age;")
 
 # After a failed run, some error information prints to console,
 # But more details are available with function:
-crunchAutomationFailure()
+showScriptErrors()
 
 # After a successful run, can look at scripts
 scripts(ds)
