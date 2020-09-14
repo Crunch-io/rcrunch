@@ -104,7 +104,7 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' by specifying `TRUE` for a file, and `FALSE` for a string.
 #'
 #' @return For `runCrunchAutomation()`: an updated dataset (invisibly),
-#' For `crunchAutomationFailure()`, when run after a failure, a list with two items:
+#' For `showScriptErrors()`, when run after a failure, a list with two items:
 #' `script`: that contains the script string sent to the server and `errors` which is a
 #' `data.frame` with details about the errors sent from the server.
 #' @examples
@@ -118,7 +118,7 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #'
 #' # After a failed run, some error information prints to console,
 #' # But more details are available with function:
-#' crunchAutomationFailure()
+#' showScriptErrors()
 #'
 #' # After a successful run, can look at scripts
 #' scripts(ds)
@@ -163,7 +163,7 @@ reset_automation_error_env <- function() {
 
 #' @rdname runCrunchAutomation
 #' @export
-crunchAutomationFailure <- function() {
+showScriptErrors <- function() {
     out <- as.list(automation_error_env)
 
     if (is.null(out) || is.null(out$errors)) return(invisible(out))
@@ -230,7 +230,7 @@ crunchAutomationErrorHandler <- function(response) {
             attr(error_items, "truncated") ||
             (!is.null(automation_error_env$file) && rstudio_markers_available())
         ) {
-            more_info_text <- "\n\nRun command `crunchAutomationFailure()` for more information."
+            more_info_text <- "\n\nRun command `showScriptErrors()` for more information."
         } else {
             more_info_text <- NULL
         }

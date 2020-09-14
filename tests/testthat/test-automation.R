@@ -35,10 +35,10 @@ with_mock_crunch({
         )
 
         # Make sure this doesn't fail when there's no error
-        expect_message(crunchAutomationFailure(), NA)
+        expect_message(showScriptErrors(), NA)
         # or when reset
         reset_automation_error_env()
-        expect_message(crunchAutomationFailure(), NA)
+        expect_message(showScriptErrors(), NA)
     })
 
     test_that("Query shape is right when coming from a file", {
@@ -140,7 +140,7 @@ with_mock_crunch({
 
 
         expect_message(
-            failures <- crunchAutomationFailure(),
+            failures <- showScriptErrors(),
             "- \\(line 1\\) Variables wrong_var_name don't exist in the specified source"
         )
 
@@ -171,7 +171,7 @@ with_mock_crunch({
 
 
         expect_message(
-            failures <- crunchAutomationFailure(),
+            failures <- showScriptErrors(),
             paste(
                 "\\(line 1\\) Variables wrong_var_name don't exist in the specified source.+",
                 "\\(line 2\\) Variables wrong_var_name2 don't exist in the specified source",
@@ -255,7 +255,7 @@ with_test_authentication({
             ds <- runCrunchAutomation(ds, "FAKE CRUNCH AUTOMATION COMMAND"),
             "Crunch Automation Error"
         )
-        expect_message(errors <- crunchAutomationFailure())
+        expect_message(errors <- showScriptErrors())
         expect_is(errors$errors, "data.frame")
         expect_equal(names(errors$errors), c("column", "command", "line", "message"))
         expect_true(!is.na(errors$errors$message))
