@@ -193,3 +193,63 @@ with_mock_crunch({
         )
     })
 })
+
+with_test_authentication({
+    ds <- newDataset(
+        data.frame(
+            fav_brand1 = factor(
+                c("Coke", "Diet Coke", "Diet Pepsi", "Coke", "Pepsi", "Water"),
+                c("Coke", "Diet Coke", "Pepsi", "Diet Pepsi", "Water")
+            ),
+            fav_brand2 = factor(
+                c("Diet Coke", "Pepsi", "Coke", "Diet Coke", "Diet Pepsi", "Pepsi"),
+                c("Coke", "Diet Coke", "Pepsi", "Diet Pepsi", "Water")
+            ),
+            rating1 = c(9, 9, 7, 9, 8, 10),
+            rating2 = c(7, 2, 7, 8, 6, 3),
+            stringsAsFactors = FALSE
+        )
+    )
+
+    test_that("casewhen works for categorical variable", {
+        ds$coke_rival <- makeCaseWhenVariable(
+            ds$fav_brand1 %in% c("Coke", "Diet Coke") &
+                ds$fav_brand2 %in% c("Coke", "Diet Coke") ~ "Coke loyal",
+            ds$fav_brand1 %in% c("Coke", "Diet Coke") ~ ds$fav_brand2,
+            ds$fav_brand2 %in% c("Coke", "Diet Coke") ~ ds$fav_brand1,
+            TRUE ~ Category(name = "Never interested", missing = TRUE),
+            name = "Rival soda for those with Coke products in top 2"
+        )
+
+        expect_equal(
+            as.vector(ds$coke_rival),
+            factor(
+                c("Coke loyal", "Pepsi", "Diet Pepsi", "Coke loyal", NA, NA),
+                c("Coke loyal", "Coke", "Diet Coke", "Pepsi", "Diet Pepsi", "Water")
+            )
+        )
+
+        expect_equal(
+            names(categories(ds$coke_rival)),
+            c("Coke loyal", "Never interested", "No Data", "Coke", "Diet Coke", "Pepsi", "Diet Pepsi", "Water") #nolint
+        )
+
+        expect_equal(name(ds$coke_rival), "Rival soda for those with Coke products in top 2")
+    })
+
+    test_that("casewhen works for numeric variable", {
+        ds$coke_score <- makeCaseWhenVariable(
+            ds$fav_brand1 == "Coke" ~ ds$rating1,
+            ds$fav_brand2 == "Coke" ~ ds$rating2,
+            ds$fav_brand1 == "Diet Coke" | ds$fav_brand2 == "Diet Coke" ~ 5,
+            name = "Coke score"
+        )
+
+        expect_equal(
+            as.vector(ds$coke_score),
+            c(9, 5, 7, 9, NA, NA)
+        )
+
+        expect_equal(name(ds$coke_score), "Coke score")
+    })
+})
