@@ -11,7 +11,10 @@
 #' @param dataset CrunchDataset, which may be subset with a filter expression
 #' on the rows, and a selection of variables to use on the columns.
 #' @param weight a CrunchVariable that has been designated as a potential
-#' weight variable for `dataset`, or `NULL` for unweighted results.
+#' weight variable for `dataset`, or `NULL` for unweighted results. Alternatively
+#' a named list where the name is the alias of the weight and the contents of 
+#' the list component are a character vector of aliases to which that weight 
+#' should apply.
 #' Default is the currently applied [`weight`].
 #' @param output_format character export format: currently supported values are "json"
 #' (default) and "xlsx".
@@ -25,6 +28,8 @@
 #' Defaults to `FALSE`, but can be set in the function, or with the environment
 #' variable `R_USE_LEGACY_TABBOOK_ENDPOINT` or R option
 #' `use.legacy.tabbook.endpoint`.
+#' @param include_original_weighted Logical, if you have specified complex weights 
+#' should the original weighted variable be included or only the custom weighted version?
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
 #' [in the crunch API documentation](
@@ -48,6 +53,35 @@
 #' @importFrom jsonlite fromJSON
 #' @export
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
+                    output_format = c("json", "xlsx"), file, filter = NULL,
+                    use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE), 
+                    include_original_weighted = TRUE, 
+                    ...) {
+  if(is.null(weight) | is.variable(weight)) {
+    # Push through
+    return(tabBook_inner(match.call()))
+  }
+  
+  if(is.list(weight)) {
+    # Loop through multitable vars
+    # Loop through custom weights
+    # If custom weight in multitable, calculate tabBook
+    # combine tabBook
+    # Include original if include_original_weighted is TRUE and it is in
+    # the multitable
+    # stop if custom weight is specified but missing from multitable
+    for(v in var_from_multitable) {
+      for(w in names(weight)) {
+        if(v %in% weight[[w]]) {
+          
+        }
+      }
+    }
+  }
+}
+
+
+tabBook_inner <- function(multitable, dataset, weight = crunch::weight(dataset),
                     output_format = c("json", "xlsx"), file, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
                     ...) {
