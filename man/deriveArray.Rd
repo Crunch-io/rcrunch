@@ -38,7 +38,7 @@ We strongly recommend using \code{deriveArray} which leaves your subvariables in
 the dataset. \code{makeArray} \emph{removes} component subvariables from your dataset.
 Array variables are composed of a set of "subvariables" bound together for
 display  in the app. For example, you might have a set of survey questions
-that ask how the respondent would rate a tv show from 1-5. Array variables
+that ask how the respondent would rate a TV show from 1-5. Array variables
 allow you to display all of their ratings in a compact table rather than a
 set of distinct variables.
 }
