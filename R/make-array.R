@@ -25,7 +25,7 @@
 #' @export
 deriveArray <- function(subvariables, name, selections, ...) {
   expression <- makeFrame(subvariables)
-  
+
   if (!missing(selections)) {
     expression <- selectCategories(expression, selections, collapse = FALSE)
   }
