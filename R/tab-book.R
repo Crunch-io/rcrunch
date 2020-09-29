@@ -53,36 +53,72 @@
 #' @importFrom jsonlite fromJSON
 #' @export
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
-                    output_format = c("json", "xlsx"), file, filter = NULL,
+                    output_format = c("json", "xlsx"), file = NULL, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE), 
                     include_original_weighted = TRUE, 
                     ...) {
-  if(is.null(weight) | is.variable(weight)) {
-    # Push through
-    return(tabBook_inner(match.call()))
+  if (is.null(weight) | is.variable(weight)) {
+    # Pass through
+    return(tabBook_inner(as.list(match.call())))
   }
   
-  if(is.list(weight)) {
-    # Loop through multitable vars
-    # Loop through custom weights
-    # If custom weight in multitable, calculate tabBook
-    # combine tabBook
-    # Include original if include_original_weighted is TRUE and it is in
-    # the multitable
-    # stop if custom weight is specified but missing from multitable
-    for(v in var_from_multitable) {
-      for(w in names(weight)) {
-        if(v %in% weight[[w]]) {
-          
-        }
-      }
+  if (is.list(weight)) {
+    # Stack em'
+    default_weight <- alias(crunch::weight(ds))
+    default_weights <- data.frame(
+        values = names(dataset),
+        ind = NA, 
+        ord = 1:length(names(dataset)),
+        stringsAsFactors = FALSE
+    )
+    default_weights$keep <- FALSE
+    custom_weights <- stack(weight)
+    custom_weights <- merge(custom_weights, default_weights[-2], by = "values")
+    custom_weights$keep <- TRUE
+    # Bind em'
+    tab_frame <- rbind(default_weights, custom_weights)
+    # Ordering is important here for duplicates that should be shown with
+    # different weights
+    tab_frame <- tab_frame[with(tab_frame, order(ord, rev(ind), keep)),]
+    tab_frame[is.na(tab_frame$ind),]$ind <- default_weight
+    # Drop duplicated from last
+    c1 <- !duplicated(
+        tab_frame[!names(tab_frame) %in% "keep"], 
+        fromLast = TRUE
+    )
+    tab_frame <- tab_frame[c1,]
+    
+    if (!include_original_weighted) {
+        c1 = duplicated(tab_frame$values, fromLast = TRUE)
+        c2 = tab_frame$ind == default_weight
+        c3 = !tab_frame$keep
+        tab_frame <- tab_frame[!(c1 & c2 & c3),]
     }
+    
+    # Loop through tabBooks
+    books <- list()
+    for (w in unique(tab_frame$ind)) {
+        vars <- tab_frame$values[tab_frame$ind == w]
+        books[[w]] <- tabBook_inner(
+            multitable = multitable, 
+            dataset = dataset[vars],
+            weight = dataset[[w]],
+            output_format = output_format,
+            file = file, 
+            filter = filter,
+            use_legacy_endpoint = use_legacy_endpoint,
+            ...
+        )
+    }
+    
+    # TODO: Figure out how to bind books object together in the same order as
+    # tab_frame
   }
 }
 
 
 tabBook_inner <- function(multitable, dataset, weight = crunch::weight(dataset),
-                    output_format = c("json", "xlsx"), file, filter = NULL,
+                    output_format = c("json", "xlsx"), file = NULL, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
                     ...) {
     dots <- list(...)
@@ -97,7 +133,7 @@ tabBook_inner <- function(multitable, dataset, weight = crunch::weight(dataset),
     }
 
     accept <- extToContentType(fmt)
-    if (missing(file)) {
+    if (is.null(file)) {
         if (fmt == "json") {
             ## We don't need a file.
             file <- NULL
@@ -176,7 +212,7 @@ standardize_tabbook_filter <- function(dataset, filter) {
         expr_filter <- list(c(zcl(expr_filter), name = formatExpression(expr_filter)))
     }
 
-    if(length(filter) > 0 && !is.null(expr_filter)) {
+    if (length(filter) > 0 && !is.null(expr_filter)) {
         filter <- unname(c(filter, expr_filter))
     } else if (!is.null(expr_filter)) {
         filter <- expr_filter
