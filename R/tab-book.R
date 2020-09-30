@@ -12,8 +12,8 @@
 #' on the rows, and a selection of variables to use on the columns.
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `dataset`, or `NULL` for unweighted results. Alternatively
-#' a named list where the name is the alias of the weight and the contents of 
-#' the list component are a character vector of aliases to which that weight 
+#' a named list where the name is the alias of the weight and the contents of
+#' the list component are a character vector of aliases to which that weight
 #' should apply.
 #' Default is the currently applied [`weight`].
 #' @param output_format character export format: currently supported values are "json"
@@ -28,7 +28,7 @@
 #' Defaults to `FALSE`, but can be set in the function, or with the environment
 #' variable `R_USE_LEGACY_TABBOOK_ENDPOINT` or R option
 #' `use.legacy.tabbook.endpoint`.
-#' @param include_original_weighted Logical, if you have specified complex weights 
+#' @param include_original_weighted Logical, if you have specified complex weights
 #' should the original weighted variable be included or only the custom weighted version?
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
@@ -51,40 +51,41 @@
 #' tables <- prop.table(book, 2)
 #' }
 #' @importFrom jsonlite fromJSON
+#' @importFrom utils stack
 #' @export
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                     output_format = c("json", "xlsx"), file = NULL, filter = NULL,
-                    use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE), 
+                    use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
                     include_original_weighted = TRUE, 
                     ...) {
   if (is.null(weight) | is.variable(weight)) {
     # Pass through
     return(tabBook_inner(
-        multitable = multitable, 
+        multitable = multitable,
         dataset = dataset,
         weight = weight,
         output_format = output_format,
-        file = file, 
+        file = file,
         filter = filter,
         use_legacy_endpoint = use_legacy_endpoint,
         ...
       )
     )
   }
-  
+
   if (is.list(weight)) {
     # Stack em'
-    default_weight <- alias(crunch::weight(ds))
+    default_weight <- alias(crunch::weight(dataset))
     default_weights <- data.frame(
         values = names(dataset),
-        ind = NA, 
-        ord = 1:length(names(dataset)),
+        ind = NA,
+        ord = seq_len(names(dataset)),
         stringsAsFactors = FALSE
     )
     default_weights$keep <- FALSE
     custom_weights <- stack(weight)
     
-    if (!all(names(weight) %in% names(dataset))) { 
+    if (!all(names(weight) %in% names(dataset))) {
       stop("One or more specified weights are not included in the dataset")
     }
     
@@ -98,46 +99,38 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     tab_frame[is.na(tab_frame$ind),]$ind <- default_weight
     # Drop duplicated from last
     c1 <- !duplicated(
-        tab_frame[!names(tab_frame) %in% "keep"], 
+        tab_frame[!names(tab_frame) %in% "keep"],
         fromLast = TRUE
     )
     tab_frame <- tab_frame[c1,]
     
     if (!include_original_weighted) {
-        c1 = duplicated(tab_frame$values, fromLast = TRUE)
-        c2 = tab_frame$ind == default_weight
-        c3 = !tab_frame$keep
+        c1 <- duplicated(tab_frame$values, fromLast = TRUE)
+        c2 <- tab_frame$ind == default_weight
+        c3 <- !tab_frame$keep
         tab_frame <- tab_frame[!(c1 & c2 & c3),]
     }
     
-    # Loop through tabBooks
-    # TODO: Change to lapply
     books <- list()
     for (w in unique(tab_frame$ind)) {
         vars <- tab_frame$values[tab_frame$ind == w]
         books[[w]] <- tabBook_inner(
-            multitable = multitable, 
+            multitable = multitable,
             dataset = dataset[vars],
             weight = dataset[[w]],
             output_format = output_format,
-            file = file, 
+            file = file,
             filter = filter,
             use_legacy_endpoint = use_legacy_endpoint,
             ...
         )
     }
-    
-    # TODO: Figure out how to bind books object together in the same order as
-    # tab_frame
-    # TODO: Change to lapply
-    
+
     book <- books[[unique(tab_frame$ind)[1]]]
-    for (row in 1:nrow(tab_frame)) { 
+    for (row in seq_len(tab_frame)) {
         tf <- tab_frame[row,]
         id <- tf$ord
-        current_weight <- tf$ind
         part <- books[[tf$ind]]@.Data
-        
         book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[id]
         book@.Data[[2]][[row]] <- part[[2]][[id]]
     }
@@ -145,7 +138,6 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
   return(book)
   }
 }
-
 
 tabBook_inner <- function(multitable, dataset, weight,
                     output_format = c("json", "xlsx"), file = NULL, filter = NULL,
