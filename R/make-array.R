@@ -1,10 +1,12 @@
 #' Make a Categorical Array or Multiple Response variable
 #'
-#' Array variables are composed of a set of "subvariables" bound
-#' together for display in the app. For example, you might have a set of
-#' survey questions that ask how the respondent would rate a tv show from
-#' 1-5. Array variables allow you to display all of their ratings in a compact
-#' table rather than a set of distinct variables.
+#' In most situations we recommend using `deriveArray` which leaves your
+#' subvariables in the dataset. `makeArray` _removes_ component subvariables
+#' from your dataset. Array variables are composed of a set of "subvariables"
+#' bound together for display  in the app. For example, you might have a set of
+#' survey questions that ask how the respondent would rate a TV show from 1-5.
+#' Array variables allow you to display all of their ratings in a compact table
+#' rather than a set of distinct variables.
 #'
 #' @param subvariables a list of Variable objects to bind together, or a
 #' Dataset subset which contains only the Variables to bind.
@@ -20,6 +22,16 @@
 #' if `selections` are supplied), while `makeArray` and `makeMR`
 #' return an expression that "binds" variables together, removing them from
 #' independent existence.
+#' @export
+deriveArray <- function(subvariables, name, selections, ...) {
+  expression <- makeFrame(subvariables)
+  if (!missing(selections)) {
+    expression <- selectCategories(expression, selections, collapse = FALSE)
+  }
+  return(VariableDefinition(expression, name = name, ...))
+}
+
+#' @rdname deriveArray
 #' @export
 makeArray <- function(subvariables, name, ...) {
     if (missing(name)) {
@@ -43,7 +55,7 @@ makeArray <- function(subvariables, name, ...) {
     return(out)
 }
 
-#' @rdname makeArray
+#' @rdname deriveArray
 #' @export
 makeMR <- function(subvariables, name, selections, ...) {
     if (missing(selections)) {
@@ -242,19 +254,6 @@ buildDelimRegex <- function(str, delim) {
     )
     return(regex)
 }
-
-
-#' @rdname makeArray
-#' @export
-deriveArray <- function(subvariables, name, selections, ...) {
-    expression <- makeFrame(subvariables)
-
-    if (!missing(selections)) {
-        expression <- selectCategories(expression, selections, collapse = FALSE)
-    }
-    return(VariableDefinition(expression, name = name, ...))
-}
-
 
 #' @rdname expressions-internal
 #' @export
