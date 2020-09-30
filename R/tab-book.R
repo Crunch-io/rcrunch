@@ -74,8 +74,9 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     default_weights$keep <- FALSE
     custom_weights <- stack(weight)
     
-    # TODO: Add check to see if dataset contains all variables
-    # specified in the complex weight
+    if (!all(names(weight) %in% names(dataset))) { 
+      stop("One or more specified weights are not included in the dataset")
+    }
     
     custom_weights <- merge(custom_weights, default_weights[-2], by = "values")
     custom_weights$keep <- TRUE
@@ -119,17 +120,19 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     # TODO: Figure out how to bind books object together in the same order as
     # tab_frame
     # TODO: Change to lapply
+    
+    book <- books[[unique(tab_frame$ind)[1]]]
     for (row in 1:nrow(tab_frame)) { 
         tf <- tab_frame[row,]
+        id <- tf$ord
+        current_weight <- tf$ind
+        part <- books[[tf$ind]]@.Data
         
-        # Maybe use ord on meta+data to get an ordered list? 
-        # Or perhaps a better approach would be to bind it together before 
-        # it hits the TabBookResult object definition
-        
-    
+        book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[id]
+        book@.Data[[2]][[row]] <- part[[2]][[id]]
     }
 
-
+  return(book)
   }
 }
 
