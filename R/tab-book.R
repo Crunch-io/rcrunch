@@ -59,7 +59,17 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                     ...) {
   if (is.null(weight) | is.variable(weight)) {
     # Pass through
-    return(tabBook_inner(as.list(match.call())))
+    return(tabBook_inner(
+        multitable = multitable, 
+        dataset = dataset,
+        weight = weight,
+        output_format = output_format,
+        file = file, 
+        filter = filter,
+        use_legacy_endpoint = use_legacy_endpoint,
+        ...
+      )
+    )
   }
   
   if (is.list(weight)) {
@@ -137,7 +147,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
 }
 
 
-tabBook_inner <- function(multitable, dataset, weight = crunch::weight(dataset),
+tabBook_inner <- function(multitable, dataset, weight,
                     output_format = c("json", "xlsx"), file = NULL, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
                     ...) {
