@@ -56,93 +56,112 @@
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                     output_format = c("json", "xlsx"), file = NULL, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
-                    include_original_weighted = TRUE, 
+                    include_original_weighted = TRUE,
                     ...) {
-  if (is.null(weight) | is.variable(weight)) {
-    # Pass through
-    return(tabBook_inner(
-        multitable = multitable,
-        dataset = dataset,
-        weight = weight,
-        output_format = output_format,
-        file = file,
-        filter = filter,
-        use_legacy_endpoint = use_legacy_endpoint,
-        ...
-      )
-    )
-  }
-
-  if (is.list(weight)) {
-    # Stack em'
-    default_weight <- alias(crunch::weight(dataset))
-    default_weights <- data.frame(
-        values = names(dataset),
-        ind = NA,
-        ord = seq_len(names(dataset)),
-        stringsAsFactors = FALSE
-    )
-    default_weights$keep <- FALSE
-    custom_weights <- stack(weight)
-    
-    if (!all(names(weight) %in% names(dataset))) {
-      stop("One or more specified weights are not included in the dataset")
-    }
-    
-    custom_weights <- merge(custom_weights, default_weights[-2], by = "values")
-    custom_weights$keep <- TRUE
-    # Bind em'
-    tab_frame <- rbind(default_weights, custom_weights)
-    # Ordering is important here for duplicates that should be shown with
-    # different weights
-    tab_frame <- tab_frame[with(tab_frame, order(ord, rev(ind), keep)),]
-    tab_frame[is.na(tab_frame$ind),]$ind <- default_weight
-    # Drop duplicated from last
-    c1 <- !duplicated(
-        tab_frame[!names(tab_frame) %in% "keep"],
-        fromLast = TRUE
-    )
-    tab_frame <- tab_frame[c1,]
-    
-    if (!include_original_weighted) {
-        c1 <- duplicated(tab_frame$values, fromLast = TRUE)
-        c2 <- tab_frame$ind == default_weight
-        c3 <- !tab_frame$keep
-        tab_frame <- tab_frame[!(c1 & c2 & c3),]
-    }
-    
-    books <- list()
-    for (w in unique(tab_frame$ind)) {
-        vars <- tab_frame$values[tab_frame$ind == w]
-        books[[w]] <- tabBook_inner(
+    if (is.null(weight) | is.variable(weight)) {
+        # Pass through
+        return(tabBookSingle(
             multitable = multitable,
-            dataset = dataset[vars],
-            weight = dataset[[w]],
+            dataset = dataset,
+            weight = weight,
             output_format = output_format,
             file = file,
             filter = filter,
             use_legacy_endpoint = use_legacy_endpoint,
             ...
+            )
         )
     }
-
-    book <- books[[unique(tab_frame$ind)[1]]]
-    for (row in seq_len(tab_frame)) {
-        tf <- tab_frame[row,]
-        id <- tf$ord
-        part <- books[[tf$ind]]@.Data
-        book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[id]
-        book@.Data[[2]][[row]] <- part[[2]][[id]]
+    
+    if (is.list(weight)) {
+        tabFrame <- tabFramePrepare(dataset = dataset, 
+                                    weight = weight, 
+                                    include_original_weighted = include_original_weighted)
+        books <- list()
+        for (w in unique(tabFrame$ind)) {
+            vars <- tabFrame$values[tabFrame$ind == w]
+            books[[w]] <- tabBookSingle(
+                multitable = multitable,
+                dataset = dataset[vars],
+                weight = dataset[[w]],
+                output_format = output_format,
+                file = file,
+                filter = filter,
+                use_legacy_endpoint = use_legacy_endpoint,
+                ...
+            )
+        }
+        
+        book <- books[[unique(tabFrame$ind)[1]]]
+        for (row in seq_len(nrow(tabFrame))) {
+            tf <- tabFrame[row,]
+            id <- tf$ord
+            part <- books[[tf$ind]]@.Data
+            book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[id]
+            message(part[[1]]$analyses[[id]]$name)
+            book@.Data[[2]][[row]] <- part[[2]][[id]]
+        }
+        
+        return(book)
     }
-
-  return(book)
-  }
 }
 
-tabBook_inner <- function(multitable, dataset, weight,
-                    output_format = c("json", "xlsx"), file = NULL, filter = NULL,
-                    use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
-                    ...) {
+#' A utility function that prepares 
+#' @param dataset CrunchDataset, which may be subset with a filter expression
+#' on the rows, and a selection of variables to use on the columns.
+#' @param weight a CrunchVariable that has been designated as a potential
+#' weight variable for `dataset`, or `NULL` for unweighted results. Alternatively
+#' a named list where the name is the alias of the weight and the contents of
+#' the list component are a character vector of aliases to which that weight
+#' should apply.
+#' Default is the currently applied [`weight`].
+#' @param include_original_weighted Logical, if you have specified complex weights
+#' should the original weighted variable be included or only the custom weighted version?
+#' @export
+tabFramePrepare <- function(dataset, weight, include_original_weighted) {
+    # Stack em'
+    defaultWeight <- if (is.null(weight(dataset))) NULL else alias(crunch::weight(dataset))
+    defaultWeights <- data.frame(
+        values = names(dataset),
+        ind = NA,
+        ord = seq_len(length(names(dataset))),
+        stringsAsFactors = FALSE
+    )
+    defaultWeights$keep <- FALSE
+    customWeights <- stack(weight)
+    
+    if (!all(names(weight) %in% names(dataset))) {
+        stop("One or more specified weights are not included in the dataset")
+    }
+    
+    customWeights <- merge(customWeights, defaultWeights[-2], by = "values")
+    customWeights$keep <- TRUE
+    # Bind em'
+    tabFrame <- rbind(defaultWeights, customWeights)
+    # Ordering is important here for duplicates that should be shown with
+    # different weights
+    tabFrame <- tabFrame[with(tabFrame, order(ord, rev(ind), keep)),]
+    tabFrame[is.na(tabFrame$ind),]$ind <- defaultWeight
+    # Drop duplicated from last
+    c1 <- !duplicated(
+        tabFrame[!names(tabFrame) %in% "keep"],
+        fromLast = TRUE
+    )
+    tabFrame <- tabFrame[c1,]
+    
+    if (!include_original_weighted) {
+        tabFrame <- tabFrame[tabFrame$keep,]
+    } else {
+        tabFrame <- tabFrame[!tabFrame$values %in% unique(customWeights$ind),]
+    }
+    
+    return(tabFrame)
+}
+
+tabBookSingle <- function(multitable, dataset, weight,
+                          output_format = c("json", "xlsx"), file = NULL, filter = NULL,
+                          use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
+                          ...) {
     dots <- list(...)
     if ("format" %in% names(dots) && is.character(dots$format)) {
         warning(
@@ -153,7 +172,7 @@ tabBook_inner <- function(multitable, dataset, weight,
     } else {
         fmt <- match.arg(output_format)
     }
-
+    
     accept <- extToContentType(fmt)
     if (is.null(file)) {
         if (fmt == "json") {
@@ -164,13 +183,13 @@ tabBook_inner <- function(multitable, dataset, weight,
             file <- paste(name(multitable), fmt, sep = ".")
         }
     }
-
+    
     if (!is.null(weight)) {
         weight <- self(weight)
     }
-
+    
     filter <- standardize_tabbook_filter(dataset, filter)
-
+    
     body <- list(
         filter = filter,
         weight = weight,
@@ -178,7 +197,7 @@ tabBook_inner <- function(multitable, dataset, weight,
     )
     ## Add this after so that if it is NULL, the "where" key isn't present
     body$where <- variablesFilter(dataset)
-
+    
     if (use_legacy_endpoint) {
         warning(
             "The legacy tabbook endpoint has been deprecated and will be removed in the future."
@@ -187,11 +206,11 @@ tabBook_inner <- function(multitable, dataset, weight,
     } else {
         tabbook_url <- shojiURL(multitable, "views", "export")
     }
-
+    
     ## POST the query, which (after progress polling) returns a URL to download
     result <- crPOST(tabbook_url,
-        config = add_headers(`Accept` = accept),
-        body = toJSON(body)
+                     config = add_headers(`Accept` = accept),
+                     body = toJSON(body)
     )
     if (is.null(file)) {
         ## Read in the tab book content and turn it into useful objects
@@ -228,12 +247,12 @@ standardize_tabbook_filter <- function(dataset, filter) {
         list(filter = x)
     })
     if (inherits(filter, "CrunchFilter")) filter <- list(list(filter = self(filter)))
-
+    
     expr_filter <- activeFilter(dataset)
     if (is.CrunchExpr(expr_filter)) {
         expr_filter <- list(c(zcl(expr_filter), name = formatExpression(expr_filter)))
     }
-
+    
     if (length(filter) > 0 && !is.null(expr_filter)) {
         filter <- unname(c(filter, expr_filter))
     } else if (!is.null(expr_filter)) {
@@ -340,7 +359,7 @@ setMethod("initialize", "MultitableResult", function(.Object, ...) {
         }
         return(cube)
     })
-
+    
     return(.Object)
 })
 
