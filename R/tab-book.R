@@ -79,11 +79,20 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                                     include_original_weighted = include_original_weighted)
         books <- list()
         for (w in unique(tabFrame$ind)) {
-            vars <- tabFrame$values[tabFrame$ind == w]
+            
+            if (is.na(w)) {
+                w <- "UNWEIGHTED"
+                pushWeight <- NULL
+                vars <- tabFrame$values[is.na(tabFrame$ind)]
+            } else {
+                pushWeight <- dataset[[w]]
+                vars <- tabFrame$values[tabFrame$ind %in% w]
+            }
+
             books[[w]] <- tabBookSingle(
                 multitable = multitable,
                 dataset = dataset[vars],
-                weight = dataset[[w]],
+                weight = pushWeight,
                 output_format = output_format,
                 file = file,
                 filter = filter,
@@ -92,14 +101,15 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
             )
         }
         
-        book <- books[[unique(tabFrame$ind)[1]]]
+        book <- books[[1]] # Grab the first one for structure
         for (row in seq_len(nrow(tabFrame))) {
+            message(row)
             tf <- tabFrame[row,]
-            id <- tf$ord
+            tf$ind[is.na(tf$ind)] <- "UNWEIGHTED"
+            index <- tf$index
             part <- books[[tf$ind]]@.Data
-            book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[id]
-            message(part[[1]]$analyses[[id]]$name)
-            book@.Data[[2]][[row]] <- part[[2]][[id]]
+            book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[index]
+            book@.Data[[2]][[row]] <- part[[2]][[index]]
         }
         
         return(book)
@@ -141,7 +151,10 @@ tabFramePrepare <- function(dataset, weight, include_original_weighted) {
     # Ordering is important here for duplicates that should be shown with
     # different weights
     tabFrame <- tabFrame[with(tabFrame, order(ord, rev(ind), keep)),]
-    tabFrame[is.na(tabFrame$ind),]$ind <- defaultWeight
+    if (!is.null(defaultWeight)) {
+        tabFrame[is.na(tabFrame$ind),]$ind <- defaultWeight
+    }
+
     # Drop duplicated from last
     c1 <- !duplicated(
         tabFrame[!names(tabFrame) %in% "keep"],
@@ -153,6 +166,13 @@ tabFramePrepare <- function(dataset, weight, include_original_weighted) {
         tabFrame <- tabFrame[tabFrame$keep,]
     } else {
         tabFrame <- tabFrame[!tabFrame$values %in% unique(customWeights$ind),]
+    }
+    
+    # Add an index value per weight (or non-weight)
+    # This is used in repacking
+    tabFrame$index <- NA
+    for (w in unique(tabFrame$ind)) {
+        tabFrame$index[tabFrame$ind %in% w] <- seq_len(nrow(tabFrame[tabFrame$ind %in% w,]))
     }
     
     return(tabFrame)
