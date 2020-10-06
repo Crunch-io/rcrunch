@@ -1,0 +1,7 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/9839d1/preferences/",
+    "body": {
+        "weight": "https://app.crunch.io/api/datasets/9839d1/variables/5e8013/"
+    }
+}

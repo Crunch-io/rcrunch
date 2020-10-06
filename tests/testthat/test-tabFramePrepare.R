@@ -12,7 +12,7 @@ with_mock_crunch({
     
     test_that("tabFramePrepare fails if given a dataset that does not include a specified complex weight", {
         
-        w <- list(weigth1 = c('allpets', 'q1'), weight2 = 'q1')
+        w <- list(weight1 = c('allpets', 'q1'), weight2 = 'q1')
         expect_error(
             tabFramePrepare(ds[c("q1", "allpets", "weight2")], w, TRUE), 
             "One or more specified weights are not included in the dataset"
@@ -37,7 +37,6 @@ with_mock_crunch({
     })    
     
     test_that("tabFrame works with unweighted + complex weight specification", {
-        ds <- loadDataset("Example dataset")
         r <- structure(
             list(values = c("allpets", "allpets", "q1", "q1", "q1", "petloc",
                             "ndogs", "ndogs_a", "ndogs_b", "q3", "country",
@@ -62,7 +61,6 @@ with_mock_crunch({
     context("tabBook multiweight")
     
     test_that("tabBook runs appropriately with a list as a weight", {
-        ds <- loadDataset("Example dataset")
         weight(ds) <- NULL
         w <- list(weight1 = c("allpets", "q1"), weight2 = "q1")
         # This is how crunchtabs tricks tabBook into giving it a cube

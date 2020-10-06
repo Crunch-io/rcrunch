@@ -1,0 +1,17 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/Example%20dataset/",
+    "index": {
+        "https://app.crunch.io/api/datasets/9839d1/": {
+            "owner_display_name": "Fake User",
+            "name": "Example dataset",
+            "description": "",
+            "start_date": "2016-01-01",
+            "end_date": "2016-01-01",
+            "archived": false,
+            "id": "9839d1",
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "is_published": true
+        }
+    }
+}

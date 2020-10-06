@@ -1,0 +1,70 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/9839d1/folders/",
+    "catalogs": {
+        "personal": "https://app.crunch.io/api/datasets/9839d1/variables/personal/",
+        "hidden": "https://app.crunch.io/api/datasets/9839d1/folders/hidden/",
+        "trash": "https://app.crunch.io/api/datasets/9839d1/folders/trash/",
+        "parents": "https://app.crunch.io/api/datasets/9839d1/folders/parents/",
+        "secure": "https://app.crunch.io/api/datasets/9839d1/folders/secure/"
+    },
+    "description": "This is the variables' folder root",
+    "index": {
+        "c8811a/": {
+            "type": "folder",
+            "name": "Details",
+            "size": 1
+        },
+        "7eea6e/": {
+            "type": "folder",
+            "name": "Dimensions",
+            "size": 2
+        },
+        "../variables/e05c01/": {
+            "discarded": false,
+            "alias": "weight1",
+            "secure": false,
+            "name": "weight1",
+            "id": "e05c01",
+            "type": "numeric",
+            "notes": "",
+            "derived": true,
+            "hidden": false,
+            "description": "Raked weighting based on: Pet"
+        },
+        "fb406e/": {
+            "type": "folder",
+            "name": "Key Pet Indicators",
+            "size": 3
+        },
+        "37c7ae/": {
+            "type": "folder",
+            "name": "Dog Metrics",
+            "size": 3
+        },
+        "../variables/5e8013/": {
+            "discarded": false,
+            "alias": "weight2",
+            "secure": false,
+            "name": "weight2",
+            "id": "5e8013",
+            "type": "numeric",
+            "notes": "",
+            "derived": true,
+            "hidden": false,
+            "description": "Raked weighting based on: Pet"
+        }
+    },
+    "body": {
+        "name": "Root"
+    },
+    "graph": [
+        "fb406e/",
+        "37c7ae/",
+        "c8811a/",
+        "7eea6e/",
+        "../variables/e05c01/",
+        "../variables/5e8013/"
+    ],
+    "size": 11
+}
