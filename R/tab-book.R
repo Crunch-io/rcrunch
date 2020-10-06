@@ -72,17 +72,17 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
             )
         )
     }
-    
+
     if (is.list(weight)) {
         tabFrame <- tabFramePrepare(
-            dataset = dataset, 
+            dataset = dataset,
             weight = weight,
             include_original_weighted = include_original_weighted
         )
-        
+
         books <- list()
         for (w in unique(tabFrame$ind)) {
-            
+
             if (is.na(w)) {
                 w <- "UNWEIGHTED"
                 pushWeight <- NULL
@@ -103,7 +103,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                 ...
             )
         }
-        
+        print("Successfully got both tabbooks")
         book <- books[[1]] # Grab the first one for structure
         for (row in seq_len(nrow(tabFrame))) {
             message(row)
@@ -114,17 +114,17 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
             book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[index]
             book@.Data[[2]][[row]] <- part[[2]][[index]]
         }
-        
+
         return(book)
     }
 }
 
 #' Prepare a tabFrame
-#' 
-#' A tabFrame is a data.frame that acts as instructions to 
+#'
+#' A tabFrame is a data.frame that acts as instructions to
 #' tabBook for repacking a complexly weighted set of tabBook results
-#' with appropriate ordering. 
-#' 
+#' with appropriate ordering.
+#'
 #' @param dataset CrunchDataset, which may be subset with a filter expression
 #' on the rows, and a selection of variables to use on the columns.
 #' @param weight a CrunchVariable that has been designated as a potential
@@ -147,11 +147,11 @@ tabFramePrepare <- function(dataset, weight, include_original_weighted) {
     )
     defaultWeights$keep <- FALSE
     customWeights <- stack(weight)
-    
+
     if (!all(names(weight) %in% names(dataset))) {
         stop("One or more specified weights are not included in the dataset")
     }
-    
+
     customWeights <- merge(customWeights, defaultWeights[-2], by = "values")
     customWeights$keep <- TRUE
     # Bind em'
@@ -169,13 +169,13 @@ tabFramePrepare <- function(dataset, weight, include_original_weighted) {
         fromLast = TRUE
     )
     tabFrame <- tabFrame[c1,]
-    
+
     if (!include_original_weighted) {
         tabFrame <- tabFrame[tabFrame$keep,]
     } else {
         tabFrame <- tabFrame[!tabFrame$values %in% unique(customWeights$ind),]
     }
-    
+
     # Add an index value per weight (or non-weight)
     # This is used in repacking
     tabFrame$index <- NA
@@ -184,7 +184,7 @@ tabFramePrepare <- function(dataset, weight, include_original_weighted) {
             nrow(tabFrame[tabFrame$ind %in% w,])
         )
     }
-    
+
     return(tabFrame)
 }
 
@@ -204,7 +204,7 @@ tabBookSingle <- function(multitable, dataset, weight,
     } else {
         fmt <- match.arg(output_format)
     }
-    
+
     accept <- extToContentType(fmt)
     if (is.null(file)) {
         if (fmt == "json") {
@@ -215,13 +215,13 @@ tabBookSingle <- function(multitable, dataset, weight,
             file <- paste(name(multitable), fmt, sep = ".")
         }
     }
-    
+
     if (!is.null(weight)) {
         weight <- self(weight)
     }
-    
+
     filter <- standardize_tabbook_filter(dataset, filter)
-    
+
     body <- list(
         filter = filter,
         weight = weight,
@@ -229,7 +229,7 @@ tabBookSingle <- function(multitable, dataset, weight,
     )
     ## Add this after so that if it is NULL, the "where" key isn't present
     body$where <- variablesFilter(dataset)
-    
+
     if (use_legacy_endpoint) {
         warning(
             "The legacy tabbook endpoint has been deprecated and will be removed in the future."
@@ -238,7 +238,7 @@ tabBookSingle <- function(multitable, dataset, weight,
     } else {
         tabbook_url <- shojiURL(multitable, "views", "export")
     }
-    
+
     ## POST the query, which (after progress polling) returns a URL to download
     result <- crPOST(tabbook_url,
                      config = add_headers(`Accept` = accept),
@@ -279,12 +279,12 @@ standardize_tabbook_filter <- function(dataset, filter) {
         list(filter = x)
     })
     if (inherits(filter, "CrunchFilter")) filter <- list(list(filter = self(filter)))
-    
+
     expr_filter <- activeFilter(dataset)
     if (is.CrunchExpr(expr_filter)) {
         expr_filter <- list(c(zcl(expr_filter), name = formatExpression(expr_filter)))
     }
-    
+
     if (length(filter) > 0 && !is.null(expr_filter)) {
         filter <- unname(c(filter, expr_filter))
     } else if (!is.null(expr_filter)) {
@@ -391,7 +391,7 @@ setMethod("initialize", "MultitableResult", function(.Object, ...) {
         }
         return(cube)
     })
-    
+
     return(.Object)
 })
 

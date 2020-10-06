@@ -96,6 +96,17 @@ with_POST <- function(resp, expr) {
     with_mock(`crunch::crPOST` = function(...) resp, eval.parent(expr))
 }
 
+with_multi_POST <- function(resps, expr) {
+    ## Mock a POST that returns something, like a Location header pulled from 201
+    force(resps)
+    counter <- 0
+    with_mock(`crunch::crPOST` = function(...) {
+        counter <<- counter + 1
+        resps[[counter]]
+    }, eval.parent(expr))
+}
+
+
 with_PATCH <- function(resp, expr) {
     ## Mock a PATCH that returns something, or nothing
     force(resp)
