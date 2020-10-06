@@ -103,7 +103,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                 ...
             )
         }
-        print("Successfully got both tabbooks")
+        
         book <- books[[1]] # Grab the first one for structure
         for (row in seq_len(nrow(tabFrame))) {
             message(row)
@@ -114,6 +114,8 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
             book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[index]
             book@.Data[[2]][[row]] <- part[[2]][[index]]
         }
+        
+        print("Successfully got both tabbooks")
 
         return(book)
     }

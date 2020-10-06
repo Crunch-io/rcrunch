@@ -2,7 +2,7 @@
 % Please edit documentation in R/tab-book.R
 \name{tabFramePrepare}
 \alias{tabFramePrepare}
-\title{A utility function that prepares}
+\title{Prepare a tabFrame}
 \usage{
 tabFramePrepare(dataset, weight, include_original_weighted)
 }
@@ -21,5 +21,7 @@ Default is the currently applied \code{\link{weight}}.}
 should the original weighted variable be included or only the custom weighted version?}
 }
 \description{
-A utility function that prepares
+A tabFrame is a data.frame that acts as instructions to
+tabBook for repacking a complexly weighted set of tabBook results
+with appropriate ordering.
 }

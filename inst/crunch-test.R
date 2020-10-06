@@ -90,6 +90,25 @@ with_mock_crunch <- function(expr) {
     )
 }
 
+with_folder_mock_crunch <- function(folder, backup = TRUE, expr) {
+    if (backup) {
+        opts <- temp.options(
+            crunch.api = "https://app.crunch.io/api/",
+            httptest.mock.paths = c(".", paste0("../", folder), file.path(tempdir(), "mocks"))
+        )
+    } else {
+        opts <- temp.options(
+            crunch.api = "https://app.crunch.io/api/",
+            httptest.mock.paths = c(".", folder, file.path(tempdir(), "mocks"))
+        )
+    }
+
+    with(
+        opts,
+        with_mock_API(expr)
+    )
+}
+
 with_POST <- function(resp, expr) {
     ## Mock a POST that returns something, like a Location header pulled from 201
     force(resp)
