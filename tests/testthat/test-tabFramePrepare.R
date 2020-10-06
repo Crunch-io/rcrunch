@@ -1,7 +1,7 @@
 context('tabFramePrepare') 
 
 with_mock_crunch({
-    ds <- newExampleDataset()
+    # ds <- newExampleDataset()
     ds <- loadDataset("Example dataset")
     
     # Dummy weights for testing
