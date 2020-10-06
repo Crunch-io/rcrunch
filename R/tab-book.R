@@ -74,9 +74,12 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     }
     
     if (is.list(weight)) {
-        tabFrame <- tabFramePrepare(dataset = dataset, 
-                                    weight = weight, 
-                                    include_original_weighted = include_original_weighted)
+        tabFrame <- tabFramePrepare(
+            dataset = dataset, 
+            weight = weight,
+            include_original_weighted = include_original_weighted
+        )
+        
         books <- list()
         for (w in unique(tabFrame$ind)) {
             
@@ -116,7 +119,12 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     }
 }
 
-#' A utility function that prepares 
+#' Prepare a tabFrame
+#' 
+#' A tabFrame is a data.frame that acts as instructions to 
+#' tabBook for repacking a complexly weighted set of tabBook results
+#' with appropriate ordering. 
+#' 
 #' @param dataset CrunchDataset, which may be subset with a filter expression
 #' on the rows, and a selection of variables to use on the columns.
 #' @param weight a CrunchVariable that has been designated as a potential
@@ -172,15 +180,19 @@ tabFramePrepare <- function(dataset, weight, include_original_weighted) {
     # This is used in repacking
     tabFrame$index <- NA
     for (w in unique(tabFrame$ind)) {
-        tabFrame$index[tabFrame$ind %in% w] <- seq_len(nrow(tabFrame[tabFrame$ind %in% w,]))
+        tabFrame$index[tabFrame$ind %in% w] <- seq_len(
+            nrow(tabFrame[tabFrame$ind %in% w,])
+        )
     }
     
     return(tabFrame)
 }
 
 tabBookSingle <- function(multitable, dataset, weight,
-                          output_format = c("json", "xlsx"), file = NULL, filter = NULL,
-                          use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
+                          output_format = c("json", "xlsx"), file = NULL,
+                          filter = NULL,
+                          use_legacy_endpoint = envOrOption(
+                              "use.legacy.tabbook.endpoint", FALSE),
                           ...) {
     dots <- list(...)
     if ("format" %in% names(dots) && is.character(dots$format)) {
