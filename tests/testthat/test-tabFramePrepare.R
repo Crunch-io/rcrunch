@@ -61,7 +61,9 @@ with_mock_crunch({
     
     context("tabBook multiweight")
     
-    test_that("tabBook runs appropriately with a list as a weight",{
+    test_that("tabBook runs appropriately with a list as a weight", {
+        ds <- loadDataset("Example dataset")
+        weight(ds) <- NULL
         w <- list(weight1 = c("allpets", "q1"), weight2 = "q1")
         # This is how crunchtabs tricks tabBook into giving it a cube
         multitable <- newMultitable("~ `allpets`", ds)
