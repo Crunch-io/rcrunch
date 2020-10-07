@@ -26,9 +26,9 @@ with_api_fixture("../../tmp", {
     
     test_that("Includes original weighted when not specified in weight argument",{
         r <- structure(list(
-            values = c("q1", "q1", "wave", "allpets"), 
-            ind = c("weight1","weight2", "weight1", "weight1"), 
-            ord = c(1L, 1L, 2L, 3L), keep = c(TRUE, TRUE, FALSE, TRUE), 
+            alias = c("q1", "q1", "wave", "allpets"), 
+            weight = c("weight1","weight2", "weight1", "weight1"), 
+            order = c(1L, 1L, 2L, 3L), keep = c(TRUE, TRUE, FALSE, TRUE), 
             index = c(1L, 1L, 2L, 3L)), row.names = c(7L, 8L, 2L, 6L), 
             class = "data.frame")
         
@@ -48,10 +48,10 @@ with_api_fixture("../../tmp_unweighted",  {
     ds <- loadDataset("Example dataset")
 
     test_that("tabFrame works with unweighted + complex weight specification", {
-        r <- structure(list(values = c("allpets", "allpets", "q1", "q1", "q1",
+        r <- structure(list(alias = c("allpets", "allpets", "q1", "q1", "q1",
             "petloc", "ndogs", "ndogs_a", "ndogs_b", "q3", "country", "wave"
-            ), ind = c(NA, "weight1", NA, "weight1", "weight2", NA, NA, NA,
-            NA, NA, NA, NA), ord = c(1L, 1L, 2L, 2L, 2L, 3L, 4L, 5L, 6L,
+            ), weight = c(NA, "weight1", NA, "weight1", "weight2", NA, NA, NA,
+            NA, NA, NA, NA), order = c(1L, 1L, 2L, 2L, 2L, 3L, 4L, 5L, 6L,
             7L, 8L, 9L), keep = c(FALSE, TRUE, FALSE, TRUE, TRUE, FALSE,
             FALSE, FALSE, FALSE, FALSE, FALSE, FALSE), index = c(1L, 1L,
             2L, 2L, 1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L)), row.names = c(1L, 12L,
@@ -88,7 +88,7 @@ with_api_fixture("../../tmp_unweighted",  {
             # Test name
             expect_equal(
                 r@.Data[[1]][[6]][[i]]$name,
-                name(ds[[tabFrame$values[i]]])
+                name(ds[[tabFrame$alias[i]]])
             )
 
             if (is.na(tabFrame$ind[i])) {
@@ -98,7 +98,7 @@ with_api_fixture("../../tmp_unweighted",  {
             } else {
                 expect_equal(
                     r@.Data[[1]][[6]][[i]]$weight,
-                    tabFrame$ind[i]
+                    tabFrame$weight[i]
                 )
             }
         }

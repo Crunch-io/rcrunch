@@ -69,6 +69,15 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
             )
         )
     }
+    
+    if (!is.list(weight) & !is.variable(weight)) {
+        stop("Weight can be NULL, a list, or a variable")
+    }
+    
+    if (is.list(weight) & output_format = "xlsx") {
+        stop("Excel TabBooks can only have one weight.")
+    }
+    
 
     if (is.list(weight)) {
         tabFrame <- tabFramePrepare(
@@ -100,16 +109,22 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         })
         
         # Repack
-        book <- books[[1]] # Grab the first one for structure
-        for (row in seq_len(nrow(tabFrame))) {
-            message(row)
-            tf <- tabFrame[row,]
-            tf$ind[is.na(tf$ind)] <- "UNWEIGHTED"
-            index <- tf$index
-            part <- books[[tf$ind]]@.Data
-            book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[index]
-            book@.Data[[2]][[row]] <- part[[2]][[index]]
-        }
+        analyses <- mapply(
+            ind = tf$weight, 
+            index = tf$index, 
+            FUN = function(weight, index) books[[weight]]@.Data[[1]]$analyses[index], 
+            SIMPLIFY = FALSE
+        )
+        pages <- mapply(
+            ind = tf$weight, 
+            index = tf$index, 
+            FUN = function(weight, index) books[[weight]]@.Data[[2]][[index]], 
+            SIMPLIFY = FALSE
+        )
+        
+        book <- books[[1]]
+        book@.Data[[1]] <- analyses
+        book@.Data[[2]] <- pages
 
         return(book)
     }
@@ -134,13 +149,14 @@ tabFramePrepare <- function(dataset, weight) {
     # Stack em'
     defaultWeight <- if (is.null(weight(dataset))) NULL else alias(crunch::weight(dataset))
     defaultWeights <- data.frame(
-        values = names(dataset),
-        ind = NA,
-        ord = seq_len(length(names(dataset))),
+        alias = names(dataset),
+        weight = NA,
+        order = seq_len(length(names(dataset))),
         stringsAsFactors = FALSE
     )
     defaultWeights$keep <- FALSE
     customWeights <- stack(weight)
+    
 
     if (!all(names(weight) %in% names(dataset))) {
         stop("One or more specified weights are not included in the dataset")
@@ -173,12 +189,7 @@ tabFramePrepare <- function(dataset, weight) {
 
     # Add an index value per weight (or non-weight)
     # This is used in repacking
-    tabFrame$index <- NA
-    for (w in unique(tabFrame$ind)) {
-        tabFrame$index[tabFrame$ind %in% w] <- seq_len(
-            nrow(tabFrame[tabFrame$ind %in% w,])
-        )
-    }
+    tabFrame$index <- ave(tabFrame$ind, tabFrame$ind, FUN = seq_along)
 
     return(tabFrame)
 }
