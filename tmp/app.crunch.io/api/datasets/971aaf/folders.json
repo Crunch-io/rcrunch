@@ -1,0 +1,70 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/971aaf/folders/",
+    "catalogs": {
+        "personal": "https://app.crunch.io/api/datasets/971aaf/variables/personal/",
+        "hidden": "https://app.crunch.io/api/datasets/971aaf/folders/hidden/",
+        "trash": "https://app.crunch.io/api/datasets/971aaf/folders/trash/",
+        "parents": "https://app.crunch.io/api/datasets/971aaf/folders/parents/",
+        "secure": "https://app.crunch.io/api/datasets/971aaf/folders/secure/"
+    },
+    "description": "This is the variables' folder root",
+    "index": {
+        "71a4c6/": {
+            "type": "folder",
+            "name": "Details",
+            "size": 1
+        },
+        "../variables/a78465/": {
+            "discarded": false,
+            "alias": "weight1",
+            "secure": false,
+            "name": "weight1",
+            "id": "a78465",
+            "type": "numeric",
+            "notes": "",
+            "derived": true,
+            "hidden": false,
+            "description": "Raked weighting based on: Pet"
+        },
+        "ef06d7/": {
+            "type": "folder",
+            "name": "Key Pet Indicators",
+            "size": 3
+        },
+        "0b62ea/": {
+            "type": "folder",
+            "name": "Dog Metrics",
+            "size": 3
+        },
+        "95b4f4/": {
+            "type": "folder",
+            "name": "Dimensions",
+            "size": 2
+        },
+        "../variables/128c95/": {
+            "discarded": false,
+            "alias": "weight2",
+            "secure": false,
+            "name": "weight2",
+            "id": "128c95",
+            "type": "numeric",
+            "notes": "",
+            "derived": true,
+            "hidden": false,
+            "description": "Raked weighting based on: Pet"
+        }
+    },
+    "body": {
+        "name": "Root"
+    },
+    "graph": [
+        "ef06d7/",
+        "0b62ea/",
+        "71a4c6/",
+        "95b4f4/",
+        "../variables/a78465/",
+        "../variables/128c95/"
+    ],
+    "size": 11
+}
