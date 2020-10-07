@@ -57,3 +57,4 @@ r <- tabBook(multitable, dataset = ds, w)
 stop_capturing()
 
 
+# Copy from player/export/tabbooks/export-*/*.json into  app.crunch.io/api/datasets/<ID>/multitables/<MID>/

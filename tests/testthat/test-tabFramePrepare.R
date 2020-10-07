@@ -36,12 +36,13 @@ with_api_fixture("../../tmp", {
             weight = c("weight1","weight2", "weight1", "weight1"), 
             order = c(1L, 1L, 2L, 3L), 
             keep = c(TRUE, TRUE, FALSE, TRUE), 
-            index = c(1L, 2L, 3L, 4L)), row.names = c(7L, 8L, 2L, 6L), 
+            position = c(1L, 1L, 2L, 3L)), row.names = c(7L, 8L, 2L, 6L), 
             class = "data.frame"
         )
         
+        res <- tabFramePrepare(ds[c("q1","wave", "allpets", "weight2", "weight1")], w)
         expect_equal(
-            tabFramePrepare(ds[c("q1","wave", "allpets", "weight2", "weight1")], w), 
+            res, 
             r
         )
     })
@@ -66,66 +67,49 @@ with_api_fixture("../../tmp", {
             "Weight can be NULL, a list, or a variable"
         )
     })
+    
+
 
 })
 
-context('tabBook multiweight - unweighted tests')
-
-with_api_fixture("../../tmp_unweighted",  {
-    
-    # TODO: Change to test ds
-    httpcache::clearCache()
-    # needs to use unweighted dataset, which will be a separate mock ds
-    ds <- loadDataset("Example dataset")
-
-    test_that("tabFrame works with unweighted + complex weight specification", {
-        r <- structure(list(alias = c("allpets", "allpets", "q1", "q1", "q1",
-            "petloc", "ndogs", "ndogs_a", "ndogs_b", "q3", "country", "wave"
-            ), weight = c(NA, "weight1", NA, "weight1", "weight2", NA, NA, NA,
-            NA, NA, NA, NA), order = c(1L, 1L, 2L, 2L, 2L, 3L, 4L, 5L, 6L,
-            7L, 8L, 9L), keep = c(FALSE, TRUE, FALSE, TRUE, TRUE, FALSE,
-            FALSE, FALSE, FALSE, FALSE, FALSE, FALSE), index = c(1L, 2L,
-            3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L)), row.names = c(1L, 12L,
-            2L, 13L, 14L, 3L, 4L, 5L, 6L, 7L, 8L, 9L), class = "data.frame")
-
-        res <- tabFramePrepare(ds, w)
-
-        expect_equal(
-            res,
-            r
-        )
-    })
-    
+with_api_fixture("../../tmp_unweighted", {
+    context("tabBook multiweighted")
     test_that("tabBook returns multiple results in the expected order", {
+        ds <- loadDataset("Example dataset")
         w <- list(weight1 = c("allpets", "q1"), weight2 = "q1")
         # This is how crunchtabs tricks tabBook into giving it a cube
         multitable <- newMultitable("~ `allpets`", ds)
         # debugonce(tabBook)
         tabFrame <- tabFramePrepare(ds, w)
-        print("Made it to test!")
-
-
+        
         r <- with_multi_POST(
             c(
-                "https://app.crunch.io/api/datasets/50ec91/multitables/037c42/",
-                "https://app.crunch.io/api/datasets/50ec91/multitables/037c42/",
-                "https://app.crunch.io/api/datasets/50ec91/multitables/037c42/"
+                "https://app.crunch.io/api/datasets/63b9d9/multitables/722ceb/tb-unweighted/",
+                "https://app.crunch.io/api/datasets/63b9d9/multitables/722ceb/tb-weight1/",
+                "https://app.crunch.io/api/datasets/63b9d9/multitables/722ceb/tb-weight2/"
+                
             ),
             tabBook(multitable, dataset = ds, w)
         )
-
-
+        
+        
         for (i in seq_len(nrow(r))) {
             # Test name
+            
+            print(tabFrame[i, ])
+            print(r@.Data[[1]][[6]][[i]]$name)
+            
             expect_equal(
                 r@.Data[[1]][[6]][[i]]$name,
                 name(ds[[tabFrame$alias[i]]])
             )
-
-            if (is.na(tabFrame$ind[i])) {
+            
+            # Test weight is null if na
+            if (is.na(tabFrame$weight[i])) {
                 expect_true(
                     is.null(r@.Data[[1]][[6]][[i]]$weight)
                 )
+                
             } else {
                 expect_equal(
                     r@.Data[[1]][[6]][[i]]$weight,
@@ -133,12 +117,7 @@ with_api_fixture("../../tmp_unweighted",  {
                 )
             }
         }
-
+        
         expect_equal(length(aliases(r)), 11)
     })
 })
-
-
-
-
-

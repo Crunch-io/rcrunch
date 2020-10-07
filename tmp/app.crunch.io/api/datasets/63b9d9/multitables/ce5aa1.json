@@ -1,0 +1,37 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/63b9d9/multitables/ce5aa1/",
+    "views": {
+        "applied": "https://app.crunch.io/api/datasets/63b9d9/multitables/ce5aa1/applied/",
+        "tabbook": "https://app.crunch.io/api/datasets/63b9d9/multitables/ce5aa1/tabbook/",
+        "export": "https://app.crunch.io/api/datasets/63b9d9/multitables/ce5aa1/export/"
+    },
+    "description": "Detail information for one multitable definition",
+    "body": {
+        "name": "`allpets` (1)",
+        "user": "https://app.crunch.io/api/users/0740cc/",
+        "template": [
+            {
+                "query": [
+                    {
+                        "each": "https://app.crunch.io/api/datasets/63b9d9/variables/000000/"
+                    },
+                    {
+                        "function": "as_selected",
+                        "args": [
+                            {
+                                "variable": "https://app.crunch.io/api/datasets/63b9d9/variables/000000/"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "team": null,
+        "is_public": false,
+        "display_settings": {
+
+        },
+        "id": "ce5aa1"
+    }
+}

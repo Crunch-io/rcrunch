@@ -3,7 +3,7 @@
     "self": "https://app.crunch.io/api/datasets/by_name/Example%20dataset/",
     "description": "Datasets with a given name ",
     "index": {
-        "https://app.crunch.io/api/datasets/50ec91/": {
+        "https://app.crunch.io/api/datasets/63b9d9/": {
             "size": {
                 "rows": 20,
                 "unfiltered_rows": 20,
@@ -17,18 +17,18 @@
             "streaming": "no",
             "owner_id": "https://app.crunch.io/api/users/0740cc/",
             "current_editor": "https://app.crunch.io/api/users/0740cc/",
-            "creation_time": "2020-10-07T17:32:15.625000+00:00",
+            "creation_time": "2020-10-07T22:07:59.422000+00:00",
             "archived": false,
             "view_of": null,
             "start_date": null,
-            "modification_time": "2020-10-07T17:32:24.341000+00:00",
-            "access_time": "2020-10-07T17:32:15.436000+00:00",
+            "modification_time": "2020-10-07T22:08:09.123000+00:00",
+            "access_time": "2020-10-07T22:07:59.281000+00:00",
             "permissions": {
                 "edit": true,
                 "view": true
             },
             "is_published": true,
-            "id": "50ec91",
+            "id": "63b9d9",
             "description": "A dataset to illustrate the API"
         }
     }

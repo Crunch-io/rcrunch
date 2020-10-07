@@ -1,0 +1,122 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/63b9d9/",
+    "catalogs": {
+        "folders": "https://app.crunch.io/api/datasets/63b9d9/folders/",
+        "users": "https://app.crunch.io/api/datasets/63b9d9/users/",
+        "views": "https://app.crunch.io/api/datasets/63b9d9/views/",
+        "variables": "https://app.crunch.io/api/datasets/63b9d9/variables/",
+        "actions": "https://app.crunch.io/api/datasets/63b9d9/actions/",
+        "boxdata": "https://app.crunch.io/api/datasets/63b9d9/boxdata/",
+        "filters": "https://app.crunch.io/api/datasets/63b9d9/filters/",
+        "scripts": "https://app.crunch.io/api/datasets/63b9d9/scripts/",
+        "permissions": "https://app.crunch.io/api/datasets/63b9d9/permissions/",
+        "batches": "https://app.crunch.io/api/datasets/63b9d9/batches/",
+        "tags": "https://app.crunch.io/api/datasets/63b9d9/tags/",
+        "teams": "https://app.crunch.io/api/datasets/63b9d9/teams/",
+        "savepoints": "https://app.crunch.io/api/datasets/63b9d9/savepoints/",
+        "multitables": "https://app.crunch.io/api/datasets/63b9d9/multitables/",
+        "forks": "https://app.crunch.io/api/datasets/63b9d9/forks/",
+        "decks": "https://app.crunch.io/api/datasets/63b9d9/decks/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "project": "https://app.crunch.io/api/projects/personal/",
+        "variables_private": "https://app.crunch.io/api/datasets/63b9d9/variables/private/"
+    },
+    "fragments": {
+        "preferences": "https://app.crunch.io/api/datasets/63b9d9/preferences/",
+        "stream": "https://app.crunch.io/api/datasets/63b9d9/stream/",
+        "settings": "https://app.crunch.io/api/datasets/63b9d9/settings/",
+        "exclusion": "https://app.crunch.io/api/datasets/63b9d9/exclusion/",
+        "publish": "https://app.crunch.io/api/datasets/63b9d9/publish/",
+        "state": "https://app.crunch.io/api/datasets/63b9d9/state/",
+        "table": "https://app.crunch.io/api/datasets/63b9d9/table/",
+        "pk": "https://app.crunch.io/api/datasets/63b9d9/pk/",
+        "schema": "https://app.crunch.io/api/datasets/63b9d9/schema/"
+    },
+    "views": {
+        "second_order_analysis": "https://app.crunch.io/api/datasets/63b9d9/second_order_analysis/",
+        "cube": "https://app.crunch.io/api/datasets/63b9d9/cube/",
+        "export": "https://app.crunch.io/api/datasets/63b9d9/export/",
+        "summary": "https://app.crunch.io/api/datasets/63b9d9/summary/",
+        "applied_filters": "https://app.crunch.io/api/datasets/63b9d9/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "https://app.crunch.io/api/users/0740cc/",
+        "current_editor": "https://app.crunch.io/api/users/0740cc/",
+        "creation_time": "2020-10-07T22:07:59.422000",
+        "streaming": "no",
+        "archived": false,
+        "owner": "https://app.crunch.io/api/users/0740cc/",
+        "logo": {
+            "large": "https://s.crunch.io/act_app_icons/account-yougov-lrhfua-large.png",
+            "small": "https://s.crunch.io/act_app_icons/account-yougov-wmgadi-small.png",
+            "favicon": "https://s.crunch.io/act_app_icons/account-yougov-slyzix-favicon.ico"
+        },
+        "id": "63b9d9",
+        "size": {
+            "rows": 20,
+            "unfiltered_rows": 20,
+            "columns": 12
+        },
+        "palette": {
+            "brand": {
+                "message": "#722580",
+                "primary": "#0064a4",
+                "secondary": "#107f65"
+            },
+            "analysis": [
+                {
+                    "default": true,
+                    "palette": [
+                        "#7c64c3",
+                        "#f372a1",
+                        "#29cdca",
+                        "#ae61c4",
+                        "#ff6352",
+                        "#00b7b4",
+                        "#6048a7",
+                        "#eb4f3e",
+                        "#ca85de",
+                        "#00a3a0",
+                        "#dc4c81",
+                        "#ad97ed"
+                    ],
+                    "type": "qualitative",
+                    "name": "YouGov standard"
+                }
+            ]
+        },
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Personal project for Brandon Bertelsen",
+        "description": "A dataset to illustrate the API",
+        "end_date": null,
+        "access_time": "2020-10-07T22:07:59.281000",
+        "view_cols": null,
+        "current_editor_name": "Brandon Bertelsen",
+        "view_of": null,
+        "modification_time": "2020-10-07T22:08:09.123000",
+        "view_rows": null,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "https://app.crunch.io/api/accounts/b7a990/",
+        "name": "Example dataset",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "https://app.crunch.io/api/datasets/63b9d9/variables/weights/",
+        "variables_hier": "https://app.crunch.io/api/datasets/63b9d9/variables/hier/",
+        "variables_personal": "https://app.crunch.io/api/datasets/63b9d9/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "https://app.crunch.io/api/projects/bf9f4f/",
+        "editor_url": "https://app.crunch.io/api/users/0740cc/",
+        "user_url": "https://app.crunch.io/api/users/0740cc/"
+    }
+}

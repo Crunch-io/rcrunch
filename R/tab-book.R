@@ -55,13 +55,27 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                     output_format = c("json", "xlsx"), file = NULL, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
                     ...) {
+    
+    
+    dots <- list(...)
+    if ("format" %in% names(dots) && is.character(dots$format)) {
+        warning(
+            "Passing string to `format` is deprecated in `tabBook()`. Use `output_format` instead."
+        )
+        fmt <- match.arg(dots$format, c("json", "xlsx"))
+        dots$format <- NULL
+    } else {
+        fmt <- match.arg(output_format)
+    }
+    
+    
     if (is.null(weight) | is.variable(weight)) {
         # Pass through
         return(tabBookSingle(
             multitable = multitable,
             dataset = dataset,
             weight = weight,
-            output_format = output_format,
+            output_format = fmt,
             file = file,
             filter = filter,
             use_legacy_endpoint = use_legacy_endpoint,
@@ -74,7 +88,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         stop("Weight can be NULL, a list, or a variable")
     }
     
-    if (is.list(weight) & output_format == "xlsx") {
+    if (is.list(weight) & fmt == "xlsx") {
         stop("Excel TabBooks can only have one weight.")
     }
     
@@ -85,46 +99,44 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
             weight = weight
         )
 
-        books <- lapply(unique(tabFrame$ind), function(w) {
+        books <- lapply(unique(tabFrame$weight), function(w) {
 
             if (is.na(w)) {
                 w <- "UNWEIGHTED"
                 pushWeight <- NULL
-                vars <- tabFrame$values[is.na(tabFrame$ind)]
+                vars <- tabFrame$alias[is.na(tabFrame$weight)]
             } else {
                 pushWeight <- dataset[[w]]
-                vars <- tabFrame$values[tabFrame$ind %in% w]
+                vars <- tabFrame$alias[tabFrame$weight %in% w]
             }
+            
+            # print("Running tabBook for weight: %s", w)
 
-            tabBookSingle(
+            r <- tabBookSingle(
                 multitable = multitable,
                 dataset = dataset[vars],
                 weight = pushWeight,
-                output_format = output_format,
+                output_format = fmt,
                 file = file,
                 filter = filter,
                 use_legacy_endpoint = use_legacy_endpoint,
                 ...
             )
+            return(r)
         })
         
-        # Repack
-        analyses <- mapply(
-            ind = tabFrame$weight, 
-            index = tabFrame$index, 
-            FUN = function(weight, index) books[[weight]]@.Data[[1]]$analyses[index], 
-            SIMPLIFY = FALSE
-        )
-        pages <- mapply(
-            ind = tabFrame$weight, 
-            index = tabFrame$index, 
-            FUN = function(weight, index) books[[weight]]@.Data[[2]][[index]], 
-            SIMPLIFY = FALSE
-        )
+        names(books) <- unique(tabFrame$weight)
         
-        book <- books[[1]]
-        book@.Data[[1]] <- analyses
-        book@.Data[[2]] <- pages
+        # Repack
+        book <- books[[1]] 
+        for (row in seq_len(nrow(tabFrame))) {
+            tf <- tabFrame[row,]
+            tf$ind[is.na(tf$weight)] <- "UNWEIGHTED"
+            position <- tf$position
+            part <- books[[tf$weight]]@.Data
+            book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[position]
+            book@.Data[[2]][[row]] <- part[[2]][[position]]
+        }
 
         return(book)
     }
@@ -192,10 +204,10 @@ tabFramePrepare <- function(dataset, weight) {
 
     # Add an index value per weight (or non-weight)
     # This is used in repacking
-    tabFrame$index <- NA
-    for (w in unique(tabFrame$ind)) {
-        tabFrame$index[tabFrame$ind %in% w] <- seq_len(
-            nrow(tabFrame[tabFrame$ind %in% w,])
+    tabFrame$position <- NA
+    for (w in unique(tabFrame$weight)) {
+        tabFrame$position[tabFrame$weight %in% w] <- seq_len(
+            nrow(tabFrame[tabFrame$weight %in% w,])
         )
     }
 
@@ -203,30 +215,21 @@ tabFramePrepare <- function(dataset, weight) {
 }
 
 tabBookSingle <- function(multitable, dataset, weight,
-                          output_format = c("json", "xlsx"), file = NULL,
+                          output_format, file = NULL,
                           filter = NULL,
                           use_legacy_endpoint = envOrOption(
                               "use.legacy.tabbook.endpoint", FALSE),
                           ...) {
-    dots <- list(...)
-    if ("format" %in% names(dots) && is.character(dots$format)) {
-        warning(
-            "Passing string to `format` is deprecated in `tabBook()`. Use `output_format` instead."
-        )
-        fmt <- match.arg(dots$format, c("json", "xlsx"))
-        dots$format <- NULL
-    } else {
-        fmt <- match.arg(output_format)
-    }
 
-    accept <- extToContentType(fmt)
+    dots <- list(...)
+    accept <- extToContentType(output_format)
     if (is.null(file)) {
-        if (fmt == "json") {
+        if (output_format == "json") {
             ## We don't need a file.
             file <- NULL
         } else {
             ## Generate a reasonable filename in the current working dir
-            file <- paste(name(multitable), fmt, sep = ".")
+            file <- paste(name(multitable), output_format, sep = ".")
         }
     }
 

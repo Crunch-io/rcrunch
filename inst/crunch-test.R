@@ -121,6 +121,8 @@ with_multi_POST <- function(resps, expr) {
     counter <- 0
     with_mock(`crunch::crPOST` = function(...) {
         counter <<- counter + 1
+        #print(list(...))
+        #cat("\n")
         resps[[counter]]
     }, eval.parent(expr))
 }
