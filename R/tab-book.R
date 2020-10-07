@@ -70,11 +70,11 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         )
     }
     
-    if (!is.list(weight) & !is.variable(weight)) {
+    if ((!is.list(weight) & !is.variable(weight)) | length(weight) == 0) {
         stop("Weight can be NULL, a list, or a variable")
     }
     
-    if (is.list(weight) & output_format = "xlsx") {
+    if (is.list(weight) & output_format == "xlsx") {
         stop("Excel TabBooks can only have one weight.")
     }
     
@@ -110,14 +110,14 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         
         # Repack
         analyses <- mapply(
-            ind = tf$weight, 
-            index = tf$index, 
+            ind = tabFrame$weight, 
+            index = tabFrame$index, 
             FUN = function(weight, index) books[[weight]]@.Data[[1]]$analyses[index], 
             SIMPLIFY = FALSE
         )
         pages <- mapply(
-            ind = tf$weight, 
-            index = tf$index, 
+            ind = tabFrame$weight, 
+            index = tabFrame$index, 
             FUN = function(weight, index) books[[weight]]@.Data[[2]][[index]], 
             SIMPLIFY = FALSE
         )
@@ -162,9 +162,10 @@ tabFramePrepare <- function(dataset, weight) {
         stop("One or more specified weights are not included in the dataset")
     }
 
+    names(customWeights) <- c("alias", "weight")
     customWeights <- merge(
         customWeights, 
-        defaultWeights[-2], by = "values", 
+        defaultWeights[-2], by = "alias", 
         sort = FALSE
     )
     
@@ -173,9 +174,10 @@ tabFramePrepare <- function(dataset, weight) {
     tabFrame <- rbind(defaultWeights, customWeights)
     # Ordering is important here for duplicates that should be shown with
     # different weights
-    tabFrame <- tabFrame[with(tabFrame, order(ord, rev(ind), keep)),]
+    tabFrame <- tabFrame[with(tabFrame, order(order, rev(weight), keep)),]
+    
     if (!is.null(defaultWeight)) {
-        tabFrame[is.na(tabFrame$ind),]$ind <- defaultWeight
+        tabFrame[is.na(tabFrame$weight),]$weight <- defaultWeight
     }
 
     # Drop duplicated from last
@@ -183,13 +185,19 @@ tabFramePrepare <- function(dataset, weight) {
         tabFrame[!names(tabFrame) %in% "keep"],
         fromLast = TRUE
     )
+    
     tabFrame <- tabFrame[c1,]
 
-    tabFrame <- tabFrame[!tabFrame$values %in% unique(customWeights$ind),]
+    tabFrame <- tabFrame[!tabFrame$alias %in% unique(customWeights$weight),]
 
     # Add an index value per weight (or non-weight)
     # This is used in repacking
-    tabFrame$index <- ave(tabFrame$ind, tabFrame$ind, FUN = seq_along)
+    tabFrame$index <- NA
+    for (w in unique(tabFrame$ind)) {
+        tabFrame$index[tabFrame$ind %in% w] <- seq_len(
+            nrow(tabFrame[tabFrame$ind %in% w,])
+        )
+    }
 
     return(tabFrame)
 }

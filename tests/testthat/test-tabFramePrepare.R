@@ -1,4 +1,4 @@
-context('tabFramePrepare - weighted tests')
+
 
 with_api_fixture <- function(fixture_path, expr) {
     with(
@@ -14,7 +14,12 @@ with_api_fixture <- function(fixture_path, expr) {
 }
 
 with_api_fixture("../../tmp", {
+
+    
+    context('tabFramePrepare - weighted tests')
+    
     ds <- loadDataset("Example dataset")
+    mt <- newMultitable("~ `allpets`", ds)
     w <- list(weight1 = c('allpets', 'q1'), weight2 = 'q1')
     
     test_that("tabFramePrepare fails if given a dataset that does not include a specified complex weight", {
@@ -23,18 +28,42 @@ with_api_fixture("../../tmp", {
             "One or more specified weights are not included in the dataset"
         )
     })
+
     
-    test_that("Includes original weighted when not specified in weight argument",{
+    test_that("tabFrame includes original weighted",{
         r <- structure(list(
             alias = c("q1", "q1", "wave", "allpets"), 
             weight = c("weight1","weight2", "weight1", "weight1"), 
-            order = c(1L, 1L, 2L, 3L), keep = c(TRUE, TRUE, FALSE, TRUE), 
-            index = c(1L, 1L, 2L, 3L)), row.names = c(7L, 8L, 2L, 6L), 
-            class = "data.frame")
+            order = c(1L, 1L, 2L, 3L), 
+            keep = c(TRUE, TRUE, FALSE, TRUE), 
+            index = c(1L, 2L, 3L, 4L)), row.names = c(7L, 8L, 2L, 6L), 
+            class = "data.frame"
+        )
         
         expect_equal(
             tabFramePrepare(ds[c("q1","wave", "allpets", "weight2", "weight1")], w), 
             r
+        )
+    })
+    
+    test_that("tabBook xlsx fails with ", {
+        expect_error(
+            tabBook(mt, ds, w, output_format = "xlsx"),
+            "Excel TabBooks can only have one weight"
+        )
+    })
+    
+    test_that("Bad weights specifications fail", {
+        expect_error(
+            tabBook(mt, ds, weight = 1),
+            "Weight can be NULL, a list, or a variable"
+        )
+    })
+    
+    test_that("Bad weights specifications fail", {
+        expect_error(
+            tabBook(mt, ds, weight = NA),
+            "Weight can be NULL, a list, or a variable"
         )
     })
 
@@ -43,6 +72,8 @@ with_api_fixture("../../tmp", {
 context('tabBook multiweight - unweighted tests')
 
 with_api_fixture("../../tmp_unweighted",  {
+    
+    # TODO: Change to test ds
     httpcache::clearCache()
     # needs to use unweighted dataset, which will be a separate mock ds
     ds <- loadDataset("Example dataset")
@@ -53,8 +84,8 @@ with_api_fixture("../../tmp_unweighted",  {
             ), weight = c(NA, "weight1", NA, "weight1", "weight2", NA, NA, NA,
             NA, NA, NA, NA), order = c(1L, 1L, 2L, 2L, 2L, 3L, 4L, 5L, 6L,
             7L, 8L, 9L), keep = c(FALSE, TRUE, FALSE, TRUE, TRUE, FALSE,
-            FALSE, FALSE, FALSE, FALSE, FALSE, FALSE), index = c(1L, 1L,
-            2L, 2L, 1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L)), row.names = c(1L, 12L,
+            FALSE, FALSE, FALSE, FALSE, FALSE, FALSE), index = c(1L, 2L,
+            3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L)), row.names = c(1L, 12L,
             2L, 13L, 14L, 3L, 4L, 5L, 6L, 7L, 8L, 9L), class = "data.frame")
 
         res <- tabFramePrepare(ds, w)
