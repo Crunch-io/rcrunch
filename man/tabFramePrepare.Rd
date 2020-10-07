@@ -4,7 +4,7 @@
 \alias{tabFramePrepare}
 \title{Prepare a tabFrame}
 \usage{
-tabFramePrepare(dataset, weight, include_original_weighted)
+tabFramePrepare(dataset, weight)
 }
 \arguments{
 \item{dataset}{CrunchDataset, which may be subset with a filter expression
@@ -16,9 +16,6 @@ a named list where the name is the alias of the weight and the contents of
 the list component are a character vector of aliases to which that weight
 should apply.
 Default is the currently applied \code{\link{weight}}.}
-
-\item{include_original_weighted}{Logical, if you have specified complex weights
-should the original weighted variable be included or only the custom weighted version?}
 }
 \description{
 A tabFrame is a data.frame that acts as instructions to

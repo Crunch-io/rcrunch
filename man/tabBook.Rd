@@ -12,7 +12,6 @@ tabBook(
   file = NULL,
   filter = NULL,
   use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
-  include_original_weighted = TRUE,
   ...
 )
 }
@@ -44,9 +43,6 @@ endpoint for compatibility (this endpoint will be removed in the future).
 Defaults to \code{FALSE}, but can be set in the function, or with the environment
 variable \code{R_USE_LEGACY_TABBOOK_ENDPOINT} or R option
 \code{use.legacy.tabbook.endpoint}.}
-
-\item{include_original_weighted}{Logical, if you have specified complex weights
-should the original weighted variable be included or only the custom weighted version?}
 
 \item{...}{Additional "options" passed to the tab book POST request.
 More details can be found

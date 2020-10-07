@@ -25,24 +25,24 @@
             "name": "Dimensions",
             "size": 2
         },
-        "../variables/f33651/": {
+        "../variables/79f800/": {
             "discarded": false,
             "alias": "weight2",
             "secure": false,
             "name": "weight2",
-            "id": "f33651",
+            "id": "79f800",
             "type": "numeric",
             "notes": "",
             "derived": true,
             "hidden": false,
             "description": "Raked weighting based on: Pet"
         },
-        "../variables/6dc73c/": {
+        "../variables/343c30/": {
             "discarded": false,
             "alias": "weight1",
             "secure": false,
             "name": "weight1",
-            "id": "6dc73c",
+            "id": "343c30",
             "type": "numeric",
             "notes": "",
             "derived": true,
@@ -63,8 +63,8 @@
         "2a0973/",
         "c57f4a/",
         "3d5b87/",
-        "../variables/6dc73c/",
-        "../variables/f33651/"
+        "../variables/343c30/",
+        "../variables/79f800/"
     ],
     "size": 11
 }

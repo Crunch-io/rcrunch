@@ -12,18 +12,6 @@
     },
     "description": "List of Variables of this dataset",
     "index": {
-        "6dc73c/": {
-            "discarded": false,
-            "alias": "weight1",
-            "secure": false,
-            "name": "weight1",
-            "id": "6dc73c",
-            "type": "numeric",
-            "notes": "",
-            "derived": true,
-            "hidden": false,
-            "description": "Raked weighting based on: Pet"
-        },
         "000007/": {
             "secure": false,
             "derived": false,
@@ -91,6 +79,18 @@
             "hidden": false,
             "description": "How many dogs do you have?"
         },
+        "343c30/": {
+            "discarded": false,
+            "alias": "weight1",
+            "secure": false,
+            "name": "weight1",
+            "id": "343c30",
+            "type": "numeric",
+            "notes": "",
+            "derived": true,
+            "hidden": false,
+            "description": "Raked weighting based on: Pet"
+        },
         "000003/": {
             "discarded": false,
             "alias": "ndogs",
@@ -148,18 +148,6 @@
             "hidden": false,
             "type": "multiple_response"
         },
-        "f33651/": {
-            "discarded": false,
-            "alias": "weight2",
-            "secure": false,
-            "name": "weight2",
-            "id": "f33651",
-            "type": "numeric",
-            "notes": "",
-            "derived": true,
-            "hidden": false,
-            "description": "Raked weighting based on: Pet"
-        },
         "000001/": {
             "discarded": true,
             "alias": "caseid",
@@ -171,6 +159,18 @@
             "derived": false,
             "hidden": true,
             "description": ""
+        },
+        "79f800/": {
+            "discarded": false,
+            "alias": "weight2",
+            "secure": false,
+            "name": "weight2",
+            "id": "79f800",
+            "type": "numeric",
+            "notes": "",
+            "derived": true,
+            "hidden": false,
+            "description": "Raked weighting based on: Pet"
         }
     }
 }
