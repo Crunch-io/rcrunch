@@ -50,14 +50,14 @@ loadCube <- function(filename) {
     # check the temp place
     filename <- cubePath(filename)
 
-
+    
     # if the cube json has a value name, it has full metadata and we need to
     # extract only the value
     cube_json <- jsonlite::fromJSON(filename, simplifyVector = FALSE)
     if ("value" %in% names(cube_json)) {
         cube_json <- cube_json$value
     }
-
+    
     return(crunch:::CrunchCube(cube_json))
 }
 
@@ -67,7 +67,7 @@ cubify <- function(..., dims) {
     ## not column-major. Make array, then aperm the array back to order
     data <- c(...)
     d <- rev(vapply(dims, length, integer(1), USE.NAMES = FALSE))
-
+    
     out <- array(data, dim = d)
     if (length(dims) > 1) {
         ap <- seq_len(length(dims))
@@ -102,7 +102,7 @@ with_folder_mock_crunch <- function(folder, backup = TRUE, expr) {
             httptest.mock.paths = c(".", folder, file.path(tempdir(), "mocks"))
         )
     }
-
+    
     with(
         opts,
         with_mock_API(expr)
@@ -147,7 +147,7 @@ test_options <- temp.options(
         "test.api",
         "http://local.crunch.io:8080/api/"
     ),
-
+    
     crunch.email = crunch::envOrOption("test.user"),
     crunch.pw = crunch::envOrOption("test.pw"),
     crunch.show.progress = FALSE,
@@ -157,7 +157,7 @@ test_options <- temp.options(
 with_test_authentication <- function(expr) {
     if (run.integration.tests) {
         env <- parent.frame()
-
+        
         with(test_options, {
             ## Authenticate.
             try(suppressMessages(login()))
@@ -172,8 +172,8 @@ with_test_authentication <- function(expr) {
                 if (!is.null(loc)) {
                     seen <- get("entities.created", envir = globalenv())
                     assign("entities.created",
-                        c(seen, loc),
-                        envir = globalenv()
+                           c(seen, loc),
+                           envir = globalenv()
                     )
                 }
             })
@@ -181,11 +181,11 @@ with_test_authentication <- function(expr) {
                 ## Wrap this so that we can generate a test failure if
                 ## there's an error rather than just halt the process
                 tryCatch(eval(expr, envir = env),
-                    error = function(e) {
-                        test_that("There are no test code errors", {
-                            expect_error(stop(e$message), NA)
-                        })
-                    }
+                         error = function(e) {
+                             test_that("There are no test code errors", {
+                                 expect_error(stop(e$message), NA)
+                             })
+                         }
                 )
             })
         })

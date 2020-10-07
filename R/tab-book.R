@@ -56,7 +56,6 @@
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                     output_format = c("json", "xlsx"), file = NULL, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
-                    include_original_weighted = TRUE,
                     ...) {
     if (is.null(weight) | is.variable(weight)) {
         # Pass through
@@ -76,12 +75,10 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     if (is.list(weight)) {
         tabFrame <- tabFramePrepare(
             dataset = dataset,
-            weight = weight,
-            include_original_weighted = include_original_weighted
+            weight = weight
         )
 
-        books <- list()
-        for (w in unique(tabFrame$ind)) {
+        books <- lapply(unique(tabFrame$ind), function(w) {
 
             if (is.na(w)) {
                 w <- "UNWEIGHTED"
@@ -102,8 +99,9 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                 use_legacy_endpoint = use_legacy_endpoint,
                 ...
             )
-        }
+        })
         
+        # Repack
         book <- books[[1]] # Grab the first one for structure
         for (row in seq_len(nrow(tabFrame))) {
             message(row)
@@ -138,7 +136,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
 #' @param include_original_weighted Logical, if you have specified complex weights
 #' should the original weighted variable be included or only the custom weighted version?
 #' @export
-tabFramePrepare <- function(dataset, weight, include_original_weighted) {
+tabFramePrepare <- function(dataset, weight) {
     # Stack em'
     defaultWeight <- if (is.null(weight(dataset))) NULL else alias(crunch::weight(dataset))
     defaultWeights <- data.frame(
@@ -172,11 +170,7 @@ tabFramePrepare <- function(dataset, weight, include_original_weighted) {
     )
     tabFrame <- tabFrame[c1,]
 
-    if (!include_original_weighted) {
-        tabFrame <- tabFrame[tabFrame$keep,]
-    } else {
-        tabFrame <- tabFrame[!tabFrame$values %in% unique(customWeights$ind),]
-    }
+    tabFrame <- tabFrame[!tabFrame$values %in% unique(customWeights$ind),]
 
     # Add an index value per weight (or non-weight)
     # This is used in repacking
