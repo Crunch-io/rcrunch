@@ -43,6 +43,7 @@ with_api_fixture("../../tmp", {
 context('tabBook multiweight - unweighted tests')
 
 with_api_fixture("../../tmp_unweighted",  {
+    httpcache::clearCache()
     # needs to use unweighted dataset, which will be a separate mock ds
     ds <- loadDataset("Example dataset")
 
@@ -57,8 +58,6 @@ with_api_fixture("../../tmp_unweighted",  {
             2L, 13L, 14L, 3L, 4L, 5L, 6L, 7L, 8L, 9L), class = "data.frame")
 
         res <- tabFramePrepare(ds, w)
-        print(weight(ds))
-        print(res)
 
         expect_equal(
             res,
@@ -66,45 +65,46 @@ with_api_fixture("../../tmp_unweighted",  {
         )
     })
     
-    # test_that("tabBook returns multiple results in the expected order", {
-    #     w <- list(weight1 = c("allpets", "q1"), weight2 = "q1")
-    #     # This is how crunchtabs tricks tabBook into giving it a cube
-    #     multitable <- newMultitable("~ `allpets`", ds)
-    #     # debugonce(tabBook)
-    #     tabFrame <- tabFramePrepare(ds, w)
-    #     print("Made it to test!")
-    #     
-    #     
-    #     r <- with_multi_POST(
-    #         c(
-    #             "https://app.crunch.io/api/datasets/a8aa2b/multitables/2c1266/",
-    #             "https://app.crunch.io/api/datasets/a8aa2b/multitables/2c1266/"
-    #         ),
-    #         tabBook(multitable, dataset = ds, w)
-    #     )
-    # 
-    # 
-    #     for (i in seq_len(nrow(r))) {
-    #         # Test name
-    #         expect_equal(
-    #             r@.Data[[1]][[6]][[i]]$name,
-    #             name(ds[[tabFrame$values[i]]])
-    #         )
-    # 
-    #         if (is.na(tabFrame$ind[i])) {
-    #             expect_true(
-    #                 is.null(r@.Data[[1]][[6]][[i]]$weight)
-    #             )
-    #         } else {
-    #             expect_equal(
-    #                 r@.Data[[1]][[6]][[i]]$weight,
-    #                 tabFrame$ind[i]
-    #             )
-    #         }
-    #     }
-    # 
-    #     expect_equal(length(aliases(r)), 11)
-    # })
+    test_that("tabBook returns multiple results in the expected order", {
+        w <- list(weight1 = c("allpets", "q1"), weight2 = "q1")
+        # This is how crunchtabs tricks tabBook into giving it a cube
+        multitable <- newMultitable("~ `allpets`", ds)
+        # debugonce(tabBook)
+        tabFrame <- tabFramePrepare(ds, w)
+        print("Made it to test!")
+
+
+        r <- with_multi_POST(
+            c(
+                "https://app.crunch.io/api/datasets/50ec91/multitables/037c42/",
+                "https://app.crunch.io/api/datasets/50ec91/multitables/037c42/",
+                "https://app.crunch.io/api/datasets/50ec91/multitables/037c42/"
+            ),
+            tabBook(multitable, dataset = ds, w)
+        )
+
+
+        for (i in seq_len(nrow(r))) {
+            # Test name
+            expect_equal(
+                r@.Data[[1]][[6]][[i]]$name,
+                name(ds[[tabFrame$values[i]]])
+            )
+
+            if (is.na(tabFrame$ind[i])) {
+                expect_true(
+                    is.null(r@.Data[[1]][[6]][[i]]$weight)
+                )
+            } else {
+                expect_equal(
+                    r@.Data[[1]][[6]][[i]]$weight,
+                    tabFrame$ind[i]
+                )
+            }
+        }
+
+        expect_equal(length(aliases(r)), 11)
+    })
 })
 
 

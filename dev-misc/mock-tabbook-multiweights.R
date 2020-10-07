@@ -18,6 +18,7 @@ is.weight(ds$weight1) <- TRUE
 weight(ds) <- ds$weight1
 
 httpcache::clearCache()
+
 start_capturing("tmp")
 login() 
 ds <- loadDataset("Example dataset")
@@ -31,15 +32,20 @@ r <- tabBook(multitable, dataset = ds, w)
 stop_capturing()
 
 
-
+rn(list = ls())
+with_consent(deleteDataset("Example dataset"))
+ds <- newExampleDataset()
+ds$weight1 <- makeWeight(ds$q1 ~ c(0.3,0.3,0.4,0), name = 'weight1')
+ds$weight2 <- makeWeight(ds$q1 ~ c(0.4,0.4,0.1,0.1), name = 'weight2')
+is.weight(ds$weight2) <- TRUE
+is.weight(ds$weight1) <- TRUE
 weight(ds) <- NULL
 
+httpcache::clearCache()
 start_capturing("tmp_unweighted")
 login()
 ds <- loadDataset("Example dataset")
-weight(ds) <- NULL
 # Drop weights and capture again
-
 
 w <- list(weight1 = c('allpets', 'q1'), weight2 = 'q1')
 tabFramePrepare(
