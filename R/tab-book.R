@@ -30,7 +30,6 @@
 #' `use.legacy.tabbook.endpoint`.
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
-#' @param
 #' [in the crunch API documentation](
 #' https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options)
 #' or [for the legacy endpoint](
