@@ -2,7 +2,6 @@
 % Please edit documentation in R/tab-book.R
 \name{tabBook}
 \alias{tabBook}
-\alias{tabBookWeightSpec}
 \title{Compute a Tab Book}
 \usage{
 tabBook(
@@ -10,13 +9,11 @@ tabBook(
   dataset,
   weight = crunch::weight(dataset),
   output_format = c("json", "xlsx"),
-  file,
+  file = NULL,
   filter = NULL,
   use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
   ...
 )
-
-tabBookWeightSpec(dataset, weights, append_default_wt = TRUE)
 }
 \arguments{
 \item{multitable}{a \code{Multitable} object}
@@ -26,7 +23,10 @@ on the rows, and a selection of variables to use on the columns.}
 
 \item{weight}{a CrunchVariable that has been designated as a potential
 weight variable for \code{dataset}, or \code{NULL} for unweighted results.
-Default is the currently applied \code{\link{weight}}.}
+Default is the currently applied \code{\link{weight}}. Additionally, weights can be
+set on a per variable basis for json export only. To do so, specify the weight
+as either a list (which will be passed to \code{tabBookWeightSpec()}, or a data.frame
+that mimics the structure. See \code{\link[=tabBookWeightSpec]{tabBookWeightSpec()}} for more details.}
 
 \item{output_format}{character export format: currently supported values are "json"
 (default) and "xlsx".}
@@ -45,8 +45,10 @@ variable \code{R_USE_LEGACY_TABBOOK_ENDPOINT} or R option
 \code{use.legacy.tabbook.endpoint}.}
 
 \item{...}{Additional "options" passed to the tab book POST request.
-More details can be found
-\href{https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options}{in the crunch API documentation}
+More details can be found}
+
+\item{[in}{the crunch API documentation](
+https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options)
 or \href{https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options}{for the legacy endpoint}}
 }
 \value{

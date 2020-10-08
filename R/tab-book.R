@@ -12,7 +12,10 @@
 #' on the rows, and a selection of variables to use on the columns.
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `dataset`, or `NULL` for unweighted results.
-#' Default is the currently applied [`weight`].
+#' Default is the currently applied [`weight`]. Additionally, weights can be
+#' set on a per variable basis for json export only. To do so, specify the weight
+#' as either a list (which will be passed to `tabBookWeightSpec()`, or a data.frame
+#' that mimics the structure. See [`tabBookWeightSpec()`] for more details.
 #' @param output_format character export format: currently supported values are "json"
 #' (default) and "xlsx".
 #' @param file character local filename to write to. A default filename will be
@@ -27,6 +30,7 @@
 #' `use.legacy.tabbook.endpoint`.
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
+#' @param
 #' [in the crunch API documentation](
 #' https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options)
 #' or [for the legacy endpoint](
@@ -140,7 +144,10 @@ tabBookMulti <- function(
         stop("Empty list not allowed as a weight spec, use NULL to indicate no weights")
     }
 
-    if (!is.data.frame(weight_spec)) weight_spec <- tabBookWeightSpec(dataset, weight_spec)
+    if (is.data.frame(weight_spec) && !setequal(names(weight_spec), "name", "alias")) {
+        stop("if weight_spec is a data.frame it must have exactly two columns: 'name' & 'alias'")
+    }
+
     wt_vars <- unique(weight_spec$weight)
     # Add a column that indicates what page the variable will be on
     # in the weight-specific tabbook
@@ -186,6 +193,72 @@ tabBookMulti <- function(
     combinedk@.Data[[2]] <- pages
     combined
 }
+
+
+
+#' Helper function for setting complex weights on a tabbook
+#'
+#' For json [`tabBook()`], you can specify a weight per variable in the
+#' dataset, where each row in the data.frame indicates a weight and
+#' alias to use in the
+#'
+#' @param dataset A `CrunchDataset`
+#' @param weights A list where each item has a name that indicates the
+#' weight's alias that should be use (no name indicates unweighted) and
+#' each item is a vector of variable aliases to include as pages in the
+#' tabbook.
+#' @param append_default_wt Whether to append the dataset's default weight
+#' (or unweighted pages if no weight is set) for all variables.
+#'
+#' @return A data.frame with two columns, `weight`, the alias of the weight to use,
+#' and alias, the alias of the variable to use the weight on. If `append_default_wt`
+#' is `TRUE`, the returned object is sorted in the order of aliases in the dataset,
+#' and with the default weight first, followed by the weights specified in the `weights`
+#' argument.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' ds <- newExampleDataset("pets")
+#' mt <- newMultitable(~q1, ds)
+#'
+#' weight_spec <- tabBookWeightSpec(
+#'   ds,
+#'   list(wt1 = "gender", wt2 = "starttime", "gender")
+#' )
+#'
+#' # Now can use the weight spec in `tabBook()`
+#' tabbook <- tabBook(mt, ds, weight = weight_spec)
+#' }
+tabBookWeightSpec <- function(dataset, weights, append_default_wt = TRUE) {
+    weight_df <- stack(weights)
+    names(weight_df) <- c("alias", "weight")
+    # stack does mostly what we want, but we don't want factor
+    weight_df$weight <- as.character(weight_df$weight)
+
+    # If we don't need to append the default weights, we're done
+    if (!append_default_wt) return(weight_df)
+
+    default_weight <- if (is.null(weight(dataset))) "" else alias(weight(dataset))
+    default_weight_df <- data.frame(
+        alias = names(dataset),
+        weight = default_weight,
+        stringsAsFactors = FALSE
+    )
+
+    # Combine, but reorder so that the variables are in the same order as they are in the
+    # original dataset, with the default weight first and then the weights
+    # from the list are ordered after in the order they came in
+    default_weight_df$wt_pos <- 0
+    weight_df$wt_pos <- seq_len(nrow(weight_df))
+
+    out <- rbind(weight_df, default_weight_df)
+    out <- out[order(match(out$alias, names(dataset)), out$wt_pos), ]
+    out$wt_pos <- NULL
+    row.names(out) <- NULL # Really just for testing purposes
+    out
+}
+
 
 extToContentType <- function(ext) {
     mapping <- list(
@@ -380,35 +453,3 @@ setMethod("bases", "TabBookResult", function(x, margin = NULL) {
 setMethod("bases", "MultitableResult", function(x, margin = NULL) {
     lapply(x, bases, margin = margin)
 })
-
-
-#' @rdname tabBook
-#' @export
-tabBookWeightSpec <- function(dataset, weights, append_default_wt = TRUE) {
-    weight_df <- stack(weights)
-    names(weight_df) <- c("alias", "weight")
-    # stack does mostly what we want, but we don't want factor
-    weight_df$weight <- as.character(weight_df$weight)
-
-    # If we don't need to append the default weights, we're done
-    if (!append_default_wt) return(weight_df)
-
-    default_weight <- if (is.null(weight(dataset))) "" else alias(weight(dataset))
-    default_weight_df <- data.frame(
-        alias = names(dataset),
-        weight = default_weight,
-        stringsAsFactors = FALSE
-    )
-
-    # Combine, but reorder so that the variables are in the same order as they are in the
-    # original dataset, with the default weight first and then the weights
-    # from the list are ordered after in the order they came in
-    default_weight_df$wt_pos <- 0
-    weight_df$wt_pos <- seq_len(nrow(weight_df))
-
-    out <- rbind(weight_df, default_weight_df)
-    out <- out[order(match(out$alias, names(dataset)), out$wt_pos), ]
-    out$wt_pos <- NULL
-    row.names(out) <- NULL # Really just for testing purposes
-    out
-}
