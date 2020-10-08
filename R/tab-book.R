@@ -129,31 +129,30 @@ tabBookSingle <- function(
 tabBookMulti <- function(
     multitable,
     dataset,
-    weight,
+    weight_spec,
     output_format,
     file,
     filter,
     use_legacy_endpoint,
     dots
 ) {
-    if (length(weight) == 0) {
-        stop("Empty list not allowed as weights, use NULL to indicate no weights")
+    if (length(weight_spec) == 0) {
+        stop("Empty list not allowed as a weight spec, use NULL to indicate no weights")
     }
 
-    if (!is.data.frame(weights)) weights <- tabBookWeightSpec(weights)
-    wt_vars <- unique(weights$weight)
+    if (!is.data.frame(weight_spec)) weight_spec <- tabBookWeightSpec(dataset, weight_spec)
+    wt_vars <- unique(weight_spec$weight)
     # Add a column that indicates what page the variable will be on
     # in the weight-specific tabbook
-    weights$page_num <- ave(weights$weight, weights$weight, FUN = seq_along)
+    weight_spec$page_num <- as.numeric(ave(weight_spec$weight, weight_spec$weight, FUN = seq_along))
 
-
-    tabbooks <- lapply(wt_vars, function(wt) {
-        page_vars <- weights$alias[weights$weight == wt]
+    books <- lapply(wt_vars, function(wt) {
+        page_vars <- weight_spec$alias[weight_spec$weight == wt]
 
         tabBookSingle(
             multitable,
             dataset[page_vars],
-            weight,
+            dataset[[wt]],
             output_format,
             file,
             filter,
@@ -161,25 +160,31 @@ tabBookMulti <- function(
             dots
         )
     })
-    names(tabbooks) <- wt_vars
+    names(books) <- wt_vars
 
     # stitch together
+    # Most of the objects should be the same because they come from the same multitable
+    # But the analyses object contain an item per variable with the weight included
+    # and then the pages section contains the cube results
     analyses <- mapply(
-        weight = weights$weight,
-        page_num = weights$page_num,
-        FUN = function(weight, page_num) books[[weight]]@.Data[[1]]$analyses[page_num],
+        weight = weight_spec$weight,
+        page_num = weight_spec$page_num,
+        FUN = function(weight, page_num) {
+            books[[which(names(books) == weight)]]@.Data[[1]]$analyses[[page_num]]
+        },
         SIMPLIFY = FALSE
     )
     pages <- mapply(
-        weight = weights$weight,
-        page_num = weights$page_num,
-        FUN = function(weight, page_num) books[[weight]]@.Data[[2]][[page_num]],
+        weight = weight_spec$weight,
+        page_num = weight_spec$page_num,
+        FUN = function(weight, page_num) books[[which(names(books) == weight)]]@.Data[[2]][[page_num]],
         SIMPLIFY = FALSE
     )
-    book <- books[[1]]
-    book@.Data[[1]] <- analyses
-    book@.Data[[2]] <- pages
-    book
+
+    combined <- books[[1]] # start with first one for skeleton
+    combined@.Data[[1]]$analyses <- analyses
+    combinedk@.Data[[2]] <- pages
+    combined
 }
 
 extToContentType <- function(ext) {
