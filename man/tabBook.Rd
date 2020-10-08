@@ -2,6 +2,7 @@
 % Please edit documentation in R/tab-book.R
 \name{tabBook}
 \alias{tabBook}
+\alias{tabBookWeightSpec}
 \title{Compute a Tab Book}
 \usage{
 tabBook(
@@ -14,6 +15,8 @@ tabBook(
   use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
   ...
 )
+
+tabBookWeightSpec(dataset, weights, append_default_wt = TRUE)
 }
 \arguments{
 \item{multitable}{a \code{Multitable} object}

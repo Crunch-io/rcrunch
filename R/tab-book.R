@@ -305,3 +305,32 @@ setMethod("bases", "TabBookResult", function(x, margin = NULL) {
 setMethod("bases", "MultitableResult", function(x, margin = NULL) {
     lapply(x, bases, margin = margin)
 })
+
+
+#' @rdname tabBook
+#' @export
+tabBookWeightSpec <- function(dataset, weights, append_default_wt = TRUE) {
+    weight_df <- stack(weights)
+    names(weight_df) <- c("alias", "weight")
+
+    # If we don't need to append the default weights, we're done
+    if (!use_default) return(weight_df)
+
+    default_weight <- if (is.null(weight(ds))) NA_character_ else alias(weight(ds))
+    default_weight_df <- data.frame(
+        alias = names(dataset),
+        weight = default_weight,
+        stringsAsFactors = FALSE
+    )
+
+    # Combine, but reorder so that the variables are in the same order as they are in the
+    # original dataset, with the default weight first and then the weights
+    # from the list are ordered after in the order they came in
+    default_weight_df$wt_pos <- 0
+    weight_df$wt_pos <- seq_len(nrow(weight_df))
+
+    out <- rbind(weight_df, default_weight_df)
+    out <- out[order(match(out$alias, names(dataset)), out$wt_pos), ]
+    out$wt_pos <- NULL
+    out
+}
