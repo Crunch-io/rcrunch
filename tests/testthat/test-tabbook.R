@@ -1,7 +1,7 @@
 context("tabBook")
 with_mock_crunch({
-    ds <- loadDataset("test ds") ## Has 2 multitables
-    ds2 <- loadDataset("ECON.sav") ## Has no multitables
+    ds <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
 
     with_POST("https://app.crunch.io/api/datasets/1/filters/filter1/", {
         ## Mock the return of that creation
