@@ -1,7 +1,7 @@
 context("tabBook")
 with_mock_crunch({
-    ds <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds <- loadDataset("test ds") ## No weight set on dataset
+    ds2 <- loadDataset("ECON.sav") ## Has weight set on dataset
 
     with_POST("https://app.crunch.io/api/datasets/1/filters/filter1/", {
         ## Mock the return of that creation
@@ -296,6 +296,63 @@ with_mock_crunch({
                 prop.table(book[[3]][[2]], 2)
             )
         })
+    })
+
+    test_that("tabBookWeightSpec works on dataset when appending default true weight", {
+        expect_equal(
+            tabBookWeightSpec(
+                ds2[c("gender", "starttime")],
+                list(wt1 = "gender", wt2 = "starttime")
+            ),
+            data.frame(
+                alias =  c("gender", "gender", "starttime", "starttime"),
+                weight = c("birthyr", "wt1", "birthyr", "wt2"),
+                stringsAsFactors = FALSE
+            )
+        )
+    })
+
+    test_that("tabBookWeightSpec works on dataset when appending default unweighted", {
+        expect_equal(
+            tabBookWeightSpec(
+                ds[c("gender", "mymrset", "location")],
+                list(wt1 = "gender", wt2 = "location")
+            ),
+            data.frame(
+                alias =  c("gender", "gender", "mymrset", "location", "location"),
+                weight = c(NA, "wt1", NA, NA, "wt2"),
+                stringsAsFactors = FALSE
+            )
+        )
+    })
+
+    test_that("tabBookWeightSpec works on dataset when not appending default", {
+        expect_equal(
+            tabBookWeightSpec(
+                ds[c("gender", "mymrset", "location")],
+                list(wt1 = "gender", wt2 = "location"),
+                append_default_wt = FALSE
+            ),
+            data.frame(
+                alias =  c("gender",  "location"),
+                weight = c("wt1", "wt2"),
+                stringsAsFactors = FALSE
+            )
+        )
+    })
+
+    test_that("tabBookWeightSpec works on dataset when appending and complicated list input", {
+        expect_equal(
+            tabBookWeightSpec(
+                ds2[c("gender", "starttime")],
+                list(wt1 = "gender", wt2 = "starttime", "gender")
+            ),
+            data.frame(
+                alias =  c("gender", "gender", "gender", "starttime", "starttime"),
+                weight = c("birthyr", "wt1", NA, "birthyr", "wt2"),
+                stringsAsFactors = FALSE
+            )
+        )
     })
 })
 

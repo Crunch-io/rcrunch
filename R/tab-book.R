@@ -312,6 +312,9 @@ setMethod("bases", "MultitableResult", function(x, margin = NULL) {
 tabBookWeightSpec <- function(dataset, weights, append_default_wt = TRUE) {
     weight_df <- stack(weights)
     names(weight_df) <- c("alias", "weight")
+    # stack does mostly what we want, but we don't want factor and we want NA instead of ""
+    weight_df$weight <- as.character(weight_df$weight)
+    weight_df$weight <- ifelse(weight_df$weight == "", NA, weight_df$weight)
 
     # If we don't need to append the default weights, we're done
     if (!append_default_wt) return(weight_df)
@@ -332,5 +335,6 @@ tabBookWeightSpec <- function(dataset, weights, append_default_wt = TRUE) {
     out <- rbind(weight_df, default_weight_df)
     out <- out[order(match(out$alias, names(dataset)), out$wt_pos), ]
     out$wt_pos <- NULL
+    row.names(out) <- NULL # Really just for testing purposes
     out
 }
