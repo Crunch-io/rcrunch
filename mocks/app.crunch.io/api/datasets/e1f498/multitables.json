@@ -1,0 +1,14 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/e1f498/multitables/",
+    "description": "List of multitable definitions for this dataset",
+    "index": {
+        "https://app.crunch.io/api/datasets/e1f498/multitables/b5c6f7/": {
+            "is_public": false,
+            "team": null,
+            "owner_id": "https://app.crunch.io/api/users/27a158/",
+            "name": "`allpets`",
+            "id": "b5c6f7"
+        }
+    }
+}

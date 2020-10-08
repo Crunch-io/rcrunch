@@ -1,0 +1,35 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/by_name/multiweight%20tabbook%20ds/",
+    "description": "Datasets with a given name ",
+    "index": {
+        "https://app.crunch.io/api/datasets/e1f498/": {
+            "size": {
+                "rows": 20,
+                "unfiltered_rows": 20,
+                "columns": 12
+            },
+            "current_editor_name": "Greg",
+            "account": "https://app.crunch.io/api/accounts/00001/",
+            "owner_name": "Greg",
+            "name": "multiweight tabbook ds",
+            "end_date": null,
+            "streaming": "no",
+            "owner_id": "https://app.crunch.io/api/users/27a158/",
+            "current_editor": "https://app.crunch.io/api/users/27a158/",
+            "creation_time": "2020-10-08T17:02:22.994000+00:00",
+            "archived": false,
+            "view_of": null,
+            "start_date": null,
+            "modification_time": "2020-10-08T17:02:29.444000+00:00",
+            "access_time": "2020-10-08T17:02:22.860000+00:00",
+            "permissions": {
+                "edit": true,
+                "view": true
+            },
+            "is_published": true,
+            "id": "e1f498",
+            "description": "A dataset to illustrate the API"
+        }
+    }
+}
