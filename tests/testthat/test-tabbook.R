@@ -320,7 +320,7 @@ with_mock_crunch({
             ),
             data.frame(
                 alias =  c("gender", "gender", "mymrset", "location", "location"),
-                weight = c(NA, "wt1", NA, NA, "wt2"),
+                weight = c("", "wt1", "", "", "wt2"),
                 stringsAsFactors = FALSE
             )
         )
@@ -349,7 +349,7 @@ with_mock_crunch({
             ),
             data.frame(
                 alias =  c("gender", "gender", "gender", "starttime", "starttime"),
-                weight = c("birthyr", "wt1", NA, "birthyr", "wt2"),
+                weight = c("birthyr", "wt1", "", "birthyr", "wt2"),
                 stringsAsFactors = FALSE
             )
         )
