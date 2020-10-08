@@ -154,6 +154,10 @@ tabBookMulti <- function(
 
     if (!is.data.frame(weight_spec)) weight_spec <- tabBookWeightSpec(dataset, weight_spec)
 
+    if (any(duplicated(weight_spec))) {
+        stop("Found duplicate weight + alias combinations in weight_spec")
+    }
+
     wt_vars <- unique(weight_spec$weight)
     # Add a column that indicates what page the variable will be on
     # in the weight-specific tabbook
@@ -267,6 +271,12 @@ tabBookWeightSpec <- function(dataset, weights, append_default_wt = TRUE) {
     out <- out[order(match(out$alias, names(dataset)), out$wt_pos), ]
     out$wt_pos <- NULL
     row.names(out) <- NULL # Really just for testing purposes
+
+    duplicated <- duplicated(out)
+    if (any(duplicated)) {
+        warning("Dropping duplicated alias & weight combinations")
+        out <- out[!duplicated, ]
+    }
     out
 }
 
