@@ -161,7 +161,7 @@ tabBookMulti <- function(
             dataset[page_vars],
             dataset[[wt]],
             output_format,
-            file,
+            file = NULL,
             filter,
             use_legacy_endpoint,
             dots
@@ -191,6 +191,11 @@ tabBookMulti <- function(
     combined <- books[[1]] # start with first one for skeleton
     combined@.Data[[1]]$analyses <- analyses
     combinedk@.Data[[2]] <- pages
+
+    if (!is.null(file)) {
+        jsonlite::write_json(toJSON(combined), file)
+        return(invisible(file))
+    }
     combined
 }
 
