@@ -314,9 +314,9 @@ tabBookWeightSpec <- function(dataset, weights, append_default_wt = TRUE) {
     names(weight_df) <- c("alias", "weight")
 
     # If we don't need to append the default weights, we're done
-    if (!use_default) return(weight_df)
+    if (!append_default_wt) return(weight_df)
 
-    default_weight <- if (is.null(weight(ds))) NA_character_ else alias(weight(ds))
+    default_weight <- if (is.null(weight(dataset))) NA_character_ else alias(weight(dataset))
     default_weight_df <- data.frame(
         alias = names(dataset),
         weight = default_weight,
