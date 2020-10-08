@@ -145,17 +145,17 @@ tabBookMulti <- function(
     }
 
     if (output_format != "json") {
-        stop("Complex weights only supported for json tabBooks.")
+        stop("Complex weights only supported for json tabBooks")
     }
 
-    if (is.data.frame(weight_spec) && !setequal(names(weight_spec), c("weight", "alias")) {
+    if (is.data.frame(weight_spec) && !setequal(names(weight_spec), c("weight", "alias"))) {
         stop("if weight_spec is a data.frame it must have exactly two columns: 'weight' & 'alias'")
     }
 
     if (!is.data.frame(weight_spec)) weight_spec <- tabBookWeightSpec(dataset, weight_spec)
 
     if (any(duplicated(weight_spec))) {
-        stop("Found duplicate weight + alias combinations in weight_spec")
+        stop("Found duplicate weight and alias combinations in weight_spec")
     }
 
     wt_vars <- unique(weight_spec$weight)
