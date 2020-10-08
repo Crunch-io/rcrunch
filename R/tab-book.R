@@ -48,7 +48,7 @@
 #' @importFrom jsonlite fromJSON
 #' @export
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
-                    output_format = c("json", "xlsx"), file, filter = NULL,
+                    output_format = c("json", "xlsx"), file = NULL, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
                     ...) {
     dots <- list(...)
@@ -62,15 +62,29 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         fmt <- match.arg(output_format)
     }
 
-    accept <- extToContentType(fmt)
-    if (missing(file)) {
-        if (fmt == "json") {
-            ## We don't need a file.
-            file <- NULL
-        } else {
-            ## Generate a reasonable filename in the current working dir
-            file <- paste(name(multitable), fmt, sep = ".")
-        }
+    if (is.null(weight) | is.variable(weight)) {
+        tabBookSingle(multitable, dataset, weight, fmt, file, filter, use_legacy_endpoint, dots)
+    } else if (is.list(weight)) {
+        tabBookMulti(multitable, dataset, weight, fmt, file, filter,  use_legacy_endpoint, dots)
+    } else {
+        stop("weight must be NULL, a CrunchVariable or a list indicating a multi-weight spec")
+    }
+}
+
+tabBookSingle <- function(
+    multitable,
+    dataset,
+    weight,
+    output_format,
+    file,
+    filter,
+    use_legacy_endpoint,
+    dots
+) {
+    accept <- extToContentType(output_format)
+    if (is.null(file) & output_format != "json") {
+        ## Generate a reasonable filename in the current working dir
+        file <- paste(name(multitable), output_format, sep = ".")
     }
 
     if (!is.null(weight)) {
@@ -110,6 +124,62 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         ## (invisibly) return the filename
         invisible(file)
     }
+}
+
+tabBookMulti <- function(
+    multitable,
+    dataset,
+    weight,
+    output_format,
+    file,
+    filter,
+    use_legacy_endpoint,
+    dots
+) {
+    if (length(weight) == 0) {
+        stop("Empty list not allowed as weights, use NULL to indicate no weights")
+    }
+
+    if (!is.data.frame(weights)) weights <- tabBookWeightSpec(weights)
+    wt_vars <- unique(weights$weight)
+    # Add a column that indicates what page the variable will be on
+    # in the weight-specific tabbook
+    weights$page_num <- ave(weights$weight, weights$weight, FUN = seq_along)
+
+
+    tabbooks <- lapply(wt_vars, function(wt) {
+        page_vars <- weights$alias[weights$weight == wt]
+
+        tabBookSingle(
+            multitable,
+            dataset[page_vars],
+            weight,
+            output_format,
+            file,
+            filter,
+            use_legacy_endpoint,
+            dots
+        )
+    })
+    names(tabbooks) <- wt_vars
+
+    # stitch together
+    analyses <- mapply(
+        weight = weights$weight,
+        page_num = weights$page_num,
+        FUN = function(weight, page_num) books[[weight]]@.Data[[1]]$analyses[page_num],
+        SIMPLIFY = FALSE
+    )
+    pages <- mapply(
+        weight = weights$weight,
+        page_num = weights$page_num,
+        FUN = function(weight, page_num) books[[weight]]@.Data[[2]][[page_num]],
+        SIMPLIFY = FALSE
+    )
+    book <- books[[1]]
+    book@.Data[[1]] <- analyses
+    book@.Data[[2]] <- pages
+    book
 }
 
 extToContentType <- function(ext) {
