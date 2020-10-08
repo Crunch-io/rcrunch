@@ -2,6 +2,7 @@ context("tabBook")
 with_mock_crunch({
     ds <- loadDataset("test ds") ## No weight set on dataset
     ds2 <- loadDataset("ECON.sav") ## Has weight set on dataset
+    ds3 <- loadDataset("multiweight tabbook ds")
 
     with_POST("https://app.crunch.io/api/datasets/1/filters/filter1/", {
         ## Mock the return of that creation
@@ -353,6 +354,54 @@ with_mock_crunch({
                 stringsAsFactors = FALSE
             )
         )
+    })
+
+    w <- list(weight1 = c("allpets", "q1"), weight2 = "q1")
+    w_df <- tabBookWeightSpec(ds3, w)
+    multitable <- multitables(ds3)[[1]]
+    test_that("Can load a multiweight tabbook", {
+        ds3_id <- ds3@body$id
+        mt_id <- multitable@body$id
+
+        with_multi_POST(
+            c(paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-unweighted/"),
+              paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight1/"),
+              paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight2/")
+            ), {
+                r <- tabBook(multitable, ds3, weight = w)
+            }
+        )
+
+        # Right number of pages
+        expect_equal(length(r@.Data[[1]]$analyses), nrow(w_df))
+        expect_equal(length(r@.Data[[2]]), nrow(w_df))
+
+        # Each analysis has right weight
+        expect_equal(
+            unname(vapply(r@.Data[[1]]$analyses, function(x) x$weight %||% "", "")),
+            w_df$weight
+        )
+
+        # Each analysis has right name
+        expect_equal(
+            unname(vapply(r@.Data[[1]]$analyses, function(x) x$name %||% "", "")),
+            unname(vapply(w_df$alias, function(x) name(ds3[[x]]), ""))
+        )
+
+
+        # TODO: numeric variables don't have alias, but total instead.
+        # See if this is bug with backend or intentional
+        # ref: https://github.com/Crunch-io/rcrunch/issues/509
+        aliases <- unname(vapply(
+            r@.Data[[2]],
+            function(x) x@.Data[[1]][[1]]@.Data[[1]]$dimensions[[1]]$references$alias,
+            ""
+        ))
+        expect_equal(
+           aliases[aliases != "total"],
+           w_df$alias[aliases != "total"]
+        )
+
     })
 })
 
