@@ -152,6 +152,8 @@ tabBookMulti <- function(
         stop("if weight_spec is a data.frame it must have exactly two columns: 'name' & 'alias'")
     }
 
+    if (!is.data.frame(weight_spec)) weight_spec <- tabBookWeightSpec(dataset, weight_spec)
+
     wt_vars <- unique(weight_spec$weight)
     # Add a column that indicates what page the variable will be on
     # in the weight-specific tabbook
