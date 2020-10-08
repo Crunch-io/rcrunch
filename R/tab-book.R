@@ -144,6 +144,10 @@ tabBookMulti <- function(
         stop("Empty list not allowed as a weight spec, use NULL to indicate no weights")
     }
 
+    if (output_format != "json") {
+        stop("Complex weights only supported for json tabBooks.")
+    }
+
     if (is.data.frame(weight_spec) && !setequal(names(weight_spec), "name", "alias")) {
         stop("if weight_spec is a data.frame it must have exactly two columns: 'name' & 'alias'")
     }
