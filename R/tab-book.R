@@ -190,7 +190,7 @@ tabBookMulti <- function(
 
     combined <- books[[1]] # start with first one for skeleton
     combined@.Data[[1]]$analyses <- analyses
-    combinedk@.Data[[2]] <- pages
+    combined@.Data[[2]] <- pages
 
     if (!is.null(file)) {
         jsonlite::write_json(toJSON(combined), file)
