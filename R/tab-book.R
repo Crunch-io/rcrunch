@@ -129,6 +129,8 @@ tabBookSingle <- function(
     }
 }
 
+#' @importFrom stats ave
+#' @importFrom utils stack
 tabBookMulti <- function(
     multitable,
     dataset,
@@ -214,13 +216,13 @@ tabBookMulti <- function(
 #'
 #' For json [`tabBook()`], you can specify a weight per variable in the
 #' dataset, where each row in the data.frame indicates a weight and
-#' alias to use in the
+#' alias to use for each page.
 #'
 #' @param dataset A `CrunchDataset`
 #' @param weights A list where each item has a name that indicates the
 #' weight's alias that should be use (no name indicates unweighted) and
 #' each item is a vector of variable aliases to include as pages in the
-#' tabbook.
+#' `tabbook`.
 #' @param append_default_wt Whether to append the dataset's default weight
 #' (or unweighted pages if no weight is set) for all variables.
 #'

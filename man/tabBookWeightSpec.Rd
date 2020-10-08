@@ -12,7 +12,7 @@ tabBookWeightSpec(dataset, weights, append_default_wt = TRUE)
 \item{weights}{A list where each item has a name that indicates the
 weight's alias that should be use (no name indicates unweighted) and
 each item is a vector of variable aliases to include as pages in the
-tabbook.}
+\code{tabbook}.}
 
 \item{append_default_wt}{Whether to append the dataset's default weight
 (or unweighted pages if no weight is set) for all variables.}
@@ -27,7 +27,7 @@ argument.
 \description{
 For json \code{\link[=tabBook]{tabBook()}}, you can specify a weight per variable in the
 dataset, where each row in the data.frame indicates a weight and
-alias to use in the
+alias to use for each page.
 }
 \examples{
 \dontrun{
