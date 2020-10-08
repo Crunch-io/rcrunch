@@ -148,8 +148,8 @@ tabBookMulti <- function(
         stop("Complex weights only supported for json tabBooks.")
     }
 
-    if (is.data.frame(weight_spec) && !setequal(names(weight_spec), "name", "alias")) {
-        stop("if weight_spec is a data.frame it must have exactly two columns: 'name' & 'alias'")
+    if (is.data.frame(weight_spec) && !setequal(names(weight_spec), c("weight", "alias")) {
+        stop("if weight_spec is a data.frame it must have exactly two columns: 'weight' & 'alias'")
     }
 
     if (!is.data.frame(weight_spec)) weight_spec <- tabBookWeightSpec(dataset, weight_spec)
