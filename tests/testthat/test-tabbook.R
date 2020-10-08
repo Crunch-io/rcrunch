@@ -300,7 +300,7 @@ with_mock_crunch({
     })
 
     test_that("tabBookWeightSpec works on dataset when appending default true weight", {
-        expect_equal(
+        expect_equivalent(
             tabBookWeightSpec(
                 ds2[c("gender", "starttime")],
                 list(wt1 = "gender", wt2 = "starttime")
@@ -314,7 +314,7 @@ with_mock_crunch({
     })
 
     test_that("tabBookWeightSpec works on dataset when appending default unweighted", {
-        expect_equal(
+        expect_equivalent(
             tabBookWeightSpec(
                 ds[c("gender", "mymrset", "location")],
                 list(wt1 = "gender", wt2 = "location")
@@ -328,7 +328,7 @@ with_mock_crunch({
     })
 
     test_that("tabBookWeightSpec works on dataset when not appending default", {
-        expect_equal(
+        expect_equivalent(
             tabBookWeightSpec(
                 ds[c("gender", "mymrset", "location")],
                 list(wt1 = "gender", wt2 = "location"),
@@ -343,7 +343,7 @@ with_mock_crunch({
     })
 
     test_that("tabBookWeightSpec works on dataset when appending and complicated list input", {
-        expect_equal(
+        expect_equivalent(
             tabBookWeightSpec(
                 ds2[c("gender", "starttime")],
                 list(wt1 = "gender", wt2 = "starttime", "gender")
@@ -356,21 +356,41 @@ with_mock_crunch({
         )
     })
 
+    test_that("tabBookWeight warns and drops duplicate items", {
+        expect_warning(
+            weight_spec <- tabBookWeightSpec(
+                ds2[c("gender", "starttime")],
+                list(wt1 = "gender", wt2 = "starttime", birthyr = "gender") # birthyr default too
+            ),
+            "Dropping duplicated alias & weight combinations"
+        )
+        expect_equivalent(
+            weight_spec,
+            data.frame(
+                alias =  c("gender", "gender","starttime", "starttime"),
+                weight = c("birthyr", "wt1", "birthyr", "wt2"),
+                stringsAsFactors = FALSE
+            )
+        )
+    })
+
     w <- list(weight1 = c("allpets", "q1"), weight2 = "q1")
     w_df <- tabBookWeightSpec(ds3, w)
     multitable <- multitables(ds3)[[1]]
-    test_that("Can load a multiweight tabbook", {
-        ds3_id <- ds3@body$id
-        mt_id <- multitable@body$id
 
-        with_multi_POST(
-            c(paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-unweighted/"),
-              paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight1/"),
-              paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight2/")
-            ), {
-                r <- tabBook(multitable, ds3, weight = w)
-            }
-        )
+    # Used for constructing the paths to the multitable returns
+    ds3_id <- ds3@body$id
+    mt_id <- multitable@body$id
+    mt_paths <- c(
+        paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-unweighted/"),
+        paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight1/"),
+        paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight2/")
+    )
+
+    test_that("Can load a multiweight tabbook", {
+        with_multi_POST(mt_paths, {
+            r <- tabBook(multitable, ds3, weight = w_df)
+        })
 
         # Right number of pages
         expect_equal(length(r@.Data[[1]]$analyses), nrow(w_df))
@@ -402,6 +422,48 @@ with_mock_crunch({
            w_df$alias[aliases != "total"]
         )
 
+        # Check that we can also specify a list
+        with_multi_POST(mt_paths, {
+            r_from_list <- tabBook(multitable, ds3, weight = w)
+        })
+
+        expect_equal(r, r_from_list)
+    })
+
+    test_that("Fails on empty list", {
+        expect_error(
+            tabBook(multitable, ds3, weight = list(), output_format = "xlsx"),
+            "Empty list not allowed as a weight spec, use NULL to indicate no weights"
+        )
+    })
+
+    test_that("Fails when multi weight and excel", {
+        expect_error(
+            tabBook(multitable, ds3, weight = w, output_format = "xlsx"),
+            "Complex weights only supported for json tabBooks"
+        )
+    })
+
+    test_that("Fails when duplicated weights", {
+        weights <- data.frame(weight = c("wt1", "wt1"), alias = c("x", "x"), stringsAsFactors = FALSE)
+        expect_error(
+            tabBook(multitable, ds3, weight = weights),
+            "Found duplicate weight and alias combinations in weight_spec"
+        )
+    })
+
+    test_that("Fails when wrong columns are given in weight data.frame argument", {
+        weights <- data.frame(a = 1, stringsAsFactors = FALSE)
+        expect_error(
+            tabBook(multitable, ds3, weight = weights),
+            "if weight_spec is a data.frame it must have exactly two columns: 'weight' & 'alias'"
+        )
+
+        weights <- data.frame(weight = "wt1", alias = "q1", order = 1, stringsAsFactors = FALSE)
+        expect_error(
+            tabBook(multitable, ds3, weight = weights),
+            "if weight_spec is a data.frame it must have exactly two columns: 'weight' & 'alias'"
+        )
     })
 })
 
