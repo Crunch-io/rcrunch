@@ -15,18 +15,6 @@
             "name": "Key Pet Indicators",
             "size": 3
         },
-        "../variables/2e784d/": {
-            "discarded": false,
-            "alias": "weight2",
-            "secure": false,
-            "name": "weight2",
-            "id": "2e784d",
-            "type": "numeric",
-            "notes": "",
-            "derived": true,
-            "hidden": false,
-            "description": "Raked weighting based on: Pet"
-        },
         "1d7b21/": {
             "type": "folder",
             "name": "Dog Metrics",
@@ -37,12 +25,24 @@
             "name": "Details",
             "size": 1
         },
-        "../variables/201c51/": {
+        "../variables/ec1665/": {
             "discarded": false,
             "alias": "weight1",
             "secure": false,
             "name": "weight1",
-            "id": "201c51",
+            "id": "ec1665",
+            "type": "numeric",
+            "notes": "",
+            "derived": true,
+            "hidden": false,
+            "description": "Raked weighting based on: Pet"
+        },
+        "../variables/75066f/": {
+            "discarded": false,
+            "alias": "weight2",
+            "secure": false,
+            "name": "weight2",
+            "id": "75066f",
             "type": "numeric",
             "notes": "",
             "derived": true,
@@ -63,8 +63,8 @@
         "1d7b21/",
         "46e66a/",
         "ae2d70/",
-        "../variables/201c51/",
-        "../variables/2e784d/"
+        "../variables/ec1665/",
+        "../variables/75066f/"
     ],
     "size": 11
 }

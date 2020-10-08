@@ -24,6 +24,30 @@
             "hidden": false,
             "description": ""
         },
+        "75066f/": {
+            "discarded": false,
+            "alias": "weight2",
+            "secure": false,
+            "name": "weight2",
+            "id": "75066f",
+            "type": "numeric",
+            "notes": "",
+            "derived": true,
+            "hidden": false,
+            "description": "Raked weighting based on: Pet"
+        },
+        "ec1665/": {
+            "discarded": false,
+            "alias": "weight1",
+            "secure": false,
+            "name": "weight1",
+            "id": "ec1665",
+            "type": "numeric",
+            "notes": "",
+            "derived": true,
+            "hidden": false,
+            "description": "Raked weighting based on: Pet"
+        },
         "000002/": {
             "discarded": false,
             "alias": "country",
@@ -35,18 +59,6 @@
             "derived": false,
             "hidden": false,
             "description": ""
-        },
-        "201c51/": {
-            "discarded": false,
-            "alias": "weight1",
-            "secure": false,
-            "name": "weight1",
-            "id": "201c51",
-            "type": "numeric",
-            "notes": "",
-            "derived": true,
-            "hidden": false,
-            "description": "Raked weighting based on: Pet"
         },
         "000004/": {
             "discarded": false,
@@ -71,18 +83,6 @@
             "derived": false,
             "hidden": false,
             "description": "How many dogs do you have?"
-        },
-        "2e784d/": {
-            "discarded": false,
-            "alias": "weight2",
-            "secure": false,
-            "name": "weight2",
-            "id": "2e784d",
-            "type": "numeric",
-            "notes": "",
-            "derived": true,
-            "hidden": false,
-            "description": "Raked weighting based on: Pet"
         },
         "000007/": {
             "secure": false,

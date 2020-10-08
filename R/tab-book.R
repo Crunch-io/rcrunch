@@ -102,7 +102,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         books <- lapply(unique(tabFrame$weight), function(w) {
 
             if (is.na(w)) {
-                w <- "UNWEIGHTED"
+                w <- NULL
                 pushWeight <- NULL
                 vars <- tabFrame$alias[is.na(tabFrame$weight)]
             } else {
@@ -110,7 +110,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                 vars <- tabFrame$alias[tabFrame$weight %in% w]
             }
             
-            # print("Running tabBook for weight: %s", w)
+            print(names(dataset[vars]))
 
             r <- tabBookSingle(
                 multitable = multitable,
@@ -122,16 +122,20 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                 use_legacy_endpoint = use_legacy_endpoint,
                 ...
             )
+            
+            
+            
             return(r)
         })
         
         names(books) <- unique(tabFrame$weight)
+        names(books)[is.na(names(books))] <- "UNWEIGHTED"
         
         # Repack
         book <- books[[1]] 
         for (row in seq_len(nrow(tabFrame))) {
             tf <- tabFrame[row,]
-            tf$ind[is.na(tf$weight)] <- "UNWEIGHTED"
+            tf$weight[is.na(tf$weight)] <- "UNWEIGHTED"
             position <- tf$position
             part <- books[[tf$weight]]@.Data
             book@.Data[[1]]$analyses[row] <- part[[1]]$analyses[position]

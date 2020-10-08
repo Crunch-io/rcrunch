@@ -1,0 +1,89 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/63b9d9/variables/75066f/",
+    "catalogs": {
+        "parent": "https://app.crunch.io/api/datasets/63b9d9/variables/",
+        "folder": "https://app.crunch.io/api/datasets/63b9d9/folders/"
+    },
+    "fragments": {
+        "missing_rules": "https://app.crunch.io/api/datasets/63b9d9/variables/75066f/missing_rules/",
+        "user_settings": "https://app.crunch.io/api/datasets/63b9d9/variables/75066f/user_settings/",
+        "dataset": "https://app.crunch.io/api/datasets/63b9d9/"
+    },
+    "views": {
+        "frequencies": "https://app.crunch.io/api/datasets/63b9d9/variables/75066f/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/63b9d9/variables/75066f/summary/",
+        "values": "https://app.crunch.io/api/datasets/63b9d9/variables/75066f/values/",
+        "cast": "https://app.crunch.io/api/datasets/63b9d9/variables/75066f/cast/"
+    },
+    "body": {
+        "secure": false,
+        "name": "weight2",
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "notes": "",
+        "derived": true,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "weight2",
+        "derivation": {
+            "function": "rake",
+            "args": [
+                {
+                    "variable": "../000007/",
+                    "targets": [
+                        [
+                            1,
+                            0.4
+                        ],
+                        [
+                            2,
+                            0.4
+                        ],
+                        [
+                            3,
+                            0.1
+                        ],
+                        [
+                            8,
+                            0.1
+                        ],
+                        [
+                            9,
+                            0
+                        ],
+                        [
+                            -1,
+                            0
+                        ]
+                    ]
+                }
+            ]
+        },
+        "dataset_id": "63b9d9",
+        "owner": null,
+        "hidden": false,
+        "view": {
+            "column_width": null
+        },
+        "type": "numeric",
+        "id": "75066f",
+        "categories": [
+
+        ],
+        "description": "Raked weighting based on: Pet"
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/63b9d9/"
+    }
+}

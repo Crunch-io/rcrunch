@@ -1,6 +1,7 @@
 
 
 with_api_fixture <- function(fixture_path, expr) {
+    httpcache::clearCache()
     with(
         crunch::temp.options(
             crunch.api = "https://app.crunch.io/api/",
@@ -15,7 +16,6 @@ with_api_fixture <- function(fixture_path, expr) {
 
 with_api_fixture("../../tmp", {
 
-    
     context('tabFramePrepare - weighted tests')
     
     ds <- loadDataset("Example dataset")
@@ -72,7 +72,10 @@ with_api_fixture("../../tmp", {
 
 })
 
-with_api_fixture("../../tmp_unweighted", {
+
+# httpcache::clearCache()
+
+with_api_fixture("../../tmp", {
     context("tabBook multiweighted")
     test_that("tabBook returns multiple results in the expected order", {
         ds <- loadDataset("Example dataset")
@@ -84,20 +87,20 @@ with_api_fixture("../../tmp_unweighted", {
         
         r <- with_multi_POST(
             c(
-                "https://app.crunch.io/api/datasets/63b9d9/multitables/722ceb/tb-unweighted/",
-                "https://app.crunch.io/api/datasets/63b9d9/multitables/722ceb/tb-weight1/",
-                "https://app.crunch.io/api/datasets/63b9d9/multitables/722ceb/tb-weight2/"
-                
+                "https://app.crunch.io/api/datasets/63b9d9/multitables/300608/tb-weight1/",
+                "https://app.crunch.io/api/datasets/63b9d9/multitables/300608/tb-weight2/"
             ),
             tabBook(multitable, dataset = ds, w)
         )
         
+        print(tabFrame)
+        saveRDS(r, "test_object.rds")
         
         for (i in seq_len(nrow(r))) {
             # Test name
             
-            print(tabFrame[i, ])
-            print(r@.Data[[1]][[6]][[i]]$name)
+            # print(tabFrame[i, ])
+            # print(r@.Data[[1]][[6]][[i]]$name)
             
             expect_equal(
                 r@.Data[[1]][[6]][[i]]$name,

@@ -25,6 +25,8 @@ ds <- loadDataset("Example dataset")
 w <- list(weight1 = c('allpets', 'q1'), weight2 = 'q1')
 tabFramePrepare(
     ds[c("q1", "allpets", "weight2", "weight1")], w)
+ds[["weight1"]]
+ds[["weight2"]]
 tabFramePrepare(ds, w)
 tabFrame <- tabFramePrepare(ds, w)
 multitable <- newMultitable("~ `allpets`", ds)
@@ -45,6 +47,8 @@ httpcache::clearCache()
 start_capturing("tmp_unweighted")
 login()
 ds <- loadDataset("Example dataset")
+ds[["weight1"]]
+ds[["weight2"]]
 # Drop weights and capture again
 
 w <- list(weight1 = c('allpets', 'q1'), weight2 = 'q1')
