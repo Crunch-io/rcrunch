@@ -382,9 +382,9 @@ with_mock_crunch({
     ds3_id <- ds3@body$id
     mt_id <- multitable@body$id
     mt_paths <- c(
-        paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-unweighted/"),
-        paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight1/"),
-        paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight2/")
+        paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-unweighted/"), #nolint
+        paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight1/"), #nolint
+        paste0("https://app.crunch.io/api/datasets/", ds3_id, "/multitables/", mt_id, "/tabbook-weight2/") #nolint
     )
 
     test_that("Can load a multiweight tabbook", {
@@ -445,7 +445,11 @@ with_mock_crunch({
     })
 
     test_that("Fails when duplicated weights", {
-        weights <- data.frame(weight = c("wt1", "wt1"), alias = c("x", "x"), stringsAsFactors = FALSE)
+        weights <- data.frame(
+            weight = c("wt1", "wt1"),
+            alias = c("x", "x"),
+            stringsAsFactors = FALSE
+        )
         expect_error(
             tabBook(multitable, ds3, weight = weights),
             "Found duplicate weight and alias combinations in weight_spec"

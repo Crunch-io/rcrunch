@@ -195,7 +195,9 @@ tabBookMulti <- function(
     pages <- mapply(
         weight = weight_spec$weight,
         page_num = weight_spec$page_num,
-        FUN = function(weight, page_num) books[[which(names(books) == weight)]]@.Data[[2]][[page_num]],
+        FUN = function(weight, page_num) {
+            books[[which(names(books) == weight)]]@.Data[[2]][[page_num]]
+        },
         SIMPLIFY = FALSE
     )
 
@@ -212,7 +214,7 @@ tabBookMulti <- function(
 
 
 
-#' Helper function for setting complex weights on a tabbook
+#' Helper function for setting complex weights on a `tabbook`
 #'
 #' For json [`tabBook()`], you can specify a weight per variable in the
 #' dataset, where each row in the data.frame indicates a weight and

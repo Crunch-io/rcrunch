@@ -2,7 +2,7 @@
 % Please edit documentation in R/tab-book.R
 \name{tabBookWeightSpec}
 \alias{tabBookWeightSpec}
-\title{Helper function for setting complex weights on a tabbook}
+\title{Helper function for setting complex weights on a \code{tabbook}}
 \usage{
 tabBookWeightSpec(dataset, weights, append_default_wt = TRUE)
 }
