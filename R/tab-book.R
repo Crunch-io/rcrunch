@@ -190,7 +190,8 @@ tabBookMulti <- function(
         FUN = function(weight, page_num) {
             books[[which(names(books) == weight)]]@.Data[[1]]$analyses[[page_num]]
         },
-        SIMPLIFY = FALSE
+        SIMPLIFY = FALSE,
+        USE.NAMES = FALSE
     )
     pages <- mapply(
         weight = weight_spec$weight,
@@ -198,7 +199,8 @@ tabBookMulti <- function(
         FUN = function(weight, page_num) {
             books[[which(names(books) == weight)]]@.Data[[2]][[page_num]]
         },
-        SIMPLIFY = FALSE
+        SIMPLIFY = FALSE,
+        USE.NAMES = FALSE
     )
 
     combined <- books[[1]] # start with first one for skeleton
