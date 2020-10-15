@@ -188,7 +188,7 @@ tabBookMulti <- function(
         weight = weight_spec$weight,
         page_num = weight_spec$page_num,
         FUN = function(weight, page_num) {
-            books[[which(names(books) == weight)]]@.Data[[1]]$analyses[[page_num]]
+            books[[which(names(books) == weight)]]@.Data[[1]]$analyses[page_num]
         },
         SIMPLIFY = FALSE
     )
