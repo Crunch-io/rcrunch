@@ -159,6 +159,15 @@ tabBookMulti <- function(
         stop("Found duplicate weight and alias combinations in weight_spec")
     }
 
+    # We can't trust that weight variables are included in the dataset subset
+    # that we are using for the tabbook, so we need to load the full variable list
+    # NB: The `relative=on` is to get a cache hit, and might need to change
+    # (comes from `variablesFilter()`)
+    all_dsvars <- ShojiCatalog(crGET(
+        self(allVariables(dataset)),
+        query = list(relative = "on")
+    ))
+
     wt_vars <- unique(weight_spec$weight)
     # Add a column that indicates what page the variable will be on
     # in the weight-specific tabbook
@@ -166,11 +175,13 @@ tabBookMulti <- function(
 
     books <- lapply(wt_vars, function(wt) {
         page_vars <- weight_spec$alias[weight_spec$weight == wt]
+        # `tabBookSingle` uses `self` to get URL of weight
+        wt_entity <- VariableEntity(self = names(all_dsvars[wt]@index))
 
         tabBookSingle(
             multitable,
             dataset[page_vars],
-            dataset[[wt]],
+            wt_entity,
             output_format,
             file = NULL,
             filter,
