@@ -374,6 +374,42 @@ with_mock_crunch({
         )
     })
 
+    test_that("get_weight_spec_page_num works for spaced apart vars", {
+        weight_spec <- data.frame(
+            alias = c("allpets", "petloc", "allpets", "ndogs"),
+            weight = c("weight1", "weight1", "weight2", "weight2"),
+            stringsAsFactors = FALSE
+        )
+        expect_equivalent(
+            get_weight_spec_page_num(weight_spec, variables(ds3)),
+            c(1, 2, 1, 2)
+        )
+    })
+
+    test_that("get_weight_spec_page_num works for out of order vars", {
+        weight_spec <- data.frame(
+            alias = c("petloc", "ndogs", "allpets", "allpets"),
+            weight = c("weight1", "weight2", "weight1", "weight2"),
+            stringsAsFactors = FALSE
+        )
+        expect_equivalent(
+            get_weight_spec_page_num(weight_spec, variables(ds3)),
+            c(2, 2, 1, 1)
+        )
+    })
+
+    test_that("get_weight_spec_page_num preserves order", {
+        weight_spec <- data.frame(
+            alias = c("allpets", "petloc", "allpets", "ndogs"),
+            weight = c("weight2", "weight1", "weight1", "weight2"),
+            stringsAsFactors = FALSE
+        )
+        expect_equivalent(
+            get_weight_spec_page_num(weight_spec, variables(ds3)),
+            c(1, 2, 1, 2)
+        )
+    })
+
     w <- list(weight1 = c("allpets", "q1"), weight2 = "q1")
     w_df <- tabBookWeightSpec(ds3, w)
     multitable <- multitables(ds3)[[1]]
