@@ -12,6 +12,7 @@ tabBook(
   file = NULL,
   filter = NULL,
   use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
+  append_default_wt = TRUE,
   ...
 )
 }
@@ -43,6 +44,8 @@ endpoint for compatibility (this endpoint will be removed in the future).
 Defaults to \code{FALSE}, but can be set in the function, or with the environment
 variable \code{R_USE_LEGACY_TABBOOK_ENDPOINT} or R option
 \code{use.legacy.tabbook.endpoint}.}
+
+\item{append_default_wt}{passed to \code{\link[=tabBookWeightSpec]{tabBookWeightSpec()}}}
 
 \item{...}{Additional "options" passed to the tab book POST request.
 More details can be found

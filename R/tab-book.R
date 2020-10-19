@@ -34,6 +34,7 @@
 #' Defaults to `FALSE`, but can be set in the function, or with the environment
 #' variable `R_USE_LEGACY_TABBOOK_ENDPOINT` or R option
 #' `use.legacy.tabbook.endpoint`.
+#' @param append_default_wt passed to [`tabBookWeightSpec()`]
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
 #' [in the crunch API documentation](
@@ -61,7 +62,7 @@
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
                     output_format = c("json", "xlsx"), file = NULL, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
-                    ...) {
+                    append_default_wt = TRUE, ...) {
     dots <- list(...)
     if ("format" %in% names(dots) && is.character(dots$format)) {
         warning(
@@ -161,7 +162,9 @@ tabBookMulti <- function(
         stop("if weight_spec is a data.frame it must have exactly two columns: 'weight' & 'alias'")
     }
 
-    if (!is.data.frame(weight_spec)) weight_spec <- tabBookWeightSpec(dataset, weight_spec)
+    if (!is.data.frame(weight_spec)) weight_spec <- tabBookWeightSpec(
+        dataset, weight_spec, append_default_wt = append_default_wt
+    )
 
     if (any(duplicated(weight_spec))) {
         stop("Found duplicate weight and alias combinations in weight_spec")
