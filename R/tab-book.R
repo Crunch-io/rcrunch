@@ -175,8 +175,12 @@ tabBookMulti <- function(
 
     books <- lapply(wt_vars, function(wt) {
         page_vars <- weight_spec$alias[weight_spec$weight == wt]
-        # `tabBookSingle` uses `self` to get URL of weight
-        wt_entity <- VariableEntity(self = names(all_dsvars[wt]@index))
+        if (wt == "") {
+            wt_entity <- NULL
+        } else {
+            # `tabBookSingle` uses `self` to get URL of weight
+            wt_entity <- VariableEntity(self = names(all_dsvars[wt]@index))
+        }
 
         tabBookSingle(
             multitable,
