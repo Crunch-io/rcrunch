@@ -393,18 +393,18 @@ with_mock_crunch({
         })
 
         # Right number of pages
-        expect_equal(length(r@.Data[[1]]$analyses), nrow(w_df))
-        expect_equal(length(r@.Data[[2]]), nrow(w_df))
+        expect_equal(length(r$meta$analyses), nrow(w_df))
+        expect_equal(length(r$sheets), nrow(w_df))
 
         # Each analysis has right weight
         expect_equal(
-            unname(vapply(r@.Data[[1]]$analyses, function(x) x$weight %||% "", "")),
+            unname(vapply(r$meta$analyses, function(x) x$weight %||% "", "")),
             w_df$weight
         )
 
         # Each analysis has right name
         expect_equal(
-            unname(vapply(r@.Data[[1]]$analyses, function(x) x$name %||% "", "")),
+            unname(vapply(r$meta$analyses, function(x) x$name, "")),
             unname(vapply(w_df$alias, function(x) name(ds3[[x]]), ""))
         )
 
@@ -412,11 +412,7 @@ with_mock_crunch({
         # TODO: numeric variables don't have alias, but total instead.
         # See if this is bug with backend or intentional
         # ref: https://github.com/Crunch-io/rcrunch/issues/509
-        aliases <- unname(vapply(
-            r@.Data[[2]],
-            function(x) x@.Data[[1]][[1]]@.Data[[1]]$dimensions[[1]]$references$alias,
-            ""
-        ))
+        aliases <- aliases(r)
         expect_equal(
            aliases[aliases != "total"],
            w_df$alias[aliases != "total"]
@@ -432,7 +428,7 @@ with_mock_crunch({
 
     test_that("Fails on empty list", {
         expect_error(
-            tabBook(multitable, ds3, weight = list(), output_format = "xlsx"),
+            tabBook(multitable, ds3, weight = list()),
             "Empty list not allowed as a weight spec, use NULL to indicate no weights"
         )
     })

@@ -163,29 +163,28 @@ tabBookMulti <- function(
     # that we are using for the tabbook, so we need to load the full variable list
     # NB: The `relative=on` is to get a cache hit, and might need to change
     # (comes from `variablesFilter()`)
-    all_dsvars <- ShojiCatalog(crGET(
+    all_dsvars <- VariableCatalog(crGET(
         self(allVariables(dataset)),
         query = list(relative = "on")
     ))
 
-    wt_vars <- unique(weight_spec$weight)
-    # Add a column that indicates what page the variable will be on
-    # in the weight-specific tabbook
+    wt_aliases <- unique(weight_spec$weight)
+    # Add a column that indicates what page the variable will be on in the weight-specific
+    # tabbook. The backend always sends the  results in dataset order.
     weight_spec$page_num <- as.numeric(ave(weight_spec$weight, weight_spec$weight, FUN = seq_along))
 
-    books <- lapply(wt_vars, function(wt) {
-        page_vars <- weight_spec$alias[weight_spec$weight == wt]
-        if (wt == "") {
-            wt_entity <- NULL
+    books <- lapply(wt_aliases, function(wt_alias) {
+        page_vars <- weight_spec$alias[weight_spec$weight == wt_alias]
+        if (wt_alias == "") {
+            wt_var <- NULL
         } else {
-            # `tabBookSingle` uses `self` to get URL of weight
-            wt_entity <- VariableEntity(self = names(all_dsvars[wt]@index))
+            wt_var <- all_dsvars[[wt_alias]]
         }
 
         tabBookSingle(
             multitable,
             dataset[page_vars],
-            wt_entity,
+            wt_var,
             output_format,
             file = NULL,
             filter,
@@ -193,7 +192,7 @@ tabBookMulti <- function(
             dots
         )
     })
-    names(books) <- wt_vars
+    names(books) <- wt_aliases
 
     # stitch together
     # Most of the objects should be the same because they come from the same multitable
@@ -203,7 +202,7 @@ tabBookMulti <- function(
         weight = weight_spec$weight,
         page_num = weight_spec$page_num,
         FUN = function(weight, page_num) {
-            books[[which(names(books) == weight)]]@.Data[[1]]$analyses[[page_num]]
+            books[[which(names(books) == weight)]]$meta$analyses[[page_num]]
         },
         SIMPLIFY = FALSE,
         USE.NAMES = FALSE
@@ -212,15 +211,15 @@ tabBookMulti <- function(
         weight = weight_spec$weight,
         page_num = weight_spec$page_num,
         FUN = function(weight, page_num) {
-            books[[which(names(books) == weight)]]@.Data[[2]][[page_num]]
+            books[[which(names(books) == weight)]]$sheets[[page_num]]
         },
         SIMPLIFY = FALSE,
         USE.NAMES = FALSE
     )
 
     combined <- books[[1]] # start with first one for skeleton
-    combined@.Data[[1]]$analyses <- analyses
-    combined@.Data[[2]] <- pages
+    combined$meta$analyses <- analyses
+    combined$sheets <- pages
 
     if (!is.null(file)) {
         jsonlite::write_json(toJSON(combined), file)
