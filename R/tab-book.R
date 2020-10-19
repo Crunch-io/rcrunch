@@ -76,7 +76,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
 
     if (is.null(weight) | is.variable(weight)) {
         tabBookSingle(multitable, dataset, weight, fmt, file, filter, use_legacy_endpoint, dots)
-    } else if (is.list(weight)) {
+    } else if (is.list(weight) || is.data.frame(weight)) {
         tabBookMulti(
             multitable,
             dataset,
