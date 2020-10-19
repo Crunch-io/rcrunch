@@ -45,7 +45,7 @@ Defaults to \code{FALSE}, but can be set in the function, or with the environmen
 variable \code{R_USE_LEGACY_TABBOOK_ENDPOINT} or R option
 \code{use.legacy.tabbook.endpoint}.}
 
-\item{append_default_wt}{passed to \code{\link[=tabBookWeightSpec]{tabBookWeightSpec()}}}
+\item{append_default_wt}{passed to \code{\link[=tabBookWeightSpec]{tabBookWeightSpec()}} if \code{weight} is a list}
 
 \item{...}{Additional "options" passed to the tab book POST request.
 More details can be found

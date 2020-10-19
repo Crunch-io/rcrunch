@@ -34,7 +34,7 @@
 #' Defaults to `FALSE`, but can be set in the function, or with the environment
 #' variable `R_USE_LEGACY_TABBOOK_ENDPOINT` or R option
 #' `use.legacy.tabbook.endpoint`.
-#' @param append_default_wt passed to [`tabBookWeightSpec()`]
+#' @param append_default_wt passed to [`tabBookWeightSpec()`] if `weight` is a list
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
 #' [in the crunch API documentation](
@@ -77,7 +77,17 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     if (is.null(weight) | is.variable(weight)) {
         tabBookSingle(multitable, dataset, weight, fmt, file, filter, use_legacy_endpoint, dots)
     } else if (is.list(weight)) {
-        tabBookMulti(multitable, dataset, weight, fmt, file, filter,  use_legacy_endpoint, dots)
+        tabBookMulti(
+            multitable,
+            dataset,
+            weight,
+            fmt,
+            file,
+            filter,
+            use_legacy_endpoint,
+            append_default_wt,
+            dots
+        )
     } else {
         stop("weight must be NULL, a CrunchVariable or a list indicating a multi-weight spec")
     }
@@ -148,6 +158,7 @@ tabBookMulti <- function(
     file,
     filter,
     use_legacy_endpoint,
+    append_default_wt,
     dots
 ) {
     if (length(weight_spec) == 0) {
