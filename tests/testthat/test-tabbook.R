@@ -462,6 +462,37 @@ with_mock_crunch({
         expect_equal(r, r_from_list)
     })
 
+    test_that("multiweight tabbook always requests vars in ds order", {
+        post_body <- paste0(
+            '{"filter":null,"weight":null,"options":[],',
+            '"where":{"function":"select","args":[{"map":',
+            '{"66ae9881e3524f7db84970d556c34552":{"variable":',
+            '"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+            '"d7c21314ca9e453c93069168681a285c\":{\"variable\":',
+            '"https://app.crunch.io/api/datasets/1/variables/starttime/\"}}}]}'
+        )
+
+        expect_POST(
+            tabBook(
+                multitable,
+                ds,
+                weight = data.frame(weight = "", alias = c("gender", "starttime"))
+            ),
+            "https://app.crunch.io/api/datasets/e1f498/multitables/b5c6f7/export/",
+            post_body
+        )
+
+        expect_POST(
+            tabBook(
+                multitable,
+                ds,
+                weight = data.frame(weight = "", alias = c("starttime", "gender"))
+            ),
+            "https://app.crunch.io/api/datasets/e1f498/multitables/b5c6f7/export/",
+            post_body
+        )
+    })
+
     test_that("Fails on empty list", {
         expect_error(
             tabBook(multitable, ds3, weight = list()),

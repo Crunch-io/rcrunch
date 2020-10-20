@@ -196,7 +196,11 @@ tabBookMulti <- function(
     weight_spec$page_number <- get_weight_spec_page_num(weight_spec, all_dsvars)
 
     books <- lapply(wt_aliases, function(wt_alias) {
-        page_vars <- weight_spec$alias[weight_spec$weight == wt_alias]
+        # Get the page_vars in order they appear in dataset so that even if server
+        # changes behavior about tabbook order, rcrunch isn't affected
+        page_vars <- weight_spec[weight_spec$weight == wt_alias, ]
+        page_vars <- page_vars[order(page_vars$page_number), ]$alias
+
         if (wt_alias == "") {
             wt_var <- NULL
         } else {
