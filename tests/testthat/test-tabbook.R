@@ -532,6 +532,13 @@ with_mock_crunch({
             "if weight_spec is a data.frame it must have exactly two columns: 'weight' & 'alias'"
         )
     })
+
+    test_that("Fails when weight doesn't exist", {
+        expect_error(
+            tabBook(multitable, ds3, weight = list(xyz = "allpets"), append_default_wt = FALSE),
+            "Could not find weight variable: 'xyz'"
+        )
+    })
 })
 
 

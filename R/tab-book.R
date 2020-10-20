@@ -205,6 +205,7 @@ tabBookMulti <- function(
             wt_var <- NULL
         } else {
             wt_var <- all_dsvars[[wt_alias]]
+            if (is.null(wt_var)) halt("Could not find weight variable: '", wt_alias, "'")
         }
 
         tabBookSingle(
