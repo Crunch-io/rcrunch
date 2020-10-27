@@ -41,6 +41,23 @@
 #' # after integrating, the derived variable is no longer derived.
 #' is.derived(ds$derived_v1)
 #' # FALSE
+#'
+#' # You can update with an arbitrary expression
+#' # So if we start with this variable...
+#' ds$main_weight <- makeCaseWhenVariable(
+#'     ds$wave == 1 ~ ds$weight_1,
+#'     ds$wave == 2 ~ ds$weight_2,
+#'     ds$wave == 3 ~ ds$weight_3,
+#'     name = "Combined weight"
+#' )
+#' 
+#' # But, oh no, realize we forgot to include wave 4! Can fix with:
+#' derivation(ds$main_weight) <- caseWhenExpr(
+#'     ds$wave == 1 ~ ds$weight_1,
+#'     ds$wave == 2 ~ ds$weight_2,
+#'     ds$wave == 3 ~ ds$weight_3,
+#'     ds$wave == 4 ~ ds$weight_4
+#' )
 #' }
 #' @name derivations
 #' @aliases derivation derivation<-
