@@ -254,23 +254,35 @@ newSlide <- function(deck,
                      title = "",
                      subtitle = "",
                      ...) {
-    # TODO allow newSlide to accept list of formulas. In order for this to work
-    # we need to send the analysis order. The only current use case for multiple
-    # analyses is Profiles, and those probably shouldn't be set from R anyway.
-    stopifnot(inherits(query, "formula"))
-    ds <- loadDataset(datasetReference(deck))
-    query <- list(query)
-
+    stopifnot(inherits(query, "formula") || is.null(query))
     settings <- modifyList(DEFAULT_DISPLAY_SETTINGS, display_settings)
     settings <- wrapDisplaySettings(settings)
 
+    ds <- loadDataset(datasetReference(deck))
+
     payload <- list(title = title, subtitle = subtitle, ...)
-    payload[["analyses"]] <- lapply(query, function(x) {
-        return(list(
-            query = formulaToCubeQuery(x, ds),
+    if ("analyses" %in% names(payload) && !is.null(query)) {
+        halt("Cannot specify both a `query` and `analyses` for `newSlide()`")
+    }
+    if (!"analyses" %in% names(payload) && is.null(query)) {
+        halt("Must specify either a `query` or `analyses` for `newSlide()`")
+    }
+    if (!"analyses" %in% names(payload) && length(display_settings) != 0) {
+        warning(
+            "`display_settings` are ignored if `analyses` are defined directly for `newSlide()`"
+        )
+    }
+
+    if (!is.null(query)) {
+        # Technically multiple analyses per slide are allowed (for profiles), but this
+        # isn't supported in the R package, and if someone really wants it, they could
+        # form the analyses object themselves
+        payload[["analyses"]] <- list(list(
+            query = formulaToCubeQuery(query, ds),
             display_settings = settings
         ))
-    })
+    }
+
     payload <- wrapEntity(body = payload)
     url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
     return(CrunchSlide(crGET(url)))
