@@ -157,6 +157,15 @@ with_mock_crunch({
             ),
             "Accept: application/vnd.openxmlformats-officedocument.presentationml.presentation"
         )
+        # ... arguments are passed
+        expect_header(
+            expect_POST(
+                exportDeck(main_deck, format = "json", slides = list(urls(slides(main_deck)[1]))),
+                "https://app.crunch.io/api/datasets/4/decks/8ad8/export/",
+                body = '{"element":"shoji:entity","body":{"slides":[',
+                '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/"]}}'),
+            "Accept: application/json"
+        )
     })
 
     test_that("Deck export errors helpfully", {
