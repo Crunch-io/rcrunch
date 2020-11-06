@@ -357,6 +357,15 @@ setMethod("analysis<-", c("CrunchSlide", "Analysis"), function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
+setMethod("analysis<-", c("CrunchSlide", "list"), function(x, value) {
+    payload <- wrapEntity(body = value)
+    url <- self(analysis(x))
+    crPATCH(url, body = toJSON(payload))
+    invisible(refresh(x))
+})
+
+#' @rdname analysis-methods
+#' @export
 setMethod("filter", "CrunchSlide", function(x, ...) {
     analysis <- analyses(x)[[1]]
     return(filter(analysis))

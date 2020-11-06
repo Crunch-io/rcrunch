@@ -14,6 +14,7 @@
 \alias{analysis,CrunchSlide-method}
 \alias{analysis<-,CrunchSlide,formula-method}
 \alias{analysis<-,CrunchSlide,Analysis-method}
+\alias{analysis<-,CrunchSlide,list-method}
 \alias{filter,CrunchSlide-method}
 \alias{filter<-,CrunchSlide,ANY-method}
 \alias{query<-,CrunchSlide,ANY-method}
@@ -54,6 +55,8 @@ cubes(x)
 \S4method{analysis}{CrunchSlide,formula}(x) <- value
 
 \S4method{analysis}{CrunchSlide,Analysis}(x) <- value
+
+\S4method{analysis}{CrunchSlide,list}(x) <- value
 
 \S4method{filter}{CrunchSlide}(x, ...)
 

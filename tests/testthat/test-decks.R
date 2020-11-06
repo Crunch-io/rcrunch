@@ -680,6 +680,16 @@ with_mock_crunch({
         )
     })
 
+    test_that("Analysis list assignment", {
+        expect_PATCH(
+            analysis(slide) <- list(query = "query", display_settings = "settings"),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity","body":{"query":"query",',
+            '"display_settings":"settings"}}'
+        )
+
+    })
+
     test_that("analysis assignment errors", {
         expect_error(
             an_cat[[1]] <- list(~birthyr, ~gender),
