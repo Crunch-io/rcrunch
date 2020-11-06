@@ -121,7 +121,14 @@ setMethod(
         anCat <- analyses(value)
         payload$analyses <- lapply(seq_along(anCat), function(i) {
             out <- anCat[[i]]
-            out <- out@body[c("query", "query_environment", "display_settings")]
+            # TODO: Make sure API always sends all parts (and no legacy pre-viz_specs)
+            # and update fixtures
+            out <- out@body[
+                na.omit(match(
+                    c("query", "query_environment", "display_settings", "transform", "viz_specs"),
+                    names(out@body)
+                ))
+            ]
             out
         })
         payload <- wrapEntity(body = payload)
@@ -450,7 +457,14 @@ setMethod(
         if (i > length(x) + 1) {
             # TODO what to do with adding an analysis that's not the next one.
         }
-        payload <- value@body[c("query", "display_settings", "query_environment")]
+        # TODO: Make sure API always sends all parts (and no legacy pre-viz_specs)
+        # and update fixtures
+        payload <- value@body[
+            na.omit(match(
+                c("query", "display_settings", "query_environment", "viz_specs", "transforms"),
+                names(value@body)
+            ))
+        ]
         payload <- wrapEntity(body = payload)
         if (i <= length(x)) {
             url <- names(x@index)[i]
