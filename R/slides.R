@@ -121,7 +121,14 @@ setMethod(
         anCat <- analyses(value)
         payload$analyses <- lapply(seq_along(anCat), function(i) {
             out <- anCat[[i]]
-            out <- out@body[c("query", "query_environment", "display_settings")]
+            # TODO: Make sure API always sends all parts (and no legacy pre-viz_specs)
+            # and update fixtures
+            out <- out@body[
+                na.omit(match(
+                    c("query", "query_environment", "display_settings", "transform", "viz_specs"),
+                    names(out@body)
+                ))
+            ]
             out
         })
         payload <- wrapEntity(body = payload)
@@ -254,23 +261,35 @@ newSlide <- function(deck,
                      title = "",
                      subtitle = "",
                      ...) {
-    # TODO allow newSlide to accept list of formulas. In order for this to work
-    # we need to send the analysis order. The only current use case for multiple
-    # analyses is Profiles, and those probably shouldn't be set from R anyway.
-    stopifnot(inherits(query, "formula"))
-    ds <- loadDataset(datasetReference(deck))
-    query <- list(query)
-
+    stopifnot(inherits(query, "formula") || is.null(query))
     settings <- modifyList(DEFAULT_DISPLAY_SETTINGS, display_settings)
     settings <- wrapDisplaySettings(settings)
 
+    ds <- loadDataset(datasetReference(deck))
+
     payload <- list(title = title, subtitle = subtitle, ...)
-    payload[["analyses"]] <- lapply(query, function(x) {
-        return(list(
-            query = formulaToCubeQuery(x, ds),
+    if ("analyses" %in% names(payload) && !is.null(query)) {
+        halt("Cannot specify both a `query` and `analyses` for `newSlide()`")
+    }
+    if (!"analyses" %in% names(payload) && is.null(query)) {
+        halt("Must specify either a `query` or `analyses` for `newSlide()`")
+    }
+    if (!"analyses" %in% names(payload) && length(display_settings) != 0) {
+        warning(
+            "`display_settings` are ignored if `analyses` are defined directly for `newSlide()`"
+        )
+    }
+
+    if (!is.null(query)) {
+        # Technically multiple analyses per slide are allowed (for profiles), but this
+        # isn't supported in the R package, and if someone really wants it, they could
+        # form the analyses object themselves
+        payload[["analyses"]] <- list(list(
+            query = formulaToCubeQuery(query, ds),
             display_settings = settings
         ))
-    })
+    }
+
     payload <- wrapEntity(body = payload)
     url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
     return(CrunchSlide(crGET(url)))
@@ -341,6 +360,15 @@ setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value) {
 setMethod("analysis<-", c("CrunchSlide", "Analysis"), function(x, value) {
     analysis_cat <- analyses(x)
     return(invisible(modifyCatalogInPlace(analysis_cat, 1, NULL, value)))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("analysis<-", c("CrunchSlide", "list"), function(x, value) {
+    payload <- wrapEntity(body = value)
+    url <- self(analysis(x))
+    crPATCH(url, body = toJSON(payload))
+    invisible(refresh(x))
 })
 
 #' @rdname analysis-methods
@@ -429,7 +457,14 @@ setMethod(
         if (i > length(x) + 1) {
             # TODO what to do with adding an analysis that's not the next one.
         }
-        payload <- value@body[c("query", "display_settings", "query_environment")]
+        # TODO: Make sure API always sends all parts (and no legacy pre-viz_specs)
+        # and update fixtures
+        payload <- value@body[
+            na.omit(match(
+                c("query", "display_settings", "query_environment", "viz_specs", "transforms"),
+                names(value@body)
+            ))
+        ]
         payload <- wrapEntity(body = payload)
         if (i <= length(x)) {
             url <- names(x@index)[i]

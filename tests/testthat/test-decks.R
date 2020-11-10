@@ -157,6 +157,15 @@ with_mock_crunch({
             ),
             "Accept: application/vnd.openxmlformats-officedocument.presentationml.presentation"
         )
+        # ... arguments are passed
+        expect_header(
+            expect_POST(
+                exportDeck(main_deck, format = "json", slides = list(urls(slides(main_deck)[1]))),
+                "https://app.crunch.io/api/datasets/4/decks/8ad8/export/",
+                body = '{"element":"shoji:entity","body":{"slides":[',
+                '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/"]}}'),
+            "Accept: application/json"
+        )
     })
 
     test_that("Deck export errors helpfully", {
@@ -244,6 +253,39 @@ with_mock_crunch({
             '"decimalPlaces":{"value":1},',
             '"showSignif":{"value":true},',
             '"currentTab":{"value":0}}}]}}'
+        )
+    })
+
+    test_that("New Slide - specify analyses", {
+        example_analyses <- list(list(
+            query = list(
+                dimensions = list(list(variable = self(ds$birthyr))),
+                measures = list(count = list(`function` = "cube_count", args = list()))
+            )
+        ))
+        example_analyses_json <- paste0(
+            '"analyses":[{"query":{"dimensions":[{"variable":"https://app.',
+            'crunch.io/api/datasets/4/variables/birthyr/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}'
+        )
+
+        expect_POST(
+            newSlide(main_deck, NULL, title = "title", analyses = example_analyses),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
+            '{"element":"shoji:entity",',
+            '"body":{"title":"title","subtitle":"",', example_analyses_json, "}}"
+        )
+
+        expect_error(
+            newSlide(main_deck, ~birthyr, analyses = example_analyses),
+            "Cannot specify both a `query` and `analyses` for `newSlide()`",
+             fixed = TRUE
+        )
+
+        expect_error(
+            newSlide(main_deck, NULL),
+            "Must specify either a `query` or `analyses` for `newSlide()`",
+            fixed = TRUE
         )
     })
 
@@ -636,6 +678,16 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
             payload
         )
+    })
+
+    test_that("Analysis list assignment", {
+        expect_PATCH(
+            analysis(slide) <- list(query = "query", display_settings = "settings"),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity","body":{"query":"query",',
+            '"display_settings":"settings"}}'
+        )
+
     })
 
     test_that("analysis assignment errors", {
