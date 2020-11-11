@@ -9,8 +9,21 @@
 #' from a `CrunchDeck` with `cubes`. Analyses can be changed by assigning a formula
 #' into the `query` function.
 #'
+#' Advanced users of the API can assign a list to  `analysis<-` to specify settings
+#' on the analyses that are not otherwise available in `rcrunch`. The helpers
+#' `formulaToSlideQuery()` and `slideQueryEnv()` help you create objects for the
+#' `query` and `query_environment`.
+#'
 #' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
 #' @param value for the setter, a query
+#' @param query For `formulaToSlideQuery()`, a formula that specifies the query, as in
+#' `newSlide()`
+#' @param dataset For `formulaToSlideQuery()`, a `CrunchDataset` that the variables in
+#' `query` refer to.
+#' @param weight For `slideQueryEnv()` a crunch variable to use as a weight or `NULL`
+#' to indicate no weight should be used.
+#' @param filter for `slideQueryEnv()`, a `CrunchFilter` or `CrunchExpression` to filter
+#' the slide.
 #' @param ... ignored
 #'
 #' @return an `AnalysisCatalog`, `Analysis`, `Cube`, or `Filter`
@@ -536,6 +549,12 @@ setMethod("query<-", c("Analysis", "formula"), function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
+formulaToSlideQuery <- function(query, ds) {
+    formulaToCubeQuery(query, ds)
+}
+
+#' @rdname analysis-methods
+#' @export
 setMethod("cube", "Analysis", function(x) {
     CrunchCube(crGET(
         cubeURL(x),
@@ -626,6 +645,30 @@ setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
     return(set_query_env_slot(x, filter = list()))
 })
+
+#' @rdname analysis-methods
+#' @export
+slideQueryEnv <- function(weight, filter) {
+    if (missing(weight) && missing(filer)) {
+        halt("Must specify at least one of `weight` or `filter`")
+    }
+    out <- list()
+    if (!is.missing(weight)) {
+        out$weight <- if (is.null(weight)) list() else list(self(weight))
+    }
+    if (!is.missing(filter)) {
+        if (is.null(filter)) {
+            out$filter <- list()
+        } else if (is.CrunchExpr(filter)) {
+            # Reasoning explained in `setMethod("filter<-", c("Analysis", "CrunchLogicalExpr")`
+            halt("ad-hoc filters not supported for slides")
+            # out$filter <- list(filter@expression)
+        } else {
+            out$filter <- list(self(filter))
+        }
+    }
+    out
+}
 
 #' @rdname display-settings
 #' @export

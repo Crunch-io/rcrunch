@@ -791,6 +791,49 @@ with_mock_crunch({
             '"measures":{"count":{"function":"cube_count","args":[]}}}}}'
         )
     })
+
+    test_that("formulaToSlideQuery helper", {
+        # It's just a wrapper with different argument names for internal function
+        expect_equal(
+            formulaToSlideQuery(~birthyr, ds),
+            formulaToCubeQuery(~birthyr, ds)
+        )
+    })
+
+    test_that("slideQueryEnv helper", {
+        expect_equal(
+            slideQueryEnv(weight = ds$birthyr),
+            list(weight = self(ds$birthyr))
+        )
+        expect_equal(
+            slideQueryEnv(weight = NULL),
+            list(weight = list())
+        )
+
+        filter <- filters(ds)[["Occasional Political Interest"]]
+        expect_equal(
+            slideQueryEnv(filter = filter),
+            list(filter = self(filter))
+        )
+        expect_equal(
+            slideQueryEnv(filter = NULL),
+            list(filter = list())
+        )
+        expect_error(
+            slideQueryEnv(filter = ds$birthyr < 1980),
+            "ad-hoc filters not supported"
+        )
+
+        expect_equal(
+            slideQueryEnv(weight = ds$birthyr, filter = filter),
+            list(weight = self(ds$birthyr), filter = self(filter))
+        )
+
+        expect_error(
+            slideQueryEnv(),
+            "Must specify at least one of `weight` or `filter`"
+        )
+    })
 })
 
 test_that("filter gets pass through method on non-crunch objects", {
