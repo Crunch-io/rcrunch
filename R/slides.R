@@ -595,7 +595,10 @@ setMethod("filter", "Analysis", function(x, ...) {
         return(CrunchFilter(crGET(filt[[1]]$filter)))
     } else {
         # an adhoc filter
-        adhoc_expr <- CrunchExpr(expression = fixAdhocFilterExpression(filt[[1]]))
+        adhoc_expr <- CrunchExpr(expression = fixAdhocFilterExpression(
+            filt[[1]],
+            dataset = gsub(".+/datasets/(.+)/", "\\1", datasetReference(x))
+        ))
         return(adhoc_expr)
     }
 })
@@ -623,13 +626,7 @@ setMethod("filter<-", "CrunchSlide", function(x, value) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
-    halt("Setting adhoc filters on decks is unsupported")
-    # the following _should_ work, however query_environment filters must include
-    # dataset references (which our expression to ZCL converter does not support)
-    # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
-    # once query_environment is changed to work like every other expression, the
-    # following should just work:
-    # return(set_query_env_slot(x, filter = list(value@expression)))
+    return(set_query_env_slot(x, filter = list(value@expression)))
 })
 
 #' @rdname analysis-methods

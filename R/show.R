@@ -332,11 +332,11 @@ formatExpressionValue <- function(val, cats = NULL) {
 # dataset urls. This function recursively goes through the expression replacing
 # the variable/dataset pair with the correct URL.
 # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
-fixAdhocFilterExpression <- function(expr) {
+fixAdhocFilterExpression <- function(expr, dataset = NULL) {
     if (is.CrunchExpr(expr)) {
         return(fixAdhocFilterExpression(expr@expression))
-    } else if ("variable" %in% names(expr) && "dataset" %in% names(expr)) {
-        dataset <- expr[["dataset"]]
+    } else if ("variable" %in% names(expr) && ("dataset" %in% names(expr) || !is.null(dataset))) {
+        if ("dataset" %in% names(expr)) dataset <- expr[["dataset"]]
         var <- expr[["variable"]]
         expr[["dataset"]] <- NULL
         path <- paste0("datasets/", dataset, "/variables/", var, "/") # nolint
@@ -345,7 +345,7 @@ fixAdhocFilterExpression <- function(expr) {
     } else if (is.atomic(expr)) {
         return(expr)
     }
-    return(lapply(expr, fixAdhocFilterExpression))
+    return(lapply(expr, fixAdhocFilterExpression, dataset = dataset))
 }
 
 #' @rdname show
