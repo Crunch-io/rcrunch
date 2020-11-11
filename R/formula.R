@@ -147,15 +147,26 @@ registerCubeFunctions <- function(varnames = c()) {
             }
             zfunc("as_array", x)
         },
-        as_selected = function(x) {
-            ## Another hacky solution
-            if (!is.MR(x)) {
+        # Preserved for backwards compatibility here, but we don't allow changing
+        # the default behavior of MRs anymore so this special case isn't needed
+        as_selected = identity,
+        subvariables = function(x) {
+            if (!is.Array(x)) {
                 halt(
                     "Cannot analyze a variable of type ", dQuote(type(x)),
-                    " 'as_selected'"
+                    " using 'subvariables'"
                 )
             }
-            zfunc("as_selected", x)
+            zfunc("dimension", x, "subvariables")
+        },
+        categories = function(x) {
+            if (!is.Array(x)) {
+                halt(
+                    "Cannot analyze a variable of type ", dQuote(type(x)),
+                    " using 'categories'"
+                )
+            }
+            zcl(x)
         },
         n = function(...) zfunc("cube_count")
     )
@@ -204,10 +215,6 @@ varToDim <- function(x) {
         ## x is thus list(`function`="as_array", args=list(list(variable=self)))
         ## Return instead list(list(each=self), list(variable=self))
         return(list(list(each = x$args[[1]]$variable), x$args[[1]]))
-    } else if (is.zfunc(x, "as_selected")) {
-        ## Pseudo-ZCL from registerCubeFunctions, used to compute MR by subvar
-        ## x is thus list(`function`="as_selected", args=list(list(variable=self)))
-        return(list(list(each = x$args[[1]]$variable), zfunc("as_selected", x$args[[1]])))
     } else if (is.CrunchExpr(x)) {
         ## Give a name and alias "references"
         ref <- formatExpression(x)
