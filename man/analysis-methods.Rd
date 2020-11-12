@@ -74,7 +74,7 @@ cubes(x)
 
 \S4method{query}{Analysis,formula}(x) <- value
 
-formulaToSlideQuery(query, ds)
+formulaToSlideQuery(query, dataset)
 
 \S4method{cube}{Analysis}(x)
 
@@ -102,14 +102,14 @@ slideQueryEnv(weight, filter)
 \item{query}{For \code{formulaToSlideQuery()}, a formula that specifies the query, as in
 \code{newSlide()}}
 
+\item{dataset}{For \code{formulaToSlideQuery()}, a \code{CrunchDataset} that the variables in
+\code{query} refer to.}
+
 \item{weight}{For \code{slideQueryEnv()} a crunch variable to use as a weight or \code{NULL}
 to indicate no weight should be used.}
 
 \item{filter}{for \code{slideQueryEnv()}, a \code{CrunchFilter} or \code{CrunchExpression} to filter
 the slide.}
-
-\item{dataset}{For \code{formulaToSlideQuery()}, a \code{CrunchDataset} that the variables in
-\code{query} refer to.}
 }
 \value{
 an \code{AnalysisCatalog}, \code{Analysis}, \code{Cube}, or \code{Filter}

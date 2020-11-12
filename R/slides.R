@@ -549,8 +549,8 @@ setMethod("query<-", c("Analysis", "formula"), function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-formulaToSlideQuery <- function(query, ds) {
-    formulaToCubeQuery(query, ds)
+formulaToSlideQuery <- function(query, dataset) {
+    formulaToCubeQuery(query, dataset)
 }
 
 #' @rdname analysis-methods
@@ -649,14 +649,14 @@ setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
 #' @rdname analysis-methods
 #' @export
 slideQueryEnv <- function(weight, filter) {
-    if (missing(weight) && missing(filer)) {
+    if (missing(weight) && missing(filter)) {
         halt("Must specify at least one of `weight` or `filter`")
     }
     out <- list()
-    if (!is.missing(weight)) {
-        out$weight <- if (is.null(weight)) list() else list(self(weight))
+    if (!missing(weight)) {
+        out$weight <- if (is.null(weight)) list() else self(weight)
     }
-    if (!is.missing(filter)) {
+    if (!missing(filter)) {
         if (is.null(filter)) {
             out$filter <- list()
         } else if (is.CrunchExpr(filter)) {
@@ -664,7 +664,7 @@ slideQueryEnv <- function(weight, filter) {
             halt("ad-hoc filters not supported for slides")
             # out$filter <- list(filter@expression)
         } else {
-            out$filter <- list(self(filter))
+            out$filter <- self(filter)
         }
     }
     out

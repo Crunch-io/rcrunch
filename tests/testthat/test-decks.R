@@ -821,7 +821,7 @@ with_mock_crunch({
         )
         expect_error(
             slideQueryEnv(filter = ds$birthyr < 1980),
-            "ad-hoc filters not supported"
+            "ad-hoc filters not supported for slides"
         )
 
         expect_equal(

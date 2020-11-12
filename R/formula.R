@@ -149,7 +149,16 @@ registerCubeFunctions <- function(varnames = c()) {
         },
         # Preserved for backwards compatibility here, but we don't allow changing
         # the default behavior of MRs anymore so this special case isn't needed
-        as_selected = identity,
+        # except for the error message
+        as_selected = function(x) {
+            if (!is.MR(x)) {
+                halt(
+                    "Cannot analyze a variable of type ", dQuote(type(x)),
+                    " 'as_selected'"
+                )
+            }
+            x
+        },
         subvariables = function(x) {
             if (!is.Array(x)) {
                 halt(
