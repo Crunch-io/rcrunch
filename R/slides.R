@@ -654,7 +654,7 @@ slideQueryEnv <- function(weight, filter) {
     }
     out <- list()
     if (!missing(weight)) {
-        out$weight <- if (is.null(weight)) list() else self(weight)
+        out$weight <- if (is.null(weight)) list() else list(self(weight))
     }
     if (!missing(filter)) {
         if (is.null(filter)) {
@@ -664,7 +664,7 @@ slideQueryEnv <- function(weight, filter) {
             halt("ad-hoc filters not supported for slides")
             # out$filter <- list(filter@expression)
         } else {
-            out$filter <- self(filter)
+            out$filter <- list(self(filter))
         }
     }
     out

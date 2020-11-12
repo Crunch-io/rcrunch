@@ -803,7 +803,7 @@ with_mock_crunch({
     test_that("slideQueryEnv helper", {
         expect_equal(
             slideQueryEnv(weight = ds$birthyr),
-            list(weight = self(ds$birthyr))
+            list(weight = list(self(ds$birthyr)))
         )
         expect_equal(
             slideQueryEnv(weight = NULL),
@@ -813,7 +813,7 @@ with_mock_crunch({
         filter <- filters(ds)[["Occasional Political Interest"]]
         expect_equal(
             slideQueryEnv(filter = filter),
-            list(filter = self(filter))
+            list(filter = list(self(filter)))
         )
         expect_equal(
             slideQueryEnv(filter = NULL),
@@ -826,7 +826,7 @@ with_mock_crunch({
 
         expect_equal(
             slideQueryEnv(weight = ds$birthyr, filter = filter),
-            list(weight = self(ds$birthyr), filter = self(filter))
+            list(weight = list(self(ds$birthyr)), filter = list(self(filter)))
         )
 
         expect_error(
