@@ -83,5 +83,32 @@ newSlide(
     ),
     subtitle = "2017 Data"
 )
+
+# Can specify advanced options by specifying `analyses` directly
+# `formulaToSlideQuery()` and `slideQueryEnv()` help describe the API
+newSlide(
+    main_deck,
+    title = "custom slide",
+    analyses = list(list(
+        query = formulaToSlideQuery(~categories(fav_array)+subvariables(fav_array), ds),
+        query_environment = slideQueryEnv(filter = filters(ds)[[1]]),
+        display_settings = list(viz_type = list(value = "table")),
+        viz_specs =  list(
+            default = list(measure = "col_percent"),
+            table = list(
+             measures = c("col_percent", "pairwise_t_test"),
+             page_layout = list(
+                 rows = list(
+                     top = list(),
+                     bottom = c("base_unweighted", "scale_mean", "significant_columns")
+                 ),
+                 measure_layout = "long"
+             ),
+             pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
+             format = list(pval_colors = FALSE)
+            ),
+        )
+    ))
+)
 }
 }
