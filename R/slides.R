@@ -278,8 +278,13 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'         query_environment = slideQueryEnv(filter = filters(ds)[[1]]),
 #'         display_settings = list(viz_type = list(value = "table")),
 #'         viz_specs =  list(
-#'             default = list(measure = "col_percent"),
-#'             table = list(
+#'             default = list(
+#'                 format = list(
+#'                     decimal_places = list(percentages = 0L, other = 2L),
+#'                     show_empty = FALSE
+#'                 )
+#'              ),
+#'              table = list(
 #'              measures = c("col_percent", "pairwise_t_test"),
 #'              page_layout = list(
 #'                  rows = list(
@@ -290,7 +295,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'              ),
 #'              pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
 #'              format = list(pval_colors = FALSE)
-#'             ),
+#'             )
 #'         )
 #'     ))
 #' )
