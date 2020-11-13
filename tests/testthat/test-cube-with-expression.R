@@ -55,6 +55,20 @@ with_mock_crunch({
                 dQuote("categorical_array"), "'as_selected'"
             )
         )
+        expect_error(
+            formulaToCubeQuery(~ categories(gender), data = ds),
+            paste(
+                "Cannot analyze a variable of type",
+                dQuote("categorical"), "using 'categories'"
+            )
+        )
+        expect_error(
+            formulaToCubeQuery(~ subvariables(gender), data = ds),
+            paste(
+                "Cannot analyze a variable of type",
+                dQuote("categorical"), "using 'subvariables'"
+            )
+        )
         expect_JSON(
             formulaToCubeQuery(~ gender + as_array(mymrset), data = ds),
             '{"dimensions":[
