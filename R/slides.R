@@ -296,7 +296,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' )
 #' }
 newSlide <- function(deck,
-                     query,
+                     query = NULL,
                      display_settings = list(),
                      title = "",
                      subtitle = "",

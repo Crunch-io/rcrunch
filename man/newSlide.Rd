@@ -6,7 +6,7 @@
 \usage{
 newSlide(
   deck,
-  query,
+  query = NULL,
   display_settings = list(),
   title = "",
   subtitle = "",
