@@ -9,8 +9,21 @@
 #' from a `CrunchDeck` with `cubes`. Analyses can be changed by assigning a formula
 #' into the `query` function.
 #'
+#' Advanced users of the API can assign a list to  `analysis<-` to specify settings
+#' on the analyses that are not otherwise available in `rcrunch`. The helpers
+#' `formulaToSlideQuery()` and `slideQueryEnv()` help you create objects for the
+#' `query` and `query_environment`.
+#'
 #' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
 #' @param value for the setter, a query
+#' @param query For `formulaToSlideQuery()`, a formula that specifies the query, as in
+#' `newSlide()`
+#' @param dataset For `formulaToSlideQuery()`, a `CrunchDataset` that the variables in
+#' `query` refer to.
+#' @param weight For `slideQueryEnv()` a crunch variable to use as a weight or `NULL`
+#' to indicate no weight should be used.
+#' @param filter for `slideQueryEnv()`, a `CrunchFilter` or `CrunchExpression` to filter
+#' the slide.
 #' @param ... ignored
 #'
 #' @return an `AnalysisCatalog`, `Analysis`, `Cube`, or `Filter`
@@ -254,9 +267,41 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     ),
 #'     subtitle = "2017 Data"
 #' )
+#'
+#' # Can specify advanced options by specifying `analyses` directly
+#' # `formulaToSlideQuery()` and `slideQueryEnv()` help describe the API
+#' newSlide(
+#'     main_deck,
+#'     title = "custom slide",
+#'     analyses = list(list(
+#'         query = formulaToSlideQuery(~categories(fav_array)+subvariables(fav_array), ds),
+#'         query_environment = slideQueryEnv(filter = filters(ds)[[1]]),
+#'         display_settings = list(viz_type = list(value = "table")),
+#'         viz_specs =  list(
+#'             default = list(
+#'                 format = list(
+#'                     decimal_places = list(percentages = 0L, other = 2L),
+#'                     show_empty = FALSE
+#'                 )
+#'              ),
+#'              table = list(
+#'              measures = c("col_percent", "pairwise_t_test"),
+#'              page_layout = list(
+#'                  rows = list(
+#'                      top = list(),
+#'                      bottom = c("base_unweighted", "scale_mean", "significant_columns")
+#'                  ),
+#'                  measure_layout = "long"
+#'              ),
+#'              pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
+#'              format = list(pval_colors = FALSE)
+#'             )
+#'         )
+#'     ))
+#' )
 #' }
 newSlide <- function(deck,
-                     query,
+                     query = NULL,
                      display_settings = list(),
                      title = "",
                      subtitle = "",
@@ -536,6 +581,12 @@ setMethod("query<-", c("Analysis", "formula"), function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
+formulaToSlideQuery <- function(query, dataset) {
+    formulaToCubeQuery(query, dataset)
+}
+
+#' @rdname analysis-methods
+#' @export
 setMethod("cube", "Analysis", function(x) {
     CrunchCube(crGET(
         cubeURL(x),
@@ -626,6 +677,30 @@ setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
     return(set_query_env_slot(x, filter = list()))
 })
+
+#' @rdname analysis-methods
+#' @export
+slideQueryEnv <- function(weight, filter) {
+    if (missing(weight) && missing(filter)) {
+        halt("Must specify at least one of `weight` or `filter`")
+    }
+    out <- list()
+    if (!missing(weight)) {
+        out$weight <- if (is.null(weight)) list() else list(self(weight))
+    }
+    if (!missing(filter)) {
+        if (is.null(filter)) {
+            out$filter <- list()
+        } else if (is.CrunchExpr(filter)) {
+            # Reasoning explained in `setMethod("filter<-", c("Analysis", "CrunchLogicalExpr")`
+            halt("ad-hoc filters not supported for slides")
+            # out$filter <- list(filter@expression)
+        } else {
+            out$filter <- list(self(filter))
+        }
+    }
+    out
+}
 
 #' @rdname display-settings
 #' @export
