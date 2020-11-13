@@ -1,4 +1,6 @@
 # Development Version
+
+# crunch 1.27.6
 * You can now set the analyses manually using `analyses` argument of `newSlide()` or set `analysis<-` to a list, allowing all slide customizations from R.
 * Documentation improvements.
 
