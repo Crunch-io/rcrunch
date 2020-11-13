@@ -42,21 +42,25 @@
 #' is.derived(ds$derived_v1)
 #' # FALSE
 #'
-#' # You can update with an arbitrary expression
-#' # So if we start with this variable...
-#' ds$main_weight <- makeCaseWhenVariable(
-#'     ds$wave == 1 ~ ds$weight_1,
-#'     ds$wave == 2 ~ ds$weight_2,
-#'     ds$wave == 3 ~ ds$weight_3,
-#'     name = "Combined weight"
+#' # Derivations can be updated with arbitrary expressions.
+#' # Consider a numeric case variable that combines weights
+#' # calculated separately in a separate variable 
+#' # for each of several waves:
+#' ds$weight <- makeCaseWhenVariable(
+#'     ds$wave == 1 ~ ds$weight_wave1,
+#'     ds$wave == 2 ~ ds$weight_wave2,
+#'     ds$wave == 3 ~ ds$weight_wave3,
+#'     name = "Weight"
 #' )
 #' 
-#' # But, oh no, realize we forgot to include wave 4! Can fix with:
-#' derivation(ds$main_weight) <- caseWhenExpr(
-#'     ds$wave == 1 ~ ds$weight_1,
-#'     ds$wave == 2 ~ ds$weight_2,
-#'     ds$wave == 3 ~ ds$weight_3,
-#'     ds$wave == 4 ~ ds$weight_4
+#' # When a new wave is added, update the derivation
+#' # of the weight to add the new condition and source 
+#' # column.
+#' derivation(ds$weight) <- caseWhenExpr(
+#'     ds$wave == 1 ~ ds$weight_wave1,
+#'     ds$wave == 2 ~ ds$weight_wave2,
+#'     ds$wave == 3 ~ ds$weight_wave3,
+#'     ds$wave == 4 ~ ds$weight_wave4
 #' )
 #' }
 #' @name derivations
