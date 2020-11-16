@@ -10,7 +10,7 @@ jobs:
   pkgdown:
     runs-on: macOS-latest
     env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.TA_DA_ACCESS }}
     steps:
       - uses: actions/checkout@v2
 
@@ -18,7 +18,7 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
-      - name: Set env
+      - name: Set release version env var
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Query dependencies
