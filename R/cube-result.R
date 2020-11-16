@@ -421,8 +421,7 @@ as.array.CrunchCube <- function(x, ...) cubeToArray(x, ...)
 #'   returns a list of lists of prop.tables.
 #' @name cube-computing
 #' @aliases cube-computing margin.table prop.table bases round
-#' @seealso \code{\link[base:marginSums]{base::margin.table()}}
-#' \code{\link[base:proportions]{base::prop.table()}}
+#' @seealso [`margin.table()`] [`prop.table()`]
 setGeneric("margin.table")
 #' @rdname cube-computing
 setGeneric("prop.table")

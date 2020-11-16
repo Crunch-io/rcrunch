@@ -76,6 +76,5 @@ argument to work like \code{margin.table}, or with \code{margin=0} gives all cel
 counts.
 }
 \seealso{
-\code{\link[base:marginSums]{base::margin.table()}}
-\code{\link[base:proportions]{base::prop.table()}}
+\code{\link[=margin.table]{margin.table()}} \code{\link[=prop.table]{prop.table()}}
 }
