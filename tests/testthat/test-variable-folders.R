@@ -177,7 +177,7 @@ with_mock_crunch({
         test_that("Folder tree printing", {
             ## These are obfuscated because of archaic restrictions on UTF-8
             skip_on_cran()
-            source("print-folders.R", local = TRUE)
+            source("print-folders.R", encoding = "UTF-8", local = TRUE)
         })
     })
 
