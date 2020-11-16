@@ -8,4 +8,3 @@ cd ../ta-da
 git add .
 git commit -m "Updating rcrunch pkgdown site (release ${RELEASE_VERSION})" || true
 git push origin src || true
-fi
