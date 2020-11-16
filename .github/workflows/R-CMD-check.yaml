@@ -87,8 +87,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Decompress cubes
-        run: 'dev-misc/compress-mocks.R'
-        shell: Rscript {0}
+        run: Rscript 'dev-misc/compress-mocks.R'
 
       - name: Check
         env:
