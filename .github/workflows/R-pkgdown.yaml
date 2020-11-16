@@ -8,8 +8,9 @@ name: R-pkgdown
 
 jobs:
   pkgdown:
-    runs-on: macOS-latest
+    runs-on: ubuntu-16.04
     env:
+      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"
       GITHUB_PAT: ${{ secrets.TA_DA_ACCESS }}
     steps:
       - uses: actions/checkout@v2

@@ -1,6 +1,7 @@
 #!/bin/bash
 set -ev
-git clone --branch src https://${GH_TOKEN}@github.com/Crunch-io/ta-da.git ../ta-da
+Rscript -e 'pkgdown::build_site()'
+git clone --branch src https://${GITHUB_PAT}@github.com/Crunch-io/ta-da.git ../ta-da
 rm -rf ../ta-da/static/r/crunch
 cp -r docs/. ../ta-da/static/r/crunch
 cd ../ta-da
