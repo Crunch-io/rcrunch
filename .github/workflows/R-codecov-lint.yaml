@@ -43,6 +43,10 @@ on:
            remotes::install_cran("lintr")
          shell: Rscript {0}
 
+       - name: Decompress cubes
+         run: 'dev-misc/compress-mocks.R'
+         shell: Rscript {0}
+
        - name: Test coverage
          run: covr::codecov()
          shell: Rscript {0}
