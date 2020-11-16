@@ -43,7 +43,7 @@ jobs:
       _R_CHECK_TESTS_NLINES_: 0
       # error in documentation cross references in old versions of R because of `margin.table`.
       # Make sure references workin modern R, and skip checks on older versions
-      _R_CHECK_RD_XREFS_: ${{ matrix.config.r == 'release' or matrix.config.r == 'devel' }}
+      _R_CHECK_RD_XREFS_: ${{ matrix.config.r == 'release' || matrix.config.r == 'devel' }}
     steps:
       - uses: actions/checkout@v2
 
