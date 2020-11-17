@@ -270,7 +270,7 @@ with_mock_crunch({
             )
             ## These are obfuscated because of archaic restrictions on UTF-8
             skip_on_cran()
-            source("print-projects.R", local = TRUE)
+            source("print-projects.R", encoding = "UTF-8", local = TRUE)
         })
     })
 })
