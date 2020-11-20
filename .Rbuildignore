@@ -27,3 +27,4 @@
 ^dev-misc$
 ^docker$
 ^\.github$
+^LICENSE\.md$
