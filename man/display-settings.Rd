@@ -33,7 +33,7 @@ displaySettings(x) <- value
 \arguments{
 \item{x}{a CrunchSlide, Analysis, or AnalysisCatalog}
 
-\item{value}{a named list, for valid settings see docs.crunch.io}
+\item{value}{a named list, for valid settings see \href{https://crunch.io/api/reference/#get-/datasets/-dataset_id-/decks/-deck_id-/slides/-slide_id-/}{API documentation}}
 }
 \description{
 A slide's display settings can be modified by assigning a named list

@@ -43,8 +43,7 @@ variable \code{R_USE_LEGACY_TABBOOK_ENDPOINT} or R option
 
 \item{...}{Additional "options" passed to the tab book POST request.
 More details can be found
-\href{https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options}{in the crunch API documentation}
-or \href{https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options}{for the legacy endpoint}}
+\href{https://crunch.io/api/reference/#post-/datasets/-dataset_id-/multitables/}{in the crunch API documentation}}
 }
 \value{
 If "json" format is requested, the function returns an object of

@@ -404,7 +404,8 @@ setMethod("owner<-", "CrunchDataset", function(x, value) {
 #' 'viewers_can_change_weight'); and
 #' * 'weight', which determines the default weighting variable for the dataset
 #'  Additional settings will be added in the future. See
-#' https://crunch.io/api/reference/#post-/datasets/ -> request body model -> settings key, for an up-to-date
+#' https://crunch.io/api/reference/#post-/datasets/
+#' -> request body model -> settings key, for an up-to-date
 #' list of settings supported throughout the Crunch system. Clients may also
 #' provide and use custom settings if they choose.
 #' @param x CrunchDataset
