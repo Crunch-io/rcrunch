@@ -10,7 +10,7 @@ vignette: >
 
 [Previous: subtotals](subtotals.html)
 
-The Crunch web app and the `crunch` package are both built on a [REST API](https://docs.crunch.io/). Users can interact with very large datasets because most of the heavy computation is done on the Crunch servers and not on the users computer. In most cases, you don't need to know how the API works---the R package handles the HTTP requests and responses and presents meaningful objects and methods to you. To go beyond the basics, though, it can be useful to understand how the API works so that you can make more complex or more efficient (read: faster) operations.
+The Crunch web app and the `crunch` package are both built on a [REST API](https://crunch.io/api/reference/). Users can interact with very large datasets because most of the heavy computation is done on the Crunch servers and not on the users computer. In most cases, you don't need to know how the API works---the R package handles the HTTP requests and responses and presents meaningful objects and methods to you. To go beyond the basics, though, it can be useful to understand how the API works so that you can make more complex or more efficient (read: faster) operations.
 
 ### Catalogs
 
@@ -39,14 +39,14 @@ Internally there is actually a second method `datasets<-` that takes the value o
 
 ## Cube Subsetting
 
-Crunch cubes are generally used to cross tabulate different variables in a crunch dataset. For instance if you cross tabulate two variables with `crtabs(~cyl + gear, data = ds)`, you get a 2 dimensional cube which looks just like a matrix. Cross tabbing three variables leads to a 3d cube, etc. This simple case gets quite a bit more complicated when you add array variables to the cube: 
+Crunch cubes are generally used to cross tabulate different variables in a crunch dataset. For instance if you cross tabulate two variables with `crtabs(~cyl + gear, data = ds)`, you get a 2 dimensional cube which looks just like a matrix. Cross tabbing three variables leads to a 3d cube, etc. This simple case gets quite a bit more complicated when you add array variables to the cube:
 
 _Multiple response_
 
 Multiple response variables are themselves 2d arrays with the items or responses on one dimension and the selection status on the second dimension. The result is that a categorical-by-MR cube ends up with three dimensions: the categorical variable categories, the MR items/responses, and the MR selection status.
 
 _Categorical array_
-Categorical arrays are also represented cubes as 2d arrays. With the items/responses (the subvariable labels) on one dimension, and their categories on another dimension. 
+Categorical arrays are also represented cubes as 2d arrays. With the items/responses (the subvariable labels) on one dimension, and their categories on another dimension.
 
 ### Cube to Array
 
@@ -54,7 +54,7 @@ The main feature of representing these counts as high dimensional arrays is that
 
 *Real cube*: The cube with all of the underlying data
 *User cube*: The cube the user thinks they’re interacting with. This is the same as the real cube without MR selection dimensions
-*Printed cube* The cube which prints to the console. The same as the the user cube but with missing categories suppressed. 
+*Printed cube* The cube which prints to the console. The same as the the user cube but with missing categories suppressed.
 
 The user cube differs from the real cube in that it doesn’t include MR selection dimensions. We assume that when the user is including an MR in a cube, they really only care about the parts of the cube where the MR is selected. So the 5d real cube listed above would become a 3d user cube with 300 entries (`5 * 6 * 10`) because we are selecting the slices of the cube where each MR selection dimension is equal to “Selected” and are able to drop the selections dimensions
 
@@ -63,9 +63,9 @@ The printed cube differs from the user cube in that it doesn’t include missing
 
 ### Cube subsetting
 
-This structure gets a little tricky when we subset the cube. For instance the cube we’ve been working with has 5 dimensions, but to the user appears to only have 3, so should they subset it as a 5 dimensional array like `cube[1, 1,  2:3, 1, 5]` or a 3 dimensional array `cube[1, 2:3, 5]`. Similarly, if a dimension is missing, should that be included in the subset. For example if a cube has three entries A, B, C, along one dimension, and B is hidden, should `cube[ , 1:2]` return A, A & B, or A &C? Similarly should `dim(cube)` show the dimensions of the real cube or the printed cube? 
+This structure gets a little tricky when we subset the cube. For instance the cube we’ve been working with has 5 dimensions, but to the user appears to only have 3, so should they subset it as a 5 dimensional array like `cube[1, 1,  2:3, 1, 5]` or a 3 dimensional array `cube[1, 2:3, 5]`. Similarly, if a dimension is missing, should that be included in the subset. For example if a cube has three entries A, B, C, along one dimension, and B is hidden, should `cube[ , 1:2]` return A, A & B, or A &C? Similarly should `dim(cube)` show the dimensions of the real cube or the printed cube?
 
-We resolve this problem by allowing the user to select whether they want the cube to represent the user cube or the printed cube, and make all of the behavior of those cubes consistent. The `cube@useNA` controls whether the user wanted to interact with the printed cube or the user cube and they can `showMissing()` and `hideMissing()` functions to control which cube they are interacting with 
+We resolve this problem by allowing the user to select whether they want the cube to represent the user cube or the printed cube, and make all of the behavior of those cubes consistent. The `cube@useNA` controls whether the user wanted to interact with the printed cube or the user cube and they can `showMissing()` and `hideMissing()` functions to control which cube they are interacting with
 
 ```
 > dim(cube)
@@ -77,22 +77,22 @@ We resolve this problem by allowing the user to select whether they want the cub
 This makes subsetting a bit easier because we can enforce the dimensions of the printed cube. For instance
 
 ```
-cube[5, 6, 10] 
+cube[5, 6, 10]
 ```
  Errors because the user supplied the wrong number of dimensions while
 
 ```
-showMissing(cube)[cube[5, 6, 10] 
+showMissing(cube)[cube[5, 6, 10]
 ```
-Returns the correct data they were looking for. 
+Returns the correct data they were looking for.
 
 Subsetting the printed cube
 
-There are two cases for dropping dimensions from the printed and user cubes which need special handling. 
+There are two cases for dropping dimensions from the printed and user cubes which need special handling.
 
 _Dropping MR variable_
 
-MR dimensions are always dropped together. Consider a cube composed of a multiple response variable and a categorical variable. The real cube has three dimensions, and the printed cube has two, the first of which represents the multiple response variable. If the user asks for `cube[1, ]` both MR dimensions are dropped and a one dimensional cube is returned. 
+MR dimensions are always dropped together. Consider a cube composed of a multiple response variable and a categorical variable. The real cube has three dimensions, and the printed cube has two, the first of which represents the multiple response variable. If the user asks for `cube[1, ]` both MR dimensions are dropped and a one dimensional cube is returned.
 
 _Subsetting dimensions with missing values_
 

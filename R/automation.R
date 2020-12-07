@@ -94,7 +94,7 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' Crunch automation is a custom scripting syntax that allows you to
 #' concisely describe the metadata of your data when importing. The
 #' syntax is described [in the crunch API documentation](
-#' https://docs.crunch.io/feature-guide/feature-automation.html)
+#' https://help.crunch.io/hc/en-us/categories/360004356012-Crunch-Automation)
 #'
 #' @param dataset A crunch dataset
 #' @param script A path to a text file with crunch automation syntax

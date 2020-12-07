@@ -32,7 +32,7 @@ streamRows <- function(ds, data) {
 #'
 #' Crunch allows you to stream data to a dataset. Streaming data is useful for
 #' datasets which have frequent updates (see the
-#' [Crunch API documentation](https://docs.crunch.io/#streaming-rows) for more
+#' [Crunch API documentation](https://crunch.io/api/reference/#post-/datasets/-dataset_id-/stream/) for more
 #' information). Crunch automatically appends streamed data periodically;
 #' however, if you would like to trigger appending pending streamed data to a
 #' dataset, you can call `appendStream()`.

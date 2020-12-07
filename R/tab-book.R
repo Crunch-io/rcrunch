@@ -28,9 +28,7 @@
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
 #' [in the crunch API documentation](
-#' https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options)
-#' or [for the legacy endpoint](
-#' https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options)
+#' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/multitables/)
 #' @return If "json" format is requested, the function returns an object of
 #' class `TabBookResult`, containing a list of `MultitableResult`
 #' objects, which themselves contain `CrunchCube`s. If "xlsx" is requested,
