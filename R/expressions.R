@@ -187,7 +187,7 @@ zfuncExpr <- function(fun, x, ...) {
 #' encapsulate derivations of Crunch variables, possibly composed of other functions
 #' which are only evaluated when sent to the server when creating a variable using [`VarDef()`]
 #' or using [`as.vector()`] to get data. The crunch database functions can be found in the
-#' [Crunch API Reference](https://docs.crunch.io/object-reference/object-reference.html),
+#' [Help Center](https://help.crunch.io/hc/en-us/articles/360042411792-Expressions),
 #' and can be called directly via `crunchdbFunc()`m but many have also been wrapped
 #'  in native R functions, and are described in the details section below.
 #'

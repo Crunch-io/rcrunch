@@ -28,7 +28,7 @@ For \code{showScriptErrors()}, when run after a failure, a list with two items:
 \description{
 Crunch automation is a custom scripting syntax that allows you to
 concisely describe the metadata of your data when importing. The
-syntax is described \href{https://docs.crunch.io/feature-guide/feature-automation.html}{in the crunch API documentation}
+syntax is described \href{https://help.crunch.io/hc/en-us/categories/360004356012-Crunch-Automation}{in the crunch API documentation}
 }
 \examples{
 \dontrun{

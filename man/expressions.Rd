@@ -19,7 +19,7 @@ Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
 encapsulate derivations of Crunch variables, possibly composed of other functions
 which are only evaluated when sent to the server when creating a variable using \code{\link[=VarDef]{VarDef()}}
 or using \code{\link[=as.vector]{as.vector()}} to get data. The crunch database functions can be found in the
-\href{https://docs.crunch.io/object-reference/object-reference.html}{Crunch API Reference},
+\href{https://help.crunch.io/hc/en-us/articles/360042411792-Expressions}{Help Center},
 and can be called directly via \code{crunchdbFunc()}m but many have also been wrapped
 in native R functions, and are described in the details section below.
 }

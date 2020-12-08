@@ -15,8 +15,8 @@ the dataset with pending stream data appended.
 \description{
 Crunch allows you to stream data to a dataset. Streaming data is useful for
 datasets which have frequent updates (see the
-\href{https://docs.crunch.io/#streaming-rows}{Crunch API documentation} for more
-information). Crunch automatically appends streamed data periodically;
-however, if you would like to trigger appending pending streamed data to a
-dataset, you can call \code{appendStream()}.
+\href{https://crunch.io/api/reference/#post-/datasets/-dataset_id-/stream/}{Crunch API documentation}
+for more information). Crunch automatically appends streamed data
+periodically; however, if you would like to trigger appending pending s
+treamed data to a dataset, you can call \code{appendStream()}.
 }
