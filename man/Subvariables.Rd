@@ -6,26 +6,26 @@
 \alias{Subvariables}
 \alias{subvariables}
 \alias{subvariables<-}
-\alias{subvariables,CategoricalArrayVariable-method}
+\alias{subvariables,ArrayVariable-method}
 \alias{subvariables,CrunchVariable-method}
 \alias{subvariables,VariableTuple-method}
-\alias{subvariables<-,CategoricalArrayVariable,ANY-method}
-\alias{subvariables<-,CategoricalArrayVariable,Subvariables-method}
+\alias{subvariables<-,ArrayVariable,ANY-method}
+\alias{subvariables<-,ArrayVariable,Subvariables-method}
 \title{Subvariables in Array Variables}
 \usage{
 subvariables(x)
 
 subvariables(x) <- value
 
-\S4method{subvariables}{CategoricalArrayVariable}(x)
+\S4method{subvariables}{ArrayVariable}(x)
 
 \S4method{subvariables}{CrunchVariable}(x)
 
 \S4method{subvariables}{VariableTuple}(x)
 
-\S4method{subvariables}{CategoricalArrayVariable,ANY}(x) <- value
+\S4method{subvariables}{ArrayVariable,ANY}(x) <- value
 
-\S4method{subvariables}{CategoricalArrayVariable,Subvariables}(x) <- value
+\S4method{subvariables}{ArrayVariable,Subvariables}(x) <- value
 }
 \arguments{
 \item{x}{A Variable or Subvariables object}

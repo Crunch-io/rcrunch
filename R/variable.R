@@ -95,14 +95,14 @@ setMethod("digits<-", "CrunchVariable", function(x, value) {
 
 #' Split an array or multiple-response variable into its CategoricalVariables
 #'
-#' @param x a `CategoricalArrayVariable` or `MultipleResponseVariable`
+#' @param x an `ArrayVariable`
 #' @return invisibly, the API response from DELETEing the array variable
 #' definition. If you [refresh()] the corresponding dataset after
 #' unbinding, you should see the array variable removed and its subvariables
 #' promoted to regular variables.
 #' @export
 unbind <- function(x) {
-    stopifnot(inherits(x, "CategoricalArrayVariable"))
+    stopifnot(inherits(x, "ArrayVariable"))
     ## Delete self and drop cache for variable catalog (parent)
     u <- self(x)
     out <- crPOST(u, body = '{"unbind": {}}')
