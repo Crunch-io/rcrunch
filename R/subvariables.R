@@ -37,7 +37,7 @@ setGeneric(
 
 #' @rdname Subvariables
 #' @export
-setMethod("subvariables", "CategoricalArrayVariable", function(x) {
+setMethod("subvariables", "ArrayVariable", function(x) {
     # TODO: it may be simpler and cleaner to just get the subvars from the
     # entity rather than the subvariables catalog.
     tup <- tuple(x)
@@ -75,7 +75,7 @@ setMethod("subvariables", "VariableTuple", function(x) {
 #' @rdname Subvariables
 #' @export
 setMethod(
-    "subvariables<-", c("CategoricalArrayVariable", "ANY"),
+    "subvariables<-", c("ArrayVariable", "ANY"),
     function(x, value) {
         halt("Can only assign an object of class Subvariables")
     }
@@ -83,7 +83,7 @@ setMethod(
 #' @rdname Subvariables
 #' @export
 setMethod(
-    "subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
+    "subvariables<-", c("ArrayVariable", "Subvariables"),
     function(x, value) {
         old <- subvariableURLs(tuple(x))
         new <- urls(value)
@@ -220,7 +220,7 @@ as.list.Subvariables <- function(x, ...) lapply(names(x), function(i) x[[i]])
 
 #' @rdname describe-catalog
 #' @export
-setMethod("names", "CategoricalArrayVariable", function(x) {
+setMethod("names", "ArrayVariable", function(x) {
     getIndexSlot(subvariables(x), namekey(x))
 })
 
@@ -231,7 +231,7 @@ setMethod("names", "CategoricalArrayVariable", function(x) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[", c("CategoricalArrayVariable", "character"), function(x, i, ...) {
+setMethod("[", c("ArrayVariable", "character"), function(x, i, ...) {
     w <- match(i, names(x)) ## TODO: use whichNameOrURL
     if (any(is.na(w))) {
         halt("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
@@ -240,13 +240,13 @@ setMethod("[", c("CategoricalArrayVariable", "character"), function(x, i, ...) {
 })
 #' @rdname crunch-extract
 #' @export
-setMethod("[", c("CategoricalArrayVariable", "missing", "ANY"), function(x, i, j, ...) {
+setMethod("[", c("ArrayVariable", "missing", "ANY"), function(x, i, j, ...) {
     return(subvariables(x)[j, ...])
 })
 #' @rdname crunch-extract
 #' @export
 setMethod(
-    "[", c("CategoricalArrayVariable", "missing", "character"),
+    "[", c("ArrayVariable", "missing", "character"),
     function(x, i, j, ...) {
         return(x[j])
     }
@@ -254,12 +254,12 @@ setMethod(
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[", c("CategoricalArrayVariable", "ANY"), function(x, i, ...) {
+setMethod("[[", c("ArrayVariable", "ANY"), function(x, i, ...) {
     return(subvariables(x)[[i, ...]])
 })
 #' @rdname crunch-extract
 #' @export
-setMethod("[[", c("CategoricalArrayVariable", "character"), function(x, i, ...) {
+setMethod("[[", c("ArrayVariable", "character"), function(x, i, ...) {
     i <- match(i, names(x))
     if (is.na(i)) {
         return(NULL)
@@ -269,13 +269,13 @@ setMethod("[[", c("CategoricalArrayVariable", "character"), function(x, i, ...) 
 
 #' @rdname crunch-extract
 #' @export
-setMethod("$", "CategoricalArrayVariable", function(x, name) x[[name]])
+setMethod("$", "ArrayVariable", function(x, name) x[[name]])
 
 
 #' @rdname crunch-extract
 #' @export
 setMethod(
-    "[[<-", c("CategoricalArrayVariable", "ANY", "missing", "ANY"),
+    "[[<-", c("ArrayVariable", "ANY", "missing", "ANY"),
     function(x, i, value) {
         subvariables(x)[[i]] <- value
         return(x)
@@ -284,7 +284,7 @@ setMethod(
 #' @rdname crunch-extract
 #' @export
 setMethod(
-    "[[<-", c("CategoricalArrayVariable", "character", "missing", "ANY"),
+    "[[<-", c("ArrayVariable", "character", "missing", "ANY"),
     function(x, i, value) {
         i <- match(i, names(x))
         if (is.na(i)) {
@@ -301,7 +301,7 @@ setMethod(
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("$<-", "CategoricalArrayVariable", function(x, name, value) {
+setMethod("$<-", "ArrayVariable", function(x, name, value) {
     x[[name]] <- value
     return(x)
 })

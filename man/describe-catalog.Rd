@@ -54,7 +54,7 @@
 \alias{names,OrderGroup-method}
 \alias{names,SlideCatalog-method}
 \alias{names<-,SlideCatalog-method}
-\alias{names,CategoricalArrayVariable-method}
+\alias{names,ArrayVariable-method}
 \alias{names,TabBookResult-method}
 \alias{aliases,TabBookResult-method}
 \alias{descriptions,TabBookResult-method}
@@ -165,7 +165,7 @@ dates(x) <- value
 
 \S4method{names}{SlideCatalog}(x) <- value
 
-\S4method{names}{CategoricalArrayVariable}(x)
+\S4method{names}{ArrayVariable}(x)
 
 \S4method{names}{TabBookResult}(x)
 
