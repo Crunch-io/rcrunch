@@ -24,11 +24,11 @@
 #' independent existence.
 #' @export
 deriveArray <- function(subvariables, name, selections, ...) {
-  expression <- makeFrame(subvariables)
-  if (!missing(selections)) {
-    expression <- selectCategories(expression, selections, collapse = FALSE)
-  }
-  return(VariableDefinition(expression, name = name, ...))
+    expression <- makeFrame(subvariables)
+    if (!missing(selections)) {
+        expression <- selectCategories(expression, selections, collapse = FALSE)
+    }
+    return(VariableDefinition(expression, name = name, ...))
 }
 
 #' @rdname deriveArray
@@ -38,19 +38,33 @@ makeArray <- function(subvariables, name, ...) {
         halt("Must provide the name for the new variable")
     }
 
-    ## Get subvariable URLs
     if (is.dataset(subvariables)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
         subvariables <- allVariables(subvariables)
     }
-    subvariables <- urls(subvariables)
+
     if (!length(subvariables)) {
         halt("No variables supplied")
     }
 
+    subvar_types <- unique(types(subvariables))
+    if (all(subvar_types == "numeric")) {
+        var_type <- "numeric_array"
+    } else if (all(subvar_types %in% c("numeric", "categorical"))) {
+        var_type <- "categorical_array"
+    } else {
+        bad_types <- paste0(
+            "'", setdiff(subvar_types, c("numeric", "categorical")), "'", collapse = ", "
+        )
+        halt("Cannot makeArray from subvariables of type: ", bad_types)
+    }
+
+    ## Get subvariable URLs
+    subvariables <- urls(subvariables)
+
     out <- VariableDefinition(
         subvariables = I(subvariables), name = name,
-        type = "categorical_array", ...
+        type = var_type, ...
     )
     return(out)
 }
