@@ -152,13 +152,14 @@ describeDatasetVariables <- function(dataset) {
     }, character(1)))
 }
 
-showCategoricalArrayVariable <- function(x) {
+showArrayVariable <- function(x) {
     c(showCrunchVariableTitle(x), showSubvariables(subvariables(x)))
 }
 
 showSubvariables <- function(x) {
     out <- c("Subvariables:", vapply(index(x), function(s) {
-        paste0("  $`", s$name, "`")
+        alias <- ifelse(grepl("[[:blank:]]", s$alias), paste0("`", s$alias, "`"), s$alias)
+        paste0("  $", alias, " (", s$name, ")")
     }, character(1), USE.NAMES = FALSE))
     return(out)
 }
@@ -405,8 +406,8 @@ setMethod("getShowContent", "Heading", showSubtotalHeading)
 setMethod("getShowContent", "SummaryStat", showSubtotalHeading)
 setMethod("getShowContent", "CrunchVariable", showCrunchVariable)
 setMethod(
-    "getShowContent", "CategoricalArrayVariable",
-    showCategoricalArrayVariable
+    "getShowContent", "ArrayVariable",
+    showArrayVariable
 )
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
