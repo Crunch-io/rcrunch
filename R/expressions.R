@@ -239,8 +239,8 @@ zfuncExpr <- function(fun, x, ...) {
 #'     by `id`.
 #'
 #' Array expressions
-#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions,
-#'    see `deriveArray()` for more details
+#'  - `makeFrame(x, numeric = NULL)` an expression that creates an array from existing
+#'    variables or expressions, see `deriveArray()` for more details
 #'  - `arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))` Take a subset of an
 #'    existing array variable, identifying the subvariables by alias, name, or id (if `x` is
 #'    an expression, you must use id).

@@ -80,8 +80,8 @@ by \code{id}.
 
 Array expressions
 \itemize{
-\item \code{makeFrame(x)} an expression that creates an array from existing variables or expressions,
-see \code{deriveArray()} for more details
+\item \code{makeFrame(x, numeric = NULL)} an expression that creates an array from existing
+variables or expressions, see \code{deriveArray()} for more details
 \item \code{arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))} Take a subset of an
 existing array variable, identifying the subvariables by alias, name, or id (if \code{x} is
 an expression, you must use id).
