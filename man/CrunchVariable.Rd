@@ -15,6 +15,8 @@
 \alias{CategoricalArrayVariable}
 \alias{MultipleResponseVariable-class}
 \alias{MultipleResponseVariable}
+\alias{NumericArrayVariable-class}
+\alias{NumericArrayVariable}
 \title{Variables in Crunch}
 \description{
 Variables are S4 objects. All inherit from the base class
