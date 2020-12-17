@@ -19,8 +19,9 @@
 \alias{is.MR}
 \alias{is.MultipleResponse}
 \alias{is.CA}
-\alias{is.Array}
 \alias{is.CategoricalArray}
+\alias{is.NumericArray}
+\alias{is.Array}
 \title{Test whether a Crunch object belongs to a class}
 \usage{
 is.VariableDefinition(x)
@@ -57,9 +58,11 @@ is.MultipleResponse(x)
 
 is.CA(x)
 
-is.Array(x)
-
 is.CategoricalArray(x)
+
+is.NumericArray(x)
+
+is.Array(x)
 }
 \arguments{
 \item{x}{an object}
