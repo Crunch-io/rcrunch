@@ -184,10 +184,52 @@ with_mock_crunch({
         mr <- refresh(mr)
         expect_identical(showSubvariables(subvariables(mr)), c(
             "Subvariables:",
-            "  $`First`",
-            "  $`Second`",
-            "  $`Last`"
+            "  $subvar2  | First",
+            "  $subvar1  | Second",
+            "  $subvar3  | Last"
         ))
+    })
+
+    test_that("subvar aliases are right padded", {
+        with(temp.option(width = 100),
+             expect_equal(
+                 format_subvar_aliases_and_names(
+                     c("alias", "long_alias"),
+                     c("name1", "name2")
+                 ),
+                 c("  $alias       | name1", "  $long_alias  | name2")
+             )
+        )
+    })
+
+    test_that("subvar aliases with spaces get backticks", {
+        with(temp.option(width = 100),
+             expect_equal(
+                 format_subvar_aliases_and_names(
+                     c("alias", "a b"),
+                     c("name1", "name2")
+                 ),
+                 c("  $alias  | name1", "  $`a b`  | name2")
+             )
+        )
+
+    })
+
+    test_that("subvar names are truncated", {
+        with(temp.option(width = 25),
+             expect_equal(
+                 format_subvar_aliases_and_names(
+                     c("alias1", "alias2", "a3"),
+                     c("name1", "name2 extra", "name3 is very long")
+                 ),
+                 c(
+                     "  $alias1  | name1",
+                     "  $alias2  | name2 extra",
+                     "  $a3      | name3 is ..."
+                 )
+             )
+        )
+
     })
 })
 
