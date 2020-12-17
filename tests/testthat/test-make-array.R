@@ -210,11 +210,12 @@ with_mock_crunch({
         expect_equivalent(varDef, expected)
     })
 
-    test_that("deriveArray with subvariables creates a VariableDefinition", {
+    test_that("deriveArray with subvariable expr creates a categorical VariableDefinition", {
         expect_json_equivalent(
             deriveArray(
                 subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")),
-                name = "Gender MR"
+                name = "Gender MR",
+                numeric = FALSE
             ),
             list(
                 name = "Gender MR",
@@ -227,7 +228,33 @@ with_mock_crunch({
                                 c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
                             )
                         ), list(value = I("1")))
-                    ))
+                    )),
+                    kwargs = list(numeric = list(value = FALSE))
+                )
+            )
+        )
+    })
+
+    test_that("deriveArray with subvariable expr creates a numeric VariableDefinition", {
+        expect_json_equivalent(
+            deriveArray(
+                subvariables = list(VariableDefinition(ds$birthyr + 10, name = "birthyr + 10")),
+                name = "birthyr addition",
+                numeric = TRUE
+            ),
+            list(
+                name = "birthyr addition",
+                derivation = list(
+                    `function` = "array",
+                    args = list(list(
+                        `function` = "make_frame",
+                        args = list(list(
+                            map = list(
+                                c(zcl(ds$birthyr + 10), list(references = list(name = "birthyr + 10"))) #nolint
+                            )
+                        ), list(value = I("1")))
+                    )),
+                    kwargs = list(numeric = list(value = TRUE))
                 )
             )
         )

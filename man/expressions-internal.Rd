@@ -136,7 +136,7 @@ alterArrayExpr(
 
 arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))
 
-makeFrame(x)
+makeFrame(x, numeric = NULL)
 }
 \arguments{
 \item{x, e1, e2}{inputs}
