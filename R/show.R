@@ -157,10 +157,10 @@ showArrayVariable <- function(x) {
 }
 
 showSubvariables <- function(x) {
-    c("Subvariables:", format_subvar_aliases_and_names(aliases(x), names(x)))
+    c("Subvariables:", format_subvars(aliases(x), names(x)))
 }
 
-format_subvar_aliases_and_names <- function(aliases, names) {
+format_subvars <- function(aliases, names) {
     # Add ticks to aliases
     aliases <- ifelse(grepl("[[:blank:]]", aliases), paste0("`", aliases, "`"), aliases)
     # Make them constant width
