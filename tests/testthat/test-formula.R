@@ -53,8 +53,17 @@ with_mock_crunch({
             formulaToQuery(~as_selected(ds$mymrset)),
             list(
                 dimensions = list(list(
-                    list(each = self(ds$mymrset)),
-                    list(`function` = "as_selected", args = list(list(variable = self(ds$mymrset))))
+                    list(`function` = "dimension", args = list(
+                         list(
+                             `function` = "as_selected",
+                             args = list(list(variable = self(ds$mymrset)))
+                         ),
+                         list(value = "subvariables")
+                    )),
+                    list(
+                        `function` = "as_selected",
+                        args = list(list(variable = self(ds$mymrset)))
+                    )
                 )),
                 measures = list(count = list(`function` = "cube_count", args = list()))
             )
@@ -66,7 +75,12 @@ with_mock_crunch({
             formulaToQuery(~as_array(ds$mymrset)),
             list(
                 dimensions = list(list(
-                    list(each = self(ds$mymrset)),
+                    list(
+                        "function" = "dimension",
+                        args = list(
+                            list(variable = self(ds$mymrset)), list(value = "subvariables")
+                        )
+                    ),
                     list(variable = self(ds$mymrset))
                 )),
                 measures = list(count = list(`function` = "cube_count", args = list()))
