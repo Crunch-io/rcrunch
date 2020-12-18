@@ -287,7 +287,7 @@ makeFrame <- function(x, numeric = NULL) {
         x <- x[lengths(x) > 0] # remove NULLs (from eg slider)
         subvar_types <- vapply(x, function(sv) {
             if (is.VarDef(sv)) return("vardef")
-            else if (is.variable(x)) return(type(x))
+            else if (is.variable(sv)) return(type(sv))
             else return("unknown")
         }, character(1))
         x <- lapply(x, zcl)
