@@ -210,20 +210,26 @@ varToDim <- function(x) {
     ## as dimensions
     v <- zcl(x)
     if (is.MR(x)) {
-        ## Multiple response gets "as_selected" by default and "each"
-        return(list(list(each = self(x)), zfunc("as_selected", v)))
-    } else if (is.CA(x)) {
-        ## Categorical array gets the var reference and "each"
-        ## Put "each" first so that the rows, not columns, are subvars
+        ## Multiple response gets "as_selected" by default and subvars dimension
         return(list(
-            list(each = self(x)),
+            zfunc("dimension", zfunc("as_selected", v), list(value = "subvariables")),
+            zfunc("as_selected", v)
+        ))
+    } else if (is.CA(x)) {
+        ## Categorical array gets the subvariables dimension first
+        ## and then itself so that the rows, not columns, are subvars
+        return(list(
+            zfunc("dimension", x, list(value = "subvariables")),
             v
         ))
     } else if (is.zfunc(x, "as_array")) {
         ## Pseudo-ZCL from registerCubeFunctions, used to treat an MR like a CA
         ## x is thus list(`function`="as_array", args=list(list(variable=self)))
-        ## Return instead list(list(each=self), list(variable=self))
-        return(list(list(each = x$args[[1]]$variable), x$args[[1]]))
+        ## Return instead subvar dimension + variable
+        return(list(
+            zfunc("dimension", x$args[[1]]["variable"], list(value = "subvariables")),
+            x$args[[1]]["variable"]
+        ))
     } else if (is.CrunchExpr(x)) {
         ## Give a name and alias "references"
         ref <- formatExpression(x)

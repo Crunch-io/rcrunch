@@ -455,30 +455,31 @@ with_mock_crunch({
         expect_GET(
             crtabs(~mymrset, data = ds),
             paste0(
-                "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimension",
-                "s%22%3A%5B%7B%22each%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2F",
-                "datasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%2C%7B%22function%22%3A%22",
-                "as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2F",
-                "app.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset",
-                "%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22",
-                "function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22",
-                "weight%22%3Anull%7D&filter=%7B%7D"
+                "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions",
+                "%22%3A%5B%7B%22function%22%3A%22dimension%22%2C%22args%22%3A%5B%7B%22",
+                "function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22",
+                "https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F",
+                "%22%7D%5D%7D%2C%7B%22value%22%3A%22subvariables%22%7D%5D%7D%2C%7B%22function",
+                "%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2F",
+                "app.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%7D%5D%2C",
+                "%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22",
+                "args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D"
             )
         )
 
         expect_GET(
             crtabs(~ mymrset + location, data = ds),
             paste0(
-                "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22",
-                "dimensions%22%3A%5B%7B%22each%22%3A%22https%3A%2F%2F",
-                "app.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset",
-                "%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args",
-                "%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io",
-                "%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%7D%2C%7B%22",
-                "variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets",
-                "%2F1%2Fvariables%2Flocation%2F%22%7D%5D%2C%22measures%22%3A%7B%22",
-                "count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args",
-                "%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D"
+                "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions",
+                "%22%3A%5B%7B%22function%22%3A%22dimension%22%2C%22args%22%3A%5B%7B%22",
+                "function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A",
+                "%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset",
+                "%2F%22%7D%5D%7D%2C%7B%22value%22%3A%22subvariables%22%7D%5D%7D%2C%7B%22function",
+                "%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2F",
+                "app.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%7D%2C%7B%22",
+                "variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2F",
+                "location%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22",
+                "cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D"
             )
         )
     })
