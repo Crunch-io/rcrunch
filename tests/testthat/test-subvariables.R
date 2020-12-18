@@ -193,7 +193,7 @@ with_mock_crunch({
     test_that("subvar aliases are right padded", {
         with(temp.option(width = 100),
              expect_equal(
-                 format_subvar_aliases_and_names(
+                 format_subvars(
                      c("alias", "long_alias"),
                      c("name1", "name2")
                  ),
@@ -205,7 +205,7 @@ with_mock_crunch({
     test_that("subvar aliases with spaces get backticks", {
         with(temp.option(width = 100),
              expect_equal(
-                 format_subvar_aliases_and_names(
+                 format_subvars(
                      c("alias", "a b"),
                      c("name1", "name2")
                  ),
@@ -218,7 +218,7 @@ with_mock_crunch({
     test_that("subvar names are truncated", {
         with(temp.option(width = 25),
              expect_equal(
-                 format_subvar_aliases_and_names(
+                 format_subvars(
                      c("alias1", "alias2", "a3"),
                      c("name1", "name2 extra", "name3 is very long")
                  ),
