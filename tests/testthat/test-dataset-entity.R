@@ -717,6 +717,7 @@ with_test_authentication({
             )))
         })
         test_that("Dataset [[<- on new array variable", {
+            ds <- refresh(ds)
             ds$arrayVar <- makeArray(ds[cast.these], name = "Array variable")
             expect_true(is.CA(ds$arrayVar))
             expect_identical(name(ds$arrayVar), "Array variable")
