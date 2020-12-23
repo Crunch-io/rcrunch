@@ -384,10 +384,10 @@ showMultitable <- function(x) {
     out <- c(
         out, "Column variables:",
         vapply(x@body$template, function(expr) {
-            if ("each" %in% names(expr$query[[1]])) {
-                # if the first element of the query is each, then this is
-                # an array so take the second argument instead.
-                exprToFormat <- expr$query[[2]]
+            if ((expr$query[[1]][["function"]] %||% "") == "dimension") {
+                # if the first element of the query is a dimension func, then this is
+                # an array, so take the second arg
+                exprToFormat <- expr$query[[1]][["args"]][[1]]
 
                 # if the second arg is a as_selected take the variable from
                 # that to display var only
