@@ -151,13 +151,8 @@ with_test_authentication <- function(expr) {
             with_trace("locationHeader", exit = tracer, where = crGET, expr = {
                 ## Wrap this so that we can generate a test failure if
                 ## there's an error rather than just halt the process
-                tryCatch(eval(expr, envir = env),
-                    error = function(e) {
-                        test_that("There are no test code errors", {
-                            expect_error(stop(e$message), NA)
-                        })
-                    }
-                )
+                ## (eg make sure we run the test teardown)
+                eval(expr, envir = env)
             })
         })
     }
