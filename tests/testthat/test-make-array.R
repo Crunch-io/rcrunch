@@ -263,8 +263,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("We bind with makeArray", {
-        ds <- mrdf.setup(newDataset(mrdf))
-        ds$arrayVar <- makeArray(ds[1:3], name = "arrayVar")
+        ds <- mrdf.setup(newDataset(mrdf), name = "arrayVar")
 
         test_that("can make Categorical Array with Dataset subset", {
             expect_equal(c("arrayVar", "v4"), names(ds))
@@ -278,8 +277,7 @@ with_test_authentication({
     })
 
     whereas("Testing dichotomizing and undichotomizing", {
-        ds <- mrdf.setup(newDataset(mrdf))
-        ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")], name = "arrayVar")
+        ds <- mrdf.setup(newDataset(mrdf), name = "arrayVar")
         var <- ds$arrayVar
         test_that("setup to make MultipleResponse from CategoricalArray", {
             expect_true(is.CA(var))
@@ -355,10 +353,11 @@ with_test_authentication({
     })
 
     whereas("deriveArray with subvariables functions as expected", {
-        ds <- mrdf.setup(newDataset(mrdf))
+        ds <- newDataset(mrdf)
         ds$mrVar <- deriveArray(
             list(VariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias")),
-            name = "MR Variable"
+            name = "MR Variable",
+            numeric = FALSE
         )
 
         test_that("can make MR with formMR", {
