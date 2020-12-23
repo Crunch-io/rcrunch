@@ -3,7 +3,7 @@ context("Handling append conflicts")
 with_test_authentication({
     whereas("When attempting to append an array and a numeric", {
         part1 <- mrdf.setup(newDataset(mrdf))
-        part2 <- mrdf.setup(newDataset(mrdf[c("mr_3", "v4")]))
+        part2 <- newDataset(mrdf[c("mr_3", "v4")])
         alias(part2$mr_3) <- "CA"
         name(part2$CA) <- "Bad var"
         test_that("setup for append array type mismatch", {
