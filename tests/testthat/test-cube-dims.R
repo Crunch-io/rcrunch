@@ -23,6 +23,21 @@ test_that("getDimTypes returns the expected cube dimension types", {
         getDimTypes(cattarray_cat),
         c("ca_items", "ca_categories", "categorical")
     )
+    numa <- loadCube(test_path("cubes/numa.json"))
+    expect_equivalent(
+        getDimTypes(numa),
+        c("numarray_items")
+    )
+    numa_cat <- loadCube(test_path("cubes/numa-x-cat.json"))
+    expect_equivalent(
+        getDimTypes(numa_cat),
+        c("categorical", "numarray_items")
+    )
+    numa_mr <- loadCube(test_path("cubes/numa-x-mr.json"))
+    expect_equivalent(
+        getDimTypes(numa_mr),
+        c("mr_items", "mr_selections", "numarray_items")
+    )
 })
 
 with_mock_crunch({
