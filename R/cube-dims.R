@@ -15,6 +15,8 @@ cubeDims <- function(cube) {
             references = tuple
         ))
     })
+    dimnames <- c(dimnames, inflateNumArray(cube))
+
     names(dimnames) <- vapply(
         dimnames, function(x) x$references$alias,
         character(1)
@@ -82,6 +84,30 @@ elementName <- function(el) {
     return(out)
 }
 
+inflateNumArray <- function(cube) {
+    ## Numeric arrays have pseudo-dimensions stored in their results
+    ## that needs to be "inflated" up to a real dimension  here.
+    ## We'll look only at the first cube for this, because in most cases
+    ## this okay, but it does mean that cubes that mix numeric arrays and
+    ## not will have invalid dimensions.
+    first_metadata <- cube$result$measures[[1]]$metadata
+    if (is.null(first_metadata$type$subvariables)) return(NULL)
+
+    tuple <- cubeVarReferences(first_metadata)
+    subvar_names <- vapply(
+        tuple$subreferences,
+        function(x) x$name,
+        character(1),
+        USE.NAMES = FALSE
+    )
+
+    list(list(
+        name = subvar_names,
+        missing = rep(FALSE, length(subvar_names)),
+        references = tuple
+    ))
+}
+
 #' Methods on Cube objects
 #'
 #' These methods provide an `array`-like interface to the CrunchCube
@@ -143,13 +169,13 @@ is.selectedDimension <- function(dims) getDimTypes(dims) == "mr_selections"
 #' Get dimension type
 #'
 #' This function returns the specific type of each cube dimension. This is useful
-#' when cubes contain categorical array or multiple response variables because it
-#' identifies the dimensions of the cube which refer to the different parts of
-#' array variable:
+#' when cubes contain array variables because it identifies the dimensions of
+#' the cube which refer to the different parts of array variable:
 #' - `ca_items`: Categorical array items
 #' - `ca_categories`: The categories of the categorical array
 #' - `mr_items`: Multiple response options or items
 #' - `mr_selections`: The selection status for a multiple response variable
+#' - `numarray_items`: Numeric array items
 #'
 #' @param x a CrunchCube or CubeDims object
 #'
@@ -217,6 +243,11 @@ getDimTypes <- function(x) {
     vars <- variables(x)
     array_aliases <- aliases(vars)[types(vars) == "subvariable_items"]
     out <- vapply(vars, what_dim_is_it, character(1), array_aliases)
+
+    # numeric variables can only be a dimension if they're array
+    # so we'll change the type to fit in with the `ca_item`/`mr_items`
+    # so that subvariables are reliably "*_items"
+    out[out == "numeric"] <- "numarray_items"
 
     names(out) <- names(vars)
     return(out)
