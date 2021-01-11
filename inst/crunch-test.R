@@ -87,7 +87,7 @@ with_mock_crunch <- function(expr) {
     )
     with(
         opts,
-        with_mock_API(expr)
+        with_mock_api(expr)
     )
 }
 
