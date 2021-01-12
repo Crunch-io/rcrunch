@@ -221,36 +221,56 @@ setMethod("initialize", "MultitableResult", function(.Object, ...) {
         ))
     )
     .Object$result <- lapply(.Object$result, function(cube) {
-        cube <- CrunchCube(cube)
-        ## TODO: refactor with CrunchCubep-native methods (eg, dimensions<-, aperm)
-        if (length(dim(cube)) == 3L) {
-            ## check if there is an MR, in which case there are actually 4 dims
-            ## underlyingly, not 3 dims
-            selecteds <- is.selectedDimension(cube@dims)
-            if (any(which(selecteds) %in% c(3, 4))) {
-                ## the selected dimension is in the second half of the cube, so
-                ## the MR is in the multitable
-                cube@dims <- CubeDims(cube@dims[c(2, 3, 4, 1)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm = c(2, 3, 4, 1))
-            } else if (any(which(selecteds) %in% c(1, 2))) {
-                ## the selected dimension is in the first half of the cube, so
-                ## the array is in the multitable
-                cube@dims <- CubeDims(cube@dims[c(4, 3, 1, 2)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm = c(4, 3, 1, 2))
-            } else {
-                ## If cubes are 3D (categorical array x multitable), aperm the
-                ## cubes so that column is multitable var (3 -> 2), row is
-                ## category of array (2 -> 1), subvar is "tab" (1 -> 3)
-                ## TODO: check if it is cat by multitable catarray?
-                cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm = c(2, 3, 1))
-            }
-        }
-        return(cube)
+        rearrange3DTabbookDims(CrunchCube(cube))
     })
 
     return(.Object)
 })
+
+# Tabbook cubes can only have 3 dimensions if they have a cat/numeric array
+# somewhere. At the time of writing, there is no validation on the template,
+# so it is possible it could be in either the template or the row variables.
+# This code preserves the legacy behavior where we have special logic to handle
+# the situation where categorical arrays
+# (see https://www.pivotaltracker.com/n/projects/2172644/stories/176401734)
+# NB: Tabbooks have 2 variables per cube, so there cannot be a 3D cube with
+# more than 1 selected dimension (2 MRs would be a 2D cube).
+# The goal is to have the dimensions be rearranged so that it's c(2, 3, 1)
+# but need to keep the MR together
+rearrange3DTabbookDims <- function(cube) {
+    if (length(dim(cube)) != 3L) return(cube)
+    ## TODO: refactor with CrunchCubep-native methods (eg, dimensions<-, aperm)
+
+    ## check if there is an MR, in which case there are actually 4 dims
+    ## underlyingly, not 3 dims
+    selecteds <- is.selectedDimension(cube@dims)
+    if (!any(selecteds)) {
+        ## If cubes are categorical array x multitable (non-array), aperm the
+        ## cubes so that column is multitable var (3 -> 2), row is
+        ## category of array (2 -> 1), subvar is "tab" (1 -> 3)
+        dim_order <- c(2, 3, 1)
+    } else if (any(which(selecteds) %in% c(3, 4))) {
+        ## the selected dimension is in the second half of the cube, so
+        ## the MR is in the multitable
+        ## The "3rd dimension" is actually c(3, 4), so dim_order is:
+        ## c(2, (3, 4), 1)
+        dim_order <- c(2, 3, 4, 1)
+    } else if (any(which(selecteds) %in% c(1, 2))) {
+        ## the selected dimension is in the first half of the cube, so
+        ## the array is in the multitable. (This shouldn't really be allowed)
+        ## The "first" dimension is actually c(1, 2), so it would be:
+        ## c(3, 4, (1, 2))
+        ## However, to match legacy behavior, we do 4, 3, 1, 2,
+        ## Greg isn't really sure why we do this, but since it only
+        ## comes up when there's a cat array in the template,
+        ## I just leave it as is.
+        dim_order <- c(4, 3, 1, 2)
+    }
+
+    cube@dims <- CubeDims(cube@dims[dim_order])
+    cube@arrays <- lapply(cube@arrays, aperm, perm = dim_order)
+    return(cube)
+}
 
 #' @rdname crunch-extract
 #' @export
