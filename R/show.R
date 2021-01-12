@@ -510,7 +510,23 @@ setMethod("show", "CrunchSlide", function(object) {
 #' @rdname show
 #' @export
 setMethod("show", "MultitableResult", function(object) {
-    show(do.call("cbind", lapply(object, cubeToArray)))
+    arrays <- lapply(object, cubeToArray)
+    num_unique_dims <- unique(vapply(arrays, function(x) length(dim(x)), numeric(1)))
+    if (length(num_unique_dims) > 1) {
+        # Happens if a categorical array is in the multitable template
+        # which we plan to disallow in the future
+        show("Cannot display Multitable results with unequal dimensions.")
+    } else {
+        # For 1&2D, abind along last dimension (as you usually would), but for 3D
+        # because of `rearrange3DTabbookDims()`, bind along the second one so
+        # that shapes match up.
+        # 4D only happens if Cat Array is in the template, which will be prevented
+        along <- ifelse(num_unique_dims == 3, 2, num_unique_dims)
+        show(do.call(
+            function(...) abind::abind(..., along = min(num_unique_dims, 2)),
+            lapply(object, cubeToArray)
+        ))
+    }
 })
 
 setMethod("getShowContent", "ShojiFolder", function(x) {

@@ -20,6 +20,7 @@ License: LGPL (>= 3)
 Depends:
     R (>= 3.0.0)
 Imports:
+    abind,
     crayon,
     curl,
     grDevices,
