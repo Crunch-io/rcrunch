@@ -1,0 +1,26 @@
+{
+    "body": {
+        "name": "Secure"
+    },
+    "element": "shoji:catalog",
+    "graph": [
+        "../../variables/var_16/"
+    ],
+    "index": {
+        "../../variables/var_16/": {
+            "alias": "resp_id",
+            "derived": false,
+            "description": "",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_16",
+            "name": "resp_id",
+            "notes": "",
+            "secure": true,
+            "type": "numeric"
+        }
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/folders/secure/",
+    "size": 1
+}
+

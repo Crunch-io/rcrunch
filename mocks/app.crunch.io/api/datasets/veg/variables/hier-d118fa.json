@@ -1,0 +1,38 @@
+{
+    "description": "Hierarchical order from folder structure of dataset variables",
+    "element": "shoji:order",
+    "graph": [
+        "../var_22/",
+        "../var_01/",
+        "../var_06/",
+        "../var_02/",
+        "../var_17/",
+        "../var_15/",
+        {
+            "Survey variables": [
+                "../var_23/",
+                "../var_07/",
+                "../var_08/"
+            ]
+        },
+        {
+            "__hidden__": [
+                "../var_03/",
+                "../var_04/",
+                "../var_05/",
+                "../var_20/",
+                "../var_21/",
+                "../var_19/",
+                "../var_18/",
+                "../var_09/",
+                "../var_10/",
+                "../var_11/",
+                "../var_12/",
+                "../var_13/",
+                "../var_14/"
+            ]
+        }
+    ],
+    "self": "https://app.crunch.io/api/datasets/veg/variables/hier/?relative=on"
+}
+

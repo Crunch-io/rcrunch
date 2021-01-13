@@ -1,0 +1,130 @@
+{
+    "body": {
+        "name": "Root"
+    },
+    "catalogs": {
+        "hidden": "https://app.crunch.io/api/datasets/veg/folders/hidden/",
+        "parents": "https://app.crunch.io/api/datasets/veg/folders/parents/",
+        "personal": "https://app.crunch.io/api/datasets/veg/variables/personal/",
+        "secure": "https://app.crunch.io/api/datasets/veg/folders/secure/",
+        "trash": "https://app.crunch.io/api/datasets/veg/folders/trash/"
+    },
+    "description": "This is the variables' folder root",
+    "element": "shoji:catalog",
+    "graph": [
+        "../variables/var_22/",
+        "../variables/var_01/",
+        "../variables/var_06/",
+        "../variables/var_02/",
+        "../variables/var_17/",
+        "../variables/var_15/",
+        "vdir_01/"
+    ],
+    "index": {
+        "../variables/var_01/": {
+            "alias": "age",
+            "derived": false,
+            "description": "Age of respondent",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_01",
+            "name": "Age",
+            "notes": "How old are you?",
+            "secure": false,
+            "type": "numeric"
+        },
+        "../variables/var_02/": {
+            "alias": "enjoy_mr",
+            "derived": true,
+            "description": "Typically enjoy foods with flavors",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_02",
+            "name": "Enjoy Food Flavors",
+            "notes": "Do you typically enjoy foods that taste..?",
+            "secure": false,
+            "subvariables": [
+                "../variables/var_02/subvariables/1/",
+                "../variables/var_02/subvariables/2/",
+                "../variables/var_02/subvariables/3/"
+            ],
+            "subvariables_catalog": "../variables/var_02/subvariables/",
+            "type": "multiple_response",
+            "uniform_basis": false
+        },
+        "../variables/var_06/": {
+            "alias": "healthy_eater",
+            "derived": false,
+            "description": "Self identified 'Healthy eater' (binary)",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_06",
+            "name": "Healthy Eater",
+            "notes": "Do you consider yourself a 'Healthy Eater' (eg someone who enjoys eating healthy food)?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "../variables/var_15/": {
+            "alias": "ratings_numa",
+            "derived": true,
+            "description": "Rating of Vegetables: Scale of 0-100",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_15",
+            "name": "Vegetable Ratings",
+            "notes": "On a scale of 0-100, how would you rate...?",
+            "secure": false,
+            "subvariables": [
+                "../variables/var_15/subvariables/1/",
+                "../variables/var_15/subvariables/2/",
+                "../variables/var_15/subvariables/3/",
+                "../variables/var_15/subvariables/4/",
+                "../variables/var_15/subvariables/5/",
+                "../variables/var_15/subvariables/6/"
+            ],
+            "subvariables_catalog": "../variables/var_15/subvariables/",
+            "type": "numeric_array"
+        },
+        "../variables/var_17/": {
+            "alias": "veg_enjoy_ca",
+            "derived": true,
+            "description": "Enjoy vegetables reasons (5 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_17",
+            "name": "Reasons for Enjoying Vegetables",
+            "notes": "To what extent do you enjoy vegetables because of...?",
+            "scale": "interval",
+            "secure": false,
+            "subvariables": [
+                "../variables/var_17/subvariables/1/",
+                "../variables/var_17/subvariables/2/",
+                "../variables/var_17/subvariables/3/",
+                "../variables/var_17/subvariables/4/"
+            ],
+            "subvariables_catalog": "../variables/var_17/subvariables/",
+            "type": "categorical_array"
+        },
+        "../variables/var_22/": {
+            "alias": "wave",
+            "derived": false,
+            "description": "Wave of survey that participant was in",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_22",
+            "name": "Survey Wave",
+            "notes": "",
+            "secure": false,
+            "type": "categorical"
+        },
+        "vdir_01/": {
+            "name": "Survey variables",
+            "size": 3,
+            "type": "folder"
+        }
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/folders/",
+    "size": 9
+}
+

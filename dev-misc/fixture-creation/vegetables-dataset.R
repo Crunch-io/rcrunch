@@ -16,9 +16,16 @@ pct_missing <- 0.05
 
 library(dplyr)
 library(crunch)
+library(httptest)
+library(fs)
+library(here)
+library(purrr)
+
+source(here("dev-misc/fixture-creation/redactors.R"))
 login()
 
-# Helpers ----
+# Setup dataset ----
+## Data generation helpers ----
 random_gen_func <- function(...) {
     dots <- list(...)
     coefs <- purrr::map_dbl(seq(1, length(dots), by = 2), ~dots[[.]])
@@ -59,7 +66,7 @@ set_var_meta <- function(var, name = NULL, description = NULL, notes = NULL) {
 }
 
 
-# Make R data.frame -----
+## Make R data.frame -----
 total_n <- num_waves * people_per_wave
 
 vegetables <- tibble(
@@ -149,10 +156,10 @@ vegetables <- tibble(
     }))
 
 
-# Setup crunch dataset ----
+## Setup crunch dataset ----
 ds <- newDataset(vegetables, "Vegetables example")
 
-# Set variable metadata ----
+## Set variable metadata ----
 set_var_meta(
     ds$wave,
     name = "Survey Wave",
@@ -268,7 +275,7 @@ set_var_meta(
 )
 ds <- refresh(ds)
 
-# Derive arrays ----
+## Derive arrays ----
 ds$enjoy_mr <- deriveArray(
     list(
         VarDef(ds$enjoy_savory_food, alias = "enjoy_mr_savory", name = "Savory"),
@@ -318,7 +325,7 @@ hideVariables(ds, c(
     "rating_eggplant", "rating_fennel"
 ))
 
-# Other metadata ----
+## Other metadata ----
 values(categories(ds$wave)) <- NA
 dates(categories(ds$wave)[!is.na(categories(ds$wave))]) <- format(seq(as.Date("2019-01-01"), length.out = sum(!is.na(categories(ds$wave))), by = "month"), "%Y-%m")
 
@@ -329,3 +336,142 @@ mv(ds, c("weight", "last_vegetable", "last_vegetable_date"), "Survey variables")
 
 ds <- refresh(ds)
 
+
+## Other ds ----
+mt <- newMultitable(
+    ~ds$enjoy_mr + ds$healthy_eater,
+    ds,
+    "cat + mr multitable"
+)
+# Capture fixtures ----
+set_redactor(response_redactor(ds, "veg"))
+set_requester(request_redactor(ds, "veg"))
+## Capture dataset fixtures ----
+### General dataset capture ----
+temp_dir <- tempfile()
+httpcache::clearCache()
+dir_create(temp_dir)
+
+start_capturing(temp_dir)
+ds <- loadDataset("Vegetables example")
+mt <- multitables(ds)[[1]]
+tb <- tabBook(mt, ds)
+stop_capturing()
+
+### Cleanup and move dataset capture ----
+# File level modifications needed to scrub attributes that change over time
+stabilize_json_files(
+    temp_dir,
+    list(
+        "app.crunch.io/api/datasets/by_name/Vegetables%20example.json",
+        list(list("index", 1, "current_editor_name"), "User"),
+        list(list("index", 1, "owner_name"), "User"),
+        list(list("index", 1, "creation_time"), "2021-01-01T21:25:59.791000"),
+        list(list("index", 1, "modification_time"), "2021-01-01T21:26:43.038000"),
+        list(list("index", 1, "access_time"), "2021-01-01T21:26:43.038000")
+    ),
+    list(
+        "app.crunch.io/api/datasets/veg.json",
+        list(list("body", "current_editor_name"), "User"),
+        list(list("body", "owner_name"), "User"),
+        list(list("body", "creation_time"), "2021-01-01T21:25:59.791000"),
+        list(list("body", "modification_time"), "2021-01-01T21:26:43.038000"),
+        list(list("body", "access_time"), "2021-01-01T21:26:43.038000"),
+        list(list("urls", "owner_url"), "https://app.crunch.io/api/projects/pid/")
+    )
+)
+
+# POST files contain lots of info that changes between runs, so delete it
+# and use `with_POST()`
+path(temp_dir, "app.crunch.io/api/datasets/veg/multitables/mt_01") %>%
+    dir_ls(glob = "*POST.R") %>%
+    file_delete()
+
+# Now move to the mocks folder
+file_copy(
+    path(temp_dir, "app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
+    here("mocks/app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
+    overwrite = TRUE
+)
+
+file_copy(
+    path(temp_dir, "app.crunch.io/api/datasets/veg.json"),
+    here("mocks/app.crunch.io/api/datasets/veg.json"),
+    overwrite = TRUE
+)
+
+
+dir_copy(
+    path(temp_dir, "app.crunch.io/api/datasets/veg/"),
+    here("mocks/app.crunch.io/api/datasets/veg/"),
+    overwrite = TRUE
+)
+
+file_copy(
+    dir_ls(path(temp_dir, "player-crunch-io.s3.amazonaws.com"), glob = "*.json", recurse = TRUE),
+    here("mocks/app.crunch.io/api/datasets/veg/multitables/mt_01/cat-mr-tabbook.json"),
+    overwrite = TRUE
+)
+
+dir_delete(temp_dir)
+
+## Generate cube fixtures ----
+### Numeric array alone (numa.json) ----
+httpcache::clearCache()
+dir_create(temp_dir)
+
+start_capturing(temp_dir)
+cube <- crtabs(mean(ds$ratings_numa) ~ 1, ds)
+stop_capturing()
+
+cube_path <- dir_ls(
+    temp_dir,
+    regexp = "app.crunch.io/api/datasets/veg/cube-.{6}\\.json",
+    recurse = TRUE
+)
+stabilize_json_files(path_dir(cube_path))
+file_copy(cube_path, here("mocks", "cubes", "numa.json"), overwrite = TRUE)
+
+dir_delete(temp_dir)
+
+
+### Numeric array by categorical (numa-x-cat.json) ----
+httpcache::clearCache()
+dir_create(temp_dir)
+
+start_capturing(temp_dir)
+cube <- crtabs(mean(ds$ratings_numa) ~ ds$healthy_eater, ds)
+stop_capturing()
+
+cube_path <- dir_ls(
+    temp_dir,
+    regexp = "app.crunch.io/api/datasets/veg/cube-.{6}\\.json",
+    recurse = TRUE
+)
+stabilize_json_files(path_dir(cube_path))
+file_copy(cube_path, here("mocks", "cubes", "numa-x-cat.json"), overwrite = TRUE)
+
+dir_delete(temp_dir)
+
+
+### Numeric array by categorical (numa-x-mr.json) ----
+httpcache::clearCache()
+dir_create(temp_dir)
+
+start_capturing(temp_dir)
+cube <- crtabs(mean(ds$ratings_numa) ~ ds$enjoy_mr, ds)
+stop_capturing()
+
+cube_path <- dir_ls(
+    temp_dir,
+    regexp = "app.crunch.io/api/datasets/veg/cube-.{6}\\.json",
+    recurse = TRUE
+)
+stabilize_json_files(path_dir(cube_path))
+
+file_copy(cube_path, here("mocks", "cubes", "numa-x-mr.json"), overwrite = TRUE)
+
+dir_delete(temp_dir)
+
+# Cleanup ----
+with_consent(delete(ds))

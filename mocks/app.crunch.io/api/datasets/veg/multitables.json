@@ -1,0 +1,15 @@
+{
+    "description": "List of multitable definitions for this dataset",
+    "element": "shoji:catalog",
+    "index": {
+        "https://app.crunch.io/api/datasets/veg/multitables/mt_01/": {
+            "id": "mt_01",
+            "is_public": false,
+            "name": "cat + mr multitable",
+            "owner_id": "https://app.crunch.io/api/users/user_id/",
+            "team": null
+        }
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/multitables/"
+}
+
