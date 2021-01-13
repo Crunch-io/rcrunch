@@ -182,7 +182,7 @@ setMethod("dim", "TabBookResult", function(x) {
 #' @rdname describe-catalog
 #' @export
 setMethod("names", "TabBookResult", function(x) {
-    unlist(lapply(x$meta$sheets, function(sheet) sheet$name))
+    unlist(lapply(x$meta$analyses, function(sheet) sheet$name))
 })
 #' @rdname describe-catalog
 #' @export
