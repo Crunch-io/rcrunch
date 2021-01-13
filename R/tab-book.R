@@ -219,7 +219,10 @@ setMethod("initialize", "MultitableResult", function(.Object, ...) {
         ))
     )
     .Object$result <- lapply(.Object$result, function(cube) {
-        rearrange3DTabbookDims(CrunchCube(cube))
+        cube <- CrunchCube(cube)
+        cube <- rearrange3DTabbookDims(cube)
+        cube <- rearrangeNumArrTabbookDims(cube)
+        cube
     })
 
     return(.Object)
@@ -268,6 +271,28 @@ rearrange3DTabbookDims <- function(cube) {
     cube@dims <- CubeDims(cube@dims[dim_order])
     cube@arrays <- lapply(cube@arrays, aperm, perm = dim_order)
     return(cube)
+}
+
+# Numeric arrays have a "measure axis" rather than a dimension,
+# and it gets put in the wrong order for display purposes.
+# When we find a numeric array as the last dimension, reorder
+# it so that numeric array is second-to-last
+rearrangeNumArrTabbookDims <- function(cube) {
+    dim_types <- getDimTypes(cube)
+    if (dim_types[length(dim_types)] != "numarray_items") return(cube)
+
+    ndims <- length(dim_types)
+    if (ndims == 2) {
+        dim_order <- c(2, 1)
+    } else if (ndims == 3) { # MR (or CatArray) by numeric array
+        dim_order <- c(3, 1, 2)
+    } else {
+        # Shouldn't ever happen, but don't want to error here
+        return(cube)
+    }
+    cube@dims <- CubeDims(cube@dims[dim_order])
+    cube@arrays <- lapply(cube@arrays, aperm, perm = dim_order)
+    cube
 }
 
 #' @rdname crunch-extract
