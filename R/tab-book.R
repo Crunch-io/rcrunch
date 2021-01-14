@@ -271,7 +271,11 @@ rearrange3DTabbookDims <- function(cube) {
     }
 
     cube@dims <- CubeDims(cube@dims[dim_order])
-    cube@arrays <- lapply(cube@arrays, aperm, perm = dim_order)
+    cube@arrays <- lapply(cube@arrays, function(x) {
+        out <- aperm(x, perm = dim_order)
+        attr(out, "measure_type") <- attr(x, "measure_type")
+        out
+    })
     return(cube)
 }
 
@@ -293,7 +297,11 @@ rearrangeNumArrTabbookDims <- function(cube) {
         return(cube)
     }
     cube@dims <- CubeDims(cube@dims[dim_order])
-    cube@arrays <- lapply(cube@arrays, aperm, perm = dim_order)
+    cube@arrays <- lapply(cube@arrays, function(x) {
+        out <- aperm(x, perm = dim_order)
+        attr(out, "measure_type") <- attr(x, "measure_type")
+        out
+    })
     cube
 }
 
@@ -336,13 +344,17 @@ setMethod("prop.table", "MultitableResult", function(x, margin = NULL) {
 #' @rdname cube-computing
 #' @export
 setMethod("prop.table", "TabBookResult", function(x, margin = NULL) {
-    lapply(x, prop.table, margin = margin)
+    lapply(x, function(x) {
+        tryCatch(prop.table(x, margin = margin), error = function(e) NULL)
+    })
 })
 
 #' @rdname cube-computing
 #' @export
 setMethod("bases", "TabBookResult", function(x, margin = NULL) {
-    lapply(x, bases, margin = margin)
+    lapply(x, function(x) {
+        tryCatch(bases(x, margin = margin), error = function(e) NULL)
+    })
 })
 
 #' @rdname cube-computing

@@ -129,6 +129,28 @@ with_mock_crunch({
             fixed = TRUE
         )
     })
+
+    test_that("Can't do count cube calculation on non-counts", {
+        cube <- crtabs(min(birthyr) ~ 1, ds)
+
+        expect_error(
+            prop.table(cube),
+            "Cannot calculate `prop.table()` on non-count measure: min",
+            fixed = TRUE
+        )
+
+        expect_error(
+            margin.table(cube),
+            "Cannot calculate `margin.table()` on non-count measure: min",
+            fixed = TRUE
+        )
+
+        expect_error(
+            bases(cube),
+            "Cannot calculate `bases()` on non-count measure: min",
+            fixed = TRUE
+        )
+    })
 })
 
 with_test_authentication({
