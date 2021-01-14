@@ -2,8 +2,10 @@ formulaToCubeQuery <- function(formula, data) {
     query <- formulaToQuery(formula, data)
     ## The formulaToQuery part is shared with newMultitable.
     ## What follows is needed to prepare for a cube query
-    query$dimensions <- unlist(query$dimensions, recursive = FALSE)
-    names(query$dimensions) <- NULL
+    if (length(query$dimensions) > 0) { # leave empty dimensions present in query
+        query$dimensions <- unlist(query$dimensions, recursive = FALSE)
+        names(query$dimensions) <- NULL
+    }
     return(query)
 }
 
