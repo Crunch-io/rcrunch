@@ -21,7 +21,7 @@ formulaToQuery <- function(formula, data) {
     ## Construct the "measures", either from the formula or default "count"
     if (!length(measures)) {
         # if measures is an empty list, there are none.
-        measures <- list(count = zfunc("cube_count"))
+        measures <- list(zfunc("cube_count"))
     } else {
         ## Look for multiple measures, as passed by `list(f(x), g(x) ~ a + b)`
         if (startsWith(as.character(formula)[2], "list(")) {
@@ -46,11 +46,11 @@ formulaToQuery <- function(formula, data) {
         halt("Right side of formula cannot contain aggregation functions")
     }
 
-    ## One last munge
+    ## Name measures based on function (and append to end if already named)
     if (is.null(names(measures))) {
-        names(measures) <- vapply(measures, function(m) {
-            sub("^cube_", "", m[["function"]])
-        }, character(1))
+        names(measures) <- getCubeMeasureNames(measures)
+    } else {
+        names(measures) <- paste0(names(measures), "__", getCubeMeasureNames(measures))
     }
 
     return(list(dimensions = dimensions, measures = measures))
@@ -189,6 +189,12 @@ registerCubeFunctions <- function(varnames = c()) {
         )
     }
     return(funcs)
+}
+
+getCubeMeasureNames <- function(measures) {
+    vapply(measures, function(m) {
+        sub("^cube_", "", m[["function"]])
+    }, character(1))
 }
 
 isCubeAggregation <- function(x) {

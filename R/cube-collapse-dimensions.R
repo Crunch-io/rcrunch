@@ -134,6 +134,7 @@ collapse_dims <- function(array_in,
 
     # add attributes back
     attributes(array)$variable$type <- attributes(array_in)$variable$type
+    attributes(array)$measure_type <- attributes(array_in)$measure_type
 
     return(array)
 }
