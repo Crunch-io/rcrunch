@@ -232,6 +232,7 @@ subsetCubeArray <- function(array, bools, drop = FALSE, selected_dims = FALSE) {
     if (re_shape) {
         out <- array(out, dim = newdim, dimnames = newdimnames)
     }
+    attr(out, "measure_type") <- attr(array, "measure_type")
     return(out)
 }
 
