@@ -15,16 +15,20 @@ setGeneric("sd")
 setGeneric("median")
 
 .summary.stat <- function(x, stat, na.rm = FALSE, ...) {
+    measure <- list(registerCubeFunctions()[[stat]](x))
+    measure_name <- getCubeMeasureNames(measure)
+    names(measure) <- measure_name
+
     query <- list(
         query = toJSON(list(
             dimensions = list(),
-            measures = list(q = registerCubeFunctions()[[stat]](x))
+            measures = measure
         )),
         filter = toJSON(zcl(activeFilter(x)))
         ## TODO: this should explicitly specify the weight
     )
     cube <- CrunchCube(crGET(cubeURL(x), query = query))
-    if (!na.rm && cube$result$measures$q[["n_missing"]] > 0) {
+    if (!na.rm && cube$result$measures[[measure_name]][["n_missing"]] > 0) {
         return(NA_real_)
     } else {
         return(as.array(cube))

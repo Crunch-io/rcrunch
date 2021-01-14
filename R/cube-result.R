@@ -1,12 +1,17 @@
 setMethod("initialize", "CrunchCube", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
+    ## Fill in with the measure types based on the result name
+    .Object$result$measures <- addCubeMeasureTypes(.Object$result$measures)
     ## Fill in these reshaped values if loading an API response
     if (!length(.Object@dims)) .Object@dims <- cubeDims(.Object)
     if (!length(.Object@arrays)) {
         ## Get the "measures" from the response
         m <- .Object$result$measures
         ## Add the "bases", which aren't included in "measures"
-        m[[".unweighted_counts"]] <- list(data = .Object$result$counts)
+        m[[".unweighted_counts"]] <- list(
+            data = .Object$result$counts,
+            measure_type = ".unweighted_counts"
+        )
         ## Transform the flat arrays into N-d arrays for easier use
         .Object@arrays <- lapply(m, cToA, dims = .Object@dims)
     }
@@ -52,6 +57,19 @@ setMethod("dim", "CrunchCube", function(x) dim(as.array(x)))
 #' @export
 setMethod("dimnames", "CrunchCube", function(x) dimnames(dimensions(x)))
 
+addCubeMeasureTypes <- function(measures) {
+    # Add cube measure type to object, which may be stored as an appended
+    # "__<measure>" if user chose names
+    out <- lapply(names(measures), function(measure_name) {
+        c(
+            measures[[measure_name]],
+            list(measure_type = sub(".+__", "", measure_name))
+        )
+    })
+    names(out) <- sub("(.+)__.+", "\\1", names(measures))
+    out
+}
+
 cToA <- function(x, dims) {
     ## Just make an array from the cube "measure's" data. Nothing else.
     ## This function takes a flat array from the JSON response and shapes it
@@ -90,6 +108,8 @@ cToA <- function(x, dims) {
     ## Stick any variable metadata we have in here as an attribute so that
     ## `measures()` and `variables()` can access it
     attr(out, "variable") <- cubeVarReferences(x$metadata)
+    ## Add measure_type (from original measure_name) to array attributes as well
+    attr(out, "measure_type") <- x$measure_type
     return(out)
 }
 
@@ -115,8 +135,9 @@ cubeToArray <- function(x, measure = 1) {
     ## think of the data, we take the "Selected" slice from the categories
     ## dimension.
     out <- x@arrays[[measure]]
-    ## Remove the "variables" metadata stuck in there
+    ## Remove the "variables" & "measure_type" metadata stuck in there
     attr(out, "variable") <- NULL
+    attr(out, "measure_type") <- NULL
     ## If "out" is just a scalar, skip this
     if (is.array(out)) {
         ## First, take the "Selected" slices, if any
@@ -428,6 +449,7 @@ setGeneric("prop.table")
 setGeneric("round")
 #' @rdname cube-computing
 setGeneric("bases", function(x, margin = NULL) standardGeneric("bases"))
+
 
 #' @rdname cube-computing
 #' @export
