@@ -120,4 +120,16 @@ with_mock_crunch({
             "should be one of"
         )
     })
+
+    test_that("cubeMeasureType works correctly", {
+        expect_identical(
+            cubeMeasureType(crtabs(~ birthyr > 1980, data = ds)),
+            "count"
+        )
+
+        expect_identical(
+            cubeMeasureType(crtabs(min(birthyr) ~ 1, data = ds)),
+            "min"
+        )
+    })
 })

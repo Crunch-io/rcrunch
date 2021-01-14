@@ -51,6 +51,39 @@ setCubeNA <- function(cube, value = c("always", "no", "ifany")) {
 #' @export
 setMethod("dim", "CrunchCube", function(x) dim(as.array(x)))
 
+
+#' Get measure type of cube result
+#'
+#' Returns a string describing the measure type of the cube result,
+#' such as "count", "mean", "sd", etc.
+#'
+#' @param x A `CrunchCube`
+#' @param measure Which measure in the cube to check, can index by position
+#' with numbers or by name.
+#'
+#' @return A string describing the cube's measure type
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' cube1 <- crtabs(~allpets, ds)
+#' cubeMeasureType(cube1)
+#' #> "count"
+#'
+#' cube2 <- crtabs(list(a = n(), b = mean(age)) ~ allpets, ds)
+#' cubeMeasureType(cube2)
+#' #> "count"
+#' cubeMeasureType(cube2, "b")
+#' #> "mean"
+#' }
+setGeneric("cubeMeasureType", function(x, measure = 1) standardGeneric("cubeMeasureType"))
+
+#' @rdname cubeMeasureType
+#' @export
+setMethod("cubeMeasureType", "CrunchCube", function(x, measure = 1) {
+    attr(x@arrays[[measure]], "measure_type") %||% "unknown"
+})
+
 # ---- Cube To Array ----
 
 #' @rdname cube-methods
@@ -449,7 +482,6 @@ setGeneric("prop.table")
 setGeneric("round")
 #' @rdname cube-computing
 setGeneric("bases", function(x, margin = NULL) standardGeneric("bases"))
-
 
 #' @rdname cube-computing
 #' @export
