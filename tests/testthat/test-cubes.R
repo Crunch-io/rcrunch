@@ -92,6 +92,7 @@ a1 <- CrunchCube(
     ), dim = c(2L, 4L))),
     dims = adims
 )
+attr(a1@arrays[[1]], "measure_type") <- "count"
 #    v7
 # v4  C D E No Data
 #   B 8 3 2 0

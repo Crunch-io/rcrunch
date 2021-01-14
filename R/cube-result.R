@@ -487,6 +487,9 @@ setGeneric("bases", function(x, margin = NULL) standardGeneric("bases"))
 #' @rdname cube-computing
 #' @export
 setMethod("prop.table", "CrunchCube", function(x, margin = NULL) {
+    if (cubeMeasureType(x) != "count") {
+        halt("Cannot calculate `prop.table()` on non-count measure: ", cubeMeasureType(x))
+    }
     out <- applyTransforms(x)
     marg <- margin.table(x, margin)
     actual_margin <- mr_items_margins(margin, cube = x, user_dims = TRUE)
@@ -514,6 +517,9 @@ setMethod("round", "CrunchCube", function(x, digits = 0) {
 #' @rdname cube-computing
 #' @export
 setMethod("bases", "CrunchCube", function(x, margin = NULL) {
+    if (cubeMeasureType(x) != "count") {
+        halt("Cannot calculate `bases()` on non-count measure: ", cubeMeasureType(x))
+    }
     if (length(margin) == 1 && margin == 0) {
         ## Unlike margin.table. This just returns the "bases", without reducing
         return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
@@ -534,6 +540,9 @@ setMethod("bases", "CrunchCube", function(x, margin = NULL) {
 #' @rdname cube-computing
 #' @export
 setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
+    if (cubeMeasureType(x) != "count") {
+        halt("Cannot calculate `margin.table()` on non-count measure: ", cubeMeasureType(x))
+    }
     # This selects the margins while skipping over the MR selected dimension
     # See comments in cubeToArray for more detail.
     mt_margins <- mr_items_margins(margin, cube = x)
