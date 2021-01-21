@@ -14,7 +14,7 @@ setMethod("initialize", "ScriptCatalog", init.sortCatalog)
 #' Script entities.
 #' @name script-catalog
 #' @aliases scripts
-#' @seealso [`runCrunchAutomation()`] & [`automation-undo`]
+#' @family crunch-automation
 NULL
 
 #' @rdname script-catalog
@@ -89,6 +89,21 @@ setMethod("scriptSavepoint", "Script", function(x) {
     return(crGET(shojiURL(x, "views", "savepoint"))$body)
 })
 
+
+#' @rdname collapseScripts
+#' @export
+setMethod("collapseScripts", "CrunchDataset", function(x, ...) {
+    collapseScripts(scripts(x))
+    invisible(refresh(x))
+})
+
+#' @rdname collapseScripts
+#' @export
+setMethod("collapseScripts", "ScriptCatalog", function(x, ...) {
+    crPOST(shojiURL(x, "fragments", "collapse"))
+    invisible(refresh(x))
+})
+
 #' Run a crunch automation script
 #'
 #' Crunch automation is a custom scripting syntax that allows you to
@@ -125,7 +140,7 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #'
 #' }
 #' @export
-#' @seealso [`automation-undo`] & [`script-catalog`]
+#' @family crunch-automation
 runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(script)) {
     reset_automation_error_env()
     stopifnot(is.dataset(dataset))

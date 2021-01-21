@@ -49,5 +49,9 @@ scripts(ds)
 }
 }
 \seealso{
-\code{\link{automation-undo}} & \code{\link{script-catalog}}
+Other crunch-automation: 
+\code{\link{automation-undo}},
+\code{\link{collapseScripts}()},
+\code{\link{scripts}()}
 }
+\concept{crunch-automation}

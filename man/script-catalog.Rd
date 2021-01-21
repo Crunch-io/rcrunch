@@ -21,5 +21,9 @@ Script entities.
 Crunch Automation scripts entities for a dataset
 }
 \seealso{
-\code{\link[=runCrunchAutomation]{runCrunchAutomation()}} & \code{\link{automation-undo}}
+Other crunch-automation: 
+\code{\link{automation-undo}},
+\code{\link{collapseScripts}()},
+\code{\link{runCrunchAutomation}()}
 }
+\concept{crunch-automation}

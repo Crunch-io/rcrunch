@@ -319,13 +319,26 @@ setGeneric("scripts", function(x) standardGeneric("scripts"))
 #' For `scriptSavePoint()` a version list object that can be used in [`restoreVersion()`].
 #' @name automation-undo
 #' @aliases undoScript
-#' @seealso [`runCrunchAutomation()`] & [`script-catalog`]
+#' @family crunch-automation
 #' @export
 setGeneric("undoScript", function(dataset, x) standardGeneric("undoScript"))
 #' @rdname automation-undo
 setGeneric("revertScript", function(dataset, x) standardGeneric("revertScript"))
 #' @rdname automation-undo
 setGeneric("scriptSavepoint", function(x) standardGeneric("scriptSavepoint"))
+
+#' Collapse Crunch Auatomation scripts into a single script
+#'
+#' Collapse multiple crunch automation scripts into a single one, which
+#' may cause improved performance in some situations.
+#'
+#' @param x A Crunch object with automation scripts
+#' @param ... Ignored, for possible future expansion
+#'
+#' @return Invisibly, refreshed x
+#' @family crunch-automation
+#' @export
+setGeneric("collapseScripts", function(x, ...) standardGeneric("collapseScripts"))
 
 #' @rdname dataset-owner
 setGeneric("owner", function(x) standardGeneric("owner"))

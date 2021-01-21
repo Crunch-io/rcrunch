@@ -54,5 +54,9 @@ script's record will remain in place.
 The function \code{scriptSavepoint()} gets the version object
 }
 \seealso{
-\code{\link[=runCrunchAutomation]{runCrunchAutomation()}} & \code{\link{script-catalog}}
+Other crunch-automation: 
+\code{\link{collapseScripts}()},
+\code{\link{runCrunchAutomation}()},
+\code{\link{scripts}()}
 }
+\concept{crunch-automation}
