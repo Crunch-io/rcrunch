@@ -1,6 +1,6 @@
 {
     "element": "shoji:view",
-    "self": "/api/datasets/c25696/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22%2Fapi%2Fdatasets%2Fc25696%2Fvariables%2F6af3ce%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fc25696%2Fvariables%2F6af3ce%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%7D&filter=%7B%7D",
+    "self": "/api/datasets/c25696/cube/?query=%7B%22dimensions%22%3A%5B%7B%22function%22%3A%22dimension%22%2C%22args%22%3A%5B%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fc25696%2Fvariables%2F6af3ce%2F%22%7D%5D%7D%2C%7B%22value%22%3A%22subvariables%22%7D%5D%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fc25696%2Fvariables%2F6af3ce%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%7D&filter=%7B%7D",
     "value": {
         "query": {
             "measures": {
@@ -13,7 +13,20 @@
             },
             "dimensions": [
                 {
-                    "each": "/api/datasets/c25696/variables/6af3ce/"
+                    "function": "dimension",
+                    "args": [
+                        {
+                            "function": "as_selected",
+                            "args": [
+                                {
+                                    "variable": "/api/datasets/c25696/variables/6af3ce/"
+                                }
+                            ]
+                        },
+                        {
+                            "value": "subvariables"
+                        }
+                    ]
                 },
                 {
                     "function": "as_selected",

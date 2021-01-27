@@ -30,7 +30,10 @@ with_mock_crunch({
             formulaToCubeQuery(~ gender + catarray, data = ds),
             '{"dimensions":[
                 {"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},
-                {"each":"https://app.crunch.io/api/datasets/1/variables/catarray/"},
+                {"function":"dimension","args":[
+                    {"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},
+                    {"value":"subvariables"}
+                ]},
                 {"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}
                 ],
             "measures":{"count":{"function":"cube_count","args":[]}}}'
@@ -39,11 +42,15 @@ with_mock_crunch({
             formulaToCubeQuery(~ gender + as_selected(mymrset), data = ds),
             paste0(
                 '{"dimensions":[
-                {"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},
-                {"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},
-                {"function": "as_selected",
-                    "args": [{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}
+                    {"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},
+                    {"function":"dimension","args":[
+                        {"function":"as_selected","args":[
+                            {"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}
+                        ]},
+                        {"value":"subvariables"}
+                    ]},
+                    {"function": "as_selected","args": [
+                        {"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}
                 ],
             "measures":{"count":{"function":"cube_count","args":[]}}}'
             )
@@ -73,7 +80,10 @@ with_mock_crunch({
             formulaToCubeQuery(~ gender + as_array(mymrset), data = ds),
             '{"dimensions":[
                 {"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},
-                {"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},
+                {"function":"dimension","args":[
+                    {"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},
+                    {"value":"subvariables"}
+                ]},
                 {"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}
                 ],
             "measures":{"count":{"function":"cube_count","args":[]}}}'

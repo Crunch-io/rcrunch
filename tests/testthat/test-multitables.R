@@ -120,10 +120,10 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{',
             '"template":[{"query":[{"variable":"https://app.crunch.io/api/',
             'datasets/1/variables/gender/"}]},',
-            '{"query":[{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},',
-            '{"function":"as_selected","args":[{"variable":"https://app.crunch.io/',
-            'api/datasets/1/variables/mymrset/"}]}',
-            "]}]",
+            '{"query":[{"function":"dimension","args":[{"function":"as_selected",',
+            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
+            '{"value":"subvariables"}]},{"function":"as_selected","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]}]',
             ',"name":"New multitable","is_public":true}}'
         )
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
@@ -142,10 +142,10 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{',
             '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets',
             '/1/variables/gender/"}]},', # nolint
-            '{"query":[{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},',
-            '{"function":"as_selected","args":[{"variable":"https://app.crunch.io',
-            '/api/datasets/1/variables/mymrset/"}]}', # nolint
-            "]}]",
+            '{"query":[{"function":"dimension","args":[{"function":"as_selected",',
+            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
+            '{"value":"subvariables"}]},{"function":"as_selected","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]}]',
             ',"name":"gender + mymrset"}}'
         )
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
