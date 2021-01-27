@@ -100,7 +100,7 @@ setMethod("collapseScripts", "CrunchDataset", function(x, ...) {
 #' @rdname collapseScripts
 #' @export
 setMethod("collapseScripts", "ScriptCatalog", function(x, ...) {
-    crPOST(shojiURL(x, "fragments", "collapse"))
+    crPOST(shojiURL(x, "views", "collapse"))
     invisible(refresh(x))
 })
 
