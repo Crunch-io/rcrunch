@@ -216,15 +216,9 @@ with_test_authentication({
         )
         ## 4 comes from derivedarray$dsub2, which comes from petloc$petloc_home,
         ## but with different category names
-
-        ## This assertion fails. The new data comes in as Cat Dog and not one two
-        # print(table(ds$metapetloc[[4]]))
-        # dsub2#
-        #  Cat  Dog Bird  one  two
-        #    5    3    6    5    3
         expect_identical(
             as.numeric(table(ds$metapetloc[[4]])),
-            2 * c(0, 0, 3, 5, 3)
+            c(5, 3, 6, 5, 3)
         )
     })
     test_that("Combined categories on top of derived array also gets the right data", {
