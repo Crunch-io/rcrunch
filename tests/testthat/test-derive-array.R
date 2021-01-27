@@ -6,14 +6,15 @@ with_mock_crunch({
         expect_POST(
             ds$derived_mr <- deriveArray(list(ds$gender),
                 selections = list("Female"),
-                name = "derivedMR"
+                name = "derivedMR",
+                numeric = FALSE
             ),
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"derivation":{"function":"select_categories","args":',
             '[{"function":"array","args":[{"function":"make_frame","args":',
             '[{"map":{"1":{"variable":"https://app.crunch.io/api/datasets',
-            '/1/variables/gender/"}}},{"value":["1"]}]}]},{"value":', # nolint
-            '["Female"]}]},"name":"derivedMR","alias":"derived_mr"}'
+            '/1/variables/gender/"}}},{"value":["1"]}]}],"kwargs":{"numeric":{"value":false}}},', # nolint
+            '{"value":["Female"]}]},"name":"derivedMR","alias":"derived_mr"}'
         )
     })
 })

@@ -39,11 +39,15 @@ is.CA <- function(x) {
 
 #' @rdname crunch-is
 #' @export
-is.Array <- function(x) inherits(x, "ArrayVariable")
+is.CategoricalArray <- is.CA
 
 #' @rdname crunch-is
 #' @export
-is.CategoricalArray <- is.CA
+is.NumericArray <- function(x) inherits(x, "NumericArrayVariable")
+
+#' @rdname crunch-is
+#' @export
+is.Array <- function(x) inherits(x, "ArrayVariable")
 
 has.categories <- function(x) {
     if (!is.character(x)) {

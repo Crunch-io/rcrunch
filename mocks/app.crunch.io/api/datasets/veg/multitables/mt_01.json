@@ -1,0 +1,58 @@
+{
+    "body": {
+        "display_settings": {
+
+        },
+        "id": "mt_01",
+        "is_public": false,
+        "name": "cat + mr multitable",
+        "team": null,
+        "template": [
+            {
+                "query": [
+                    {
+                        "args": [
+                            {
+                                "args": [
+                                    {
+                                        "variable": "https://app.crunch.io/api/datasets/veg/variables/var_02/"
+                                    }
+                                ],
+                                "function": "as_selected"
+                            },
+                            {
+                                "value": "subvariables"
+                            }
+                        ],
+                        "function": "dimension"
+                    },
+                    {
+                        "args": [
+                            {
+                                "variable": "https://app.crunch.io/api/datasets/veg/variables/var_02/"
+                            }
+                        ],
+                        "function": "as_selected"
+                    }
+                ]
+            },
+            {
+                "query": [
+                    {
+                        "variable": "https://app.crunch.io/api/datasets/veg/variables/var_06/"
+                    }
+                ]
+            }
+        ],
+        "user": "https://app.crunch.io/api/users/user_id/"
+    },
+    "description": "Detail information for one multitable definition",
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/veg/multitables/mt_01/",
+    "views": {
+        "applied": "https://app.crunch.io/api/datasets/veg/multitables/mt_01/applied/",
+        "export": "https://app.crunch.io/api/datasets/veg/multitables/mt_01/export/",
+        "tabbook": "https://app.crunch.io/api/datasets/veg/multitables/mt_01/tabbook/"
+    }
+}
+

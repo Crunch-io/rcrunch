@@ -99,7 +99,8 @@ setClass("CrunchVariable",
     text = "TextVariable",
     datetime = "DatetimeVariable",
     multiple_response = "MultipleResponseVariable",
-    categorical_array = "CategoricalArrayVariable"
+    categorical_array = "CategoricalArrayVariable",
+    numeric_array = "NumericArrayVariable"
 )
 
 CrunchVariable <- function(tuple, filter = NULL, ...) {
@@ -145,6 +146,12 @@ CategoricalArrayVariable <- setClass("CategoricalArrayVariable",
 #' @export MultipleResponseVariable
 MultipleResponseVariable <- setClass("MultipleResponseVariable",
     contains = "CategoricalArrayVariable"
+)
+
+#' @rdname CrunchVariable
+#' @export NumericArrayVariable
+NumericArrayVariable <- setClass("NumericArrayVariable",
+    contains = "ArrayVariable"
 )
 
 setClassUnion("CrunchVarOrExpr", c("CrunchVariable", "CrunchExpr"))

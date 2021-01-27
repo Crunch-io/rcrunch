@@ -1,0 +1,535 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/veg/cube/?query=%7B%22dimensions%22%3A%5B%7B%22function%22%3A%22dimension%22%2C%22args%22%3A%5B%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2Fveg%2Fvariables%2Fvar_02%2F%22%7D%5D%7D%2C%7B%22value%22%3A%22subvariables%22%7D%5D%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2Fveg%2Fvariables%2Fvar_02%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22mean%22%3A%7B%22function%22%3A%22cube_mean%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2Fveg%2Fvariables%2Fvar_15%2F%22%7D%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "dimensions": [
+                {
+                    "args": [
+                        {
+                            "args": [
+                                {
+                                    "variable": "https://app.crunch.io/api/datasets/veg/variables/var_02/"
+                                }
+                            ],
+                            "function": "as_selected"
+                        },
+                        {
+                            "value": "subvariables"
+                        }
+                    ],
+                    "function": "dimension"
+                },
+                {
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/veg/variables/var_02/"
+                        }
+                    ],
+                    "function": "as_selected"
+                }
+            ],
+            "measures": {
+                "mean": {
+                    "args": [
+                        {
+                            "variable": "https://app.crunch.io/api/datasets/veg/variables/var_15/"
+                        }
+                    ],
+                    "function": "cube_mean"
+                }
+            },
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "counts": [
+                86,
+                111,
+                13,
+                128,
+                68,
+                14,
+                171,
+                33,
+                6
+            ],
+            "dimensions": [
+                {
+                    "derived": true,
+                    "references": {
+                        "alias": "enjoy_mr",
+                        "description": "Typically enjoy foods with flavors",
+                        "name": "Enjoy Food Flavors",
+                        "notes": "Do you typically enjoy foods that taste..?",
+                        "subreferences": [
+                            {
+                                "alias": "enjoy_mr_savory",
+                                "description": "Enjoyment of savory food (binary)",
+                                "format": {
+                                    "summary": {
+                                        "digits": 0
+                                    }
+                                },
+                                "name": "Savory",
+                                "notes": "Do you typically enjoy food that is savory?",
+                                "view": {
+                                    "column_width": null,
+                                    "include_missing": false,
+                                    "show_counts": false,
+                                    "show_numeric_values": false
+                                }
+                            },
+                            {
+                                "alias": "enjoy_mr_spicy",
+                                "description": "Enjoyment of spicy food (binary)",
+                                "format": {
+                                    "summary": {
+                                        "digits": 0
+                                    }
+                                },
+                                "name": "Spicy",
+                                "notes": "Do you typically enjoy food that is spicy?",
+                                "view": {
+                                    "column_width": null,
+                                    "include_missing": false,
+                                    "show_counts": false,
+                                    "show_numeric_values": false
+                                }
+                            },
+                            {
+                                "alias": "enjoy_mr_sweet",
+                                "description": "Enjoyment of sweet food (binary)",
+                                "format": {
+                                    "summary": {
+                                        "digits": 0
+                                    }
+                                },
+                                "name": "Sweet",
+                                "notes": "Do you typically enjoy food that is sweet?",
+                                "view": {
+                                    "column_width": null,
+                                    "include_missing": false,
+                                    "show_counts": false,
+                                    "show_numeric_values": false
+                                }
+                            }
+                        ],
+                        "uniform_basis": false
+                    },
+                    "type": {
+                        "class": "enum",
+                        "elements": [
+                            {
+                                "id": 1,
+                                "missing": false,
+                                "value": {
+                                    "derived": false,
+                                    "id": "1",
+                                    "references": {
+                                        "alias": "enjoy_mr_savory",
+                                        "description": "Enjoyment of savory food (binary)",
+                                        "format": {
+                                            "summary": {
+                                                "digits": 0
+                                            }
+                                        },
+                                        "name": "Savory",
+                                        "notes": "Do you typically enjoy food that is savory?",
+                                        "view": {
+                                            "column_width": null,
+                                            "include_missing": false,
+                                            "show_counts": false,
+                                            "show_numeric_values": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "id": 2,
+                                "missing": false,
+                                "value": {
+                                    "derived": false,
+                                    "id": "2",
+                                    "references": {
+                                        "alias": "enjoy_mr_spicy",
+                                        "description": "Enjoyment of spicy food (binary)",
+                                        "format": {
+                                            "summary": {
+                                                "digits": 0
+                                            }
+                                        },
+                                        "name": "Spicy",
+                                        "notes": "Do you typically enjoy food that is spicy?",
+                                        "view": {
+                                            "column_width": null,
+                                            "include_missing": false,
+                                            "show_counts": false,
+                                            "show_numeric_values": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "id": 3,
+                                "missing": false,
+                                "value": {
+                                    "derived": false,
+                                    "id": "3",
+                                    "references": {
+                                        "alias": "enjoy_mr_sweet",
+                                        "description": "Enjoyment of sweet food (binary)",
+                                        "format": {
+                                            "summary": {
+                                                "digits": 0
+                                            }
+                                        },
+                                        "name": "Sweet",
+                                        "notes": "Do you typically enjoy food that is sweet?",
+                                        "view": {
+                                            "column_width": null,
+                                            "include_missing": false,
+                                            "show_counts": false,
+                                            "show_numeric_values": false
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "subtype": {
+                            "class": "variable"
+                        }
+                    }
+                },
+                {
+                    "derived": true,
+                    "references": {
+                        "alias": "enjoy_mr",
+                        "description": "Typically enjoy foods with flavors",
+                        "name": "Enjoy Food Flavors",
+                        "notes": "Do you typically enjoy foods that taste..?",
+                        "subreferences": [
+                            {
+                                "alias": "enjoy_mr_savory",
+                                "description": "Enjoyment of savory food (binary)",
+                                "format": {
+                                    "summary": {
+                                        "digits": 0
+                                    }
+                                },
+                                "name": "Savory",
+                                "notes": "Do you typically enjoy food that is savory?",
+                                "view": {
+                                    "column_width": null,
+                                    "include_missing": false,
+                                    "show_counts": false,
+                                    "show_numeric_values": false
+                                }
+                            },
+                            {
+                                "alias": "enjoy_mr_spicy",
+                                "description": "Enjoyment of spicy food (binary)",
+                                "format": {
+                                    "summary": {
+                                        "digits": 0
+                                    }
+                                },
+                                "name": "Spicy",
+                                "notes": "Do you typically enjoy food that is spicy?",
+                                "view": {
+                                    "column_width": null,
+                                    "include_missing": false,
+                                    "show_counts": false,
+                                    "show_numeric_values": false
+                                }
+                            },
+                            {
+                                "alias": "enjoy_mr_sweet",
+                                "description": "Enjoyment of sweet food (binary)",
+                                "format": {
+                                    "summary": {
+                                        "digits": 0
+                                    }
+                                },
+                                "name": "Sweet",
+                                "notes": "Do you typically enjoy food that is sweet?",
+                                "view": {
+                                    "column_width": null,
+                                    "include_missing": false,
+                                    "show_counts": false,
+                                    "show_numeric_values": false
+                                }
+                            }
+                        ],
+                        "uniform_basis": false
+                    },
+                    "type": {
+                        "categories": [
+                            {
+                                "id": 1,
+                                "missing": false,
+                                "name": "Selected",
+                                "numeric_value": 1,
+                                "selected": true
+                            },
+                            {
+                                "id": 0,
+                                "missing": false,
+                                "name": "Other",
+                                "numeric_value": 0
+                            },
+                            {
+                                "id": -1,
+                                "missing": true,
+                                "name": "No Data",
+                                "numeric_value": null
+                            }
+                        ],
+                        "class": "categorical",
+                        "ordinal": false,
+                        "subvariables": [
+                            "1",
+                            "2",
+                            "3"
+                        ]
+                    }
+                }
+            ],
+            "element": "crunch:cube",
+            "filter_stats": {
+                "filtered": {
+                    "unweighted": {
+                        "missing": 0,
+                        "other": 0,
+                        "selected": 210
+                    },
+                    "weighted": {
+                        "missing": 0,
+                        "other": 0,
+                        "selected": 210
+                    }
+                },
+                "filtered_complete": {
+                    "unweighted": {
+                        "missing": 0,
+                        "other": 0,
+                        "selected": 210
+                    },
+                    "weighted": {
+                        "missing": 0,
+                        "other": 0,
+                        "selected": 210
+                    }
+                }
+            },
+            "filtered": {
+                "unweighted_n": 210,
+                "weighted_n": 210
+            },
+            "measures": {
+                "mean": {
+                    "data": [
+                        72.5647058823529,
+                        63.9642857142857,
+                        76.3658536585366,
+                        69.433734939759,
+                        68.9746835443038,
+                        87.2133333333333,
+                        72.9722222222222,
+                        61.8878504672897,
+                        76.1203703703704,
+                        71.2285714285714,
+                        68.2803738317757,
+                        86.1851851851852,
+                        75.25,
+                        56.4615384615385,
+                        77,
+                        70.9166666666667,
+                        64.6153846153846,
+                        87.6153846153846,
+                        73.312,
+                        61.9186991869919,
+                        76.3145161290323,
+                        73.6829268292683,
+                        67.6147540983606,
+                        87.1610169491525,
+                        72.3181818181818,
+                        64.1492537313433,
+                        75.5909090909091,
+                        64.359375,
+                        68.5625,
+                        86.109375,
+                        72.5,
+                        58.2142857142857,
+                        79.3846153846154,
+                        70.0769230769231,
+                        73.6923076923077,
+                        85.1428571428571,
+                        72.905325443787,
+                        62.3090909090909,
+                        76.5722891566265,
+                        71.8765432098765,
+                        68.4409937888199,
+                        86.8679245283019,
+                        72.8,
+                        59.8484848484849,
+                        75.1612903225806,
+                        66.09375,
+                        68.6875,
+                        85.8387096774194,
+                        74.5,
+                        78.8333333333333,
+                        73.8333333333333,
+                        55.6666666666667,
+                        63,
+                        85.8333333333333
+                    ],
+                    "metadata": {
+                        "derived": true,
+                        "references": {
+                            "alias": "ratings_numa",
+                            "description": "Rating of Vegetables: Scale of 0-100",
+                            "name": "Vegetable Ratings",
+                            "notes": "On a scale of 0-100, how would you rate...?",
+                            "subreferences": [
+                                {
+                                    "alias": "ratings_numa_avocado",
+                                    "description": "Avocado Rating (100 point scale)",
+                                    "format": {
+                                        "data": {
+                                            "digits": 2
+                                        },
+                                        "summary": {
+                                            "digits": 2
+                                        }
+                                    },
+                                    "name": "Avocado",
+                                    "notes": "What is your rating between 0 and 100 of: Avocado",
+                                    "view": {
+                                        "column_width": null
+                                    }
+                                },
+                                {
+                                    "alias": "ratings_numa_brussel_sprout",
+                                    "description": "Brussel Sprout Rating (100 point scale)",
+                                    "format": {
+                                        "data": {
+                                            "digits": 2
+                                        },
+                                        "summary": {
+                                            "digits": 2
+                                        }
+                                    },
+                                    "name": "Brussel Sprout",
+                                    "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                                    "view": {
+                                        "column_width": null
+                                    }
+                                },
+                                {
+                                    "alias": "ratings_numa_carrot",
+                                    "description": "Carrot Rating (100 point scale)",
+                                    "format": {
+                                        "data": {
+                                            "digits": 2
+                                        },
+                                        "summary": {
+                                            "digits": 2
+                                        }
+                                    },
+                                    "name": "Carrot",
+                                    "notes": "What is your rating between 0 and 100 of: Carrot",
+                                    "view": {
+                                        "column_width": null
+                                    }
+                                },
+                                {
+                                    "alias": "ratings_numa_daikon",
+                                    "description": "Daikon Rating (100 point scale)",
+                                    "format": {
+                                        "data": {
+                                            "digits": 2
+                                        },
+                                        "summary": {
+                                            "digits": 2
+                                        }
+                                    },
+                                    "name": "Daikon",
+                                    "notes": "What is your rating between 0 and 100 of: Daikon",
+                                    "view": {
+                                        "column_width": null
+                                    }
+                                },
+                                {
+                                    "alias": "ratings_numa_eggplant",
+                                    "description": "Eggplant Rating (100 point scale)",
+                                    "format": {
+                                        "data": {
+                                            "digits": 2
+                                        },
+                                        "summary": {
+                                            "digits": 2
+                                        }
+                                    },
+                                    "name": "Eggplant",
+                                    "notes": "What is your rating between 0 and 100 of: Eggplant",
+                                    "view": {
+                                        "column_width": null
+                                    }
+                                },
+                                {
+                                    "alias": "ratings_numa_fennel",
+                                    "description": "Fennel Rating (100 point scale)",
+                                    "format": {
+                                        "data": {
+                                            "digits": 2
+                                        },
+                                        "summary": {
+                                            "digits": 2
+                                        }
+                                    },
+                                    "name": "Fennel",
+                                    "notes": "What is your rating between 0 and 100 of: Fennel",
+                                    "view": {
+                                        "column_width": null
+                                    }
+                                }
+                            ],
+                            "uniform_basis": false
+                        },
+                        "type": {
+                            "class": "numeric",
+                            "integer": true,
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "missing_rules": {
+
+                            },
+                            "subvariables": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6"
+                            ]
+                        }
+                    },
+                    "n_missing": 0
+                }
+            },
+            "missing": 0,
+            "n": 210,
+            "unfiltered": {
+                "unweighted_n": 210,
+                "weighted_n": 210
+            }
+        }
+    }
+}
+

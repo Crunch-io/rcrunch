@@ -6,7 +6,7 @@
 \alias{makeMR}
 \title{Make a Categorical Array or Multiple Response variable}
 \usage{
-deriveArray(subvariables, name, selections, ...)
+deriveArray(subvariables, name, selections, numeric = NULL, ...)
 
 makeArray(subvariables, name, ...)
 
@@ -22,6 +22,12 @@ should have.}
 \item{selections}{character, for \code{makeMR} and \code{deriveArray} the names of the
 categories to mark as the dichotomous selections. Required for
 \code{makeMR}; optional for \code{deriveArray}; ignored in \code{makeArray}.}
+
+\item{numeric}{Logical indicating whether the array should be a numeric
+array or categorical array. \code{NULL} the default will guess numeric if
+all variables are known to be numeric and categorical if all are
+categorical. If any subvariables are created from expressions, then
+their type cannot be guessed and so \code{numeric} must be specified.}
 
 \item{...}{Optional additional attributes to set on the new variable.}
 }

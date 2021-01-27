@@ -289,7 +289,7 @@ with_mock_crunch({
         )
     })
 
-    test_that("makeFrame expr", {
+    test_that("makeFrame categorical vars exoression", {
         expr <- makeFrame(ds[c("gender", "location")])
         expect_is(expr, "CrunchExpr")
         expect_equal(
@@ -297,8 +297,66 @@ with_mock_crunch({
             paste0(
                 '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"1":{"variable":', # nolint
                 '"https://app.crunch.io/api/datasets/1/variables/gender/"},"2":{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/location/"}}},{"value":["1","2"]}]}]}' # nolint
+                '"https://app.crunch.io/api/datasets/1/variables/location/"}}},{"value":',
+                '["1","2"]}]}],"kwargs":{"numeric":{"value":false}}}'
             )
+        )
+    })
+
+    test_that("makeFrame numeric vars expression", {
+        expr <- makeFrame(ds[c("birthyr")])
+        expect_is(expr, "CrunchExpr")
+        expect_equal(
+            unclass(toJSON(expr@expression)),
+            paste0(
+                '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"1":{"variable":', # nolint
+                '"https://app.crunch.io/api/datasets/1/variables/birthyr/"}}},{"value":',
+                '["1"]}]}],"kwargs":{"numeric":{"value":true}}}'
+            )
+        )
+    })
+
+    test_that("makeFrame from expressions expression works", {
+        expect_json_equivalent(
+            makeFrame(
+                list(VariableDefinition(ds$gender == "Male", name = "male")),
+                numeric = FALSE
+            )@expression,
+            list(
+                `function` = "array",
+                args = list(list(
+                    `function` = "make_frame",
+                    args = list(list(
+                        map = list(
+                            c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
+                        )
+                    ), list(value = I("1")))
+                )),
+                kwargs = list(numeric = list(value = FALSE))
+            )
+        )
+    })
+
+    test_that("makeFrame from expressions expression requires numeric arg", {
+        expect_error(
+            deriveArray(
+                subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")),
+                name = "Gender MR"
+            ),
+            "Could not guess array type, specify `numeric` argument in `makeFrame()`",
+            fixed = TRUE
+        )
+    })
+
+    test_that("makeFrame type checks numeric arg", {
+        expect_error(
+            deriveArray(
+                subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")),
+                name = "Gender MR",
+                numeric = "WRONG"
+            ),
+            "Expected `numeric` argument of `makeFrame()` to be TRUE or FALSE",
+            fixed = TRUE
         )
     })
 
