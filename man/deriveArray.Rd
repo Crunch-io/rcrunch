@@ -26,7 +26,8 @@ categories to mark as the dichotomous selections. Required for
 \item{numeric}{Logical indicating whether the array should be a numeric
 array or categorical array. \code{NULL} the default will guess numeric if
 all variables are known to be numeric and categorical if all are
-categorical. It cannot guess for expression subvariables.}
+categorical. If any subvariables are created from expressions, then
+their type cannot be guessed and so \code{numeric} must be specified.}
 
 \item{...}{Optional additional attributes to set on the new variable.}
 }
