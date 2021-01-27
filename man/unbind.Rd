@@ -7,7 +7,7 @@
 unbind(x)
 }
 \arguments{
-\item{x}{a \code{CategoricalArrayVariable} or \code{MultipleResponseVariable}}
+\item{x}{an \code{ArrayVariable}}
 }
 \value{
 invisibly, the API response from DELETEing the array variable

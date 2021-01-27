@@ -131,10 +131,14 @@ TextVariable <- setClass("TextVariable", contains = "CrunchVariable")
 #' @export DatetimeVariable
 DatetimeVariable <- setClass("DatetimeVariable", contains = "CrunchVariable")
 
+ArrayVariable <- setClass("ArrayVariable",
+    representation("VIRTUAL"), contains = "CrunchVariable"
+)
+
 #' @rdname CrunchVariable
 #' @export CategoricalArrayVariable
 CategoricalArrayVariable <- setClass("CategoricalArrayVariable",
-    contains = "CrunchVariable"
+    contains = "ArrayVariable"
 )
 
 #' @rdname CrunchVariable

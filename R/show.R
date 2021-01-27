@@ -152,15 +152,26 @@ describeDatasetVariables <- function(dataset) {
     }, character(1)))
 }
 
-showCategoricalArrayVariable <- function(x) {
+showArrayVariable <- function(x) {
     c(showCrunchVariableTitle(x), showSubvariables(subvariables(x)))
 }
 
 showSubvariables <- function(x) {
-    out <- c("Subvariables:", vapply(index(x), function(s) {
-        paste0("  $`", s$name, "`")
-    }, character(1), USE.NAMES = FALSE))
-    return(out)
+    c("Subvariables:", format_subvars(aliases(x), names(x)))
+}
+
+format_subvars <- function(aliases, names) {
+    # Add ticks to aliases
+    aliases <- ifelse(grepl("[[:blank:]]", aliases), paste0("`", aliases, "`"), aliases)
+    # Make them constant width
+    aliases <- format(aliases, max(nchar(aliases)))
+
+    # Trim names to remaining width (3 for "  $" before alias, 4 for "  | " after)
+    names_width <- getOption("width", 100) - (3 + nchar(aliases[1]) + 4)
+    needs_trim <- nchar(names) > names_width
+    names[needs_trim] <- paste0(strtrim(names[needs_trim], names_width - 3), "...")
+
+    paste0("  $", aliases, "  | ", names)
 }
 
 showShojiOrder <- function(x, catalog_url = x@catalog_url, key = "name") {
@@ -405,8 +416,8 @@ setMethod("getShowContent", "Heading", showSubtotalHeading)
 setMethod("getShowContent", "SummaryStat", showSubtotalHeading)
 setMethod("getShowContent", "CrunchVariable", showCrunchVariable)
 setMethod(
-    "getShowContent", "CategoricalArrayVariable",
-    showCategoricalArrayVariable
+    "getShowContent", "ArrayVariable",
+    showArrayVariable
 )
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)

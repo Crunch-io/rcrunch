@@ -34,12 +34,12 @@ is.MultipleResponse <- is.Multiple
 #' @export
 is.CA <- function(x) {
     ## so it doesn't return true for MultipleResponse
-    return(class(x) %in% "CategoricalArrayVariable")
+    return(identical(class(x), class(CategoricalArrayVariable())))
 }
 
 #' @rdname crunch-is
 #' @export
-is.Array <- function(x) inherits(x, "CategoricalArrayVariable")
+is.Array <- function(x) inherits(x, "ArrayVariable")
 
 #' @rdname crunch-is
 #' @export
