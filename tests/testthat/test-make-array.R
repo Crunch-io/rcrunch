@@ -52,6 +52,7 @@ with_mock_crunch({
         "Must provide the names of the category or",
         "categories that indicate the dichotomous selection"
     )
+    wrong.type <- "Expected subvariables to be either"
     invalid.selection <- "not found in variable's categories"
     not.categorical <- "are not Categorical"
     test_that("makeArray error conditions", {
@@ -60,6 +61,10 @@ with_mock_crunch({
         expect_error(
             makeArray(ds[grep("NO variables", names(ds))], name = "foo"),
             no.match
+        )
+        expect_error(
+            makeArray(ds$gender, name = "foo"),
+            wrong.type
         )
     })
     test_that("makeMR error conditions", {

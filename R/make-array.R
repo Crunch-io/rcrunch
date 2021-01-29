@@ -47,6 +47,9 @@ makeArray <- function(subvariables, name, ...) {
         ## as in, if the list of variables is a [ extraction from a Dataset
         subvariables <- allVariables(subvariables)
     }
+    if (!(inherits(subvariables, "VariableCatalog") || is.list(subvariables))) {
+        halt("Expected subvariables to be either a variables catalog or list of variables")
+    }
 
     if (!length(subvariables)) {
         halt("No variables supplied")
@@ -284,7 +287,7 @@ makeFrame <- function(x, numeric = NULL) {
     }
 
     # if it's a list, it could contain variable definitions:
-    if (is.list(x)) {
+    if (is.list(x) & !is.VarDef(x)) {
         x <- x[lengths(x) > 0] # remove NULLs (from eg slider)
         subvar_types <- vapply(x, function(sv) {
             if (is.VarDef(sv)) return("vardef")
@@ -292,9 +295,12 @@ makeFrame <- function(x, numeric = NULL) {
             else return("unknown")
         }, character(1))
         x <- lapply(x, zcl)
-    } else { # but ShojiCatalogs don't give their urls when lapplying, so treat differently
+    } else if (inherits(x, "VariableCatalog")) {
+        # but ShojiCatalogs don't give their urls when lapplying, so treat differently
         subvar_types <- types(x)
         x <- lapply(urls(x), function(sv) list(variable = sv))
+    } else {
+        halt("Expected a Variable Catalog or a list of Variables/Expressions/VarDefs")
     }
 
     numeric <- check_make_frame_type_arg(numeric, subvar_types)
