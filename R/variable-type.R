@@ -89,6 +89,13 @@ setMethod("type", "CrunchVariable", function(x) type(tuple(x)))
 #' @export
 setMethod("type", "VariableEntity", function(x) x@body$type)
 
+# It's also nice sometimes if a list of variables has a `types` method
+#' @export
+#' @rdname describe-catalog
+setMethod("types", "list", function(x) {
+    vapply(x, type, character(1), USE.NAMES = FALSE)
+})
+
 castVariable <- function(x, value) {
     if (!(type(x) %in% CASTABLE_TYPES)) {
         halt("Cannot change the type of a ", class(x), " by type<-")

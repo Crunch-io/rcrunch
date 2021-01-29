@@ -40,6 +40,10 @@ with_mock_crunch({
             )
         }
     })
+
+    test_that("`types` list dispatch works", {
+        expect_equal(types(list(ds$birthyr, ds$mymrset)), c("numeric", "multiple_response"))
+    })
 })
 
 with_test_authentication({
