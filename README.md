@@ -7,7 +7,7 @@
 
 [Cloud Collaboration with Crunch](http://crunch-io.github.io/rcrunch/)
 
-[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://app.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
+[Crunch.io](https://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://app.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
 
 [Subscribe to the mailing list](mailto:rcrunch+subscribe@crunch.io) to receive notification of releases and to ask general support questions.
 
@@ -82,7 +82,7 @@ This installs dependencies and then runs the tests, which installs `crunch` from
 
 ### Running tests
 
-You can run tests in an interactive session, or from the command line, `$ make test` is all you need. Requires the [`httptest`](https://github.com/nealrichardson/httptest) package for R. You can also specify a specific test file or files to run by adding a "file=" argument, like `$ make test file=auth`. `test_package` will do a regular-expression pattern match within the file names. See its documentation in the [`testthat`](http://testthat.r-lib.org/) package.
+You can run tests in an interactive session, or from the command line, `$ make test` is all you need. Requires the [`httptest`](https://github.com/nealrichardson/httptest) package for R. You can also specify a specific test file or files to run by adding a "file=" argument, like `$ make test file=auth`. `test_package` will do a regular-expression pattern match within the file names. See its documentation in the [`testthat`](https://testthat.r-lib.org/) package.
 
 Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `INTEGRATION`, which is false by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ make test INTEGRATION=TRUE`.
 

@@ -116,7 +116,7 @@ variables (#396).
 * Removed excess metadata in some cube fixtures in anticipation of Crunch not sending that information any more (no code changes were necessary).
 
 # crunch 1.24.2
-* The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://crunch.io/r/crunchy) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
+* The RStudio gadgets for `listDatasets()` and `makeArrayGadget()` have been moved to the [`crunchy`](https://crunch.io/r/crunchy/) package. Wiring for them, including RStudio add-in configuration, remains here, but you'll have to install that package to use them.
 * Minor fixes for backwards compatibility with the old projects API
 * Remove code paths that modify the project dataset order, which was removed from the Crunch API.
 * List as deprecated many functions that modify variable order, suggesting `mv()` and the other folder operations. These functions will be removed in December 2018.
@@ -351,7 +351,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * `tabBook` to compute a tab book with a multitable. If `format="json"` (the default), returns a `TabBookResult` containing `CrunchCube` objects with which further analysis or formatting can be done.
 * `bases` method for cubes and tab book responses to access unweighted counts and margin tables.
 * Handle case of attempting to `saveVersion` when there are no changes since the last saved version.
-* Update to work with [`roxygen2` 6.0.0 release](https://github.com/klutometis/roxygen/issues/568)
+* Update to work with [`roxygen2` 6.0.0 release](https://github.com/r-lib/roxygen2/issues/568)
 
 # crunch 1.14.4
 * `newFilter` and `newProject` functions to create those objects more directly, rather than by assigning into their respective catalogs.
@@ -359,7 +359,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Add `with_consent` as an alternative to `with(consent(), ...)`
 * Deprecate the "confirm" argument to destructive functions and methods such as `delete` in favor of the `consent` context manager.
 * Add deprecation warning that destructive actions will soon also require consent when running in a non-interactive R session.
-* Use [`httptest`](https://enpiar.com/r/httptest) for mocking HTTP and the Crunch API.
+* Use [`httptest`](https://enpiar.com/r/httptest/) for mocking HTTP and the Crunch API.
 
 # crunch 1.14.2
 * Trivial change to DESCRIPTION to meet new, hidden CRAN requirement
@@ -457,7 +457,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 # crunch 1.10.4
 * Fix `as.data.frame`/`as.environment` for `CrunchDataset` when a variable alias contained an apostrophe.
 * Better print method for project `MemberCatalog`.
-* Fix for [change in `jsonlite` API](https://github.com/jeroenooms/jsonlite/issues/130#issuecomment-225971209) in its v0.9.22
+* Fix for [change in `jsonlite` API](https://github.com/jeroen/jsonlite/issues/130) in its v0.9.22
 * Progress polling now returns the error message, if given, if a job fails.
 
 # crunch 1.10.2
