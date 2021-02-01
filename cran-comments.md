@@ -1,6 +1,6 @@
 ## Test environments
-* local OS X install, R 4.0.2
-* ubuntu 14.04 (on travis-ci), R 4.0.2
+* local OS X install, R 4.0.3
+* ubuntu 14.04 (on travis-ci), R 4.0.3
 * win-builder (devel)
 
 ## R CMD check results
@@ -9,6 +9,6 @@
 
 
 ## Downstream dependencies
-No problems were found in 2 downstream dependencies.
+A change affected crplyr, but a fix was submitted to CRAN earlier today. No other problems were found.
 
 
