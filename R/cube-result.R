@@ -59,7 +59,10 @@ setMethod("dim", "CrunchCube", function(x) dim(as.array(x)))
 #'
 #' @param x A `CrunchCube`
 #' @param measure Which measure in the cube to check, can index by position
-#' with numbers or by name.
+#' with numbers or by name. NULL, the default, will select a "sum" type measure
+#' first, "mean" if no sum is available, and will use the cube's names in alphabetic
+#' order if there are no "sum" or "mean" measures (or if a tie breaker between two
+#' measure types is needed).
 #'
 #' @return A string describing the cube's measure type
 #' @export
@@ -76,7 +79,7 @@ setMethod("dim", "CrunchCube", function(x) dim(as.array(x)))
 #' cubeMeasureType(cube2, "b")
 #' #> "mean"
 #' }
-setGeneric("cubeMeasureType", function(x, measure = 1) standardGeneric("cubeMeasureType"))
+setGeneric("cubeMeasureType", function(x, measure = NULL) standardGeneric("cubeMeasureType"))
 
 #' @rdname cubeMeasureType
 #' @export
@@ -146,7 +149,7 @@ cToA <- function(x, dims) {
     return(out)
 }
 
-cubeToArray <- function(x, measure = 1) {
+cubeToArray <- function(x, measure = NULL) {
     ## This is the function behind the "as.array" method, as well as what
     ## "bases" does with the ".unweighted_counts". It evaluates all of the logic
     ## that takes the array in the cube response and selects the slices of that
@@ -167,6 +170,8 @@ cubeToArray <- function(x, measure = 1) {
     ## For reducing the display of the result back to the single dimension we
     ## think of the data, we take the "Selected" slice from the categories
     ## dimension.
+    if (is.null(measure)) measure <- getDefaultMeasure(x)
+
     out <- x@arrays[[measure]]
     ## Remove the "variables" & "measure_type" metadata stuck in there
     attr(out, "variable") <- NULL
@@ -291,12 +296,13 @@ keepWithNA <- function(dimension, marginal, useNA) {
     return(out)
 }
 
-cubeMarginTable <- function(x, margin = NULL, measure = 1) {
+cubeMarginTable <- function(x, margin = NULL, measure = NULL) {
     ## Given a CrunchCube, get the right margin table for percentaging
     ##
     ## This is the function that `margin.table` calls internally, and like
     ## `cubeToArray` (for `as.array`), it manages the complexity of how we
     ## handle missing data and especially multiple response.
+    if (is.null(measure)) measure <- getDefaultMeasure(x)
     data <- x@arrays[[measure]]
     dims <- x@dims
     dimnames(data) <- dimnames(dims)
@@ -660,4 +666,29 @@ makeMarginMap <- function(dimTypes) {
     names(margin_map) <- NULL
 
     return(margin_map)
+}
+
+getDefaultMeasure <- function(cube) {
+    measure_types <- vapply(
+        cube@arrays,
+        function(x) attr(x, "measure_type") %||% "unknown",
+        character(1)
+    )
+    measure_names <- names(cube@arrays)
+    default_measure_helper(measure_types, measure_names)
+}
+
+default_measure_helper <- function(types, names) {
+    # If any are count, use first alphabetically by name (in case there are 2+ counts)
+    # Next use "mean" (again alphabetically)
+    # Finally use alphabetically (avoiding unweighted counts if possible)
+    if (any(types == "count")) {
+        return(sort(names[types == "count"])[1])
+    } else if (any(types == "mean")) {
+        return(sort(names[types == "mean"])[1])
+    } else if (any(types != ".unweighted_counts")) { # Try not unweighted counts
+        return(sort(names[types != ".unweighted_counts"])[1])
+    } else { # shouldn't be possible, but just in case:
+        return(sort(names)[1])
+    }
 }

@@ -133,3 +133,41 @@ with_mock_crunch({
         )
     })
 })
+
+
+# Default measure
+test_that("Defualt measure works as expected", {
+    # easy case
+    expect_equal(
+        default_measure_helper(c("count", ".unweighted_counts"), c("count", ".unweighted_counts")),
+        "count"
+    )
+    # prefers count over alphabet
+    expect_equal(
+        default_measure_helper(c("aaa", "count", ".unweighted_counts"), c("a", "b", ".unweighted_counts")),
+        "b"
+    )
+    # prefers mean over alphabet
+    expect_equal(
+        default_measure_helper(c("aaa", "mean", ".unweighted_counts"), c("a", "b", ".unweighted_counts")),
+        "b"
+    )
+    # prefers alphabetical count over mean and other count
+    expect_equal(
+        default_measure_helper(
+            c("count", "mean", "count", ".unweighted_counts"),
+            c("z", "a", "b", ".unweighted_counts")
+        ),
+        "b"
+    )
+    # prefers anything over unweighted count
+    expect_equal(
+        default_measure_helper(c("aaa", ".unweighted_counts"), c("a", ".unweighted_counts")),
+        "a"
+    )
+    # but will give .unweighted counts if only one
+    expect_equal(
+        default_measure_helper(c(".unweighted_counts"), c(".unweighted_counts")),
+        ".unweighted_counts"
+    )
+})
