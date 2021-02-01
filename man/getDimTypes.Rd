@@ -15,14 +15,14 @@ the array variable types are more specific.
 }
 \description{
 This function returns the specific type of each cube dimension. This is useful
-when cubes contain categorical array or multiple response variables because it
-identifies the dimensions of the cube which refer to the different parts of
-array variable:
+when cubes contain array variables because it identifies the dimensions of
+the cube which refer to the different parts of array variable:
 \itemize{
 \item \code{ca_items}: Categorical array items
 \item \code{ca_categories}: The categories of the categorical array
 \item \code{mr_items}: Multiple response options or items
 \item \code{mr_selections}: The selection status for a multiple response variable
+\item \code{numarray_items}: Numeric array items
 }
 }
 \keyword{internal}

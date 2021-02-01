@@ -215,9 +215,12 @@ varToDim <- function(x) {
             zfunc("dimension", zfunc("as_selected", v), list(value = "subvariables")),
             zfunc("as_selected", v)
         ))
-    } else if (is.CA(x)) {
+    } else if (is.CA(x) | is.NumericArray(x)) {
         ## Categorical array gets the subvariables dimension first
         ## and then itself so that the rows, not columns, are subvars
+        ## We treat numeric arrays as categoricals when used bare
+        ## in formulas like this too so that eg `table(ds$numarray)`
+        ## matches expectations.
         return(list(
             zfunc("dimension", x, list(value = "subvariables")),
             v
