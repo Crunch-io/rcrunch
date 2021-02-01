@@ -5,7 +5,7 @@
 \alias{cubeMeasureType,CrunchCube-method}
 \title{Get measure type of cube result}
 \usage{
-cubeMeasureType(x, measure = 1)
+cubeMeasureType(x, measure = NULL)
 
 \S4method{cubeMeasureType}{CrunchCube}(x, measure = 1)
 }
@@ -13,7 +13,10 @@ cubeMeasureType(x, measure = 1)
 \item{x}{A \code{CrunchCube}}
 
 \item{measure}{Which measure in the cube to check, can index by position
-with numbers or by name.}
+with numbers or by name. NULL, the default, will select a "sum" type measure
+first, "mean" if no sum is available, and will use the cube's names in alphabetic
+order if there are no "sum" or "mean" measures (or if a tie breaker between two
+measure types is needed).}
 }
 \value{
 A string describing the cube's measure type
