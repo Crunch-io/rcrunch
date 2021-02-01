@@ -144,12 +144,18 @@ test_that("Defualt measure works as expected", {
     )
     # prefers count over alphabet
     expect_equal(
-        default_measure_helper(c("aaa", "count", ".unweighted_counts"), c("a", "b", ".unweighted_counts")),
+        default_measure_helper(
+            c("aaa", "count", ".unweighted_counts"),
+            c("a", "b", ".unweighted_counts")
+        ),
         "b"
     )
     # prefers mean over alphabet
     expect_equal(
-        default_measure_helper(c("aaa", "mean", ".unweighted_counts"), c("a", "b", ".unweighted_counts")),
+        default_measure_helper(
+            c("aaa", "mean", ".unweighted_counts"),
+            c("a", "b", ".unweighted_counts")
+        ),
         "b"
     )
     # prefers alphabetical count over mean and other count
