@@ -360,6 +360,18 @@ with_mock_crunch({
         )
     })
 
+    test_that("makeFrame errors on single subvar", {
+        expect_error(
+            deriveArray(
+                subvariables = VariableDefinition(ds$gender == "Male", name = "male"),
+                name = "Gender MR"
+            ),
+            "Expected a Variable Catalog or a list of Variables/Expressions/VarDefs",
+            fixed = TRUE
+        )
+
+    })
+
     test_that("selectCategories expr", {
         expr <- selectCategories(ds$gender, "Male")
         expect_is(expr, "CrunchExpr")
