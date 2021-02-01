@@ -57,14 +57,14 @@ with_mock_crunch({
             )
         )
     })
-    test_that("formulaToCubeQuery preserves measure names", {
+    test_that("formulaToCubeQuery preserves name and appends official name", {
         expect_identical(
             formulaToCubeQuery(list(avg = mean(birthyr), cts = n()) ~ gender, data = ds),
             list(
                 dimensions = list(zcl(ds$gender)),
                 measures = list(
-                    avg = zfunc("cube_mean", ds$birthyr),
-                    cts = zfunc("cube_count")
+                    avg__mean = zfunc("cube_mean", ds$birthyr),
+                    cts__count = zfunc("cube_count")
                 )
             )
         )
@@ -92,6 +92,7 @@ a1 <- CrunchCube(
     ), dim = c(2L, 4L))),
     dims = adims
 )
+attr(a1@arrays[[1]], "measure_type") <- "count"
 #    v7
 # v4  C D E No Data
 #   B 8 3 2 0

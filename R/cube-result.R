@@ -1,12 +1,17 @@
 setMethod("initialize", "CrunchCube", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
+    ## Fill in with the measure types based on the result name
+    .Object$result$measures <- addCubeMeasureTypes(.Object$result$measures)
     ## Fill in these reshaped values if loading an API response
     if (!length(.Object@dims)) .Object@dims <- cubeDims(.Object)
     if (!length(.Object@arrays)) {
         ## Get the "measures" from the response
         m <- .Object$result$measures
         ## Add the "bases", which aren't included in "measures"
-        m[[".unweighted_counts"]] <- list(data = .Object$result$counts)
+        m[[".unweighted_counts"]] <- list(
+            data = .Object$result$counts,
+            measure_type = ".unweighted_counts"
+        )
         ## Transform the flat arrays into N-d arrays for easier use
         .Object@arrays <- lapply(m, cToA, dims = .Object@dims)
     }
@@ -46,11 +51,60 @@ setCubeNA <- function(cube, value = c("always", "no", "ifany")) {
 #' @export
 setMethod("dim", "CrunchCube", function(x) dim(as.array(x)))
 
+
+#' Get measure type of cube result
+#'
+#' Returns a string describing the measure type of the cube result,
+#' such as "count", "mean", "sd", etc.
+#'
+#' @param x A `CrunchCube`
+#' @param measure Which measure in the cube to check, can index by position
+#' with numbers or by name. NULL, the default, will select a "sum" type measure
+#' first, "mean" if no sum is available, and will use the cube's names in alphabetic
+#' order if there are no "sum" or "mean" measures (or if a tie breaker between two
+#' measure types is needed).
+#'
+#' @return A string describing the cube's measure type
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' cube1 <- crtabs(~allpets, ds)
+#' cubeMeasureType(cube1)
+#' #> "count"
+#'
+#' cube2 <- crtabs(list(a = n(), b = mean(age)) ~ allpets, ds)
+#' cubeMeasureType(cube2)
+#' #> "count"
+#' cubeMeasureType(cube2, "b")
+#' #> "mean"
+#' }
+setGeneric("cubeMeasureType", function(x, measure = NULL) standardGeneric("cubeMeasureType"))
+
+#' @rdname cubeMeasureType
+#' @export
+setMethod("cubeMeasureType", "CrunchCube", function(x, measure = 1) {
+    attr(x@arrays[[measure]], "measure_type") %||% "unknown"
+})
+
 # ---- Cube To Array ----
 
 #' @rdname cube-methods
 #' @export
 setMethod("dimnames", "CrunchCube", function(x) dimnames(dimensions(x)))
+
+addCubeMeasureTypes <- function(measures) {
+    # Add cube measure type to object, which may be stored as an appended
+    # "__<measure>" if user chose names
+    out <- lapply(names(measures), function(measure_name) {
+        c(
+            measures[[measure_name]],
+            list(measure_type = sub(".+__", "", measure_name))
+        )
+    })
+    names(out) <- sub("(.+)__.+", "\\1", names(measures))
+    out
+}
 
 cToA <- function(x, dims) {
     ## Just make an array from the cube "measure's" data. Nothing else.
@@ -90,10 +144,12 @@ cToA <- function(x, dims) {
     ## Stick any variable metadata we have in here as an attribute so that
     ## `measures()` and `variables()` can access it
     attr(out, "variable") <- cubeVarReferences(x$metadata)
+    ## Add measure_type (from original measure_name) to array attributes as well
+    attr(out, "measure_type") <- x$measure_type
     return(out)
 }
 
-cubeToArray <- function(x, measure = 1) {
+cubeToArray <- function(x, measure = NULL) {
     ## This is the function behind the "as.array" method, as well as what
     ## "bases" does with the ".unweighted_counts". It evaluates all of the logic
     ## that takes the array in the cube response and selects the slices of that
@@ -114,9 +170,12 @@ cubeToArray <- function(x, measure = 1) {
     ## For reducing the display of the result back to the single dimension we
     ## think of the data, we take the "Selected" slice from the categories
     ## dimension.
+    if (is.null(measure)) measure <- getDefaultMeasure(x)
+
     out <- x@arrays[[measure]]
-    ## Remove the "variables" metadata stuck in there
+    ## Remove the "variables" & "measure_type" metadata stuck in there
     attr(out, "variable") <- NULL
+    attr(out, "measure_type") <- NULL
     ## If "out" is just a scalar, skip this
     if (is.array(out)) {
         ## First, take the "Selected" slices, if any
@@ -178,6 +237,7 @@ subsetCubeArray <- function(array, bools, drop = FALSE, selected_dims = FALSE) {
     if (re_shape) {
         out <- array(out, dim = newdim, dimnames = newdimnames)
     }
+    attr(out, "measure_type") <- attr(array, "measure_type")
     return(out)
 }
 
@@ -236,12 +296,13 @@ keepWithNA <- function(dimension, marginal, useNA) {
     return(out)
 }
 
-cubeMarginTable <- function(x, margin = NULL, measure = 1) {
+cubeMarginTable <- function(x, margin = NULL, measure = NULL) {
     ## Given a CrunchCube, get the right margin table for percentaging
     ##
     ## This is the function that `margin.table` calls internally, and like
     ## `cubeToArray` (for `as.array`), it manages the complexity of how we
     ## handle missing data and especially multiple response.
+    if (is.null(measure)) measure <- getDefaultMeasure(x)
     data <- x@arrays[[measure]]
     dims <- x@dims
     dimnames(data) <- dimnames(dims)
@@ -432,6 +493,9 @@ setGeneric("bases", function(x, margin = NULL) standardGeneric("bases"))
 #' @rdname cube-computing
 #' @export
 setMethod("prop.table", "CrunchCube", function(x, margin = NULL) {
+    if (cubeMeasureType(x) != "count") {
+        halt("Cannot calculate `prop.table()` on non-count measure: ", cubeMeasureType(x))
+    }
     out <- applyTransforms(x)
     marg <- margin.table(x, margin)
     actual_margin <- mr_items_margins(margin, cube = x, user_dims = TRUE)
@@ -459,6 +523,9 @@ setMethod("round", "CrunchCube", function(x, digits = 0) {
 #' @rdname cube-computing
 #' @export
 setMethod("bases", "CrunchCube", function(x, margin = NULL) {
+    if (cubeMeasureType(x) != "count") {
+        halt("Cannot calculate `bases()` on non-count measure: ", cubeMeasureType(x))
+    }
     if (length(margin) == 1 && margin == 0) {
         ## Unlike margin.table. This just returns the "bases", without reducing
         return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
@@ -479,6 +546,9 @@ setMethod("bases", "CrunchCube", function(x, margin = NULL) {
 #' @rdname cube-computing
 #' @export
 setMethod("margin.table", "CrunchCube", function(x, margin = NULL) {
+    if (cubeMeasureType(x) != "count") {
+        halt("Cannot calculate `margin.table()` on non-count measure: ", cubeMeasureType(x))
+    }
     # This selects the margins while skipping over the MR selected dimension
     # See comments in cubeToArray for more detail.
     mt_margins <- mr_items_margins(margin, cube = x)
@@ -596,4 +666,29 @@ makeMarginMap <- function(dimTypes) {
     names(margin_map) <- NULL
 
     return(margin_map)
+}
+
+getDefaultMeasure <- function(cube) {
+    measure_types <- vapply(
+        cube@arrays,
+        function(x) attr(x, "measure_type") %||% "unknown",
+        character(1)
+    )
+    measure_names <- names(cube@arrays)
+    default_measure_helper(measure_types, measure_names)
+}
+
+default_measure_helper <- function(types, names) {
+    # If any are count, use first alphabetically by name (in case there are 2+ counts)
+    # Next use "mean" (again alphabetically)
+    # Finally use alphabetically (avoiding unweighted counts if possible)
+    if (any(types == "count")) {
+        return(sort(names[types == "count"])[1])
+    } else if (any(types == "mean")) {
+        return(sort(names[types == "mean"])[1])
+    } else if (any(types != ".unweighted_counts")) { # Try not unweighted counts
+        return(sort(names[types != ".unweighted_counts"])[1])
+    } else { # shouldn't be possible, but just in case:
+        return(sort(names)[1])
+    }
 }

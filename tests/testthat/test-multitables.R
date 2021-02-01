@@ -498,6 +498,11 @@ with_mock_crunch({
                     prop.table(book, 1)[[3]][[2]],
                     prop.table(book[[3]][[2]], 1)
                 )
+                ## And non-count measures get NULL
+                expect_identical(
+                    prop.table(book)[[2]],
+                    NULL
+                )
             })
 
             test_that("tabBook from apidocs dataset (mock)", {
