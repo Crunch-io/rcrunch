@@ -117,4 +117,56 @@ with_mock_crunch({
             )
         )
     })
+
+    test_that("scorecard works", {
+        expect_equal(
+            formulaToQuery(~scorecard(ds$mymrset, selectCategories(ds$catarray, "A"))),
+            list(
+                measures = list(count = list(`function` = "cube_count", args = list())),
+                with = list(
+                    v1 = list(
+                        `function` = "fuse",
+                        args = list(
+                            list(
+                                list(
+                                    `function` = "as_selected",
+                                    args = list(list(variable = self(ds$mymrset)))
+                                ),
+                                list(
+                                    `function` = "as_selected",
+                                    args = list(
+                                        list(
+                                            `function` = "select_categories",
+                                            args = list(
+                                                list(variable = self(ds$catarray)),
+                                                list(value = I("A"))
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                dimensions = list(list(
+                    list(local = "v1.subvariables"),
+                    list(local = "v1.categories"),
+                    list(local = "v1.variables")
+                ))
+            )
+        )
+
+        expect_error(
+            formulaToQuery(~scorecard(ds$catarray)),
+            "Expected Multiple Response variables or expressions in a scorecard"
+        )
+        expect_error(
+            formulaToQuery(~scorecard(ds$mymrset) + ds$gender),
+            "scorecard queries cannot be combined with other dimensions"
+        )
+        expect_error(
+            formulaToQuery(mean(ds$birthyr) ~ scorecard(ds$mymrset)),
+            "scorecard queries can only have count as the aggregation"
+        )
+    })
 })

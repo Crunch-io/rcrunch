@@ -15,9 +15,7 @@ formulaToQuery <- function(formula, data) {
         halt(dQuote("formula"), " is not a valid formula")
     }
 
-    # all lhs variables in list
     vars <- parseTerms(formula, data, side = "RHS")
-    # all rhs variables in list
     measures <- parseTerms(formula, data, side = "LHS")
 
     ## Construct the "measures", either from the formula or default "count"
@@ -32,20 +30,9 @@ formulaToQuery <- function(formula, data) {
         measures <- lapply(measures, zcl)
     }
 
-    ## Make "dimensions".
-    dimensions <- lapply(vars, varToDim)
-
-    ## Final validations
     badmeasures <- vapply(measures, Negate(isCubeAggregation), logical(1))
     if (any(badmeasures)) {
         halt("Left side of formula must be a valid aggregation")
-    }
-    baddimensions <- vapply(
-        unlist(dimensions, recursive = FALSE),
-        isCubeAggregation, logical(1)
-    )
-    if (any(baddimensions)) {
-        halt("Right side of formula cannot contain aggregation functions")
     }
 
     ## Name measures based on function (and append to end if already named)
@@ -53,6 +40,22 @@ formulaToQuery <- function(formula, data) {
         names(measures) <- getCubeMeasureNames(measures)
     } else {
         names(measures) <- paste0(names(measures), "__", getCubeMeasureNames(measures))
+    }
+
+    ## Special case for scorecard queries
+    if (any(is_scorecard(vars))) {
+        return(scorecardQuery(vars, measures))
+    }
+
+    ## Make "dimensions".
+    dimensions <- lapply(vars, varToDim)
+
+    baddimensions <- vapply(
+        unlist(dimensions, recursive = FALSE),
+        isCubeAggregation, logical(1)
+    )
+    if (any(baddimensions)) {
+        halt("Right side of formula cannot contain aggregation functions")
     }
 
     return(list(dimensions = dimensions, measures = measures))
@@ -179,7 +182,18 @@ registerCubeFunctions <- function(varnames = c()) {
             }
             zcl(x)
         },
-        n = function(...) zfunc("cube_count")
+        n = function(...) zfunc("cube_count"),
+        scorecard = function(...) {
+            vars <- list(...)
+            if (!all(vapply(vars, function(x) is.MR(x) | is.CrunchExpr(x), logical(1)))) {
+                halt("Expected Multiple Response variables or expressions in a scorecard")
+            }
+            vars <- lapply(vars, function(x) {
+                if (is.MR(x)) zfunc("as_selected", x) else zcl(x)
+            })
+
+            do.call(zfunc, c(list(func = "scorecard"), vars))
+        }
     )
 
     overlap <- intersect(varnames, names(funcs))
@@ -283,4 +297,28 @@ LHS_string <- function(f) {
 splitFormula <- function(f) {
     if (!is.character(f)) f <- paste(deparse(f), collapse = " ")
     unlist(strsplit(f, "~"))
+}
+
+is_scorecard <- function(vars) {
+    vapply(
+        vars,
+        function(x) is.list(x) && identical(x[["function"]], "scorecard"), logical(1)
+    )
+}
+
+scorecardQuery <- function(vars, measures) {
+    if (length(vars) > 1) halt("scorecard queries cannot be combined with other dimensions")
+    if (length(measures) > 1 || !identical(measures[[1]][["function"]], "cube_count")) {
+        halt("scorecard queries can only have count as the aggregation")
+    }
+
+    return(list(
+        measures = measures,
+        with = list(v1 = zfunc("fuse", vars[[1]]$args)),
+        dimensions = list(list(
+            list(local = "v1.subvariables"),
+            list(local = "v1.categories"),
+            list(local = "v1.variables")
+        ))
+    ))
 }
