@@ -1,3 +1,5 @@
+# crunch 1.27.8 (Development version)
+
 # crunch 1.27.7
 * You can now create numeric array variables in `deriveArray()` and `makeArray()`, and you can perform calculations on them via `crtabs()` and `tabBook()`. 
 * Fix for upcoming version of httptest.
