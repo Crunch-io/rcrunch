@@ -17,7 +17,7 @@
 #' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
 #' @param value for the setter, a query
 #' @param query For `formulaToSlideQuery()`, a formula that specifies the query, as in
-#' `newSlide()`
+#' `newSlide()`. See Details of [`crtabs()`] for more information.
 #' @param dataset For `formulaToSlideQuery()`, a `CrunchDataset` that the variables in
 #' `query` refer to.
 #' @param weight For `slideQueryEnv()` a crunch variable to use as a weight or `NULL`
@@ -208,8 +208,8 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' Append a new slide to a Crunch Deck
 #'
 #' @param deck A Crunch Deck
-#' @param query A formula definition of a query to be used by the slide. This is
-#' similar to CrunchCube query
+#' @param query A formula definition of a query to be used by the slide. See
+#' Details of [`crtabs()`] for more information about making queries.
 #' @param display_settings (optional) A list of display settings. If omitted,
 #' slide will be a table of column percentages with hypothesis test highlighting
 #' enabled. The most common setting used is `vizType`, which can be:

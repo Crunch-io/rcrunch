@@ -16,8 +16,8 @@ newSlide(
 \arguments{
 \item{deck}{A Crunch Deck}
 
-\item{query}{A formula definition of a query to be used by the slide. This is
-similar to CrunchCube query}
+\item{query}{A formula definition of a query to be used by the slide. See
+Details of \code{\link[=crtabs]{crtabs()}} for more information about making queries.}
 
 \item{display_settings}{(optional) A list of display settings. If omitted,
 slide will be a table of column percentages with hypothesis test highlighting

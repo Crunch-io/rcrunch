@@ -12,11 +12,8 @@ crtabs(
 )
 }
 \arguments{
-\item{formula}{an object of class 'formula' object with the
-cross-classifying variables separated by '+' on the right side of the
-"~". If aggregating by functions other than counts, include the aggregation
-expression on the left-hand side.
-Compare to \code{\link[stats:xtabs]{stats::xtabs()}}.}
+\item{formula}{an object of class 'formula' object, that specifies that query
+to calculate. See Details for more information.}
 
 \item{data}{an object of class \code{CrunchDataset}}
 
@@ -32,7 +29,56 @@ an object of class \code{CrunchCube}
 }
 \description{
 Create a contingency table or other aggregation from cross-classifying
-variables in a CrunchDataset.
+variables in a CrunchDataset, expanding on the notation allowed in
+\code{\link[stats:xtabs]{stats::xtabs()}} to tailor to the kinds of calculations available in crunch.
+}
+\details{
+There are 3 types of queries supported:
+\itemize{
+\item Crosstabs: Share the most in common with \code{\link[stats:xtabs]{stats::xtabs()}}, are defined by
+a formula with only a right hand side, with each dimension specified on the
+right-hand side, separated by a \code{+}. A dimension are generally variables, but
+categorical array variables contribute 2 dimensions, "categories" and "subvariables".
+If you just use the categorical array variable directly, the "subvariables" dimensions
+will be added first and the "categories" second, but you can choose their order by
+specifying both \code{categories(var)} and \code{subvariables(var)} (where \code{var} is a
+Categorical Array CrunchVariable).
+\item Aggregations: An extension to 'Crosstabs' where you can select one or more
+measures by putting them in the left-hand side of the formula. Multiple measures
+can be placed in a list to calculate them together. The currently supported
+measures are \code{mean(var)}, \code{n()} (the same as a crosstab), \code{min(var)}, \code{max(var)},
+\code{sd(var)}, \code{sum(var)} and \code{median(var)} (where \code{var} is a CrunchVariable).
+\item Scorecards: When you want to compare multiple MR variables with the same
+subvariables, you can use a scorecard to create a tabulation where they are
+lined up. Scorecard queries cannot be combined with the other types. Use
+the \code{scorecard(..., vars = NULL)} (where \code{...} is a set of MR variables or
+\code{vars} is a list of them).
+}
+}
+\examples{
+\dontrun{
+# Crosstab of people by `age_cat`:
+crtabs(~age_cat, ds)
+
+# Aggregation of means of income by `age_cat`
+crtabs(mean(income) ~ age_cat, ds)
+
+# Scorecard of multiple MRs with aligned subvariables
+crtabs(~scorecard(trust_mr, value_mr, quality_mr), ds)
+# Can also pre-define the variables in a scorecard with
+mr_list <- list(ds$trust_mr, ds$value_mr, ds$quality_mr)
+crtabs(~scorecard(vars = mr_list), ds)
+
+# Crosstab of people by `age_cat` and the reasons for enjoying a brand (cat array)
+crtabs(~age_cat + enjoy_array, ds)
+
+# Crosstab of people by `age_cat` and the `enjoy_array` (cat array)
+# But manually choosing the order of the dimensions
+crtabs(~subvariables(enjoy_array) + age_cat + categories(enjoy_array), ds)
+
+# Aggregation of means & standard deviations of income by `age_cat`
+crtabs(list(mean = mean(income), sd = sd(income)) ~ age_cat, ds)
+}
 }
 \seealso{
 \code{\link[=weight]{weight()}}
