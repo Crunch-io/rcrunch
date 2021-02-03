@@ -12,7 +12,7 @@ crtabs(
 )
 }
 \arguments{
-\item{formula}{an object of class 'formula' object, that specifies that query
+\item{formula}{a \link[stats:formula]{stats::formula} object that specifies that query
 to calculate. See Details for more information.}
 
 \item{data}{an object of class \code{CrunchDataset}}
@@ -38,9 +38,10 @@ There are 3 types of queries supported:
 \item Crosstabs: Share the most in common with \code{\link[stats:xtabs]{stats::xtabs()}}, are defined by
 a formula with only a right hand side, with each dimension specified on the
 right-hand side, separated by a \code{+}. A dimension are generally variables, but
-categorical array variables contribute 2 dimensions, "categories" and "subvariables".
-If you just use the categorical array variable directly, the "subvariables" dimensions
-will be added first and the "categories" second, but you can choose their order by
+categorical array variables contribute 2 dimensions, \dQuote{categories} and
+\dQuote{subvariables}.
+If you just use the categorical array variable directly, the subvariables dimensions
+will be added first and the categories second, but you can choose their order by
 specifying both \code{categories(var)} and \code{subvariables(var)} (where \code{var} is a
 Categorical Array CrunchVariable).
 \item Aggregations: An extension to 'Crosstabs' where you can select one or more
