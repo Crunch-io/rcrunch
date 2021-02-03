@@ -503,7 +503,7 @@ with_test_authentication({
         ds_scorecard$x_sel_a<- deriveArray(ds_scorecard[c("x1", "x2")], "x mr - a", selections = "a")
         ds_scorecard$x_sel_b<- deriveArray(ds_scorecard[c("x1", "x2")], "x mr - b", selections = "b")
 
-        scorecard_cube <- crtabs(~scorecard(ds_scorecard$x_sel_a, ds_scorecard$x_sel_b), ds_scorecard)
+        scorecard_cube <- crtabs(~scorecard(x_sel_a, x_sel_b), ds_scorecard)
 
         expect_equal(dimnames(scorecard_cube)[[1]], c("x1", "x2"))
         expect_equal(dimnames(scorecard_cube)[[2]], c("x mr - a", "x mr - b"))
