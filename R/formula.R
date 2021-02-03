@@ -183,8 +183,8 @@ registerCubeFunctions <- function(varnames = c()) {
             zcl(x)
         },
         n = function(...) zfunc("cube_count"),
-        scorecard = function(...) {
-            vars <- list(...)
+        scorecard = function(..., vars = NULL) {
+            vars <- c(list(...), vars)
             if (!all(vapply(vars, function(x) is.MR(x) | is.CrunchExpr(x), logical(1)))) {
                 halt("Expected Multiple Response variables or expressions in a scorecard")
             }
