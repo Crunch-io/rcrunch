@@ -28,7 +28,7 @@
 #' the `scorecard(..., vars = NULL)` (where `...` is a set of MR variables or
 #' `vars` is a list of them).
 #'
-#' @param formula an object of class 'formula' object, that specifies that query
+#' @param formula a [stats::formula] object that specifies that query
 #' to calculate. See Details for more information.
 #' @param data an object of class `CrunchDataset`
 #' @param weight a CrunchVariable that has been designated as a potential
