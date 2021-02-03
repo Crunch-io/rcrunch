@@ -507,7 +507,7 @@ setMethod(
         # and update fixtures
         payload <- value@body[
             na.omit(match(
-                c("query", "display_settings", "query_environment", "viz_specs", "transforms"),
+                c("query", "display_settings", "query_environment", "viz_specs", "transform"),
                 names(value@body)
             ))
         ]
