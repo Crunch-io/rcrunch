@@ -500,8 +500,12 @@ with_test_authentication({
             ),
             "scorecard test"
         )
-        ds_scorecard$x_sel_a<- deriveArray(ds_scorecard[c("x1", "x2")], "x mr - a", selections = "a")
-        ds_scorecard$x_sel_b<- deriveArray(ds_scorecard[c("x1", "x2")], "x mr - b", selections = "b")
+        ds_scorecard$x_sel_a <- deriveArray(
+            ds_scorecard[c("x1", "x2")], "x mr - a", selections = "a"
+        )
+        ds_scorecard$x_sel_b <- deriveArray(
+            ds_scorecard[c("x1", "x2")], "x mr - b", selections = "b"
+        )
 
         scorecard_cube <- crtabs(~scorecard(x_sel_a, x_sel_b), ds_scorecard)
 

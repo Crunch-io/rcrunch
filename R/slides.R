@@ -56,6 +56,7 @@ setGeneric("cube", function(x) standardGeneric("cube"))
 #' @export
 setGeneric("cubes", function(x) standardGeneric("cubes"))
 
+#nolint start
 #' Get or set a slide's display settings
 #'
 #' A slide's display settings can be modified by assigning a named list
@@ -64,6 +65,7 @@ setGeneric("cubes", function(x) standardGeneric("cubes"))
 #' https://crunch.io/api/reference/#patch-/datasets/-dataset_id-/decks/-deck_id-/slides/-slide_id-/analyses/-analysis_id-/)
 #' @rdname display-settings
 #' @export
+#nolint end
 setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
 #' @rdname display-settings
 #' @export
