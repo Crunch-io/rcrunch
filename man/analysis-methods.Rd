@@ -100,7 +100,7 @@ slideQueryEnv(weight, filter)
 \item{value}{for the setter, a query}
 
 \item{query}{For \code{formulaToSlideQuery()}, a formula that specifies the query, as in
-\code{newSlide()}}
+\code{newSlide()}. See Details of \code{\link[=crtabs]{crtabs()}} for more information.}
 
 \item{dataset}{For \code{formulaToSlideQuery()}, a \code{CrunchDataset} that the variables in
 \code{query} refer to.}

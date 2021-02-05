@@ -17,7 +17,7 @@
 #' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
 #' @param value for the setter, a query
 #' @param query For `formulaToSlideQuery()`, a formula that specifies the query, as in
-#' `newSlide()`
+#' `newSlide()`. See Details of [`crtabs()`] for more information.
 #' @param dataset For `formulaToSlideQuery()`, a `CrunchDataset` that the variables in
 #' `query` refer to.
 #' @param weight For `slideQueryEnv()` a crunch variable to use as a weight or `NULL`
@@ -56,14 +56,16 @@ setGeneric("cube", function(x) standardGeneric("cube"))
 #' @export
 setGeneric("cubes", function(x) standardGeneric("cubes"))
 
+#nolint start
 #' Get or set a slide's display settings
 #'
 #' A slide's display settings can be modified by assigning a named list
 #' @param x a CrunchSlide, Analysis, or AnalysisCatalog
 #' @param value a named list, for valid settings see [API documentation](
-#' https://crunch.io/api/reference/#get-/datasets/-dataset_id-/decks/-deck_id-/slides/-slide_id-/)
+#' https://crunch.io/api/reference/#patch-/datasets/-dataset_id-/decks/-deck_id-/slides/-slide_id-/analyses/-analysis_id-/)
 #' @rdname display-settings
 #' @export
+#nolint end
 setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
 #' @rdname display-settings
 #' @export
@@ -208,8 +210,8 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' Append a new slide to a Crunch Deck
 #'
 #' @param deck A Crunch Deck
-#' @param query A formula definition of a query to be used by the slide. This is
-#' similar to CrunchCube query
+#' @param query A formula definition of a query to be used by the slide. See
+#' Details of [`crtabs()`] for more information about making queries.
 #' @param display_settings (optional) A list of display settings. If omitted,
 #' slide will be a table of column percentages with hypothesis test highlighting
 #' enabled. The most common setting used is `vizType`, which can be:
@@ -507,7 +509,7 @@ setMethod(
         # and update fixtures
         payload <- value@body[
             na.omit(match(
-                c("query", "display_settings", "query_environment", "viz_specs", "transforms"),
+                c("query", "display_settings", "query_environment", "viz_specs", "transform"),
                 names(value@body)
             ))
         ]
