@@ -10,6 +10,8 @@ newSlide(
   display_settings = list(),
   title = "",
   subtitle = "",
+  filter = NULL,
+  weight = NULL,
   ...
 )
 }
@@ -31,6 +33,12 @@ exports show labels on bars or arcs of donuts.}
 \item{title}{The slide's title}
 
 \item{subtitle}{The slide's subtitle}
+
+\item{filter}{a \code{CrunchLogicalExpression}, a crunch \code{filter} object or
+a vector of names of \code{\link{filters}} defined in the dataset (defaults
+to \code{NULL}, using all data).}
+
+\item{weight}{A weight variable (defaults to NULL, meaning no weight)}
 
 \item{...}{Further options to be passed on to the API}
 }

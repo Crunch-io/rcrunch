@@ -239,14 +239,17 @@ with_mock_crunch({
 
     test_that("New Slide", {
         expect_POST(
-            newSlide(main_deck, ~birthyr, title = "Title", subtitle = "SubTitle"),
+            newSlide(
+                main_deck, ~birthyr, title = "Title", subtitle = "SubTitle",
+                weight = ds$birthyr, filter = filters(ds)[["Occasional Political Interest"]]),
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
             '{"element":"shoji:entity",',
             '"body":{"title":"Title",',
             '"subtitle":"SubTitle",',
             '"analyses":[{"query":{"dimensions":[{"variable":"https://app.',
             'crunch.io/api/datasets/4/variables/birthyr/"}],',
-            '"measures":{"count":{"function":"cube_count","args":[]}}},',
+            '"measures":{"count":{"function":"cube_count","args":[]}},',
+            '"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"},',
             '"display_settings":{"percentageDirection":{"value":"colPct"},',
             '"showEmpty":{"value":false},',
             '"showMean":{"value":false},',
@@ -254,7 +257,10 @@ with_mock_crunch({
             '"countsOrPercents":{"value":"percent"},',
             '"decimalPlaces":{"value":1},',
             '"showSignif":{"value":true},',
-            '"currentTab":{"value":0}}}]}}'
+            '"currentTab":{"value":0}},"query_environment":{',
+            '"filter":[{"filter":"https://app.crunch.io/api/datasets/4/filters/filter1/"}],',
+            '"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}',
+            '}]}}'
         )
     })
 

@@ -222,6 +222,10 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' exports show labels on bars or arcs of donuts.
 #' @param title The slide's title
 #' @param subtitle The slide's subtitle
+#' @param filter a `CrunchLogicalExpression`, a crunch `filter` object or
+#' a vector of names of \code{\link{filters}} defined in the dataset (defaults
+#' to `NULL`, using all data).
+#' @param weight A weight variable (defaults to NULL, meaning no weight)
 #' @param ... Further options to be passed on to the API
 #'
 #' @return CrunchSlide object
@@ -303,17 +307,22 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     ))
 #' )
 #' }
-newSlide <- function(deck,
-                     query = NULL,
-                     display_settings = list(),
-                     title = "",
-                     subtitle = "",
-                     ...) {
+newSlide <- function(
+    deck,
+    query = NULL,
+    display_settings = list(),
+    title = "",
+    subtitle = "",
+    filter = NULL,
+    weight = NULL,
+    ...
+) {
     stopifnot(inherits(query, "formula") || is.null(query))
     settings <- modifyList(DEFAULT_DISPLAY_SETTINGS, display_settings)
     settings <- wrapDisplaySettings(settings)
 
     ds <- loadDataset(datasetReference(deck))
+    filter <- standardize_tabbook_filter(ds, filter)
 
     payload <- list(title = title, subtitle = subtitle, ...)
     if ("analyses" %in% names(payload) && !is.null(query)) {
@@ -322,20 +331,31 @@ newSlide <- function(deck,
     if (!"analyses" %in% names(payload) && is.null(query)) {
         halt("Must specify either a `query` or `analyses` for `newSlide()`")
     }
-    if ("analyses" %in% names(payload) && length(display_settings) != 0) {
-        warning(
-            "`display_settings` are ignored if `analyses` are defined directly for `newSlide()`"
-        )
+    if ("analyses" %in% names(payload) &&
+        (length(display_settings) != 0 || !is.null(filter) || !is.null(weight))
+    ) {
+        warning(paste0(
+            "`display_settings`, `filter` and `weight` are ignored if `analyses` ",
+            "are defined directly for `newSlide()`"
+        ))
     }
 
     if (!is.null(query)) {
-        # Technically multiple analyses per slide are allowed (for profiles), but this
-        # isn't supported in the R package, and if someone really wants it, they could
-        # form the analyses object themselves
-        payload[["analyses"]] <- list(list(
+        analysis <- list(
             query = formulaToCubeQuery(query, ds),
             display_settings = settings
-        ))
+        )
+
+        query_environment <- list()
+        if (!is.null(filter)) query_environment$filter <- filter
+        if (!is.null(weight)) {
+            query_environment$weight <- self(weight)
+            # Also add to the query to match webapp behavior
+            analysis$query$weight <- self(weight)
+        }
+        if (length(query_environment) > 0) analysis$query_environment <- query_environment
+
+        payload[["analyses"]] <- list(analysis)
     }
 
     payload <- wrapEntity(body = payload)

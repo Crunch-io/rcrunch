@@ -134,6 +134,7 @@ standardize_tabbook_filter <- function(dataset, filter) {
         list(filter = x)
     })
     if (inherits(filter, "CrunchFilter")) filter <- list(list(filter = self(filter)))
+    if (is.Expr(filter)) filter <- list(zcl(filter))
 
     expr_filter <- activeFilter(dataset)
     if (is.CrunchExpr(expr_filter)) {
