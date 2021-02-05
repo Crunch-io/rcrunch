@@ -648,7 +648,11 @@ setMethod("filter", "Analysis", function(x, ...) {
         return(CrunchFilter(crGET(filt[[1]]$filter)))
     } else {
         # an adhoc filter
-        adhoc_expr <- CrunchExpr(expression = fixAdhocFilterExpression(filt[[1]]))
+        base_url <- absoluteURL("./variables/", datasetReference(x))
+        adhoc_expr <- CrunchLogicalExpr(
+            expression = fixAdhocFilterExpression(filt[[1]]),
+            dataset_url = datasetReference(x)
+        )
         return(adhoc_expr)
     }
 })
@@ -676,13 +680,7 @@ setMethod("filter<-", "CrunchSlide", function(x, value) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
-    halt("Setting adhoc filters on decks is unsupported")
-    # the following _should_ work, however query_environment filters must include
-    # dataset references (which our expression to ZCL converter does not support)
-    # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
-    # once query_environment is changed to work like every other expression, the
-    # following should just work:
-    # return(set_analysis_filter_or_weight(x, filter = list(value@expression)))
+    return(set_analysis_filter_or_weight(x, filter = list(value@expression)))
 })
 
 #' @rdname analysis-methods
@@ -713,9 +711,7 @@ slideQueryEnv <- function(weight, filter) {
         if (is.null(filter)) {
             out$filter <- list()
         } else if (is.CrunchExpr(filter)) {
-            # Reasoning explained in `setMethod("filter<-", c("Analysis", "CrunchLogicalExpr")`
-            halt("ad-hoc filters not supported for slides")
-            # out$filter <- list(filter@expression)
+            out$filter <- list(filter@expression)
         } else {
             out$filter <- list(self(filter))
         }
@@ -767,8 +763,11 @@ setMethod("weight", "Analysis", function(x) {
     full_ds <- loadDataset(datasetReference(VariableEntity(x)))
     wt_pos <- which(urls(allVariables(full_ds)) == wt)
     filt <- filter(x)
-    if (!is.null(filt)) {
-        filt <- CrunchLogicalExpr(expression = filt@body[["expression"]])
+    if (inherits(filt, "CrunchFilter")) {
+        filt <- CrunchLogicalExpr(
+            dataset_url = self(full_ds),
+            expression = filt@body[["expression"]]
+        )
     }
     CrunchVariable(allVariables(full_ds)[[wt_pos]], filter = filt)
 })

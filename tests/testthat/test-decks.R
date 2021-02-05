@@ -432,7 +432,7 @@ with_mock_crunch({
         expect_is(filter(main_deck[[3]]), "CrunchExpr")
         expect_prints(
             filter(main_deck[[3]]),
-            'Crunch expression: gender %in% "Male"'
+            'Crunch logical expression: gender %in% "Male"'
         )
         # filter() on slide and analysis are identical (a shortcut when there is
         # one analysis)
@@ -440,16 +440,20 @@ with_mock_crunch({
     })
 
     test_that("filter<-something for slides (and analyses)", {
-        # though CrunchLogicalExpr could be made into filters, the expression in
-        # query_environment is a bespoke shape unlike any other expression.
-        # This can be enabled once the specialness here is removed on the server.
-        expect_error(
+        # Ad-hoc expressions
+        expect_PATCH(
             filter(decks(ds)[[2]][[3]]) <- ds$birthyr > 1990,
-            "Setting adhoc filters on decks is unsupported"
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[{"function":">","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"},{"value":1990}]}],',
+            '"weight":null}}'
         )
-        expect_error(
+        expect_PATCH(
             filter(analysis(decks(ds)[[2]][[3]])) <- ds$birthyr > 1990,
-            "Setting adhoc filters on decks is unsupported"
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[{"function":">","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"},{"value":1990}]}],',
+            '"weight":null}}'
         )
 
         # named filters (through a CrunchDeck object)
@@ -837,9 +841,9 @@ with_mock_crunch({
             slideQueryEnv(filter = NULL),
             list(filter = list())
         )
-        expect_error(
+        expect_equal(
             slideQueryEnv(filter = ds$birthyr < 1980),
-            "ad-hoc filters not supported for slides"
+            list(filter = list(zcl(ds$birthyr < 1980)))
         )
 
         expect_equal(
