@@ -572,25 +572,34 @@ with_mock_crunch({
     })
 
     test_that("weight<-NULL for slides (and analyses)", {
+        request_string <- paste0(
+            '{"query_environment":{"filter":[],"weight":null},"query":{"measures":{"count":',
+            '{"function":"cube_count","args":[]}},"dimensions":[{"each":',
+            '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"},', #nolint
+            '{"function":"as_selected","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"}]},', #nolint
+            '{"function":"bin","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/0127c71ba3094ea4a12ca5823050991c/"}]}]}}' #nolint
+        )
         expect_PATCH(
             weight(decks(ds)[[2]][[4]]) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
-            '{"query_environment":{"filter":[],"weight":null}}'
+            request_string
         )
         expect_PATCH(
             weight(analysis(decks(ds)[[2]][[4]])) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
-            '{"query_environment":{"filter":[],"weight":null}}'
+            request_string
         )
         expect_PATCH(
             weight(main_deck[[4]]) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
-            '{"query_environment":{"filter":[],"weight":null}}'
+            request_string
         )
         expect_PATCH(
             weight(analysis(main_deck[[4]])) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
-            '{"query_environment":{"filter":[],"weight":null}}'
+            request_string
         )
     })
 
@@ -600,9 +609,16 @@ with_mock_crunch({
             weight(decks(ds)[[2]][[3]]) <- ds$birthyr,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[{"function":"in","args":[{"variable":"gender",',
-            '"dataset":"1"},{"column":[1],"type":{"function":"typeof","args":[{"variable":',
-            '"gender","dataset":"1"}]}}],"name":"Adhoc filter"}],"weight":',
-            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}'
+            '"dataset":"1"},{"column":[1],"type":{"function":"typeof","args":[{"variable":"',
+            'gender","dataset":"1"}]}}],"name":"Adhoc filter"}],"weight":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"},"query":{"measures":{',
+            '"count":{"function":"cube_count","args":[]}},"dimensions":[{"each":',
+            '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"},',
+            '{"function":"as_selected","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"',
+            '}]},{"function":"bin","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/0127c71ba3094ea4a12ca5823050991c/"}]}',
+            '],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}'
         )
         # Can add a filter when weight exists
         expect_PATCH(

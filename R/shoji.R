@@ -87,6 +87,46 @@ setEntitySlot <- function(x, i, value) {
     return(x)
 }
 
+#' setter for Crunch objects that allows a single request to update multiple parts of an entity
+#' @param x a ShojiObject or subclass thereof
+#' @param ... Named arguments where the names are the slot name to update and the values
+#' are the values that they should be updated to include.
+#' @return x modified accordingly.
+#' @keywords internal
+setMultiEntitySlots <- function(x, ...) {
+    values <- list(...)
+    updated <- vapply(names(values), function(slot_name) {
+        ## Check if we have actual changes to send. Wrap both sides in I()
+        ## in case "value" is already wrapped
+        !identical(I(slot(x, "body")[[slot_name]]), I(values[["slot_name"]]))
+    }, logical(1))
+
+    if (any(updated)) {
+        new <- values[updated]
+        # Send to server
+        payload <- toJSON(new)
+        crPATCH(self(x), body = payload)
+
+        # Update R Object
+        for (slot_name in names(new)) {
+            slot(x, "body")[[slot_name]] <- new[[slot_name]]
+        }
+        if (is.dataset(x)) {
+            # Update the tuple in place too
+            # This is hacky; we should probably make datasets not involve tuples
+            for (slot_names in names(new)) {
+                if (slot_name %in% names(tuple(x)@body)) {
+                    tuple(x)[[slot_name]] <- new[[slot_name]]
+                }
+            }
+            # Also drop cache for the dataset's containing project index
+            dropOnly(shojiURL(x, "catalogs", "project"))
+        }
+    }
+    return(x)
+}
+
+
 #' Setter for Crunch objects that wraps in a "body"
 #'
 #' Variable Folders require an extra list(body = ...)

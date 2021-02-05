@@ -682,21 +682,21 @@ setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
     # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
     # once query_environment is changed to work like every other expression, the
     # following should just work:
-    # return(set_query_env_slot(x, filter = list(value@expression)))
+    # return(set_analysis_filter_or_weight(x, filter = list(value@expression)))
 })
 
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("Analysis", "CrunchFilter"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
-    return(set_query_env_slot(x, filter = list(self(value))))
+    return(set_analysis_filter_or_weight(x, filter = list(self(value))))
 })
 
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
-    return(set_query_env_slot(x, filter = list()))
+    return(set_analysis_filter_or_weight(x, filter = list()))
 })
 
 #' @rdname analysis-methods
@@ -779,24 +779,32 @@ setMethod("weight<-", c("Analysis", "CrunchVariable"), function(x, value) {
     if (!is.weightVariable(value)) halt(paste0(
         "Variable '", alias(value), "' is not a weightVariable"
     ))
-    return(set_query_env_slot(x, weight = self(value)))
+    return(set_analysis_filter_or_weight(x, weight = self(value)))
 })
 
 #' @rdname weight
 #' @export
 setMethod("weight<-", c("Analysis", "NULL"), function(x, value) {
-    return(set_query_env_slot(x, weight = NULL))
+    return(set_analysis_filter_or_weight(x, weight = NULL))
 })
 
 # TODO: setMethod("weight<-", c("Analysis", "CrunchVariable") method to use alias?
 
 # Want to update filter/weight components separately so that we don't
 # remove something accidentally.
-set_query_env_slot <- function(x, filter, weight) {
+set_analysis_filter_or_weight <- function(x, filter, weight) {
     query_env <- slot(x, "body")[["query_environment"]]
     # The single "[" <- list() notation allows NULLs in weight rather than just removing weight
     if (!missing(filter)) query_env["filter"] <- list(filter)
     if (!missing(weight)) query_env["weight"] <- list(weight)
 
-    setEntitySlot(x, "query_environment", query_env)
+    # Also need to set weight in the query to match webapp's behavior
+    if (!missing(weight)) {
+        query <- slot(x, "body")[["query"]]
+        query$weight <- weight
+        setMultiEntitySlots(x, query_environment = query_env, query = query)
+    } else { # But if only updating filter, then leave query alone
+        setEntitySlot(x, "query_environment", query_env)
+    }
+
 }
