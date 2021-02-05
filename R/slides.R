@@ -591,7 +591,15 @@ formulaToSlideQuery <- function(query, dataset) {
 #' @rdname analysis-methods
 #' @export
 setMethod("cube", "Analysis", function(x) {
-    http_query <- list(query = toJSON(x@body$query))
+    # Always use the weight from the query_environment (even if missing in qe, we want to
+    # override with no weight in this case)
+    cube_query <- x@body$query
+    cube_query$weight <- NULL
+    # Actually want weight=NULL to override the default dataset weight
+    cube_query <- c(cube_query, list(weight = x@body$query_environment$weight))
+
+    http_query <- list(query = toJSON(cube_query))
+
     # Don't pass filter=NULL because API's probably grumpy about that. Also, rather than pass a
     # list of filters if there are multiple, the API expects multiple `filter=` URL query
     # parameters
@@ -601,6 +609,7 @@ setMethod("cube", "Analysis", function(x) {
         names(qe_filters) <- rep("filter", length(qe_filters))
         http_query <- c(http_query, qe_filters)
     }
+
     CrunchCube(crGET(
         cubeURL(x),
         query = http_query
