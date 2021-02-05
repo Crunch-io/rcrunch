@@ -591,10 +591,19 @@ formulaToSlideQuery <- function(query, dataset) {
 #' @rdname analysis-methods
 #' @export
 setMethod("cube", "Analysis", function(x) {
+    http_query <- list(query = toJSON(x@body$query))
+    # Don't pass filter=NULL because API's probably grumpy about that. Also, rather than pass a
+    # list of filters if there are multiple, the API expects multiple `filter=` URL query
+    # parameters
+    qe_filters <- x@body$query_environment$filter
+    if (length(qe_filters) > 0) {
+        qe_filters <- lapply(qe_filters, toJSON)
+        names(qe_filters) <- rep("filter", length(qe_filters))
+        http_query <- c(http_query, qe_filters)
+    }
     CrunchCube(crGET(
         cubeURL(x),
-        query = list(query = toJSON(x@body$query)),
-        filter = toJSON(x@body$query_environment$filter)
+        query = http_query
     ))
 })
 #' @rdname display-settings

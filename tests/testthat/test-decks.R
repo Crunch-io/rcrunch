@@ -129,6 +129,8 @@ with_mock_crunch({
     test_that("cube methods for crunch decks", {
         cube <- cube(main_deck[[1]])
         expect_is(cube, "CrunchCube")
+        expect_is(cube(main_deck[[2]]), "CrunchCube")
+        expect_is(cube(main_deck[[4]]), "CrunchCube")
         cube_list <- cubes(main_deck)
         expect_is(cube_list, "list")
         expect_identical(cube, cube_list[[1]])
