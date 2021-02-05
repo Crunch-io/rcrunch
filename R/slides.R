@@ -648,10 +648,16 @@ setMethod("filter", "Analysis", function(x, ...) {
         return(CrunchFilter(crGET(filt[[1]]$filter)))
     } else {
         # an adhoc filter
-        base_url <- absoluteURL("./variables/", datasetReference(x))
+        ds_url <- datasetReference(x)
         adhoc_expr <- CrunchLogicalExpr(
-            expression = fixAdhocFilterExpression(filt[[1]]),
-            dataset_url = datasetReference(x)
+            expression = idsToURLs(
+                # 02/2021: Not sure if this is still needed anymore, server doesn't
+                # currently seem to be sending the `dataset` attributes this takes out.
+                # But mocks require it (/4/decks/8ad8/slides/72e8/analysies/52fb.json)
+                fixAdhocFilterExpression(filt[[1]]),
+                paste0(ds_url, "/variables/")
+            ),
+            dataset_url = ds_url
         )
         return(adhoc_expr)
     }
