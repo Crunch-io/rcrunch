@@ -322,7 +322,7 @@ newSlide <- function(deck,
     if (!"analyses" %in% names(payload) && is.null(query)) {
         halt("Must specify either a `query` or `analyses` for `newSlide()`")
     }
-    if (!"analyses" %in% names(payload) && length(display_settings) != 0) {
+    if ("analyses" %in% names(payload) && length(display_settings) != 0) {
         warning(
             "`display_settings` are ignored if `analyses` are defined directly for `newSlide()`"
         )
