@@ -53,9 +53,9 @@ test_that("ShojiCatalog", {
 })
 
 with_mock_crunch({
-    full.urls <- DatasetCatalog(crGET("https://app.crunch.io/api/datasets/"))
+    full.urls <- DatasetCatalog(crGET("https://app.crunch.io/api/datasets/all"))
     rel.urls <- DatasetCatalog(
-        crGET("https://app.crunch.io/api/datasets/", query = list(relative = "on"))
+        crGET("https://app.crunch.io/api/datasets/all", query = list(relative = "on"))
     )
     test_that("urls() method returns absolute URLs", {
         expect_identical(urls(full.urls), urls(rel.urls))
