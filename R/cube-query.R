@@ -9,7 +9,7 @@
 #' - Crosstabs: Share the most in common with [`stats::xtabs()`], are defined by
 #' a formula with only a right hand side, with each dimension specified on the
 #' right-hand side, separated by a `+`. A dimension are generally variables, but
-#' categorical array variables contribute 2 dimensions, \dQuote{categories} and 
+#' categorical array variables contribute 2 dimensions, \dQuote{categories} and
 #' \dQuote{subvariables}.
 #' If you just use the categorical array variable directly, the subvariables dimensions
 #' will be added first and the categories second, but you can choose their order by

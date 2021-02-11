@@ -325,20 +325,7 @@ newSlide <- function(
     filter <- standardize_tabbook_filter(ds, filter)
 
     payload <- list(title = title, subtitle = subtitle, ...)
-    if ("analyses" %in% names(payload) && !is.null(query)) {
-        halt("Cannot specify both a `query` and `analyses` for `newSlide()`")
-    }
-    if (!"analyses" %in% names(payload) && is.null(query)) {
-        halt("Must specify either a `query` or `analyses` for `newSlide()`")
-    }
-    if ("analyses" %in% names(payload) &&
-        (length(display_settings) != 0 || !is.null(filter) || !is.null(weight))
-    ) {
-        warning(paste0(
-            "`display_settings`, `filter` and `weight` are ignored if `analyses` ",
-            "are defined directly for `newSlide()`"
-        ))
-    }
+    check_newslide_args(query, display_settings, payload)
 
     if (!is.null(query)) {
         analysis <- list(
@@ -361,6 +348,24 @@ newSlide <- function(
     payload <- wrapEntity(body = payload)
     url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
     return(CrunchSlide(crGET(url)))
+}
+
+
+check_newslide_args <- function(query, display_settings, payload) {
+    if ("analyses" %in% names(payload) && !is.null(query)) {
+        halt("Cannot specify both a `query` and `analyses` for `newSlide()`")
+    }
+    if (!"analyses" %in% names(payload) && is.null(query)) {
+        halt("Must specify either a `query` or `analyses` for `newSlide()`")
+    }
+    if ("analyses" %in% names(payload) &&
+        (length(display_settings) != 0 || !is.null(filter) || !is.null(weight))
+    ) {
+        warning(paste0(
+            "`display_settings`, `filter` and `weight` are ignored if `analyses` ",
+            "are defined directly for `newSlide()`"
+        ))
+    }
 }
 
 #' @rdname crunch-extract

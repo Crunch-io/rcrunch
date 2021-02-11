@@ -259,8 +259,7 @@ with_mock_crunch({
             '"showSignif":{"value":true},',
             '"currentTab":{"value":0}},"query_environment":{',
             '"filter":[{"filter":"https://app.crunch.io/api/datasets/4/filters/filter1/"}],',
-            '"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}',
-            '}]}}'
+            '"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}]}}'
         )
     })
 
