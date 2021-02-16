@@ -222,6 +222,14 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' exports show labels on bars or arcs of donuts.
 #' @param title The slide's title
 #' @param subtitle The slide's subtitle
+#' @param filter a `CrunchLogicalExpression`, a crunch `filter` object or
+#' a vector of names of \code{\link{filters}} defined in the dataset (defaults
+#' to `NULL`, using all data).
+#' @param weight A weight variable (defaults to NULL, meaning no weight)
+#' @param viz_specs Another set of options for the display of the slide, see
+#' the [API documentation](
+#' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/)
+#' for more information.
 #' @param ... Further options to be passed on to the API
 #'
 #' @return CrunchSlide object
@@ -271,7 +279,42 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     subtitle = "2017 Data"
 #' )
 #'
-#' # Can specify advanced options by specifying `analyses` directly
+#'
+#' # Example of advanced options being set:
+#' # viz_specs can get quite long, see
+#' # https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/
+#' viz_specs <- list(
+#'     default = list(
+#'         format = list(
+#'             decimal_places = list(percentages = 0L, other = 2L),
+#'             show_empty = FALSE
+#'         )
+#'     ),
+#'     table = list(
+#'         measures = c("col_percent", "pairwise_t_test"),
+#'         page_layout = list(
+#'             rows = list(
+#'                 top = list(),
+#'                 bottom = c("base_unweighted", "scale_mean", "significant_columns")
+#'             ),
+#'             measure_layout = "long"
+#'         ),
+#'         pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
+#'         format = list(pval_colors = FALSE)
+#'     )
+#' )
+#'
+#' newSlide(
+#'     main_deck,
+#'     ~categories(fav_array)+subvariables(fav_array),
+#'     display_settings = list(viz_type = list(value = "table")),
+#'     title = "custom slide",
+#'     filter = filters(ds)[[1]],
+#'     weight = ds$weight,
+#'     viz_specs = viz_specs
+#' )
+#'
+#' # Can also specify `analyses` directly, which allows for very advanced use.
 #' # `formulaToSlideQuery()` and `slideQueryEnv()` help describe the API
 #' newSlide(
 #'     main_deck,
@@ -280,67 +323,74 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'         query = formulaToSlideQuery(~categories(fav_array)+subvariables(fav_array), ds),
 #'         query_environment = slideQueryEnv(filter = filters(ds)[[1]]),
 #'         display_settings = list(viz_type = list(value = "table")),
-#'         viz_specs =  list(
-#'             default = list(
-#'                 format = list(
-#'                     decimal_places = list(percentages = 0L, other = 2L),
-#'                     show_empty = FALSE
-#'                 )
-#'              ),
-#'              table = list(
-#'              measures = c("col_percent", "pairwise_t_test"),
-#'              page_layout = list(
-#'                  rows = list(
-#'                      top = list(),
-#'                      bottom = c("base_unweighted", "scale_mean", "significant_columns")
-#'                  ),
-#'                  measure_layout = "long"
-#'              ),
-#'              pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
-#'              format = list(pval_colors = FALSE)
-#'             )
-#'         )
+#'         viz_specs = viz_specs
 #'     ))
 #' )
 #' }
-newSlide <- function(deck,
-                     query = NULL,
-                     display_settings = list(),
-                     title = "",
-                     subtitle = "",
-                     ...) {
+newSlide <- function(
+    deck,
+    query = NULL,
+    display_settings = list(),
+    title = "",
+    subtitle = "",
+    filter = NULL,
+    weight = NULL,
+    viz_specs = NULL,
+    ...
+) {
     stopifnot(inherits(query, "formula") || is.null(query))
     settings <- modifyList(DEFAULT_DISPLAY_SETTINGS, display_settings)
     settings <- wrapDisplaySettings(settings)
 
     ds <- loadDataset(datasetReference(deck))
+    filter <- standardize_tabbook_filter(ds, filter)
 
     payload <- list(title = title, subtitle = subtitle, ...)
+    check_newslide_args(query, display_settings, payload, filter, weight, viz_specs)
+
+    if (!is.null(query)) {
+        analysis <- list(
+            query = formulaToCubeQuery(query, ds),
+            display_settings = settings
+        )
+
+        query_environment <- list()
+        if (!is.null(filter)) query_environment$filter <- filter
+        if (!is.null(weight)) {
+            query_environment$weight <- self(weight)
+            # Also add to the query to match webapp behavior
+            analysis$query$weight <- self(weight)
+        }
+        if (length(query_environment) > 0) analysis$query_environment <- query_environment
+        if (!is.null(viz_specs)) {
+            analysis$viz_specs <- viz_specs
+        }
+
+        payload[["analyses"]] <- list(analysis)
+    }
+
+    payload <- wrapEntity(body = payload)
+    url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
+    return(CrunchSlide(crGET(url)))
+}
+
+
+check_newslide_args <- function(query, display_settings, payload, filter, weight, viz_specs) {
     if ("analyses" %in% names(payload) && !is.null(query)) {
         halt("Cannot specify both a `query` and `analyses` for `newSlide()`")
     }
     if (!"analyses" %in% names(payload) && is.null(query)) {
         halt("Must specify either a `query` or `analyses` for `newSlide()`")
     }
-    if (!"analyses" %in% names(payload) && length(display_settings) != 0) {
-        warning(
-            "`display_settings` are ignored if `analyses` are defined directly for `newSlide()`"
-        )
-    }
-
-    if (!is.null(query)) {
-        # Technically multiple analyses per slide are allowed (for profiles), but this
-        # isn't supported in the R package, and if someone really wants it, they could
-        # form the analyses object themselves
-        payload[["analyses"]] <- list(list(
-            query = formulaToCubeQuery(query, ds),
-            display_settings = settings
+    if ("analyses" %in% names(payload) && (
+        length(display_settings) != 0 || !is.null(filter) || !is.null(weight) ||
+        !is.null(viz_specs)
+    )) {
+        warning(paste0(
+            "`display_settings`, `filter`, `weight` and `viz_specs` are ignored if `analyses` ",
+            "are defined directly for `newSlide()`"
         ))
     }
-
-    payload <- wrapEntity(body = payload)
-    url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
-    return(CrunchSlide(crGET(url)))
 }
 
 #' @rdname crunch-extract
@@ -591,10 +641,28 @@ formulaToSlideQuery <- function(query, dataset) {
 #' @rdname analysis-methods
 #' @export
 setMethod("cube", "Analysis", function(x) {
+    # Always use the weight from the query_environment (even if missing in qe, we want to
+    # override with no weight in this case)
+    cube_query <- x@body$query
+    cube_query$weight <- NULL
+    # Actually want weight=NULL to override the default dataset weight
+    cube_query <- c(cube_query, list(weight = x@body$query_environment$weight))
+
+    http_query <- list(query = toJSON(cube_query))
+
+    # Don't pass filter=NULL because API's probably grumpy about that. Also, rather than pass a
+    # list of filters if there are multiple, the API expects multiple `filter=` URL query
+    # parameters
+    qe_filters <- x@body$query_environment$filter
+    if (length(qe_filters) > 0) {
+        qe_filters <- lapply(qe_filters, toJSON)
+        names(qe_filters) <- rep("filter", length(qe_filters))
+        http_query <- c(http_query, qe_filters)
+    }
+
     CrunchCube(crGET(
         cubeURL(x),
-        query = list(query = toJSON(x@body$query)),
-        filter = toJSON(x@body$query_environment$filter)
+        query = http_query
     ))
 })
 #' @rdname display-settings
@@ -630,7 +698,17 @@ setMethod("filter", "Analysis", function(x, ...) {
         return(CrunchFilter(crGET(filt[[1]]$filter)))
     } else {
         # an adhoc filter
-        adhoc_expr <- CrunchExpr(expression = fixAdhocFilterExpression(filt[[1]]))
+        ds_url <- datasetReference(x)
+        adhoc_expr <- CrunchLogicalExpr(
+            expression = idsToURLs(
+                # 02/2021: Not sure if this is still needed anymore, server doesn't
+                # currently seem to be sending the `dataset` attributes this takes out.
+                # But mocks require it (/4/decks/8ad8/slides/72e8/analysies/52fb.json)
+                fixAdhocFilterExpression(filt[[1]]),
+                paste0(ds_url, "/variables/")
+            ),
+            dataset_url = ds_url
+        )
         return(adhoc_expr)
     }
 })
@@ -658,27 +736,21 @@ setMethod("filter<-", "CrunchSlide", function(x, value) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
-    halt("Setting adhoc filters on decks is unsupported")
-    # the following _should_ work, however query_environment filters must include
-    # dataset references (which our expression to ZCL converter does not support)
-    # This should be fixed in https://www.pivotaltracker.com/story/show/157399444
-    # once query_environment is changed to work like every other expression, the
-    # following should just work:
-    # return(set_query_env_slot(x, filter = list(value@expression)))
+    return(set_analysis_filter_or_weight(x, filter = list(value@expression)))
 })
 
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("Analysis", "CrunchFilter"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
-    return(set_query_env_slot(x, filter = list(self(value))))
+    return(set_analysis_filter_or_weight(x, filter = list(self(value))))
 })
 
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
-    return(set_query_env_slot(x, filter = list()))
+    return(set_analysis_filter_or_weight(x, filter = list()))
 })
 
 #' @rdname analysis-methods
@@ -689,15 +761,13 @@ slideQueryEnv <- function(weight, filter) {
     }
     out <- list()
     if (!missing(weight)) {
-        out$weight <- if (is.null(weight)) list() else list(self(weight))
+        out$weight <- if (is.null(weight)) list() else self(weight)
     }
     if (!missing(filter)) {
         if (is.null(filter)) {
             out$filter <- list()
         } else if (is.CrunchExpr(filter)) {
-            # Reasoning explained in `setMethod("filter<-", c("Analysis", "CrunchLogicalExpr")`
-            halt("ad-hoc filters not supported for slides")
-            # out$filter <- list(filter@expression)
+            out$filter <- list(filter@expression)
         } else {
             out$filter <- list(self(filter))
         }
@@ -749,8 +819,11 @@ setMethod("weight", "Analysis", function(x) {
     full_ds <- loadDataset(datasetReference(VariableEntity(x)))
     wt_pos <- which(urls(allVariables(full_ds)) == wt)
     filt <- filter(x)
-    if (!is.null(filt)) {
-        filt <- CrunchLogicalExpr(expression = filt@body[["expression"]])
+    if (inherits(filt, "CrunchFilter")) {
+        filt <- CrunchLogicalExpr(
+            dataset_url = self(full_ds),
+            expression = filt@body[["expression"]]
+        )
     }
     CrunchVariable(allVariables(full_ds)[[wt_pos]], filter = filt)
 })
@@ -761,24 +834,32 @@ setMethod("weight<-", c("Analysis", "CrunchVariable"), function(x, value) {
     if (!is.weightVariable(value)) halt(paste0(
         "Variable '", alias(value), "' is not a weightVariable"
     ))
-    return(set_query_env_slot(x, weight = self(value)))
+    return(set_analysis_filter_or_weight(x, weight = self(value)))
 })
 
 #' @rdname weight
 #' @export
 setMethod("weight<-", c("Analysis", "NULL"), function(x, value) {
-    return(set_query_env_slot(x, weight = NULL))
+    return(set_analysis_filter_or_weight(x, weight = NULL))
 })
 
 # TODO: setMethod("weight<-", c("Analysis", "CrunchVariable") method to use alias?
 
 # Want to update filter/weight components separately so that we don't
 # remove something accidentally.
-set_query_env_slot <- function(x, filter, weight) {
+set_analysis_filter_or_weight <- function(x, filter, weight) {
     query_env <- slot(x, "body")[["query_environment"]]
     # The single "[" <- list() notation allows NULLs in weight rather than just removing weight
     if (!missing(filter)) query_env["filter"] <- list(filter)
     if (!missing(weight)) query_env["weight"] <- list(weight)
 
-    setEntitySlot(x, "query_environment", query_env)
+    # Also need to set weight in the query to match webapp's behavior
+    if (!missing(weight)) {
+        query <- slot(x, "body")[["query"]]
+        query$weight <- weight
+        setMultiEntitySlots(x, query_environment = query_env, query = query)
+    } else { # But if only updating filter, then leave query alone
+        setEntitySlot(x, "query_environment", query_env)
+    }
+
 }
