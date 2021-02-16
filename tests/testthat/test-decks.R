@@ -830,7 +830,7 @@ with_mock_crunch({
     test_that("slideQueryEnv helper", {
         expect_equal(
             slideQueryEnv(weight = ds$birthyr),
-            list(weight = list(self(ds$birthyr)))
+            list(weight = self(ds$birthyr))
         )
         expect_equal(
             slideQueryEnv(weight = NULL),
@@ -853,7 +853,7 @@ with_mock_crunch({
 
         expect_equal(
             slideQueryEnv(weight = ds$birthyr, filter = filter),
-            list(weight = list(self(ds$birthyr)), filter = list(self(filter)))
+            list(weight = self(ds$birthyr), filter = list(self(filter)))
         )
 
         expect_error(

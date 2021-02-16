@@ -736,7 +736,7 @@ slideQueryEnv <- function(weight, filter) {
     }
     out <- list()
     if (!missing(weight)) {
-        out$weight <- if (is.null(weight)) list() else list(self(weight))
+        out$weight <- if (is.null(weight)) list() else self(weight)
     }
     if (!missing(filter)) {
         if (is.null(filter)) {
