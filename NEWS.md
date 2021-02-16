@@ -1,4 +1,5 @@
 # crunch 1.27.8 (Development version)
+* You can now set the filter, weight and viz_type of a slide when creating it.
 
 # crunch 1.27.7
 * You can now create numeric array variables in `deriveArray()` and `makeArray()`, and you can perform calculations on them via `crtabs()` and `tabBook()`. 
