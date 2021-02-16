@@ -38,7 +38,7 @@ datasets <- function(x = getAPIRoot()) {
         ## TODO: explicit test, though this is called in loadDataset
         return(x[types(x) %in% "dataset"])
     } else {
-        out <- crGET(shojiURL(x, "catalogs", "datasets"))
+        out <- crGET(paste0(shojiURL(x, "catalogs", "datasets"), "all"))
     }
     DatasetCatalog(out)
 }
