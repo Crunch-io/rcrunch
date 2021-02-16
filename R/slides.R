@@ -226,6 +226,10 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' a vector of names of \code{\link{filters}} defined in the dataset (defaults
 #' to `NULL`, using all data).
 #' @param weight A weight variable (defaults to NULL, meaning no weight)
+#' @param viz_specs Another set of options for the display of the slide, see
+#' the [API documentation](
+#' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/)
+#' for more information.
 #' @param ... Further options to be passed on to the API
 #'
 #' @return CrunchSlide object
@@ -275,7 +279,42 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     subtitle = "2017 Data"
 #' )
 #'
-#' # Can specify advanced options by specifying `analyses` directly
+#'
+#' # Example of advanced options being set:
+#' # viz_specs can get quite long, see
+#' # https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/
+#' viz_specs <- list(
+#'     default = list(
+#'         format = list(
+#'             decimal_places = list(percentages = 0L, other = 2L),
+#'             show_empty = FALSE
+#'         )
+#'     ),
+#'     table = list(
+#'         measures = c("col_percent", "pairwise_t_test"),
+#'         page_layout = list(
+#'             rows = list(
+#'                 top = list(),
+#'                 bottom = c("base_unweighted", "scale_mean", "significant_columns")
+#'             ),
+#'             measure_layout = "long"
+#'         ),
+#'         pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
+#'         format = list(pval_colors = FALSE)
+#'     )
+#' )
+#'
+#' newSlide(
+#'     main_deck,
+#'     ~categories(fav_array)+subvariables(fav_array),
+#'     display_settings = list(viz_type = list(value = "table")),
+#'     title = "custom slide",
+#'     filter = filters(ds)[[1]],
+#'     weight = ds$weight,
+#'     viz_specs = viz_specs
+#' )
+#'
+#' # Can also specify `analyses` directly, which allows for very advanced use.
 #' # `formulaToSlideQuery()` and `slideQueryEnv()` help describe the API
 #' newSlide(
 #'     main_deck,
@@ -284,26 +323,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'         query = formulaToSlideQuery(~categories(fav_array)+subvariables(fav_array), ds),
 #'         query_environment = slideQueryEnv(filter = filters(ds)[[1]]),
 #'         display_settings = list(viz_type = list(value = "table")),
-#'         viz_specs =  list(
-#'             default = list(
-#'                 format = list(
-#'                     decimal_places = list(percentages = 0L, other = 2L),
-#'                     show_empty = FALSE
-#'                 )
-#'              ),
-#'              table = list(
-#'              measures = c("col_percent", "pairwise_t_test"),
-#'              page_layout = list(
-#'                  rows = list(
-#'                      top = list(),
-#'                      bottom = c("base_unweighted", "scale_mean", "significant_columns")
-#'                  ),
-#'                  measure_layout = "long"
-#'              ),
-#'              pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
-#'              format = list(pval_colors = FALSE)
-#'             )
-#'         )
+#'         viz_specs = viz_specs
 #'     ))
 #' )
 #' }
@@ -315,6 +335,7 @@ newSlide <- function(
     subtitle = "",
     filter = NULL,
     weight = NULL,
+    viz_specs = NULL,
     ...
 ) {
     stopifnot(inherits(query, "formula") || is.null(query))
@@ -325,7 +346,7 @@ newSlide <- function(
     filter <- standardize_tabbook_filter(ds, filter)
 
     payload <- list(title = title, subtitle = subtitle, ...)
-    check_newslide_args(query, display_settings, payload)
+    check_newslide_args(query, display_settings, payload, filter, weight, viz_specs)
 
     if (!is.null(query)) {
         analysis <- list(
@@ -341,6 +362,9 @@ newSlide <- function(
             analysis$query$weight <- self(weight)
         }
         if (length(query_environment) > 0) analysis$query_environment <- query_environment
+        if (!is.null(viz_specs)) {
+            analysis$viz_specs <- viz_specs
+        }
 
         payload[["analyses"]] <- list(analysis)
     }
@@ -351,18 +375,19 @@ newSlide <- function(
 }
 
 
-check_newslide_args <- function(query, display_settings, payload) {
+check_newslide_args <- function(query, display_settings, payload, filter, weight, viz_specs) {
     if ("analyses" %in% names(payload) && !is.null(query)) {
         halt("Cannot specify both a `query` and `analyses` for `newSlide()`")
     }
     if (!"analyses" %in% names(payload) && is.null(query)) {
         halt("Must specify either a `query` or `analyses` for `newSlide()`")
     }
-    if ("analyses" %in% names(payload) &&
-        (length(display_settings) != 0 || !is.null(filter) || !is.null(weight))
-    ) {
+    if ("analyses" %in% names(payload) && (
+        length(display_settings) != 0 || !is.null(filter) || !is.null(weight) ||
+        !is.null(viz_specs)
+    )) {
         warning(paste0(
-            "`display_settings`, `filter` and `weight` are ignored if `analyses` ",
+            "`display_settings`, `filter`, `weight` and `viz_specs` are ignored if `analyses` ",
             "are defined directly for `newSlide()`"
         ))
     }

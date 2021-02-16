@@ -12,6 +12,7 @@ newSlide(
   subtitle = "",
   filter = NULL,
   weight = NULL,
+  viz_specs = NULL,
   ...
 )
 }
@@ -39,6 +40,10 @@ a vector of names of \code{\link{filters}} defined in the dataset (defaults
 to \code{NULL}, using all data).}
 
 \item{weight}{A weight variable (defaults to NULL, meaning no weight)}
+
+\item{viz_specs}{Another set of options for the display of the slide, see
+the \href{https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/}{API documentation}
+for more information.}
 
 \item{...}{Further options to be passed on to the API}
 }
@@ -92,7 +97,42 @@ newSlide(
     subtitle = "2017 Data"
 )
 
-# Can specify advanced options by specifying `analyses` directly
+
+# Example of advanced options being set:
+# viz_specs can get quite long, see
+# https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/
+viz_specs <- list(
+    default = list(
+        format = list(
+            decimal_places = list(percentages = 0L, other = 2L),
+            show_empty = FALSE
+        )
+    ),
+    table = list(
+        measures = c("col_percent", "pairwise_t_test"),
+        page_layout = list(
+            rows = list(
+                top = list(),
+                bottom = c("base_unweighted", "scale_mean", "significant_columns")
+            ),
+            measure_layout = "long"
+        ),
+        pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
+        format = list(pval_colors = FALSE)
+    )
+)
+
+newSlide(
+    main_deck,
+    ~categories(fav_array)+subvariables(fav_array),
+    display_settings = list(viz_type = list(value = "table")),
+    title = "custom slide",
+    filter = filters(ds)[[1]],
+    weight = ds$weight,
+    viz_specs = viz_specs
+)
+
+# Can also specify `analyses` directly, which allows for very advanced use.
 # `formulaToSlideQuery()` and `slideQueryEnv()` help describe the API
 newSlide(
     main_deck,
@@ -101,26 +141,7 @@ newSlide(
         query = formulaToSlideQuery(~categories(fav_array)+subvariables(fav_array), ds),
         query_environment = slideQueryEnv(filter = filters(ds)[[1]]),
         display_settings = list(viz_type = list(value = "table")),
-        viz_specs =  list(
-            default = list(
-                format = list(
-                    decimal_places = list(percentages = 0L, other = 2L),
-                    show_empty = FALSE
-                )
-             ),
-             table = list(
-             measures = c("col_percent", "pairwise_t_test"),
-             page_layout = list(
-                 rows = list(
-                     top = list(),
-                     bottom = c("base_unweighted", "scale_mean", "significant_columns")
-                 ),
-                 measure_layout = "long"
-             ),
-             pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
-             format = list(pval_colors = FALSE)
-            )
-        )
+        viz_specs = viz_specs
     ))
 )
 }
