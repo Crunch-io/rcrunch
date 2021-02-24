@@ -151,6 +151,13 @@ setMethod("is.derived", "VariableTuple", function(x) {
    isTRUE(x$derived)
 })
 
+#' @rdname derivations
+#' @aliases is.derived
+#' @export
+setMethod("is.derived", "VariableCatalog", function(x) {
+    vapply(x, function(vartuple) vartuple$derived, logical(1))
+})
+
 
 #' @rdname derivations
 #' @aliases is.derived<-
