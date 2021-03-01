@@ -152,6 +152,7 @@ Collate:
     'shoji-order-slots.R'
     'shoji-order.R'
     'shoji.R'
+    'slide-transforms.R'
     'slides.R'
     'sliding-categories.R'
     'subtotals-and-headings.R'
