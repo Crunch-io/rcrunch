@@ -3,6 +3,7 @@
 \name{filter}
 \alias{filter}
 \alias{filter<-}
+\alias{weight<-,CrunchDeck,ANY-method}
 \alias{filter<-,CrunchDeck,ANY-method}
 \alias{analyses}
 \alias{analysis}
@@ -35,6 +36,8 @@
 filter(x, ...)
 
 filter(x) <- value
+
+\S4method{weight}{CrunchDeck,ANY}(x) <- value
 
 \S4method{filter}{CrunchDeck,ANY}(x) <- value
 

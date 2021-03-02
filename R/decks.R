@@ -272,7 +272,7 @@ exportDeck <- function(deck, file, format = c("xlsx", "pptx", "json"), ...) {
 }
 
 
-#' @rdname weight
+#' @rdname analysis-methods
 #' @export
 setMethod("weight<-", c("CrunchDeck", "ANY"), function(x, value) {
     lapply(seq_along(x), function(slide_num) {
