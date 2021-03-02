@@ -1,0 +1,144 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/veg/cube/?query=%7B%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2Fveg%2Fvariables%2Fvar_06%2F%22%7D%5D%2C%22weight%22%3Anull%7D",
+    "value": {
+        "query": {
+            "dimensions": [
+                {
+                    "variable": "https://app.crunch.io/api/datasets/veg/variables/var_06/"
+                }
+            ],
+            "measures": {
+                "count": {
+                    "args": [
+
+                    ],
+                    "function": "cube_count"
+                }
+            },
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "counts": [
+                85,
+                120,
+                5
+            ],
+            "dimensions": [
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "healthy_eater",
+                        "description": "Self identified 'Healthy eater' (binary)",
+                        "format": {
+                            "summary": {
+                                "digits": 0
+                            }
+                        },
+                        "name": "Healthy Eater",
+                        "notes": "Do you consider yourself a 'Healthy Eater' (eg someone who enjoys eating healthy food)?",
+                        "view": {
+                            "column_width": null,
+                            "include_missing": false,
+                            "show_counts": false,
+                            "show_numeric_values": false
+                        }
+                    },
+                    "type": {
+                        "categories": [
+                            {
+                                "id": 1,
+                                "missing": false,
+                                "name": "No",
+                                "numeric_value": 1
+                            },
+                            {
+                                "id": 2,
+                                "missing": false,
+                                "name": "Yes",
+                                "numeric_value": 2
+                            },
+                            {
+                                "id": -1,
+                                "missing": true,
+                                "name": "No Data",
+                                "numeric_value": null
+                            }
+                        ],
+                        "class": "categorical",
+                        "ordinal": false
+                    }
+                }
+            ],
+            "element": "crunch:cube",
+            "filter_stats": {
+                "filtered": {
+                    "unweighted": {
+                        "missing": 0,
+                        "other": 0,
+                        "selected": 210
+                    },
+                    "weighted": {
+                        "missing": 0,
+                        "other": 0,
+                        "selected": 210
+                    }
+                },
+                "filtered_complete": {
+                    "unweighted": {
+                        "missing": 0,
+                        "other": 0,
+                        "selected": 210
+                    },
+                    "weighted": {
+                        "missing": 0,
+                        "other": 0,
+                        "selected": 210
+                    }
+                }
+            },
+            "filtered": {
+                "unweighted_n": 210,
+                "weighted_n": 210
+            },
+            "measures": {
+                "count": {
+                    "data": [
+                        85,
+                        120,
+                        5
+                    ],
+                    "metadata": {
+                        "derived": true,
+                        "references": {
+
+                        },
+                        "type": {
+                            "class": "numeric",
+                            "integer": true,
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "missing_rules": {
+
+                            }
+                        }
+                    },
+                    "n_missing": 5
+                }
+            },
+            "missing": 5,
+            "n": 210,
+            "unfiltered": {
+                "unweighted_n": 210,
+                "weighted_n": 210
+            }
+        }
+    }
+}
+

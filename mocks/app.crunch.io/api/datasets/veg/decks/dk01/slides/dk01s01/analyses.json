@@ -1,0 +1,54 @@
+{
+    "description": "List of all analyses inside this slide",
+    "element": "shoji:catalog",
+    "index": {
+        "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s01/analyses/000001/": {
+            "display_settings": {
+                "countsOrPercents": {
+                    "value": "percent"
+                },
+                "currentTab": {
+                    "value": 0
+                },
+                "decimalPlaces": {
+                    "value": 1
+                },
+                "percentageDirection": {
+                    "value": "colPct"
+                },
+                "showEmpty": {
+                    "value": false
+                },
+                "showMean": {
+                    "value": false
+                },
+                "showSignif": {
+                    "value": true
+                },
+                "vizType": {
+                    "value": "table"
+                }
+            },
+            "query": {
+                "dimensions": [
+                    {
+                        "variable": "https://app.crunch.io/api/datasets/veg/variables/var_06/"
+                    }
+                ],
+                "measures": {
+                    "count": {
+                        "args": [
+
+                        ],
+                        "function": "cube_count"
+                    }
+                }
+            },
+            "query_environment": {
+
+            }
+        }
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s01/analyses/"
+}
+
