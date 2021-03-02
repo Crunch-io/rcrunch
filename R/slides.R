@@ -230,6 +230,8 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' the [API documentation](
 #' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/)
 #' for more information.
+#' @param transform A list of slide transformations, usually created using the function
+#' [`slideTransform()`].
 #' @param ... Further options to be passed on to the API
 #'
 #' @return CrunchSlide object
@@ -279,6 +281,18 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     subtitle = "2017 Data"
 #' )
 #'
+#' # A Grouped bar plot with slide transformations to hide a category
+#' newSlide(
+#'     main_deck,
+#'     ~ approval + age4,
+#'     title = "Approval by age group",
+#'     display_settings = list(
+#'         vizType = "groupedBarPlot",
+#'         showValueLabels = TRUE
+#'     ),
+#'     transform = list(rows_dimension = slideTransform(hide = "Neutral")),
+#'     subtitle = "2017 Data"
+#' )
 #'
 #' # Example of advanced options being set:
 #' # viz_specs can get quite long, see
@@ -336,6 +350,7 @@ newSlide <- function(
     filter = NULL,
     weight = NULL,
     viz_specs = NULL,
+    transform = NULL,
     ...
 ) {
     stopifnot(inherits(query, "formula") || is.null(query))
@@ -346,7 +361,13 @@ newSlide <- function(
     filter <- standardize_tabbook_filter(ds, filter)
 
     payload <- list(title = title, subtitle = subtitle, ...)
-    check_newslide_args(query, display_settings, payload, filter, weight, viz_specs)
+    check_newslide_args(
+        query, display_settings, payload, filter, weight, viz_specs, transform
+    )
+
+    if (any(slideTransformNeedsPrep(transform))) {
+        transform <- prepareSlideTransforms(transform, query, ds)
+    }
 
     if (!is.null(query)) {
         analysis <- list(
@@ -365,6 +386,7 @@ newSlide <- function(
         if (!is.null(viz_specs)) {
             analysis$viz_specs <- viz_specs
         }
+        if (!is.null(transform)) analysis$transform <- transform
 
         payload[["analyses"]] <- list(analysis)
     }
@@ -375,20 +397,21 @@ newSlide <- function(
 }
 
 
-check_newslide_args <- function(query, display_settings, payload, filter, weight, viz_specs) {
-    if ("analyses" %in% names(payload) && !is.null(query)) {
+check_newslide_args <- function(query, display_settings, payload, filter, weight, viz_specs, transform) {
+    has_analyses <- "analyses" %in% names(payload)
+    if (has_analyses && !is.null(query)) {
         halt("Cannot specify both a `query` and `analyses` for `newSlide()`")
     }
-    if (!"analyses" %in% names(payload) && is.null(query)) {
+    if (!has_analyses && is.null(query)) {
         halt("Must specify either a `query` or `analyses` for `newSlide()`")
     }
-    if ("analyses" %in% names(payload) && (
+    if (has_analyses && (
         length(display_settings) != 0 || !is.null(filter) || !is.null(weight) ||
-        !is.null(viz_specs)
+        !is.null(viz_specs) || !is.null(transform)
     )) {
         warning(paste0(
-            "`display_settings`, `filter`, `weight` and `viz_specs` are ignored if `analyses` ",
-            "are defined directly for `newSlide()`"
+            "`display_settings`, `filter`, `weight`, `viz_specs` and `transform` are ",
+            "ignored if `analyses` are defined directly for `newSlide()`"
         ))
     }
 }

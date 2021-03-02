@@ -43,6 +43,24 @@ slideTransform <- function(
     out
 }
 
+
+slideTransformNeedsPrep <- function(transform) {
+    vapply(transform, function(x) inherits(x, "SlideTransform"), logical(1))
+}
+
+prepareSlideTransforms <- function(transforms, query = NULL, ds = NULL, cube = NULL) {
+    if (is.null(cube)) cube <- crtabs(query, ds)
+    old_names <- names(transforms)
+    transforms <- lapply(old_names, function(tname) {
+        if (!inherits(transforms[[tname]], "SlideTransform")) return(transforms[[tname]])
+        prepareSlideTransform(transforms[[tname]], tname, cube)
+    })
+    names(transforms) <- old_names
+    if (length(transforms) > 0 && !"version" %in% names(transforms)) transforms$version <- "1.0"
+
+    transforms
+}
+
 prepareSlideTransform <- function(transform, dim, cube) {
     # User specified transform without helper (and so send along unmodified)
     if (!inherits(transform, "SlideTransform")) return(transform)
@@ -151,3 +169,58 @@ standardizeTransformIDs <- function(x, crosswalk, type) {
     names(out) <- names(x)
     out
 }
+
+
+# NB: A super annoying thing
+# The API refers to these as `transform` even though it's a list of multiple
+# The R package already has `transform**s**` generic so we use that (plus there's
+# already base R function named `transform`), but this inconsistency will probably
+# trip you up some day
+
+#' @rdname slideTransform
+#' @export
+setMethod("transforms", "CrunchSlide", function(x) {
+    transforms(analyses(x))
+})
+#' @rdname slideTransform
+#' @export
+setMethod("transforms", "AnalysisCatalog", function(x) {
+    transforms_list <- lapply(seq_along(x), function(i) {
+        transforms(x[[i]])
+    })
+    if (length(transforms_list) == 1) {
+        return(transforms_list[[1]])
+    } else {
+        return(transforms_list)
+    }
+})
+#' @rdname slideTransform
+#' @export
+setMethod("transforms", "Analysis", function(x) {
+    x@body$transform
+})
+
+
+#' @rdname slideTransform
+#' @export
+setMethod("transforms<-", "CrunchSlide", function(x, value) {
+    transforms(analyses(x)) <- value
+    invisible(x)
+})
+#' @rdname slideTransform
+#' @export
+setMethod("transforms<-", "AnalysisCatalog", function(x) {
+    transforms <- lapply(seq_along(x), function(i) x[[i]])
+    lapply(transforms, function(x) transforms(x) <- value)
+    invisible(x)
+})
+#' @rdname slideTransform
+#' @export
+setMethod("transforms<-", "Analysis", function(x, value) {
+    if (any(slideTransformNeedsPrep(value))) {
+        value <- prepareSlideTransforms(value, cube = cube(x))
+    }
+    payload <- wrapEntity(body = list(transform = value))
+    crPATCH(self(x), body = toJSON(payload))
+    invisible(refresh(x))
+})

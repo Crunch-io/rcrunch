@@ -296,6 +296,34 @@ with_mock_crunch({
         )
     })
 
+    test_that("New Slide - with manual transforms", {
+        expect_POST(
+            newSlide(
+                main_deck, ~gender, title = "Title", subtitle = "SubTitle",
+                transform = list(
+                    rows_dimension = list(elements=list(`1` = list("hide" = TRUE))),
+                    version = "1.0"
+                )
+            ),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
+            '{"element":"shoji:entity",',
+            '"body":{"title":"Title",',
+            '"subtitle":"SubTitle",',
+            '"analyses":[{"query":{"dimensions":[{"variable":"https://app.',
+            'crunch.io/api/datasets/4/variables/gender/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}},',
+            '"display_settings":{"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":false},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0}},"transform":{',
+            '"rows_dimension":{"elements":{"1":{"hide":true}}},"version":"1.0"}}]}}'
+        )
+    })
+
     slide <- main_deck[[1]]
     test_that("Slide show method", {
         expect_prints(

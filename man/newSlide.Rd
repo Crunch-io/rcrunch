@@ -13,6 +13,7 @@ newSlide(
   filter = NULL,
   weight = NULL,
   viz_specs = NULL,
+  transform = NULL,
   ...
 )
 }
@@ -44,6 +45,9 @@ to \code{NULL}, using all data).}
 \item{viz_specs}{Another set of options for the display of the slide, see
 the \href{https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/}{API documentation}
 for more information.}
+
+\item{transform}{A list of slide transformations, usually created using the function
+\code{\link[=slideTransform]{slideTransform()}}.}
 
 \item{...}{Further options to be passed on to the API}
 }
@@ -97,6 +101,18 @@ newSlide(
     subtitle = "2017 Data"
 )
 
+# A Grouped bar plot with slide transformations to hide a category
+newSlide(
+    main_deck,
+    ~ approval + age4,
+    title = "Approval by age group",
+    display_settings = list(
+        vizType = "groupedBarPlot",
+        showValueLabels = TRUE
+    ),
+    transform = list(rows_dimension = slideTransform(hide = "Neutral")),
+    subtitle = "2017 Data"
+)
 
 # Example of advanced options being set:
 # viz_specs can get quite long, see
