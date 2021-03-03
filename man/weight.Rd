@@ -4,9 +4,6 @@
 \alias{is.weight<-}
 \alias{weight}
 \alias{weight<-}
-\alias{weight,CrunchSlide-method}
-\alias{weight<-,CrunchSlide,ANY-method}
-\alias{weight,Analysis-method}
 \alias{weight<-,Analysis,CrunchVariable-method}
 \alias{weight<-,Analysis,NULL-method}
 \alias{weight,CrunchDataset-method}
@@ -20,12 +17,6 @@ is.weight(x) <- value
 weight(x)
 
 weight(x) <- value
-
-\S4method{weight}{CrunchSlide}(x)
-
-\S4method{weight}{CrunchSlide,ANY}(x) <- value
-
-\S4method{weight}{Analysis}(x)
 
 \S4method{weight}{Analysis,CrunchVariable}(x) <- value
 

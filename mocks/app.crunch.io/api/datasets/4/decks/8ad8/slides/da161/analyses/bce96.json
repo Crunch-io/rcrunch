@@ -62,6 +62,13 @@
             ],
             "weight": null
         },
+        "viz_specs": {
+            "default": {
+                "format": {
+                    "show_empty": true
+                }
+            }
+        },
         "id": "bce96"
     }
 }

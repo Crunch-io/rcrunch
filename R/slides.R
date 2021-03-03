@@ -1,13 +1,18 @@
 # Generics ---------------------------------------------------------------
+#' #nolint start
 #' Get and set slide analyses
 #'
 #' Slides are composed of analyses, which are effectively `CrunchCubes` with some
 #' additional metadata. You can get and set a slide's Analysis Catalog with the
-#' `analyses` method, and access an individual analysis with `analysis`.
+#' `analyses` method, and access an individual analysis with `analysis`. There
+#' are also helpers to get and set the components of the analysis such as `filter()`,
+#' `weight()`, `transforms()`, `displaySettings()` and `vizSpecs()`. You can also
+#' get the `CrunchCube` from an analysis using `cube()`.
 #'
-#' You can get the `CrunchCube` from a slide or analysis with the `cube` method and
-#' from a `CrunchDeck` with `cubes`. Analyses can be changed by assigning a formula
-#' into the `query` function.
+#' For more complex objects like `displaySettings()`, `vizSpecs()` and `transforms()`,
+#' the [API documentation](
+#' https://crunch.io/api/reference/#patch-/datasets/-dataset_id-/decks/-deck_id-/slides/-slide_id-/analyses/-analysis_id-/)
+#' provides more details.
 #'
 #' Advanced users of the API can assign a list to  `analysis<-` to specify settings
 #' on the analyses that are not otherwise available in `rcrunch`. The helpers
@@ -15,7 +20,7 @@
 #' `query` and `query_environment`.
 #'
 #' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
-#' @param value for the setter, a query
+#' @param value for the setter, an object to set it
 #' @param query For `formulaToSlideQuery()`, a formula that specifies the query, as in
 #' `newSlide()`. See Details of [`crtabs()`] for more information.
 #' @param dataset For `formulaToSlideQuery()`, a `CrunchDataset` that the variables in
@@ -26,19 +31,39 @@
 #' the slide.
 #' @param ... ignored
 #'
-#' @return an `AnalysisCatalog`, `Analysis`, `Cube`, or `Filter`
 #' @rdname analysis-methods
 #' @export
 #' @examples
 #' \dontrun{
-#' analysis(slide)
-#' cube(slide)
-#' cubes(deck)
-#' query(slide) <- ~ cyl + wt
-#' filter(slide)
+#' # Examples of setting analysis details (in general these setters work on
+#' # the slide, analysis catalog and analysis, but for brevity the examples only
+#' # show on the slide)
+#'
+#' # Change the filter
 #' filter(slide) <- NULL # to remove a filter
 #' filter(slide) <- filters(ds)[["My filter"]]
+#' filter(deck) <- filters(ds)[["My filter"]] # Can set the same filter on a whole deck too
+#'
+#' # Change the weight
+#' weight(slide) <- NULL # to remove
+#' weight(slide) <- ds$weight
+#' weight(deck) <- ds$weight # Can set the same weight on a whole deck too
+#'
+#' # Change the transforms
+#' transforms(slide) <- list(rows_dimension = slideTransform(hide = "Neutral"))
+#'
+#' # Change the displaySettings
+#' displaySettings(slide) <- list(vizType = "groupedBarPlot")
+#'
+#' # Change the vizSpecs
+#' # viz_specs can get quite long, see
+#' # https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/
+#' vizSpecs(slide) <- viz_specs
+#'
+#' # Change the query
+#' #' query(slide) <- ~ cyl + wt
 #' }
+#nolint end
 setGeneric("analyses", function(x) standardGeneric("analyses"))
 #' @rdname analysis-methods
 #' @export
@@ -56,20 +81,19 @@ setGeneric("cube", function(x) standardGeneric("cube"))
 #' @export
 setGeneric("cubes", function(x) standardGeneric("cubes"))
 
-#nolint start
-#' Get or set a slide's display settings
-#'
-#' A slide's display settings can be modified by assigning a named list
-#' @param x a CrunchSlide, Analysis, or AnalysisCatalog
-#' @param value a named list, for valid settings see [API documentation](
-#' https://crunch.io/api/reference/#patch-/datasets/-dataset_id-/decks/-deck_id-/slides/-slide_id-/analyses/-analysis_id-/)
-#' @rdname display-settings
+#' @rdname anaylsis-methods
 #' @export
-#nolint end
 setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
-#' @rdname display-settings
+#' @rdname analysis-methods
 #' @export
 setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
+
+#' @rdname anaylsis-methods
+#' @export
+setGeneric("vizSpecs", function(x) standardGeneric("vizSpecs"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("vizSpecs<-", function(x, value) standardGeneric("vizSpecs<-"))
 
 
 # Slide Catalog -----------------------------------------------------------
@@ -522,14 +546,23 @@ setMethod("cubes", "CrunchSlide", function(x) cubes(analyses(x)))
 #' @rdname analysis-methods
 #' @export
 setMethod("cube", "CrunchSlide", function(x) cube(analyses(x)[[1]]))
-#' @rdname display-settings
+#' @rdname analysis-methods
 #' @export
 setMethod("displaySettings", "CrunchSlide", function(x) displaySettings(analyses(x)))
-#' @rdname display-settings
+#' @rdname analysis-methods
 #' @export
 setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
     an_cat <- analyses(x)
     displaySettings(an_cat) <- value
+    return(invisible(x))
+})
+
+setMethod("vizSpecs", "CrunchSlide", function(x) vizSpecs(analyses(x)))
+#' @rdname analysis-methods
+#' @export
+setMethod("vizSpecs<-", "CrunchSlide", function(x, value) {
+    an_cat <- analyses(x)
+    vizSpecs(an_cat) <- value
     return(invisible(x))
 })
 
@@ -624,7 +657,7 @@ setMethod("cubes", "AnalysisCatalog", function(x) {
     lapply(seq_along(x@index), function(i) cube(x[[i]]))
 })
 
-#' @rdname display-settings
+#' @rdname analysis-methods
 #' @export
 setMethod("displaySettings", "AnalysisCatalog", function(x) {
     settings_list <- lapply(seq_along(x), function(i) {
@@ -636,11 +669,30 @@ setMethod("displaySettings", "AnalysisCatalog", function(x) {
         return(settings_list)
     }
 })
-#' @rdname display-settings
+#' @rdname analysis-methods
 #' @export
 setMethod("displaySettings<-", c("AnalysisCatalog", "list"), function(x, value) {
     analyses <- lapply(seq_along(x), function(i) x[[i]])
     lapply(analyses, function(x) displaySettings(x) <- value)
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("vizSpecs", "AnalysisCatalog", function(x) {
+    settings_list <- lapply(seq_along(x), function(i) {
+        vizSpecs(x[[i]])
+    })
+    if (length(settings_list) == 1) {
+        return(settings_list[[1]])
+    } else {
+        return(settings_list)
+    }
+})
+#' @rdname analysis-methods
+#' @export
+setMethod("vizSpecs<-", c("AnalysisCatalog", "list"), function(x, value) {
+    analyses <- lapply(seq_along(x), function(i) x[[i]])
+    lapply(analyses, function(x) vizSpecs(x) <- value)
 })
 
 
@@ -688,18 +740,30 @@ setMethod("cube", "Analysis", function(x) {
         query = http_query
     ))
 })
-#' @rdname display-settings
+#' @rdname analysis-methods
 #' @export
 setMethod("displaySettings", "Analysis", function(x) {
     lapply(x@body$display_settings, function(x) x$value)
 })
-#' @rdname display-settings
+#' @rdname analysis-methods
 #' @export
 setMethod("displaySettings<-", "Analysis", function(x, value) {
     settings <- modifyList(displaySettings(x), value)
     settings <- wrapDisplaySettings(settings)
     payload <- list(display_settings = settings)
     payload <- wrapEntity(body = payload)
+    crPATCH(self(x), body = toJSON(payload))
+    invisible(refresh(x))
+})
+#' @rdname analysis-methods
+#' @export
+setMethod("vizSpecs", "Analysis", function(x) {
+    x@body$viz_specs
+})
+#' @rdname analysis-methods
+#' @export
+setMethod("vizSpecs<-", "Analysis", function(x, value) {
+    payload <- wrapEntity(body = list(viz_specs = value))
     crPATCH(self(x), body = toJSON(payload))
     invisible(refresh(x))
 })
@@ -798,7 +862,7 @@ slideQueryEnv <- function(weight, filter) {
     out
 }
 
-#' @rdname display-settings
+#' @rdname analysis-methods
 #' @export
 setMethod("cubes", "CrunchDeck", function(x) {
     out <- lapply(seq_len(length(x)), function(i) {
@@ -816,14 +880,14 @@ setMethod("cubes", "CrunchDeck", function(x) {
 })
 
 
-#' @rdname weight
+#' @rdname analysis-methods
 #' @export
 setMethod("weight", "CrunchSlide", function(x) {
     analysis <- analyses(x)[[1]]
     return(weight(analysis))
 })
 
-#' @rdname weight
+#' @rdname analysis-methods
 #' @export
 setMethod("weight<-", c("CrunchSlide", "ANY"), function(x, value) {
     # check that there is only on analysis?
@@ -832,7 +896,7 @@ setMethod("weight<-", c("CrunchSlide", "ANY"), function(x, value) {
     return(invisible(x))
 })
 
-#' @rdname weight
+#' @rdname analysis-methods
 #' @export
 setMethod("weight", "Analysis", function(x) {
     wt <- x@body$query_environment$weight

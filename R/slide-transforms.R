@@ -177,12 +177,12 @@ standardizeTransformIDs <- function(x, crosswalk, type) {
 # already base R function named `transform`), but this inconsistency will probably
 # trip you up some day
 
-#' @rdname slideTransform
+#' @rdname analysis-methods
 #' @export
 setMethod("transforms", "CrunchSlide", function(x) {
     transforms(analyses(x))
 })
-#' @rdname slideTransform
+#' @rdname analysis-methods
 #' @export
 setMethod("transforms", "AnalysisCatalog", function(x) {
     transforms_list <- lapply(seq_along(x), function(i) {
@@ -194,28 +194,28 @@ setMethod("transforms", "AnalysisCatalog", function(x) {
         return(transforms_list)
     }
 })
-#' @rdname slideTransform
+#' @rdname analysis-methods
 #' @export
 setMethod("transforms", "Analysis", function(x) {
     x@body$transform
 })
 
 
-#' @rdname slideTransform
+#' @rdname analysis-methods
 #' @export
 setMethod("transforms<-", "CrunchSlide", function(x, value) {
     all_analyses <- analyses(x)
     transforms(all_analyses) <- value
     invisible(x)
 })
-#' @rdname slideTransform
+#' @rdname analysis-methods
 #' @export
 setMethod("transforms<-", "AnalysisCatalog", function(x, value) {
     all_analyses <- lapply(seq_along(x), function(i) x[[i]])
     lapply(all_analyses, function(analysis) transforms(analysis) <- value)
     invisible(x)
 })
-#' @rdname slideTransform
+#' @rdname analysis-methods
 #' @export
 setMethod("transforms<-", "Analysis", function(x, value) {
     if (any(slideTransformNeedsPrep(value))) {

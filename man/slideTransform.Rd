@@ -2,12 +2,6 @@
 % Please edit documentation in R/slide-transforms.R
 \name{slideTransform}
 \alias{slideTransform}
-\alias{transforms,CrunchSlide-method}
-\alias{transforms,AnalysisCatalog-method}
-\alias{transforms,Analysis-method}
-\alias{transforms<-,CrunchSlide,ANY-method}
-\alias{transforms<-,AnalysisCatalog,ANY-method}
-\alias{transforms<-,Analysis,ANY-method}
 \title{Helper for creating slide dimension transformations for dashboards and exports}
 \usage{
 slideTransform(
@@ -19,18 +13,6 @@ slideTransform(
   description = NULL,
   ...
 )
-
-\S4method{transforms}{CrunchSlide}(x)
-
-\S4method{transforms}{AnalysisCatalog}(x)
-
-\S4method{transforms}{Analysis}(x)
-
-\S4method{transforms}{CrunchSlide,ANY}(x) <- value
-
-\S4method{transforms}{AnalysisCatalog,ANY}(x) <- value
-
-\S4method{transforms}{Analysis,ANY}(x) <- value
 }
 \arguments{
 \item{palette}{A vector of color RGB hex color codes that will be used for the color of
