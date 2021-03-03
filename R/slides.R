@@ -671,14 +671,14 @@ setMethod("cube", "Analysis", function(x) {
     # Actually want weight=NULL to override the default dataset weight
     cube_query <- c(cube_query, list(weight = x@body$query_environment$weight))
 
-    http_query <- list(query = toJSON(cube_query))
+    http_query <- list(query = toJSON(cube_query, for_query_string = TRUE))
 
     # Don't pass filter=NULL because API's probably grumpy about that. Also, rather than pass a
     # list of filters if there are multiple, the API expects multiple `filter=` URL query
     # parameters
     qe_filters <- x@body$query_environment$filter
     if (length(qe_filters) > 0) {
-        qe_filters <- lapply(qe_filters, toJSON)
+        qe_filters <- lapply(qe_filters, function(filt) toJSON(filt, for_query_string = TRUE))
         names(qe_filters) <- rep("filter", length(qe_filters))
         http_query <- c(http_query, qe_filters)
     }

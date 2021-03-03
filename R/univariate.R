@@ -24,8 +24,8 @@ setGeneric("median")
             dimensions = list(),
             measures = measure,
             weight = NULL
-        )),
-        filter = toJSON(zcl(activeFilter(x)))
+        ), for_query_string = TRUE),
+        filter = toJSON(zcl(activeFilter(x)), for_query_string = TRUE)
     )
     cube <- CrunchCube(crGET(cubeURL(x), query = query))
     if (!na.rm && cube$result$measures[[measure_name]][["n_missing"]] > 0) {

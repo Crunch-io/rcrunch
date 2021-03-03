@@ -423,6 +423,10 @@ setGeneric("zcl", function(x) standardGeneric("zcl"))
 #'
 #' @param x the object
 #' @param ... additional arguments
+#' @param for_query_string If `TRUE`, and `crunch.stabilize.query` option
+#' is also set to `TRUE`, then dictionary items in the JSON are
+#' sorted alphabetically, which can be useful when capturing
+#' mocks using httptest.
 #' @return `jsonprep` returns a base R object that `jsonlite::toJSON`
 #' can handle. `toJSON` returns the JSON-serialized character object.
 #' @name tojson-crunch

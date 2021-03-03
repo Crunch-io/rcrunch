@@ -8,7 +8,7 @@
 # - Has a weight
 
 # TODO: Get this metadata into `newExampleDataset`?
-
+options(crunch.stabilize.query = TRUE)
 set.seed(2020-12-22)
 num_waves <- 7
 people_per_wave <- 30
@@ -426,7 +426,7 @@ file_copy(
     overwrite = TRUE
 )
 
-
+dir_delete(here("mocks/app.crunch.io/api/datasets/veg/"))
 dir_copy(
     path(temp_dir, "app.crunch.io/api/datasets/veg/"),
     here("mocks/app.crunch.io/api/datasets/veg/"),
