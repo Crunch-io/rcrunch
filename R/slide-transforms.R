@@ -204,14 +204,15 @@ setMethod("transforms", "Analysis", function(x) {
 #' @rdname slideTransform
 #' @export
 setMethod("transforms<-", "CrunchSlide", function(x, value) {
-    transforms(analyses(x)) <- value
+    all_analyses <- analyses(x)
+    transforms(all_analyses) <- value
     invisible(x)
 })
 #' @rdname slideTransform
 #' @export
-setMethod("transforms<-", "AnalysisCatalog", function(x) {
-    transforms <- lapply(seq_along(x), function(i) x[[i]])
-    lapply(transforms, function(x) transforms(x) <- value)
+setMethod("transforms<-", "AnalysisCatalog", function(x, value) {
+    all_analyses <- lapply(seq_along(x), function(i) x[[i]])
+    lapply(all_analyses, function(analysis) transforms(analysis) <- value)
     invisible(x)
 })
 #' @rdname slideTransform
@@ -220,6 +221,8 @@ setMethod("transforms<-", "Analysis", function(x, value) {
     if (any(slideTransformNeedsPrep(value))) {
         value <- prepareSlideTransforms(value, cube = cube(x))
     }
+    # API doesn't accept totally empty lists
+    if (length(value) == 0) value <- list(version = "1.0")
     payload <- wrapEntity(body = list(transform = value))
     crPATCH(self(x), body = toJSON(payload))
     invisible(refresh(x))

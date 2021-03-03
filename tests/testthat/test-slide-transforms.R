@@ -1,4 +1,3 @@
-
 ca_cube <- loadCube("cubes/cat-array.json")
 mr_x_mr_cube <- loadCube("cubes/mr-by-mr-different-mrs.json")
 
@@ -8,6 +7,35 @@ test_that("slideTransform() makes a SlideTransforms object", {
     expect_equal(slide_transform$palette, "foo")
 })
 
+test_that("prepareSlideTransforms() prepares if needed", {
+    expect_equal(
+        prepareSlideTransforms(
+            list(
+                rows_dimension = slideTransform(palette = c("#FFFFFF")),
+                columns_dimension = list("foo")
+            ),
+            cube = ca_cube
+        ),
+        list(
+            rows_dimension = prepareSlideTransform(
+                slideTransform(palette = c("#FFFFFF")), "rows_dimension", ca_cube
+            ),
+            columns_dimension = list("foo"),
+            version = "1.0"
+        )
+    )
+})
+
+test_that("prepareSlideTransforms() doesn't add version to empty", {
+    expect_equal(
+        prepareSlideTransforms(
+            list(),
+            cube = ca_cube
+        ),
+        list()
+    )
+})
+
 test_that("prepareSlideTransform() can convert element components", {
     transform <- prepareSlideTransform(
         slideTransform(
@@ -15,7 +43,6 @@ test_that("prepareSlideTransform() can convert element components", {
             hide = c("Neutral"),
             renames = c("A little unhappy" = 4),
             order = c("Extremely Unhappy", "Somewhat Unhappy", "Somewhat Happy", "Extremely Happy"),
-            insertions = list("insertion"),
             name = "Test",
             description = "Description",
             other = "foo"
@@ -26,7 +53,6 @@ test_that("prepareSlideTransform() can convert element components", {
 
     expected <- list(
         order = c(5, 4, 2, 1),
-        insertions = list("insertion"),
         name = "Test",
         description = "Description",
         other = "foo",
@@ -184,4 +210,100 @@ test_that("standardizeTransformIDs() ignores non-character", {
         standardizeTransformIDs(NULL, data.frame(), "foo"),
         NULL
     )
+})
+
+
+with_mock_crunch({
+    ds <- loadDataset("Vegetables example")
+    deck <- decks(ds)[["deck about transforms"]]
+
+    test_that("Can get empty transform from slide/analyses cat/analysis", {
+        expect_equivalent(transforms(deck[[1]]), list())
+        expect_equivalent(transforms(analyses(deck[[1]])), list())
+        expect_equivalent(transforms(analyses(deck[[1]])[[1]]), list())
+    })
+
+    test_that("Can get actual transform from slide/analyses cat/analysis", {
+        transform <- list(
+            rows_dimension = list(elements = list(`1` = list(hide = TRUE))),
+            version = "1.0"
+        )
+        expect_equal(transforms(deck[[2]]), transform)
+        expect_equal(transforms(analyses(deck[[2]])), transform)
+        expect_equal(transforms(analyses(deck[[2]])[[1]]), transform)
+    })
+
+    test_that("Can set transform on existing slide/analyses cat/analysis", {
+        url <- "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s01/analyses/000001/"
+        expected <- paste0(
+            '{"element":"shoji:entity","body":{"transform":{',
+            '"rows_dimension":{"elements":{"1":{"hide":true}}},',
+            '"version":"1.0"}}}'
+        )
+        transform_list <- list(rows_dimension = slideTransform(hide = "No"))
+
+        expect_PATCH(
+            transforms(deck[[1]]) <- transform_list,
+            url,
+            expected
+        )
+        expect_PATCH(
+            transforms(analyses(deck[[1]])) <- transform_list,
+            url,
+            expected
+        )
+        expect_PATCH(
+            transforms(analyses(deck[[1]])[[1]]) <- transform_list,
+            url,
+            expected
+        )
+    })
+
+    test_that("Can remove transform on existing slide/analyses cat/analysis", {
+        url <- "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s02/analyses/000001/"
+        expected <- '{"element":"shoji:entity","body":{"transform":{"version":"1.0"}}}'
+        expect_PATCH(
+            transforms(deck[[2]]) <- NULL,
+            url,
+            expected
+        )
+        expect_PATCH(
+            transforms(analyses(deck[[2]])) <- NULL,
+            url,
+            expected
+        )
+        expect_PATCH(
+            transforms(analyses(deck[[2]])[[1]]) <- NULL,
+            url,
+            expected
+        )
+    })
+
+    # Because veg dataset captured with queries stabalized, need to set it here.
+    # For now do so in a targeted way, but it'd be better to set it globally
+    # and get all tests to work that way
+    with(temp.option(crunch.stabilize.query = TRUE), {
+        test_that("Can create slide with transform using slideTransform helper", {
+            transform <- list(rows_dimension = slideTransform(palette = "#FFFFFF"))
+            expect_POST(
+                newSlide(deck, ~healthy_eater, title = "Title", transform = transform),
+                "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/",
+                '{"element":"shoji:entity",',
+                '"body":{"title":"Title",',
+                '"subtitle":"",',
+                '"analyses":[{"query":{"dimensions":[{"variable":"https://app.',
+                'crunch.io/api/datasets/veg/variables/var_06/"}],',
+                '"measures":{"count":{"function":"cube_count","args":[]}}},',
+                '"display_settings":{"percentageDirection":{"value":"colPct"},',
+                '"showEmpty":{"value":false},',
+                '"showMean":{"value":false},',
+                '"vizType":{"value":"table"},',
+                '"countsOrPercents":{"value":"percent"},',
+                '"decimalPlaces":{"value":1},',
+                '"showSignif":{"value":true},',
+                '"currentTab":{"value":0}},"transform":{"rows_dimension":{',
+                '"elements":{"1":{"fill":"#FFFFFF"}}},"version":"1.0"}}]}}'
+            )
+        })
+    })
 })

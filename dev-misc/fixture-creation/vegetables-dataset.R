@@ -374,6 +374,10 @@ cube1 <- cube(analyses1[[1]])
 slide2 <- slides(deck)[[2]]
 analyses2 <- analyses(slide2)
 cube2 <- cube(analyses2[[1]])
+
+# newSlide() uses a slightly different query (I think it has filter=NULL instead of no filter)
+# than getting the cube from a slide. So for the newSlide test, we make this request explicitly
+cube3 <- crtabs(~ds$healthy_eater, ds)
 stop_capturing()
 
 ### Cleanup and move dataset capture ----
@@ -500,4 +504,5 @@ file_copy(cube_path, here("mocks", "cubes", "numa-x-mr.json"), overwrite = TRUE)
 dir_delete(temp_dir)
 
 # Cleanup ----
+rm(deck) # Hopefully gets rid of weird message after sourcing script
 with_consent(delete(ds))
