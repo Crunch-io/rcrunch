@@ -18,7 +18,9 @@
 \alias{query<-}
 \alias{cube}
 \alias{cubes}
+\alias{displaySettings}
 \alias{displaySettings<-}
+\alias{vizSpecs}
 \alias{vizSpecs<-}
 \alias{analyses,CrunchSlide-method}
 \alias{analysis,CrunchSlide-method}
@@ -90,7 +92,11 @@ cube(x)
 
 cubes(x)
 
+displaySettings(x)
+
 displaySettings(x) <- value
+
+vizSpecs(x)
 
 vizSpecs(x) <- value
 

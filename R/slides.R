@@ -81,14 +81,14 @@ setGeneric("cube", function(x) standardGeneric("cube"))
 #' @export
 setGeneric("cubes", function(x) standardGeneric("cubes"))
 
-#' @rdname anaylsis-methods
+#' @rdname analysis-methods
 #' @export
 setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("displaySettings<-", function(x, value) standardGeneric("displaySettings<-"))
 
-#' @rdname anaylsis-methods
+#' @rdname analysis-methods
 #' @export
 setGeneric("vizSpecs", function(x) standardGeneric("vizSpecs"))
 #' @rdname analysis-methods
