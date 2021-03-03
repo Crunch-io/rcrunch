@@ -557,6 +557,8 @@ setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
     return(invisible(x))
 })
 
+#' @rdname analysis-methods
+#' @export
 setMethod("vizSpecs", "CrunchSlide", function(x) vizSpecs(analyses(x)))
 #' @rdname analysis-methods
 #' @export

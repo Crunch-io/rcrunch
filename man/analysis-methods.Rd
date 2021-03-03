@@ -34,6 +34,7 @@
 \alias{cube,CrunchSlide-method}
 \alias{displaySettings,CrunchSlide-method}
 \alias{displaySettings<-,CrunchSlide,ANY-method}
+\alias{vizSpecs,CrunchSlide-method}
 \alias{vizSpecs<-,CrunchSlide,ANY-method}
 \alias{cubes,AnalysisCatalog-method}
 \alias{displaySettings,AnalysisCatalog-method}
@@ -123,6 +124,8 @@ vizSpecs(x) <- value
 \S4method{displaySettings}{CrunchSlide}(x)
 
 \S4method{displaySettings}{CrunchSlide,ANY}(x) <- value
+
+\S4method{vizSpecs}{CrunchSlide}(x)
 
 \S4method{vizSpecs}{CrunchSlide,ANY}(x) <- value
 
