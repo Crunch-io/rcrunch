@@ -6,8 +6,12 @@
 #' [API documentation](
 #' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/)
 #'
-#' @param colors A vector of color RGB hex color codes that will be used for the color
-#' of graphs in the dashboard (used in the order of appearance of categories/subvariables).
+#' @param colors An [`AnalyticPalette`] or a vector of color RGB hex color codes that will be used
+#' for the color of graphs in the dashboard (used in the order of appearance of
+#' categories/subvariables).
+#' @param palette An [`AnalyticPalette`], a vector of color RGB hex color codes, or a function that
+#' takes the categories/subvariables from the dimension and returns a RGB hex color codes that will
+#' be used for the color of graphs in the dashboard.
 #' @param hide A vector of category names/ids or subvariable names/aliases to hide from display
 #' @param rename A named vector of category names/ids or subvariable names/aliases to override
 #' their default values
@@ -20,21 +24,26 @@
 #' @examples
 #' \dontrun{
 #' # Hiding an element
-#' transform(slide) <- list(rows_dimension = makeDimTransform(hide = "Neutral"))
+#' transforms(slide) <- list(rows_dimension = makeDimTransform(hide = "Neutral"))
 #'
-#' # Setting pre-specified colors
+#' # Using an existing saved palette
+#' transforms(slide) <- list(rows_dimension = makeDimTransform(
+#'     colors = defaultPalette(ds)
+#' ))
+#'
+#' # Setting specific colors
 #' transform(slide) <- list(rows_dimension = makeDimTransform(
 #'      colors = c("#af8dc3", "#f7f7f7", "#7fbf7b")
 #' ))
 #'
 #' # Reordering & renaming elements
-#' transform(slide) <- list(
+#' transforms(slide) <- list(
 #'      rows_dimension = makeDimTransform(
 #'          rename = c("V. Good" = "Very Good", "V. Bad" = "Very Bad"),
 #'          order = 5:1
 #'      ),
 #'      columns_dimension = makeDimTransform(order = c("Brand X", "Brand A", "Brand B"))
-#' ))
+#' )
 #' }
 #'
 #' @export
@@ -116,6 +125,9 @@ prepareDimTransform <- function(transform, dim, cube) {
 
     # Prepare colors
     if (!is.null(transform$colors)) {
+        if (is.AnalyticPalette(transform$colors)) {
+            transform$colors <- transform$colors$palette
+        }
         ids <- transform$order %||% crosswalk[[1]]
         ids <- setdiff(ids, transform$hide)
         len <- seq_len(min(length(ids), length(transform$colors)))
@@ -146,6 +158,7 @@ prepareDimTransform <- function(transform, dim, cube) {
     if (length(elements) > 0) out$elements <- elements
     out
 }
+
 
 getDimIDCrosswalk <- function(cube, dim_num) {
     elements <- getDimElements(cube, dim_num)
