@@ -458,6 +458,23 @@ setGeneric("weight", function(x) standardGeneric("weight"))
 #' @export
 setGeneric("weight<-", function(x, value) standardGeneric("weight<-"))
 
+
+#' Get the palettes from a crunch object
+#'
+#' `CrunchDataset`s have color palettes associated with them
+#' that can be used as default colors for dashboard tiles. One of
+#' them can be assigned the "default".
+#'
+#' @param x A crunch object, like a `CrunchDataset`
+#' @param ... ignored (reserved for future expansion)
+#' @name palettes
+#' @export
+setGeneric("palettes", function(x) standardGeneric("palettes"))
+
+#' @rdname palettes
+#' @export
+setGeneric("defaultPalette", function(x, ...) standardGeneric("defaultPalette"))
+
 # for ggplot to not copmlain when given crunchdata
 #' Fortify crunch objects for use with ggplot
 #'
