@@ -15,8 +15,9 @@ makeDimTransform(
 )
 }
 \arguments{
-\item{palette}{A vector of color RGB hex color codes that will be used for the color of
-graphs in the dashboard.}
+\item{palette}{A vector of color RGB hex color codes or a function that takes the categories/
+subvariables from the dimension and returns a RGB hex color codes that will be used for the color
+of graphs in the dashboard.}
 
 \item{hide}{A vector of category names/ids or subvariable names/aliases to hide from display}
 
@@ -37,4 +38,30 @@ When displayed in a Crunch Dashboard or exported, crunch slides can have transfo
 that customize their display. This is a helper to form the correct data structure for
 the functions \code{\link[=newSlide]{newSlide()}} for setting the transformation directly. For more details see the
 \href{https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/}{API documentation}
+}
+\examples{
+\dontrun{
+# Hiding an element
+transform(slide) <- list(rows_dimension = makeDimTransform(hide = "Neutral"))
+
+# Setting pre-specified colors
+transform(slide) <- list(rows_dimension = makeDimTransform(
+     palette = c("#af8dc3", "#f7f7f7", "#7fbf7b")
+))
+
+# Using a function to set the palette (eg highlight a category in blue)
+transform(slide) <- list(columns_dimension = makeDimTransform(
+     palette = function(cats) ifelse(names(cats) == "Brand", "#2166ac", "#333333")
+))
+
+# Reordering & renaming elements
+transform(slide) <- list(
+     rows_dimension = makeDimTransform(
+         renames = c("V. Good" = "Very Good", "V. Bad" = "Very Bad"),
+         order = 5:1
+     ),
+     columns_dimension = makeDimTransform(order = c("Brand X", "Brand A", "Brand B"))
+))
+}
+
 }

@@ -66,6 +66,53 @@ test_that("prepareDimTransform() can convert element components", {
     expect_equal(transform, expected)
 })
 
+test_that("prepareDimTransform() can handle palette functions", {
+    transform <- prepareDimTransform(
+        makeDimTransform(
+            palette = function(cats) ifelse(names(cats) == "Extremely Happy", "#1b7837", "#333333"),
+        ),
+        "columns_dimension",
+        ca_cube
+    )
+
+    expected <- list(
+        elements = list(
+            `1` = list(fill = "#1b7837"),
+            `2` = list(fill = "#333333"),
+            `3` = list(fill = "#333333"),
+            `4` = list(fill = "#333333"),
+            `5` = list(fill = "#333333")
+        )
+    )
+
+    expect_equal(transform, expected)
+})
+
+test_that("prepareDimTransform() can convert palette functions and reorder/hides", {
+    transform <- prepareDimTransform(
+        makeDimTransform(
+            palette = function(cats) ifelse(names(cats) == "Extremely Happy", "#1b7837", "#333333"),
+            hide = c("Neutral"),
+            order = c("Extremely Unhappy", "Somewhat Unhappy", "Somewhat Happy", "Extremely Happy"),
+        ),
+        "columns_dimension",
+        ca_cube
+    )
+
+    expected <- list(
+        order = c(5, 4, 2, 1),
+        elements = list(
+            `1` = list(fill = "#1b7837"),
+            `2` = list(fill = "#333333"),
+            `3` = list(hide = TRUE),
+            `4` = list(fill = "#333333"),
+            `5` = list(fill = "#333333")
+        )
+    )
+
+    expect_equal(transform, expected)
+})
+
 test_that("prepareDimTransform() can handle pre-specified elements", {
     transform <- prepareDimTransform(
         makeDimTransform(
@@ -114,10 +161,10 @@ test_that("getDimIDCrosswalk() handles CA categories dimension", {
     expect_equivalent(
         getDimIDCrosswalk(ca_cube, 2),
         data.frame(
-            id = c(1:5, -1),
+            id = c(1:5),
             name = c(
                 "Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy",
-                "Extremely Unhappy", "No Data"
+                "Extremely Unhappy"
             ),
             stringsAsFactors = FALSE
         )

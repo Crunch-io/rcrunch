@@ -6,8 +6,9 @@
 #' [API documentation](
 #' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/)
 #'
-#' @param palette A vector of color RGB hex color codes that will be used for the color of
-#' graphs in the dashboard.
+#' @param palette A vector of color RGB hex color codes or a function that takes the categories/
+#' subvariables from the dimension and returns a RGB hex color codes that will be used for the color
+#' of graphs in the dashboard.
 #' @param hide A vector of category names/ids or subvariable names/aliases to hide from display
 #' @param renames A named vector of category names/ids or subvariable names/aliases to override
 #' their default values
@@ -16,6 +17,31 @@
 #' @param name A name for the dimension, overrides the variable's name
 #' @param description A description for the dimension, overrides the variable's description
 #' @param ... Other arguments, passed directly to the API for future expansion
+#'
+#' @examples
+#' \dontrun{
+#' # Hiding an element
+#' transform(slide) <- list(rows_dimension = makeDimTransform(hide = "Neutral"))
+#'
+#' # Setting pre-specified colors
+#' transform(slide) <- list(rows_dimension = makeDimTransform(
+#'      palette = c("#af8dc3", "#f7f7f7", "#7fbf7b")
+#' ))
+#'
+#' # Using a function to set the palette (eg highlight a category in blue)
+#' transform(slide) <- list(columns_dimension = makeDimTransform(
+#'      palette = function(cats) ifelse(names(cats) == "Brand", "#2166ac", "#333333")
+#' ))
+#'
+#' # Reordering & renaming elements
+#' transform(slide) <- list(
+#'      rows_dimension = makeDimTransform(
+#'          renames = c("V. Good" = "Very Good", "V. Bad" = "Very Bad"),
+#'          order = 5:1
+#'      ),
+#'      columns_dimension = makeDimTransform(order = c("Brand X", "Brand A", "Brand B"))
+#' ))
+#' }
 #'
 #' @export
 makeDimTransform <- function(
@@ -97,6 +123,17 @@ prepareDimTransform <- function(transform, dim, cube) {
     # Prepare palette
     if (!is.null(transform$palette)) {
         ids <- transform$order %||% crosswalk[[1]]
+        ids <- setdiff(ids, transform$hide)
+
+        if (is.function(transform$palette)) {
+            elements <- getDimElements(cube, dim_num)
+            if (is.categories(elements)) {
+                elements <- elements[match(ids, ids(elements))]
+            } else {
+                elements <- elements[match(ids, aliases(elements))]
+            }
+            transform$palette <- transform$palette(elements)
+        }
 
         len <- seq_len(min(length(ids), length(transform$palette)))
         transform$palette <- setNames(ids[len], transform$palette[len])
@@ -128,27 +165,24 @@ prepareDimTransform <- function(transform, dim, cube) {
 }
 
 getDimIDCrosswalk <- function(cube, dim_num) {
-    var <- getDimVar(cube, dim_num)
-    cube_dim_type <- getDimTypes(cube)[dim_num]
-    if (cube_dim_type %in% c("categorical", "ca_categories")) {
-        cats <- categories(var)
+    elements <- getDimElements(cube, dim_num)
+    if (is.categories(elements)) {
         data.frame(
-            id = ids(cats),
-            name = names(cats),
+            id = ids(elements),
+            name = names(elements),
             stringsAsFactors = FALSE
         )
-    } else if (cube_dim_type %in% c("ca_items", "mr_items")) {
-        subvars <- subvariables(var)
+    } else {
         data.frame(
-            id = aliases(subvars),
-            alias = aliases(subvars),
-            name = names(subvars),
+            id = aliases(elements),
+            alias = aliases(elements),
+            name = names(elements),
             stringsAsFactors = FALSE
         )
     }
 }
 
-getDimVar <- function(cube, dim_num) {
+getDimElements <- function(cube, dim_num) {
     cube_dim_alias <- cubeDims(cube)[[dim_num]]$references$alias
     cube_dim_type <- getDimTypes(cube)[dim_num]
     cube_vars <- variables(cube)
@@ -166,6 +200,14 @@ getDimVar <- function(cube, dim_num) {
     }
 
     var <- cube_vars[[dim_var_pos]]
+    if (cube_dim_type %in% c("categorical", "ca_categories")) {
+        cats <- categories(var)
+        return(cats[!is.na(cats)])
+    } else if (cube_dim_type %in% c("ca_items", "mr_items")) {
+        return(subvariables(var))
+    } else {
+        halt("Unexpected cube dimension type when getting elements: ", cube_dim_type)
+    }
 }
 
 standardizeTransformIDs <- function(x, crosswalk, type) {
