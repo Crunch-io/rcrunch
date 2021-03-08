@@ -1,24 +1,24 @@
 ca_cube <- loadCube("cubes/cat-array.json")
 mr_x_mr_cube <- loadCube("cubes/mr-by-mr-different-mrs.json")
 
-test_that("slideTransform() makes a SlideTransforms object", {
-    slide_transform <- slideTransform(palette = "foo")
-    expect_true(inherits(slide_transform, "SlideTransform"))
-    expect_equal(slide_transform$palette, "foo")
+test_that("makeDimTransform() makes a DimensionTransforms object", {
+    dim_transform <- makeDimTransform(palette = "foo")
+    expect_true(inherits(dim_transform, "DimensionTransform"))
+    expect_equal(dim_transform$palette, "foo")
 })
 
-test_that("prepareSlideTransforms() prepares if needed", {
+test_that("prepareDimTransforms() prepares if needed", {
     expect_equal(
-        prepareSlideTransforms(
+        prepareDimTransforms(
             list(
-                rows_dimension = slideTransform(palette = c("#FFFFFF")),
+                rows_dimension = makeDimTransform(palette = c("#FFFFFF")),
                 columns_dimension = list("foo")
             ),
             cube = ca_cube
         ),
         list(
-            rows_dimension = prepareSlideTransform(
-                slideTransform(palette = c("#FFFFFF")), "rows_dimension", ca_cube
+            rows_dimension = prepareDimTransform(
+                makeDimTransform(palette = c("#FFFFFF")), "rows_dimension", ca_cube
             ),
             columns_dimension = list("foo"),
             version = "1.0"
@@ -26,9 +26,9 @@ test_that("prepareSlideTransforms() prepares if needed", {
     )
 })
 
-test_that("prepareSlideTransforms() doesn't add version to empty", {
+test_that("prepareDimTransforms() doesn't add version to empty", {
     expect_equal(
-        prepareSlideTransforms(
+        prepareDimTransforms(
             list(),
             cube = ca_cube
         ),
@@ -36,9 +36,9 @@ test_that("prepareSlideTransforms() doesn't add version to empty", {
     )
 })
 
-test_that("prepareSlideTransform() can convert element components", {
-    transform <- prepareSlideTransform(
-        slideTransform(
+test_that("prepareDimTransform() can convert element components", {
+    transform <- prepareDimTransform(
+        makeDimTransform(
             palette = c("#FFFFFF", "#BBBBBB"),
             hide = c("Neutral"),
             renames = c("A little unhappy" = 4),
@@ -66,9 +66,9 @@ test_that("prepareSlideTransform() can convert element components", {
     expect_equal(transform, expected)
 })
 
-test_that("prepareSlideTransform() can handle pre-specified elements", {
-    transform <- prepareSlideTransform(
-        slideTransform(
+test_that("prepareDimTransform() can handle pre-specified elements", {
+    transform <- prepareDimTransform(
+        makeDimTransform(
             elements = list("foo"),
             name = "Test"
         ),
@@ -84,9 +84,9 @@ test_that("prepareSlideTransform() can handle pre-specified elements", {
     expect_equal(transform, expected)
 })
 
-test_that("prepareSlideTransform() can handle no elements", {
-    transform <- prepareSlideTransform(
-        slideTransform(
+test_that("prepareDimTransform() can handle no elements", {
+    transform <- prepareDimTransform(
+        makeDimTransform(
             order = c("Extremely Unhappy", "Somewhat Unhappy", "Somewhat Happy", "Extremely Happy"),
         ),
         "columns_dimension",
@@ -98,15 +98,15 @@ test_that("prepareSlideTransform() can handle no elements", {
     expect_equal(transform, expected)
 })
 
-test_that("prepareSlideTransform() checks arguments", {
+test_that("prepareDimTransform() checks arguments", {
     expect_error(
-        prepareSlideTransform(slideTransform(elements = list("foo"), renames = c("a" = "Extremely Happy"))),
+        prepareDimTransform(makeDimTransform(elements = list("foo"), renames = c("a" = "Extremely Happy"))),
         "Cannot specify `palette`, `renames`, or `hide` if `elements` is provided"
     )
 
     expect_error(
-        prepareSlideTransform(slideTransform(name = "test"), "xyz", "columns_dimension"),
-        "Expected slideTransform dim to be one of"
+        prepareDimTransform(makeDimTransform(name = "test"), "xyz", "columns_dimension"),
+        "Expected dimTransform dim to be one of"
     )
 })
 
@@ -240,7 +240,7 @@ with_mock_crunch({
             '"rows_dimension":{"elements":{"1":{"hide":true}}},',
             '"version":"1.0"}}}'
         )
-        transform_list <- list(rows_dimension = slideTransform(hide = "No"))
+        transform_list <- list(rows_dimension = makeDimTransform(hide = "No"))
 
         expect_PATCH(
             transforms(deck[[1]]) <- transform_list,
@@ -284,7 +284,7 @@ with_mock_crunch({
     # and get all tests to work that way
     with(temp.option(crunch.stabilize.query = TRUE), {
         test_that("Can create slide with transform using slideTransform helper", {
-            transform <- list(rows_dimension = slideTransform(palette = "#FFFFFF"))
+            transform <- list(rows_dimension = makeDimTransform(palette = "#FFFFFF"))
             expect_POST(
                 newSlide(deck, ~healthy_eater, title = "Title", transform = transform),
                 "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/",

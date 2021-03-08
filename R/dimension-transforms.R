@@ -2,7 +2,7 @@
 #'
 #' When displayed in a Crunch Dashboard or exported, crunch slides can have transformations
 #' that customize their display. This is a helper to form the correct data structure for
-#' the functions [`newSlide()`] pr setting the transformation directly. For more details see the
+#' the functions [`newSlide()`] for setting the transformation directly. For more details see the
 #' [API documentation](
 #' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/)
 #'
@@ -18,7 +18,7 @@
 #' @param ... Other arguments, passed directly to the API for future expansion
 #'
 #' @export
-slideTransform <- function(
+makeDimTransform <- function(
     palette = NULL,
     hide = NULL,
     renames = NULL,
@@ -39,21 +39,25 @@ slideTransform <- function(
         description = description,
         ...
     )
-    class(out) <- c("SlideTransform", class(out))
+    class(out) <- c("DimensionTransform", class(out))
     out
 }
 
 
-slideTransformNeedsPrep <- function(transform) {
-    vapply(transform, function(x) inherits(x, "SlideTransform"), logical(1))
+dimTransformNeedsPrep <- function(transform) {
+    vapply(transform, is.DimTransform, logical(1))
 }
 
-prepareSlideTransforms <- function(transforms, query = NULL, ds = NULL, cube = NULL) {
+is.DimTransform <- function(x) {
+    inherits(x, "DimensionTransform")
+}
+
+prepareDimTransforms <- function(transforms, query = NULL, ds = NULL, cube = NULL) {
     if (is.null(cube)) cube <- crtabs(query, ds)
     old_names <- names(transforms)
     transforms <- lapply(old_names, function(tname) {
-        if (!inherits(transforms[[tname]], "SlideTransform")) return(transforms[[tname]])
-        prepareSlideTransform(transforms[[tname]], tname, cube)
+        if (!is.DimTransform(transforms[[tname]])) return(transforms[[tname]])
+        prepareDimTransform(transforms[[tname]], tname, cube)
     })
     names(transforms) <- old_names
     if (length(transforms) > 0 && !"version" %in% names(transforms)) transforms$version <- "1.0"
@@ -61,9 +65,9 @@ prepareSlideTransforms <- function(transforms, query = NULL, ds = NULL, cube = N
     transforms
 }
 
-prepareSlideTransform <- function(transform, dim, cube) {
+prepareDimTransform <- function(transform, dim, cube) {
     # User specified transform without helper (and so send along unmodified)
-    if (!inherits(transform, "SlideTransform")) return(transform)
+    if (!is.DimTransform(transform)) return(transform)
 
     needs_element <- !is.null(transform$palette) ||
         !is.null(transform$renames) ||
@@ -76,7 +80,7 @@ prepareSlideTransform <- function(transform, dim, cube) {
     dim_types <- c("rows_dimension", "columns_dimension", "tabs_dimension")
     if (!dim %in% dim_types) {
         halt(
-            "Expected slideTransform dim to be one of ",
+            "Expected dimTransform dim to be one of ",
             paste0(dQuote(dim_types), collapse = ", "),
             "but got ", dQuote(dim)
         )
@@ -124,22 +128,44 @@ prepareSlideTransform <- function(transform, dim, cube) {
 }
 
 getDimIDCrosswalk <- function(cube, dim_num) {
-    cube_dim <- cubeDims(cube)[[dim_num]]
+    var <- getDimVar(cube, dim_num)
     cube_dim_type <- getDimTypes(cube)[dim_num]
     if (cube_dim_type %in% c("categorical", "ca_categories")) {
+        cats <- categories(var)
         data.frame(
-            id = vapply(cube_dim$references$categories, function(x) x$id, numeric(1)),
-            name = vapply(cube_dim$references$categories, function(x) x$name, character(1)),
+            id = ids(cats),
+            name = names(cats),
             stringsAsFactors = FALSE
         )
     } else if (cube_dim_type %in% c("ca_items", "mr_items")) {
+        subvars <- subvariables(var)
         data.frame(
-            id = vapply(cube_dim$references$subreferences, function(x) x$alias, character(1)),
-            alias = vapply(cube_dim$references$subreferences, function(x) x$alias, character(1)),
-            name = vapply(cube_dim$references$subreferences, function(x) x$name, character(1)),
+            id = aliases(subvars),
+            alias = aliases(subvars),
+            name = names(subvars),
             stringsAsFactors = FALSE
         )
     }
+}
+
+getDimVar <- function(cube, dim_num) {
+    cube_dim_alias <- cubeDims(cube)[[dim_num]]$references$alias
+    cube_dim_type <- getDimTypes(cube)[dim_num]
+    cube_vars <- variables(cube)
+    dim_var_pos <- which(aliases(cube_vars) == cube_dim_alias)
+
+    if (length(dim_var_pos) > 1) {
+        # prefer categorical because even for CA it has both cats & subvars
+        # but nothing's stopping you from having mr by itself, so if no cats, just grab
+        # the first and hope for the best
+        if (any(types(cube_vars) == "categorical")) {
+            dim_var_pos <- which(aliases(cube_vars) == cube_dim_alias & types(cube_vars) == "categorical")[1]
+        } else {
+            dim_var_pos <- dim_var_pos[1]
+        }
+    }
+
+    var <- cube_vars[[dim_var_pos]]
 }
 
 standardizeTransformIDs <- function(x, crosswalk, type) {
@@ -218,8 +244,8 @@ setMethod("transforms<-", "AnalysisCatalog", function(x, value) {
 #' @rdname analysis-methods
 #' @export
 setMethod("transforms<-", "Analysis", function(x, value) {
-    if (any(slideTransformNeedsPrep(value))) {
-        value <- prepareSlideTransforms(value, cube = cube(x))
+    if (any(dimTransformNeedsPrep(value))) {
+        value <- prepareDimTransforms(value, cube = cube(x))
     }
     # API doesn't accept totally empty lists
     if (length(value) == 0) value <- list(version = "1.0")

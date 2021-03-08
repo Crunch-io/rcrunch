@@ -47,7 +47,7 @@ the \href{https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-de
 for more information.}
 
 \item{transform}{A list of slide transformations, usually created using the function
-\code{\link[=slideTransform]{slideTransform()}}.}
+\code{\link[=makeDimTransform]{makeDimTransform()}}.}
 
 \item{...}{Further options to be passed on to the API}
 }
@@ -110,7 +110,7 @@ newSlide(
         vizType = "groupedBarPlot",
         showValueLabels = TRUE
     ),
-    transform = list(rows_dimension = slideTransform(hide = "Neutral")),
+    transform = list(rows_dimension = makeDimTransform(hide = "Neutral")),
     subtitle = "2017 Data"
 )
 

@@ -50,7 +50,7 @@
 #' weight(deck) <- ds$weight # Can set the same weight on a whole deck too
 #'
 #' # Change the transforms
-#' transforms(slide) <- list(rows_dimension = slideTransform(hide = "Neutral"))
+#' transforms(slide) <- list(rows_dimension = makeDimTransform(hide = "Neutral"))
 #'
 #' # Change the displaySettings
 #' displaySettings(slide) <- list(vizType = "groupedBarPlot")
@@ -255,7 +255,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/)
 #' for more information.
 #' @param transform A list of slide transformations, usually created using the function
-#' [`slideTransform()`].
+#' [`makeDimTransform()`].
 #' @param ... Further options to be passed on to the API
 #'
 #' @return CrunchSlide object
@@ -314,7 +314,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'         vizType = "groupedBarPlot",
 #'         showValueLabels = TRUE
 #'     ),
-#'     transform = list(rows_dimension = slideTransform(hide = "Neutral")),
+#'     transform = list(rows_dimension = makeDimTransform(hide = "Neutral")),
 #'     subtitle = "2017 Data"
 #' )
 #'
@@ -389,8 +389,8 @@ newSlide <- function(
         query, display_settings, payload, filter, weight, viz_specs, transform
     )
 
-    if (any(slideTransformNeedsPrep(transform))) {
-        transform <- prepareSlideTransforms(transform, query, ds)
+    if (any(dimTransformNeedsPrep(transform))) {
+        transform <- prepareDimTransforms(transform, query, ds)
     }
 
     if (!is.null(query)) {
