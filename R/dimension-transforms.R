@@ -121,23 +121,7 @@ prepareDimTransform <- function(transform, dim, cube) {
     transform$order <- standardizeTransformIDs(transform$order, crosswalk, "order")
 
     # Prepare palette
-    if (!is.null(transform$palette)) {
-        ids <- transform$order %||% crosswalk[[1]]
-        ids <- setdiff(ids, transform$hide)
-
-        if (is.function(transform$palette)) {
-            elements <- getDimElements(cube, dim_num)
-            if (is.categories(elements)) {
-                elements <- elements[match(ids, ids(elements))]
-            } else {
-                elements <- elements[match(ids, aliases(elements))]
-            }
-            transform$palette <- transform$palette(elements)
-        }
-
-        len <- seq_len(min(length(ids), length(transform$palette)))
-        transform$palette <- setNames(ids[len], transform$palette[len])
-    }
+    transform$palette <- prepareDimTransformPalette(transform, cube, dim_num)
 
     # Form elements
     elements <- lapply(crosswalk$id, function(id) {
@@ -162,6 +146,28 @@ prepareDimTransform <- function(transform, dim, cube) {
     out <- out[setdiff(names(out), c("palette", "renames", "hide"))]
     if (length(elements) > 0) out$elements <- elements
     out
+}
+
+prepareDimTransformPalette <- function(transform, crosswalk, cube, dim_num) {
+    if (is.null(transform$palette)) return(NULL)
+
+    ids <- transform$order %||% crosswalk[[1]]
+    ids <- setdiff(ids, transform$hide)
+
+    this_pal <- transform$palette
+    if (is.function(this_pal)) {
+        elements <- getDimElements(cube, dim_num)
+        if (is.categories(elements)) {
+            elements <- elements[match(ids, ids(elements))]
+        } else {
+            elements <- elements[match(ids, aliases(elements))]
+        }
+        this_pal <- this_pal(elements)
+    }
+
+    len <- seq_len(min(length(ids), length(this_pal)))
+    this_pal <- setNames(ids[len], this_pal[len])
+    this_pal
 }
 
 getDimIDCrosswalk <- function(cube, dim_num) {
@@ -193,7 +199,9 @@ getDimElements <- function(cube, dim_num) {
         # but nothing's stopping you from having mr by itself, so if no cats, just grab
         # the first and hope for the best
         if (any(types(cube_vars) == "categorical")) {
-            dim_var_pos <- which(aliases(cube_vars) == cube_dim_alias & types(cube_vars) == "categorical")[1]
+            dim_var_pos <- which(
+                aliases(cube_vars) == cube_dim_alias & types(cube_vars) == "categorical"
+            )[1]
         } else {
             dim_var_pos <- dim_var_pos[1]
         }
@@ -212,7 +220,12 @@ getDimElements <- function(cube, dim_num) {
 
 standardizeTransformIDs <- function(x, crosswalk, type) {
     dups <- duplicated(x)
-    if (any(dups)) halt("Found duplicated transform ids for", type, ": ", paste0(unique(x[dups]), collapse = ", "))
+    if (any(dups)) {
+        halt(
+            "Found duplicated transform ids for", type, ": ",
+            paste0(unique(x[dups]), collapse = ", ")
+        )
+    }
 
     if (!is.character(x)) return(x)
 
@@ -223,7 +236,11 @@ standardizeTransformIDs <- function(x, crosswalk, type) {
 
     if (!any(lengths(missing_matches) == 0)) {
         error_text <- vapply(names(missing_matches), function(name) {
-            bad_vals <- if (length(missing_matches[[name]]) == length(x)) "All" else  paste(missing_matches[[name]], collapse = ", ")
+            if (length(missing_matches[[name]]) == length(x)) {
+                bad_vals <- "All"
+            } else {
+                bad_vals <- paste(missing_matches[[name]], collapse = ", ")
+            }
             paste0("  - ", name, ": ", bad_vals, collapse = ", ")
         }, character(1))
         halt(

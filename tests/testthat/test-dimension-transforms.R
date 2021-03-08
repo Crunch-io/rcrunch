@@ -147,7 +147,9 @@ test_that("prepareDimTransform() can handle no elements", {
 
 test_that("prepareDimTransform() checks arguments", {
     expect_error(
-        prepareDimTransform(makeDimTransform(elements = list("foo"), renames = c("a" = "Extremely Happy"))),
+        prepareDimTransform(
+            makeDimTransform(elements = list("foo"), renames = c("a" = "Extremely Happy"))
+        ),
         "Cannot specify `palette`, `renames`, or `hide` if `elements` is provided"
     )
 
@@ -244,7 +246,7 @@ test_that("standardizeTransformIDs() provides informative error for no match", {
             ),
             "foo"
         ),
-        "Could not match transform ids for foo to a set of expected values:\n  - name: c\n  - other_name: All"
+        "Could not match transform ids for foo to a set of expected values:\n  - name: c\n  - other_name: All" #nolint
     )
 })
 

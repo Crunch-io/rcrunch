@@ -421,24 +421,31 @@ newSlide <- function(
 }
 
 
-check_newslide_args <- function(query, display_settings, payload, filter, weight, viz_specs, transform) {
+#nolint start
+check_newslide_args <- function(
+    query, display_settings, payload, filter, weight, viz_specs, transform
+) {
     has_analyses <- "analyses" %in% names(payload)
+    has_any_analysis_objects <- length(display_settings) != 0 ||
+        !is.null(filter) ||
+        !is.null(weight) ||
+        !is.null(viz_specs) ||
+        !is.null(transform)
+
     if (has_analyses && !is.null(query)) {
         halt("Cannot specify both a `query` and `analyses` for `newSlide()`")
     }
     if (!has_analyses && is.null(query)) {
         halt("Must specify either a `query` or `analyses` for `newSlide()`")
     }
-    if (has_analyses && (
-        length(display_settings) != 0 || !is.null(filter) || !is.null(weight) ||
-        !is.null(viz_specs) || !is.null(transform)
-    )) {
+    if (has_analyses && has_any_analysis_objects) {
         warning(paste0(
             "`display_settings`, `filter`, `weight`, `viz_specs` and `transform` are ",
             "ignored if `analyses` are defined directly for `newSlide()`"
         ))
     }
 }
+#nolint end
 
 #' @rdname crunch-extract
 #' @export

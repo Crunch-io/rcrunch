@@ -302,7 +302,7 @@ with_mock_crunch({
             newSlide(
                 main_deck, ~gender, title = "Title", subtitle = "SubTitle",
                 transform = list(
-                    rows_dimension = list(elements=list(`1` = list("hide" = TRUE))),
+                    rows_dimension = list(elements = list(`1` = list("hide" = TRUE))),
                     version = "1.0"
                 )
             ),
