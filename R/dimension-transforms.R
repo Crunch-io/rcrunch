@@ -6,9 +6,8 @@
 #' [API documentation](
 #' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/)
 #'
-#' @param palette A vector of color RGB hex color codes or a function that takes the categories/
-#' subvariables from the dimension and returns a RGB hex color codes that will be used for the color
-#' of graphs in the dashboard.
+#' @param colors A vector of color RGB hex color codes that will be used for the color
+#' of graphs in the dashboard (used in the order of appearance of categories/subvariables).
 #' @param hide A vector of category names/ids or subvariable names/aliases to hide from display
 #' @param renames A named vector of category names/ids or subvariable names/aliases to override
 #' their default values
@@ -25,12 +24,7 @@
 #'
 #' # Setting pre-specified colors
 #' transform(slide) <- list(rows_dimension = makeDimTransform(
-#'      palette = c("#af8dc3", "#f7f7f7", "#7fbf7b")
-#' ))
-#'
-#' # Using a function to set the palette (eg highlight a category in blue)
-#' transform(slide) <- list(columns_dimension = makeDimTransform(
-#'      palette = function(cats) ifelse(names(cats) == "Brand", "#2166ac", "#333333")
+#'      colors = c("#af8dc3", "#f7f7f7", "#7fbf7b")
 #' ))
 #'
 #' # Reordering & renaming elements
@@ -45,7 +39,7 @@
 #'
 #' @export
 makeDimTransform <- function(
-    palette = NULL,
+    colors = NULL,
     hide = NULL,
     renames = NULL,
     order = NULL,
@@ -57,7 +51,7 @@ makeDimTransform <- function(
     # Will need to use slide's query to convert to structure API needs
     # (eg get ids from names) so just store as list for now
     out <- list(
-        palette = palette,
+        colors = colors,
         renames = renames,
         hide = hide,
         order = order,
@@ -95,12 +89,12 @@ prepareDimTransform <- function(transform, dim, cube) {
     # User specified transform without helper (and so send along unmodified)
     if (!is.DimTransform(transform)) return(transform)
 
-    needs_element <- !is.null(transform$palette) ||
+    needs_element <- !is.null(transform$colors) ||
         !is.null(transform$renames) ||
         !is.null(transform$hide)
 
     if ("elements" %in% names(transform) && needs_element) {
-        halt("Cannot specify `palette`, `renames`, or `hide` if `elements` is provided")
+        halt("Cannot specify `colors`, `renames`, or `hide` if `elements` is provided")
     }
 
     dim_types <- c("rows_dimension", "columns_dimension", "tabs_dimension")
@@ -120,8 +114,13 @@ prepareDimTransform <- function(transform, dim, cube) {
     transform$hide <- standardizeTransformIDs(transform$hide, crosswalk, "hide")
     transform$order <- standardizeTransformIDs(transform$order, crosswalk, "order")
 
-    # Prepare palette
-    transform$palette <- prepareDimTransformPalette(transform, cube, dim_num)
+    # Prepare colors
+    if (!is.null(transform$colors)) {
+        ids <- transform$order %||% crosswalk[[1]]
+        ids <- setdiff(ids, transform$hide)
+        len <- seq_len(min(length(ids), length(transform$colors)))
+        transform$colors <- setNames(ids[len], transform$colors[len])
+    }
 
     # Form elements
     elements <- lapply(crosswalk$id, function(id) {
@@ -132,8 +131,8 @@ prepareDimTransform <- function(transform, dim, cube) {
         if (any(transform$hide == id)) {
             out$hide <- TRUE
         }
-        if (any(transform$palette == id)) {
-            out$fill <- names(transform$palette)[transform$palette == id]
+        if (any(transform$colors == id)) {
+            out$fill <- names(transform$colors)[transform$colors == id]
         }
         out
     })
@@ -143,31 +142,9 @@ prepareDimTransform <- function(transform, dim, cube) {
     # Form return object
     out <- Filter(function(x) !is.null(x), transform)
     # And remove components of element + add element if formed
-    out <- out[setdiff(names(out), c("palette", "renames", "hide"))]
+    out <- out[setdiff(names(out), c("colors", "renames", "hide"))]
     if (length(elements) > 0) out$elements <- elements
     out
-}
-
-prepareDimTransformPalette <- function(transform, crosswalk, cube, dim_num) {
-    if (is.null(transform$palette)) return(NULL)
-
-    ids <- transform$order %||% crosswalk[[1]]
-    ids <- setdiff(ids, transform$hide)
-
-    this_pal <- transform$palette
-    if (is.function(this_pal)) {
-        elements <- getDimElements(cube, dim_num)
-        if (is.categories(elements)) {
-            elements <- elements[match(ids, ids(elements))]
-        } else {
-            elements <- elements[match(ids, aliases(elements))]
-        }
-        this_pal <- this_pal(elements)
-    }
-
-    len <- seq_len(min(length(ids), length(this_pal)))
-    this_pal <- setNames(ids[len], this_pal[len])
-    this_pal
 }
 
 getDimIDCrosswalk <- function(cube, dim_num) {

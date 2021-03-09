@@ -2,23 +2,23 @@ ca_cube <- loadCube("cubes/cat-array.json")
 mr_x_mr_cube <- loadCube("cubes/mr-by-mr-different-mrs.json")
 
 test_that("makeDimTransform() makes a DimensionTransforms object", {
-    dim_transform <- makeDimTransform(palette = "foo")
+    dim_transform <- makeDimTransform(colors = "foo")
     expect_true(inherits(dim_transform, "DimensionTransform"))
-    expect_equal(dim_transform$palette, "foo")
+    expect_equal(dim_transform$colors, "foo")
 })
 
 test_that("prepareDimTransforms() prepares if needed", {
     expect_equal(
         prepareDimTransforms(
             list(
-                rows_dimension = makeDimTransform(palette = c("#FFFFFF")),
+                rows_dimension = makeDimTransform(colors = c("#FFFFFF")),
                 columns_dimension = list("foo")
             ),
             cube = ca_cube
         ),
         list(
             rows_dimension = prepareDimTransform(
-                makeDimTransform(palette = c("#FFFFFF")), "rows_dimension", ca_cube
+                makeDimTransform(colors = c("#FFFFFF")), "rows_dimension", ca_cube
             ),
             columns_dimension = list("foo"),
             version = "1.0"
@@ -39,7 +39,7 @@ test_that("prepareDimTransforms() doesn't add version to empty", {
 test_that("prepareDimTransform() can convert element components", {
     transform <- prepareDimTransform(
         makeDimTransform(
-            palette = c("#FFFFFF", "#BBBBBB"),
+            colors = c("#FFFFFF", "#BBBBBB"),
             hide = c("Neutral"),
             renames = c("A little unhappy" = 4),
             order = c("Extremely Unhappy", "Somewhat Unhappy", "Somewhat Happy", "Extremely Happy"),
@@ -60,53 +60,6 @@ test_that("prepareDimTransform() can convert element components", {
             `3` = list(hide = TRUE),
             `4` = list(name = "A little unhappy", fill = "#BBBBBB"),
             `5` = list(fill = "#FFFFFF")
-        )
-    )
-
-    expect_equal(transform, expected)
-})
-
-test_that("prepareDimTransform() can handle palette functions", {
-    transform <- prepareDimTransform(
-        makeDimTransform(
-            palette = function(cats) ifelse(names(cats) == "Extremely Happy", "#1b7837", "#333333"),
-        ),
-        "columns_dimension",
-        ca_cube
-    )
-
-    expected <- list(
-        elements = list(
-            `1` = list(fill = "#1b7837"),
-            `2` = list(fill = "#333333"),
-            `3` = list(fill = "#333333"),
-            `4` = list(fill = "#333333"),
-            `5` = list(fill = "#333333")
-        )
-    )
-
-    expect_equal(transform, expected)
-})
-
-test_that("prepareDimTransform() can convert palette functions and reorder/hides", {
-    transform <- prepareDimTransform(
-        makeDimTransform(
-            palette = function(cats) ifelse(names(cats) == "Extremely Happy", "#1b7837", "#333333"),
-            hide = c("Neutral"),
-            order = c("Extremely Unhappy", "Somewhat Unhappy", "Somewhat Happy", "Extremely Happy"),
-        ),
-        "columns_dimension",
-        ca_cube
-    )
-
-    expected <- list(
-        order = c(5, 4, 2, 1),
-        elements = list(
-            `1` = list(fill = "#1b7837"),
-            `2` = list(fill = "#333333"),
-            `3` = list(hide = TRUE),
-            `4` = list(fill = "#333333"),
-            `5` = list(fill = "#333333")
         )
     )
 
@@ -150,7 +103,7 @@ test_that("prepareDimTransform() checks arguments", {
         prepareDimTransform(
             makeDimTransform(elements = list("foo"), renames = c("a" = "Extremely Happy"))
         ),
-        "Cannot specify `palette`, `renames`, or `hide` if `elements` is provided"
+        "Cannot specify `colors`, `renames`, or `hide` if `elements` is provided"
     )
 
     expect_error(
@@ -333,7 +286,7 @@ with_mock_crunch({
     # and get all tests to work that way
     with(temp.option(crunch.stabilize.query = TRUE), {
         test_that("Can create slide with transform using slideTransform helper", {
-            transform <- list(rows_dimension = makeDimTransform(palette = "#FFFFFF"))
+            transform <- list(rows_dimension = makeDimTransform(colors = "#FFFFFF"))
             expect_POST(
                 newSlide(deck, ~healthy_eater, title = "Title", transform = transform),
                 "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/",
