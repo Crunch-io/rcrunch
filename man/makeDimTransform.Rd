@@ -5,7 +5,7 @@
 \title{Helper for creating slide dimension transformations for dashboards and exports}
 \usage{
 makeDimTransform(
-  palette = NULL,
+  colors = NULL,
   hide = NULL,
   renames = NULL,
   order = NULL,
@@ -15,9 +15,8 @@ makeDimTransform(
 )
 }
 \arguments{
-\item{palette}{A vector of color RGB hex color codes or a function that takes the categories/
-subvariables from the dimension and returns a RGB hex color codes that will be used for the color
-of graphs in the dashboard.}
+\item{colors}{A vector of color RGB hex color codes that will be used for the color
+of graphs in the dashboard (used in the order of appearance of categories/subvariables).}
 
 \item{hide}{A vector of category names/ids or subvariable names/aliases to hide from display}
 
@@ -46,12 +45,7 @@ transform(slide) <- list(rows_dimension = makeDimTransform(hide = "Neutral"))
 
 # Setting pre-specified colors
 transform(slide) <- list(rows_dimension = makeDimTransform(
-     palette = c("#af8dc3", "#f7f7f7", "#7fbf7b")
-))
-
-# Using a function to set the palette (eg highlight a category in blue)
-transform(slide) <- list(columns_dimension = makeDimTransform(
-     palette = function(cats) ifelse(names(cats) == "Brand", "#2166ac", "#333333")
+     colors = c("#af8dc3", "#f7f7f7", "#7fbf7b")
 ))
 
 # Reordering & renaming elements
