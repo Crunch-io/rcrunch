@@ -7,7 +7,7 @@
 makeDimTransform(
   colors = NULL,
   hide = NULL,
-  renames = NULL,
+  rename = NULL,
   order = NULL,
   name = NULL,
   description = NULL,
@@ -20,7 +20,7 @@ of graphs in the dashboard (used in the order of appearance of categories/subvar
 
 \item{hide}{A vector of category names/ids or subvariable names/aliases to hide from display}
 
-\item{renames}{A named vector of category names/ids or subvariable names/aliases to override
+\item{rename}{A named vector of category names/ids or subvariable names/aliases to override
 their default values}
 
 \item{order}{A vector of category names/ids or subvariable names/aliases to override the
@@ -51,7 +51,7 @@ transform(slide) <- list(rows_dimension = makeDimTransform(
 # Reordering & renaming elements
 transform(slide) <- list(
      rows_dimension = makeDimTransform(
-         renames = c("V. Good" = "Very Good", "V. Bad" = "Very Bad"),
+         rename = c("V. Good" = "Very Good", "V. Bad" = "Very Bad"),
          order = 5:1
      ),
      columns_dimension = makeDimTransform(order = c("Brand X", "Brand A", "Brand B"))

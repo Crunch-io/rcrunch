@@ -41,7 +41,7 @@ test_that("prepareDimTransform() can convert element components", {
         makeDimTransform(
             colors = c("#FFFFFF", "#BBBBBB"),
             hide = c("Neutral"),
-            renames = c("A little unhappy" = 4),
+            rename = c("A little unhappy" = 4),
             order = c("Extremely Unhappy", "Somewhat Unhappy", "Somewhat Happy", "Extremely Happy"),
             name = "Test",
             description = "Description",
@@ -101,9 +101,9 @@ test_that("prepareDimTransform() can handle no elements", {
 test_that("prepareDimTransform() checks arguments", {
     expect_error(
         prepareDimTransform(
-            makeDimTransform(elements = list("foo"), renames = c("a" = "Extremely Happy"))
+            makeDimTransform(elements = list("foo"), rename = c("a" = "Extremely Happy"))
         ),
-        "Cannot specify `colors`, `renames`, or `hide` if `elements` is provided"
+        "Cannot specify `colors`, `rename`, or `hide` if `elements` is provided"
     )
 
     expect_error(

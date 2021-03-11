@@ -9,7 +9,7 @@
 #' @param colors A vector of color RGB hex color codes that will be used for the color
 #' of graphs in the dashboard (used in the order of appearance of categories/subvariables).
 #' @param hide A vector of category names/ids or subvariable names/aliases to hide from display
-#' @param renames A named vector of category names/ids or subvariable names/aliases to override
+#' @param rename A named vector of category names/ids or subvariable names/aliases to override
 #' their default values
 #' @param order A vector of category names/ids or subvariable names/aliases to override the
 #' default ordering of the dimension.
@@ -30,7 +30,7 @@
 #' # Reordering & renaming elements
 #' transform(slide) <- list(
 #'      rows_dimension = makeDimTransform(
-#'          renames = c("V. Good" = "Very Good", "V. Bad" = "Very Bad"),
+#'          rename = c("V. Good" = "Very Good", "V. Bad" = "Very Bad"),
 #'          order = 5:1
 #'      ),
 #'      columns_dimension = makeDimTransform(order = c("Brand X", "Brand A", "Brand B"))
@@ -41,7 +41,7 @@
 makeDimTransform <- function(
     colors = NULL,
     hide = NULL,
-    renames = NULL,
+    rename = NULL,
     order = NULL,
     name = NULL,
     description = NULL,
@@ -52,7 +52,7 @@ makeDimTransform <- function(
     # (eg get ids from names) so just store as list for now
     out <- list(
         colors = colors,
-        renames = renames,
+        rename = rename,
         hide = hide,
         order = order,
         name = name,
@@ -90,11 +90,11 @@ prepareDimTransform <- function(transform, dim, cube) {
     if (!is.DimTransform(transform)) return(transform)
 
     needs_element <- !is.null(transform$colors) ||
-        !is.null(transform$renames) ||
+        !is.null(transform$rename) ||
         !is.null(transform$hide)
 
     if ("elements" %in% names(transform) && needs_element) {
-        halt("Cannot specify `colors`, `renames`, or `hide` if `elements` is provided")
+        halt("Cannot specify `colors`, `rename`, or `hide` if `elements` is provided")
     }
 
     dim_types <- c("rows_dimension", "columns_dimension", "tabs_dimension")
@@ -106,11 +106,11 @@ prepareDimTransform <- function(transform, dim, cube) {
         )
     }
 
-    # Convert renames/hide/order to dimension id (eg cat id / subvar)
+    # Convert rename/hide/order to dimension id (eg cat id / subvar)
     dim_num <- match(dim, dim_types)
 
     crosswalk <- getDimIDCrosswalk(cube, dim_num)
-    transform$renames <- standardizeTransformIDs(transform$renames, crosswalk, "renames")
+    transform$rename <- standardizeTransformIDs(transform$rename, crosswalk, "rename")
     transform$hide <- standardizeTransformIDs(transform$hide, crosswalk, "hide")
     transform$order <- standardizeTransformIDs(transform$order, crosswalk, "order")
 
@@ -125,8 +125,8 @@ prepareDimTransform <- function(transform, dim, cube) {
     # Form elements
     elements <- lapply(crosswalk$id, function(id) {
         out <- list()
-        if (any(transform$renames == id)) {
-            out$name <- names(transform$renames)[transform$renames == id]
+        if (any(transform$rename == id)) {
+            out$name <- names(transform$rename)[transform$rename == id]
         }
         if (any(transform$hide == id)) {
             out$hide <- TRUE
@@ -142,7 +142,7 @@ prepareDimTransform <- function(transform, dim, cube) {
     # Form return object
     out <- Filter(function(x) !is.null(x), transform)
     # And remove components of element + add element if formed
-    out <- out[setdiff(names(out), c("colors", "renames", "hide"))]
+    out <- out[setdiff(names(out), c("colors", "rename", "hide"))]
     if (length(elements) > 0) out$elements <- elements
     out
 }
