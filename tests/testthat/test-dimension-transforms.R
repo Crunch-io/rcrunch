@@ -308,4 +308,22 @@ with_mock_crunch({
             )
         })
     })
+
+    test_that("Can use an AnalyticPalette in makeDimTransform", {
+        url <- "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s01/analyses/000001/"
+        expected <- paste0(
+            '{"element":"shoji:entity","body":{"transform":{',
+            '"rows_dimension":{"elements":{"1":{"fill":"#4fc3f7"},',
+            '"2":{"fill":"#4dd0e1"}}},"version":"1.0"}}}'
+        )
+        transform_list <- list(
+            rows_dimension = makeDimTransform(colors = defaultPalette(ds))
+        )
+
+        expect_PATCH(
+            transforms(deck[[1]]) <- transform_list,
+            url,
+            expected
+        )
+    })
 })

@@ -528,6 +528,10 @@ TabBookResult <- setClass("TabBookResult", contains = "namedList")
 
 SearchResults <- setClass("SearchResults", contains = "namedList")
 
+AnalyticPalettes <- setClass("AnalyticPalettes", contains = "namedList")
+AnalyticPalette <- setClass("AnalyticPalette", contains = "namedList")
+AnalyticPalette <- GenericConstructor("AnalyticPalette")
+
 #' @rdname geo
 setClass("CrunchGeography", contains = "namedList")
 #' @rdname geo

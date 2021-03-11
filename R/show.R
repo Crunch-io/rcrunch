@@ -37,7 +37,6 @@ setMethod("show", "Category", .showIt)
 #' @export
 setMethod("show", "Categories", .showIt)
 
-
 #' @rdname show
 #' @export
 setMethod("show", "Insertion", .showIt)
@@ -225,6 +224,7 @@ formatScriptCatalog <- function(x, from = Sys.time(), body_width = 20) {
     ))
 }
 
+
 .ts_format <- function(ts, from = NULL) {
     if (!is.null(from)) {
         ts <- vapply(seq_along(ts), function(a) {
@@ -404,6 +404,34 @@ showMultitable <- function(x) {
 
     return(c(out))
 }
+
+#' @rdname show
+#' @export
+setMethod("show", "AnalyticPalettes", function(object) {
+    df <- do.call("rbind", lapply(object, function(x) {
+        data.frame(
+            type = x$type,
+            default = x$default,
+            palette = paste0("", length(x$palette), " colors"),
+            stringsAsFactors = FALSE
+        )
+    }))
+    print(df)
+    invisible(object)
+})
+
+#' @rdname show
+#' @export
+setMethod("show", "AnalyticPalette", function(object) {
+    default <- if (object$default) ", default" else ""
+    cat(paste0(
+        "Crunch AnalyticPalette ",
+        dQuote(object$name),
+        " (", object$type, default, ")\n"
+    ))
+    cat(paste0(paste(object$palette, collapse = " "), "\n"))
+    invisible(object)
+})
 
 # More boilerplate
 

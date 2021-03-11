@@ -15,8 +15,9 @@ makeDimTransform(
 )
 }
 \arguments{
-\item{colors}{A vector of color RGB hex color codes that will be used for the color
-of graphs in the dashboard (used in the order of appearance of categories/subvariables).}
+\item{colors}{An \code{\link{AnalyticPalette}} or a vector of color RGB hex color codes that will be used
+for the color of graphs in the dashboard (used in the order of appearance of
+categories/subvariables).}
 
 \item{hide}{A vector of category names/ids or subvariable names/aliases to hide from display}
 
@@ -31,6 +32,10 @@ default ordering of the dimension.}
 \item{description}{A description for the dimension, overrides the variable's description}
 
 \item{...}{Other arguments, passed directly to the API for future expansion}
+
+\item{palette}{An \code{\link{AnalyticPalette}}, a vector of color RGB hex color codes, or a function that
+takes the categories/subvariables from the dimension and returns a RGB hex color codes that will
+be used for the color of graphs in the dashboard.}
 }
 \description{
 When displayed in a Crunch Dashboard or exported, crunch slides can have transformations
@@ -41,21 +46,26 @@ the functions \code{\link[=newSlide]{newSlide()}} for setting the transformation
 \examples{
 \dontrun{
 # Hiding an element
-transform(slide) <- list(rows_dimension = makeDimTransform(hide = "Neutral"))
+transforms(slide) <- list(rows_dimension = makeDimTransform(hide = "Neutral"))
 
-# Setting pre-specified colors
+# Using an existing saved palette
+transforms(slide) <- list(rows_dimension = makeDimTransform(
+    colors = defaultPalette(ds)
+))
+
+# Setting specific colors
 transform(slide) <- list(rows_dimension = makeDimTransform(
      colors = c("#af8dc3", "#f7f7f7", "#7fbf7b")
 ))
 
 # Reordering & renaming elements
-transform(slide) <- list(
+transforms(slide) <- list(
      rows_dimension = makeDimTransform(
          rename = c("V. Good" = "Very Good", "V. Bad" = "Very Bad"),
          order = 5:1
      ),
      columns_dimension = makeDimTransform(order = c("Brand X", "Brand A", "Brand B"))
-))
+)
 }
 
 }

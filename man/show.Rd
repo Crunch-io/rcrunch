@@ -10,6 +10,8 @@
 \alias{show,Insertions-method}
 \alias{show,CrunchExpr-method}
 \alias{show,CrunchLogicalExpr-method}
+\alias{show,AnalyticPalettes-method}
+\alias{show,AnalyticPalette-method}
 \alias{show,CrunchCube-method}
 \alias{show,OrderGroup-method}
 \alias{show,CrunchGeography-method}
@@ -37,6 +39,10 @@ show(object)
 \S4method{show}{CrunchExpr}(object)
 
 \S4method{show}{CrunchLogicalExpr}(object)
+
+\S4method{show}{AnalyticPalettes}(object)
+
+\S4method{show}{AnalyticPalette}(object)
 
 \S4method{show}{CrunchCube}(object)
 
