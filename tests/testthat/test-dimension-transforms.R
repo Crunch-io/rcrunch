@@ -130,7 +130,7 @@ test_that("getDimIDCrosswalk() handles CA items dimension", {
     expect_equivalent(
         getDimIDCrosswalk(ca_cube, 1),
         data.frame(
-            id = c("cat_feeling", "dog_feeling"),
+            id = 1:2,
             alias = c("cat_feeling", "dog_feeling"),
             name = c("cat_feeling", "dog_feeling"),
             stringsAsFactors = FALSE
@@ -142,7 +142,7 @@ test_that("getDimIDCrosswalk() handles MR items dimension", {
     expect_equivalent(
         getDimIDCrosswalk(mr_x_mr_cube, 1),
         data.frame(
-            id = c("food_opinion__1", "rest_opinion__1", "play_opinion__1"),
+            id = 1:3,
             alias = c("food_opinion__1", "rest_opinion__1", "play_opinion__1"),
             name = c("food_opinion", "rest_opinion", "play_opinion"),
             stringsAsFactors = FALSE

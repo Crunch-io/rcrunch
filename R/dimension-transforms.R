@@ -167,7 +167,7 @@ getDimIDCrosswalk <- function(cube, dim_num) {
         )
     } else {
         data.frame(
-            id = aliases(elements),
+            id = seq_along(elements),
             alias = aliases(elements),
             name = names(elements),
             stringsAsFactors = FALSE
