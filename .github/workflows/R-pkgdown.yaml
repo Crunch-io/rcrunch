@@ -51,4 +51,7 @@ jobs:
         run: R CMD INSTALL .
 
       - name: Run pkgdown
-        run: bash 'pkgdown.sh'
+        run: |
+          git config user.email "rcrunch@crunch.io"
+          git config user.name "rcrunch GitHub Action"
+          bash 'pkgdown.sh'
