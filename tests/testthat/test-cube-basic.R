@@ -100,7 +100,7 @@ test_that("Categorical with categories Selected, Not selected", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("useNA is set correctly on CrunchCube init", {
         expect_identical(

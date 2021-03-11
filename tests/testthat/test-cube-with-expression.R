@@ -1,7 +1,7 @@
 context("Cube queries with on-the-fly expressions")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     expect_JSON <- function(object, expected) {
         expect_identical(
             unclass(toJSON(object)),

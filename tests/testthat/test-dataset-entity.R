@@ -1,8 +1,8 @@
 context("Dataset object and methods")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds <- cachedLoadDataset("test ds")
+    ds2 <- cachedLoadDataset("ECON.sav")
     ds3 <- loadDataset("an archived dataset", kind = "archived")
 
     today <- "2016-02-11"

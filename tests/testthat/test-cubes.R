@@ -22,7 +22,7 @@ test_that("cube missing functions set @useNA", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("formulaToCubeQuery", {
         expect_identical(

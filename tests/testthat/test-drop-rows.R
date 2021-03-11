@@ -1,7 +1,7 @@
 context("Deleting rows of a dataset")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("dropRows generates the right request", {
         expect_POST(
             dropRows(ds, ds$gender == "Male"),

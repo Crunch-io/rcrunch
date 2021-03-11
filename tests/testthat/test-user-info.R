@@ -18,7 +18,7 @@ with_mock_crunch({
     })
 
     test_that("users() works with dataset entities", {
-        ds <- loadDataset("ECON.sav")
+        ds <- cachedLoadDataset("ECON.sav")
         user_cat <- users(ds)
 
         expect_is(user_cat, "UserCatalog")

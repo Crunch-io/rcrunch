@@ -1,7 +1,7 @@
 context("Variable catalog")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     varcat <- allVariables(ds)
     varorder <- ordering(varcat)
     test_that("VariableCatalog instantiates from Shoji", {

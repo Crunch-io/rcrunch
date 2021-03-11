@@ -26,7 +26,7 @@ with_mock_crunch({
         '"https://app.crunch.io/api/datasets/1/variables/birthyr/"},{"value":10}]}}}]}'
     )
 
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("fillExpr works on existing variable with ids in list", {
         expect_equal(

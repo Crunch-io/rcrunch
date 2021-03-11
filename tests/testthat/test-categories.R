@@ -1,7 +1,7 @@
 context("Categories")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     cats <- categories(ds$gender)
 
     test_that("category init", {

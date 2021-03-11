@@ -82,7 +82,7 @@ test_that("sliding_subvar_meta fails correctly", {
 })
 
 with_mock_crunch({
-  ds <- loadDataset("ECON.sav")
+  ds <- cachedLoadDataset("ECON.sav")
 
   test_that("slidingCategories creates expected VariableDefinition", {
     expect_equal(

@@ -1,7 +1,7 @@
 context("Export dataset")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("Export POST request", {
         expect_POST(
             exportDataset(ds, file = ""),
@@ -113,7 +113,7 @@ with_mock_crunch({
         '{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]'
     )
     test_that("exporting hidden variables", {
-        ds <- loadDataset("ECON.sav")
+        ds <- cachedLoadDataset("ECON.sav")
 
         expect_POST(
             write.csv(ds, file = "", include.hidden = TRUE),

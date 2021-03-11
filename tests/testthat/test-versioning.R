@@ -1,7 +1,7 @@
 context("Versions")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("Version catalog exists", {
         expect_is(versions(ds), "VersionCatalog")
     })

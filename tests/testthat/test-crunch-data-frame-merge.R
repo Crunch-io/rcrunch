@@ -2,7 +2,7 @@ context("CrunchDataFrame merging")
 
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("the most basic case of merging a CrunchDataFarme with a data.frame", {
         ds_df <- as.data.frame(ds)

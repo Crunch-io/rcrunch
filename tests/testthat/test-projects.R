@@ -194,14 +194,14 @@ with_mock_crunch({
     })
 
     test_that("Add datasets to project by <- a dataset (which calls mv)", {
-        ds <- loadDataset("ECON.sav")
+        ds <- cachedLoadDataset("ECON.sav")
         expect_PATCH(
             datasets(aproject) <- ds,
             "https://app.crunch.io/api/projects/project1/"
         )
     })
     test_that("Add datasets to project by <- does nothing if already present", {
-        ds <- loadDataset("test ds")
+        ds <- cachedLoadDataset("test ds")
         expect_no_request(datasets(aproject) <- ds)
     })
 

@@ -1,8 +1,8 @@
 context("Conditional transform")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds <- cachedLoadDataset("test ds")
+    ds2 <- cachedLoadDataset("ECON.sav")
 
     test_that("conditionalTransform input validation", {
         expect_error(

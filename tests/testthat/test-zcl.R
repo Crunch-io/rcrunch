@@ -12,7 +12,7 @@ test_that("zcl(logical)", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("has.function", {
         func <- zfunc("cast", ds$birthyr, "text")
         expect_true(has.function(func, "cast"))
