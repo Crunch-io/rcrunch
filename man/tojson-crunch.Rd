@@ -30,7 +30,7 @@ toJSON(x, ..., for_query_string = FALSE)
 \item{for_query_string}{If \code{TRUE}, and \code{crunch.stabilize.query} option
 is also set to \code{TRUE}, then dictionary items in the JSON are
 sorted alphabetically, which can be useful when capturing
-mocks using httptest.}
+mocks using "httptest".}
 }
 \value{
 \code{jsonprep} returns a base R object that \code{jsonlite::toJSON}

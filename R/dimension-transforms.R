@@ -6,12 +6,9 @@
 #' [API documentation](
 #' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/decks/-deck_id-/slides/)
 #'
-#' @param colors An [`AnalyticPalette`] or a vector of color RGB hex color codes that will be used
-#' for the color of graphs in the dashboard (used in the order of appearance of
-#' categories/subvariables).
-#' @param palette An [`AnalyticPalette`], a vector of color RGB hex color codes, or a function that
-#' takes the categories/subvariables from the dimension and returns a RGB hex color codes that will
-#' be used for the color of graphs in the dashboard.
+#' @param colors A crunch `AnalyticPalettes` ([`palettes()`]) or a vector of color RGB hex color
+#' codes that will be used for the color of graphs in the dashboard (used in the order of
+#' appearance of categories/subvariables).
 #' @param hide A vector of category names/ids or subvariable names/aliases to hide from display
 #' @param rename A named vector of category names/ids or subvariable names/aliases to override
 #' their default values

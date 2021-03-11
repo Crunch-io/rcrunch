@@ -1,5 +1,5 @@
 # Generics ---------------------------------------------------------------
-#' #nolint start
+#nolint start
 #' Get and set slide analyses
 #'
 #' Slides are composed of analyses, which are effectively `CrunchCubes` with some
@@ -390,7 +390,7 @@ newSlide <- function(
     )
 
     if (any(dimTransformNeedsPrep(transform))) {
-        transform <- prepareDimTransforms(transform, query, ds)
+        transform <- prepareDimTransforms(transform, query, ds) #nolint
     }
 
     if (!is.null(query)) {

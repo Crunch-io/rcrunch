@@ -58,8 +58,7 @@
 \alias{weight,CrunchSlide-method}
 \alias{weight<-,CrunchSlide,ANY-method}
 \alias{weight,Analysis-method}
-\title{#nolint start
-Get and set slide analyses}
+\title{Get and set slide analyses}
 \usage{
 filter(x, ...)
 

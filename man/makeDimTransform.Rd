@@ -15,9 +15,9 @@ makeDimTransform(
 )
 }
 \arguments{
-\item{colors}{An \code{\link{AnalyticPalette}} or a vector of color RGB hex color codes that will be used
-for the color of graphs in the dashboard (used in the order of appearance of
-categories/subvariables).}
+\item{colors}{A crunch \code{AnalyticPalettes} (\code{\link[=palettes]{palettes()}}) or a vector of color RGB hex color
+codes that will be used for the color of graphs in the dashboard (used in the order of
+appearance of categories/subvariables).}
 
 \item{hide}{A vector of category names/ids or subvariable names/aliases to hide from display}
 
@@ -32,10 +32,6 @@ default ordering of the dimension.}
 \item{description}{A description for the dimension, overrides the variable's description}
 
 \item{...}{Other arguments, passed directly to the API for future expansion}
-
-\item{palette}{An \code{\link{AnalyticPalette}}, a vector of color RGB hex color codes, or a function that
-takes the categories/subvariables from the dimension and returns a RGB hex color codes that will
-be used for the color of graphs in the dashboard.}
 }
 \description{
 When displayed in a Crunch Dashboard or exported, crunch slides can have transformations
