@@ -147,6 +147,7 @@ reference:
   - cube-methods
   - cube-residuals
   - cube-missingness
+  - cubeMeasureType
   - index.table
   - dashboard
   - duplicated
@@ -166,6 +167,7 @@ reference:
   - analyses
   - slides
   - newSlide
+  - makeDimTransform
   - titles
   - reorderSlides
   - displaySettings
