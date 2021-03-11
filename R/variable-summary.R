@@ -1,6 +1,9 @@
 getSummary <- function(x) {
     url <- shojiURL(x, "views", "summary")
-    out <- crGET(url, query = list(filter = toJSON(zcl(activeFilter(x)))))
+    out <- crGET(
+        url,
+        query = list(filter = toJSON(zcl(activeFilter(x)), for_query_string = TRUE))
+    )
     if (is.Datetime(x)) {
         toR <- columnParser("datetime")
         for (i in c("min", "max")) out[[i]] <- toR(out[[i]])
@@ -37,14 +40,14 @@ table <- function(..., exclude, useNA = c("no", "ifany", "always"), dnn, deparse
         ## Check for filters
         filters <- vapply(
             dots,
-            function(x) toJSON(zcl(activeFilter(x))),
+            function(x) toJSON(zcl(activeFilter(x)), for_query_string = TRUE),
             character(1)
         )
         if (!all(filters == filters[1])) {
             halt("Filter expressions in variables must be identical")
         }
         query <- list(
-            query = toJSON(query),
+            query = toJSON(query, for_query_string = TRUE),
             filter = filters[1]
         )
         cube_url <- cubeURL(dots[[1]])

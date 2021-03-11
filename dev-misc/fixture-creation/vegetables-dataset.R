@@ -8,7 +8,7 @@
 # - Has a weight
 
 # TODO: Get this metadata into `newExampleDataset`?
-
+options(crunch.stabilize.query = TRUE)
 set.seed(2020-12-22)
 num_waves <- 7
 people_per_wave <- 30
@@ -337,12 +337,22 @@ mv(ds, c("weight", "last_vegetable", "last_vegetable_date"), "Survey variables")
 ds <- refresh(ds)
 
 
-## Other ds ----
+## Multitables ----
 mt <- newMultitable(
     ~ds$enjoy_mr + ds$healthy_eater,
     ds,
     "cat + mr multitable"
 )
+## Decks ----
+deck <- newDeck(ds, "deck about transforms")
+slide1 <- newSlide(deck, ~ds$healthy_eater, title = "No transforms")
+slide2 <- newSlide(
+    deck,
+    ~ds$healthy_eater,
+    title = "Yes transforms",
+    transform = list(rows_dimension = slideTransform(hide = "No"))
+)
+
 # Capture fixtures ----
 set_redactor(response_redactor(ds, "veg"))
 set_requester(request_redactor(ds, "veg"))
@@ -356,6 +366,18 @@ start_capturing(temp_dir)
 ds <- loadDataset("Vegetables example")
 mt <- multitables(ds)[[1]]
 tb <- tabBook(mt, ds)
+
+deck <- decks(ds)[[1]]
+slide1 <- slides(deck)[[1]]
+analyses1 <- analyses(slide1)
+cube1 <- cube(analyses1[[1]])
+slide2 <- slides(deck)[[2]]
+analyses2 <- analyses(slide2)
+cube2 <- cube(analyses2[[1]])
+
+# newSlide() uses a slightly different query (I think it has filter=NULL instead of no filter)
+# than getting the cube from a slide. So for the newSlide test, we make this request explicitly
+cube3 <- crtabs(~ds$healthy_eater, ds)
 stop_capturing()
 
 ### Cleanup and move dataset capture ----
@@ -378,6 +400,14 @@ stabilize_json_files(
         list(list("body", "modification_time"), "2021-01-01T21:26:43.038000"),
         list(list("body", "access_time"), "2021-01-01T21:26:43.038000"),
         list(list("urls", "owner_url"), "https://app.crunch.io/api/projects/pid/")
+    ),
+    list(
+        "app.crunch.io/api/datasets/veg/decks.json",
+        list(list("index", 1, "creation_time"), "2021-01-01T21:29:59.791000")
+    ),
+    list(
+        "app.crunch.io/api/datasets/veg/decks/dk01.json",
+        list(list("body", "creation_time"), "2021-01-01T21:29:59.791000")
     )
 )
 
@@ -400,7 +430,7 @@ file_copy(
     overwrite = TRUE
 )
 
-
+dir_delete(here("mocks/app.crunch.io/api/datasets/veg/"))
 dir_copy(
     path(temp_dir, "app.crunch.io/api/datasets/veg/"),
     here("mocks/app.crunch.io/api/datasets/veg/"),
@@ -474,4 +504,5 @@ file_copy(cube_path, here("mocks", "cubes", "numa-x-mr.json"), overwrite = TRUE)
 dir_delete(temp_dir)
 
 # Cleanup ----
+rm(deck) # Hopefully gets rid of weird message after sourcing script
 with_consent(delete(ds))

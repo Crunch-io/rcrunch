@@ -43,15 +43,19 @@ setMethod("as.vector", "CrunchVariable", function(x, mode) {
     # specified that is not in the same order as rows
     # (eg as.vector(ds$v1[c(10:1)])) as.vector should re-order by default
     # see CrunchDataFrame for one way this could be accomplished
-    columnParser(type(x))(getValues(x, filter = toJSON(f)), x, mode)
+    columnParser(type(x))(
+        getValues(x, filter = toJSON(f, for_query_string = TRUE)),
+        x,
+        mode
+    )
 })
 
 #' @rdname as-vector
 #' @export
 setMethod("as.vector", "CrunchExpr", function(x, mode) {
-    payload <- list(query = toJSON(list(out = zcl(x))))
+    payload <- list(query = toJSON(list(out = zcl(x)), for_query_string = TRUE))
     if (length(x@filter)) {
-        payload[["filter"]] <- toJSON(x@filter)
+        payload[["filter"]] <- toJSON(x@filter, for_query_string = TRUE)
     } else {
         payload$filter <- "{}"
     }

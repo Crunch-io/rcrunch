@@ -138,16 +138,18 @@ ids_from_ds <- function(ds, desired_ds_id) {
         # Variable IDs
         setNames(
             ids(allVariables(ds))[order(aliases(allVariables(ds)))],
-            paste0("var_", sprintf("%02d", seq_along(allVariables(ds))))
+            sprintf("var_%02d", seq_along(allVariables(ds)))
         ),
         # Multitable IDs
         setNames(
             lapply(multitables(ds), function(mt) mt@body$id),
-            paste0("mt_", sprintf("%02d", seq_along(multitables(ds))))
+            sprintf("mt_%02d", seq_along(multitables(ds)))
         ),
         # Folder IDs
-        ids_from_folders(ds)
-        # TODO: decks, slides, analyses, versions, filters, etc.
+        ids_from_folders(ds),
+        # Deck/Slide/Analyses IDs
+        ids_from_decks(ds)
+        # TODO: versions, filters, scripts, etc.
     )
 
     # rather than named list, make it 2 item list so that
@@ -163,7 +165,7 @@ ids_from_folders <- function(ds) {
     )
 
     out <- unlist(out)
-    setNames(out, paste0("vdir_", sprintf("%02d", seq_along(out))))
+    setNames(out, sprintf("vdir_%02d", seq_along(out)))
 }
 
 ids_below <- function(folder) {
@@ -171,6 +173,29 @@ ids_below <- function(folder) {
     subdirs <- folder[types(folder) %in% "folder"]
     out <- lapply(seq_along(subdirs), function(iii) ids_below(subdirs[[iii]]))
     c(id, out)
+}
+
+ids_from_decks <- function(ds) {
+    if (length(decks(ds)) == 0) return
+    deck_ids <- lapply(seq_along(decks(ds)), function(deck_num) {
+        deck <- refresh(decks(ds)[[deck_num]])
+        slide_ids <- lapply(seq_along(refresh(slides(deck))), function(slide_num) {
+            slide <- refresh(slides(deck)[[slide_num]])
+            analyses_ids <- lapply(
+                seq_along(refresh(analyses(slide))),
+                function(a_num) refresh(slide[[a_num]])@body$id
+            )
+            names(analyses_ids) <- sprintf("a%02d", seq_along(analyses_ids))
+            c(slide@body$id, analyses_ids)
+        })
+        names(slide_ids) <- sprintf("s%02d", seq_along(slide_ids))
+        c(deck@body$id, slide_ids)
+    })
+    names(deck_ids) <- sprintf("dk%02d", seq_along(deck_ids))
+
+    out <- unlist(deck_ids)
+    names(out) <- gsub("\\.", "", names(out))
+    out
 }
 
 id_response_redactor <- function(ds, desired_ds_id) {

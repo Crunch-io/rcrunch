@@ -199,7 +199,8 @@ with_mock_crunch({
             '"populationMagnitude":{"value":3},',
             '"showSignif":{"value":true},',
             '"currentTab":{"value":0},',
-            '"uiView":{"value":"app.datasets.browse"}}}]}}'
+            '"uiView":{"value":"app.datasets.browse"}},',
+            '"viz_specs":{"default":{"format":{"show_empty":true}}}}]}}'
         )
     })
     test_that("delete decks", {
@@ -293,6 +294,34 @@ with_mock_crunch({
             newSlide(main_deck, NULL),
             "Must specify either a `query` or `analyses` for `newSlide()`",
             fixed = TRUE
+        )
+    })
+
+    test_that("New Slide - with manual transforms", {
+        expect_POST(
+            newSlide(
+                main_deck, ~gender, title = "Title", subtitle = "SubTitle",
+                transform = list(
+                    rows_dimension = list(elements = list(`1` = list("hide" = TRUE))),
+                    version = "1.0"
+                )
+            ),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
+            '{"element":"shoji:entity",',
+            '"body":{"title":"Title",',
+            '"subtitle":"SubTitle",',
+            '"analyses":[{"query":{"dimensions":[{"variable":"https://app.',
+            'crunch.io/api/datasets/4/variables/gender/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}},',
+            '"display_settings":{"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":false},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0}},"transform":{',
+            '"rows_dimension":{"elements":{"1":{"hide":true}}},"version":"1.0"}}]}}'
         )
     })
 
@@ -693,7 +722,8 @@ with_mock_crunch({
             '"showSignif":{"value":true},',
             '"currentTab":{"value":0},',
             '"uiView":{"value":"app.datasets.browse"}},',
-            '"query_environment":{"filter":[],"weight":null}}}'
+            '"query_environment":{"filter":[],"weight":null},',
+            '"viz_specs":{"default":{"format":{"show_empty":true}}}}}'
         )
         expect_POST(
             slide[[2]] <- slide[[1]],
@@ -799,6 +829,44 @@ with_mock_crunch({
             '"showSignif":{"value":true},',
             '"currentTab":{"value":0},',
             '"uiView":{"value":"app.datasets.browse"}}}}'
+        )
+    })
+
+    test_that("analysis viz_specs", {
+        analysis <- an_cat[[1]]
+        expect_equal(
+            vizSpecs(analysis),
+            list(default = list(format = list(show_empty = TRUE)))
+        )
+        expect_PATCH(
+            vizSpecs(analysis) <- list(default = list(format = list(show_empty = FALSE))),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity","body":{"viz_specs"',
+            ':{"default":{"format":{"show_empty":false}}}}}'
+        )
+
+        # and the same thing works with the convenience of specifying the slide
+        expect_identical(
+            vizSpecs(slide),
+            list(default = list(format = list(show_empty = TRUE)))
+        )
+        expect_PATCH(
+            vizSpecs(slide) <- list(default = list(format = list(show_empty = FALSE))),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity","body":{"viz_specs":',
+            '{"default":{"format":{"show_empty":false}}}}}'
+        )
+
+        # And the analysis catalog
+        expect_equal(
+            vizSpecs(an_cat),
+            list(default = list(format = list(show_empty = TRUE)))
+        )
+        expect_PATCH(
+            vizSpecs(an_cat) <- list(default = list(format = list(show_empty = FALSE))),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity","body":{"viz_specs":',
+            '{"default":{"format":{"show_empty":false}}}}}'
         )
     })
 

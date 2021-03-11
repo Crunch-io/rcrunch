@@ -423,6 +423,10 @@ setGeneric("zcl", function(x) standardGeneric("zcl"))
 #'
 #' @param x the object
 #' @param ... additional arguments
+#' @param for_query_string If `TRUE`, and `crunch.stabilize.query` option
+#' is also set to `TRUE`, then dictionary items in the JSON are
+#' sorted alphabetically, which can be useful when capturing
+#' mocks using "httptest".
 #' @return `jsonprep` returns a base R object that `jsonlite::toJSON`
 #' can handle. `toJSON` returns the JSON-serialized character object.
 #' @name tojson-crunch
@@ -453,6 +457,23 @@ setGeneric("weight", function(x) standardGeneric("weight"))
 #' @rdname weight
 #' @export
 setGeneric("weight<-", function(x, value) standardGeneric("weight<-"))
+
+
+#' Get the palettes from a crunch object
+#'
+#' `CrunchDataset`s have color palettes associated with them
+#' that can be used as default colors for dashboard tiles. One of
+#' them can be assigned the "default".
+#'
+#' @param x A crunch object, like a `CrunchDataset`
+#' @param ... ignored (reserved for future expansion)
+#' @name palettes
+#' @export
+setGeneric("palettes", function(x) standardGeneric("palettes"))
+
+#' @rdname palettes
+#' @export
+setGeneric("defaultPalette", function(x, ...) standardGeneric("defaultPalette"))
 
 # for ggplot to not copmlain when given crunchdata
 #' Fortify crunch objects for use with ggplot

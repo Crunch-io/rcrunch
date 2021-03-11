@@ -38,7 +38,7 @@ getDatasetVariables <- function(x) {
 getNrow <- function(dataset) {
     u <- summaryURL(dataset)
     f <- zcl(activeFilter(dataset))
-    q <- crGET(u, query = list(filter = toJSON(f)))
+    q <- crGET(u, query = list(filter = toJSON(f, for_query_string = TRUE)))
     nrows <- as.integer(round(q$unweighted[["filtered"]]))
     return(nrows)
 }

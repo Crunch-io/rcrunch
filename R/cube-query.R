@@ -93,7 +93,10 @@ crtabs <- function(formula, data, weight = crunch::weight(data),
 
     ## GET it.
     resp <- crGET(cubeURL(data),
-        query = list(query = toJSON(query), filter = toJSON(f))
+        query = list(
+            query = toJSON(query, for_query_string = TRUE),
+            filter = toJSON(f, for_query_string = TRUE)
+        )
     )
     return(CrunchCube(resp, useNA = useNA))
 }

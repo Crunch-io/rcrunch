@@ -43,14 +43,31 @@ setMethod("jsonprep", "OrderGroup", .jsonprep.ordergroup)
 #' @importFrom jsonlite toJSON
 #' @rdname tojson-crunch
 #' @export
-toJSON <- function(x, ...) {
+toJSON <- function(x, ..., for_query_string = FALSE) {
     if (is.null(x)) {
         return(jsonlite::toJSON(emptyObject()))
     }
+    x <- jsonprep(x)
+    if (for_query_string && getOption("crunch.stabilize.query", FALSE)) {
+        x <- object_sort(x)
+    }
+
     out <- jsonlite::toJSON(
-        jsonprep(x),
+        x,
         auto_unbox = TRUE, null = "null", na = "null", force = TRUE, ...
     )
     # cat(out)
     return(out)
+}
+
+
+# Adapated from httptest:::object_sort
+object_sort <- function(x) {
+    if (is.list(x)) {
+        if (!is.null(names(x))) {
+            x <- x[sort(names(x))]
+        }
+        return(lapply(x, object_sort))
+    }
+    x
 }

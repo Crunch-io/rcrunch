@@ -1,0 +1,19 @@
+{
+    "description": "List of decks available for this user under this dataset",
+    "element": "shoji:catalog",
+    "index": {
+        "https://app.crunch.io/api/datasets/veg/decks/dk01/": {
+            "creation_time": "2021-01-01T21:29:59.791000",
+            "is_public": false,
+            "name": "deck about transforms",
+            "owner_id": "https://app.crunch.io/api/users/user_id/",
+            "owner_name": "Greg",
+            "team": null
+        }
+    },
+    "orders": {
+        "order": "https://app.crunch.io/api/datasets/veg/decks/order/"
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/decks/"
+}
+

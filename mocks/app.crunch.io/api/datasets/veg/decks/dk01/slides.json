@@ -1,0 +1,75 @@
+{
+    "description": "A catalog of the Slides in this Deck",
+    "element": "shoji:catalog",
+    "index": {
+        "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s01/": {
+            "analysis_url": "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s01/analyses/000001/",
+            "display_settings": {
+                "countsOrPercents": {
+                    "value": "percent"
+                },
+                "currentTab": {
+                    "value": 0
+                },
+                "decimalPlaces": {
+                    "value": 1
+                },
+                "percentageDirection": {
+                    "value": "colPct"
+                },
+                "showEmpty": {
+                    "value": false
+                },
+                "showMean": {
+                    "value": false
+                },
+                "showSignif": {
+                    "value": true
+                },
+                "vizType": {
+                    "value": "table"
+                }
+            },
+            "subtitle": "",
+            "title": "No transforms",
+            "type": "analysis"
+        },
+        "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s02/": {
+            "analysis_url": "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s02/analyses/000001/",
+            "display_settings": {
+                "countsOrPercents": {
+                    "value": "percent"
+                },
+                "currentTab": {
+                    "value": 0
+                },
+                "decimalPlaces": {
+                    "value": 1
+                },
+                "percentageDirection": {
+                    "value": "colPct"
+                },
+                "showEmpty": {
+                    "value": false
+                },
+                "showMean": {
+                    "value": false
+                },
+                "showSignif": {
+                    "value": true
+                },
+                "vizType": {
+                    "value": "table"
+                }
+            },
+            "subtitle": "",
+            "title": "Yes transforms",
+            "type": "analysis"
+        }
+    },
+    "orders": {
+        "flat": "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/flat/"
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/"
+}
+
