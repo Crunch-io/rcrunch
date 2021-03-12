@@ -295,10 +295,10 @@ with_mock_crunch({
         expect_equal(
             unclass(toJSON(expr@expression)),
             paste0(
-                '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"1":{"variable":', # nolint
-                '"https://app.crunch.io/api/datasets/1/variables/gender/"},"2":{"variable":',
+                '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"0001":{"variable":', # nolint
+                '"https://app.crunch.io/api/datasets/1/variables/gender/"},"0002":{"variable":',
                 '"https://app.crunch.io/api/datasets/1/variables/location/"}}},{"value":',
-                '["1","2"]}]}],"kwargs":{"numeric":{"value":false}}}'
+                '["0001","0002"]}]}],"kwargs":{"numeric":{"value":false}}}'
             )
         )
     })
@@ -309,9 +309,9 @@ with_mock_crunch({
         expect_equal(
             unclass(toJSON(expr@expression)),
             paste0(
-                '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"1":{"variable":', # nolint
+                '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"0001":{"variable":', # nolint
                 '"https://app.crunch.io/api/datasets/1/variables/birthyr/"}}},{"value":',
-                '["1"]}]}],"kwargs":{"numeric":{"value":true}}}'
+                '["0001"]}]}],"kwargs":{"numeric":{"value":true}}}'
             )
         )
     })
@@ -330,7 +330,7 @@ with_mock_crunch({
                         map = list(
                             c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
                         )
-                    ), list(value = I("1")))
+                    ), list(value = I("0001")))
                 )),
                 kwargs = list(numeric = list(value = FALSE))
             )
