@@ -23,7 +23,11 @@ CrunchDataFrame <- function(dataset, row.order = NULL,
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
 
-    var_names <- aliases(allVariables(dataset))
+    if (include.hidden) {
+        var_names <- aliases(allVariables(dataset))
+    } else {
+        var_names <- aliases(variables(dataset))
+    }
 
     out <- new.env()
     attr(out, "crunchDataset") <- dataset
