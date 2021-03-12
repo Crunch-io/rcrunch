@@ -72,6 +72,7 @@ setMethod("as.vector", "CrunchExpr", function(x, mode) {
 parse_column <- list(
     numeric = function(col, variable, mode) {
         missings <- vapply(col, Negate(is.numeric), logical(1))
+        missings[names(col) %in% "?"] <- TRUE
         col[missings] <- NA_real_
         return(as.numeric(unlist(col)))
     },
