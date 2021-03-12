@@ -135,6 +135,22 @@ parse_column <- list(
         }
         return(out)
     },
+    numeric_array = function(col, variable, mode) {
+        out <- columnParser("numeric")(unlist(col), variable, mode)
+        ncols <- length(tuple(variable)$subvariables)
+        nvals <- length(out)
+        out <- lapply(seq_len(ncols), function(iii) {
+            out[seq(iii, to = nvals, by = ncols)]
+        })
+        out <- as.data.frame(out)
+
+        if (namekey(variable) == "alias") {
+            names(out) <- aliases(subvariables(variable))
+        } else {
+            names(out) <- names(subvariables(variable))
+        }
+        return(out)
+    },
     datetime = function(col, variable, mode) {
         out <- columnParser("text")(col)
         return(from8601(out))
