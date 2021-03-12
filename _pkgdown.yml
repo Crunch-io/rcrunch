@@ -69,6 +69,7 @@ reference:
   - population
   - lock
   - streaming
+  - palettes
 - title: Multiple datasets
   contents:
   - appendDataset
@@ -256,6 +257,7 @@ reference:
   - show
   - temp.options
   - with-context-manager
+  - retry
 - title: Data
   contents:
   - SO_schema

@@ -52,6 +52,6 @@ jobs:
 
       - name: Run pkgdown
         run: |
-          git config user.email "rcrunch@crunch.io"
-          git config user.name "rcrunch GitHub Action"
+          git config --global user.email "rcrunch@crunch.io"
+          git config --global user.name "rcrunch GitHub Action"
           bash 'pkgdown.sh'
