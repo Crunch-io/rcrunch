@@ -308,6 +308,114 @@
                                     }
                                 },
                                 "n_missing": 11
+                            },
+                            "stddev": {
+                                "data": [
+                                    13.5748680205
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "age",
+                                        "description": "Age of respondent",
+                                        "format": {
+                                            "data": {
+                                                "digits": 2
+                                            },
+                                            "summary": {
+                                                "digits": 2
+                                            }
+                                        },
+                                        "name": "Age",
+                                        "notes": "How old are you?",
+                                        "view": {
+                                            "column_width": null
+                                        }
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        }
+                                    }
+                                },
+                                "n_missing": 11
+                            },
+                            "sum": {
+                                "data": [
+                                    8326
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "age",
+                                        "description": "Age of respondent",
+                                        "format": {
+                                            "data": {
+                                                "digits": 2
+                                            },
+                                            "summary": {
+                                                "digits": 2
+                                            }
+                                        },
+                                        "name": "Age",
+                                        "notes": "How old are you?",
+                                        "view": {
+                                            "column_width": null
+                                        }
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        }
+                                    }
+                                },
+                                "n_missing": 11
+                            },
+                            "valid_count_unweighted": {
+                                "data": [
+                                    199
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "age",
+                                        "description": "Age of respondent",
+                                        "format": {
+                                            "data": {
+                                                "digits": 2
+                                            },
+                                            "summary": {
+                                                "digits": 2
+                                            }
+                                        },
+                                        "name": "Age",
+                                        "notes": "How old are you?",
+                                        "view": {
+                                            "column_width": null
+                                        }
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": false,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        }
+                                    }
+                                },
+                                "n_missing": 11
                             }
                         },
                         "n": 210,
@@ -401,7 +509,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "enjoy_mr_savory",
                                                     "description": "Enjoyment of savory food (binary)",
@@ -426,7 +534,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "enjoy_mr_spicy",
                                                     "description": "Enjoyment of spicy food (binary)",
@@ -451,7 +559,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "enjoy_mr_sweet",
                                                     "description": "Enjoyment of sweet food (binary)",
@@ -564,9 +672,9 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3"
+                                        "0001",
+                                        "0002",
+                                        "0003"
                                     ]
                                 }
                             }
@@ -636,6 +744,138 @@
                                     "type": {
                                         "class": "numeric",
                                         "integer": true,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        }
+                                    }
+                                },
+                                "n_missing": 11
+                            },
+                            "stddev": {
+                                "data": [
+                                    14.153492882,
+                                    11.6120425763,
+                                    15.333054624,
+                                    14.0255369336,
+                                    11.3227774182,
+                                    14.7865769245,
+                                    13.4855137162,
+                                    14.628220961,
+                                    7.6615925238
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "age",
+                                        "description": "Age of respondent",
+                                        "format": {
+                                            "data": {
+                                                "digits": 2
+                                            },
+                                            "summary": {
+                                                "digits": 2
+                                            }
+                                        },
+                                        "name": "Age",
+                                        "notes": "How old are you?",
+                                        "view": {
+                                            "column_width": null
+                                        }
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        }
+                                    }
+                                },
+                                "n_missing": 11
+                            },
+                            "sum": {
+                                "data": [
+                                    2977,
+                                    4862,
+                                    487,
+                                    5330,
+                                    2481,
+                                    515,
+                                    6735,
+                                    1390,
+                                    201
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "age",
+                                        "description": "Age of respondent",
+                                        "format": {
+                                            "data": {
+                                                "digits": 2
+                                            },
+                                            "summary": {
+                                                "digits": 2
+                                            }
+                                        },
+                                        "name": "Age",
+                                        "notes": "How old are you?",
+                                        "view": {
+                                            "column_width": null
+                                        }
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        }
+                                    }
+                                },
+                                "n_missing": 11
+                            },
+                            "valid_count_unweighted": {
+                                "data": [
+                                    80,
+                                    106,
+                                    13,
+                                    120,
+                                    65,
+                                    14,
+                                    160,
+                                    33,
+                                    6
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "age",
+                                        "description": "Age of respondent",
+                                        "format": {
+                                            "data": {
+                                                "digits": 2
+                                            },
+                                            "summary": {
+                                                "digits": 2
+                                            }
+                                        },
+                                        "name": "Age",
+                                        "notes": "How old are you?",
+                                        "view": {
+                                            "column_width": null
+                                        }
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": false,
                                         "missing_reasons": {
                                             "No Data": -1
                                         },
@@ -766,6 +1006,120 @@
                                     "type": {
                                         "class": "numeric",
                                         "integer": true,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        }
+                                    }
+                                },
+                                "n_missing": 15
+                            },
+                            "stddev": {
+                                "data": [
+                                    12.8507661695,
+                                    13.8948834691,
+                                    19.9749843554
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "age",
+                                        "description": "Age of respondent",
+                                        "format": {
+                                            "data": {
+                                                "digits": 2
+                                            },
+                                            "summary": {
+                                                "digits": 2
+                                            }
+                                        },
+                                        "name": "Age",
+                                        "notes": "How old are you?",
+                                        "view": {
+                                            "column_width": null
+                                        }
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        }
+                                    }
+                                },
+                                "n_missing": 15
+                            },
+                            "sum": {
+                                "data": [
+                                    3248,
+                                    4936,
+                                    142
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "age",
+                                        "description": "Age of respondent",
+                                        "format": {
+                                            "data": {
+                                                "digits": 2
+                                            },
+                                            "summary": {
+                                                "digits": 2
+                                            }
+                                        },
+                                        "name": "Age",
+                                        "notes": "How old are you?",
+                                        "view": {
+                                            "column_width": null
+                                        }
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        }
+                                    }
+                                },
+                                "n_missing": 15
+                            },
+                            "valid_count_unweighted": {
+                                "data": [
+                                    78,
+                                    117,
+                                    4
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "age",
+                                        "description": "Age of respondent",
+                                        "format": {
+                                            "data": {
+                                                "digits": 2
+                                            },
+                                            "summary": {
+                                                "digits": 2
+                                            }
+                                        },
+                                        "name": "Age",
+                                        "notes": "How old are you?",
+                                        "view": {
+                                            "column_width": null
+                                        }
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": false,
                                         "missing_reasons": {
                                             "No Data": -1
                                         },
@@ -1050,7 +1404,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "enjoy_mr_savory",
                                                     "description": "Enjoyment of savory food (binary)",
@@ -1075,7 +1429,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "enjoy_mr_spicy",
                                                     "description": "Enjoyment of spicy food (binary)",
@@ -1100,7 +1454,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "enjoy_mr_sweet",
                                                     "description": "Enjoyment of sweet food (binary)",
@@ -1213,9 +1567,9 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3"
+                                        "0001",
+                                        "0002",
+                                        "0003"
                                     ]
                                 }
                             }
@@ -1567,7 +1921,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "enjoy_mr_savory",
                                                     "description": "Enjoyment of savory food (binary)",
@@ -1592,7 +1946,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "enjoy_mr_spicy",
                                                     "description": "Enjoyment of spicy food (binary)",
@@ -1617,7 +1971,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "enjoy_mr_sweet",
                                                     "description": "Enjoyment of sweet food (binary)",
@@ -1730,9 +2084,9 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3"
+                                        "0001",
+                                        "0002",
+                                        "0003"
                                     ]
                                 }
                             }
@@ -1962,7 +2316,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "enjoy_mr_savory",
                                                     "description": "Enjoyment of savory food (binary)",
@@ -1987,7 +2341,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "enjoy_mr_spicy",
                                                     "description": "Enjoyment of spicy food (binary)",
@@ -2012,7 +2366,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "enjoy_mr_sweet",
                                                     "description": "Enjoyment of sweet food (binary)",
@@ -2125,9 +2479,9 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3"
+                                        "0001",
+                                        "0002",
+                                        "0003"
                                     ]
                                 }
                             },
@@ -2201,7 +2555,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "enjoy_mr_savory",
                                                     "description": "Enjoyment of savory food (binary)",
@@ -2226,7 +2580,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "enjoy_mr_spicy",
                                                     "description": "Enjoyment of spicy food (binary)",
@@ -2251,7 +2605,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "enjoy_mr_sweet",
                                                     "description": "Enjoyment of sweet food (binary)",
@@ -2364,9 +2718,9 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3"
+                                        "0001",
+                                        "0002",
+                                        "0003"
                                     ]
                                 }
                             }
@@ -2614,7 +2968,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "enjoy_mr_savory",
                                                     "description": "Enjoyment of savory food (binary)",
@@ -2639,7 +2993,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "enjoy_mr_spicy",
                                                     "description": "Enjoyment of spicy food (binary)",
@@ -2664,7 +3018,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "enjoy_mr_sweet",
                                                     "description": "Enjoyment of sweet food (binary)",
@@ -2777,9 +3131,9 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3"
+                                        "0001",
+                                        "0002",
+                                        "0003"
                                     ]
                                 }
                             },
@@ -3035,7 +3389,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_healthy",
                                                     "description": "Vegetables are healthy (5 point scale)",
@@ -3060,7 +3414,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_tasty",
                                                     "description": "Vegetables are Tasty (5 point scale)",
@@ -3085,7 +3439,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_filling",
                                                     "description": "Vegetables are filling (5 point scale)",
@@ -3110,7 +3464,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "4",
+                                                "id": "0004",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_env",
                                                     "description": "Vegetables are environmental (5 point scale)",
@@ -3257,10 +3611,10 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3",
-                                        "4"
+                                        "0001",
+                                        "0002",
+                                        "0003",
+                                        "0004"
                                     ]
                                 }
                             }
@@ -3657,7 +4011,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_healthy",
                                                     "description": "Vegetables are healthy (5 point scale)",
@@ -3682,7 +4036,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_tasty",
                                                     "description": "Vegetables are Tasty (5 point scale)",
@@ -3707,7 +4061,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_filling",
                                                     "description": "Vegetables are filling (5 point scale)",
@@ -3732,7 +4086,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "4",
+                                                "id": "0004",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_env",
                                                     "description": "Vegetables are environmental (5 point scale)",
@@ -3879,10 +4233,10 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3",
-                                        "4"
+                                        "0001",
+                                        "0002",
+                                        "0003",
+                                        "0004"
                                     ]
                                 }
                             },
@@ -3956,7 +4310,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "enjoy_mr_savory",
                                                     "description": "Enjoyment of savory food (binary)",
@@ -3981,7 +4335,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "enjoy_mr_spicy",
                                                     "description": "Enjoyment of spicy food (binary)",
@@ -4006,7 +4360,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "enjoy_mr_sweet",
                                                     "description": "Enjoyment of sweet food (binary)",
@@ -4119,9 +4473,9 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3"
+                                        "0001",
+                                        "0002",
+                                        "0003"
                                     ]
                                 }
                             }
@@ -4566,7 +4920,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_healthy",
                                                     "description": "Vegetables are healthy (5 point scale)",
@@ -4591,7 +4945,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_tasty",
                                                     "description": "Vegetables are Tasty (5 point scale)",
@@ -4616,7 +4970,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_filling",
                                                     "description": "Vegetables are filling (5 point scale)",
@@ -4641,7 +4995,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "4",
+                                                "id": "0004",
                                                 "references": {
                                                     "alias": "veg_enjoy_ca_env",
                                                     "description": "Vegetables are environmental (5 point scale)",
@@ -4788,10 +5142,10 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3",
-                                        "4"
+                                        "0001",
+                                        "0002",
+                                        "0003",
+                                        "0004"
                                     ]
                                 }
                             },
@@ -5147,12 +5501,298 @@
 
                                         },
                                         "subvariables": [
-                                            "1",
-                                            "2",
-                                            "3",
-                                            "4",
-                                            "5",
-                                            "6"
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
+                                        ]
+                                    }
+                                },
+                                "n_missing": 0
+                            },
+                            "stddev": {
+                                "data": [
+                                    8.2403168396,
+                                    20.0942162886,
+                                    9.7418541052,
+                                    12.5184798072,
+                                    11.2252095606,
+                                    4.080662365
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "ratings_numa",
+                                        "description": "Rating of Vegetables: Scale of 0-100",
+                                        "name": "Vegetable Ratings",
+                                        "notes": "On a scale of 0-100, how would you rate...?",
+                                        "subreferences": [
+                                            {
+                                                "alias": "ratings_numa_avocado",
+                                                "description": "Avocado Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Avocado",
+                                                "notes": "What is your rating between 0 and 100 of: Avocado",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_brussel_sprout",
+                                                "description": "Brussel Sprout Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Brussel Sprout",
+                                                "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_carrot",
+                                                "description": "Carrot Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Carrot",
+                                                "notes": "What is your rating between 0 and 100 of: Carrot",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_daikon",
+                                                "description": "Daikon Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Daikon",
+                                                "notes": "What is your rating between 0 and 100 of: Daikon",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_eggplant",
+                                                "description": "Eggplant Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Eggplant",
+                                                "notes": "What is your rating between 0 and 100 of: Eggplant",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_fennel",
+                                                "description": "Fennel Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Fennel",
+                                                "notes": "What is your rating between 0 and 100 of: Fennel",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            }
+                                        ],
+                                        "uniform_basis": false
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        },
+                                        "subvariables": [
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
+                                        ]
+                                    }
+                                },
+                                "n_missing": 0
+                            },
+                            "sum": {
+                                "data": [
+                                    14952,
+                                    12729,
+                                    15484,
+                                    14093,
+                                    13595,
+                                    16988
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "ratings_numa",
+                                        "description": "Rating of Vegetables: Scale of 0-100",
+                                        "name": "Vegetable Ratings",
+                                        "notes": "On a scale of 0-100, how would you rate...?",
+                                        "subreferences": [
+                                            {
+                                                "alias": "ratings_numa_avocado",
+                                                "description": "Avocado Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Avocado",
+                                                "notes": "What is your rating between 0 and 100 of: Avocado",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_brussel_sprout",
+                                                "description": "Brussel Sprout Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Brussel Sprout",
+                                                "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_carrot",
+                                                "description": "Carrot Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Carrot",
+                                                "notes": "What is your rating between 0 and 100 of: Carrot",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_daikon",
+                                                "description": "Daikon Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Daikon",
+                                                "notes": "What is your rating between 0 and 100 of: Daikon",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_eggplant",
+                                                "description": "Eggplant Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Eggplant",
+                                                "notes": "What is your rating between 0 and 100 of: Eggplant",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_fennel",
+                                                "description": "Fennel Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Fennel",
+                                                "notes": "What is your rating between 0 and 100 of: Fennel",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            }
+                                        ],
+                                        "uniform_basis": false
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        },
+                                        "subvariables": [
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
                                         ]
                                     }
                                 },
@@ -5290,12 +5930,12 @@
 
                                         },
                                         "subvariables": [
-                                            "1",
-                                            "2",
-                                            "3",
-                                            "4",
-                                            "5",
-                                            "6"
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
                                         ]
                                     }
                                 },
@@ -5393,7 +6033,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "1",
+                                                "id": "0001",
                                                 "references": {
                                                     "alias": "enjoy_mr_savory",
                                                     "description": "Enjoyment of savory food (binary)",
@@ -5418,7 +6058,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "2",
+                                                "id": "0002",
                                                 "references": {
                                                     "alias": "enjoy_mr_spicy",
                                                     "description": "Enjoyment of spicy food (binary)",
@@ -5443,7 +6083,7 @@
                                             "missing": false,
                                             "value": {
                                                 "derived": false,
-                                                "id": "3",
+                                                "id": "0003",
                                                 "references": {
                                                     "alias": "enjoy_mr_sweet",
                                                     "description": "Enjoyment of sweet food (binary)",
@@ -5556,9 +6196,9 @@
                                     "class": "categorical",
                                     "ordinal": false,
                                     "subvariables": [
-                                        "1",
-                                        "2",
-                                        "3"
+                                        "0001",
+                                        "0002",
+                                        "0003"
                                     ]
                                 }
                             }
@@ -5774,12 +6414,394 @@
 
                                         },
                                         "subvariables": [
-                                            "1",
-                                            "2",
-                                            "3",
-                                            "4",
-                                            "5",
-                                            "6"
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
+                                        ]
+                                    }
+                                },
+                                "n_missing": 0
+                            },
+                            "stddev": {
+                                "data": [
+                                    8.0110742678,
+                                    19.7718592946,
+                                    9.9113505142,
+                                    12.5942231929,
+                                    11.8202072561,
+                                    4.1436807418,
+                                    8.1349118789,
+                                    20.6554516093,
+                                    9.8157965313,
+                                    12.460905899,
+                                    10.969764959,
+                                    4.0306029051,
+                                    10.8889017728,
+                                    17.3282783556,
+                                    8.6313382508,
+                                    13.0694531661,
+                                    9.5003373759,
+                                    3.8630398552,
+                                    8.4112213834,
+                                    20.5608228036,
+                                    9.3533759268,
+                                    12.5497809224,
+                                    10.9540337272,
+                                    3.9612877535,
+                                    7.9675478148,
+                                    19.5767748383,
+                                    10.131409307,
+                                    10.4355424217,
+                                    11.3121300255,
+                                    4.3098896517,
+                                    8.3550997784,
+                                    18.8482954603,
+                                    11.478519515,
+                                    10.9883388073,
+                                    12.6779639229,
+                                    3.5050983275,
+                                    8.3489681452,
+                                    19.8922764095,
+                                    9.8308828575,
+                                    12.4480363051,
+                                    11.1802530833,
+                                    4.1048184214,
+                                    8.057551609,
+                                    20.4925614738,
+                                    9.3348693053,
+                                    10.9260250866,
+                                    12.0333876924,
+                                    3.8652017989,
+                                    6.9785385289,
+                                    18.9569688154,
+                                    10.2062072616,
+                                    7.607014307,
+                                    7.5365774726,
+                                    4.5789372857
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "ratings_numa",
+                                        "description": "Rating of Vegetables: Scale of 0-100",
+                                        "name": "Vegetable Ratings",
+                                        "notes": "On a scale of 0-100, how would you rate...?",
+                                        "subreferences": [
+                                            {
+                                                "alias": "ratings_numa_avocado",
+                                                "description": "Avocado Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Avocado",
+                                                "notes": "What is your rating between 0 and 100 of: Avocado",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_brussel_sprout",
+                                                "description": "Brussel Sprout Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Brussel Sprout",
+                                                "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_carrot",
+                                                "description": "Carrot Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Carrot",
+                                                "notes": "What is your rating between 0 and 100 of: Carrot",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_daikon",
+                                                "description": "Daikon Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Daikon",
+                                                "notes": "What is your rating between 0 and 100 of: Daikon",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_eggplant",
+                                                "description": "Eggplant Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Eggplant",
+                                                "notes": "What is your rating between 0 and 100 of: Eggplant",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_fennel",
+                                                "description": "Fennel Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Fennel",
+                                                "notes": "What is your rating between 0 and 100 of: Fennel",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            }
+                                        ],
+                                        "uniform_basis": false
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        },
+                                        "subvariables": [
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
+                                        ]
+                                    }
+                                },
+                                "n_missing": 0
+                            },
+                            "sum": {
+                                "data": [
+                                    6168,
+                                    5373,
+                                    6262,
+                                    5763,
+                                    5449,
+                                    6541,
+                                    7881,
+                                    6622,
+                                    8221,
+                                    7479,
+                                    7306,
+                                    9308,
+                                    903,
+                                    734,
+                                    1001,
+                                    851,
+                                    840,
+                                    1139,
+                                    9164,
+                                    7616,
+                                    9463,
+                                    9063,
+                                    8249,
+                                    10285,
+                                    4773,
+                                    4298,
+                                    4989,
+                                    4119,
+                                    4388,
+                                    5511,
+                                    1015,
+                                    815,
+                                    1032,
+                                    911,
+                                    958,
+                                    1192,
+                                    12321,
+                                    10281,
+                                    12711,
+                                    11644,
+                                    11019,
+                                    13812,
+                                    2184,
+                                    1975,
+                                    2330,
+                                    2115,
+                                    2198,
+                                    2661,
+                                    447,
+                                    473,
+                                    443,
+                                    334,
+                                    378,
+                                    515
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "ratings_numa",
+                                        "description": "Rating of Vegetables: Scale of 0-100",
+                                        "name": "Vegetable Ratings",
+                                        "notes": "On a scale of 0-100, how would you rate...?",
+                                        "subreferences": [
+                                            {
+                                                "alias": "ratings_numa_avocado",
+                                                "description": "Avocado Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Avocado",
+                                                "notes": "What is your rating between 0 and 100 of: Avocado",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_brussel_sprout",
+                                                "description": "Brussel Sprout Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Brussel Sprout",
+                                                "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_carrot",
+                                                "description": "Carrot Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Carrot",
+                                                "notes": "What is your rating between 0 and 100 of: Carrot",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_daikon",
+                                                "description": "Daikon Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Daikon",
+                                                "notes": "What is your rating between 0 and 100 of: Daikon",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_eggplant",
+                                                "description": "Eggplant Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Eggplant",
+                                                "notes": "What is your rating between 0 and 100 of: Eggplant",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_fennel",
+                                                "description": "Fennel Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Fennel",
+                                                "notes": "What is your rating between 0 and 100 of: Fennel",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            }
+                                        ],
+                                        "uniform_basis": false
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        },
+                                        "subvariables": [
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
                                         ]
                                     }
                                 },
@@ -5965,12 +6987,12 @@
 
                                         },
                                         "subvariables": [
-                                            "1",
-                                            "2",
-                                            "3",
-                                            "4",
-                                            "5",
-                                            "6"
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
                                         ]
                                     }
                                 },
@@ -6212,12 +7234,322 @@
 
                                         },
                                         "subvariables": [
-                                            "1",
-                                            "2",
-                                            "3",
-                                            "4",
-                                            "5",
-                                            "6"
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
+                                        ]
+                                    }
+                                },
+                                "n_missing": 5
+                            },
+                            "stddev": {
+                                "data": [
+                                    7.8175447298,
+                                    19.4261421801,
+                                    9.9047002186,
+                                    12.8402795641,
+                                    11.7589459304,
+                                    4.0624866115,
+                                    8.4870341276,
+                                    20.6466183196,
+                                    9.4271916409,
+                                    12.2511835389,
+                                    10.8516230126,
+                                    4.0536837561,
+                                    9.8590060351,
+                                    21.6055548413,
+                                    5.0497524692,
+                                    14.5155089473,
+                                    11.1669154201,
+                                    6.0207972894
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "ratings_numa",
+                                        "description": "Rating of Vegetables: Scale of 0-100",
+                                        "name": "Vegetable Ratings",
+                                        "notes": "On a scale of 0-100, how would you rate...?",
+                                        "subreferences": [
+                                            {
+                                                "alias": "ratings_numa_avocado",
+                                                "description": "Avocado Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Avocado",
+                                                "notes": "What is your rating between 0 and 100 of: Avocado",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_brussel_sprout",
+                                                "description": "Brussel Sprout Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Brussel Sprout",
+                                                "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_carrot",
+                                                "description": "Carrot Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Carrot",
+                                                "notes": "What is your rating between 0 and 100 of: Carrot",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_daikon",
+                                                "description": "Daikon Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Daikon",
+                                                "notes": "What is your rating between 0 and 100 of: Daikon",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_eggplant",
+                                                "description": "Eggplant Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Eggplant",
+                                                "notes": "What is your rating between 0 and 100 of: Eggplant",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_fennel",
+                                                "description": "Fennel Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Fennel",
+                                                "notes": "What is your rating between 0 and 100 of: Fennel",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            }
+                                        ],
+                                        "uniform_basis": false
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        },
+                                        "subvariables": [
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
+                                        ]
+                                    }
+                                },
+                                "n_missing": 5
+                            },
+                            "sum": {
+                                "data": [
+                                    6126,
+                                    5076,
+                                    6359,
+                                    5745,
+                                    5598,
+                                    6956,
+                                    8465,
+                                    7331,
+                                    8785,
+                                    7967,
+                                    7626,
+                                    9687,
+                                    361,
+                                    322,
+                                    340,
+                                    381,
+                                    371,
+                                    345
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {
+                                        "alias": "ratings_numa",
+                                        "description": "Rating of Vegetables: Scale of 0-100",
+                                        "name": "Vegetable Ratings",
+                                        "notes": "On a scale of 0-100, how would you rate...?",
+                                        "subreferences": [
+                                            {
+                                                "alias": "ratings_numa_avocado",
+                                                "description": "Avocado Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Avocado",
+                                                "notes": "What is your rating between 0 and 100 of: Avocado",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_brussel_sprout",
+                                                "description": "Brussel Sprout Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Brussel Sprout",
+                                                "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_carrot",
+                                                "description": "Carrot Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Carrot",
+                                                "notes": "What is your rating between 0 and 100 of: Carrot",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_daikon",
+                                                "description": "Daikon Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Daikon",
+                                                "notes": "What is your rating between 0 and 100 of: Daikon",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_eggplant",
+                                                "description": "Eggplant Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Eggplant",
+                                                "notes": "What is your rating between 0 and 100 of: Eggplant",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            },
+                                            {
+                                                "alias": "ratings_numa_fennel",
+                                                "description": "Fennel Rating (100 point scale)",
+                                                "format": {
+                                                    "data": {
+                                                        "digits": 2
+                                                    },
+                                                    "summary": {
+                                                        "digits": 2
+                                                    }
+                                                },
+                                                "name": "Fennel",
+                                                "notes": "What is your rating between 0 and 100 of: Fennel",
+                                                "view": {
+                                                    "column_width": null
+                                                }
+                                            }
+                                        ],
+                                        "uniform_basis": false
+                                    },
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": null,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {
+
+                                        },
+                                        "subvariables": [
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
                                         ]
                                     }
                                 },
@@ -6367,12 +7699,12 @@
 
                                         },
                                         "subvariables": [
-                                            "1",
-                                            "2",
-                                            "3",
-                                            "4",
-                                            "5",
-                                            "6"
+                                            "0001",
+                                            "0002",
+                                            "0003",
+                                            "0004",
+                                            "0005",
+                                            "0006"
                                         ]
                                     }
                                 },
