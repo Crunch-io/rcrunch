@@ -1,0 +1,570 @@
+---
+title: "Crunch Deck Cookbook"
+description: "TKTKTK"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Crunch Deck Cookbook}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+Decks are a way for analysts to save a set of analyses so that they can refer back to it later,
+export to Excel or PowerPoint, or create a Crunch Dashboard. Each *deck* is made up of a set of
+*slides*, and each *slide* contains an *analysis* and optionally a *title* and *subtitle*.
+
+While a good slide generally appears simple to the viewer, a lot depends on getting the analysis
+exactly right, and so the creator must spell out the fine details of the slide so that their
+analysis is clear. The attributes of a slide's analysis consist of:
+
+- **a query**: A set of variables and what calculation to perform (such as a count or mean)
+- **the query environment**: Modifiers to the data that the query is performed on, like a filter
+or weight to use.
+- **dimension transformations**: A dimension is a set of items that the calculation
+is enumerated along (a table based on a categorical array could have the categories in the
+"rows" dimension and the subvariables in the "columns" dimension). Dimension transformations are
+modifications to how those dimensions are displayed, such as reordering, renaming or assigning
+colors.
+- **display settings and visual specifications**: There's a whole other collection of settings
+such as the type of visualization, number of decimals, and advanced options for how the slide
+is exported to Excel.
+
+
+This vignette will start from the pets example dataset.
+
+```{r}
+suppressPackageStartupMessages({
+    library(purrr)
+    library(glue)
+    library(crunch)
+})
+
+options("crunch.show.progress" = FALSE)
+
+login()
+ds <- newExampleDataset()
+```
+
+## Basic deck and slide manipulation
+
+### Creating a slide on a new deck
+#### Problem
+You want to create a new deck and add slides to it.
+
+#### Solution
+A deck is created on a dataset with the command `newDeck()`. It takes the dataset, a title for the
+deck, and can take `is_public=TRUE` if the deck should be made public to other users of the dataset
+(it defaults to `FALSE`).
+
+After the deck is created, the `newSlide()` function adds a slide.
+
+```{r}
+deck <- newDeck(ds, "Q3 Pets Deck", is_public = TRUE)
+private_deck <- newDeck(ds, "Private Deck")
+
+# If no `vizType` is specified, defaults to a table
+slide <- newSlide(deck, ~q1, title = "Table of Favorite Pet")
+
+# Example of setting a vizType and filter
+slide <- newSlide(
+    deck, 
+    mean(ndogs) ~ country, 
+    title = "Dot Plot of Mean Dogs by Country",
+    display_settings = list(vizType = "dotplot"),
+    filter = ds$q1 == "Dog"
+)
+
+deck <- refresh(deck)
+```
+
+
+### Creating a slide on an existing deck
+#### Problem
+You want to add a slide to a deck that has already been made.
+
+#### Solution
+The `decks()` function access the decks catalog for a dataset. You can select one
+name or position and then add to it.
+
+```{r}
+ds <- refresh(ds)
+decks(ds)
+
+private_deck <- decks(ds)[["Private Deck"]]
+
+slide <- newSlide(
+    private_deck, 
+    ~q1, 
+    title = "Bar Plot of Favorite Pet", 
+    display_settings = list(vizType = "groupedBarPlot")
+)
+```
+
+
+### Editing an existing slide
+#### Problem
+You want to edit a slide that's already been created.
+
+#### Solution
+Slides can be accessed from the deck's slide catalog, available from the `slides()` command. 
+You can retrieve them by their title or position. 
+
+The helper functions `title<-`, `subtitle<-`, `query<-`, `weight<-`, `filter<-`, `transforms<-`,
+`displaySettings<-` and `vizSpecs<-` help set options on a slide.
+
+```{r}
+# Move title to subtitle and change the title
+slide <- slides(deck)[["Table of Favorite Pet"]]
+subtitle(slide) <- title(slide)
+title(slide) <- "Cats are the most popular"
+
+
+# Rename a category
+slide <- slides(deck)[[2]]
+transforms(slide) <- list(
+    rows_dimension = makeDimTransform(rename = c("AUS" = "Australia"))
+)
+```
+
+
+### Reordering slides on a deck
+#### Problem
+You want to rearrange the order slides on an existing deck.
+
+#### Solution
+TODO: This is not currently possible from R :(
+
+```{r}
+```
+
+(Note this controls the order of the slides in a deck, which controls how they appear in the web app's
+deck viewer and Excel and PowerPoint exports, but does not change order or position of an existing 
+Crunch Dashboard)
+
+
+### Deleting slides on a deck
+#### Problem
+You want to delete a slide from a deck.
+
+#### Solution
+Access a slide from the slide catalog and then use the `delete()` command to delete it (it will
+ask before deleting unless you use command `with_consent()`).
+
+```{r}
+slide <- slides(deck)[[1]]
+
+if (FALSE) { # Not actually run for example
+    delete(slide)
+}
+```
+
+### Making a deck public (or private)
+#### Problem
+You want to change a deck from being private to public (or vice-versa).
+
+#### Solution
+The `is.public<-` function can set the deck's status.
+
+```{r}
+is.public(private_deck) <- TRUE # now public
+```
+
+
+
+## Query types
+Queries define the variables and summary measures used for the slide's analysis. They use the 
+formula notation used by the crunch function `crtabs` which is based on base R's `xtabs()`.
+
+### Univariate Frequencies
+#### Problem
+You want to get the frequencies of a single cateorical or multiple response variable.
+
+#### Solution
+The query for a univariate count query puts the variable on the right hand side of a
+formula (eg `~var`).
+
+```{r}
+slide <- newSlide(
+    deck, 
+    ~q1, 
+    title = "Univariate frequency: Favorite Pet"
+)
+```
+
+### Bivariate Frequencies (Crosstabs)
+#### Problem
+You want to get a crosstab (or a frequency from two variables' joint distribution)
+
+#### Solution
+The query for a multivariate frequency uses the `+` to separate the variables on the right
+hand side of the formula (eg `~var1 + var2`).
+
+```{r}
+slide <- newSlide(
+    deck, 
+    ~q1 + country, 
+    title = "Bivariate frequency: Favorite Pet by country"
+)
+
+# A third dimension is possible, which will usually result in a tabbed result:
+slide <- newSlide(
+    deck, 
+    ~q1 + country + wave, 
+    title = "Trivariate frequency: Favorite Pet by country by wave"
+)
+```
+
+
+### Frequencies from a Categorical Array
+#### Problem
+You want to get the frequencies of a single cateorical or multiple response variable.
+
+#### Solution
+A categorical array contributes two dimensions to the analysis, a "subvariables" dimension
+and a "" dimension. If your query just specifies the variable, by default the 
+categories dimension is used first and the categories second, but you can specify the order
+by using `categories()` and `subvaribles()` functions in your query.
+
+```{r}
+slide <- newSlide(
+    deck, 
+    ~allpets, 
+    title = "Categorical array: default order"
+)
+
+slide <- newSlide(
+    deck, 
+    ~categories(allpets) + subvariables(allpets), 
+    title = "Categorical array: categories on rows dimension"
+)
+```
+
+
+### Mean of a Numeric variable
+#### Problem
+You want to get the frequencies of a single categorical or multiple response variable.
+
+#### Solution
+A numeric summary measure like a mean goes on the left hand side of the formula in a query.
+The right hand side cannot be empty, but to get the mean of the whole dataset a value of 1
+can be used.
+```{r}
+slide <- newSlide(
+    deck, 
+    mean(ndogs) ~ 1,
+    title = "Mean Number of Dogs"
+)
+
+slide <- newSlide(
+    deck, 
+    mean(ndogs) ~ country,
+    title = "Mean Number of Dogs by Country"
+)
+```
+
+
+### Scorecard of aligned Multiple Response variables
+#### Problem
+You want to make comparisons of frequencies of a set of multiple response variables with
+the same options
+
+#### Solution
+A scorecard is a rectangular grid of different Multiple Response variables with their
+items aligned. The query for a scorecard can be created using the `scorecard()` function.
+
+```{r}
+# There's only one MR available on this dataset, so we repeat the same one twice to illustrate
+slide <- newSlide(
+    deck, 
+    ~scorecard(allpets, allpets), 
+    title = "Scorecard"
+)
+```
+
+
+## Dimension transforms
+Query results have "dimensions", which are enumerated sets that the calculation's results
+are formed in, such as the categories of a categorical variables or the items in a 
+multiple response variables. Their behavior in the slide can be customized using 
+dimension transforms.
+
+A query result can have up to three dimensions. The first is the "rows_dimension", second
+is the "columns" dimension and third is the "tabs_dimension". When using the `transform`
+argument of `newSlide()` or setting the `transforms<-` of a slide directly, you form a
+named list with these dimensions as the names. The helper function `makeDimTransform()`
+can also help create the dimension changes.
+
+### Using a dataset's palette
+#### Problem
+You want to make the colors of a dashboard tile use a pre-defined palette.
+
+#### Solution
+Each Crunch Dataset has a set of color palettes associated with it's account and folder.
+You can access the palettes using the `palettes()` or `defaultPalette()` functions.
+Then using the `makeDimTransform()` function you can use this palette. The colors are
+used in the order they appear and if more colors are needed than provided by the 
+palette, the default colors are used.
+
+```{r}
+slide <- newSlide(
+    deck, 
+    ~q1, 
+    title = glue("Favorite pet using default palette"),
+    display_settings = list(vizType = "groupedBarPlot"),
+    transform = list(
+        rows_dimension = makeDimTransform(colors = defaultPalette(ds))
+    )
+)
+
+graph_pal <- palettes(ds)[["purple palette"]]
+slide <- newSlide(
+    deck, 
+    ~categories(petloc) + subvariables(petloc), 
+    title = glue("Pets by location using another palette"),
+    display_settings = list(vizType = "horizontalBarPlot"),
+    transform = list(
+        rows_dimension = makeDimTransform(colors = graph_pal)
+    )
+)
+```
+
+
+### Hiding a dimension item
+#### Problem
+You want to hide a dimension item (a category or subvariable) from the slide.
+
+#### Solution
+The `hide` argument of `makeDimTransform()` takes a category name or id, if 
+the dimension is made from categories, or a subvariable name or alias if the
+dimension is made from subvariables (as in a MultipleResponse variable or a
+subvariables dimension of a Categorical Array or Numeric Array).
+```{r}
+slide <- newSlide(
+    deck, 
+    ~q1, 
+    title = "Favorite pet excluding birds",
+    display_settings = list(vizType = "groupedBarPlot"),
+    transform = list(
+        rows_dimension = makeDimTransform(hide = "Bird")
+    )
+)
+```
+
+
+## Display settings and Visual Specifications
+
+### Choosing a graph type
+#### Problem
+You want to create a slide with a display type other than table.
+
+#### Solution
+The default display of a tile is the table, but the `vizType` display setting chooses
+between other options. The most commonly used vizTypes are: 
+- `table` (always availble)
+- `groupedBarPlot`, `stackedBarPlot`, `horizontalBarPlot`, `horizontalStackedBarPlot` (available
+for queries based on a count in any number of dimensions)
+- `timeplot` (available when the second dimension has a time component)
+- `dotplot` (availble for displays of means)
+- `donut` (available only for 1 dimensional count queries)
+
+```{r}
+slide <- newSlide(
+    deck, 
+    ~q1 + country, 
+    title = "Favorite pet by country horizontal bar plot",
+    display_settings = list(vizType = "horizontalBarPlot")
+)
+
+
+slide <- newSlide(
+    deck, 
+    ~q1 + wave, 
+    title = "Favorite pet over time timeplot",
+    display_settings = list(vizType = "timeplot")
+)
+```
+
+### Using a slide as a template
+#### Problem
+You want to use the settings from an existing slide to create a new one (or modify an existing one).
+
+#### Solution
+The functions `displaySettings()` and `vizSpecs()` give access to the settings on an existing slide.
+This slide can be a slide you've created from R or from the web app, so that you can use the visual
+editor to perfect the look for one slide and then use it for a whole set of slides.
+
+```{r}
+template_deck <- newDeck(ds, "Templates", is_public = TRUE)
+slide <- newSlide(
+    template_deck, 
+    ~q1, 
+    title = "Donut with value labels",
+    display_settings = list(vizType = "donut", showValueLabels = TRUE),
+    viz_specs = list(
+        default = list(
+            format = list(
+                decimal_places = list(percentages = 0L, other = 2L),
+                show_empty = FALSE
+            )
+        )
+    )
+)
+
+
+slide <- newSlide(
+    deck, 
+    ~country,
+    title = "Country donut with value labels",
+    display_settings = displaySettings(template_deck[["Donut with value labels"]]),
+    viz_specs = vizSpecs(template_deck[["Donut with value labels"]])
+)
+```
+
+
+## Bulk Creation of Slides
+Sometimes you want to make many slides with related formatting to create a document
+that gives a good high level overview of a dataset. The [`tabBook()`] function is designed 
+to create a basic "top line" report  of simple crosstabs from a multitable, and is probably
+the first thing you should check if you're thinking of making bulk analyses. However, `tabBook()`
+does not allow for all of the customization possible in a slide.
+
+The trickiest part of bulk creating slides from R is iterating over the variables. The general
+behind all of these cookbook recipes is to get a list of variable aliases, iterate over them 
+using them to get other variable metadata. The trickiest part is to create a query formula
+from a string, but the `as.formula()` function helps with this. This cookbook uses base R functions
+`lapply()` and `paste0()`, but the "tidyverse" functions `purrr::walk()` and `glue::glue()` are 
+well-suited to this task.
+
+
+### Basic Topline for Entire Dataset
+#### Problem
+You want to create a simple report for every variable in a dataset.
+
+#### Solution
+Use the `variables()` function to get the variables from a dataset, and the `aliases()`
+function to get their aliases. Then use `lapply()` to iterate over the variable aliases
+and construct the slide using `paste0()` and `as.formula()`.
+```{r}
+deck <- newDeck(ds, "Full Dataset Topline Deck", is_public = TRUE)
+
+var_aliases <- aliases(variables(ds))
+
+slides <- lapply(var_aliases, function(alias) {
+    slide_query <- as.formula(paste0("~", alias))
+    slide_title <- paste0("Topline - ", name(ds[[alias]]))
+    
+    newSlide(deck, slide_query, title = slide_title)
+})
+```
+
+### Slides for Variables Within a Particular Folder
+#### Problem
+You want to create a simple report for every variable in a particular folder.
+
+#### Solution
+The `variables()` function can also work on a folder, so we can make a deck from
+variables in a folder in a similar way to making one for a whole dataset.
+```{r}
+deck <- newDeck(ds, "Folder Topline Deck", is_public = TRUE)
+
+folder <- cd(ds, "Key Pet Indicators")
+var_aliases <- aliases(variables(folder))
+
+slides <- lapply(var_aliases, function(alias) {
+    slide_query <- as.formula(paste0("~", alias))
+    slide_title <- paste0("Topline - ", name(ds[[alias]]))
+    
+    newSlide(deck, slide_query, title = slide_title)
+})
+```
+
+
+#### Problem
+You want to create crosstabs for many variables across a set of variables.
+
+#### Solution
+You can use `lapply()` to iterate over both the row and column variables of
+the crosstab.
+```{r}
+deck <- newDeck(ds, "Crosstabs Deck", is_public = TRUE)
+
+demo_vars <- aliases(variables(cd(ds, "Dimensions")))
+var_aliases <- setdiff(aliases(variables(ds)), demo_vars) # don't cross demo vars with themselves
+
+slides <- lapply(var_aliases, function(alias) {
+    # Add a slide before crosstabs of the univariate frequency
+    all_query <- as.formula(paste0("~", alias))
+    all_title <- paste0("Frequency - ", name(ds[[alias]]))
+    
+    newSlide(deck, all_query, title = all_title)
+    
+    lapply(demo_vars, function(demo_alias) {
+        crosstab_query <- as.formula(paste0("~", demo_alias, " + ", alias))
+        crosstab_title <- paste0("Crosstab - ", name(ds[[alias]]), " by ", name(ds[[demo_alias]]))
+        
+        newSlide(deck, crosstab_query, title = crosstab_title)
+    })
+})
+```
+
+
+### Slides Based on Variable Type
+#### Problem
+You want to create a report with slides that vary based on the variable's type.
+
+#### Solution
+You can create functions that create slides for a particular variable type and
+then choose which function to use based on the variable's type while iterating.
+
+```{r}
+cat_slide <- function(alias, ds, deck) {
+    slide_query <- as.formula(paste0("~", alias))
+    slide_title <- paste0(name(ds[[alias]]))
+    newSlide(
+        deck, 
+        slide_query,
+        title = slide_title,
+        display_settings = list(vizType = "donut")
+    )
+}
+
+mr_slide <- function(alias, ds, deck) {
+    slide_query <- as.formula(paste0("~", alias))
+    slide_title <- paste0(name(ds[[alias]]))
+    newSlide(
+        deck, 
+        slide_query,
+        title = slide_title,
+        display_settings = list(vizType = "groupedBarPlot")
+    )
+}
+
+numeric_slide <- function(alias, ds, deck) {
+    slide_query <- as.formula(paste0("mean(", alias, ") ~ wave"))
+    slide_title <- paste0(name(ds[[alias]]), " over time")
+    newSlide(
+        deck, 
+        slide_query,
+        title = slide_title,
+        display_settings = list(vizType = "timeplot")
+    )
+}
+
+deck <- newDeck(ds, "Slides Customized by Variable Type", is_public = TRUE)
+
+var_aliases <- c("q1", "allpets", "ndogs")
+slides <- lapply(var_aliases, function(alias) {
+    switch(
+        type(ds[[alias]]),
+        "categorical" = cat_slide(alias, ds, deck),
+        "multiple_response" = mr_slide(alias, ds, deck),
+        "numeric" = numeric_slide(alias, ds, deck),
+    )
+})
+```
