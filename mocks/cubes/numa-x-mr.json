@@ -129,7 +129,7 @@
                                 "missing": false,
                                 "value": {
                                     "derived": false,
-                                    "id": "1",
+                                    "id": "0001",
                                     "references": {
                                         "alias": "enjoy_mr_savory",
                                         "description": "Enjoyment of savory food (binary)",
@@ -154,7 +154,7 @@
                                 "missing": false,
                                 "value": {
                                     "derived": false,
-                                    "id": "2",
+                                    "id": "0002",
                                     "references": {
                                         "alias": "enjoy_mr_spicy",
                                         "description": "Enjoyment of spicy food (binary)",
@@ -179,7 +179,7 @@
                                 "missing": false,
                                 "value": {
                                     "derived": false,
-                                    "id": "3",
+                                    "id": "0003",
                                     "references": {
                                         "alias": "enjoy_mr_sweet",
                                         "description": "Enjoyment of sweet food (binary)",
@@ -292,9 +292,9 @@
                         "class": "categorical",
                         "ordinal": false,
                         "subvariables": [
-                            "1",
-                            "2",
-                            "3"
+                            "0001",
+                            "0002",
+                            "0003"
                         ]
                     }
                 }
@@ -511,12 +511,12 @@
 
                             },
                             "subvariables": [
-                                "1",
-                                "2",
-                                "3",
-                                "4",
-                                "5",
-                                "6"
+                                "0001",
+                                "0002",
+                                "0003",
+                                "0004",
+                                "0005",
+                                "0006"
                             ]
                         }
                     },

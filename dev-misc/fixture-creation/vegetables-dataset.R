@@ -350,7 +350,7 @@ slide2 <- newSlide(
     deck,
     ~ds$healthy_eater,
     title = "Yes transforms",
-    transform = list(rows_dimension = slideTransform(hide = "No"))
+    transform = list(rows_dimension = makeDimTransform(hide = "No"))
 )
 
 # Capture fixtures ----
