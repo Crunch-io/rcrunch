@@ -23,8 +23,8 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
                 .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars] #nolint
             }
         } else {
-            .Object@hiddenVariables <- .Object@variables[FALSE]
-            .Object@privateVariables <- .Object@variables[FALSE]
+            .Object@hiddenVariables <- .Object@variables[logical(0)]
+            .Object@privateVariables <- .Object@variables[logical(0)]
         }
 
     }
