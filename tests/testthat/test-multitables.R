@@ -402,10 +402,10 @@ with_mock_crunch({
                 expect_is(book, "TabBookResult")
             })
             test_that("TabBookResult and MultitableResult size/extract methods", {
-                expect_length(book, 9)
+                expect_length(book, 5)
                 expect_is(book[[1]], "MultitableResult")
                 expect_length(book[[1]], 3)
-                expect_identical(dim(book), c(9L, 3L))
+                expect_identical(dim(book), c(5L, 3L))
                 expect_is(book[[1]][[1]], "CrunchCube")
             })
 
@@ -419,7 +419,7 @@ with_mock_crunch({
                         c("", "Savory", "Spicy", "Sweet", "No", "Yes")
                     )
                 )
-                expect_prints(print(book[[3]]), get_output(out))
+                expect_prints(print(book[[2]]), get_output(out))
             })
 
             test_that("MultitableResult print methods - mr+cat template x catarray page", {
@@ -440,7 +440,7 @@ with_mock_crunch({
                         c("Healthy", "Tasty", "Filling", "Environmental")
                     )
                 )
-                expect_prints(print(book[[5]]), get_output(out))
+                expect_prints(print(book[[4]]), get_output(out))
             })
 
             test_that("MultitableResult print methods - mr+cat template x mr page", {
@@ -454,7 +454,7 @@ with_mock_crunch({
                         c("", "Savory", "Spicy", "Sweet", "No", "Yes")
                     )
                 )
-                expect_prints(print(book[[4]]), get_output(out))
+                expect_prints(print(book[[3]]), get_output(out))
             })
 
             test_that("MultitableResult print methods - mr+cat template x numeric page", {
@@ -465,7 +465,7 @@ with_mock_crunch({
                         c("", "Savory", "Spicy", "Sweet", "No", "Yes")
                     )
                 )
-                expect_prints(print(book[[2]]), get_output(out))
+                expect_prints(print(book[[1]]), get_output(out))
             })
 
             test_that("MultitableResult print methods - mr+cat template x numeric array page", {
@@ -482,34 +482,34 @@ with_mock_crunch({
                         c("", "Savory", "Spicy", "Sweet", "No", "Yes")
                     )
                 )
-                expect_prints(print(book[[6]]), get_output(out))
+                expect_prints(print(book[[5]]), get_output(out))
             })
 
             test_that("The first result in a MultitableResult has 2 dimensions", {
-                expect_identical(dim(book[[1]][[1]]), c(7L, 1L))
+                expect_identical(dim(book[["Healthy Eater"]][[1]]), c(2L, 1L))
             })
             test_that("prop.table methods", {
                 ## prop.table on a TabBookResult returns a list of lists of prop.tables
                 full_prop_table <- prop.table(book)
 
                 expect_identical(
-                    full_prop_table[[3]][[2]],
-                    prop.table(book[[3]][[2]])
+                    full_prop_table[[2]][[2]],
+                    prop.table(book[[2]][[2]])
                 )
 
                 ## And non-count measures get NULL
                 expect_identical(
-                    full_prop_table[[2]],
+                    full_prop_table[["Age"]],
                     NULL
                 )
             })
 
             test_that("tab book names", {
                 expect_identical(
-                    names(book)[1:4],
-                    c("Survey Wave", "Age", "Healthy Eater", "Enjoy Food Flavors")
+                    names(book)[1:2],
+                    c("Age", "Healthy Eater")
                 )
-                expect_is(book[["Survey Wave"]], "MultitableResult")
+                expect_is(book[["Healthy Eater"]], "MultitableResult")
                 expect_null(book[["NOTVALID"]])
             })
 
