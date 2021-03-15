@@ -490,26 +490,17 @@ with_mock_crunch({
             })
             test_that("prop.table methods", {
                 ## prop.table on a TabBookResult returns a list of lists of prop.tables
+                full_prop_table <- prop.table(book)
+
                 expect_identical(
-                    prop.table(book)[[3]][[2]],
+                    full_prop_table[[3]][[2]],
                     prop.table(book[[3]][[2]])
                 )
-                expect_identical(
-                    prop.table(book, 1)[[3]][[2]],
-                    prop.table(book[[3]][[2]], 1)
-                )
+
                 ## And non-count measures get NULL
                 expect_identical(
-                    prop.table(book)[[2]],
+                    full_prop_table[[2]],
                     NULL
-                )
-            })
-
-            test_that("tabBook from apidocs dataset (mock)", {
-                expect_identical(dim(book), c(9L, 3L))
-                expect_identical(
-                    prop.table(book, 1)[[1]][[2]],
-                    prop.table(book[[1]][[2]], 1)
                 )
             })
 
@@ -521,13 +512,7 @@ with_mock_crunch({
                 expect_is(book[["Survey Wave"]], "MultitableResult")
                 expect_null(book[["NOTVALID"]])
             })
-            test_that("tabBook JSON with arrays returns TabBookResult", {
-                expect_is(book, "TabBookResult")
-                expect_identical(
-                    prop.table(book, 1)[[3]][[2]],
-                    prop.table(book[[3]][[2]], 1)
-                )
-            })
+
         }
     )
         ## TODO: something more with variable metadata? For cubes more generally?
