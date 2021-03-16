@@ -12,13 +12,13 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
         # Hidden variables now require folder transversal, so we do this up front
         # so that we don't have to hit API whenever we want a list of active variables
         hidden_dir <- hiddenFolder(.Object)
-        hidden_vars <- variablesBelowFolder(hidden_dir, "alias")
+        hidden_vars <- aliases(variablesBelowFolder(hidden_dir))
         .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% hidden_vars]
 
         # Secure variables also accessed via folder transversal
         private_dir <- privateFolder(.Object)
         if (!is.null(private_dir)) {
-            private_vars <- variablesBelowFolder(private_dir, "alias")
+            private_vars <- aliases(variablesBelowFolder(private_dir))
             .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars] #nolint
         }
     }
