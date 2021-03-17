@@ -321,3 +321,8 @@ strip_token_if_outside <- function(url) {
     url_hostname <- parse_url(url)$hostname
     if (!identical(api_hostname, url_hostname)) add_headers(Authorization = "")
 }
+
+
+is.cacheOn <- function() {
+    isTRUE(getOption("httpcache.on", TRUE))
+}

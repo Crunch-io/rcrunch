@@ -180,7 +180,7 @@ with_test_authentication({
     })
 
     test_that("Reserved function names cannot be variable aliases", {
-        dsb <- ds
+        dsb <- forceVarCat(ds)
         al <- aliases(dsb@variables)
         dsb@variables@index[[which(al == "v1")]]$alias <- "mean"
         dsb@variables@index[[which(al == "v2")]]$alias <- "sd"

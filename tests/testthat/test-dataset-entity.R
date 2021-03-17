@@ -284,7 +284,8 @@ with_mock_crunch({
         })
     })
 
-    test_that("Dataset ncol doesn't make any requests", {
+    test_that("Dataset ncol doesn't make any requests if variables have been forced", {
+        ds <- forceVarCat(ds)
         with(temp.options(httpcache.log = ""), {
             logs <- capture.output(nc <- ncol(ds))
         })

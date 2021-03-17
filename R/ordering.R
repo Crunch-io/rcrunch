@@ -21,6 +21,9 @@ setMethod("ordering", "CrunchDataset", function(x) ordering(allVariables(x)))
 #' @rdname ordering
 #' @export
 setMethod("ordering<-", "CrunchDataset", function(x, value) {
+    if (is.unforcedVarCat(x@variables)) {
+        x@variables <- getDatasetVariables(x)
+    }
     ordering(x@variables) <- value
     return(x)
 })

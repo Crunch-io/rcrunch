@@ -132,7 +132,8 @@ with_mock_crunch({
     })
 
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
-        t2 <- ds
+        t2 <- forceVarCat(ds)
+
         t2@variables@index[[2]]$alias <- "Quote 'unquote' alias"
         expect_is(as.data.frame(t2), "CrunchDataFrame")
     })

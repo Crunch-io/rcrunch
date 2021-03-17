@@ -31,7 +31,7 @@ with_mock_crunch({
             index(variables(ds)),
             index(varcat)[urls(ordering(varcat))]
         )
-        ds@hiddenVariables <- ds@variables[1]
+        ds@hiddenVariables <- allVariables(ds)[1]
         expect_is(variables(ds), "VariableCatalog")
         # Specific behavior of "hidden" is tested in test-hide-variables.R
         expect_identical(
@@ -49,7 +49,7 @@ with_mock_crunch({
     })
 
     test_that("private variables aren't considered active (#383)", {
-        ds@privateVariables <- ds@variables[1]
+        ds@privateVariables <- allVariables(ds)[1]
 
         expect_identical(
             urls(variables(ds)),
