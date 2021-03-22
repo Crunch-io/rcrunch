@@ -166,6 +166,10 @@ setGeneric("arguments", function(x, ...) standardGeneric("arguments"))
 #' @rdname Insertions
 setGeneric("arguments<-", function(x, value) standardGeneric("arguments<-"))
 #' @rdname Insertions
+setGeneric("kwarguments", function(x, ...) standardGeneric("kwarguments"))
+#' @rdname Insertions
+setGeneric("kwarguments<-", function(x, value) standardGeneric("kwarguments<-"))
+#' @rdname Insertions
 setGeneric("func", function(x) standardGeneric("func"))
 #' @rdname Insertions
 setGeneric("funcs", function(x) standardGeneric("funcs"))

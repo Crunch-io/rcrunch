@@ -44,6 +44,8 @@
 #' @param after character or numeric if `position` is "relative", then the
 #' category name or id to position the subtotal or heading after. If not supplied
 #' this defaults to the last of the `categories` supplied to `Subtotal`.
+#' @param negative character or numeric of the category names or ids to be subtracted
+#' for subtotals only
 #' @examples
 #' \dontrun{
 #' # given a variable ds$opinion, with categories: Strongly Agree, Somewhat
@@ -115,19 +117,30 @@ NULL
 #' @rdname SubtotalsHeadings
 #' @export
 Subtotal <- function(name,
-                     categories,
+                     categories = NULL,
                      position = c("relative", "top", "bottom"),
-                     after = NULL) {
+                     after = NULL,
+                     negative = NULL
+) {
+    if (is.null(categories) && is.null(negative)) {
+        halt("Must specify at least one of categories or negative for a valid Subtotal")
+    }
     # match.args position
     position <- match.arg(position)
     validatePosition(position, after)
 
-    return(new("Subtotal", list(
+    subtotal_info <- list(
         name = name,
         categories = categories,
         position = position,
-        after = after
-    )))
+        after = after,
+        negative = negative
+    )
+    # Remove NULLs
+    if (is.null(subtotal_info$categories)) subtotal_info$categories <- NULL
+    if (is.null(subtotal_info$negative)) subtotal_info$negative <- NULL
+
+    return(new("Subtotal", subtotal_info))
 }
 
 validatePosition <- function(position, after) {
@@ -275,7 +288,8 @@ setMethod("makeInsertion", "Subtotal", function(x, var_categories) {
     return(.Insertion(
         anchor = anchor(x, var_categories), name = name(x),
         `function` = "subtotal",
-        args = arguments(x, var_categories)
+        args = arguments(x, var_categories),
+        kwargs = kwarguments(x, var_categories)
     ))
 })
 
@@ -339,10 +353,15 @@ subtypeInsertion <- function(insert) {
     if (!(is.na(func(insert)))) {
         # there is a function, check the kind.
         if (func(insert) == "subtotal") {
-            # this is a subtotal, make it so
+            # we plan to migrate to having `kwargs$positive` instead
+            # of `args`. Our migration plan is to have them be duplicated
+            # to start, so for now trust the kwargs first
+            kwargs <- kwarguments(insert)
+            positive <- kwargs$positive %||% arguments(insert)
             insert <- Subtotal(
                 name = name(insert), after = after,
-                position = position, categories = arguments(insert)
+                position = position, categories = positive,
+                negative = kwargs$negative
             )
         }
         if (func(insert) %in% names(summaryStatInsertions)) {

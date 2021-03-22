@@ -271,7 +271,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/gender/",
             '{"element":"shoji:entity","body":{"view":{"transform":{',
             '"insertions":[{"anchor":3,"name":"Male+Female","function"',
-            ':"subtotal","args":[1,2]}]}}}}'
+            ':"subtotal","args":[1,2],"kwargs":{"positive":[1,2]}}]}}}}'
         )
     })
 
