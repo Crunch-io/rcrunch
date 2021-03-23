@@ -152,6 +152,7 @@ runCrunchAutomation <- function(dataset, script, is_file = NULL, ...) {
     invisible(refresh(dataset))
 }
 
+# Helper that combines multiple script text files
 read_scripts <- function(scripts) {
     if (length(scripts) == 1) {
         out <- list(text = readLines(scripts, encoding = "UTF-8", warn = FALSE), file = scripts)
@@ -159,9 +160,29 @@ read_scripts <- function(scripts) {
         text <- lapply(scripts, function(file) {
             c(paste0("# ", file), readLines(file, encoding = "UTF-8", warn = FALSE))
         })
-        out <- list(text = unlist(text), file = NULL)
+
+        # Calculate end by from cumulative sum
+        script_ends <- cumsum(lengths(text))
+        # Starts are 1, then the end of the previous one plus one
+        script_starts <- c(1, script_ends[-length(script_ends)] + 1)
+        file_info <- data.frame(
+            file = scripts,
+            start = script_starts,
+            end = script_ends
+        )
+
+        out <- list(text = unlist(text), file = file_info)
     }
     out
+}
+
+# Helper that untangles the line numbers from combined text
+untangle_error_files <- function(errors, file_info) {
+    if (!is.data.frame(file_info)) return(errors)
+    errors$file <- as.character(cut(errors$line, c(0, file_info$end), labels = file_info$file))
+    # Usually you'd have to subtract 1 here, but because of comment line added, it is offset
+    errors$line <- errors$line - file_info$start[match(errors$file, file_info$file)]
+    errors
 }
 
 strings_are_file_like <- function(x) {
@@ -185,7 +206,7 @@ showScriptErrors <- function() {
     if (is.null(out) || is.null(out$errors)) return(invisible(out))
 
     if (!is.null(out$file) && rstudio_markers_available()) {
-        make_rstudio_markers(out)
+        make_rstudio_markers(out$errors)
     } else {
         message(automation_errors_text(out$errors))
     }
@@ -201,9 +222,9 @@ make_rstudio_markers <- function(errors) {
     markers <- data.frame(
         type = "error",
         file = errors$file,
-        line = ifelse(is.na(errors$errors$line), 1, errors$errors$line),
-        column = ifelse(is.na(errors$errors$column), 1, errors$errors$column),
-        message = errors$errors$message,
+        line = ifelse(is.na(errors$line), 1, errors$line),
+        column = ifelse(is.na(errors$column), 1, errors$column),
+        message = errors$message,
         stringsAsFactors = FALSE
     )
     rstudioapi::sourceMarkers("crunchAutomation", markers)
@@ -235,11 +256,13 @@ crunchAutomationErrorHandler <- function(response) {
         if (length(errors) == 0) {
             halt("Error when running Crunch Automation script, but no futher information is available.") # nocov
         }
-
         errors <- do.call(
             function(...) rbind(..., stringsAsFactors = FALSE),
             errors
         )
+        if (is.data.frame(automation_error_env$file)) {
+            errors <- untangle_error_files(errors, automation_error_env$file)
+        }
 
         automation_error_env$errors <- errors
 
@@ -267,12 +290,10 @@ automation_errors_text <- function(errors, display_num = Inf) {
         errors <- errors[seq_len(display_num), ]
     }
 
-    out <- paste0(
-        " - ",
-        ifelse(is.na(errors$line), "", paste0("(line ", errors$line, ") ")),
-        errors$message,
-        collapse = "\n"
-    )
+    file_info <- if (length(unique(errors$file)) > 1) paste0(errors$file, ":") else ""
+    line_info <- ifelse(is.na(errors$line), "", paste0("(", file_info, "line ", errors$line, ") "))
+
+    out <- paste0(" - ", line_info, errors$message, collapse = "\n")
 
     if (orig_num_errors - display_num > 0) {
         out <- paste0(

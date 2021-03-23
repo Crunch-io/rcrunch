@@ -13,16 +13,51 @@ test_that("read_scripts works", {
     temp1 <- tempfile()
     writeLines(c("a", "b"), temp1)
     temp2 <- tempfile()
-    writeLines(c("c", "d"), temp2)
+    writeLines(c("c", "d", "e"), temp2)
 
     expect_equal(read_scripts(temp1), list(text = c("a", "b"), file = temp1))
     expect_equal(
         read_scripts(c(temp1, temp2)),
         list(
-            text = c(paste0("# ", temp1), "a", "b", paste0("# ", temp2), "c", "d"),
-            file = NULL
+            text = c(paste0("# ", temp1), "a", "b", paste0("# ", temp2), "c", "d", "e"),
+            file = data.frame(
+                file = c(temp1, temp2),
+                start = c(1, 4),
+                end = c(3, 7),
+                stringsAsFactors = FALSE
+            )
         )
     )
+})
+
+test_that("untangle_error_files works", {
+    file_info <- data.frame(
+        file = c("f1.txt", "f2.txt"),
+        start = c(1, 4),
+        end = c(3, 7),
+        stringsAsFactors = FALSE
+    )
+
+    expect_equal(
+        untangle_error_files(data.frame(line = c(2, 3)), file_info),
+        data.frame(line = c(1, 2), file = c("f1.txt", "f1.txt"), stringsAsFactors = FALSE)
+    )
+
+    expect_equal(
+        untangle_error_files(data.frame(line = c(5, 6)), file_info),
+        data.frame(line = c(1, 2), file = c("f2.txt", "f2.txt"), stringsAsFactors = FALSE)
+    )
+
+    expect_equal(
+        untangle_error_files(data.frame(line = c(2, 7)), file_info),
+        data.frame(line = c(1, 3), file = c("f1.txt", "f2.txt"), stringsAsFactors = FALSE)
+    )
+
+    expect_equal(
+        untangle_error_files(data.frame(line = c(2, 100)), file_info),
+        data.frame(line = c(1, NA), file = c("f1.txt", NA), stringsAsFactors = FALSE)
+    )
+
 })
 
 with_mock_crunch({
@@ -226,6 +261,25 @@ with_mock_crunch({
                     command = 1:3,
                     line = 1:3,
                     message = c("Error 1", "Error 2", "Error 3")
+                ),
+                2
+            ),
+            expected
+        )
+    })
+
+    test_that("multiple files are shown in errr text", {
+        expected <- " - (file1:line 1) Error 1\n - (file2:line 2) Error 2"
+        attr(expected, "truncated") <- FALSE
+
+        expect_equal(
+            automation_errors_text(
+                data.frame(
+                    file = c("file1", "file2"),
+                    column = NA,
+                    command = 1:2,
+                    line = 1:2,
+                    message = c("Error 1", "Error 2")
                 ),
                 2
             ),
