@@ -102,6 +102,7 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' @param is_file The default guesses whether a file or string was
 #' used in the `script` argument, but you can override the heuristics
 #' by specifying `TRUE` for a file, and `FALSE` for a string.
+#' @param ... Additional options, passed on to the API
 #'
 #' @return For `runCrunchAutomation()`: an updated dataset (invisibly),
 #' For `showScriptErrors()`, when run after a failure, a list with two items:
@@ -126,7 +127,7 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' }
 #' @export
 #' @seealso [`automation-undo`] & [`script-catalog`]
-runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(script)) {
+runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(script), ...) {
     reset_automation_error_env()
     stopifnot(is.dataset(dataset))
     stopifnot(is.character(script))
@@ -141,7 +142,7 @@ runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(s
 
     crPOST(
         shojiURL(dataset, "catalogs", "scripts"),
-        body = toJSON(wrapEntity(body = list(body = script))),
+        body = toJSON(wrapEntity(body = list(body = script, ...))),
         status.handlers = list(`400` = crunchAutomationErrorHandler)
     )
     invisible(refresh(dataset))
