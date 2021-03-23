@@ -5,7 +5,12 @@
 \alias{showScriptErrors}
 \title{Run a crunch automation script}
 \usage{
-runCrunchAutomation(dataset, script, is_file = string_is_file_like(script))
+runCrunchAutomation(
+  dataset,
+  script,
+  is_file = string_is_file_like(script),
+  ...
+)
 
 showScriptErrors()
 }
@@ -18,6 +23,8 @@ or a string the syntax loaded in R.}
 \item{is_file}{The default guesses whether a file or string was
 used in the \code{script} argument, but you can override the heuristics
 by specifying \code{TRUE} for a file, and \code{FALSE} for a string.}
+
+\item{...}{Additional options, passed on to the API}
 }
 \value{
 For \code{runCrunchAutomation()}: an updated dataset (invisibly),
