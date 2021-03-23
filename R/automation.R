@@ -231,6 +231,11 @@ crunchAutomationErrorHandler <- function(response) {
             }
         )
 
+        # Sometimes no further information is provided
+        if (length(errors) == 0) {
+            halt("Error when running Crunch Automation script, but no futher information is available.") # nocov
+        }
+
         errors <- do.call(
             function(...) rbind(..., stringsAsFactors = FALSE),
             errors
