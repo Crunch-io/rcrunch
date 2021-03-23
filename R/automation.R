@@ -98,7 +98,8 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #'
 #' @param dataset A crunch dataset
 #' @param script A path to a text file with crunch automation syntax
-#' or a string the syntax loaded in R.
+#' or a string the syntax loaded in R. If multiple paths are provided,
+#' they will be concatenated together and performed as a single script.
 #' @param is_file The default guesses whether a file or string was
 #' used in the `script` argument, but you can override the heuristics
 #' by specifying `TRUE` for a file, and `FALSE` for a string.
@@ -127,18 +128,21 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' }
 #' @export
 #' @seealso [`automation-undo`] & [`script-catalog`]
-runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(script), ...) {
+runCrunchAutomation <- function(dataset, script, is_file = NULL, ...) {
     reset_automation_error_env()
     stopifnot(is.dataset(dataset))
     stopifnot(is.character(script))
 
-    if (is_file) {
-        automation_error_env$file <- script
-        script <- readLines(script, encoding = "UTF-8", warn = FALSE)
+    if (is.null(is_file)) is_file <- strings_are_file_like(script)
+
+    if (all(is_file)) {
+        combined <- read_scripts(script)
+        automation_error_env$file <- combined$file
+        script <- combined$text
     } else {
         automation_error_env$file <- NULL
     }
-    if (length(script) != 1) script <- paste(script, collapse = "\n")
+    script <- paste(script, collapse = "\n")
 
     crPOST(
         shojiURL(dataset, "catalogs", "scripts"),
@@ -148,11 +152,22 @@ runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(s
     invisible(refresh(dataset))
 }
 
-string_is_file_like <- function(x) {
-    length(x) == 1 && # length 1 string
-        !grepl("\\n", x) && # no new lines
+read_scripts <- function(scripts) {
+    if (length(scripts) == 1) {
+        out <- list(text = readLines(scripts, encoding = "UTF-8", warn = FALSE), file = scripts)
+    } else {
+        text <- lapply(scripts, function(file) {
+            c(paste0("# ", file), readLines(file, encoding = "UTF-8", warn = FALSE))
+        })
+        out <- list(text = unlist(text), file = NULL)
+    }
+    out
+}
+
+strings_are_file_like <- function(x) {
+    !grepl("\\n", x) & # no new lines
         # ends with a file extension ('.' + any num of letters/nums) or exists
-        (grepl("\\.[[:alnum:]]+$", x) || file.exists(x))
+        (grepl("\\.[[:alnum:]]+$", x) | file.exists(x))
 }
 
 # Where we store error information from crunch automation

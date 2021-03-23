@@ -5,12 +5,7 @@
 \alias{showScriptErrors}
 \title{Run a crunch automation script}
 \usage{
-runCrunchAutomation(
-  dataset,
-  script,
-  is_file = string_is_file_like(script),
-  ...
-)
+runCrunchAutomation(dataset, script, is_file = NULL, ...)
 
 showScriptErrors()
 }
@@ -18,7 +13,8 @@ showScriptErrors()
 \item{dataset}{A crunch dataset}
 
 \item{script}{A path to a text file with crunch automation syntax
-or a string the syntax loaded in R.}
+or a string the syntax loaded in R. If multiple paths are provided,
+they will be concatenated together and performed as a single script.}
 
 \item{is_file}{The default guesses whether a file or string was
 used in the \code{script} argument, but you can override the heuristics

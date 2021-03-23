@@ -1,11 +1,28 @@
 context("Automation")
 
-test_that("string_is_file_like behaves", {
-    expect_true(string_is_file_like("test.txt"))
-    expect_true(string_is_file_like("test.crunch"))
-    expect_false(string_is_file_like("RENAME v1 TO age;\nSET EXCLUSION v1 > 21;"))
-    expect_false(string_is_file_like("test1.txt\ntest2.txt"))
-    expect_false(string_is_file_like("test"))
+test_that("strings_are_file_like behaves", {
+    expect_true(strings_are_file_like("test.txt"))
+    expect_true(strings_are_file_like("test.crunch"))
+    expect_false(strings_are_file_like("RENAME v1 TO age;\nSET EXCLUSION v1 > 21;"))
+    expect_false(strings_are_file_like("test1.txt\ntest2.txt"))
+    expect_false(strings_are_file_like("test"))
+    expect_equal(strings_are_file_like(c("test.txt", "test")), c(TRUE, FALSE))
+})
+
+test_that("read_scripts works", {
+    temp1 <- tempfile()
+    writeLines(c("a", "b"), temp1)
+    temp2 <- tempfile()
+    writeLines(c("c", "d"), temp2)
+
+    expect_equal(read_scripts(temp1), list(text = c("a", "b"), file = temp1))
+    expect_equal(
+        read_scripts(c(temp1, temp2)),
+        list(
+            text = c(paste0("# ", temp1), "a", "b", paste0("# ", temp2), "c", "d"),
+            file = NULL
+        )
+    )
 })
 
 with_mock_crunch({
