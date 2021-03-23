@@ -168,7 +168,8 @@ read_scripts <- function(scripts) {
         file_info <- data.frame(
             file = scripts,
             start = script_starts,
-            end = script_ends
+            end = script_ends,
+            stringsAsFactors = FALSE
         )
 
         out <- list(text = unlist(text), file = file_info)
