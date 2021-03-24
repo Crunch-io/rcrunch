@@ -246,9 +246,9 @@ with_test_authentication({
             expect_false("petloc" %in% names(ds))
         })
 
-        test_that("Can oruvatuze MR variables", {
+        test_that("Can privatize MR variables", {
             expect_true("allpets" %in% names(ds))
-            ds <- privateVariables(ds, "allpets")
+            ds <- privatizeVariables(ds, "allpets")
             expect_false("allpets" %in% names(ds))
         })
     })

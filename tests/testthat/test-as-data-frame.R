@@ -322,6 +322,8 @@ with_test_authentication({
     })
 
     v2 <- ds$v2
+    # Force variable catalog so that it'll get stale
+    ds <- forceVarCat(ds)
     with_consent(delete(v2))
     test_that("CrunchDataFrame lazily fetches columns", {
         expect_true("v2" %in% names(ds)) ## ds is stale
@@ -330,6 +332,7 @@ with_test_authentication({
         expect_error(as.data.frame(ds, force = TRUE))
     })
 
+    ds <- forceVarCat(ds)
     uncached({
         with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
             with(temp.option(httpcache.log = ""), {
