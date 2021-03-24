@@ -23,6 +23,16 @@ is.unforcedVarCat <- function(x) {
     is.null(x@self)
 }
 
+#' Force variables catalog to be loaded
+#'
+#' Variables catalogs are generally loaded lazily, but this function
+#' allows you to force them to be loaded. Generally you shouldn't have to
+#' care about this except when writing tests.
+#'
+#' @param x A crunch dataset
+#'
+#' @return A dataset with it's variable catalogs filled in
+#' @export
 forceVarCat <- function(x) {
     x@variables <- getDatasetVariables(x)
     x@hiddenVariables <- getDatasetHiddenVariables(x)
