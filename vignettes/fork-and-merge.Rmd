@@ -26,11 +26,19 @@ login()
 ```{r message=FALSE, results='hide'}
 ds <- newDataset(SO_survey, "stackoverflow_survey")
 ```
+```{r forcevarcat1, include=FALSE}
+# Force catalog so that catalog is loaded at a consistent time
+ds <- forceVarCat(ds)
+```
 
 Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decision makers to make sure that the data is accurate before sharing it with clients. To do this you call `forkDataset()` to create a copy of the dataset.
 
 ```{r fork dataset}
 forked_ds <- forkDataset(ds)
+```
+```{r forcevarcat2, include=FALSE}
+# Force catalog so that catalog is loaded at a consistent time
+forked_ds <- forceVarCat(forked_ds)
 ```
 
 You now have a copied dataset which is identical to the original, and are free to make changes without fear of disrupting the client's experience. You can add or remove variables, delete records, or change the dataset's organization. These changes will be isolated to your fork and won't be visible to the end user until you decide to merge the fork back into the original dataset. This lets you edit the dataset with confidence because your work is isolated.
@@ -40,14 +48,18 @@ In this case, let's create a new categorical array variable.
 change_state()
 ```
 ```{r create Multiple Response Variable}
-ds$ImportantHiringCA <- makeArray(ds[, c("ImportantHiringTechExp", "ImportantHiringPMExp")],
+forked_ds$ImportantHiringCA <- makeArray(forked_ds[, c("ImportantHiringTechExp", "ImportantHiringPMExp")],
     name = "importantCatArray")
+```
+```{r forcevarcat3, include=FALSE}
+# Force catalog so that catalog is loaded at a consistent time
+forked_ds <- forceVarCat(forked_ds)
 ```
 
 Our forked dataset has diverged from the original dataset. Which we can see by comparing their names.
 
 ```{r compare datasets}
-all(names(ds) %in% names(forked_ds))
+all.equal(names(forked_ds), names(ds))
 ```
 
 You can work with the forked dataset as long as you like, if you want to see it in the web App or share it with other analysts by you can do so by calling `webApp(forked_ds)`. You might create many forks and discard most of them without merging them into the original dataset.

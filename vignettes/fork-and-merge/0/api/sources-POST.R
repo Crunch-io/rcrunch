@@ -1,20 +1,24 @@
 structure(list(url = "/api/sources/", status_code = 201L, headers = structure(list(
-    date = "Mon, 04 May 2020 23:13:06 GMT", `content-type` = "application/json;charset=utf-8", 
-    `content-length` = "86", location = "/api/sources/1b9f7a/", 
+    date = "Thu, 25 Mar 2021 15:18:27 GMT", `content-type` = "application/json;charset=utf-8", 
+    `content-length` = "86", location = "/api/sources/16269c/", 
     server = "nginx", `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
-    allow = "GET, HEAD, OPTIONS, POST", `x-timing` = "", `set-cookie` = "REDACTED"), class = c("insensitive", 
+    allow = "GET, HEAD, OPTIONS, POST", `x-timing` = "", `x-xss-protection` = "1; mode=block", 
+    `strict-transport-security` = "max-age=31536000; includeSubDomains", 
+    `x-content-type-options` = "nosniff"), class = c("insensitive", 
 "list")), all_headers = list(list(status = 201L, version = "HTTP/2", 
-    headers = structure(list(date = "Mon, 04 May 2020 23:13:06 GMT", 
+    headers = structure(list(date = "Thu, 25 Mar 2021 15:18:27 GMT", 
         `content-type` = "application/json;charset=utf-8", `content-length` = "86", 
-        location = "/api/sources/1b9f7a/", server = "nginx", 
+        location = "/api/sources/16269c/", server = "nginx", 
         `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
         allow = "GET, HEAD, OPTIONS, POST", `x-timing` = "", 
-        `set-cookie` = "REDACTED"), class = c("insensitive", 
-    "list")))), cookies = structure(list(domain = ".crunch.io", 
-    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1620169986, class = c("POSIXct", 
-    "POSIXt")), name = "token", value = "REDACTED"), row.names = c(NA, 
--1L), class = "data.frame"), content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/sources/\"}"), 
-    date = structure(1588633986, class = c("POSIXct", "POSIXt"
-    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.5e-05, 
-    connect = 2.6e-05, pretransfer = 0.000141, starttransfer = 0.000147, 
-    total = 1.137563)), class = "response")
+        `x-xss-protection` = "1; mode=block", `strict-transport-security` = "max-age=31536000; includeSubDomains", 
+        `x-content-type-options` = "nosniff"), class = c("insensitive", 
+    "list")))), cookies = structure(list(domain = logical(0), 
+    flag = logical(0), path = logical(0), secure = logical(0), 
+    expiration = structure(numeric(0), class = c("POSIXct", "POSIXt"
+    )), name = logical(0), value = logical(0)), row.names = integer(0), class = "data.frame"), 
+    content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/sources/\"}"), 
+    date = structure(1616685507, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.8e-05, 
+    connect = 3e-05, pretransfer = 0.000183, starttransfer = 0.000189, 
+    total = 0.940993)), class = "response")

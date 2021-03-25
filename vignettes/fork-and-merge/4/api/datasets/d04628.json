@@ -1,0 +1,128 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/d04628/",
+    "catalogs": {
+        "folders": "/api/datasets/d04628/folders/",
+        "users": "/api/datasets/d04628/users/",
+        "views": "/api/datasets/d04628/views/",
+        "variables": "/api/datasets/d04628/variables/",
+        "actions": "/api/datasets/d04628/actions/",
+        "boxdata": "/api/datasets/d04628/boxdata/",
+        "filters": "/api/datasets/d04628/filters/",
+        "scripts": "/api/datasets/d04628/scripts/",
+        "permissions": "/api/datasets/d04628/permissions/",
+        "batches": "/api/datasets/d04628/batches/",
+        "tags": "/api/datasets/d04628/tags/",
+        "teams": "/api/datasets/d04628/teams/",
+        "savepoints": "/api/datasets/d04628/savepoints/",
+        "multitables": "/api/datasets/d04628/multitables/",
+        "forks": "/api/datasets/d04628/forks/",
+        "decks": "/api/datasets/d04628/decks/",
+        "parent": "/api/datasets/",
+        "project": "/api/projects/personal/",
+        "variables_private": "/api/datasets/d04628/variables/private/"
+    },
+    "fragments": {
+        "preferences": "/api/datasets/d04628/preferences/",
+        "settings": "/api/datasets/d04628/settings/",
+        "exclusion": "/api/datasets/d04628/exclusion/",
+        "publish": "/api/datasets/d04628/publish/",
+        "state": "/api/datasets/d04628/state/",
+        "pk": "/api/datasets/d04628/pk/",
+        "stream": "/api/datasets/d04628/stream/",
+        "table": "/api/datasets/d04628/table/",
+        "schema": "/api/datasets/d04628/schema/"
+    },
+    "views": {
+        "second_order_analysis": "/api/datasets/d04628/second_order_analysis/",
+        "cube": "/api/datasets/d04628/cube/",
+        "export": "/api/datasets/d04628/export/",
+        "summary": "/api/datasets/d04628/summary/",
+        "applied_filters": "/api/datasets/d04628/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "/api/users/27a158/",
+        "current_editor": "/api/users/27a158/",
+        "creation_time": "2021-03-25T15:22:33.222000",
+        "streaming": "no",
+        "owner": "/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "d04628",
+        "size": {
+            "rows": 3268,
+            "unfiltered_rows": 3268,
+            "columns": 22
+        },
+        "palette": {
+            "brand": {
+                "message": "#722580",
+                "primary": "#005283",
+                "secondary": "#107f65"
+            },
+            "analysis": [
+                {
+                    "default": false,
+                    "palette": [
+                        "#340043",
+                        "#640083",
+                        "#9100bf",
+                        "#c300ff",
+                        "#e17fff"
+                    ],
+                    "type": "qualitative",
+                    "name": "purple palette"
+                },
+                {
+                    "default": true,
+                    "palette": [
+                        "#4fc3f7",
+                        "#4dd0e1",
+                        "#4db6ac",
+                        "#81c783",
+                        "#aed581",
+                        "#dce775",
+                        "#cddc39",
+                        "#fdae6b"
+                    ],
+                    "type": "qualitative",
+                    "name": "Green Palette for dashboard"
+                }
+            ]
+        },
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "",
+        "end_date": null,
+        "access_time": "2021-03-25T15:22:40.702000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2021-03-25T15:23:41.367000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "/api/accounts/00001/",
+        "name": "Fork #2 of stackoverflow_survey",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/d04628/variables/weights/",
+        "variables_hier": "/api/datasets/d04628/variables/hier/",
+        "variables_personal": "/api/datasets/d04628/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "/api/projects/378ad4/",
+        "editor_url": "/api/users/27a158/",
+        "user_url": "/api/users/27a158/"
+    }
+}
