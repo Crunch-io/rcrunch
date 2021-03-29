@@ -14,6 +14,18 @@ A dataset with it's variable catalogs filled in
 }
 \description{
 Variables catalogs are generally loaded lazily, but this function
-allows you to force them to be loaded. Generally you shouldn't have to
-care about this except when writing tests.
+allows you to force them to be loaded once.
+}
+\details{
+The \code{forceVarCat()} function is probably most useful when writing tests
+because it allows you to be more certain about when API calls are made.
+
+Another situation where you may care about when API calls for loading
+the variables are made is when you are loading many datasets at the same
+time (~15+) and referring to their variables later. In this situation,
+it can be faster to turn off the variables catalog with the option \code{crunch.lazy.catalog}
+because there is a limit to the number of datasets your user can hold open at the
+same time and so at some point the server will have to unload and then reload the
+datasets. However, it's probably even faster if you are able to alter your code so
+that it operates on datasets sequentially.
 }

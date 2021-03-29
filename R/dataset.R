@@ -26,8 +26,19 @@ is.unforcedVarCat <- function(x) {
 #' Force variables catalog to be loaded
 #'
 #' Variables catalogs are generally loaded lazily, but this function
-#' allows you to force them to be loaded. Generally you shouldn't have to
-#' care about this except when writing tests.
+#' allows you to force them to be loaded once.
+#'
+#' The `forceVarCat()` function is probably most useful when writing tests
+#' because it allows you to be more certain about when API calls are made.
+#'
+#' Another situation where you may care about when API calls for loading
+#' the variables are made is when you are loading many datasets at the same
+#' time (~15+) and referring to their variables later. In this situation,
+#' it can be faster to turn off the variables catalog with the option `crunch.lazy.catalog`
+#' because there is a limit to the number of datasets your user can hold open at the
+#' same time and so at some point the server will have to unload and then reload the
+#' datasets. However, it's probably even faster if you are able to alter your code so
+#' that it operates on datasets sequentially.
 #'
 #' @param x A crunch dataset
 #'
@@ -40,13 +51,17 @@ forceVarCat <- function(x) {
     x
 }
 
+use_lazy_var_cat <- function() {
+    getOption("crunch.lazy.varcat", TRUE) && isTRUE(getOption("httpcache.on", TRUE))
+}
+
 getDatasetVariables <- function(x) {
     varcat_url <- variableCatalogURL(x)
     ## Add query params to try to hit cache
     query_params <- list(relative = "on")
 
     ## Check cache
-    if (is.cacheOn()) {
+    if (use_lazy_var_cat()) {
         key <- httpcache::buildCacheKey(varcat_url, query_params, extra = "VariableCatalog")
         cache <- httpcache::getCache(key)
         if (!is.null(cache)) {
@@ -63,7 +78,7 @@ getDatasetVariables <- function(x) {
 
 getDatasetHiddenVariables <- function(x) {
     varcat_url <- variableCatalogURL(x)
-    if (is.cacheOn()) {
+    if (use_lazy_var_cat()) {
         key <- httpcache::buildCacheKey(varcat_url, extra = "HiddenVariableCatalog")
         cache <- httpcache::getCache(key)
         if (!is.null(cache)) {
@@ -79,7 +94,7 @@ getDatasetHiddenVariables <- function(x) {
 }
 
 getDatasetPrivateVariables <- function(x) {
-    if (is.cacheOn()) {
+    if (use_lazy_var_cat()) {
         varcat_url <- variableCatalogURL(x)
         key <- httpcache::buildCacheKey(varcat_url, extra = "PrivateVariableCatalog")
         cache <- httpcache::getCache(key)
