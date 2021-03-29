@@ -5,7 +5,7 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
     # subclassing an existing dataset object, the variable catalog will
     # already be populated (and due to subsetting, may not be identical
     # to a fresh pull from the API)
-    if (is.unforcedVarCat(.Object@variables) && !is.cacheOn()) {
+    if (is.unforcedVarCat(.Object@variables) && use_lazy_var_cat()) {
         # If httpcache is on, we'll load this lazily, because we may not need it
         # but if the cache is off, we do it eagerly because variables are so often
         # needed.
