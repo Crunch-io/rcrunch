@@ -104,7 +104,7 @@ getDatasetPrivateVariables <- function(x) {
             private_dir <- privateFolder(x)
             if (is.null(private_dir)) {
                 privatevarcat <- VariableCatalog()
-                privatevarcat@self = "<Not Lazy>"
+                privatevarcat@self <- "<Not Lazy>"
                 return(privatevarcat)
             } else {
                 privatevarcat <- variablesBelowFolder(private_dir)
@@ -116,7 +116,7 @@ getDatasetPrivateVariables <- function(x) {
         private_dir <- privateFolder(x)
         if (is.null(private_dir)) {
             out <- VariableCatalog()
-            out@self = "<Not Lazy>"
+            out@self <- "<Not Lazy>"
             return(out)
         } else {
             return(variablesBelowFolder(private_dir))
