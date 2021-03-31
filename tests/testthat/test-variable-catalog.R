@@ -259,7 +259,7 @@ with_mock_crunch({
 
 with_test_authentication({
     ds <- newDataset(df)
-    ds <- forceVarCat(ds) # Force variables catalog beause we're counting requests
+    ds <- forceVariableCatalog(ds) # Force variables catalog beause we're counting requests
     test_that("Can set descriptions (and doing so doesn't PUT order)", {
         with(temp.options(httpcache.log = ""), {
             expect_identical(

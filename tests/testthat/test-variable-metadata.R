@@ -20,7 +20,7 @@ with_mock_crunch({
 })
 
 # It does make internet request because variables catalog is lazy, unless we force it
-ds <- forceVarCat(ds)
+ds <- forceVariableCatalog(ds)
 httpcache::clearCache()
 without_internet({
     test_that("Getting categories and subvariables from variableMetadata doesn't make a request", {

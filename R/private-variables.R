@@ -98,7 +98,7 @@ deprivatiseVariables <- function(dataset, variables) {
 #' @rdname hide
 #' @export
 privateVariables <- function(dataset, key = namekey(dataset)) {
-  if (is.unforcedVarCat(dataset@privateVariables)) {
+  if (is.unforcedVariableCatalog(dataset@privateVariables)) {
     pv <- getDatasetPrivateVariables(dataset)
   } else {
     pv <- dataset@privateVariables

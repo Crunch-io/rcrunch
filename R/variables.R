@@ -69,7 +69,7 @@ setMethod(
 #' @rdname variables
 #' @export
 setMethod("allVariables", "CrunchDataset", function(x) {
-    if (is.unforcedVarCat(x@variables)) {
+    if (is.unforcedVariableCatalog(x@variables)) {
         getDatasetVariables(x)
     } else {
         x@variables

@@ -872,7 +872,7 @@ with_test_authentication({
     })
 
 
-    ds <- forceVarCat(ds) # force variable catalog so we can count requests
+    ds <- forceVariableCatalog(ds) # force variable catalog so we can count requests
     uncached({
         with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
             with(temp.option(httpcache.log = ""), {

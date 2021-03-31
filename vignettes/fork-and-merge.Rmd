@@ -28,7 +28,7 @@ ds <- newDataset(SO_survey, "stackoverflow_survey")
 ```
 ```{r forcevarcat1, include=FALSE}
 # Force catalog so that catalog is loaded at a consistent time
-ds <- forceVarCat(ds)
+ds <- forceVariableCatalog(ds)
 ```
 
 Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decision makers to make sure that the data is accurate before sharing it with clients. To do this you call `forkDataset()` to create a copy of the dataset.
@@ -38,7 +38,7 @@ forked_ds <- forkDataset(ds)
 ```
 ```{r forcevarcat2, include=FALSE}
 # Force catalog so that catalog is loaded at a consistent time
-forked_ds <- forceVarCat(forked_ds)
+forked_ds <- forceVariableCatalog(forked_ds)
 ```
 
 You now have a copied dataset which is identical to the original, and are free to make changes without fear of disrupting the client's experience. You can add or remove variables, delete records, or change the dataset's organization. These changes will be isolated to your fork and won't be visible to the end user until you decide to merge the fork back into the original dataset. This lets you edit the dataset with confidence because your work is isolated.
@@ -53,7 +53,7 @@ forked_ds$ImportantHiringCA <- makeArray(forked_ds[, c("ImportantHiringTechExp",
 ```
 ```{r forcevarcat3, include=FALSE}
 # Force catalog so that catalog is loaded at a consistent time
-forked_ds <- forceVarCat(forked_ds)
+forked_ds <- forceVariableCatalog(forked_ds)
 ```
 
 Our forked dataset has diverged from the original dataset. Which we can see by comparing their names.

@@ -1,5 +1,5 @@
 # crunch 1.27.8 (Development version)
-* Variables catalogs are now loaded lazily, which means some dataset operations will be much faster. You can override this behavior (useful for eg testing or rare situations when working on many datasets at once by using `forceVarCat()` or `option(crunch.lazy.varcat = FALSE)`).
+* Variables catalogs are now loaded lazily, which means some dataset operations will be much faster. You can override this behavior (useful for eg testing or rare situations when working on many datasets at once by using `forceVariableCatalog()` or `option(crunch.lazy.variable.catalog = FALSE)`).
 * You can now set the filter, weight and viz_type of a slide when creating it.
 
 # crunch 1.27.7

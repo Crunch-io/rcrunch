@@ -147,7 +147,7 @@ with_test_authentication({
         expect_null(refresh(ds)$Two)
     })
     test_that("addVariables server error handling", {
-        ds <- forceVarCat(ds) # force varcat so we don't try to get it without internet
+        ds <- forceVariableCatalog(ds) # force varcat so we don't try to get it without internet
         without_internet({
             ## Add two expr vars (no GET on rows first)
             expect_error(addVariables(

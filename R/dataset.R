@@ -5,11 +5,11 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
     # subclassing an existing dataset object, the variable catalog will
     # already be populated (and due to subsetting, may not be identical
     # to a fresh pull from the API)
-    if (is.unforcedVarCat(.Object@variables) && !use_lazy_var_cat()) {
+    if (is.unforcedVariableCatalog(.Object@variables) && !useLazyVariableCatalog()) {
         # If httpcache is on, we'll load this lazily, because we may not need it
         # but if the cache is off, we do it eagerly because variables are so often
         # needed.
-        .Object <- forceVarCat(.Object)
+        .Object <- forceVariableCatalog(.Object)
     }
 
     if (length(.Object@filter@expression) == 0) {
@@ -19,7 +19,7 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
     return(.Object)
 })
 
-is.unforcedVarCat <- function(x) {
+is.unforcedVariableCatalog <- function(x) {
     is.null(x@self)
 }
 
@@ -28,31 +28,31 @@ is.unforcedVarCat <- function(x) {
 #' Variables catalogs are generally loaded lazily, but this function
 #' allows you to force them to be loaded once.
 #'
-#' The `forceVarCat()` function is probably most useful when writing tests
+#' The `forceVariableCatalog()` function is probably most useful when writing tests
 #' because it allows you to be more certain about when API calls are made.
 #'
 #' Another situation where you may care about when API calls for loading
 #' the variables are made is when you are loading many datasets at the same
 #' time (~15+) and referring to their variables later. In this situation,
-#' it can be faster to turn off the variables catalog with the option `crunch.lazy.catalog`
-#' because there is a limit to the number of datasets your user can hold open at the
-#' same time and so at some point the server will have to unload and then reload the
-#' datasets. However, it's probably even faster if you are able to alter your code so
-#' that it operates on datasets sequentially.
+#' it can be faster to turn off the variables catalog with the option
+#' `crunch.lazy.variable.catalog` because there is a limit to the number of
+#' datasets your user can hold open at the same time and so at some point the server
+#' will have to unload and then reload the datasets. However, it's probably even faster
+#' if you are able to alter your code so that it operates on datasets sequentially.
 #'
 #' @param x A crunch dataset
 #'
 #' @return A dataset with it's variable catalogs filled in
 #' @export
-forceVarCat <- function(x) {
+forceVariableCatalog <- function(x) {
     x@variables <- getDatasetVariables(x)
     x@hiddenVariables <- getDatasetHiddenVariables(x)
     x@privateVariables <- getDatasetPrivateVariables(x)
     x
 }
 
-use_lazy_var_cat <- function() {
-    getOption("crunch.lazy.varcat", TRUE) && isTRUE(getOption("httpcache.on", TRUE))
+useLazyVariableCatalog <- function() {
+    getOption("crunch.lazy.variable.catalog", TRUE) && isTRUE(getOption("httpcache.on", TRUE))
 }
 
 getDatasetVariables <- function(x) {
@@ -61,7 +61,7 @@ getDatasetVariables <- function(x) {
     query_params <- list(relative = "on")
 
     ## Check cache
-    if (use_lazy_var_cat()) {
+    if (useLazyVariableCatalog()) {
         key <- httpcache::buildCacheKey(varcat_url, query_params, extra = "VariableCatalog")
         cache <- httpcache::getCache(key)
         if (!is.null(cache)) {
@@ -78,7 +78,7 @@ getDatasetVariables <- function(x) {
 
 getDatasetHiddenVariables <- function(x) {
     varcat_url <- variableCatalogURL(x)
-    if (use_lazy_var_cat()) {
+    if (useLazyVariableCatalog()) {
         key <- httpcache::buildCacheKey(varcat_url, extra = "HiddenVariableCatalog")
         cache <- httpcache::getCache(key)
         if (!is.null(cache)) {
@@ -94,7 +94,7 @@ getDatasetHiddenVariables <- function(x) {
 }
 
 getDatasetPrivateVariables <- function(x) {
-    if (use_lazy_var_cat()) {
+    if (useLazyVariableCatalog()) {
         varcat_url <- variableCatalogURL(x)
         key <- httpcache::buildCacheKey(varcat_url, extra = "PrivateVariableCatalog")
         cache <- httpcache::getCache(key)

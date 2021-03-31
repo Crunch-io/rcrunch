@@ -93,7 +93,7 @@ unhideVariables <- function(dataset, variables) {
 #' @rdname hide
 #' @export
 hiddenVariables <- function(dataset, key = namekey(dataset)) {
-    if (is.unforcedVarCat(dataset@hiddenVariables)) {
+    if (is.unforcedVariableCatalog(dataset@hiddenVariables)) {
         hv <- getDatasetHiddenVariables(dataset)
     } else {
         hv <- dataset@hiddenVariables
