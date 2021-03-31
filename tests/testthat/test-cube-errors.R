@@ -1,7 +1,7 @@
 context("Cube error handling")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("'formula' must be provided", {
         expect_error(crtabs(), "Must provide a formula")

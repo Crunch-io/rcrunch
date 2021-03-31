@@ -1,8 +1,8 @@
 context("Exclusion filters")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds <- cachedLoadDataset("test ds")
+    ds2 <- cachedLoadDataset("ECON.sav")
 
     test_that("Get exclusions", {
         expect_equivalent(exclusion(ds), ds$birthyr < 0)

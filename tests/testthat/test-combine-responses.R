@@ -4,7 +4,7 @@ context("Combine responses")
 #     list(list(name="Extremes", responses=c("First", "Last")))),
 #     mr.payload, fixed=TRUE)
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     extremes <- VariableDefinition(
         name = "MR combined",

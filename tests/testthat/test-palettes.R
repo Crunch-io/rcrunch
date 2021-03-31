@@ -1,5 +1,5 @@
 with_mock_crunch({
-    ds <- loadDataset("Vegetables example")
+    ds <- cachedLoadDataset("Vegetables example")
     palettes <- palettes(ds)
 
     test_that("Can get palettes from dataset", {

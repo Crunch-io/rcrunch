@@ -1,7 +1,7 @@
 context("webApp")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("Dataset URLs", {
         with(temp.options(crunch.api = "https://fake.crunch.io/api/v2/"), {

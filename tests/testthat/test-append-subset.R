@@ -1,8 +1,8 @@
 context("Appending subsets")
 
 with_mock_crunch({
-    ds1 <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds1 <- cachedLoadDataset("test ds")
+    ds2 <- cachedLoadDataset("ECON.sav")
     test_that("If no filtering, 'where' and 'filter' are omitted", {
         expect_POST(
             appendDataset(ds1, ds2),

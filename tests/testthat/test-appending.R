@@ -16,7 +16,7 @@ test_that("crunchTimeout", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("Cannot append dataset to itself", {
         expect_error(
             appendDataset(ds, ds),
@@ -24,8 +24,8 @@ with_mock_crunch({
         )
     })
 
-    ds1 <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds1 <- cachedLoadDataset("test ds")
+    ds2 <- cachedLoadDataset("ECON.sav")
     test_that("append DELETEs the pk", {
         expect_DELETE(
             appendDataset(ds2, ds1),

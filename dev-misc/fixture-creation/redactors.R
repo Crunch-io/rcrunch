@@ -134,7 +134,7 @@ ids_from_ds <- function(ds, desired_ds_id) {
         # User ID
         "user_id" = me()@body$id,
         # Dataset ID
-        setNames(id(ds), desired_ds_id),
+        setNames(crunch::id(ds), desired_ds_id),
         # Variable IDs
         setNames(
             ids(allVariables(ds))[order(aliases(allVariables(ds)))],

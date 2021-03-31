@@ -1,7 +1,7 @@
 context("Various geo functions")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     geo_data <- geo(ds$location)
     test_that("geo getter", {
         expect_is(geo_data, "CrunchGeography")

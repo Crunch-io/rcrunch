@@ -10,7 +10,7 @@ test_that("encoding + JSON reads correctly", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("Reading UTF in tests", {
         expect_identical(description(ds$textVar), "Bud\u011bjovick\u00fd Budvar")
     })

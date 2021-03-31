@@ -1,8 +1,8 @@
 context("Fork and merge")
 
 with_mock_crunch({
-    ds1 <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds1 <- cachedLoadDataset("test ds")
+    ds2 <- cachedLoadDataset("ECON.sav")
 
     test_that("mergeFork requests", {
         expect_POST(

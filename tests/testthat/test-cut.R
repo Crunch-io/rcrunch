@@ -1,7 +1,7 @@
 context("cut function")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     gen <- ds$gender
 
     test_that("cut labels are generated correcty", {

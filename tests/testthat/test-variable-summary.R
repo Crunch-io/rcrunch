@@ -1,7 +1,7 @@
 context("Variable summaries")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     gen <- ds$gender
 
     test_that("table 'method' dispatch", {

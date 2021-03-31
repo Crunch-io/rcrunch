@@ -2,7 +2,7 @@ context("CrunchDataFrame Methods")
 
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("can manipulate the row order of a crunchDataFrame", {
         ds_df <- as.data.frame(ds)
@@ -19,7 +19,7 @@ with_mock_crunch({
     })
 
     test_that("Extract methods work with CrunchDataFrames like they do with data.frames", {
-        ds_new <- loadDataset("test ds")
+        ds_new <- cachedLoadDataset("test ds")
         # remove array variables because they are not equivalent in crdf and
         # data.frames, since in the data.frames they have been flattened.
         ds_new <- ds_new[!{

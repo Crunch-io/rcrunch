@@ -27,7 +27,7 @@ test_that("'bases' can be accessed and all margins work", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     m <- multitables(ds)[[1]]
     with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
         book1 <- tabBook(m, data = ds, output_format = "json")

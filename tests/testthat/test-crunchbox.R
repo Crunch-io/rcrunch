@@ -113,8 +113,8 @@ test_that("color validator validates", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
-    ds3 <- loadDataset("ECON.sav")
+    ds <- cachedLoadDataset("test ds")
+    ds3 <- cachedLoadDataset("ECON.sav")
 
     test_that("preCrunchBoxCheck does not error", {
         expect_prints(

@@ -1,7 +1,7 @@
 context("Case variables")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("Case list validator", {
         case <- list(name = "Dudes", expression = ds$gender == "Male")

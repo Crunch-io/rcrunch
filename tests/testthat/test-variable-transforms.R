@@ -215,7 +215,7 @@ test_that("calcTransform rejects nd arrays", {
 
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("Can get transform", {
         expect_equivalent(

@@ -3,8 +3,8 @@ context("Sharing")
 me <- "fake.user@example.com"
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds <- cachedLoadDataset("test ds")
+    ds2 <- cachedLoadDataset("ECON.sav")
     test_that("Dataset has permissions catalog", {
         expect_is(permissions(ds), "PermissionCatalog")
         expect_identical(

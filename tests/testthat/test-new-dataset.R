@@ -61,7 +61,7 @@ with_mock_crunch({
     })
 
     test_that("uploadData writes out a gzipped file", {
-        ds <- loadDataset("test ds")
+        ds <- cachedLoadDataset("test ds")
         with_DELETE(NULL, {
             ## with_DELETE to handle the cleanup so we can see the real error
             expect_POST(

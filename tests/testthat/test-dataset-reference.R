@@ -1,7 +1,7 @@
 context("datasetReference")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     ds_url <- self(ds)
     test_that("datasetReference methods", {
         expect_identical(ds_url, "https://app.crunch.io/api/datasets/1/")

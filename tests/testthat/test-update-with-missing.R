@@ -1,7 +1,7 @@
 context("Update variables with NAs")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     ds2 <- loadDataset("an archived dataset", kind = "archived")
 
     test_that("If an array gets NA assigned and it doesn't have No Data, we add that category", {

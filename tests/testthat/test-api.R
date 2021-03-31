@@ -62,7 +62,7 @@ with_mock_crunch({
             )
             ## Use testthat:: so that it doesn't print ds. Check for log printing
             expect_output(
-                ds <- loadDataset("test ds"),
+                ds <- cachedLoadDataset("test ds"),
                 NA
             )
         })
