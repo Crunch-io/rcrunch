@@ -449,7 +449,7 @@ test_that("user2realMargin translates cube margins with cat by mr by mr by mr", 
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("crtabs use as_selected by default", {
         expect_GET(

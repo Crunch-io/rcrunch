@@ -243,5 +243,22 @@ crunch_test_teardown_check <- function() {
     print(get("cleanup.runtime", envir = globalenv()))
 }
 
+# Another level of caching for full datasets because even with httpcache
+# storing JSON in memory, loading the two most frequent datasets was still
+# taking ~10% of test time because we do it so often during testing.
+ds_cache_env <- new.env(parent = emptyenv())
+
+cachedLoadDataset <- function(dataset, ...) {
+    if (length(list(...)) != 0) {
+        stop("non-dataset arguments ignored in cached datasets")
+    }
+    if (!dataset %in% names(ds_cache_env)) {
+        # Don't need `with_mock_crunch()` because caller is already inside it
+        ds_cache_env[[dataset]] <- loadDataset(dataset)
+    }
+    ds_cache_env[[dataset]]
+}
+
+
 # Make compressed fixtures available to downstream packages
 decompress_fixtures()

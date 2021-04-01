@@ -84,7 +84,7 @@ with_mock_crunch({
         test_that("Auto-polling with a progress resource", {
             counter <<- 1
             logfile <- tempfile()
-            with(temp.option(httpcache.log = logfile), {
+            with(temp.option(httpcache.log = logfile, crunch.poll.wait = 0.01), {
                 expect_output(
                     expect_identical(
                         handleAPIresponse(fakeProg("https://app.crunch.io/api/progress/")),
@@ -104,7 +104,7 @@ with_mock_crunch({
         test_that("Auto-polling when progress reports failure", {
             counter <<- 1
             logfile <- tempfile()
-            with(temp.option(httpcache.log = logfile), {
+            with(temp.option(httpcache.log = logfile, crunch.poll.wait = 0.01), {
                 expect_output(
                     expect_message(
                         expect_error(

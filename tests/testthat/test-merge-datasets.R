@@ -1,8 +1,8 @@
 context("Merge/extend dataset")
 
 with_mock_crunch({
-    ds1 <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds1 <- cachedLoadDataset("test ds")
+    ds2 <- cachedLoadDataset("ECON.sav")
 
     testPayloadNoFilterArg <- paste0(
         '{"function":"adapt",',

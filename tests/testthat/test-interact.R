@@ -1,7 +1,7 @@
 context("Interact")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("makeInteractions", {
         test_cases <- makeInteractions(ds$gender, ds$mymrset[[1]], sep = ":")
         expect_equal(

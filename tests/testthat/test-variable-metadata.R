@@ -1,7 +1,7 @@
 context("All variable metadata")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     vm <- variableMetadata(ds)
     genders <- categories(ds$gender)
     test_that("variableMetadata exists, is a catalog", {

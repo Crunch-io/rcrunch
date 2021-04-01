@@ -1,7 +1,7 @@
 context("Adding subvariables")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("Adding an existing var to an array", {
         expect_PATCH(
             addSubvariable(ds$mymrset, ds$gender),

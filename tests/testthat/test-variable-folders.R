@@ -1,7 +1,7 @@
 context("Variable folders")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("Can load the root variable folder", {
         expect_is(folders(ds), "VariableFolder")
@@ -182,7 +182,7 @@ with_mock_crunch({
     })
 
     test_that("copyFolders returns the target dataset with the order applied", {
-        ds_again <- loadDataset("test ds")
+        ds_again <- cachedLoadDataset("test ds")
         expect_silent(new_order <- copyFolders(ds, ds_again))
         expect_is(new_order, "CrunchDataset")
         expect_identical(entities(ordering(ds)), entities(ordering(new_order)))

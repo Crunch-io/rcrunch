@@ -13,7 +13,7 @@ test_that("parseFolderPath", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("cd() returns a folder", {
         expect_identical(

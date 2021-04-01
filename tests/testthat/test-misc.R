@@ -298,7 +298,7 @@ test_that("expect_either", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("haltIfArray", {
         expect_true(haltIfArray(ds$birthyr))

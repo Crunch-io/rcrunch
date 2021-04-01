@@ -5,8 +5,8 @@ test_that("show method exists", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
-    ds3 <- loadDataset("ECON.sav")
+    ds <- cachedLoadDataset("test ds")
+    ds3 <- cachedLoadDataset("ECON.sav")
 
     test_that("Test dataset has 2 filters", {
         expect_is(filters(ds), "FilterCatalog")

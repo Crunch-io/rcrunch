@@ -1,7 +1,7 @@
 context("Combine categories")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     both <- VariableDefinition(
         name = "Gender 1 cat",

@@ -1,7 +1,7 @@
 context("Make a derived variable with a new type")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     save_over_error <- paste0(
         "A variable cannot be updated with a derivation that changes its ",

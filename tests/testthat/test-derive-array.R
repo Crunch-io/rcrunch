@@ -1,7 +1,7 @@
 context("Deriving array variables")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("deriveArray works with MR", {
         expect_POST(
             ds$derived_mr <- deriveArray(list(ds$gender),

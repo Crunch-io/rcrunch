@@ -1,7 +1,7 @@
 context("Hiding variables")
 
 with_mock_crunch({
-    ds <- loadDataset("ECON.sav")
+    ds <- cachedLoadDataset("ECON.sav")
     test_that("hiddenVariables", {
         expect_identical(hiddenVariables(ds, "name"), "Birth Year")
         expect_identical(hiddenVariables(ds), "birthyr")

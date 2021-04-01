@@ -1,7 +1,7 @@
 context("Filtering datasets and variables in the R session")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     ds2 <- ds[ds$gender == "Male", ]
     ds3 <- ds2[ds2$birthyr > 1981, ]
 
@@ -75,7 +75,7 @@ with_mock_crunch({
     })
 
     test_that("Getting weight variable from filtered dataset is filtered", {
-        otherds <- loadDataset("ECON.sav")
+        otherds <- cachedLoadDataset("ECON.sav")
         expect_warning(
             expect_identical(weight(otherds), otherds$birthyr),
             "Variable birthyr is hidden"

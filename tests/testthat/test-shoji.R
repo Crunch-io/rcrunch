@@ -76,7 +76,7 @@ with_mock_crunch({
     })
 
     test_that("shojiURL", {
-        ds <- loadDataset("test ds")
+        ds <- cachedLoadDataset("test ds")
         expect_identical(
             shojiURL(ds, "catalogs", "variables"),
             "https://app.crunch.io/api/datasets/1/variables/"

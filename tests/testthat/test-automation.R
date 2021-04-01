@@ -9,8 +9,8 @@ test_that("string_is_file_like behaves", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds") # 1 successful script
-    ds2 <- loadDataset("ECON.sav") # no successful scripts
+    ds <- cachedLoadDataset("test ds") # 1 successful script
+    ds2 <- cachedLoadDataset("ECON.sav") # no successful scripts
 
     script_text_vector <- c(
         "RENAME starttime TO interviewtime; ",

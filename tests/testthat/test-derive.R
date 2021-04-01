@@ -1,7 +1,7 @@
 context("Derive a new variable")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     # manually make a variable from json mock
     birthyrPlus <- CrunchVariable(
         VariableTuple(

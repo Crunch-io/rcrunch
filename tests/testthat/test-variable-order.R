@@ -12,7 +12,7 @@ test_that("VariableGroup and Order objects can be made", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     varcat <- allVariables(ds)
 
     test_that("ordering methods on variables catalog", {
@@ -380,7 +380,7 @@ with_mock_crunch({
         )
     })
 
-    ds3 <- loadDataset("ECON.sav")
+    ds3 <- cachedLoadDataset("ECON.sav")
     test_that("Show method for VO handles relative URLs correctly", {
         expect_prints(
             ordering(ds3),
@@ -622,7 +622,7 @@ with_mock_crunch({
     })
 
     test_that("copyOrder returns the order of target as a VariableOrder", {
-        ds_again <- loadDataset("test ds")
+        ds_again <- cachedLoadDataset("test ds")
         # because copyOrder is deprecated, there will be a warning.
         expect_warning(
             new_order <- copyOrder(ds, ds_again),

@@ -1,7 +1,7 @@
 context("Update a dataset")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("Updating values makes a POST request to the table endpoint", {
         ## TODO: assert the payload shape. This is mainly about exercising code
         ## in the unit tests. We test the behavior in integration tests

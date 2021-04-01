@@ -111,7 +111,7 @@ test_that("rollup resolution validation", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     v <- ds$starttime
 
     test_that("rollup CrunchExpr from DatetimeVariable", {

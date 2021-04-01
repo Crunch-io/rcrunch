@@ -307,7 +307,7 @@ test_that("checkVarDefErrors errors correctly", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     test_that("assignment restrictions", {
         expect_error(
             ds[[2]] <- 1:25,

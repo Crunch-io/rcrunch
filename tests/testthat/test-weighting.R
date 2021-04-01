@@ -1,8 +1,8 @@
 context("Weights")
 
 with_mock_crunch({
-    oldds <- loadDataset("test ds")
-    newds <- loadDataset("ECON.sav")
+    oldds <- cachedLoadDataset("test ds")
+    newds <- cachedLoadDataset("ECON.sav")
 
     test_that("Getting weights", {
         expect_null(weight(oldds))

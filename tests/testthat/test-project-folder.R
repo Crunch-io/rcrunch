@@ -2,7 +2,7 @@ context("Folder methods for projects with the new API")
 
 with_mock_crunch({
     proj <- projects()[["Project One"]]
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("Root and cd()", {
         expect_true(is.project(projects()))
@@ -131,7 +131,7 @@ with_mock_crunch({
     test_that("mv to ~", {
         expect_PATCH(
             projects() %>%
-                mv(loadDataset("ECON.sav"), "~"),
+                mv(cachedLoadDataset("ECON.sav"), "~"),
             "https://app.crunch.io/api/projects/personal/"
         )
     })

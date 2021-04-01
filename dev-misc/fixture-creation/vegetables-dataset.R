@@ -365,7 +365,7 @@ dir_create(temp_dir)
 start_capturing(temp_dir)
 ds <- loadDataset("Vegetables example")
 mt <- multitables(ds)[[1]]
-tb <- tabBook(mt, ds)
+tb <- tabBook(mt, ds[c("healthy_eater", "veg_enjoy_ca", "enjoy_mr", "age", "ratings_numa")])
 
 deck <- decks(ds)[[1]]
 slide1 <- slides(deck)[[1]]
