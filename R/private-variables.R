@@ -98,7 +98,12 @@ deprivatiseVariables <- function(dataset, variables) {
 #' @rdname hide
 #' @export
 privateVariables <- function(dataset, key = namekey(dataset)) {
-  pv <- dataset@privateVariables
+  if (is.unforcedVariableCatalog(dataset@privateVariables)) {
+    pv <- getDatasetPrivateVariables(dataset)
+  } else {
+    pv <- dataset@privateVariables
+  }
+
   if (length(pv)) {
     return(sort(vapply(index(pv), vget(key), character(1),
                        USE.NAMES = FALSE

@@ -1,27 +1,17 @@
 setMethod("initialize", "CrunchDataset", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    if (is.null(.Object@variables@self)) {
-        # This is only NULL when instantiating a fresh dataset object. If
-        # subclassing an existing dataset object, the variable catalog will
-        # already be populated (and due to subsetting, may not be identical
-        # to a fresh pull from the API)
-        #
-        # TODO: you could use this check to make lazy the fetching of variables
-        .Object@variables <- getDatasetVariables(.Object)
 
-        # Hidden variables now require folder transversal, so we do this up front
-        # so that we don't have to hit API whenever we want a list of active variables
-        hidden_dir <- hiddenFolder(.Object)
-        hidden_vars <- variablesBelowFolder(hidden_dir, "alias")
-        .Object@hiddenVariables <- .Object@variables[aliases(.Object@variables) %in% hidden_vars]
-
-        # Secure variables also accessed via folder transversal
-        private_dir <- privateFolder(.Object)
-        if (!is.null(private_dir)) {
-            private_vars <- variablesBelowFolder(private_dir, "alias")
-            .Object@privateVariables <- .Object@variables[aliases(.Object@variables) %in% private_vars] #nolint
-        }
+    # This is only NULL when instantiating a fresh dataset object. If
+    # subclassing an existing dataset object, the variable catalog will
+    # already be populated (and due to subsetting, may not be identical
+    # to a fresh pull from the API)
+    if (is.unforcedVariableCatalog(.Object@variables) && !useLazyVariableCatalog()) {
+        # If httpcache is on, we'll load this lazily, because we may not need it
+        # but if the cache is off, we do it eagerly because variables are so often
+        # needed.
+        .Object <- forceVariableCatalog(.Object)
     }
+
     if (length(.Object@filter@expression) == 0) {
         # Likewise for preserving filters
         activeFilter(.Object) <- NULL
@@ -29,10 +19,109 @@ setMethod("initialize", "CrunchDataset", function(.Object, ...) {
     return(.Object)
 })
 
+is.unforcedVariableCatalog <- function(x) {
+    is.null(x@self)
+}
+
+#' Force variables catalog to be loaded
+#'
+#' Variables catalogs are generally loaded lazily, but this function
+#' allows you to force them to be loaded once.
+#'
+#' The `forceVariableCatalog()` function is probably most useful when writing tests
+#' because it allows you to be more certain about when API calls are made.
+#'
+#' Another situation where you may care about when API calls for loading
+#' the variables are made is when you are loading many datasets at the same
+#' time (~15+) and referring to their variables later. In this situation,
+#' it can be faster to turn off the variables catalog with the option
+#' `crunch.lazy.variable.catalog` because there is a limit to the number of
+#' datasets your user can hold open at the same time and so at some point the server
+#' will have to unload and then reload the datasets. However, it's probably even faster
+#' if you are able to alter your code so that it operates on datasets sequentially.
+#'
+#' @param x A crunch dataset
+#'
+#' @return A dataset with it's variable catalogs filled in
+#' @export
+forceVariableCatalog <- function(x) {
+    x@variables <- getDatasetVariables(x)
+    x@hiddenVariables <- getDatasetHiddenVariables(x)
+    x@privateVariables <- getDatasetPrivateVariables(x)
+    x
+}
+
+useLazyVariableCatalog <- function() {
+    getOption("crunch.lazy.variable.catalog", TRUE) && isTRUE(getOption("httpcache.on", TRUE))
+}
+
 getDatasetVariables <- function(x) {
     varcat_url <- variableCatalogURL(x)
-    ## Add query params
-    return(VariableCatalog(crGET(varcat_url, query = list(relative = "on"))))
+    ## Add query params to try to hit cache
+    query_params <- list(relative = "on")
+
+    ## Check cache
+    if (useLazyVariableCatalog()) {
+        key <- httpcache::buildCacheKey(varcat_url, query_params, extra = "VariableCatalog")
+        cache <- httpcache::getCache(key)
+        if (!is.null(cache)) {
+            return(cache)
+        } else {
+            varcat <- VariableCatalog(crGET(varcat_url, query = query_params))
+            httpcache::setCache(key, varcat)
+            return(varcat)
+        }
+    } else {
+        return(VariableCatalog(crGET(varcat_url, query = query_params)))
+    }
+}
+
+getDatasetHiddenVariables <- function(x) {
+    varcat_url <- variableCatalogURL(x)
+    if (useLazyVariableCatalog()) {
+        key <- httpcache::buildCacheKey(varcat_url, extra = "HiddenVariableCatalog")
+        cache <- httpcache::getCache(key)
+        if (!is.null(cache)) {
+            return(cache)
+        } else {
+            hiddenvarcat <- variablesBelowFolder(hiddenFolder(x))
+            httpcache::setCache(key, hiddenvarcat)
+            return(hiddenvarcat)
+        }
+    } else {
+        return(variablesBelowFolder(hiddenFolder(x)))
+    }
+}
+
+getDatasetPrivateVariables <- function(x) {
+    if (useLazyVariableCatalog()) {
+        varcat_url <- variableCatalogURL(x)
+        key <- httpcache::buildCacheKey(varcat_url, extra = "PrivateVariableCatalog")
+        cache <- httpcache::getCache(key)
+        if (!is.null(cache)) {
+            return(cache)
+        } else {
+            private_dir <- privateFolder(x)
+            if (is.null(private_dir)) {
+                privatevarcat <- VariableCatalog()
+                privatevarcat@self <- "<Not Lazy>"
+                return(privatevarcat)
+            } else {
+                privatevarcat <- variablesBelowFolder(private_dir)
+            }
+            httpcache::setCache(key, privatevarcat)
+            return(privatevarcat)
+        }
+    } else {
+        private_dir <- privateFolder(x)
+        if (is.null(private_dir)) {
+            out <- VariableCatalog()
+            out@self <- "<Not Lazy>"
+            return(out)
+        } else {
+            return(variablesBelowFolder(private_dir))
+        }
+    }
 }
 
 getNrow <- function(dataset) {

@@ -42,10 +42,12 @@
         if (!(self(value) %in% urls(allVariables(x)))) {
             halt("This variable does not belong to this dataset")
         }
-        ## Update value with `i` if it is
-        ## different. I.e. set the alias based on i if not otherwise
-        ## specified. (setTupleSlot does the checking)
-        tuple(value) <- setTupleSlot(tuple(value), namekey(x), i)
+        ## The officially supported ways of updating a tuple make PATCH on their own
+        ## so unless user has been messing with S4 object, changes to the tuple
+        ## should have already been made.
+        ## Because of lazy loading of variables catalog, the variable catalog
+        ## may actually already be more updated than "i", so do not update here.
+        ## TODO: Does this function provide any value now that variable catalog is lazy?
     } else if (!identical(names(v), self(value))) {
         ## x[[i]] exists but is a different variable than value
         halt("Cannot overwrite one Variable with another")

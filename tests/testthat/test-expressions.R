@@ -871,6 +871,8 @@ with_test_authentication({
         expect_identical(as.vector(ds$v3 * ds$v3), df$v3^2) # nolint
     })
 
+
+    ds <- forceVariableCatalog(ds) # force variable catalog so we can count requests
     uncached({
         with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
             with(temp.option(httpcache.log = ""), {

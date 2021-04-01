@@ -1,21 +1,24 @@
 structure(list(url = "/api/datasets/", status_code = 202L, headers = structure(list(
-    date = "Mon, 04 May 2020 23:13:18 GMT", `content-type` = "application/json;charset=utf-8", 
-    `content-length` = "176", location = "/api/datasets/2c6beb/", 
+    date = "Thu, 25 Mar 2021 15:18:40 GMT", `content-type` = "application/json;charset=utf-8", 
+    `content-length` = "176", location = "/api/datasets/25c7c7/", 
     server = "nginx", `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
     allow = "GET, HEAD, OPTIONS, PATCH, POST", `x-timing` = "", 
-    `set-cookie` = "REDACTED"), class = c("insensitive", "list"
-)), all_headers = list(list(status = 202L, version = "HTTP/2", 
-    headers = structure(list(date = "Mon, 04 May 2020 23:13:18 GMT", 
+    `x-xss-protection` = "1; mode=block", `strict-transport-security` = "max-age=31536000; includeSubDomains", 
+    `x-content-type-options` = "nosniff"), class = c("insensitive", 
+"list")), all_headers = list(list(status = 202L, version = "HTTP/2", 
+    headers = structure(list(date = "Thu, 25 Mar 2021 15:18:40 GMT", 
         `content-type` = "application/json;charset=utf-8", `content-length` = "176", 
-        location = "/api/datasets/2c6beb/", server = "nginx", 
+        location = "/api/datasets/25c7c7/", server = "nginx", 
         `content-encoding` = "gzip", vary = "Cookie, Accept-Encoding", 
         allow = "GET, HEAD, OPTIONS, PATCH, POST", `x-timing` = "", 
-        `set-cookie` = "REDACTED"), class = c("insensitive", 
-    "list")))), cookies = structure(list(domain = ".crunch.io", 
-    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1620169998, class = c("POSIXct", 
-    "POSIXt")), name = "token", value = "REDACTED"), row.names = c(NA, 
--1L), class = "data.frame"), content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/datasets/\", \"value\": \"/api/progress/\"}"), 
-    date = structure(1588633998, class = c("POSIXct", "POSIXt"
-    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.7e-05, 
-    connect = 2.8e-05, pretransfer = 9.4e-05, starttransfer = 9.9e-05, 
-    total = 0.982934)), class = "response")
+        `x-xss-protection` = "1; mode=block", `strict-transport-security` = "max-age=31536000; includeSubDomains", 
+        `x-content-type-options` = "nosniff"), class = c("insensitive", 
+    "list")))), cookies = structure(list(domain = logical(0), 
+    flag = logical(0), path = logical(0), secure = logical(0), 
+    expiration = structure(numeric(0), class = c("POSIXct", "POSIXt"
+    )), name = logical(0), value = logical(0)), row.names = integer(0), class = "data.frame"), 
+    content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/datasets/\", \"value\": \"/api/progress/\"}"), 
+    date = structure(1616685520, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2.5e-05, 
+    connect = 2.6e-05, pretransfer = 0.000106, starttransfer = 0.000109, 
+    total = 0.919603)), class = "response")

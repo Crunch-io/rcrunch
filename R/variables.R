@@ -45,7 +45,9 @@ setMethod("variables", "CrunchCube", function(x) {
 
 setDatasetVariables <- function(x, value) {
     v <- urls(value)
-    x@variables[v] <- value
+    vars <- allVariables(x)
+    vars[v] <- value
+    x@variables <- vars
     ordering(x@variables) <- ordering(value)
     return(x)
 }
@@ -66,7 +68,13 @@ setMethod(
 )
 #' @rdname variables
 #' @export
-setMethod("allVariables", "CrunchDataset", function(x) x@variables)
+setMethod("allVariables", "CrunchDataset", function(x) {
+    if (is.unforcedVariableCatalog(x@variables)) {
+        getDatasetVariables(x)
+    } else {
+        x@variables
+    }
+})
 #' @rdname variables
 #' @export
 setMethod(

@@ -11,6 +11,12 @@ with_mock_crunch({
         expect_true(is.dataset(ds))
     })
 
+    test_that(
+        "Dataset can be loaded without cache (tests otherwise unused lazy-var-cat code path)", {
+            httpcache::uncached(ds <- loadDataset("test ds"))
+            expect_true(is.dataset(ds))
+    })
+
     test_that("CrunchDataset class (re-)init preserves object state", {
         expect_identical(CrunchDataset(ds), ds)
         expect_identical(CrunchDataset(ds[, "gender"]), ds[, "gender"])
@@ -284,7 +290,8 @@ with_mock_crunch({
         })
     })
 
-    test_that("Dataset ncol doesn't make any requests", {
+    test_that("Dataset ncol doesn't make any requests if variables have been forced", {
+        ds <- forceVariableCatalog(ds)
         with(temp.options(httpcache.log = ""), {
             logs <- capture.output(nc <- ncol(ds))
         })

@@ -388,13 +388,18 @@ copyFolders <- function(source, target) {
 # Recursively get all variables below a folder
 # TODO: Use trampoline? https://community.rstudio.com/t/tidiest-way-to-do-recursion-safely-in-r/1408
 # My initial tests say it's slower, but is safer if we ever expect a large number of folders
-variablesBelowFolder <- function(folder, namekey = "alias") {
+variablesBelowFolder <- function(folder) {
     vars <- variables(folder)
     dirs <- folder[types(folder) %in% "folder"]
 
-    out <- list(
-        vapply(index(vars), vget(namekey), "", USE.NAMES = FALSE),
-        lapply(seq_along(dirs), function(i) variablesBelowFolder(dirs[[i]], namekey))
-    )
-    unlist(out)
+    out <- vars
+    # Don't preserve graph for now because not sure how graph is used & whether it could
+    # handle hierarchical graphs
+    out@graph <- list()
+
+    below <- lapply(seq_along(dirs), function(i) variablesBelowFolder(dirs[[i]])@index)
+    below <- unlist(below, recursive = FALSE)
+
+    out@index <- c(out@index, below)
+    VariableCatalog(out)
 }

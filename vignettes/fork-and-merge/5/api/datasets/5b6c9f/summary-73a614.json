@@ -1,0 +1,16 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/5b6c9f/summary/?filter=%7B%7D",
+    "value": {
+        "unweighted": {
+            "filtered": 3268,
+            "total": 3268
+        },
+        "variables": 22,
+        "weighted": {
+            "filtered": 3268,
+            "total": 3268
+        },
+        "columns": 22
+    }
+}

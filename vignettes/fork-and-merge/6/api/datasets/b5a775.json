@@ -1,0 +1,128 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/b5a775/",
+    "catalogs": {
+        "folders": "/api/datasets/b5a775/folders/",
+        "users": "/api/datasets/b5a775/users/",
+        "views": "/api/datasets/b5a775/views/",
+        "variables": "/api/datasets/b5a775/variables/",
+        "actions": "/api/datasets/b5a775/actions/",
+        "boxdata": "/api/datasets/b5a775/boxdata/",
+        "filters": "/api/datasets/b5a775/filters/",
+        "scripts": "/api/datasets/b5a775/scripts/",
+        "permissions": "/api/datasets/b5a775/permissions/",
+        "batches": "/api/datasets/b5a775/batches/",
+        "tags": "/api/datasets/b5a775/tags/",
+        "teams": "/api/datasets/b5a775/teams/",
+        "savepoints": "/api/datasets/b5a775/savepoints/",
+        "multitables": "/api/datasets/b5a775/multitables/",
+        "forks": "/api/datasets/b5a775/forks/",
+        "decks": "/api/datasets/b5a775/decks/",
+        "parent": "/api/datasets/",
+        "project": "/api/projects/personal/",
+        "variables_private": "/api/datasets/b5a775/variables/private/"
+    },
+    "fragments": {
+        "preferences": "/api/datasets/b5a775/preferences/",
+        "settings": "/api/datasets/b5a775/settings/",
+        "exclusion": "/api/datasets/b5a775/exclusion/",
+        "publish": "/api/datasets/b5a775/publish/",
+        "state": "/api/datasets/b5a775/state/",
+        "pk": "/api/datasets/b5a775/pk/",
+        "stream": "/api/datasets/b5a775/stream/",
+        "table": "/api/datasets/b5a775/table/",
+        "schema": "/api/datasets/b5a775/schema/"
+    },
+    "views": {
+        "second_order_analysis": "/api/datasets/b5a775/second_order_analysis/",
+        "cube": "/api/datasets/b5a775/cube/",
+        "export": "/api/datasets/b5a775/export/",
+        "summary": "/api/datasets/b5a775/summary/",
+        "applied_filters": "/api/datasets/b5a775/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "maintainer": "/api/users/27a158/",
+        "current_editor": "/api/users/27a158/",
+        "creation_time": "2021-03-25T15:23:55.421000",
+        "streaming": "no",
+        "owner": "/api/users/27a158/",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "id": "b5a775",
+        "size": {
+            "rows": 1634,
+            "unfiltered_rows": 1634,
+            "columns": 2
+        },
+        "palette": {
+            "brand": {
+                "message": "#722580",
+                "primary": "#005283",
+                "secondary": "#107f65"
+            },
+            "analysis": [
+                {
+                    "default": false,
+                    "palette": [
+                        "#340043",
+                        "#640083",
+                        "#9100bf",
+                        "#c300ff",
+                        "#e17fff"
+                    ],
+                    "type": "qualitative",
+                    "name": "purple palette"
+                },
+                {
+                    "default": true,
+                    "palette": [
+                        "#4fc3f7",
+                        "#4dd0e1",
+                        "#4db6ac",
+                        "#81c783",
+                        "#aed581",
+                        "#dce775",
+                        "#cddc39",
+                        "#fdae6b"
+                    ],
+                    "type": "qualitative",
+                    "name": "Green Palette for dashboard"
+                }
+            ]
+        },
+        "app_settings": {
+
+        },
+        "start_date": null,
+        "owner_name": "Greg",
+        "description": "",
+        "end_date": null,
+        "access_time": "2021-03-25T15:23:55.236000",
+        "current_editor_name": "Greg",
+        "view_of": null,
+        "modification_time": "2021-03-25T15:23:57.267000",
+        "archived": false,
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "account": "/api/accounts/00001/",
+        "name": "House Size",
+        "notes": "",
+        "is_published": true
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/b5a775/variables/weights/",
+        "variables_hier": "/api/datasets/b5a775/variables/hier/",
+        "variables_personal": "/api/datasets/b5a775/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "/api/projects/378ad4/",
+        "editor_url": "/api/users/27a158/",
+        "user_url": "/api/users/27a158/"
+    }
+}
