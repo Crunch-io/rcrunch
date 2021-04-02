@@ -15,7 +15,7 @@ variableMetadata <- function(dataset) {
     ## 2) Now supplement that with the "table" metadata, which will give us
     ## a) categories
     ## b) entries for all subvariables
-    extra <- crGET(shojiURL(dataset, "fragments", "table"))$metadata
+    extra <- crGET(shojiURL(dataset, "fragments", "schema"))$metadata
     ## It is keyed by "id". Embed the id in the tuples, and then make the keys
     ## be URLs so that it lines up with the variables catalog
     extra <- mapply(function(x, i) {
