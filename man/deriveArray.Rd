@@ -19,9 +19,12 @@ Dataset subset which contains only the Variables to bind.}
 \item{name}{character, the name that the new Categorical Array variable
 should have.}
 
-\item{selections}{character, for \code{makeMR} and \code{deriveArray} the names of the
-categories to mark as the dichotomous selections. Required for
-\code{makeMR}; optional for \code{deriveArray}; ignored in \code{makeArray}.}
+\item{selections}{character (preferred, indicating the names of the
+categories), or numeric (indicating the IDs of the categories
+in the combined array, which may not be the same as in the original
+variables - also note that a category's ID is not the same thing
+as its \code{numeric_value}). Required for \code{makeMR}; optional for
+\code{deriveArray}; ignored in \code{makeArray}.}
 
 \item{numeric}{Logical indicating whether the array should be a numeric
 array or categorical array. \code{NULL} the default will guess numeric if
@@ -47,4 +50,51 @@ bound together for display  in the app. For example, you might have a set of
 survey questions that ask how the respondent would rate a TV show from 1-5.
 Array variables allow you to display all of their ratings in a compact table
 rather than a set of distinct variables.
+}
+\examples{
+\dontrun{
+# Categorical Array - Variables from list of variables
+ds$enjoy_cat2 <- deriveArray(
+    list(ds$enjoy1, ds$enjoy2),
+    "Enjoy activities"
+)
+
+# Categorical Array - Variables from var catalog
+# (result is the same as `ds$enjoy_cat1` above)
+ds$enjoy_cat2 <- deriveArray(
+    ds[c("enjoy1", "enjoy2")],
+    "Enjoy activities v2"
+)
+
+# Multiple Response (selections as character names)
+ds$enjoy_mr1 <- deriveArray(
+    list(ds$enjoy1, ds$enjoy2),
+    "Enjoy activities very much or a little",
+    selections = c("Very much", "A little")
+)
+
+# Numeric Array
+ds$rating_numa <- deriveArray(
+    list(ds$rating1, ds$rating2),
+    "Activity Rating"
+)
+
+# Using VarDef to specify metadata (and thus needing to specify type)
+ds$enjoy_mr <- deriveArray(
+    list(
+        VarDef(ds$enjoy1 == "Very much", name = "enjoy brand 1"),
+        VarDef(ds$enjoy2 == "Very much", name = "enjoy brand 2")
+    ),
+    "Enjoy activities with custom names"
+)
+
+# Multiple Response (selections as ids, same as ds$enjoy_mr1)
+# Be careful `ids(categories(ds$enjoy1))` is not necessarily the same as
+# `values(categories(ds$enjoy1))`
+ds$enjoy_mr1 <- deriveArray(
+    list(ds$enjoy1, ds$enjoy2),
+    "Enjoy activities very much or a little v2",
+    selections = c(1, 2)
+)
+}
 }

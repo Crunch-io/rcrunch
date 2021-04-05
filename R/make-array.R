@@ -12,9 +12,12 @@
 #' Dataset subset which contains only the Variables to bind.
 #' @param name character, the name that the new Categorical Array variable
 #' should have.
-#' @param selections character, for `makeMR` and `deriveArray` the names of the
-#' categories to mark as the dichotomous selections. Required for
-#' `makeMR`; optional for `deriveArray`; ignored in `makeArray`.
+#' @param selections character (preferred, indicating the names of the
+#' categories), or numeric (indicating the IDs of the categories
+#' in the combined array, which may not be the same as in the original
+#' variables - also note that a category's ID is not the same thing
+#' as its `numeric_value`). Required for `makeMR`; optional for
+#' `deriveArray`; ignored in `makeArray`.
 #' @param numeric Logical indicating whether the array should be a numeric
 #' array or categorical array. `NULL` the default will guess numeric if
 #' all variables are known to be numeric and categorical if all are
@@ -27,6 +30,52 @@
 #' if `selections` are supplied), while `makeArray` and `makeMR`
 #' return an expression that "binds" variables together, removing them from
 #' independent existence.
+#' @examples
+#' \dontrun{
+#' # Categorical Array - Variables from list of variables
+#' ds$enjoy_cat2 <- deriveArray(
+#'     list(ds$enjoy1, ds$enjoy2),
+#'     "Enjoy activities"
+#' )
+#'
+#' # Categorical Array - Variables from var catalog
+#' # (result is the same as `ds$enjoy_cat1` above)
+#' ds$enjoy_cat2 <- deriveArray(
+#'     ds[c("enjoy1", "enjoy2")],
+#'     "Enjoy activities v2"
+#' )
+#'
+#' # Multiple Response (selections as character names)
+#' ds$enjoy_mr1 <- deriveArray(
+#'     list(ds$enjoy1, ds$enjoy2),
+#'     "Enjoy activities very much or a little",
+#'     selections = c("Very much", "A little")
+#' )
+#'
+#' # Numeric Array
+#' ds$rating_numa <- deriveArray(
+#'     list(ds$rating1, ds$rating2),
+#'     "Activity Rating"
+#' )
+#'
+#' # Using VarDef to specify metadata (and thus needing to specify type)
+#' ds$enjoy_mr <- deriveArray(
+#'     list(
+#'         VarDef(ds$enjoy1 == "Very much", name = "enjoy brand 1"),
+#'         VarDef(ds$enjoy2 == "Very much", name = "enjoy brand 2")
+#'     ),
+#'     "Enjoy activities with custom names"
+#' )
+#'
+#' # Multiple Response (selections as ids, same as ds$enjoy_mr1)
+#' # Be careful `ids(categories(ds$enjoy1))` is not necessarily the same as
+#' # `values(categories(ds$enjoy1))`
+#' ds$enjoy_mr1 <- deriveArray(
+#'     list(ds$enjoy1, ds$enjoy2),
+#'     "Enjoy activities very much or a little v2",
+#'     selections = c(1, 2)
+#' )
+#' }
 #' @export
 deriveArray <- function(subvariables, name, selections, numeric = NULL, ...) {
     expression <- makeFrame(subvariables, numeric)
