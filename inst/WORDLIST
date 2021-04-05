@@ -160,6 +160,7 @@ sav
 SAV
 savepoints
 Savepoints
+scalable
 ScriptCatalog
 sd
 SearchResults
@@ -190,6 +191,7 @@ sym
 symlink
 TabBookResult
 TabBookResults
+tidyverse
 toJSON
 topo
 tv
