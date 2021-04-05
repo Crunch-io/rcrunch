@@ -184,7 +184,7 @@ You want to get the frequencies of a single categorical or multiple response var
 
 #### Solution
 The query for a univariate count query puts the variable on the right hand side of a
-formula (eg `~var`).
+formula (for example `~var`).
 
 ```{r}
 slide <- newSlide(
@@ -200,7 +200,7 @@ You want to get a crosstab (or a frequency from two variables' joint distributio
 
 #### Solution
 The query for a multivariate frequency uses the `+` to separate the variables on the right
-hand side of the formula (eg `~var1 + var2`).
+hand side of the formula (for example `~var1 + var2`).
 
 ```{r}
 slide <- newSlide(
@@ -373,7 +373,7 @@ slide <- newSlide(
 ```
 
 
-## Display settings and Visual Specifications
+## Display settings and visual specifications
 
 ### Choosing a graph type
 #### Problem
@@ -381,7 +381,7 @@ You want to create a slide with a display type other than table.
 
 #### Solution
 The default display of a tile is the table, but the `vizType` display setting chooses
-between other options. The most commonly used vizTypes are: 
+between other options. The most commonly used `vizType`s are: 
 - `table` (always available)
 - `groupedBarPlot`, `stackedBarPlot`, `horizontalBarPlot`, `horizontalStackedBarPlot` (available
 for queries based on a count in any number of dimensions)
@@ -449,7 +449,7 @@ print(dput(displaySettings(template_deck[["Donut with value labels"]])))
 
 
 
-## Bulk Creation of Slides
+## Bulk creation of slides
 Sometimes you want to make many slides with related formatting to create a document
 that gives a good high level overview of a dataset. The [`tabBook()`] function is designed 
 to create a basic "top line" report  of simple crosstabs from a multitable, and is probably
@@ -464,7 +464,7 @@ from a string, but the `as.formula()` function helps with this. This cookbook us
 well-suited to this task.
 
 
-### Basic Topline for Entire Dataset
+### Basic top line for entire dataset
 #### Problem
 You want to create a simple report for every variable in a dataset.
 
@@ -485,7 +485,7 @@ slides <- lapply(var_aliases, function(alias) {
 })
 ```
 
-### Slides for Variables Within a Particular Folder
+### Slides for variables within a particular folder
 #### Problem
 You want to create a simple report for every variable in a particular folder.
 
