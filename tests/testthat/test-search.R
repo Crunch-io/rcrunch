@@ -33,4 +33,11 @@ with_mock_crunch({
             "Search query must be a single string, not a length-2 character vector"
         )
     })
+
+    test_that("f argument is JSONified", {
+        expect_GET(
+            searchDatasets("one", f = list(a = 2)),
+            "https://app.crunch.io/api/search/?q=one&grouping=datasets&f=%7B%22a%22%3A2%7D"
+            )
+    })
 })

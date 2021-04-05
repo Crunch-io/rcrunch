@@ -7,10 +7,13 @@
 #'
 #' @param query the text to search for in datasets and their variables (note:
 #' only alpha characters will be used, numbers and other characters will be discarded.)
+#' @param f A list of filter parameters, see the filter parameters of
+#' [the API Documentation](https://crunch.io/api/reference/#get-/search/)
+#' for more details.
 #' @param ... additional options provided to the search endpoint.
 #' @return If successful, an object of class SearchResults
 #' @export
-searchDatasets <- function(query, ...) {
+searchDatasets <- function(query, f = NULL, ...) {
     if (!is.character(query)) {
         halt("Search query must be a string, not ", class(query))
     }
@@ -20,14 +23,13 @@ searchDatasets <- function(query, ...) {
             length(query), " character vector"
         )
     }
+
     search_url <- sessionURL("search", "views")
     ## TODO: should this GET be uncached()? Every edit anywhere is going to
     ## require dropping cache
-    results <- SearchResults(crGET(search_url, query = list(
-        q = query,
-        grouping = "datasets",
-        ...
-    )))
+    url_query <- list(q = query, grouping = "datasets", ...)
+    if (!is.null(f)) url_query$f <- toJSON(f, for_query_string = TRUE)
+    results <- SearchResults(crGET(search_url, query = url_query))
     ## Grab useful things out of the (odd) API response
     return(SearchResults(results[["groups"]][[1]]))
 }
