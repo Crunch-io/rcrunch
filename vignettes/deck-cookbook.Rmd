@@ -1,6 +1,6 @@
 ---
 title: "Crunch Deck Cookbook"
-description: "TKTKTK"
+description: "The crunch package makes it easy to save analyses in a scalable way. This cookbook shows you how to set the components of a slide so that you have exactly the analysis you want."
 output: 
   rmarkdown::html_vignette:
     toc: true
@@ -15,13 +15,13 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-Decks are a way for analysts to save a set of analyses so that they can refer back to it later,
+Decks are a way to save a set of analyses so that you or your team can refer back to them later,
 export to Excel or PowerPoint, or create a Crunch Dashboard. Each *deck* is made up of a set of
 *slides*, and each *slide* contains an *analysis* and optionally a *title* and *subtitle*.
 
 While a good slide generally appears simple to the viewer, a lot depends on getting the analysis
-exactly right, and so the creator must spell out the fine details of the slide so that their
-analysis is clear. The attributes of a slide's analysis consist of:
+exactly right, and so creating them does require setting the analysis's attributes just right. The
+attributes of a slide's analysis are:
 
 - **a query**: A set of variables and what calculation to perform (such as a count or mean)
 - **the query environment**: Modifiers to the data that the query is performed on, like a filter
@@ -35,13 +35,12 @@ colors.
 such as the type of visualization, number of decimals, and advanced options for how the slide
 is exported to Excel.
 
-
-This vignette will start from the pets example dataset.
+The recipes in this cookbook all start from the pets example dataset (available from 
+`newExampleDataset()`).
 
 ```{r}
 suppressPackageStartupMessages({
     library(purrr)
-    library(glue)
     library(crunch)
 })
 
@@ -133,19 +132,17 @@ transforms(slide) <- list(
 ```
 
 
+```{r, include=FALSE}
 ### Reordering slides on a deck
 #### Problem
-You want to rearrange the order slides on an existing deck.
+# You want to rearrange the order slides on an existing deck.
 
 #### Solution
-TODO: This is not currently possible from R :(
-
-```{r}
+# TODO: This is not currently possible from R :(
+# (Note this controls the order of the slides in a deck, which controls how they appear in the web app's
+# deck viewer and Excel and PowerPoint exports, but does not change order or position of an existing 
+# Crunch Dashboard)
 ```
-
-(Note this controls the order of the slides in a deck, which controls how they appear in the web app's
-deck viewer and Excel and PowerPoint exports, but does not change order or position of an existing 
-Crunch Dashboard)
 
 
 ### Deleting slides on a deck
@@ -179,11 +176,11 @@ is.public(private_deck) <- TRUE # now public
 
 ## Query types
 Queries define the variables and summary measures used for the slide's analysis. They use the 
-formula notation used by the crunch function `crtabs` which is based on base R's `xtabs()`.
+formula notation used by the crunch function `crtabs()` which is based on base R's `xtabs()`.
 
-### Univariate Frequencies
+### Univariate frequencies
 #### Problem
-You want to get the frequencies of a single cateorical or multiple response variable.
+You want to get the frequencies of a single categorical or multiple response variable.
 
 #### Solution
 The query for a univariate count query puts the variable on the right hand side of a
@@ -197,7 +194,7 @@ slide <- newSlide(
 )
 ```
 
-### Bivariate Frequencies (Crosstabs)
+### Bivariate frequencies (crosstabs)
 #### Problem
 You want to get a crosstab (or a frequency from two variables' joint distribution)
 
@@ -223,11 +220,11 @@ slide <- newSlide(
 
 ### Frequencies from a Categorical Array
 #### Problem
-You want to get the frequencies of a single cateorical or multiple response variable.
+You want to get the frequencies from a categorical array variable
 
 #### Solution
-A categorical array contributes two dimensions to the analysis, a "subvariables" dimension
-and a "" dimension. If your query just specifies the variable, by default the 
+A categorical array contributes two dimensions to the analysis, a "categories" dimension
+and a "subvariables" dimension. If your query just specifies the variable, by default the 
 categories dimension is used first and the categories second, but you can specify the order
 by using `categories()` and `subvaribles()` functions in your query.
 
@@ -248,12 +245,11 @@ slide <- newSlide(
 
 ### Mean of a Numeric variable
 #### Problem
-You want to get the frequencies of a single categorical or multiple response variable.
+You want to get the mean from a Numeric (Numeric Array) variable
 
 #### Solution
 A numeric summary measure like a mean goes on the left hand side of the formula in a query.
-The right hand side cannot be empty, but to get the mean of the whole dataset a value of 1
-can be used.
+The right hand side cannot be empty, but to get the mean of the whole dataset put `1`.
 ```{r}
 slide <- newSlide(
     deck, 
@@ -271,8 +267,8 @@ slide <- newSlide(
 
 ### Scorecard of aligned Multiple Response variables
 #### Problem
-You want to make comparisons of frequencies of a set of multiple response variables with
-the same options
+You want to make comparisons of frequencies of a set of Multiple Response variables with
+the same items (response)
 
 #### Solution
 A scorecard is a rectangular grid of different Multiple Response variables with their
@@ -294,7 +290,7 @@ are formed in, such as the categories of a categorical variables or the items in
 multiple response variables. Their behavior in the slide can be customized using 
 dimension transforms.
 
-A query result can have up to three dimensions. The first is the "rows_dimension", second
+A query result generally has up to three dimensions. The first is the "rows_dimension", second
 is the "columns" dimension and third is the "tabs_dimension". When using the `transform`
 argument of `newSlide()` or setting the `transforms<-` of a slide directly, you form a
 named list with these dimensions as the names. The helper function `makeDimTransform()`
@@ -315,7 +311,7 @@ palette, the default colors are used.
 slide <- newSlide(
     deck, 
     ~q1, 
-    title = glue("Favorite pet using default palette"),
+    title = "Favorite pet using default palette",
     display_settings = list(vizType = "groupedBarPlot"),
     transform = list(
         rows_dimension = makeDimTransform(colors = defaultPalette(ds))
@@ -326,10 +322,30 @@ graph_pal <- palettes(ds)[["purple palette"]]
 slide <- newSlide(
     deck, 
     ~categories(petloc) + subvariables(petloc), 
-    title = glue("Pets by location using another palette"),
+    title = "Pets by location using another palette",
     display_settings = list(vizType = "horizontalBarPlot"),
     transform = list(
         rows_dimension = makeDimTransform(colors = graph_pal)
+    )
+)
+```
+
+
+### Using a set of colors from R
+#### Problem
+You want to make the colors of a dashboard tile use a set of colors you specify in the script
+
+#### Solution
+If you want to specify the colors manually, you can also use a character vector of RGB hex codes.
+
+```{r}
+slide <- newSlide(
+    deck, 
+    ~q1, 
+    title = "Favorite pet using colors from R",
+    display_settings = list(vizType = "groupedBarPlot"),
+    transform = list(
+        rows_dimension = makeDimTransform(colors = c("#af8dc3", "#f7f7f7", "#7fbf7b"))
     )
 )
 ```
@@ -342,7 +358,7 @@ You want to hide a dimension item (a category or subvariable) from the slide.
 #### Solution
 The `hide` argument of `makeDimTransform()` takes a category name or id, if 
 the dimension is made from categories, or a subvariable name or alias if the
-dimension is made from subvariables (as in a MultipleResponse variable or a
+dimension is made from subvariables (as in a Multiple Response variable or a
 subvariables dimension of a Categorical Array or Numeric Array).
 ```{r}
 slide <- newSlide(
@@ -366,11 +382,11 @@ You want to create a slide with a display type other than table.
 #### Solution
 The default display of a tile is the table, but the `vizType` display setting chooses
 between other options. The most commonly used vizTypes are: 
-- `table` (always availble)
+- `table` (always available)
 - `groupedBarPlot`, `stackedBarPlot`, `horizontalBarPlot`, `horizontalStackedBarPlot` (available
 for queries based on a count in any number of dimensions)
 - `timeplot` (available when the second dimension has a time component)
-- `dotplot` (availble for displays of means)
+- `dotplot` (available for displays of means)
 - `donut` (available only for 1 dimensional count queries)
 
 ```{r}
@@ -397,7 +413,9 @@ You want to use the settings from an existing slide to create a new one (or modi
 #### Solution
 The functions `displaySettings()` and `vizSpecs()` give access to the settings on an existing slide.
 This slide can be a slide you've created from R or from the web app, so that you can use the visual
-editor to perfect the look for one slide and then use it for a whole set of slides.
+editor to perfect the look for one slide and then use it for a whole set of slides. You can either 
+set the attributes directly, or use `dput()` to print out the object in a way that you can copy
+and paste into your code.
 
 ```{r}
 template_deck <- newDeck(ds, "Templates", is_public = TRUE)
@@ -416,7 +434,7 @@ slide <- newSlide(
     )
 )
 
-
+# Setting the slide `display_setting` and `viz_specs` directly:
 slide <- newSlide(
     deck, 
     ~country,
@@ -424,7 +442,11 @@ slide <- newSlide(
     display_settings = displaySettings(template_deck[["Donut with value labels"]]),
     viz_specs = vizSpecs(template_deck[["Donut with value labels"]])
 )
+
+# How to print out the structure in a format that can be copy and pasted into your code
+print(dput(displaySettings(template_deck[["Donut with value labels"]])))
 ```
+
 
 
 ## Bulk Creation of Slides
