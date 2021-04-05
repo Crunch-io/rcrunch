@@ -51,3 +51,50 @@ survey questions that ask how the respondent would rate a TV show from 1-5.
 Array variables allow you to display all of their ratings in a compact table
 rather than a set of distinct variables.
 }
+\examples{
+\dontrun{
+# Categorical Array - Variables from list of variables
+ds$enjoy_cat2 <- deriveArray(
+    list(ds$enjoy1, ds$enjoy2),
+    "Enjoy activities"
+)
+
+# Categorical Array - Variables from var catalog
+# (result is the same as `ds$enjoy_cat1` above)
+ds$enjoy_cat2 <- deriveArray(
+    ds[c("enjoy1", "enjoy2")],
+    "Enjoy activities v2"
+)
+
+# Multiple Response (selections as character names)
+ds$enjoy_mr1 <- deriveArray(
+    list(ds$enjoy1, ds$enjoy2),
+    "Enjoy activities very much or a little",
+    selections = c("Very much", "A little")
+)
+
+# Numeric Array
+ds$rating_numa <- deriveArray(
+    list(ds$rating1, ds$rating2),
+    "Activity Rating"
+)
+
+# Using VarDef to specify metadata (and thus needing to specify type)
+ds$enjoy_mr <- deriveArray(
+    list(
+        VarDef(ds$enjoy1 == "Very much", name = "enjoy brand 1"),
+        VarDef(ds$enjoy2 == "Very much", name = "enjoy brand 2")
+    ),
+    "Enjoy activities with custom names"
+)
+
+# Multiple Response (selections as ids, same as ds$enjoy_mr1)
+# Be careful `ids(categories(ds$enjoy1))` is not necessarily the same as
+# `values(categories(ds$enjoy1))`
+ds$enjoy_mr1 <- deriveArray(
+    list(ds$enjoy1, ds$enjoy2),
+    "Enjoy activities very much or a little v2",
+    selections = c(1, 2)
+)
+}
+}
