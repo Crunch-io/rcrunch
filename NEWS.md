@@ -1,6 +1,8 @@
 # crunch 1.27.8 (Development version)
 * Variables catalogs are now loaded lazily, which means some dataset operations will be much faster. You can override this behavior (useful for eg testing or rare situations when working on many datasets at once by using `forceVariableCatalog()` or `option(crunch.lazy.variable.catalog = FALSE)`).
 * You can now set the filter, weight and viz_type of a slide when creating it.
+* `searchDatasets()` gained an argument `f` that allows you to pass R objects to filter on.
+* Added a vignette for common deck operations.
 
 # crunch 1.27.7
 * You can now create numeric array variables in `deriveArray()` and `makeArray()`, and you can perform calculations on them via `crtabs()` and `tabBook()`. 
