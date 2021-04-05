@@ -4,11 +4,15 @@
 \alias{searchDatasets}
 \title{Search Crunch for datasets.}
 \usage{
-searchDatasets(query, ...)
+searchDatasets(query, f = NULL, ...)
 }
 \arguments{
 \item{query}{the text to search for in datasets and their variables (note:
 only alpha characters will be used, numbers and other characters will be discarded.)}
+
+\item{f}{A list of filter parameters, see the filter parameters of
+\href{https://crunch.io/api/reference/#get-/search/}{the API Documentation}
+for more details.}
 
 \item{...}{additional options provided to the search endpoint.}
 }
