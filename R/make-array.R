@@ -305,7 +305,7 @@ makeFrame <- function(x, numeric = NULL) {
 
     numeric <- check_make_frame_type_arg(numeric, subvar_types)
 
-    subvarids <- as.character(seq_along(x))
+    subvarids <- sprintf("%04d", seq_along(x))
     expression <- zfunc("array", zfunc(
         "make_frame",
         list(map = structure(x, .Names = subvarids)),

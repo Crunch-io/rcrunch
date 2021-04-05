@@ -29,9 +29,9 @@
             "notes": "Do you typically enjoy foods that taste..?",
             "secure": false,
             "subvariables": [
-                "var_02/subvariables/1/",
-                "var_02/subvariables/2/",
-                "var_02/subvariables/3/"
+                "var_02/subvariables/0001/",
+                "var_02/subvariables/0002/",
+                "var_02/subvariables/0003/"
             ],
             "subvariables_catalog": "var_02/subvariables/",
             "type": "multiple_response",
@@ -198,12 +198,12 @@
             "notes": "On a scale of 0-100, how would you rate...?",
             "secure": false,
             "subvariables": [
-                "var_15/subvariables/1/",
-                "var_15/subvariables/2/",
-                "var_15/subvariables/3/",
-                "var_15/subvariables/4/",
-                "var_15/subvariables/5/",
-                "var_15/subvariables/6/"
+                "var_15/subvariables/0001/",
+                "var_15/subvariables/0002/",
+                "var_15/subvariables/0003/",
+                "var_15/subvariables/0004/",
+                "var_15/subvariables/0005/",
+                "var_15/subvariables/0006/"
             ],
             "subvariables_catalog": "var_15/subvariables/",
             "type": "numeric_array"
@@ -232,10 +232,10 @@
             "scale": "interval",
             "secure": false,
             "subvariables": [
-                "var_17/subvariables/1/",
-                "var_17/subvariables/2/",
-                "var_17/subvariables/3/",
-                "var_17/subvariables/4/"
+                "var_17/subvariables/0001/",
+                "var_17/subvariables/0002/",
+                "var_17/subvariables/0003/",
+                "var_17/subvariables/0004/"
             ],
             "subvariables_catalog": "var_17/subvariables/",
             "type": "categorical_array"

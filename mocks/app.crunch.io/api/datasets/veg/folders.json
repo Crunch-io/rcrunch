@@ -1,5 +1,8 @@
 {
     "body": {
+        "app_settings": {
+
+        },
         "name": "Root"
     },
     "catalogs": {
@@ -44,9 +47,9 @@
             "notes": "Do you typically enjoy foods that taste..?",
             "secure": false,
             "subvariables": [
-                "../variables/var_02/subvariables/1/",
-                "../variables/var_02/subvariables/2/",
-                "../variables/var_02/subvariables/3/"
+                "../variables/var_02/subvariables/0001/",
+                "../variables/var_02/subvariables/0002/",
+                "../variables/var_02/subvariables/0003/"
             ],
             "subvariables_catalog": "../variables/var_02/subvariables/",
             "type": "multiple_response",
@@ -76,12 +79,12 @@
             "notes": "On a scale of 0-100, how would you rate...?",
             "secure": false,
             "subvariables": [
-                "../variables/var_15/subvariables/1/",
-                "../variables/var_15/subvariables/2/",
-                "../variables/var_15/subvariables/3/",
-                "../variables/var_15/subvariables/4/",
-                "../variables/var_15/subvariables/5/",
-                "../variables/var_15/subvariables/6/"
+                "../variables/var_15/subvariables/0001/",
+                "../variables/var_15/subvariables/0002/",
+                "../variables/var_15/subvariables/0003/",
+                "../variables/var_15/subvariables/0004/",
+                "../variables/var_15/subvariables/0005/",
+                "../variables/var_15/subvariables/0006/"
             ],
             "subvariables_catalog": "../variables/var_15/subvariables/",
             "type": "numeric_array"
@@ -98,10 +101,10 @@
             "scale": "interval",
             "secure": false,
             "subvariables": [
-                "../variables/var_17/subvariables/1/",
-                "../variables/var_17/subvariables/2/",
-                "../variables/var_17/subvariables/3/",
-                "../variables/var_17/subvariables/4/"
+                "../variables/var_17/subvariables/0001/",
+                "../variables/var_17/subvariables/0002/",
+                "../variables/var_17/subvariables/0003/",
+                "../variables/var_17/subvariables/0004/"
             ],
             "subvariables_catalog": "../variables/var_17/subvariables/",
             "type": "categorical_array"

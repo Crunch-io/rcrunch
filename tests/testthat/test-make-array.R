@@ -242,7 +242,7 @@ with_mock_crunch({
                             map = list(
                                 c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
                             )
-                        ), list(value = I("1")))
+                        ), list(value = I("0001")))
                     )),
                     kwargs = list(numeric = list(value = FALSE))
                 )
@@ -267,7 +267,7 @@ with_mock_crunch({
                             map = list(
                                 c(zcl(ds$birthyr + 10), list(references = list(name = "birthyr + 10"))) #nolint
                             )
-                        ), list(value = I("1")))
+                        ), list(value = I("0001")))
                     )),
                     kwargs = list(numeric = list(value = TRUE))
                 )

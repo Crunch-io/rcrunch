@@ -3,6 +3,7 @@
     "element": "shoji:catalog",
     "index": {
         "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s01/": {
+            "amended": false,
             "analysis_url": "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s01/analyses/000001/",
             "display_settings": {
                 "countsOrPercents": {
@@ -35,6 +36,7 @@
             "type": "analysis"
         },
         "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s02/": {
+            "amended": false,
             "analysis_url": "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/dk01s02/analyses/000001/",
             "display_settings": {
                 "countsOrPercents": {
