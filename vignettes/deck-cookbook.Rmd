@@ -536,7 +536,7 @@ slides <- lapply(var_aliases, function(alias) {
 ```
 
 
-### Slides Based on Variable Type
+### Slides based on variable type
 #### Problem
 You want to create a report with slides that vary based on the variable's type.
 
