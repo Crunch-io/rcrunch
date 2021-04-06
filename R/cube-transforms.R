@@ -334,11 +334,18 @@ makeTransFuncs <- function(cat_insert_map, cats_in_array, var_cats) {
         # if element is a subtotal, sum the things it corresponds to which are
         # found with arguments()
         if (is.Subtotal(element)) {
-            # grab category combinations, and then sum those categories.
-            combos <- unlist(arguments(element, var_cats))
-            combo_ids <- which(ids(var_cats) %in% combos)
-            which.cats <- names(var_cats[combo_ids])
-            return(function(vec) sum(vec[which.cats]))
+            # grab category combinations, and then sum the positive and subtract negative
+            positive <- unlist(arguments(element, var_cats))
+            positive_ids <- which(ids(var_cats) %in% positive)
+            which.positive <- names(var_cats[positive_ids])
+
+            negative <- unlist(kwarguments(element, var_cats)$negative)
+            negative_ids <- which(ids(var_cats) %in% negative)
+            which.negative <- names(var_cats[negative_ids])
+
+            return(function(vec) {
+                sum(vec[which.positive]) - sum(vec[which.negative])
+            })
         }
 
         # if element is a summaryStat, grab the function from
