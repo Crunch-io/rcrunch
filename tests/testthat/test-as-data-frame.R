@@ -272,7 +272,7 @@ with_test_authentication({
         skip_on_local_backend("Vagrant host doesn't serve files correctly")
         expect_equal(hiddenVariables(ds), "hidden_var")
 
-        df <- as.data.frame(ds, force = TRUE)
+        df <- as.data.frame(ds, force = TRUE, include.hidden = FALSE)
         expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "vee six !"))
 
         expect_warning(
