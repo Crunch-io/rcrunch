@@ -272,16 +272,8 @@ with_test_authentication({
         skip_on_local_backend("Vagrant host doesn't serve files correctly")
         expect_equal(hiddenVariables(ds), "hidden_var")
 
-        # The following test will export the hidden_var, even though it likely
-        # shouldn't to match the behavior of passing a ds without selecting
-        # specific variables usually means all and only the non-hidden
-        # variables. `, "hidden_var"` was added to unstick build blow, but
-        # should be revisited
-        expect_warning(
-            df <- as.data.frame(ds, force = TRUE),
-            "Variable hidden_var is hidden"
-        )
-        expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "vee six !", "hidden_var"))
+        df <- as.data.frame(ds, force = TRUE)
+        expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "vee six !"))
 
         expect_warning(
             df <- as.data.frame(ds, force = TRUE, include.hidden = TRUE),

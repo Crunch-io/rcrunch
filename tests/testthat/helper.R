@@ -60,12 +60,12 @@ newDatasetFromFixture <- function(filename) {
     }
 
     ## Grab csv and json from "dataset-fixtures" and make a dataset
-    m <- fromJSON(fixturePath(paste0(filename, ".json")),
+    m <- fromJSON(datasetFixturePath(paste0(filename, ".json")),
         simplifyVector = FALSE
     )
     return(suppressMessages(createWithMetadataAndFile(
         m,
-        fixturePath(paste0(filename, ".csv"))
+        datasetFixturePath(paste0(filename, ".csv"))
     )))
 }
 
