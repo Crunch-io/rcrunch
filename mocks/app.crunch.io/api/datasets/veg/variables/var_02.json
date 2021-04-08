@@ -1,0 +1,196 @@
+{
+    "body": {
+        "alias": "enjoy_mr",
+        "categories": [
+            {
+                "id": 1,
+                "missing": false,
+                "name": "Yes",
+                "numeric_value": 1,
+                "selected": true
+            },
+            {
+                "id": 2,
+                "missing": false,
+                "name": "No",
+                "numeric_value": 2
+            },
+            {
+                "id": -1,
+                "missing": true,
+                "name": "No Data",
+                "numeric_value": null
+            }
+        ],
+        "dataset_id": "veg",
+        "derivation": {
+            "args": [
+                {
+                    "args": [
+                        {
+                            "args": [
+                                {
+                                    "map": {
+                                        "0001": {
+                                            "references": {
+                                                "alias": "enjoy_mr_savory",
+                                                "name": "Savory"
+                                            },
+                                            "variable": "var_03"
+                                        },
+                                        "0002": {
+                                            "references": {
+                                                "alias": "enjoy_mr_spicy",
+                                                "name": "Spicy"
+                                            },
+                                            "variable": "var_04"
+                                        },
+                                        "0003": {
+                                            "references": {
+                                                "alias": "enjoy_mr_sweet",
+                                                "name": "Sweet"
+                                            },
+                                            "variable": "var_05"
+                                        }
+                                    }
+                                },
+                                {
+                                    "value": [
+                                        "0001",
+                                        "0002",
+                                        "0003"
+                                    ]
+                                }
+                            ],
+                            "function": "make_frame"
+                        }
+                    ],
+                    "function": "array",
+                    "kwargs": {
+                        "numeric": {
+                            "value": false
+                        }
+                    }
+                },
+                {
+                    "value": [
+                        "Yes"
+                    ]
+                }
+            ],
+            "function": "select_categories",
+            "references": {
+                "alias": "enjoy_mr",
+                "description": "Typically enjoy foods with flavors",
+                "name": "Enjoy Food Flavors",
+                "notes": "Do you typically enjoy foods that taste..?"
+            }
+        },
+        "derived": true,
+        "description": "Typically enjoy foods with flavors",
+        "discarded": false,
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "hidden": false,
+        "id": "var_02",
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "name": "Enjoy Food Flavors",
+        "notes": "Do you typically enjoy foods that taste..?",
+        "owner": null,
+        "private": false,
+        "secure": false,
+        "subreferences": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/": {
+                "alias": "enjoy_mr_savory",
+                "description": "Enjoyment of savory food (binary)",
+                "format": {
+                    "summary": {
+                        "digits": 0
+                    }
+                },
+                "name": "Savory",
+                "notes": "Do you typically enjoy food that is savory?",
+                "view": {
+                    "column_width": null,
+                    "include_missing": false,
+                    "show_counts": false,
+                    "show_numeric_values": false
+                }
+            },
+            "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0002/": {
+                "alias": "enjoy_mr_spicy",
+                "description": "Enjoyment of spicy food (binary)",
+                "format": {
+                    "summary": {
+                        "digits": 0
+                    }
+                },
+                "name": "Spicy",
+                "notes": "Do you typically enjoy food that is spicy?",
+                "view": {
+                    "column_width": null,
+                    "include_missing": false,
+                    "show_counts": false,
+                    "show_numeric_values": false
+                }
+            },
+            "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0003/": {
+                "alias": "enjoy_mr_sweet",
+                "description": "Enjoyment of sweet food (binary)",
+                "format": {
+                    "summary": {
+                        "digits": 0
+                    }
+                },
+                "name": "Sweet",
+                "notes": "Do you typically enjoy food that is sweet?",
+                "view": {
+                    "column_width": null,
+                    "include_missing": false,
+                    "show_counts": false,
+                    "show_numeric_values": false
+                }
+            }
+        },
+        "subvariables": [
+            "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0002/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0003/"
+        ],
+        "type": "multiple_response",
+        "uniform_basis": false,
+        "view": {
+            "column_width": null,
+            "include_missing": false,
+            "include_noneoftheabove": false,
+            "show_counts": false
+        }
+    },
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/veg/folders/",
+        "parent": "https://app.crunch.io/api/datasets/veg/variables/",
+        "subvariables": "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/"
+    },
+    "description": "Details for a given Variable",
+    "element": "shoji:entity",
+    "fragments": {
+        "dataset": "https://app.crunch.io/api/datasets/veg/",
+        "user_settings": "https://app.crunch.io/api/datasets/veg/variables/var_02/user_settings/"
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/variables/var_02/",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/veg/"
+    },
+    "views": {
+        "cast": "https://app.crunch.io/api/datasets/veg/variables/var_02/cast/",
+        "frequencies": "https://app.crunch.io/api/datasets/veg/variables/var_02/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/veg/variables/var_02/summary/",
+        "values": "https://app.crunch.io/api/datasets/veg/variables/var_02/values/"
+    }
+}
+

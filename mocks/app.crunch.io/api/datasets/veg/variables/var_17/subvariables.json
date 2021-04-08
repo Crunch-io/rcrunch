@@ -1,0 +1,60 @@
+{
+    "description": "Contains the subvariables for this array variable.",
+    "element": "shoji:catalog",
+    "index": {
+        "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0001/": {
+            "alias": "veg_enjoy_ca_healthy",
+            "derived": false,
+            "description": "Vegetables are healthy (5 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0001",
+            "name": "Healthy",
+            "notes": "Do you eat vegetables because: they are healthy",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0002/": {
+            "alias": "veg_enjoy_ca_tasty",
+            "derived": false,
+            "description": "Vegetables are Tasty (5 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0002",
+            "name": "Tasty",
+            "notes": "Do you eat vegetables because: they taste good",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0003/": {
+            "alias": "veg_enjoy_ca_filling",
+            "derived": false,
+            "description": "Vegetables are filling (5 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0003",
+            "name": "Filling",
+            "notes": "Do you eat vegetables because: they are filling",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0004/": {
+            "alias": "veg_enjoy_ca_env",
+            "derived": false,
+            "description": "Vegetables are environmental (5 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0004",
+            "name": "Environmental",
+            "notes": "Do you eat vegetables because: eating them is good for the environment",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        }
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/"
+}
+

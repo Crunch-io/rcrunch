@@ -1,133 +1,120 @@
 context("Getting values to make local R objects")
 
-ca.values <- data.frame(
-    subvar2 = structure(c(
-        2L, 2L, 1L, NA, 1L, 2L, 1L, 2L, 2L, 2L, NA, 2L, NA, NA,
-        1L, 1L, 2L, 2L, 2L, 1L, NA, 1L, NA, NA, 1L
-    ),
-    levels = c("A", "B"), class = "factor"
-    ),
-    subvar1 = structure(c(
-        1L, 1L, 2L, NA, NA, NA, NA, 1L, 2L, NA, NA, 1L, NA, NA,
-        NA, 1L, 2L, 1L, 1L, 1L, NA, 1L, NA, 1L, 2L
-    ),
-    levels = c("A", "B"), class = "factor"
-    ),
-    subvar3 = structure(c(
-        1L, NA, 1L, 1L, NA, 1L, 1L, NA, 1L, NA, 1L, 1L, 1L, 1L,
-        1L, 1L, 1L, 1L, NA, 1L, 1L, 1L, 1L, 1L, 1L
-    ),
-    levels = c("A", "B"), class = "factor"
-    )
-)
 
-mr.values <- data.frame(
-    subvar2 = structure(c(
-        2L, 2L, 1L, NA, 1L, 2L, 1L, 2L, 2L, 2L, NA, 2L, NA, NA,
-        1L, 1L, 2L, 2L, 2L, 1L, NA, 1L, NA, NA, 1L
-    ),
-    levels = c("0.0", "1.0"), class = "factor"
-    ),
-    subvar1 = structure(c(
-        1L, 1L, 2L, NA, NA, NA, NA, 1L, 2L, NA, NA, 1L, NA, NA,
-        NA, 1L, 2L, 1L, 1L, 1L, NA, 1L, NA, 1L, 2L
-    ),
-    levels = c("0.0", "1.0"), class = "factor"
-    ),
-    subvar3 = structure(c(
-        1L, NA, 1L, 1L, NA, 1L, 1L, NA, 1L, NA, 1L, 1L, 1L, 1L,
-        1L, 1L, 1L, 1L, NA, 1L, 1L, 1L, 1L, 1L, 1L
-    ),
-    levels = c("0.0", "1.0"), class = "factor"
-    )
-)
-
-mr.ids <- data.frame(
-    subvar2 = c(
-        2, 2, 1, -1, 1, 2, 1, 2, 2, 2, -1, 2, -1, -1,
-        1, 1, 2, 2, 2, 1, -1, 1, -1, -1, 1
-    ),
-    subvar1 = c(
-        1, 1, 2, -1, -1, -1, -1, 1, 2, -1, -1, 1, -1, -1,
-        -1, 1, 2, 1, 1, 1, -1, 1, -1, 1, 2
-    ),
-    subvar3 = c(
-        1, -1, 1, 1, -1, 1, 1, -1, 1, -1, 1, 1, 1, 1,
-        1, 1, 1, 1, -1, 1, 1, 1, 1, 1, 1
-    )
-)
 
 with_mock_crunch({
-    ds <- cachedLoadDataset("test ds")
+    ds <- cachedLoadDataset("Vegetables example")
     test_that("setup", {
-        expect_identical(dim(ds), c(nrow(ds), ncol(ds)))
-        expect_identical(dim(ds), c(25L, 7L))
+        expect_identical(nrow(ds), 210L)
+        expect_identical(ncol(ds), 9L)
+
         expect_identical(
             names(ds),
-            c("birthyr", "gender", "location", "mymrset", "textVar", "starttime", "catarray")
+            c(
+                "wave", "age", "healthy_eater", "enjoy_mr", "veg_enjoy_ca",
+                "ratings_numa", "weight", "last_vegetable", "last_vegetable_date"
+            )
         )
     })
 
-    test_that("as.vector on Variables", {
-        expect_true(is.numeric(as.vector(ds$birthyr)))
-        expect_true(is.factor(as.vector(ds$gender)))
-        expect_true(all(levels(as.vector(ds$gender)) %in% names(categories(ds$gender))))
+    test_that("as.vector on Numeric Variable", {
+        expect_true(is.numeric(as.vector(ds$age)))
+    })
+
+    test_that("as.vector on Categorical Variable", {
+        expect_true(is.factor(as.vector(ds$healthy_eater)))
+        expect_true(all(levels(as.vector(ds$healthy_eater)) %in% names(categories(ds$healthy_eater))))
     })
 
     test_that("as.vector on Categorical Array", {
-        expect_true(is.CA(ds$catarray))
-        expect_true(is.data.frame(as.vector(ds$catarray)))
-        # if subvar3 doesn't have correct factor levels, there may have been
-        # an accidental cast to string
-        expect_identical(as.vector(ds$catarray), ca.values)
+        expect_true(is.CA(ds$veg_enjoy_ca))
+        vec <- as.vector(ds$veg_enjoy_ca)
+        expect_true(is.data.frame(vec))
+        expect_identical(nrow(vec), 210L)
+
+        # if veg_filling doesn't have correct factor levels there may have been a mistake
+        lvls <- c("Strongly Disagree", "Disagree", "Neither", "Agree", "Strongly Agree")
+        expected <- data.frame(
+            veg_enjoy_ca_healthy = structure(c(3, 1, 1, 1, 5), .Label = lvls, class = "factor"),
+            veg_enjoy_ca_tasty = structure(c(5, 1, 1, 1, 1), .Label = lvls, class = "factor"),
+            veg_enjoy_ca_filling = structure(c(1, 1, 1, 3, 4), .Label = lvls, class = "factor"),
+            veg_enjoy_ca_env = structure(c(3, 2, NA, 3, 4), .Label = lvls, class = "factor")
+        )
+        expect_identical(vec[1:5, ], expected)
     })
 
     test_that("as.vector on Multiple Response", {
-        expect_true(is.MR(ds$mymrset))
-        expect_true(is.data.frame(as.vector(ds$mymrset)))
-        expect_identical(as.vector(ds$mymrset), mr.values)
+        expect_true(is.MR(ds$enjoy_mr))
+        vec <- as.vector(ds$enjoy_mr)
+        expect_true(is.data.frame(vec))
         ## Check that getting subvar by $ from the as.vector of the array
         ## is the same as just getting the subvar as.vector directly
         expect_identical(
-            as.vector(ds$mymrset)$subvar1,
-            as.vector(ds$mymrset$subvar1)
+            vec$enjoy_mr_savory,
+            as.vector(ds$enjoy_mr$enjoy_mr_savory)
         )
+
+        lvls <- c("Yes", "No")
+        expected <- data.frame(
+            enjoy_mr_savory = structure(c(1, 2, 1, 2, 1), .Label = lvls, class = "factor"),
+            enjoy_mr_spicy = structure(c(2, 1, 2, 1, 2), .Label = lvls, class = "factor"),
+            enjoy_mr_sweet = structure(c(2, 1, 1, 1, 1), .Label = lvls, class = "factor")
+        )
+        expect_identical(vec[1:5, ], expected)
     })
 
     test_that("as.vector on Multiple Response with mode", {
-        expect_identical(as.vector(ds$mymrset, mode = "id"), mr.ids)
+        expected <- data.frame(
+            enjoy_mr_savory = c(1, 2, 1, 2, 1),
+            enjoy_mr_spicy = c(2, 1, 2, 1, 2),
+            enjoy_mr_sweet = c(2, 1, 1, 1, 1)
+        )
+
+        vec <- as.vector(ds$enjoy_mr, mode = "id")
+        expect_identical(vec[1:5, ], expected)
         expect_identical(
-            as.vector(ds$mymrset, mode = "id")$subvar1,
-            as.vector(ds$mymrset$subvar1, mode = "id")
+            vec$enjoy_mr_savory,
+            as.vector(ds$enjoy_mr$enjoy_mr_savory, mode = "id")
         )
     })
 
     test_that("as.data.frame on CrunchDataset yields CrunchDataFrame", {
         expect_false(is.data.frame(as.data.frame(ds)))
         expect_is(as.data.frame(ds), "CrunchDataFrame")
-        expect_identical(dim(as.data.frame(ds)), c(25L, ncol(ds)))
-        expect_identical(names(as.data.frame(ds)), names(ds))
-        expect_identical(as.data.frame(ds)$birthyr, as.vector(ds$birthyr))
+        expect_identical(dim(as.data.frame(ds)), c(210L, length(allVariables(ds))))
+        expect_identical(names(as.data.frame(ds)), aliases(allVariables(ds)))
+        expect_identical(as.data.frame(ds)$age, as.vector(ds$age))
         expect_identical(
-            evalq(gender, as.data.frame(ds)),
-            as.vector(ds$gender)
+            evalq(healthy_eater, as.data.frame(ds)),
+            as.vector(ds$healthy_eater)
         )
     })
 
     test_that("as.data.frame(force = TRUE) generates a POST", {
         expect_POST(
             as.data.frame(ds, force = TRUE, include.hidden = FALSE),
-            "https://app.crunch.io/api/datasets/1/export/csv/",
+            "https://app.crunch.io/api/datasets/veg/export/csv/",
             '{"filter":null,"options":{"use_category_ids":true}}'
         )
     })
-    csv_df <- read.csv("dataset-fixtures/test_ds.csv", stringsAsFactors = FALSE)
     test_that("csvToDataFrame produces the correct data frame", {
-        expected <- readRDS("dataset-fixtures/test_ds.rds")
-        vars <- c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")
+        csv_df <- read.csv(datasetFixturePath("veg.csv"), stringsAsFactors = FALSE)
+        expected <- readRDS(datasetFixturePath("veg_df.rds"))
+        vars <- c(
+            "wave", "age", "healthy_eater", "enjoy_mr", "veg_enjoy_ca", "ratings_numa",
+            "last_vegetable", "last_vegetable_date"
+        )
         cdf <- as.data.frame(ds[, vars])
         # test local CDF variables
-        cdf$newvar <- expected$newvar <- c(1:24, NA)
+        cdf$newvar <- expected$newvar <- c(1:209, NA)
+        expect_identical(csvToDataFrame(csv_df, cdf), expected)
+    })
+
+    test_that("csvToDataFrame respects include.hidden", {
+        # mock the include.hidden=FALSE by removing variables from csv_df
+        csv_df <- read.csv(datasetFixturePath("veg-no-hidden.csv"), stringsAsFactors = FALSE)
+        expected <- readRDS(datasetFixturePath("veg_hidden_df.rds"))
+        cdf <- as.data.frame(ds, include.hidden = FALSE)
         expect_identical(csvToDataFrame(csv_df, cdf), expected)
     })
 
@@ -138,10 +125,10 @@ with_mock_crunch({
         expect_is(as.data.frame(t2), "CrunchDataFrame")
     })
 
-    test_that("as.data.frame(as.data.frame())", {
+    test_that("write.csv(ds)", {
         expect_POST(
             write.csv(ds, file = ""),
-            "https://app.crunch.io/api/datasets/1/export/csv/",
+            "https://app.crunch.io/api/datasets/veg/export/csv/",
             '{"filter":null,"options":{"use_category_ids":false}}'
         )
     })
@@ -158,12 +145,12 @@ with_mock_crunch({
     })
 
     test_that(".crunchPageSize", {
-        expect_identical(.crunchPageSize(ds$birthyr), 100000L)
-        expect_identical(.crunchPageSize(ds$gender), 200000L)
-        expect_identical(.crunchPageSize(ds$textVar), 5000L)
-        expect_identical(.crunchPageSize(ds$mymrset), 66666L)
-        expect_identical(.crunchPageSize(ds$catarray), 66666L)
-        expect_identical(.crunchPageSize(ds$starttime), 100000L)
+        expect_identical(.crunchPageSize(ds$age), 100000L)
+        expect_identical(.crunchPageSize(ds$healthy_eater), 200000L)
+        expect_identical(.crunchPageSize(ds$last_vegetable), 5000L)
+        expect_identical(.crunchPageSize(ds$enjoy_mr), 200000L %/% 3L)
+        expect_identical(.crunchPageSize(ds$veg_enjoy_ca), 200000L %/% 4L)
+        expect_identical(.crunchPageSize(ds$last_vegetable_date), 100000L)
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
     })
 
@@ -173,15 +160,15 @@ with_mock_crunch({
 
     test_that("model.frame thus works on CrunchDataset", {
         expect_identical(
-            model.frame(birthyr ~ gender, data = test.df),
-            model.frame(birthyr ~ gender, data = ds)
+            model.frame(age ~ healthy_eater, data = test.df),
+            model.frame(age ~ healthy_eater, data = ds)
         )
     })
 
 
     test_that("so lm() should work too", {
-        test.lm <- lm(birthyr ~ gender, data = ds)
-        expected <- lm(birthyr ~ gender, data = test.df)
+        test.lm <- lm(age ~ healthy_eater, data = ds)
+        expected <- lm(age ~ healthy_eater, data = test.df)
         expect_is(test.lm, "lm")
         expect_identical(names(test.lm), names(expected))
         for (i in setdiff(names(expected), "call")) {

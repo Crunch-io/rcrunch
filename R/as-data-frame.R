@@ -112,7 +112,11 @@ csvToDataFrame <- function(csv_df, crdf) {
             return(structure(list(crdf[[a]]), .Names = a))
         } else if (is.Array(v)) {
             ## Find the subvar columns in the csv_df and parse them as categorical
-            cp <- columnParser("categorical")
+            if (is.NumericArray(v)) {
+                cp <- columnParser("numeric")
+            } else {
+                cp <- columnParser("categorical")
+            }
             sub_a <- aliases(subvariables(v))
             return(structure(lapply(csv_df[sub_a], cp, v, mode), .Names = sub_a))
         } else if (is.Numeric(v)) {

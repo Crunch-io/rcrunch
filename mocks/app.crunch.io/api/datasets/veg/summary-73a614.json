@@ -1,0 +1,17 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/veg/summary/?filter=%7B%7D",
+    "value": {
+        "columns": 20,
+        "unweighted": {
+            "filtered": 210,
+            "total": 210
+        },
+        "variables": 23,
+        "weighted": {
+            "filtered": 210,
+            "total": 210
+        }
+    }
+}
+

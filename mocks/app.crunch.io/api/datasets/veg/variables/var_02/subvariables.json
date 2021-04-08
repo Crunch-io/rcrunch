@@ -1,0 +1,47 @@
+{
+    "description": "Contains the subvariables for this array variable.",
+    "element": "shoji:catalog",
+    "index": {
+        "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/": {
+            "alias": "enjoy_mr_savory",
+            "derived": false,
+            "description": "Enjoyment of savory food (binary)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0001",
+            "name": "Savory",
+            "notes": "Do you typically enjoy food that is savory?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0002/": {
+            "alias": "enjoy_mr_spicy",
+            "derived": false,
+            "description": "Enjoyment of spicy food (binary)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0002",
+            "name": "Spicy",
+            "notes": "Do you typically enjoy food that is spicy?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0003/": {
+            "alias": "enjoy_mr_sweet",
+            "derived": false,
+            "description": "Enjoyment of sweet food (binary)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0003",
+            "name": "Sweet",
+            "notes": "Do you typically enjoy food that is sweet?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        }
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/"
+}
+

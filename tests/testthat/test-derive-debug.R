@@ -167,17 +167,17 @@ with_test_authentication({
     #     second_copy = second
     # )
     # # need to change categories to IDs, and then remove NAs
-    # write.csv(df, "tests/testthat/dataset-fixtures/sparse_ca.csv", row.names = FALSE)
+    # write.csv(df, "mocks/dataset-fixtures/sparse_ca.csv", row.names = FALSE)
 
     # we need to create with metadata to ensure that the categorical array is
     # stored as sparse categorical (if we use bind, then we have to figure out
     # how to trigger a cleanup which is not exposed to the API)
     ds <- createWithMetadataAndFile(
         fromJSON(
-            file.path(test_path("dataset-fixtures", "sparse_ca.json")),
+            datasetFixturePath("sparse_ca.json"),
             simplifyVector = FALSE
         ),
-        test_path(file.path("dataset-fixtures", "sparse_ca.csv"))
+        test_path(datasetFixturePath("sparse_ca.csv"))
     )
 
     test_that("combine on categorical array stored as sparse returns correct values", {

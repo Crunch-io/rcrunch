@@ -36,6 +36,23 @@ crunch:::.onLoad()
 ## Test serialize and deserialize
 cereal <- function(x) fromJSON(toJSON(x), simplifyVector = FALSE)
 
+
+datasetFixturePath <- function(filename) {
+    # Try in mocks tempdir
+    path <- file.path(tempdir(), "mocks/dataset-fixtures", filename)
+    if (file.exists(path)) return(path)
+
+    # Next check if we're in tests folder
+    path <- file.path("../mocks/dataset-fixtures", filename)
+    if (file.exists(path)) return(path)
+
+    # Finally if we're in package home
+    path <- file.path("mocks/dataset-fixtures", filename)
+    if (file.exists(path)) return(path)
+
+    halt("Could not find ", filename)
+}
+
 newDatasetFromFixture <- function(filename) {
     if (filename == "apidocs") {
         ## This one has been moved into the package and renamed
@@ -43,12 +60,12 @@ newDatasetFromFixture <- function(filename) {
     }
 
     ## Grab csv and json from "dataset-fixtures" and make a dataset
-    m <- fromJSON(file.path("dataset-fixtures", paste0(filename, ".json")),
+    m <- fromJSON(fixturePath(paste0(filename, ".json")),
         simplifyVector = FALSE
     )
     return(suppressMessages(createWithMetadataAndFile(
         m,
-        file.path("dataset-fixtures", paste0(filename, ".csv"))
+        fixturePath(paste0(filename, ".csv"))
     )))
 }
 
