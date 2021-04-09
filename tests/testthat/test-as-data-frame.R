@@ -23,7 +23,9 @@ with_mock_crunch({
 
     test_that("as.vector on Categorical Variable", {
         expect_true(is.factor(as.vector(ds$healthy_eater)))
-        expect_true(all(levels(as.vector(ds$healthy_eater)) %in% names(categories(ds$healthy_eater))))
+        expect_true(all(
+            levels(as.vector(ds$healthy_eater)) %in% names(categories(ds$healthy_eater))
+        ))
     })
 
     test_that("as.vector on Categorical Array", {
