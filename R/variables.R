@@ -92,5 +92,7 @@ setMethod("variables", "SearchResults", function(x) {
 #' @rdname variables
 #' @export
 setMethod("variables", "VariableFolder", function(x) {
-    x[!(types(x) %in% "folder")]
+    types <- types(x)
+    # `is.na` to guard against objects in folders that are missing the type
+    x[!is.na(types) & !(types %in% "folder")]
 })
