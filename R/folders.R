@@ -482,7 +482,7 @@ generateOrganizeCommand <- function(dataset) {
     }
     root_cmds <- organize_recurse(dataset, "ROOT", "/")
     hidden_cmds <- organize_recurse(hiddenFolder(dataset), "HIDDEN", "/")
-    secure_cmds <- organize_recurse(privateFolder(dataset), "PRIVATE", "/")
+    secure_cmds <- organize_recurse(privateFolder(dataset), "SECURE", "/")
 
     paste0(c(unlist(root_cmds), unlist(hidden_cmds), unlist(secure_cmds)), collapse = "\n")
 }
