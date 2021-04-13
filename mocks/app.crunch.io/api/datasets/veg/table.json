@@ -1,0 +1,823 @@
+{
+    "description": "A Crunch Table of data for this dataset.",
+    "element": "crunch:table",
+    "metadata": {
+        "var_01": {
+            "alias": "age",
+            "derived": false,
+            "description": "Age of respondent",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Age",
+            "notes": "How old are you?",
+            "type": "numeric"
+        },
+        "var_02": {
+            "alias": "enjoy_mr",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1,
+                    "selected": true
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": true,
+            "description": "Typically enjoy foods with flavors",
+            "name": "Enjoy Food Flavors",
+            "notes": "Do you typically enjoy foods that taste..?",
+            "subreferences": {
+                "0001": {
+                    "alias": "enjoy_mr_savory",
+                    "description": "Enjoyment of savory food (binary)",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Savory",
+                    "notes": "Do you typically enjoy food that is savory?",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                },
+                "0002": {
+                    "alias": "enjoy_mr_spicy",
+                    "description": "Enjoyment of spicy food (binary)",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Spicy",
+                    "notes": "Do you typically enjoy food that is spicy?",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                },
+                "0003": {
+                    "alias": "enjoy_mr_sweet",
+                    "description": "Enjoyment of sweet food (binary)",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Sweet",
+                    "notes": "Do you typically enjoy food that is sweet?",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                }
+            },
+            "subvariables": [
+                "0001",
+                "0002",
+                "0003"
+            ],
+            "type": "multiple_response"
+        },
+        "var_03": {
+            "alias": "enjoy_savory_food",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Enjoyment of savory food (binary)",
+            "name": "Enjoy Savory Food",
+            "notes": "Do you typically enjoy food that is savory?",
+            "type": "categorical"
+        },
+        "var_04": {
+            "alias": "enjoy_spicy_food",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Enjoyment of spicy food (binary)",
+            "name": "Enjoy Spicy Food",
+            "notes": "Do you typically enjoy food that is spicy?",
+            "type": "categorical"
+        },
+        "var_05": {
+            "alias": "enjoy_sweet_food",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Enjoyment of sweet food (binary)",
+            "name": "Enjoy Sweet Food",
+            "notes": "Do you typically enjoy food that is sweet?",
+            "type": "categorical"
+        },
+        "var_06": {
+            "alias": "healthy_eater",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 2
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Self identified 'Healthy eater' (binary)",
+            "name": "Healthy Eater",
+            "notes": "Do you consider yourself a 'Healthy Eater' (eg someone who enjoys eating healthy food)?",
+            "type": "categorical"
+        },
+        "var_07": {
+            "alias": "last_vegetable",
+            "derived": false,
+            "description": "Name of last vegetable eaten (free text)",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Last Vegetable Eaten",
+            "notes": "What is the last vegetable you ate?",
+            "type": "text"
+        },
+        "var_08": {
+            "alias": "last_vegetable_date",
+            "derived": false,
+            "description": "Date when saw ate vegetable",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Last Vegetable Date",
+            "notes": "On what day did you last ate a vegetable?",
+            "resolution": "D",
+            "type": "datetime"
+        },
+        "var_09": {
+            "alias": "rating_avocado",
+            "derived": false,
+            "description": "Avocado Rating (100 point scale)",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Rating: Avocado",
+            "notes": "What is your rating between 0 and 100 of: Avocado",
+            "type": "numeric"
+        },
+        "var_10": {
+            "alias": "rating_brussel_sprout",
+            "derived": false,
+            "description": "Brussel Sprout Rating (100 point scale)",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Rating: Brussel Sprout",
+            "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+            "type": "numeric"
+        },
+        "var_11": {
+            "alias": "rating_carrot",
+            "derived": false,
+            "description": "Carrot Rating (100 point scale)",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Rating: Carrot",
+            "notes": "What is your rating between 0 and 100 of: Carrot",
+            "type": "numeric"
+        },
+        "var_12": {
+            "alias": "rating_daikon",
+            "derived": false,
+            "description": "Daikon Rating (100 point scale)",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Rating: Daikon",
+            "notes": "What is your rating between 0 and 100 of: Daikon",
+            "type": "numeric"
+        },
+        "var_13": {
+            "alias": "rating_eggplant",
+            "derived": false,
+            "description": "Eggplant Rating (100 point scale)",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Rating: Eggplant",
+            "notes": "What is your rating between 0 and 100 of: Eggplant",
+            "type": "numeric"
+        },
+        "var_14": {
+            "alias": "rating_fennel",
+            "derived": false,
+            "description": "Fennel Rating (100 point scale)",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Rating: Fennel",
+            "notes": "What is your rating between 0 and 100 of: Fennel",
+            "type": "numeric"
+        },
+        "var_15": {
+            "alias": "ratings_numa",
+            "derived": true,
+            "description": "Rating of Vegetables: Scale of 0-100",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Vegetable Ratings",
+            "notes": "On a scale of 0-100, how would you rate...?",
+            "subreferences": {
+                "0001": {
+                    "alias": "ratings_numa_avocado",
+                    "description": "Avocado Rating (100 point scale)",
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Avocado",
+                    "notes": "What is your rating between 0 and 100 of: Avocado",
+                    "view": {
+                        "column_width": null
+                    }
+                },
+                "0002": {
+                    "alias": "ratings_numa_brussel_sprout",
+                    "description": "Brussel Sprout Rating (100 point scale)",
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Brussel Sprout",
+                    "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                    "view": {
+                        "column_width": null
+                    }
+                },
+                "0003": {
+                    "alias": "ratings_numa_carrot",
+                    "description": "Carrot Rating (100 point scale)",
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Carrot",
+                    "notes": "What is your rating between 0 and 100 of: Carrot",
+                    "view": {
+                        "column_width": null
+                    }
+                },
+                "0004": {
+                    "alias": "ratings_numa_daikon",
+                    "description": "Daikon Rating (100 point scale)",
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Daikon",
+                    "notes": "What is your rating between 0 and 100 of: Daikon",
+                    "view": {
+                        "column_width": null
+                    }
+                },
+                "0005": {
+                    "alias": "ratings_numa_eggplant",
+                    "description": "Eggplant Rating (100 point scale)",
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Eggplant",
+                    "notes": "What is your rating between 0 and 100 of: Eggplant",
+                    "view": {
+                        "column_width": null
+                    }
+                },
+                "0006": {
+                    "alias": "ratings_numa_fennel",
+                    "description": "Fennel Rating (100 point scale)",
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Fennel",
+                    "notes": "What is your rating between 0 and 100 of: Fennel",
+                    "view": {
+                        "column_width": null
+                    }
+                }
+            },
+            "subvariables": [
+                "0001",
+                "0002",
+                "0003",
+                "0004",
+                "0005",
+                "0006"
+            ],
+            "type": "numeric_array"
+        },
+        "var_16": {
+            "alias": "resp_id",
+            "derived": false,
+            "description": "",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "resp_id",
+            "notes": "",
+            "type": "numeric"
+        },
+        "var_17": {
+            "alias": "veg_enjoy_ca",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Strongly Disagree",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "Disagree",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": false,
+                    "name": "Neither",
+                    "numeric_value": 3
+                },
+                {
+                    "id": 4,
+                    "missing": false,
+                    "name": "Agree",
+                    "numeric_value": 4
+                },
+                {
+                    "id": 5,
+                    "missing": false,
+                    "name": "Strongly Agree",
+                    "numeric_value": 5
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": true,
+            "description": "Enjoy vegetables reasons (5 point scale)",
+            "name": "Reasons for Enjoying Vegetables",
+            "notes": "To what extent do you enjoy vegetables because of...?",
+            "subreferences": {
+                "0001": {
+                    "alias": "veg_enjoy_ca_healthy",
+                    "description": "Vegetables are healthy (5 point scale)",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Healthy",
+                    "notes": "Do you eat vegetables because: they are healthy",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                },
+                "0002": {
+                    "alias": "veg_enjoy_ca_tasty",
+                    "description": "Vegetables are Tasty (5 point scale)",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Tasty",
+                    "notes": "Do you eat vegetables because: they taste good",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                },
+                "0003": {
+                    "alias": "veg_enjoy_ca_filling",
+                    "description": "Vegetables are filling (5 point scale)",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Filling",
+                    "notes": "Do you eat vegetables because: they are filling",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                },
+                "0004": {
+                    "alias": "veg_enjoy_ca_env",
+                    "description": "Vegetables are environmental (5 point scale)",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Environmental",
+                    "notes": "Do you eat vegetables because: eating them is good for the environment",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                }
+            },
+            "subvariables": [
+                "0001",
+                "0002",
+                "0003",
+                "0004"
+            ],
+            "type": "categorical_array"
+        },
+        "var_18": {
+            "alias": "veg_environmental",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Strongly Disagree",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "Disagree",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": false,
+                    "name": "Neither",
+                    "numeric_value": 3
+                },
+                {
+                    "id": 4,
+                    "missing": false,
+                    "name": "Agree",
+                    "numeric_value": 4
+                },
+                {
+                    "id": 5,
+                    "missing": false,
+                    "name": "Strongly Agree",
+                    "numeric_value": 5
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Vegetables are environmental (5 point scale)",
+            "name": "Vegetable Reason: Environmental",
+            "notes": "Do you eat vegetables because: eating them is good for the environment",
+            "type": "categorical"
+        },
+        "var_19": {
+            "alias": "veg_filling",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Strongly Disagree",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "Disagree",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": false,
+                    "name": "Neither",
+                    "numeric_value": 3
+                },
+                {
+                    "id": 4,
+                    "missing": false,
+                    "name": "Agree",
+                    "numeric_value": 4
+                },
+                {
+                    "id": 5,
+                    "missing": false,
+                    "name": "Strongly Agree",
+                    "numeric_value": 5
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Vegetables are filling (5 point scale)",
+            "name": "Vegetable Reason: Filling",
+            "notes": "Do you eat vegetables because: they are filling",
+            "type": "categorical"
+        },
+        "var_20": {
+            "alias": "veg_healthy",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Strongly Disagree",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "Disagree",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": false,
+                    "name": "Neither",
+                    "numeric_value": 3
+                },
+                {
+                    "id": 4,
+                    "missing": false,
+                    "name": "Agree",
+                    "numeric_value": 4
+                },
+                {
+                    "id": 5,
+                    "missing": false,
+                    "name": "Strongly Agree",
+                    "numeric_value": 5
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Vegetables are healthy (5 point scale)",
+            "name": "Vegetable Reason: Healthy",
+            "notes": "Do you eat vegetables because: they are healthy",
+            "type": "categorical"
+        },
+        "var_21": {
+            "alias": "veg_tasty",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Strongly Disagree",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "Disagree",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": false,
+                    "name": "Neither",
+                    "numeric_value": 3
+                },
+                {
+                    "id": 4,
+                    "missing": false,
+                    "name": "Agree",
+                    "numeric_value": 4
+                },
+                {
+                    "id": 5,
+                    "missing": false,
+                    "name": "Strongly Agree",
+                    "numeric_value": 5
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Vegetables are Tasty (5 point scale)",
+            "name": "Vegetable Reason: Tasty",
+            "notes": "Do you eat vegetables because: they taste good",
+            "type": "categorical"
+        },
+        "var_22": {
+            "alias": "wave",
+            "categories": [
+                {
+                    "date": "2019-01",
+                    "id": 1,
+                    "missing": false,
+                    "name": "wave1",
+                    "numeric_value": null
+                },
+                {
+                    "date": "2019-02",
+                    "id": 2,
+                    "missing": false,
+                    "name": "wave2",
+                    "numeric_value": null
+                },
+                {
+                    "date": "2019-03",
+                    "id": 3,
+                    "missing": false,
+                    "name": "wave3",
+                    "numeric_value": null
+                },
+                {
+                    "date": "2019-04",
+                    "id": 4,
+                    "missing": false,
+                    "name": "wave4",
+                    "numeric_value": null
+                },
+                {
+                    "date": "2019-05",
+                    "id": 5,
+                    "missing": false,
+                    "name": "wave5",
+                    "numeric_value": null
+                },
+                {
+                    "date": "2019-06",
+                    "id": 6,
+                    "missing": false,
+                    "name": "wave6",
+                    "numeric_value": null
+                },
+                {
+                    "date": "2019-07",
+                    "id": 7,
+                    "missing": false,
+                    "name": "wave7",
+                    "numeric_value": null
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Wave of survey that participant was in",
+            "name": "Survey Wave",
+            "notes": "",
+            "type": "categorical"
+        },
+        "var_23": {
+            "alias": "weight",
+            "derived": false,
+            "description": "Downweight the healthy eaters",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "Survey Weight",
+            "notes": "survey weight note",
+            "type": "numeric"
+        }
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/table/"
+}
+

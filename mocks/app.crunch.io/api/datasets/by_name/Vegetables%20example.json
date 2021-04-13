@@ -23,8 +23,11 @@
             },
             "size": {
                 "columns": 23,
+                "derivations": 3,
                 "rows": 210,
-                "unfiltered_rows": 210
+                "source_columns": 20,
+                "unfiltered_rows": 210,
+                "variables": 23
             },
             "start_date": null,
             "streaming": "no",

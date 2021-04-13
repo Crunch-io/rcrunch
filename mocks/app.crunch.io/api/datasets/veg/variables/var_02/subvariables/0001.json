@@ -1,0 +1,71 @@
+{
+    "body": {
+        "alias": "enjoy_mr_savory",
+        "categories": [
+            {
+                "id": 1,
+                "missing": false,
+                "name": "Yes",
+                "numeric_value": 1,
+                "selected": true
+            },
+            {
+                "id": 2,
+                "missing": false,
+                "name": "No",
+                "numeric_value": 2
+            },
+            {
+                "id": -1,
+                "missing": true,
+                "name": "No Data",
+                "numeric_value": null
+            }
+        ],
+        "dataset_id": "veg",
+        "derived": false,
+        "description": "Enjoyment of savory food (binary)",
+        "discarded": false,
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "hidden": false,
+        "id": "0001",
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "name": "Savory",
+        "notes": "Do you typically enjoy food that is savory?",
+        "owner": null,
+        "private": false,
+        "secure": false,
+        "type": "categorical",
+        "view": {
+            "column_width": null,
+            "include_missing": false,
+            "show_counts": false,
+            "show_numeric_values": false
+        }
+    },
+    "catalogs": {
+        "parent": "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/"
+    },
+    "description": "Details for a given Variable",
+    "element": "shoji:entity",
+    "fragments": {
+        "dataset": "https://app.crunch.io/api/datasets/veg/",
+        "variable": "https://app.crunch.io/api/datasets/veg/variables/var_02/"
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/veg/"
+    },
+    "views": {
+        "frequencies": "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/summary/",
+        "values": "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/values/"
+    }
+}
+

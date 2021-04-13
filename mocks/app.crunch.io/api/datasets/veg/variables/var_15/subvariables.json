@@ -1,0 +1,80 @@
+{
+    "description": "Contains the subvariables for this array variable.",
+    "element": "shoji:catalog",
+    "index": {
+        "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0001/": {
+            "alias": "ratings_numa_avocado",
+            "derived": false,
+            "description": "Avocado Rating (100 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0001",
+            "name": "Avocado",
+            "notes": "What is your rating between 0 and 100 of: Avocado",
+            "secure": false,
+            "type": "numeric"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0002/": {
+            "alias": "ratings_numa_brussel_sprout",
+            "derived": false,
+            "description": "Brussel Sprout Rating (100 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0002",
+            "name": "Brussel Sprout",
+            "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+            "secure": false,
+            "type": "numeric"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0003/": {
+            "alias": "ratings_numa_carrot",
+            "derived": false,
+            "description": "Carrot Rating (100 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0003",
+            "name": "Carrot",
+            "notes": "What is your rating between 0 and 100 of: Carrot",
+            "secure": false,
+            "type": "numeric"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0004/": {
+            "alias": "ratings_numa_daikon",
+            "derived": false,
+            "description": "Daikon Rating (100 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0004",
+            "name": "Daikon",
+            "notes": "What is your rating between 0 and 100 of: Daikon",
+            "secure": false,
+            "type": "numeric"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0005/": {
+            "alias": "ratings_numa_eggplant",
+            "derived": false,
+            "description": "Eggplant Rating (100 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0005",
+            "name": "Eggplant",
+            "notes": "What is your rating between 0 and 100 of: Eggplant",
+            "secure": false,
+            "type": "numeric"
+        },
+        "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0006/": {
+            "alias": "ratings_numa_fennel",
+            "derived": false,
+            "description": "Fennel Rating (100 point scale)",
+            "discarded": false,
+            "hidden": false,
+            "id": "0006",
+            "name": "Fennel",
+            "notes": "What is your rating between 0 and 100 of: Fennel",
+            "secure": false,
+            "type": "numeric"
+        }
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/"
+}
+

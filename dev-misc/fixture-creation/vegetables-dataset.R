@@ -111,7 +111,7 @@ vegetables <- tibble(
         1, enjoy_savory_food == "Yes",
         levels = c("Strongly Disagree", "Disagree",  "Neither", "Agree", "Strongly Agree"),
         breaks = c(0.1, 0.3, 0.6, 0.7)
-    ),
+    ) %>% if_else(. == "Disagree", factor("Neither", levels = levels(.)), .),
     veg_environmental = random_cat_gen(
         -1, age,
         4, as.numeric(wave),
@@ -378,6 +378,26 @@ cube2 <- cube(analyses2[[1]])
 # newSlide() uses a slightly different query (I think it has filter=NULL instead of no filter)
 # than getting the cube from a slide. So for the newSlide test, we make this request explicitly
 cube3 <- crtabs(~ds$healthy_eater, ds)
+
+# as.vector and as.data.frame captures
+ds_dim <- dim(ds)
+cat <- as.vector(ds$healthy_eater)
+cat_names <- names(categories(ds$healthy_eater))
+num <- as.vector(ds$age)
+ca <- as.vector(ds$veg_enjoy_ca)
+mr <- as.vector(ds$enjoy_mr)
+mr_sub <- as.vector(ds$enjoy_mr$enjoy_mr_savory)
+mr_id <- mr <- as.vector(ds$enjoy_mr, mode = "id")
+mr_id_sub <- mr <- as.vector(ds$enjoy_mr$enjoy_mr_savory, mode = "id")
+numa <- as.vector(ds$ratings_numa)
+
+cdf <- as.data.frame(ds, include.hidden = TRUE)
+
+# Don't actually export because we'll save the fixture somewhere else,
+# but we do need the export views
+exporters <- crGET(shojiURL(ds, "views", "export"))
+var_meta <- variableMetadata(ds)
+
 stop_capturing()
 
 ### Cleanup and move dataset capture ----
@@ -444,6 +464,23 @@ file_copy(
 )
 
 dir_delete(temp_dir)
+
+## Generate data.frame csv ----
+### httptest balks when trying to capture `as.data.frame()` so
+### use `write.csv` directly
+write.csv(
+    ds,
+    here("mocks", "dataset-fixtures", "veg.csv"),
+    categorical = "id",
+    include.hidden = TRUE
+)
+
+write.csv(
+    ds,
+    here("mocks", "dataset-fixtures", "veg-no-hidden.csv"),
+    categorical = "id",
+    include.hidden = FALSE
+)
 
 ## Generate cube fixtures ----
 ### Numeric array alone (numa.json) ----

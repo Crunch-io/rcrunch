@@ -71,7 +71,7 @@ stream_rows <- data.frame(
     v6 = c(1, 1)
 )
 with_test_authentication({
-    metadata <- fromJSON(file.path("dataset-fixtures", "streaming.json"), simplifyVector = FALSE)
+    metadata <- fromJSON(datasetFixturePath("streaming.json"), simplifyVector = FALSE)
     ds <- suppressMessages(uploadMetadata(metadata))
     test_that("streamRows streams rows", {
         expect_equal(pendingStream(ds), 0)

@@ -1,0 +1,241 @@
+{
+    "body": {
+        "alias": "ratings_numa",
+        "categories": [
+
+        ],
+        "dataset_id": "veg",
+        "derivation": {
+            "args": [
+                {
+                    "args": [
+                        {
+                            "map": {
+                                "0001": {
+                                    "references": {
+                                        "alias": "ratings_numa_avocado",
+                                        "name": "Avocado"
+                                    },
+                                    "variable": "var_09"
+                                },
+                                "0002": {
+                                    "references": {
+                                        "alias": "ratings_numa_brussel_sprout",
+                                        "name": "Brussel Sprout"
+                                    },
+                                    "variable": "var_10"
+                                },
+                                "0003": {
+                                    "references": {
+                                        "alias": "ratings_numa_carrot",
+                                        "name": "Carrot"
+                                    },
+                                    "variable": "var_11"
+                                },
+                                "0004": {
+                                    "references": {
+                                        "alias": "ratings_numa_daikon",
+                                        "name": "Daikon"
+                                    },
+                                    "variable": "var_12"
+                                },
+                                "0005": {
+                                    "references": {
+                                        "alias": "ratings_numa_eggplant",
+                                        "name": "Eggplant"
+                                    },
+                                    "variable": "var_13"
+                                },
+                                "0006": {
+                                    "references": {
+                                        "alias": "ratings_numa_fennel",
+                                        "name": "Fennel"
+                                    },
+                                    "variable": "var_14"
+                                }
+                            }
+                        },
+                        {
+                            "value": [
+                                "0001",
+                                "0002",
+                                "0003",
+                                "0004",
+                                "0005",
+                                "0006"
+                            ]
+                        }
+                    ],
+                    "function": "make_frame"
+                }
+            ],
+            "function": "array",
+            "kwargs": {
+                "numeric": {
+                    "value": true
+                }
+            },
+            "references": {
+                "alias": "ratings_numa",
+                "description": "Rating of Vegetables: Scale of 0-100",
+                "name": "Vegetable Ratings",
+                "notes": "On a scale of 0-100, how would you rate...?"
+            }
+        },
+        "derived": true,
+        "description": "Rating of Vegetables: Scale of 0-100",
+        "discarded": false,
+        "format": {
+
+        },
+        "hidden": false,
+        "id": "var_15",
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "name": "Vegetable Ratings",
+        "notes": "On a scale of 0-100, how would you rate...?",
+        "owner": null,
+        "private": false,
+        "secure": false,
+        "subreferences": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0001/": {
+                "alias": "ratings_numa_avocado",
+                "description": "Avocado Rating (100 point scale)",
+                "format": {
+                    "data": {
+                        "digits": 2
+                    },
+                    "summary": {
+                        "digits": 2
+                    }
+                },
+                "name": "Avocado",
+                "notes": "What is your rating between 0 and 100 of: Avocado",
+                "view": {
+                    "column_width": null
+                }
+            },
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0002/": {
+                "alias": "ratings_numa_brussel_sprout",
+                "description": "Brussel Sprout Rating (100 point scale)",
+                "format": {
+                    "data": {
+                        "digits": 2
+                    },
+                    "summary": {
+                        "digits": 2
+                    }
+                },
+                "name": "Brussel Sprout",
+                "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                "view": {
+                    "column_width": null
+                }
+            },
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0003/": {
+                "alias": "ratings_numa_carrot",
+                "description": "Carrot Rating (100 point scale)",
+                "format": {
+                    "data": {
+                        "digits": 2
+                    },
+                    "summary": {
+                        "digits": 2
+                    }
+                },
+                "name": "Carrot",
+                "notes": "What is your rating between 0 and 100 of: Carrot",
+                "view": {
+                    "column_width": null
+                }
+            },
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0004/": {
+                "alias": "ratings_numa_daikon",
+                "description": "Daikon Rating (100 point scale)",
+                "format": {
+                    "data": {
+                        "digits": 2
+                    },
+                    "summary": {
+                        "digits": 2
+                    }
+                },
+                "name": "Daikon",
+                "notes": "What is your rating between 0 and 100 of: Daikon",
+                "view": {
+                    "column_width": null
+                }
+            },
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0005/": {
+                "alias": "ratings_numa_eggplant",
+                "description": "Eggplant Rating (100 point scale)",
+                "format": {
+                    "data": {
+                        "digits": 2
+                    },
+                    "summary": {
+                        "digits": 2
+                    }
+                },
+                "name": "Eggplant",
+                "notes": "What is your rating between 0 and 100 of: Eggplant",
+                "view": {
+                    "column_width": null
+                }
+            },
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0006/": {
+                "alias": "ratings_numa_fennel",
+                "description": "Fennel Rating (100 point scale)",
+                "format": {
+                    "data": {
+                        "digits": 2
+                    },
+                    "summary": {
+                        "digits": 2
+                    }
+                },
+                "name": "Fennel",
+                "notes": "What is your rating between 0 and 100 of: Fennel",
+                "view": {
+                    "column_width": null
+                }
+            }
+        },
+        "subvariables": [
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0001/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0002/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0003/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0004/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0005/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0006/"
+        ],
+        "type": "numeric_array",
+        "view": {
+            "column_width": null
+        }
+    },
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/veg/folders/",
+        "parent": "https://app.crunch.io/api/datasets/veg/variables/",
+        "subvariables": "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/"
+    },
+    "description": "Details for a given Variable",
+    "element": "shoji:entity",
+    "fragments": {
+        "dataset": "https://app.crunch.io/api/datasets/veg/",
+        "missing_rules": "https://app.crunch.io/api/datasets/veg/variables/var_15/missing_rules/",
+        "user_settings": "https://app.crunch.io/api/datasets/veg/variables/var_15/user_settings/"
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/variables/var_15/",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/veg/"
+    },
+    "views": {
+        "cast": "https://app.crunch.io/api/datasets/veg/variables/var_15/cast/",
+        "frequencies": "https://app.crunch.io/api/datasets/veg/variables/var_15/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/veg/variables/var_15/summary/",
+        "values": "https://app.crunch.io/api/datasets/veg/variables/var_15/values/"
+    }
+}
+
