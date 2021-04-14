@@ -399,22 +399,14 @@ organize_recurse <- function(base, base_type, path) {
     } else {
         # Make sequences where each folder is on its own, and the variables
         # at the folder level are in sequence. This allows the organize folder
-        # to go in the right place so that the folder is organized among the vas
-        folder_pos <- which(types(items) == "folder")
-        # starts are 1, the folder positions, and 1 after the folder positions so that
-        # each folder gets split out on its own. If position is to high, needs to be
-        # replaced with length, which can happen if a folder is in last position
-        starts <- pmin(c(1, folder_pos + c(0, 1)), length(items))
-        # and ends are one less than the folders, the folder positions and the length of
-        # the list. Need to replace item less than 1, which can occur if folder is in
-        # first position
-        ends <- pmax(c(folder_pos - c(1, 0), length(items)), 1)
+        # to go in the right place so that the folder is organized among the vars
+        is_folder <- types(items) == "folder"
+        prev_was_folder <- c(FALSE, is_folder[-length(is_folder)])
+        groups <- cumsum(is_folder | prev_was_folder)
 
-        split_items <- mapply(
-            FUN = function(starts, ends) items[seq(starts, ends)],
-            starts = starts,
-            ends = ends
-        )
+        split_items <- lapply(unique(groups), function(grp) {
+            items[groups == grp]
+        })
     }
 
     lapply(
