@@ -394,8 +394,10 @@ newSlide <- function(
     }
 
     if (!is.null(query)) {
+        query <- formulaToCubeQuery(query, ds)
+        validateSlideQuery(query)
         analysis <- list(
-            query = formulaToCubeQuery(query, ds),
+            query = query,
             display_settings = settings
         )
 
@@ -446,6 +448,36 @@ check_newslide_args <- function(
     }
 }
 #nolint end
+
+validateSlideQuery <- function(query) {
+    dimensions <- query$dimensions
+
+    if (length(dimensions) < 3) return()
+
+    is_subvar_dim <- vapply(dimensions, function(x) {
+        "function" %in% names(x) &&
+            x[["function"]] == "dimension" &&
+            "args" %in% names(x) &&
+            identical(x[["args"]][[2]], zcl("subvariables"))
+    }, logical(1))
+
+    if (!any(is_subvar_dim)) return()
+
+    subvar_args <- lapply(which(is_subvar_dim), function(x) dimensions[[x]][["args"]][[1]])
+
+    first_dim_is_array_cat <- vapply(subvar_args, function(x) {
+        identical(dimensions[[1]], x) ||
+            identical(dimensions[[1]], zfunc("dimension", x, "categories"))
+    }, logical(1))
+
+    if (any(first_dim_is_array_cat)) {
+        halt(
+            "First dimension of 3+ dimension cube for slide analysis cannot be an array's",
+            "categories. You probably want to use `selectCategories()` to collapse the",
+            "categorical array's categories dimension."
+        )
+    }
+}
 
 #' @rdname crunch-extract
 #' @export

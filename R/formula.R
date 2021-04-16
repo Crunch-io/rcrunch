@@ -144,7 +144,7 @@ registerCubeFunctions <- function(varnames = c()) {
         median = numfunc("cube_quantile", list(value = I(.5))),
         as_array = function(x) {
             ## Kinda hacky way to do a query of an MR as CA
-            if (!is.MR(x)) {
+            if (!(is.MR(x) | is.CrunchExpr(x))) {
                 halt(
                     "Cannot analyze a variable of type ", dQuote(type(x)),
                     " 'as_array'"
@@ -156,7 +156,7 @@ registerCubeFunctions <- function(varnames = c()) {
         # the default behavior of MRs anymore so this special case isn't needed
         # except for the error message
         as_selected = function(x) {
-            if (!is.MR(x)) {
+            if (!(is.MR(x) | is.CrunchExpr(x))) {
                 halt(
                     "Cannot analyze a variable of type ", dQuote(type(x)),
                     " 'as_selected'"
@@ -165,7 +165,7 @@ registerCubeFunctions <- function(varnames = c()) {
             x
         },
         subvariables = function(x) {
-            if (!is.Array(x)) {
+            if (!(is.Array(x) | is.CrunchExpr(x))) {
                 halt(
                     "Cannot analyze a variable of type ", dQuote(type(x)),
                     " using 'subvariables'"
@@ -174,7 +174,7 @@ registerCubeFunctions <- function(varnames = c()) {
             zfunc("dimension", x, "subvariables")
         },
         categories = function(x) {
-            if (!is.Array(x)) {
+            if (!(is.Array(x) | is.CrunchExpr(x))) {
                 halt(
                     "Cannot analyze a variable of type ", dQuote(type(x)),
                     " using 'categories'"
@@ -237,7 +237,14 @@ varToDim <- function(x) {
             zfunc("dimension", zfunc("as_selected", v), list(value = "subvariables")),
             zfunc("as_selected", v)
         ))
-    } else if (is.CA(x) | is.NumericArray(x)) {
+    } else if ("function" %in% names(v) && identical(v[["function"]], "as_selected")) {
+        # If user created an as_selected (eg with `asSelected` or `selectCategories()`) expand
+        # out the dimensions for them like it's a MR
+        return(list(
+            zfunc("dimension", v, list(value = "subvariables")),
+            v
+        ))
+    }    else if (is.CA(x) | is.NumericArray(x)) {
         ## Categorical array gets the subvariables dimension first
         ## and then itself so that the rows, not columns, are subvars
         ## We treat numeric arrays as categoricals when used bare

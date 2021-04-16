@@ -325,6 +325,17 @@ with_mock_crunch({
         )
     })
 
+    test_that("New slide - prevents categories in first dim", {
+        expect_error(
+            newSlide(
+                main_deck,
+                ~categories(catarray) + subvariables(catarray) + mymrset,
+                title = "Title"
+            ),
+            "First dimension of .+ analysis cannot be .+ categories"
+        )
+    })
+
     slide <- main_deck[[1]]
     test_that("Slide show method", {
         expect_prints(
