@@ -356,7 +356,7 @@ subtypeInsertion <- function(insert) {
             # we plan to migrate to having `kwargs$positive` instead
             # of `args`. Our migration plan is to have them be duplicated
             # to start, so for now trust the kwargs first
-            kwargs <- kwarguments(insert)
+            kwargs <- kwarguments(insert) #nolint
             positive <- kwargs$positive %||% arguments(insert)
             insert <- Subtotal(
                 name = name(insert), after = after,
