@@ -339,7 +339,7 @@ makeTransFuncs <- function(cat_insert_map, cats_in_array, var_cats) {
             positive_ids <- which(ids(var_cats) %in% positive)
             which.positive <- names(var_cats[positive_ids])
 
-            negative <- unlist(kwarguments(element, var_cats)$negative)
+            negative <- unlist(kwarguments(element, var_cats)$negative) #nolint
             negative_ids <- which(ids(var_cats) %in% negative)
             which.negative <- names(var_cats[negative_ids])
 

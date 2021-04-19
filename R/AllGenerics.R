@@ -165,7 +165,7 @@ setGeneric("anchor<-", function(x, value) standardGeneric("anchor<-"))
 setGeneric("arguments", function(x, ...) standardGeneric("arguments"))
 #' @rdname Insertions
 setGeneric("arguments<-", function(x, value) standardGeneric("arguments<-"))
-#' @rdname Insertions
+# not exported
 setGeneric("kwarguments", function(x, ...) standardGeneric("kwarguments"))
 #' @rdname Insertions
 setGeneric("kwarguments<-", function(x, value) standardGeneric("kwarguments<-"))

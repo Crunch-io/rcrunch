@@ -215,8 +215,6 @@ setMethod("arguments", "Insertion", function(x) {
     return(x[["args"]])
 })
 
-#' @rdname Insertions
-#' @export
 setMethod("kwarguments", "Insertion", function(x) {
     return(x$kwargs)
 })
@@ -243,8 +241,6 @@ setMethod("kwarguments", "Insertion", function(x) {
 #' @export
 setMethod("arguments", "Subtotal", .convertArgs)
 
-#' @rdname Insertions
-#' @export
 setMethod("kwarguments", "Subtotal", function(x, var_categories) {
     # We will be migrating to having both `positive` and `negative` terms in the kwargs
     # so grab the positive terms
