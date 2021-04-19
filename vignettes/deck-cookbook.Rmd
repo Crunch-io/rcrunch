@@ -242,6 +242,26 @@ slide <- newSlide(
 )
 ```
 
+The "categories" dimension cannot be the first dimension (used in the "tabs" of the analysis in
+a Crunch Dashboard) of a slide analysis that has 3 dimensions. Instead, to get the "tabs" dimension
+have the categorical array variable, choose one category to select, and create a Multiple Response
+variable out of it.
+
+When trying to make a slide with a categorical array (`ca`) and another variables(`cat`), the 
+following table shows the 6 queries that are valid and which dimension the web app will
+display on each of the "rows", "columns" and "tabs" dimensions. Here we have chosen to select
+the category with name = `"category"` when using `selectCategories`, but any valid category id
+or name could be used instead.
+
+| query                                    | rows            | columns         | tabs            |
+|------------------------------------------|-----------------|-----------------|-----------------|
+|`~cat + categories(ca) + subvariables(ca)`| CA categories   | CA subvariables | other variable  |
+|`~cat + subvariables(ca) + categories(ca)`| CA subvariables | CA categories   | other variable  |
+|`~subvariables(ca) + categories(ca) + cat`| CA categories   | other variable  | CA subvariables |
+|`~subvariables(ca) + cat + categories(ca)`| other variable  | CA categories   | CA subvariables |
+|`~cat + selectCategories(ca, "category")` | other variable  | CA subvariables | CA categories   |
+|`~selectCategories(ca, "category") + cat` | CA subvariables | other variable  | CA categories   |
+
 
 ### Mean of a Numeric variable
 #### Problem
