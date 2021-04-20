@@ -102,7 +102,8 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' @param is_file The default guesses whether a file or string was
 #' used in the `script` argument, but you can override the heuristics
 #' by specifying `TRUE` for a file, and `FALSE` for a string.
-#' @param ... Additional options, passed on to the API
+#' @param ... Additional options, such as `dry_run = TRUE` passed on
+#' to the API
 #'
 #' @return For `runCrunchAutomation()`: an updated dataset (invisibly),
 #' For `showScriptErrors()`, when run after a failure, a list with two items:
@@ -116,6 +117,9 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #'
 #' # Or a string directly:
 #' ds <- runCrunchAutomation(ds, "RENAME v1 TO age;")
+#'
+#' # A "dry run" that validates the script but does not run it:
+#' runCrunchAutomation(ds, "RENAME V1 TO age;", dry_run = TRUE)
 #'
 #' # After a failed run, some error information prints to console,
 #' # But more details are available with function:

@@ -24,7 +24,8 @@ or a string the syntax loaded in R.}
 used in the \code{script} argument, but you can override the heuristics
 by specifying \code{TRUE} for a file, and \code{FALSE} for a string.}
 
-\item{...}{Additional options, passed on to the API}
+\item{...}{Additional options, such as \code{dry_run = TRUE} passed on
+to the API}
 }
 \value{
 For \code{runCrunchAutomation()}: an updated dataset (invisibly),
@@ -45,6 +46,9 @@ ds <- runCrunchAutomation(ds, script_file)
 
 # Or a string directly:
 ds <- runCrunchAutomation(ds, "RENAME v1 TO age;")
+
+# A "dry run" that validates the script but does not run it:
+runCrunchAutomation(ds, "RENAME V1 TO age;", dry_run = TRUE)
 
 # After a failed run, some error information prints to console,
 # But more details are available with function:
