@@ -1,7 +1,7 @@
 # crunch 1.28.1 (Development version)
 * `as.data.frame()` and `as.vector()` work with numeric arrays now (#558)
 * Can now create subtotal differences from rcrunch (#559)
-* Can now use `option(crunch.show.progress.url = TRUE)` to show the URL checked for progress (#565)
+* Can now use `options(crunch.show.progress.url = TRUE)` to show the URL checked for progress (#565)
 * Avoids a possible bug when a hidden or private folder have bad entities in them (#561)
 * Fixed a bug in `as.data.frame()` where it would not respect the `include.hidden` argument (#560)
 
