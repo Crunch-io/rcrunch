@@ -341,7 +341,7 @@ with_test_authentication({
                 name = c("This is a subtitle", "B alone", "C alone", "B+C"),
                 func = c(NA, "subtotal", "subtotal", "subtotal"),
                 args = c("NA", "1", "2", "1 and 2"),
-                kwargs = c("", "positive: 1 |", "positive: 2 |", "positive: 1 and 2 |"),
+                kwargs = c("", "positive: 1 | ", "positive: 2 | ", "positive: 1 and 2 | "),
                 stringsAsFactors = FALSE
             )),
             fixed = TRUE
