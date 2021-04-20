@@ -102,15 +102,23 @@ handleAPIsuccess <- function(code, response) {
             progress_url <- handleShoji(content(response))
             ## Quick validation
             if (is.character(progress_url) && length(progress_url) == 1) {
-                tryCatch(pollProgress(progress_url, getOption("crunch.poll.wait", 0.5)),
-                         error = function(e) {
-                             ## Handle the error here so we can message the
-                             ## Location header, if present
-                             if (!is.null(loc)) {
-                                 message("Result URL: ", loc)
-                             }
-                             stop(e)
-                         }
+                if (getOption("crunch.show.progress.url", FALSE)) {
+                    message(paste0("Checking progress at: ", progress_url))
+                }
+                tryCatch(
+                    pollProgress(progress_url, getOption("crunch.poll.wait", 0.5)),
+                    error = function(e) {
+                        message(paste0(
+                            "Something went wrong during `pollProgress()` of url: ",
+                            progress_url
+                        ))
+                        ## Handle the error here so we can message the
+                        ## Location header, if present
+                        if (!is.null(loc)) {
+                            message("Result URL: ", loc)
+                        }
+                        stop(e)
+                    }
                 )
             }
         }

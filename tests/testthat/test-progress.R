@@ -124,6 +124,17 @@ with_mock_crunch({
                 sub("\\.json$", "", logs$url),
                 c("app.crunch.io/api/progress2/1", "app.crunch.io/api/progress2/2")
             )
+        }),
+        test_that("'crunch.show.progress.url' option works", {
+            counter <<- 1
+            with(temp.option(crunch.poll.wait = 0.01, "crunch.show.progress.url" = TRUE), {
+                expect_message(
+                    capture.output(handleAPIresponse(
+                        fakeProg("https://app.crunch.io/api/progress/")
+                    )),
+                    "Checking progress at: https://app.crunch.io/api/progress/"
+                )
+            })
         })
     )
 })
