@@ -124,8 +124,8 @@
 \alias{$<-,OrderGroup-method}
 \alias{[[,SlideCatalog,ANY-method}
 \alias{[[<-,SlideCatalog,numeric,missing,CrunchSlide-method}
-\alias{[[,CrunchSlide,ANY-method}
-\alias{[[<-,CrunchSlide,ANY,ANY,ANY-method}
+\alias{[[,AnalysisCrunchSlide,ANY-method}
+\alias{[[<-,AnalysisCrunchSlide,ANY,ANY,ANY-method}
 \alias{[[,AnalysisCatalog,ANY-method}
 \alias{[[<-,AnalysisCatalog,numeric,missing,formula-method}
 \alias{[[<-,AnalysisCatalog,numeric,missing,Analysis-method}
@@ -416,9 +416,9 @@
 
 \S4method{[[}{SlideCatalog,numeric,missing,CrunchSlide}(x, i, j) <- value
 
-\S4method{[[}{CrunchSlide,ANY}(x, i, j, ...)
+\S4method{[[}{AnalysisCrunchSlide,ANY}(x, i, j, ...)
 
-\S4method{[[}{CrunchSlide,ANY,ANY,ANY}(x, i, j) <- value
+\S4method{[[}{AnalysisCrunchSlide,ANY,ANY,ANY}(x, i, j) <- value
 
 \S4method{[[}{AnalysisCatalog,ANY}(x, i, j, ...)
 

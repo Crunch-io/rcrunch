@@ -6,10 +6,10 @@
 \alias{filter<-}
 \alias{weight<-,CrunchDeck,ANY-method}
 \alias{filter<-,CrunchDeck,ANY-method}
-\alias{transforms,CrunchSlide-method}
+\alias{transforms,AnalysisCrunchSlide-method}
 \alias{transforms,AnalysisCatalog-method}
 \alias{transforms,Analysis-method}
-\alias{transforms<-,CrunchSlide,ANY-method}
+\alias{transforms<-,AnalysisCrunchSlide,ANY-method}
 \alias{transforms<-,AnalysisCatalog,ANY-method}
 \alias{transforms<-,Analysis,ANY-method}
 \alias{analyses}
@@ -22,20 +22,20 @@
 \alias{displaySettings<-}
 \alias{vizSpecs}
 \alias{vizSpecs<-}
-\alias{analyses,CrunchSlide-method}
-\alias{analysis,CrunchSlide-method}
-\alias{analysis<-,CrunchSlide,formula-method}
-\alias{analysis<-,CrunchSlide,Analysis-method}
-\alias{analysis<-,CrunchSlide,list-method}
-\alias{filter,CrunchSlide-method}
-\alias{filter<-,CrunchSlide,ANY-method}
-\alias{query<-,CrunchSlide,ANY-method}
-\alias{cubes,CrunchSlide-method}
-\alias{cube,CrunchSlide-method}
-\alias{displaySettings,CrunchSlide-method}
-\alias{displaySettings<-,CrunchSlide,ANY-method}
-\alias{vizSpecs,CrunchSlide-method}
-\alias{vizSpecs<-,CrunchSlide,ANY-method}
+\alias{analyses,AnalysisCrunchSlide-method}
+\alias{analysis,AnalysisCrunchSlide-method}
+\alias{analysis<-,AnalysisCrunchSlide,formula-method}
+\alias{analysis<-,AnalysisCrunchSlide,Analysis-method}
+\alias{analysis<-,AnalysisCrunchSlide,list-method}
+\alias{filter,AnalysisCrunchSlide-method}
+\alias{filter<-,AnalysisCrunchSlide,ANY-method}
+\alias{query<-,AnalysisCrunchSlide,ANY-method}
+\alias{cubes,AnalysisCrunchSlide-method}
+\alias{cube,AnalysisCrunchSlide-method}
+\alias{displaySettings,AnalysisCrunchSlide-method}
+\alias{displaySettings<-,AnalysisCrunchSlide,ANY-method}
+\alias{vizSpecs,AnalysisCrunchSlide-method}
+\alias{vizSpecs<-,AnalysisCrunchSlide,ANY-method}
 \alias{cubes,AnalysisCatalog-method}
 \alias{displaySettings,AnalysisCatalog-method}
 \alias{displaySettings<-,AnalysisCatalog,list-method}
@@ -55,8 +55,8 @@
 \alias{filter<-,Analysis,NULL-method}
 \alias{slideQueryEnv}
 \alias{cubes,CrunchDeck-method}
-\alias{weight,CrunchSlide-method}
-\alias{weight<-,CrunchSlide,ANY-method}
+\alias{weight,AnalysisCrunchSlide-method}
+\alias{weight<-,AnalysisCrunchSlide,ANY-method}
 \alias{weight,Analysis-method}
 \title{Get and set slide analyses}
 \usage{
@@ -68,13 +68,13 @@ filter(x) <- value
 
 \S4method{filter}{CrunchDeck,ANY}(x) <- value
 
-\S4method{transforms}{CrunchSlide}(x)
+\S4method{transforms}{AnalysisCrunchSlide}(x)
 
 \S4method{transforms}{AnalysisCatalog}(x)
 
 \S4method{transforms}{Analysis}(x)
 
-\S4method{transforms}{CrunchSlide,ANY}(x) <- value
+\S4method{transforms}{AnalysisCrunchSlide,ANY}(x) <- value
 
 \S4method{transforms}{AnalysisCatalog,ANY}(x) <- value
 
@@ -100,33 +100,33 @@ vizSpecs(x)
 
 vizSpecs(x) <- value
 
-\S4method{analyses}{CrunchSlide}(x)
+\S4method{analyses}{AnalysisCrunchSlide}(x)
 
-\S4method{analysis}{CrunchSlide}(x)
+\S4method{analysis}{AnalysisCrunchSlide}(x)
 
-\S4method{analysis}{CrunchSlide,formula}(x) <- value
+\S4method{analysis}{AnalysisCrunchSlide,formula}(x) <- value
 
-\S4method{analysis}{CrunchSlide,Analysis}(x) <- value
+\S4method{analysis}{AnalysisCrunchSlide,Analysis}(x) <- value
 
-\S4method{analysis}{CrunchSlide,list}(x) <- value
+\S4method{analysis}{AnalysisCrunchSlide,list}(x) <- value
 
-\S4method{filter}{CrunchSlide}(x, ...)
+\S4method{filter}{AnalysisCrunchSlide}(x, ...)
 
-\S4method{filter}{CrunchSlide,ANY}(x) <- value
+\S4method{filter}{AnalysisCrunchSlide,ANY}(x) <- value
 
-\S4method{query}{CrunchSlide,ANY}(x) <- value
+\S4method{query}{AnalysisCrunchSlide,ANY}(x) <- value
 
-\S4method{cubes}{CrunchSlide}(x)
+\S4method{cubes}{AnalysisCrunchSlide}(x)
 
-\S4method{cube}{CrunchSlide}(x)
+\S4method{cube}{AnalysisCrunchSlide}(x)
 
-\S4method{displaySettings}{CrunchSlide}(x)
+\S4method{displaySettings}{AnalysisCrunchSlide}(x)
 
-\S4method{displaySettings}{CrunchSlide,ANY}(x) <- value
+\S4method{displaySettings}{AnalysisCrunchSlide,ANY}(x) <- value
 
-\S4method{vizSpecs}{CrunchSlide}(x)
+\S4method{vizSpecs}{AnalysisCrunchSlide}(x)
 
-\S4method{vizSpecs}{CrunchSlide,ANY}(x) <- value
+\S4method{vizSpecs}{AnalysisCrunchSlide,ANY}(x) <- value
 
 \S4method{cubes}{AnalysisCatalog}(x)
 
@@ -156,7 +156,7 @@ formulaToSlideQuery(query, dataset)
 
 \S4method{filter}{ANY}(x, ...)
 
-\S4method{filter}{CrunchSlide,ANY}(x) <- value
+\S4method{filter}{AnalysisCrunchSlide,ANY}(x) <- value
 
 \S4method{filter}{Analysis,CrunchLogicalExpr}(x) <- value
 
@@ -168,9 +168,9 @@ slideQueryEnv(weight, filter)
 
 \S4method{cubes}{CrunchDeck}(x)
 
-\S4method{weight}{CrunchSlide}(x)
+\S4method{weight}{AnalysisCrunchSlide}(x)
 
-\S4method{weight}{CrunchSlide,ANY}(x) <- value
+\S4method{weight}{AnalysisCrunchSlide,ANY}(x) <- value
 
 \S4method{weight}{Analysis}(x)
 }

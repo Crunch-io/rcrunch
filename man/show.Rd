@@ -17,7 +17,7 @@
 \alias{show,CrunchGeography-method}
 \alias{show,DeckCatalog-method}
 \alias{show,CrunchDeck-method}
-\alias{show,CrunchSlide-method}
+\alias{show,AnalysisCrunchSlide-method}
 \alias{show,MultitableResult-method}
 \alias{show,ShojiFolder-method}
 \title{Show methods for Crunch objects}
@@ -54,7 +54,7 @@ show(object)
 
 \S4method{show}{CrunchDeck}(object)
 
-\S4method{show}{CrunchSlide}(object)
+\S4method{show}{AnalysisCrunchSlide}(object)
 
 \S4method{show}{MultitableResult}(object)
 

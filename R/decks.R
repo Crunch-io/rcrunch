@@ -235,6 +235,10 @@ setMethod("subtitles<-", "CrunchDeck", function(x, value) {
     invisible(refresh(x))
 })
 
+#' @rdname describe-catalog
+#' @export
+setMethod("types", "CrunchDeck", function(x) types(slides(x)))
+
 #' Export a Crunch Deck
 #'
 #' Crunch decks can be exported as excel or json files.
@@ -275,7 +279,8 @@ exportDeck <- function(deck, file, format = c("xlsx", "pptx", "json"), ...) {
 #' @rdname analysis-methods
 #' @export
 setMethod("weight<-", c("CrunchDeck", "ANY"), function(x, value) {
-    lapply(seq_along(x), function(slide_num) {
+    # Don't set filter on markdown slides
+    lapply(which(types(x) == "analysis"), function(slide_num) {
         weight(x[[slide_num]]) <- value
     })
 
@@ -285,7 +290,8 @@ setMethod("weight<-", c("CrunchDeck", "ANY"), function(x, value) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", c("CrunchDeck", "ANY"), function(x, value) {
-    lapply(seq_along(x), function(slide_num) {
+    # Don't set filter on markdown slides
+    lapply(which(types(x) == "analysis"), function(slide_num) {
         filter(x[[slide_num]]) <- value
     })
 

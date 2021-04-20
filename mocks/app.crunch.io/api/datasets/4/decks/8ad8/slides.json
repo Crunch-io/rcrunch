@@ -41,7 +41,8 @@
                 }
             },
             "subtitle": "age",
-            "title": "mymrset"
+            "title": "mymrset",
+            "type": "analysis"
         },
         "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/": {
             "analysis_url": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
@@ -78,7 +79,8 @@
                 }
             },
             "subtitle": "",
-            "title": "birthyr"
+            "title": "birthyr",
+            "type": "analysis"
         },
         "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/5938/": {
             "analysis_url": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/5938/analyses/3f2e2/",
@@ -115,7 +117,8 @@
                 }
             },
             "subtitle": "",
-            "title": "mymrset"
+            "title": "mymrset",
+            "type": "analysis"
         },
         "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/": {
             "analysis_url": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
@@ -152,7 +155,8 @@
                 }
             },
             "subtitle": "",
-            "title": "mymrset v2"
+            "title": "mymrset v2",
+            "type": "analysis"
         }
     },
     "template": "{\"query\": {\"measures\": \"Object with keyed measures functions\", \"dimensions\": \"Array of variable references\", \"weight\": \"Optional weight variable URL\"}, \"display_settings\": {}, \"query_environment\": {\"filter\": \"Array of filter urls\"}}"

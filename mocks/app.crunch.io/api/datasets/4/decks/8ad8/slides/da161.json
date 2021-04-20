@@ -9,6 +9,7 @@
         "deck_id": "8ad8",
         "subtitle": "",
         "title": "birthyr",
+        "type": "analysis",
         "analysis_url": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
         "version": "master__tip",
         "display_settings": {

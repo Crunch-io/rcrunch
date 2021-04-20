@@ -9,6 +9,7 @@
         "deck_id": "8ad8",
         "subtitle": "",
         "title": "mymrset",
+        "type": "analysis",
         "analysis_url": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/5938/analyses/3f2e2/",
         "version": "master__tip",
         "display_settings": {
