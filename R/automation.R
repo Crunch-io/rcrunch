@@ -144,11 +144,14 @@ runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(s
     }
     if (length(script) != 1) script <- paste(script, collapse = "\n")
 
+    body <- list(body = script, ...)
     crPOST(
         shojiURL(dataset, "catalogs", "scripts"),
-        body = toJSON(wrapEntity(body = list(body = script, ...))),
+        body = toJSON(wrapEntity(body = body)),
         status.handlers = list(`400` = crunchAutomationErrorHandler)
     )
+    # Provide feedback for dry_run success so that user is confident it was succesful
+    if (isTRUE(body$dry_run)) message("Script dry run was successful")
     invisible(refresh(dataset))
 }
 
