@@ -33,6 +33,25 @@ with_mock_crunch({
         expect_equal(ftq_with_data, ftq_without_data)
     })
 
+    test_that("formulaToQuery expands dimensions for as_selected expressions", {
+        expect_equal(
+            formulaToQuery(~selectCategories(ds$catarray, 1)),
+            list(
+                dimensions = list(list(
+                    list(
+                        `function` = "dimension",
+                        args = list(
+                            unclass(zcl(selectCategories(ds$catarray, 1))),
+                            unclass(zcl("subvariables"))
+                        )
+                    ),
+                    unclass(zcl(selectCategories(ds$catarray, 1)))
+                )),
+                measures = list(count = list(`function` = "cube_count", args = list()))
+            )
+        )
+    })
+
     test_that("registerCubeFunctions work within formulaToQuery - mean", {
         expect_equal(
             formulaToQuery(mean(ds$birthyr)~1),
