@@ -84,9 +84,17 @@ showSubtotalHeading <- function(x) {
     args <- tryCatch(arguments(x), error = function(e) {
         return(x$categories)
     })
+    kwargs <- tryCatch(kwarguments(x), error = function(e) {
+        return(list(negative = x$negative))
+    })
+    kwargs <- paste0(lapply(names(kwargs), function(kw) {
+        if (length(kwargs[[kw]]) == 0) return("")
+        paste0(kw, ": ", serialPaste(kwargs[[kw]]))
+    }), collapse = " | ")
     return(data.frame(
         anchor = anchor, name = name(x),
         func = func(x), args = serialPaste(args),
+        kwargs = kwargs,
         stringsAsFactors = FALSE
     ))
 }

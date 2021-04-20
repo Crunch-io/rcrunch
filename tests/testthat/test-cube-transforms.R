@@ -37,7 +37,7 @@ test_that("Can show a complex cube with transform", {
 
 pet_feelings <- loadCube("./cubes/feelings-pets.json")
 
-pet_feelings_headers <- pet_feeling_both <- pet_feelings
+pet_feelings_subdiff <- pet_feelings_headers <- pet_feeling_both <- pet_feelings
 
 # add a header for some tests
 new_trans <- pet_feelings_headers@dims$feelings$references$view$transform
@@ -307,6 +307,88 @@ test_that("applyTransforms handles useNA", {
 })
 
 
+# add a subdiff for some tests
+new_trans <- pet_feelings_subdiff@dims$feelings$references$view$transform
+new_trans$insertions <- c(
+    new_trans$insertions,
+    list(list(
+        `function` = "subtotal",
+        name = "Subdiff",
+        args = list(1L, 2L),
+        anchor = "top",
+        kwargs = list(positive = list(1L, 4L), negative = list(2L, 5L))
+    ))
+)
+pet_feelings_subdiff@dims$feelings$references$view$transform <- new_trans
+
+test_that("simple subdiff", {
+    all <- cubify(
+        c(
+            0, -5,
+            9, 5,
+            12, 12,
+            21, 17,
+            12, 7,
+            10, 10,
+            11, 12,
+            21, 22
+        ),
+        dims = list(
+            "feelings" =
+                c(
+                    "Subdiff", "extremely happy", "somewhat happy",
+                    "happy", "neutral", "somewhat unhappy",
+                    "extremely unhappy", "unhappy"
+                ),
+            "animals" = c("cats", "dogs")
+        )
+    )
+    expect_equivalent(applyTransforms(pet_feelings_subdiff), all)
+})
+
+test_that("simple with row subdiff (margins & table percent)", {
+    # proportions, non-table percents, and bases are not implemented correctly in R
+    feelings_margin <- cubify(
+        c(-5, 14, 24, 38, 19, 20, 23, 43),
+        dims = list("feelings" = c(
+            "Subdiff", "extremely happy",
+            "somewhat happy", "happy",
+            "neutral", "somewhat unhappy",
+            "extremely unhappy", "unhappy"
+        ))
+    )
+    expect_equivalent(as.array(margin.table(pet_feelings_subdiff, 1)), feelings_margin)
+
+    pets_margin <- cubify(c(54, 46),
+                          dims = list("animals" = c("cats", "dogs"))
+    )
+    expect_equivalent(as.array(margin.table(pet_feelings_subdiff, 2)), pets_margin)
+    expect_equivalent(margin.table(pet_feelings_subdiff), 100)
+
+    all_prop <- cubify(
+        c(
+            0 / 100, -5 / 100,
+            9 / 100, 5 / 100,
+            12 / 100, 12 / 100,
+            21 / 100, 17 / 100,
+            12 / 100, 7 / 100,
+            10 / 100, 10 / 100,
+            11 / 100, 12 / 100,
+            21 / 100, 22 / 100
+        ),
+        dims = list(
+            "feelings" =
+                c(
+                    "Subdiff",
+                    "extremely happy", "somewhat happy",
+                    "happy", "neutral", "somewhat unhappy",
+                    "extremely unhappy", "unhappy"
+                ),
+            "animals" = c("cats", "dogs")
+        )
+    )
+    expect_equivalent(as.array(prop.table(pet_feelings_subdiff)), all_prop)
+})
 
 
 # cat by mr with subtotals fixture

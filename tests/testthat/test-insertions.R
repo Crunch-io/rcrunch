@@ -119,9 +119,36 @@ test_that("Insertion and insertions show methods with hetrogeneous insertions", 
             name = c("Cats A+B", "The end"),
             func = c("subtotal", NA),
             # NA is a string because we serialPaste them
-            args = c("A and B", "NA")
+            args = c("A and B", "NA"),
+            kwargs = c("", "")
         )),
         fixed = TRUE
+    )
+})
+
+test_that("Insertion and insertions show methods with subdiffs", {
+    insrts <- Insertions(
+        Subtotal(
+            name = "A+B-D", after = "B",
+            categories = c("A", "B"),
+            negative = "D"
+        ),
+        Subtotal(
+            name = "-C", after = "C",
+            negative = "C"
+        )
+    )
+
+    expect_prints(insrts,
+                  get_output(data.frame(
+                      anchor = c("B", "C"),
+                      name = c("A+B-D", "-C"),
+                      func = c("subtotal", "subtotal"),
+                      # NA is a string because we serialPaste them
+                      args = c("A and B", ""),
+                      kwargs = c("negative: D", "negative: C")
+                  )),
+                  fixed = TRUE
     )
 })
 

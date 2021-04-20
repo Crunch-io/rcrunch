@@ -22,9 +22,10 @@
 \usage{
 Subtotal(
   name,
-  categories,
+  categories = NULL,
   position = c("relative", "top", "bottom"),
-  after = NULL
+  after = NULL,
+  negative = NULL
 )
 
 Heading(name, position = c("relative", "top", "bottom"), after = NULL)
@@ -35,9 +36,10 @@ subtotals(x) <- value
 
 Subtotal(
   name,
-  categories,
+  categories = NULL,
   position = c("relative", "top", "bottom"),
-  after = NULL
+  after = NULL,
+  negative = NULL
 )
 
 is.Subtotal(x)
@@ -71,6 +73,9 @@ relative to another category in the cube (default).}
 \item{after}{character or numeric if \code{position} is "relative", then the
 category name or id to position the subtotal or heading after. If not supplied
 this defaults to the last of the \code{categories} supplied to \code{Subtotal}.}
+
+\item{negative}{character or numeric of the category names or ids to be subtracted
+for subtotals only}
 
 \item{x}{either a variable or CrunchCube object to add or get subtotal
 transforms for, for \code{is.Subtotal()} and \code{is.Heading()} an object to test if

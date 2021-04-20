@@ -12,6 +12,7 @@
 \alias{anchor<-}
 \alias{arguments}
 \alias{arguments<-}
+\alias{kwarguments<-}
 \alias{func}
 \alias{funcs}
 \alias{func<-}
@@ -22,6 +23,7 @@
 \alias{subtotals<-,Insertion,ANY-method}
 \alias{arguments<-,Insertion-method}
 \alias{arguments<-,Subtotal-method}
+\alias{kwarguments<-,Subtotal-method}
 \alias{arguments<-,Heading-method}
 \alias{arguments<-,SummaryStat-method}
 \alias{arguments,Insertion-method}
@@ -56,6 +58,8 @@ arguments(x, ...)
 
 arguments(x) <- value
 
+kwarguments(x) <- value
+
 func(x)
 
 funcs(x)
@@ -73,6 +77,8 @@ funcs(x)
 \S4method{arguments}{Insertion}(x) <- value
 
 \S4method{arguments}{Subtotal}(x) <- value
+
+\S4method{kwarguments}{Subtotal}(x) <- value
 
 \S4method{arguments}{Heading}(x) <- value
 

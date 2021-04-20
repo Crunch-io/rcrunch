@@ -64,7 +64,7 @@ insertionValidity <- function(object) {
         )
     }
 
-    if (!is.na(func(object)) && all(is.na(arguments(object)))) {
+    if (!is.na(func(object)) && all(is.na(arguments(object))) && length(kwarguments(object)) == 0) {
         # add checking so that args is either a vectorOrList of numerics
         val <- paste0(
             "If an Insertion has a ", dQuote("function"),
@@ -185,6 +185,14 @@ setMethod("arguments<-", "Subtotal", function(x, value) {
 
 #' @rdname Insertions
 #' @export
+setMethod("kwarguments<-", "Subtotal", function(x, value) {
+    # TODO: validate that the arguments are valid
+    x[["kwargs"]] <- value
+    return(x)
+})
+
+#' @rdname Insertions
+#' @export
 setMethod("arguments<-", "Heading", function(x, value) {
     halt("Cannot set arguments on Headings.")
 })
@@ -207,10 +215,21 @@ setMethod("arguments", "Insertion", function(x) {
     return(x[["args"]])
 })
 
+setMethod("kwarguments", "Insertion", function(x) {
+    return(x$kwargs)
+})
+
+
+
 # method for getting an anchor from a user-friendly abstracted Subtotal or Heading
 .convertArgs <- function(x, var_categories) {
     if (!is.null(x$categories) && is.character(x$categories)) {
-        # TODO: better error if var is null
+        if (missing(var_categories)) {
+            halt(
+                "Cannot convert insertion arguments from categories if `var_categories`",
+                " argument is not provided"
+            )
+        }
         n <- ids(var_categories[x$categories])
     } else {
         n <- x$categories
@@ -221,6 +240,28 @@ setMethod("arguments", "Insertion", function(x) {
 #' @rdname Insertions
 #' @export
 setMethod("arguments", "Subtotal", .convertArgs)
+
+setMethod("kwarguments", "Subtotal", function(x, var_categories) {
+    # We will be migrating to having both `positive` and `negative` terms in the kwargs
+    # so grab the positive terms
+    # x here is a `Subtotal` object, which is not structured the same as the JSON,
+    # it has a `categories` object
+    positive <- .convertArgs(x, var_categories)
+
+    if (!is.null(x$negative) && is.character(x$negative)) {
+        if (missing(var_categories)) {
+            halt(
+                "Cannot convert insertion arguments from negative if `var_categories`",
+                " argument is not provided"
+            )
+        }
+        negative <- ids(var_categories[x$negative])
+    } else {
+        negative <- x$negative
+    }
+
+    list(positive = positive, negative = negative)
+})
 
 #' @rdname Insertions
 #' @export
