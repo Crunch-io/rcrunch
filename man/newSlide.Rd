@@ -165,3 +165,6 @@ newSlide(
 )
 }
 }
+\seealso{
+\code{\link{newMarkdownSlide}} for creating a markdown slide
+}

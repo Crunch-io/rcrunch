@@ -336,6 +336,30 @@ with_mock_crunch({
         )
     })
 
+    test_that("New markdown slide", {
+        expect_POST(
+            newMarkdownSlide(
+                main_deck, title = "Title", subtitle = "SubTitle", "#Heading\n\n", "*text*"
+            ),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
+            '{"element":"shoji:entity",',
+            '"body":{"type":"markdown","markdown":"#Heading\\n\\n*text*",',
+            '"title":"Title","subtitle":"SubTitle"}}'
+        )
+    })
+
+    test_that("New markdown slide (named ... arg)", {
+        expect_POST(
+            newMarkdownSlide(
+                main_deck, title = "Title", subtitle = "SubTitle", "abc", other_arg = 1
+            ),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
+            '{"element":"shoji:entity",',
+            '"body":{"type":"markdown","markdown":"abc",',
+            '"title":"Title","subtitle":"SubTitle","other_arg":1}}'
+        )
+    })
+
     slide <- main_deck[[1]]
     test_that("Slide show method", {
         expect_prints(

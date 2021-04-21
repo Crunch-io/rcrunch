@@ -265,6 +265,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' @param ... Further options to be passed on to the API
 #'
 #' @return CrunchSlide object
+#' @seealso [`newMarkdownSlide`] for creating a markdown slide
 #' @export
 #'
 #' @examples
@@ -1009,3 +1010,51 @@ set_analysis_filter_or_weight <- function(x, filter, weight) {
 }
 
 # Markdown  ---------------------------------------------------------------
+
+#' Add a new markdown slide to a deck
+#'
+#' Markdown slides allow you to add rich text tiles to your Crunch Dashboards.
+#'
+#' @inheritParams newSlide
+#' @param ... Unnamed arguments are text that are combined to create the markdown body
+#' named arguments are passed to the API.
+#' @return A `MarkdownCrunchSlide`
+#' @export
+#'
+#' @seealso [`newSlide()`] for creating an analysis slide
+#' @examples
+#' \dontrun{
+#' newMarkdownSlide(deck, "We contacted 1,000 people by telephone", title = "Methodology")
+#'
+#' newMarkdownSlide(
+#'     deck,
+#'     "The 3 most **popular** vegetables are:\n",
+#'     "- Fennel\n",
+#'     "- Carrots\n",
+#'     "- Avocado\n",
+#'     title = "Key findings"
+#' )
+#' }
+newMarkdownSlide <- function(deck, ..., title = "", subtitle = "") {
+    # Separate out unnamed dots (markdown body) from named dots (passed to API)
+    dots <- list(...)
+    if (is.null(names(dots))) {
+        named_dots <- NULL
+        unnamed_dots <- dots
+    } else {
+        have_names <- names(dots) != "" & !is.na(names(dots))
+        named_dots <- dots[have_names]
+        unnamed_dots <- dots[!have_names]
+    }
+
+    markdown <- paste0(unnamed_dots, collapse = "")
+
+    body <- c(
+        list(type = "markdown", markdown = markdown, title = title, subtitle = subtitle),
+        named_dots # not actually used yet, but allowed for future expansion
+    )
+
+    payload <- wrapEntity(body = body)
+    url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
+    return(CrunchSlide(crGET(url)))
+}
