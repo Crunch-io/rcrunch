@@ -335,17 +335,17 @@ with_test_authentication({
 
         expect_json_equivalent(transforms(ds$v4), trans_resp)
 
-        # TODO: FIX for kwargs
-        # expect_prints(subtotals(ds$v4),
-        #     get_output(data.frame(
-        #         anchor = c("top", 1, 2, "bottom"),
-        #         name = c("This is a subtitle", "B alone", "C alone", "B+C"),
-        #         func = c(NA, "subtotal", "subtotal", "subtotal"),
-        #         args = c("NA", "1", "2", "1 and 2"),
-        #         stringsAsFactors = FALSE
-        #     )),
-        #     fixed = TRUE
-        # )
+        expect_prints(subtotals(ds$v4),
+            get_output(data.frame(
+                anchor = c("top", 1, 2, "bottom"),
+                name = c("This is a subtitle", "B alone", "C alone", "B+C"),
+                func = c(NA, "subtotal", "subtotal", "subtotal"),
+                args = c("NA", "1", "2", "1 and 2"),
+                kwargs = c("", "positive: 1 | ", "positive: 2 | ", "positive: 1 and 2 | "),
+                stringsAsFactors = FALSE
+            )),
+            fixed = TRUE
+        )
 
         # check shape
         v4_ary <- array(c(NA, 10, 10, 10, 10, 20),
