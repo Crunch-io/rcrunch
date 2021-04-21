@@ -537,7 +537,7 @@ setMethod("show", "CrunchDeck", function(object) {
 
 #' @rdname show
 #' @export
-setMethod("show", "AnalysisCrunchSlide", function(object) {
+setMethod("show", "CrunchAnalysisSlide", function(object) {
     out <- cubes(object)
     names(out) <- title(object)
     print(out)

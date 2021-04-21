@@ -487,13 +487,13 @@ validateSlideQuery <- function(query) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[", "AnalysisCrunchSlide", function(x, i, ...) {
+setMethod("[[", "CrunchAnalysisSlide", function(x, i, ...) {
     an_cat <- analyses(x)
     return(an_cat[[i]])
 })
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", "AnalysisCrunchSlide", function(x, i, j, value) {
+setMethod("[[<-", "CrunchAnalysisSlide", function(x, i, j, value) {
     an_cat <- analyses(x)
     an_cat[[i]] <- value
     invisible(refresh(x))
@@ -532,21 +532,21 @@ setMethod("type", "CrunchSlide", function(x) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analyses", "AnalysisCrunchSlide", function(x) {
+setMethod("analyses", "CrunchAnalysisSlide", function(x) {
     AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
 })
 
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analysis", "AnalysisCrunchSlide", function(x) {
+setMethod("analysis", "CrunchAnalysisSlide", function(x) {
     out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
     return(out[[1]])
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analysis<-", c("AnalysisCrunchSlide", "formula"), function(x, value) {
+setMethod("analysis<-", c("CrunchAnalysisSlide", "formula"), function(x, value) {
     analysis <- analyses(x)[[1]]
     query(analysis) <- value
     return(invisible(x))
@@ -554,14 +554,14 @@ setMethod("analysis<-", c("AnalysisCrunchSlide", "formula"), function(x, value) 
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analysis<-", c("AnalysisCrunchSlide", "Analysis"), function(x, value) {
+setMethod("analysis<-", c("CrunchAnalysisSlide", "Analysis"), function(x, value) {
     analysis_cat <- analyses(x)
     return(invisible(modifyCatalogInPlace(analysis_cat, 1, NULL, value)))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analysis<-", c("AnalysisCrunchSlide", "list"), function(x, value) {
+setMethod("analysis<-", c("CrunchAnalysisSlide", "list"), function(x, value) {
     payload <- wrapEntity(body = value)
     url <- self(analysis(x))
     crPATCH(url, body = toJSON(payload))
@@ -570,14 +570,14 @@ setMethod("analysis<-", c("AnalysisCrunchSlide", "list"), function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter", "AnalysisCrunchSlide", function(x, ...) {
+setMethod("filter", "CrunchAnalysisSlide", function(x, ...) {
     analysis <- analyses(x)[[1]]
     return(filter(analysis))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("AnalysisCrunchSlide", "ANY"), function(x, value) {
+setMethod("filter<-", c("CrunchAnalysisSlide", "ANY"), function(x, value) {
     # check that there is only on analysis?
     first_analysis <- analyses(x)[[1]]
     filter(first_analysis) <- value
@@ -586,7 +586,7 @@ setMethod("filter<-", c("AnalysisCrunchSlide", "ANY"), function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("query<-", "AnalysisCrunchSlide", function(x, value) {
+setMethod("query<-", "CrunchAnalysisSlide", function(x, value) {
     analysis <- analyses(x)[[1]]
     query(analysis) <- value
     return(invisible(x))
@@ -594,16 +594,16 @@ setMethod("query<-", "AnalysisCrunchSlide", function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("cubes", "AnalysisCrunchSlide", function(x) cubes(analyses(x)))
+setMethod("cubes", "CrunchAnalysisSlide", function(x) cubes(analyses(x)))
 #' @rdname analysis-methods
 #' @export
-setMethod("cube", "AnalysisCrunchSlide", function(x) cube(analyses(x)[[1]]))
+setMethod("cube", "CrunchAnalysisSlide", function(x) cube(analyses(x)[[1]]))
 #' @rdname analysis-methods
 #' @export
-setMethod("displaySettings", "AnalysisCrunchSlide", function(x) displaySettings(analyses(x)))
+setMethod("displaySettings", "CrunchAnalysisSlide", function(x) displaySettings(analyses(x)))
 #' @rdname analysis-methods
 #' @export
-setMethod("displaySettings<-", "AnalysisCrunchSlide", function(x, value) {
+setMethod("displaySettings<-", "CrunchAnalysisSlide", function(x, value) {
     an_cat <- analyses(x)
     displaySettings(an_cat) <- value
     return(invisible(x))
@@ -611,10 +611,10 @@ setMethod("displaySettings<-", "AnalysisCrunchSlide", function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("vizSpecs", "AnalysisCrunchSlide", function(x) vizSpecs(analyses(x)))
+setMethod("vizSpecs", "CrunchAnalysisSlide", function(x) vizSpecs(analyses(x)))
 #' @rdname analysis-methods
 #' @export
-setMethod("vizSpecs<-", "AnalysisCrunchSlide", function(x, value) {
+setMethod("vizSpecs<-", "CrunchAnalysisSlide", function(x, value) {
     an_cat <- analyses(x)
     vizSpecs(an_cat) <- value
     return(invisible(x))
@@ -868,7 +868,7 @@ setMethod("filter", "ANY", function(x, ...) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", "AnalysisCrunchSlide", function(x, value) {
+setMethod("filter<-", "CrunchAnalysisSlide", function(x, value) {
     analysis <- analyses(x)[[1]]
     filter(analysis) <- value
     return(invisible(x))
@@ -939,14 +939,14 @@ setMethod("cubes", "CrunchDeck", function(x) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("weight", "AnalysisCrunchSlide", function(x) {
+setMethod("weight", "CrunchAnalysisSlide", function(x) {
     analysis <- analyses(x)[[1]]
     return(weight(analysis))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("weight<-", c("AnalysisCrunchSlide", "ANY"), function(x, value) {
+setMethod("weight<-", c("CrunchAnalysisSlide", "ANY"), function(x, value) {
     # check that there is only on analysis?
     first_analysis <- analyses(x)[[1]]
     weight(first_analysis) <- value

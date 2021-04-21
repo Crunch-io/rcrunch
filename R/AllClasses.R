@@ -255,12 +255,12 @@ SlideCatalog <- setClass("SlideCatalog", contains = "ShojiCatalog")
 
 
 setClass("CrunchSlide", contains = "ShojiObject")
-AnalysisCrunchSlide <- setClass("AnalysisCrunchSlide", contains = "CrunchSlide")
-MarkdownCrunchSlide <- setClass("MarkdownCrunchSlide", contains = "CrunchSlide")
+CrunchAnalysisSlide <- setClass("CrunchAnalysisSlide", contains = "CrunchSlide")
+CrunchMarkdownSlide <- setClass("CrunchMarkdownSlide", contains = "CrunchSlide")
 
 .slideClasses <- list(
-    "analysis" = "AnalysisCrunchSlide",
-    "markdown" = "MarkdownCrunchSlide"
+    "analysis" = "CrunchAnalysisSlide",
+    "markdown" = "CrunchMarkdownSlide"
 )
 CrunchSlide <- function(...) {
     ## Create correct subclass of crunch slide
