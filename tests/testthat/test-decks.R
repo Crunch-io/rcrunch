@@ -360,6 +360,21 @@ with_mock_crunch({
         )
     })
 
+    test_that("markdownSlideImage", {
+        temp_file <- tempfile(fileext = ".png")
+
+        expect_error(
+            markdownSlideImage(temp_file),
+            "Could not find file"
+        )
+
+        write(raw(1), temp_file)
+        expect_true(grepl(
+            "^!\\[.+\\.png\\]\\(data:image/png;base64,.+\\)$",
+            markdownSlideImage(temp_file)
+        ))
+    })
+
     slide <- main_deck[[1]]
     test_that("Slide show method", {
         expect_prints(

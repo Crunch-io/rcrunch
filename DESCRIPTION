@@ -29,6 +29,7 @@ Imports:
     jsonlite (>= 0.9.15),
     methods
 Suggests:
+    base64enc,
     covr,
     crunchy,
     devtools,
@@ -38,6 +39,7 @@ Suggests:
     knitr,
     lintr,
     magrittr,
+    mime,
     rmarkdown,
     rstudioapi,
     spelling,

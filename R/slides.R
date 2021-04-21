@@ -1014,6 +1014,8 @@ set_analysis_filter_or_weight <- function(x, filter, weight) {
 #' Add a new markdown slide to a deck
 #'
 #' Markdown slides allow you to add rich text tiles to your Crunch Dashboards.
+#' `markdownSlideImage()` is a helper for embedding the data of an image from
+#' your computer into the slide.
 #'
 #' @inheritParams newSlide
 #' @param ... Unnamed arguments are text that are combined to create the markdown body
@@ -1033,6 +1035,12 @@ set_analysis_filter_or_weight <- function(x, filter, weight) {
 #'     "- Carrots\n",
 #'     "- Avocado\n",
 #'     title = "Key findings"
+#' )
+#'
+#' newMarkdownSlide(
+#'     deck,
+#'     "crunch.io: ",
+#'     markdownSlideImage("logo.png")
 #' )
 #' }
 newMarkdownSlide <- function(deck, ..., title = "", subtitle = "") {
@@ -1057,4 +1065,15 @@ newMarkdownSlide <- function(deck, ..., title = "", subtitle = "") {
     payload <- wrapEntity(body = body)
     url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
     return(CrunchSlide(crGET(url)))
+}
+
+#' @rdname newMarkdownSlide
+#' @param file Filepath to an image
+#' @export
+markdownSlideImage <- function(file) {
+    if (!file.exists(file)) halt("Could not find file: ", file)
+    paste0(
+        "![", basename(file), "]",
+        "(", base64enc::dataURI(file = file, mime = mime::guess_type(file)), ")"
+    )
 }

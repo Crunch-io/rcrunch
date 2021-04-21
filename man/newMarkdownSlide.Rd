@@ -2,9 +2,12 @@
 % Please edit documentation in R/slides.R
 \name{newMarkdownSlide}
 \alias{newMarkdownSlide}
+\alias{markdownSlideImage}
 \title{Add a new markdown slide to a deck}
 \usage{
 newMarkdownSlide(deck, ..., title = "", subtitle = "")
+
+markdownSlideImage(file)
 }
 \arguments{
 \item{deck}{A Crunch Deck}
@@ -15,12 +18,16 @@ named arguments are passed to the API.}
 \item{title}{The slide's title}
 
 \item{subtitle}{The slide's subtitle}
+
+\item{file}{Filepath to an image}
 }
 \value{
 A \code{MarkdownCrunchSlide}
 }
 \description{
 Markdown slides allow you to add rich text tiles to your Crunch Dashboards.
+\code{markdownSlideImage()} is a helper for embedding the data of an image from
+your computer into the slide.
 }
 \examples{
 \dontrun{
@@ -33,6 +40,12 @@ newMarkdownSlide(
     "- Carrots\n",
     "- Avocado\n",
     title = "Key findings"
+)
+
+newMarkdownSlide(
+    deck,
+    "crunch.io: ",
+    markdownSlideImage("logo.png")
 )
 }
 }
