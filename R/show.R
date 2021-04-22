@@ -552,6 +552,7 @@ setMethod("show", "CrunchDeck", function(object) {
             slideHeaders(titles, subtitles, viz_types),
             collapse = "\n"
         ))
+        cat("\n")
     },
     error = function(e) {
         cat("CrunchDeck with complex contents\n")
