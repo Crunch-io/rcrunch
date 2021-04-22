@@ -1,0 +1,22 @@
+{
+    "body": {
+        "creation_time": "2021-01-02T21:29:59.792000",
+        "description": "",
+        "id": "dk02",
+        "is_public": false,
+        "name": "2 deck about printing",
+        "owner_id": "https://app.crunch.io/api/users/user_id/",
+        "owner_name": "Greg",
+        "team": null
+    },
+    "catalogs": {
+        "slides": "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/"
+    },
+    "description": "Detail of one deck",
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/veg/decks/dk02/",
+    "views": {
+        "export": "https://app.crunch.io/api/datasets/veg/decks/dk02/export/"
+    }
+}
+

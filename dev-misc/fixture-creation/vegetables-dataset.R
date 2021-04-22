@@ -344,13 +344,36 @@ mt <- newMultitable(
     "cat + mr multitable"
 )
 ## Decks ----
-deck <- newDeck(ds, "deck about transforms")
+deck <- newDeck(ds, "1 deck about transforms")
 slide1 <- newSlide(deck, ~ds$healthy_eater, title = "No transforms")
 slide2 <- newSlide(
     deck,
     ~ds$healthy_eater,
     title = "Yes transforms",
     transform = list(rows_dimension = makeDimTransform(hide = "No"))
+)
+
+deck <- newDeck(ds, "2 deck about printing")
+slide1 <- newSlide(
+    deck,
+    ~ds$healthy_eater,
+    title = "donut",
+    display_settings = list(vizType = "donut")
+)
+
+slide2 <- newSlide(
+    deck,
+    ~subvariables(ds$veg_enjoy_ca) + categories(ds$veg_enjoy_ca),
+    title = "table with filter and weight",
+    subtitle = "and a subtitle",
+    filter = ds$age > 18,
+    weight = ds$weight
+)
+
+slide3 <- newMarkdownSlide(
+    deck,
+    "*markdown goes here*",
+    subtitle = "markdown slide"
 )
 
 # Capture fixtures ----
@@ -374,6 +397,12 @@ cube1 <- cube(analyses1[[1]])
 slide2 <- slides(deck)[[2]]
 analyses2 <- analyses(slide2)
 cube2 <- cube(analyses2[[1]])
+
+deck <- decks(ds)[[2]]
+slide1 <- deck[[1]]
+slide2 <- deck[[2]]
+slide3 <- deck[[3]]
+wt <- crGET(self(ds$weight)) # needed for printing of slide with weights
 
 # newSlide() uses a slightly different query (I think it has filter=NULL instead of no filter)
 # than getting the cube from a slide. So for the newSlide test, we make this request explicitly
@@ -423,11 +452,16 @@ stabilize_json_files(
     ),
     list(
         "app.crunch.io/api/datasets/veg/decks.json",
-        list(list("index", 1, "creation_time"), "2021-01-01T21:29:59.791000")
+        list(list("index", 1, "creation_time"), "2021-01-01T21:29:59.791000"),
+        list(list("index", 2, "creation_time"), "2021-01-02T21:29:59.792000")
     ),
     list(
         "app.crunch.io/api/datasets/veg/decks/dk01.json",
         list(list("body", "creation_time"), "2021-01-01T21:29:59.791000")
+    ),
+    list(
+        "app.crunch.io/api/datasets/veg/decks/dk02.json",
+        list(list("body", "creation_time"), "2021-01-02T21:29:59.792000")
     )
 )
 

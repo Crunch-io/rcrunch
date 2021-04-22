@@ -1,0 +1,56 @@
+{
+    "body": {
+        "alias": "weight",
+        "categories": [
+
+        ],
+        "dataset_id": "veg",
+        "derived": false,
+        "description": "Downweight the healthy eaters",
+        "discarded": false,
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "hidden": false,
+        "id": "var_23",
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "name": "Survey Weight",
+        "notes": "survey weight note",
+        "owner": null,
+        "private": false,
+        "secure": false,
+        "type": "numeric",
+        "view": {
+            "column_width": null
+        }
+    },
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/veg/folders/vdir_01/",
+        "parent": "https://app.crunch.io/api/datasets/veg/variables/"
+    },
+    "description": "Details for a given Variable",
+    "element": "shoji:entity",
+    "fragments": {
+        "dataset": "https://app.crunch.io/api/datasets/veg/",
+        "missing_rules": "https://app.crunch.io/api/datasets/veg/variables/var_23/missing_rules/",
+        "user_settings": "https://app.crunch.io/api/datasets/veg/variables/var_23/user_settings/"
+    },
+    "self": "https://app.crunch.io/api/datasets/veg/variables/var_23/",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/veg/"
+    },
+    "views": {
+        "cast": "https://app.crunch.io/api/datasets/veg/variables/var_23/cast/",
+        "frequencies": "https://app.crunch.io/api/datasets/veg/variables/var_23/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/veg/variables/var_23/summary/",
+        "values": "https://app.crunch.io/api/datasets/veg/variables/var_23/values/"
+    }
+}
+
