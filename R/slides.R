@@ -81,6 +81,14 @@ setGeneric("cube", function(x) standardGeneric("cube"))
 #' @export
 setGeneric("cubes", function(x) standardGeneric("cubes"))
 
+#' @rdname newMarkdownSlide
+#' @export
+setGeneric("slideMarkdown", function(x) standardGeneric("slideMarkdown"))
+#' @rdname newMarkdownSlide
+#' @export
+setGeneric("slideMarkdown<-", function(x, value) standardGeneric("slideMarkdown<-"))
+
+
 #' @rdname analysis-methods
 #' @export
 setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
@@ -1079,3 +1087,17 @@ markdownSlideImage <- function(file) {
         "(", base64enc::dataURI(file = file, mime = mime::guess_type(file)), ")"
     )
 }
+
+#' @rdname newMarkdownSlide
+#' @param x A `CrunchMarkdownSlide`
+#' @export
+setMethod("slideMarkdown", c("CrunchMarkdownSlide"), function(x) {
+    x@body$markdown
+})
+
+#' @rdname newMarkdownSlide
+#' @param value A string to replace the markdown content with
+#' @export
+setMethod("slideMarkdown<-", c("CrunchMarkdownSlide", "character"), function(x, value) {
+    setEntitySlot(x, "markdown", value)
+})

@@ -642,7 +642,7 @@ setMethod("show", "CrunchMarkdownSlide", function(object) {
     header <- slideHeaders(title(object), subtitle(object), "markdown")
     cat(paste0(
         "Crunch markdown slide ", header, "\n",
-        truncateString(object@body$markdown, 8)
+        truncateString(slideMarkdown(object), 8)
     ))
 })
 

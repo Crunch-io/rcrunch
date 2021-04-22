@@ -542,6 +542,21 @@ with_mock_crunch({
         )
     })
 
+    # Markdown ----------------------------------------------------------------
+    test_that("can get and set slideMarkdown", {
+        expect_equal(
+            slideMarkdown(deck_veg[[3]]),
+            "*markdown goes here*"
+        )
+
+
+        expect_PATCH(
+            slideMarkdown(deck_veg[[3]]) <- "new markdown",
+            "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s03/",
+            '{"markdown":"new markdown"}'
+        )
+    })
+
 
     # Analyses ----------------------------------------------------------------
 
