@@ -832,7 +832,10 @@ wrapDisplaySettings <- function(settings) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter", "Analysis", function(x, ...) {
-    filt <- x@body$query_environment$filter
+    .filterFromSlide(x@body$query_environment$filter, datasetReference(x))
+})
+
+.filterFromSlide <- function(filt, ds_ref) {
     if (length(filt) == 0) {
         return(NULL)
     } else if (length(filt) == 1 && "filter" %in% names(filt[[1]])) {
@@ -840,20 +843,19 @@ setMethod("filter", "Analysis", function(x, ...) {
         return(CrunchFilter(crGET(filt[[1]]$filter)))
     } else {
         # an adhoc filter
-        ds_url <- datasetReference(x)
         adhoc_expr <- CrunchLogicalExpr(
             expression = idsToURLs(
                 # 02/2021: Not sure if this is still needed anymore, server doesn't
                 # currently seem to be sending the `dataset` attributes this takes out.
                 # But mocks require it (/4/decks/8ad8/slides/72e8/analysies/52fb.json)
                 fixAdhocFilterExpression(filt[[1]]),
-                paste0(ds_url, "/variables/")
+                paste0(ds_ref, "/variables/")
             ),
-            dataset_url = ds_url
+            dataset_url = ds_ref
         )
         return(adhoc_expr)
     }
-})
+}
 
 #' @rdname analysis-methods
 #' @export

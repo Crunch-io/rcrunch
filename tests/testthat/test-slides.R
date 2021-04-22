@@ -1,6 +1,12 @@
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds deck")
     main_deck <- decks(ds)[[2]]
+
+    # Old fixtures haven't kept up with the API so use vegetables dataset
+    # to test printing
+    ds_veg <- cachedLoadDataset("Vegetables example")
+    deck_veg <- decks(ds_veg)[[2]]
+
     # Crunch Slides -----------------------------------------------------------
 
     test_that("New Slide", {
@@ -141,12 +147,6 @@ with_mock_crunch({
     })
 
     slide <- main_deck[[1]]
-    test_that("Slide show method", {
-        expect_prints(
-            slide,
-            get_output(cube(slide))
-        )
-    })
 
     test_that("Slide titles and subtitles", {
         expect_PATCH(
@@ -498,6 +498,51 @@ with_mock_crunch({
     })
 
 
+    test_that("slide printing", {
+        expect_prints(
+            deck_veg[[1]],
+            paste0(
+                "Crunch analysis slide ", dQuote("donut"), " (donut)\n",
+                "- Dimensions:\n",
+                "    - healthy_eater\n",
+                "- Measures:\n",
+                "    - cube_count()"
+            ),
+            fixed = TRUE,
+            crayon.enabled = FALSE
+        )
+
+        expect_prints(
+            deck_veg[[2]],
+            paste0(
+                "Crunch analysis slide ", dQuote("table with filter and weight"),
+                " | and a subtitle (table)\n",
+                "- Dimensions:\n",
+                "    - dimension(veg_enjoy_ca, \"subvariables\")\n",
+                "    - veg_enjoy_ca\n",
+                "- Measures:\n",
+                "    - cube_count()\n",
+                "- Filter:\n",
+                "    - Crunch logical expression: age > 18\n",
+                "- Weight:\n",
+                "    - weight"
+            ),
+            fixed = TRUE,
+            crayon.enabled = FALSE
+        )
+
+        expect_prints(
+            deck_veg[[3]],
+            paste0(
+                "Crunch markdown slide <Untitled> | markdown slide (markdown)\n",
+                "*markdown goes here*"
+            ),
+            fixed = TRUE,
+            crayon.enabled = FALSE
+        )
+    })
+
+
     # Analyses ----------------------------------------------------------------
 
     test_that("Analysis Catalog is ordered correctly", {
@@ -744,4 +789,31 @@ with_mock_crunch({
             "Must specify at least one of `weight` or `filter`"
         )
     })
+})
+
+test_that("truncateString works", {
+    expect_equal(
+        truncateString("0123456789", nlines = 4, width = 3),
+        "0123456789"
+    )
+
+    expect_equal(
+        truncateString("0123456789", nlines = 3, width = 3),
+        "012345678..."
+    )
+
+    expect_equal(
+        truncateString("01\n23\n456789", nlines = 3, width = 3),
+        "01\n23\n456..."
+    )
+
+    expect_equal(
+        truncateString("\n\n0123456789", nlines = 4, width = 3),
+        "\n\n012345..."
+    )
+
+    expect_equal(
+        truncateString("0123456789\n", nlines = 4, width = 3),
+        "0123456789\n"
+    )
 })

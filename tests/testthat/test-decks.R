@@ -3,6 +3,7 @@ context("Interacting with decks")
 with_mock_crunch({
     # Deck Catalog ------------------------------------------------------------
     ds <- cachedLoadDataset("test ds deck")
+    ds_veg <- cachedLoadDataset("Vegetables example")
     test_that("newDeck posts correctly", {
         expect_POST(
             newDeck(ds, "deck1"),
@@ -213,6 +214,23 @@ with_mock_crunch({
                 "https://app.crunch.io/api/datasets/4/decks/8ad8/"
             )
         })
+    })
+
+    # Old fixtures haven't kept up with the API so use vegetables dataset
+    # to test printing
+    deck_veg <- decks(ds_veg)[[2]]
+    test_that("Deck printing", {
+        expect_prints(
+            deck_veg,
+            paste0(
+                "Private CrunchDeck ", dQuote("2 deck about printing"), " with 3 slides:\n",
+                "1) ", dQuote("donut"), " (donut)\n",
+                "2) ", dQuote("table with filter and weight"), " | and a subtitle (table)\n",
+                "3) <Untitled> | markdown slide (markdown)"
+            ),
+            fixed = TRUE,
+            crayon.enabled = FALSE
+        )
     })
 
     # Slide Catalog -----------------------------------------------------------
