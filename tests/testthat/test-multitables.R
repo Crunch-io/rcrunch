@@ -338,6 +338,33 @@ with_mock_crunch({
         )
     })
 
+    test_that("tabBook filter argument with list of expressions", {
+        expect_equal(
+            as.character(toJSON(standardize_tabbook_filter(
+                ds, list(ds$gender == "Male", ds$gender == "Female"))
+            )),
+            paste0(
+                '[{\"function\":\"==\",\"args\":[{\"variable\":',
+                '\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}]},',
+                '{\"function\":\"==\",\"args\":[{\"variable\":',
+                '\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":2}]}]'
+            )
+        )
+    })
+
+    test_that("tabBook filter argument with mixed list", {
+        expect_equal(
+            as.character(toJSON(standardize_tabbook_filter(
+                ds, list(ds$gender == "Male", filters(ds)[1]))
+            )),
+            paste0(
+                '[{\"function\":\"==\",\"args\":[{\"variable\":',
+                '\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}]},',
+                '{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter1/\"}]'
+            )
+        )
+    })
+
     test_that("tabBook can return a subset of variables", {
         expect_equivalent(weight(ds2), ds[["birthyr"]])
         m <- multitables(ds2)[[1]]
