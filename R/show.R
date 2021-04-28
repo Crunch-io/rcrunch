@@ -548,7 +548,7 @@ setMethod("show", "CrunchDeck", function(object) {
 
         cat(paste0(public, " CrunchDeck ", dQuote(name), " with ", length(slides), " slides:\n"))
         cat(paste0(
-            formatC(seq_along(slides), width = nchar(length(slides))), ") ",
+            "    [[", formatC(seq_along(slides), width = nchar(length(slides))), "]]: ",
             slideHeaders(titles, subtitles, viz_types),
             collapse = "\n"
         ))
@@ -593,10 +593,11 @@ setMethod("show", "CrunchAnalysisSlide", function(object) {
             formatExpressionArgs
         )
 
-        measures <- .showSlideHeadingHelper(
-            object@body$analysis$query$measures,
-            "Measures",
-            formatExpressionArgs
+        measures <- object@body$analysis$query$measures
+        measures <- paste0(
+            "- Measures: ",
+            paste0("\"", names(measures), "\" (", formatExpressionArgs(measures), ")", collapse = ", "),
+            "\n"
         )
 
         filter <- .showSlideHeadingHelper(
@@ -610,13 +611,16 @@ setMethod("show", "CrunchAnalysisSlide", function(object) {
             }
         )
 
-        weight <- .showSlideHeadingHelper(
-            object@body$analysis$query_environment$weight,
-            "Weight",
-            function(x) {
-                crGET(x)$body$alias %||% "<unknown>"
-            }
-        )
+        weight <- object@body$analysis$query_environment$weight
+        if (!is.null(weight)) {
+            weight <- paste0(
+                "- Weight: ",
+                crGET(object@body$analysis$query_environment$weight)$body$alias %||% "<unknown>",
+                "\n"
+            )
+        } else {
+            weight <- ""
+        }
 
         cat(paste0(
             "Crunch analysis slide ", slideHeaders(title, subtitle, viz_type), "\n",

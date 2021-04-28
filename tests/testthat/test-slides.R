@@ -505,8 +505,7 @@ with_mock_crunch({
                 "Crunch analysis slide ", dQuote("donut"), " (donut)\n",
                 "- Dimensions:\n",
                 "    - healthy_eater\n",
-                "- Measures:\n",
-                "    - cube_count()"
+                "- Measures: \"count\" (cube_count())"
             ),
             fixed = TRUE,
             crayon.enabled = FALSE
@@ -520,12 +519,10 @@ with_mock_crunch({
                 "- Dimensions:\n",
                 "    - dimension(veg_enjoy_ca, \"subvariables\")\n",
                 "    - veg_enjoy_ca\n",
-                "- Measures:\n",
-                "    - cube_count()\n",
+                "- Measures: \"count\" (cube_count())\n",
                 "- Filter:\n",
                 "    - Crunch logical expression: age > 18\n",
-                "- Weight:\n",
-                "    - weight"
+                "- Weight: weight"
             ),
             fixed = TRUE,
             crayon.enabled = FALSE
