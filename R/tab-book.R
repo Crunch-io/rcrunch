@@ -121,16 +121,19 @@ extToContentType <- function(ext) {
 
 # Possibly went a little overboard allowing different filter options in tabbook
 # extract out the logic here
-standardize_tabbook_filter_types <- function(dataset, filter) {
+standardize_filter_list <- function(filter, dataset = NULL) {
     if (is.null(filter)) {
         return(NULL)
     } else if (all(is.character(filter))) {
+        if (is.null(dataset)) {
+            halt("Dataset unavailable, refer to filter names using `filters(ds)` instead.")
+        }
         filter_name <- filter
         available <- filter_name %in% names(filters(dataset))
         if (any(!available)) {
             halt("Could not find filter named: ", paste(filter_name[!available], collapse = ", "))
         }
-        return(standardize_tabbook_filter_types(dataset, filters(dataset)[filter]))
+        return(standardize_filter_list(filters(dataset)[filter], dataset))
     } else if (inherits(filter, "FilterCatalog")) {
         return(lapply(urls(filter), function(x) { list(filter = x) }))
     } else if (inherits(filter, "CrunchFilter")) {
@@ -138,13 +141,13 @@ standardize_tabbook_filter_types <- function(dataset, filter) {
     } else if (is.Expr(filter)) {
         return(list(zcl(filter)))
     } else if (is.list(filter)) {
-        filter <- lapply(filter, standardize_tabbook_filter_types, dataset = dataset)
+        filter <- lapply(filter, standardize_filter_list, dataset = dataset)
         return(unlist(filter, recursive = FALSE))
     }
     halt("Unknown filter type") #nocov
 }
 standardize_tabbook_filter <- function(dataset, filter) {
-    filter <- standardize_tabbook_filter_types(dataset, filter)
+    filter <- standardize_filter_list(filter, dataset)
 
     expr_filter <- activeFilter(dataset)
     if (is.CrunchExpr(expr_filter)) {
