@@ -356,7 +356,8 @@ fixAdhocFilterExpression <- function(expr) {
         return(fixAdhocFilterExpression(expr@expression))
     } else if ("variable" %in% names(expr) && "dataset" %in% names(expr)) {
         dataset <- expr[["dataset"]]
-        var <- expr[["variable"]]
+        # subvariable id is separated by a "."
+        var <- gsub("\\.", "/subvariables/", expr[["variable"]])
         expr[["dataset"]] <- NULL
         path <- paste0("datasets/", dataset, "/variables/", var, "/") # nolint
         expr[["variable"]] <- absoluteURL(path, getOption("crunch.api"))
