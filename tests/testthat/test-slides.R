@@ -96,7 +96,7 @@ with_mock_crunch({
         )
     })
 
-    test_that("New slide - prevents categories in first dim", {
+    test_that("New slide - prevents ca categories in first dim", {
         expect_error(
             newSlide(
                 main_deck,
@@ -193,7 +193,6 @@ with_mock_crunch({
         )
     })
 
-    slide <- main_deck[[1]]
     an_cat <- analyses(slide)
 
     test_that("slide subsetting", {
@@ -309,36 +308,36 @@ with_mock_crunch({
         expect_PATCH(
             filter(main_deck) <- filters(ds)[["Occasional Political Interest"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/',
-            'datasets/4/filters/filter1/"],"weight":null}'
+            '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
+            'datasets/4/filters/filter1/"}],"weight":null}'
         )
 
         # named filters (through a CrunchSlide)
         expect_PATCH(
             filter(main_deck[[3]]) <- filters(ds)[["Occasional Political Interest"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/',
-            'datasets/4/filters/filter1/"],"weight":null}'
+            '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
+            'datasets/4/filters/filter1/"}],"weight":null}'
         )
         expect_PATCH(
             filter(analysis(main_deck[[3]])) <- filters(ds)[["Public filter"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/',
-            'datasets/4/filters/filter2/"],"weight":null}'
+            '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
+            'datasets/4/filters/filter2/"}],"weight":null}'
         )
 
         # named filters (through the decks catalog)
         expect_PATCH(
             filter(decks(ds)[[2]][[3]]) <- filters(ds)[["Occasional Political Interest"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/',
-            'datasets/4/filters/filter1/"],"weight":null}'
+            '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
+            'datasets/4/filters/filter1/"}],"weight":null}'
         )
         expect_PATCH(
             filter(analysis(decks(ds)[[2]][[3]])) <- filters(ds)[["Public filter"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/',
-            'datasets/4/filters/filter2/"],"weight":null}'
+            '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
+            'datasets/4/filters/filter2/"}],"weight":null}'
         )
     })
 
@@ -477,8 +476,8 @@ with_mock_crunch({
         expect_PATCH(
             filter(decks(ds)[[2]][[4]]) <- filters(ds)[["Public filter"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
-            '{"query_environment":{"filter":["https://app.crunch.io/api/',
-            'datasets/4/filters/filter2/"],"weight":',
+            '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
+            'datasets/4/filters/filter2/"}],"weight":',
             '"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}'
         )
     })
@@ -496,7 +495,6 @@ with_mock_crunch({
             )
         })
     })
-
 
     test_that("slide printing", {
         expect_prints(
@@ -538,6 +536,7 @@ with_mock_crunch({
             crayon.enabled = FALSE
         )
     })
+
 
     # Markdown ----------------------------------------------------------------
     test_that("can get and set slideMarkdown", {

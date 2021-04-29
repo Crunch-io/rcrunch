@@ -5,7 +5,8 @@
 \alias{filter}
 \alias{filter<-}
 \alias{weight<-,CrunchDeck,ANY-method}
-\alias{filter<-,CrunchDeck,ANY-method}
+\alias{filter<-,CrunchDeck-method}
+\alias{filters<-,CrunchDeck,ANY-method}
 \alias{transforms,CrunchAnalysisSlide-method}
 \alias{transforms,AnalysisCatalog-method}
 \alias{transforms,Analysis-method}
@@ -29,7 +30,8 @@
 \alias{analysis<-,CrunchAnalysisSlide,Analysis-method}
 \alias{analysis<-,CrunchAnalysisSlide,list-method}
 \alias{filter,CrunchAnalysisSlide-method}
-\alias{filter<-,CrunchAnalysisSlide,ANY-method}
+\alias{filters,CrunchAnalysisSlide-method}
+\alias{filters<-,CrunchAnalysisSlide,ANY-method}
 \alias{query<-,CrunchAnalysisSlide,ANY-method}
 \alias{cubes,CrunchAnalysisSlide-method}
 \alias{cube,CrunchAnalysisSlide-method}
@@ -50,10 +52,14 @@
 \alias{vizSpecs,Analysis-method}
 \alias{vizSpecs<-,Analysis,ANY-method}
 \alias{filter,Analysis-method}
+\alias{filters,Analysis-method}
 \alias{filter,ANY-method}
-\alias{filter<-,Analysis,CrunchLogicalExpr-method}
-\alias{filter<-,Analysis,CrunchFilter-method}
-\alias{filter<-,Analysis,NULL-method}
+\alias{filter<-,CrunchAnalysisSlide-method}
+\alias{filter<-,Analysis-method}
+\alias{filters<-,Analysis,CrunchLogicalExpr-method}
+\alias{filters<-,Analysis,CrunchFilter-method}
+\alias{filters<-,Analysis,NULL-method}
+\alias{filters<-,Analysis,list-method}
 \alias{slideQueryEnv}
 \alias{cubes,CrunchDeck-method}
 \alias{weight,CrunchAnalysisSlide-method}
@@ -67,7 +73,9 @@ filter(x) <- value
 
 \S4method{weight}{CrunchDeck,ANY}(x) <- value
 
-\S4method{filter}{CrunchDeck,ANY}(x) <- value
+\S4method{filter}{CrunchDeck}(x) <- value
+
+\S4method{filters}{CrunchDeck,ANY}(x) <- value
 
 \S4method{transforms}{CrunchAnalysisSlide}(x)
 
@@ -115,7 +123,9 @@ vizSpecs(x) <- value
 
 \S4method{filter}{CrunchAnalysisSlide}(x, ...)
 
-\S4method{filter}{CrunchAnalysisSlide,ANY}(x) <- value
+\S4method{filters}{CrunchAnalysisSlide}(x)
+
+\S4method{filters}{CrunchAnalysisSlide,ANY}(x) <- value
 
 \S4method{query}{CrunchAnalysisSlide,ANY}(x) <- value
 
@@ -157,15 +167,21 @@ formulaToSlideQuery(query, dataset)
 
 \S4method{filter}{Analysis}(x, ...)
 
+\S4method{filters}{Analysis}(x)
+
 \S4method{filter}{ANY}(x, ...)
 
-\S4method{filter}{CrunchAnalysisSlide,ANY}(x) <- value
+\S4method{filter}{CrunchAnalysisSlide}(x) <- value
 
-\S4method{filter}{Analysis,CrunchLogicalExpr}(x) <- value
+\S4method{filter}{Analysis}(x) <- value
 
-\S4method{filter}{Analysis,CrunchFilter}(x) <- value
+\S4method{filters}{Analysis,CrunchLogicalExpr}(x) <- value
 
-\S4method{filter}{Analysis,`NULL`}(x) <- value
+\S4method{filters}{Analysis,CrunchFilter}(x) <- value
+
+\S4method{filters}{Analysis,`NULL`}(x) <- value
+
+\S4method{filters}{Analysis,list}(x) <- value
 
 slideQueryEnv(weight, filter)
 

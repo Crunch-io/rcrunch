@@ -292,8 +292,17 @@ setMethod("weight<-", c("CrunchDeck", "ANY"), function(x, value) {
 setMethod("filter<-", c("CrunchDeck", "ANY"), function(x, value) {
     # Don't set filter on markdown slides
     lapply(which(types(x) == "analysis"), function(slide_num) {
-        filter(x[[slide_num]]) <- value
+        filters(x[[slide_num]]) <- list(value)
     })
+    return(refresh(x))
+})
 
+#' @rdname analysis-methods
+#' @export
+setMethod("filters<-", c("CrunchDeck", "ANY"), function(x, value) {
+    # Don't set filter on markdown slides
+    lapply(which(types(x) == "analysis"), function(slide_num) {
+        filters(x[[slide_num]]) <- value
+    })
     return(refresh(x))
 })

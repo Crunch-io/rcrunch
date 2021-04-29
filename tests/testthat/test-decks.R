@@ -256,6 +256,7 @@ with_mock_crunch({
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/"]}'
         )
     })
+
 })
 
 test_that("filter gets pass through method on non-crunch objects", {

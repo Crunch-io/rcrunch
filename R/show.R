@@ -604,18 +604,15 @@ setMethod("show", "CrunchAnalysisSlide", function(object) {
             "\n"
         )
 
-        filter <- .showSlideHeadingHelper(
-            .filterFromSlide(
-                object@body$analysis$query_environment$filter,
-                datasetReference(object)
-            ),
-            "Filter",
-            function(x) {
-                paste0(capture.output(show(x)), collapse = "\n")
+        .showSlideHeadingHelper(
+            object@body$analysis$query_environment$filter,
+            "Filters",
+            function(filters) {
+                vapply(filters, function(filter) paste0(capture.output(show(filter)), collapse = "\n"), character(1))
             }
         )
 
-        weight <- object@body$analysis$query_environment$weight
+        weight <- weight(object)
         if (!is.null(weight)) {
             weight <- paste0(
                 "- Weight: ",
@@ -630,11 +627,12 @@ setMethod("show", "CrunchAnalysisSlide", function(object) {
             "Crunch analysis slide ", slideHeaders(title, subtitle, viz_type), "\n",
             dimensions,
             measures,
-            filter,
+            filters,
             weight
         ))
     },
     error = function(e) {
+            print(str(e))
             cat("CrunchAnalysisSlide with complex contents\n")
         }
     )

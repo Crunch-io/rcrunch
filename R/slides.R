@@ -581,15 +581,21 @@ setMethod("analysis<-", c("CrunchAnalysisSlide", "list"), function(x, value) {
 #' @export
 setMethod("filter", "CrunchAnalysisSlide", function(x, ...) {
     analysis <- analyses(x)[[1]]
-    return(filter(analysis))
+    return(filter(analysis))})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filters", "CrunchAnalysisSlide", function(x) {
+    analysis <- analyses(x)[[1]]
+    return(filters(analysis))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("CrunchAnalysisSlide", "ANY"), function(x, value) {
+setMethod("filters<-", c("CrunchAnalysisSlide", "ANY"), function(x, value) {
     # check that there is only on analysis?
     first_analysis <- analyses(x)[[1]]
-    filter(first_analysis) <- value
+    filters(first_analysis) <- value
     return(invisible(x))
 })
 
@@ -840,30 +846,83 @@ wrapDisplaySettings <- function(settings) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter", "Analysis", function(x, ...) {
-    .filterFromSlide(x@body$query_environment$filter, datasetReference(x))
+    out <- filters(x)
+    if (length(out) > 1) {
+        warning("More than one filter detected, returning first. Use `filters()` to get them all.")
+    }
+    out[[1]]
 })
 
-.filterFromSlide <- function(filt, ds_ref) {
+
+setMethod("filters", "Analysis", function(x) {
+    filt <- x@body$query_environment$filter
+
     if (length(filt) == 0) {
         return(NULL)
-    } else if (length(filt) == 1 && "filter" %in% names(filt[[1]])) {
-        # a saved filter
-        return(CrunchFilter(crGET(filt[[1]]$filter)))
-    } else {
-        # an adhoc filter
-        adhoc_expr <- CrunchLogicalExpr(
-            expression = idsToURLs(
-                # 02/2021: Not sure if this is still needed anymore, server doesn't
-                # currently seem to be sending the `dataset` attributes this takes out.
-                # But mocks require it (/4/decks/8ad8/slides/72e8/analysies/52fb.json)
-                fixAdhocFilterExpression(filt[[1]]),
-                paste0(ds_ref, "/variables/")
-            ),
-            dataset_url = ds_ref
-        )
-        return(adhoc_expr)
     }
-}
+
+    ds_ref <- datasetReference(x)
+    # jsonlite unboxes a single filter so it's no longer a list of lists
+    # but to make code more consistent, we add it back.
+    if (!is.null(names(filters))) {
+        filters <- list(filters)
+    }
+
+    lapply(filters, function(filt) {
+        if ("filter" %in% names(filt)) {
+            CrunchFilter(crGET(filt$filter))
+        } else {
+            # an adhoc filter
+            ds_url <- datasetReference(x)
+            adhoc_expr <- CrunchLogicalExpr(
+                expression = idsToURLs(
+                    # 02/2021: Not sure if this is still needed anymore, server doesn't
+                    # currently seem to be sending the `dataset` attributes this takes out.
+                    # But mocks require it (/4/decks/8ad8/slides/72e8/analysies/52fb.json)
+                    fixAdhocFilterExpression(filt),
+                    paste0(ds_ref, "/variables/")
+                ),
+                dataset_url = ds_ref
+            )
+            adhoc_expr
+        }
+    })
+})
+
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filters", "Analysis", function(x) {
+    filters <- x@body$query_environment$filter
+    if (length(filters) == 0) {
+        return(NULL)
+    }
+    ds_url <- datasetReference(x)
+    # jsonlite unboxes a single filter so it's no longer a list of lists
+    # but to make code more consistent, we add it back.
+    if (!is.null(names(filters))) {
+        filters <- list(filters)
+    }
+    lapply(filters, function(filt) {
+        if ("filter" %in% names(filt)) {
+            CrunchFilter(crGET(filt$filter))
+        } else {
+            # an adhoc filter
+            ds_url <- datasetReference(x)
+            adhoc_expr <- CrunchLogicalExpr(
+                expression = idsToURLs(
+                    # 02/2021: Not sure if this is still needed anymore, server doesn't
+                    # currently seem to be sending the `dataset` attributes this takes out.
+                    # But mocks require it (/4/decks/8ad8/slides/72e8/analysies/52fb.json)
+                    fixAdhocFilterExpression(filt),
+                    paste0(ds_url, "/variables/")
+                ),
+                dataset_url = ds_url
+            )
+            adhoc_expr
+        }
+    })
+})
 
 #' @rdname analysis-methods
 #' @export
@@ -880,29 +939,43 @@ setMethod("filter", "ANY", function(x, ...) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", "CrunchAnalysisSlide", function(x, value) {
-    analysis <- analyses(x)[[1]]
-    filter(analysis) <- value
+    filters(x) <- list(value)
     return(invisible(x))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
+setMethod("filter<-", "Analysis", function(x, value) {
+    filters(x) <- list(value)
+    return(invisible(x))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filters<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
     return(set_analysis_filter_or_weight(x, filter = list(value@expression)))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("Analysis", "CrunchFilter"), function(x, value) {
+setMethod("filters<-", c("Analysis", "CrunchFilter"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
     return(set_analysis_filter_or_weight(x, filter = list(self(value))))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
+setMethod("filters<-", c("Analysis", "NULL"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
     return(set_analysis_filter_or_weight(x, filter = list()))
+})
+
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filters<-", c("Analysis", "list"), function(x, value) {
+    filter <- standardize_filter_list(value)
+    return(set_analysis_filter_or_weight(x, filter = filter))
 })
 
 #' @rdname analysis-methods
@@ -1005,6 +1078,7 @@ setMethod("weight<-", c("Analysis", "NULL"), function(x, value) {
 set_analysis_filter_or_weight <- function(x, filter, weight) {
     query_env <- slot(x, "body")[["query_environment"]]
     # The single "[" <- list() notation allows NULLs in weight rather than just removing weight
+    if (!missing(filter) && is.null(filter)) filter <- list()
     if (!missing(filter)) query_env["filter"] <- list(filter)
     if (!missing(weight)) query_env["weight"] <- list(weight)
 
