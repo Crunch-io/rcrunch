@@ -261,43 +261,43 @@ with_mock_crunch({
         )
     })
 
-    test_that("filter display for slides (and analyses)", {
-        expect_identical(filter(slide), NULL)
-        expect_prints(filter(slide), "NULL")
+    test_that("filters display for slides (and analyses)", {
+        expect_identical(filters(slide), NULL)
+        expect_prints(filters(slide), "NULL")
         # filter() on slide and analysis are identical (a shortcut when there is
         # one analysis)
-        expect_identical(filter(slide), filter(analysis(slide)))
+        expect_identical(filters(slide), filters(analysis(slide)))
 
         # main_deck[[2]] has a saved filter (though it has two analyses)
-        expect_is(filter(analyses(main_deck[[2]])[[1]]), "CrunchFilter")
+        expect_is(filters(analyses(main_deck[[2]])[[1]])[[1]], "CrunchFilter")
         expect_prints(
-            filter(analyses(main_deck[[2]])[[1]]),
+            filters(analyses(main_deck[[2]])[[1]])[[1]],
             'Crunch filter .*Occasional Political Interest.*\nExpression: gender %in% "Male"',
             fixed = FALSE
         )
 
         # main_deck[[3]] has an adhoc filter
-        expect_is(filter(main_deck[[3]]), "CrunchExpr")
+        expect_is(filters(main_deck[[3]])[[1]], "CrunchExpr")
         expect_prints(
-            filter(main_deck[[3]]),
+            filters(main_deck[[3]])[[1]],
             'Crunch logical expression: gender %in% "Male"'
         )
         # filter() on slide and analysis are identical (a shortcut when there is
         # one analysis)
-        expect_identical(filter(main_deck[[3]]), filter(analysis(main_deck[[3]])))
+        expect_identical(filters(main_deck[[3]]), filters(analysis(main_deck[[3]])))
     })
 
-    test_that("filter<-something for slides (and analyses)", {
+    test_that("filters<-something for slides (and analyses)", {
         # Ad-hoc expressions
         expect_PATCH(
-            filter(decks(ds)[[2]][[3]]) <- ds$birthyr > 1990,
+            filters(decks(ds)[[2]][[3]]) <- ds$birthyr > 1990,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[{"function":">","args":[{"variable":',
             '"https://app.crunch.io/api/datasets/4/variables/birthyr/"},{"value":1990}]}],',
             '"weight":null}}'
         )
         expect_PATCH(
-            filter(analysis(decks(ds)[[2]][[3]])) <- ds$birthyr > 1990,
+            filters(analysis(decks(ds)[[2]][[3]])) <- ds$birthyr > 1990,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[{"function":">","args":[{"variable":',
             '"https://app.crunch.io/api/datasets/4/variables/birthyr/"},{"value":1990}]}],',
@@ -306,7 +306,7 @@ with_mock_crunch({
 
         # named filters (through a CrunchDeck object)
         expect_PATCH(
-            filter(main_deck) <- filters(ds)[["Occasional Political Interest"]],
+            filters(main_deck) <- filters(ds)[["Occasional Political Interest"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
             '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
             'datasets/4/filters/filter1/"}],"weight":null}'
@@ -314,13 +314,13 @@ with_mock_crunch({
 
         # named filters (through a CrunchSlide)
         expect_PATCH(
-            filter(main_deck[[3]]) <- filters(ds)[["Occasional Political Interest"]],
+            filters(main_deck[[3]]) <- filters(ds)[["Occasional Political Interest"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
             'datasets/4/filters/filter1/"}],"weight":null}'
         )
         expect_PATCH(
-            filter(analysis(main_deck[[3]])) <- filters(ds)[["Public filter"]],
+            filters(analysis(main_deck[[3]])) <- filters(ds)[["Public filter"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
             'datasets/4/filters/filter2/"}],"weight":null}'
@@ -328,13 +328,13 @@ with_mock_crunch({
 
         # named filters (through the decks catalog)
         expect_PATCH(
-            filter(decks(ds)[[2]][[3]]) <- filters(ds)[["Occasional Political Interest"]],
+            filters(decks(ds)[[2]][[3]]) <- filters(ds)[["Occasional Political Interest"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
             'datasets/4/filters/filter1/"}],"weight":null}'
         )
         expect_PATCH(
-            filter(analysis(decks(ds)[[2]][[3]])) <- filters(ds)[["Public filter"]],
+            filters(analysis(decks(ds)[[2]][[3]])) <- filters(ds)[["Public filter"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
             'datasets/4/filters/filter2/"}],"weight":null}'
@@ -343,22 +343,22 @@ with_mock_crunch({
 
     test_that("filter<-NULL for slides (and analyses)", {
         expect_PATCH(
-            filter(decks(ds)[[2]][[3]]) <- NULL,
+            filters(decks(ds)[[2]][[3]]) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[],"weight":null}}'
         )
         expect_PATCH(
-            filter(analysis(decks(ds)[[2]][[3]])) <- NULL,
+            filters(analysis(decks(ds)[[2]][[3]])) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[],"weight":null}}'
         )
         expect_PATCH(
-            filter(main_deck[[3]]) <- NULL,
+            filters(main_deck[[3]]) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[],"weight":null}}'
         )
         expect_PATCH(
-            filter(analysis(main_deck[[3]])) <- NULL,
+            filters(analysis(main_deck[[3]])) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[],"weight":null}}'
         )
@@ -474,7 +474,7 @@ with_mock_crunch({
         )
         # Can add a filter when weight exists
         expect_PATCH(
-            filter(decks(ds)[[2]][[4]]) <- filters(ds)[["Public filter"]],
+            filters(decks(ds)[[2]][[4]]) <- filters(ds)[["Public filter"]],
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
             '{"query_environment":{"filter":[{"filter":"https://app.crunch.io/api/',
             'datasets/4/filters/filter2/"}],"weight":',

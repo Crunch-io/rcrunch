@@ -40,9 +40,13 @@
 #' # show on the slide)
 #'
 #' # Change the filter
-#' filter(slide) <- NULL # to remove a filter
-#' filter(slide) <- filters(ds)[["My filter"]]
-#' filter(deck) <- filters(ds)[["My filter"]] # Can set the same filter on a whole deck too
+#' filters(slide) <- NULL # to remove a filter
+#' filters(slide) <- filters(ds)[["My filter"]]
+#' filters(slide) <- list( # Can set multiple filter
+#'     filters(ds)[["My filter"]],
+#'     ds$age_grp == "18-35"
+#' )
+#' filters(deck) <- filters(ds)[["My filter"]] # Can set the same filter on a whole deck too
 #'
 #' # Change the weight
 #' weight(slide) <- NULL # to remove
@@ -580,14 +584,20 @@ setMethod("analysis<-", c("CrunchAnalysisSlide", "list"), function(x, value) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter", "CrunchAnalysisSlide", function(x, ...) {
-    analysis <- analyses(x)[[1]]
-    return(filter(analysis))})
+    deprecate_filter("CrunchSlide")
+})
 
 #' @rdname analysis-methods
 #' @export
 setMethod("filters", "CrunchAnalysisSlide", function(x) {
     analysis <- analyses(x)[[1]]
     return(filters(analysis))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filter<-", c("CrunchSlide", "ANY"), function(x, value) {
+    deprecate_filter("CrunchSlide", arrow = TRUE)
 })
 
 #' @rdname analysis-methods
@@ -846,11 +856,7 @@ wrapDisplaySettings <- function(settings) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter", "Analysis", function(x, ...) {
-    out <- filters(x)
-    if (length(out) > 1) {
-        warning("More than one filter detected, returning first. Use `filters()` to get them all.")
-    }
-    out[[1]]
+    deprecate_filter("Analysis")
 })
 
 
@@ -939,15 +945,17 @@ setMethod("filter", "ANY", function(x, ...) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", "CrunchAnalysisSlide", function(x, value) {
-    filters(x) <- list(value)
-    return(invisible(x))
+    deprecate_filter("Analysis", arrow = TRUE)
 })
 
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", "Analysis", function(x, value) {
-    filters(x) <- list(value)
-    return(invisible(x))
+    deprecate_filter("Analysis", arrow = TRUE)
+})
+
+setMethod("filter<-", c("Analysis", "ANY"), function(x, value) {
+    deprecate_filter("Analysis", arrow = TRUE)
 })
 
 #' @rdname analysis-methods
@@ -960,7 +968,7 @@ setMethod("filters<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
 #' @export
 setMethod("filters<-", c("Analysis", "CrunchFilter"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
-    return(set_analysis_filter_or_weight(x, filter = list(self(value))))
+    return(set_analysis_filter_or_weight(x, filter = standardize_filter_list(value)))
 })
 
 #' @rdname analysis-methods
@@ -1046,7 +1054,7 @@ setMethod("weight", "Analysis", function(x) {
     }
     full_ds <- loadDataset(datasetReference(VariableEntity(x)))
     wt_pos <- which(urls(allVariables(full_ds)) == wt)
-    filt <- filter(x)
+    filt <- filters(x)
     if (inherits(filt, "CrunchFilter")) {
         filt <- CrunchLogicalExpr(
             dataset_url = self(full_ds),
@@ -1175,3 +1183,12 @@ setMethod("slideMarkdown", c("CrunchMarkdownSlide"), function(x) {
 setMethod("slideMarkdown<-", c("CrunchMarkdownSlide", "character"), function(x, value) {
     setEntitySlot(x, "markdown", value)
 })
+
+deprecate_filter <- function(type, arrow = FALSE) {
+    arrow <- if (arrow) "<-" else ""
+    msg <- paste0(
+        "`filter", "()", arrow, "` is no longer supported on ", type, ". Use ",
+        "`filter", crayon::bold(crayon::underline("s")), "()", arrow, "` instead."
+    )
+    halt(msg)
+}

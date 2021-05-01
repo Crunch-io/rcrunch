@@ -256,7 +256,6 @@ with_mock_crunch({
             '"https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/"]}'
         )
     })
-
 })
 
 test_that("filter gets pass through method on non-crunch objects", {
@@ -433,16 +432,16 @@ with_test_authentication({
         filters(ds)[["v1 over 0"]] <- ds$v1 > 0
 
         # add filters
-        filter(deck[[1]]) <- filters(ds)[["v4 is B"]]
-        filter(analysis(deck[[2]])) <- filters(ds)[["v1 over 0"]]
+        filters(deck[[1]]) <- filters(ds)[["v4 is B"]]
+        filters(analysis(deck[[2]])) <- filters(ds)[["v1 over 0"]]
 
         # check filters
-        expect_identical(filter(deck[[1]]), filters(ds)[["v4 is B"]])
-        expect_identical(filter(analysis(deck[[2]])), filters(ds)[["v1 over 0"]])
+        expect_identical(filters(deck[[1]]), list(filters(ds)[["v4 is B"]]))
+        expect_identical(filters(analysis(deck[[2]])), list(filters(ds)[["v1 over 0"]]))
 
         # remove filters
-        filter(deck[[1]]) <- NULL
-        filter(analysis(deck[[2]])) <- NULL
+        filters(deck[[1]]) <- NULL
+        filters(analysis(deck[[2]])) <- NULL
 
         # make sure that the slides are still all the same
         deck <- refresh(deck)
