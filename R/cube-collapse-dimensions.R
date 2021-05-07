@@ -64,19 +64,13 @@ dimSums <- function(x, margin = NULL) {
 
 only_count_cube <- function(cube) {
     # ensure that the cube is a counts cube
-    # TODO: this should be made more robust by parsing the ZCL from the
-    # expression instead of reaching inside
-    # TODO: S4 is really letting us down here, we want to subset the
-    # cube's internal structure by name but @.Data doesn't have names
-    # and using just `cube$query` could be masked by a user if the
-    # cube has something named query since we override indexing.
-    query_pos <- which(cube@names == "query")
-    measures <- cube@.Data[[query_pos]]$measures
-    measures_types <- lapply(measures, function(x) {
-        return(x[["function"]])
-    })
+    measure_types <- vapply(
+        names(cube@arrays),
+        function(measure) cubeMeasureType(cube, measure),
+        character(1)
+    )
 
-    noncounts <- setdiff(measures_types, c("cube_count"))
+    noncounts <- setdiff(measure_types, c("count", ".unweighted_counts"))
     if (length(noncounts) > 0) {
         msg <- c(
             "You can't use CrunchCubes with measures other than count. ",
