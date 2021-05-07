@@ -102,6 +102,8 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' @param is_file The default guesses whether a file or string was
 #' used in the `script` argument, but you can override the heuristics
 #' by specifying `TRUE` for a file, and `FALSE` for a string.
+#' @param encoding The encoding the script file is saved as on your
+#' machine. Defaults to UTF-8.
 #' @param ... Additional options, such as `dry_run = TRUE` passed on
 #' to the API
 #'
@@ -131,14 +133,20 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' }
 #' @export
 #' @seealso [`automation-undo`] & [`script-catalog`]
-runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(script), ...) {
+runCrunchAutomation <- function(
+    dataset,
+    script,
+    is_file = string_is_file_like(script),
+    encoding = "UTF-8",
+    ...
+) {
     reset_automation_error_env()
     stopifnot(is.dataset(dataset))
     stopifnot(is.character(script))
 
     if (is_file) {
         automation_error_env$file <- script
-        script <- readLines(script, encoding = "UTF-8", warn = FALSE)
+        script <- readLines(script, encoding = encoding, warn = FALSE)
     } else {
         automation_error_env$file <- NULL
     }
@@ -207,7 +215,7 @@ crunchAutomationErrorHandler <- function(response) {
     msg <- http_status(response)$message
     automation_messages <- try(content(response)$resolution, silent = TRUE)
 
-    if (!is.error(automation_messages)) {
+    if (!is.error(automation_messages) && !is.null(automation_messages)) {
         # dig into the response to get the script as we sent it to the server
         request_body <- fromJSON(rawToChar(response$request$options$postfields))
         automation_error_env$script <- request_body$body$body
@@ -244,6 +252,13 @@ crunchAutomationErrorHandler <- function(response) {
         }
 
         msg <- paste("Crunch Automation Error\n", error_items, more_info_text, sep = "")
+    } else {
+        # could also have information in message property
+        # try to use it if it's a character string
+        other_msg <- try(content(response)[["message"]], silent = TRUE) #nocov
+        if (is.character(other_msg)) { #nocov
+            msg <- paste0(msg, " - ", paste0(other_msg, collapse = "\n")) #nocov
+        }
     }
     halt(msg)
 }

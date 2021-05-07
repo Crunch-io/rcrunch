@@ -9,6 +9,7 @@ runCrunchAutomation(
   dataset,
   script,
   is_file = string_is_file_like(script),
+  encoding = "UTF-8",
   ...
 )
 
@@ -23,6 +24,9 @@ or a string the syntax loaded in R.}
 \item{is_file}{The default guesses whether a file or string was
 used in the \code{script} argument, but you can override the heuristics
 by specifying \code{TRUE} for a file, and \code{FALSE} for a string.}
+
+\item{encoding}{The encoding the script file is saved as on your
+machine. Defaults to UTF-8.}
 
 \item{...}{Additional options, such as \code{dry_run = TRUE} passed on
 to the API}
