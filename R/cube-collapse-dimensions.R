@@ -66,7 +66,7 @@ only_count_cube <- function(cube) {
     # ensure that the cube is a counts cube
     # TODO: this should be made more robust by parsing the ZCL from the
     # expression instead of reaching inside
-    measures <- cube@.Data[[1]]$measures
+    measures <- cube@.Data[["query"]]$measures
     measures_types <- lapply(measures, function(x) {
         return(x[["function"]])
     })
