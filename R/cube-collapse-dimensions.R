@@ -66,7 +66,12 @@ only_count_cube <- function(cube) {
     # ensure that the cube is a counts cube
     # TODO: this should be made more robust by parsing the ZCL from the
     # expression instead of reaching inside
-    measures <- cube@.Data[["query"]]$measures
+    # TODO: S4 is really letting us down here, we want to subset the
+    # cube's internal structure by name but @.Data doesn't have names
+    # and using just `cube$query` could be masked by a user if the
+    # cube has something named query since we override indexing.
+    query_pos <- which(cube@names == "query")
+    measures <- cube@.Data[[query_pos]]$measures
     measures_types <- lapply(measures, function(x) {
         return(x[["function"]])
     })

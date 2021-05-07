@@ -498,7 +498,7 @@ Subvariables <- setClass("Subvariables",
 CubeDims <- setClass("CubeDims", contains = "namedList")
 
 CrunchCube <- setClass("CrunchCube",
-    contains = "list",
+    contains = "namedList",
     slots = c(
         useNA = "character",
         dims = "CubeDims",
