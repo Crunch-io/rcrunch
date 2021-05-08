@@ -281,7 +281,7 @@ with_test_authentication({
         )
     })
 
-    test_that("only_cube_count() prevents use with non-count cubes", {
+    test_that("only_count_cube() prevents use with non-count cubes", {
         multi_measures <- crtabs(list(mean(ndogs), max(ndogs)) ~ allpets + q1, data = ds)
         expect_error(
             only_count_cube(multi_measures),

@@ -75,7 +75,7 @@ only_count_cube <- function(cube) {
         msg <- c(
             "You can't use CrunchCubes with measures other than count. ",
             "The cube you provided included measures: ",
-            serialPaste(noncounts)
+            serialPaste(sort(noncounts))
         )
         halt(msg)
     }
