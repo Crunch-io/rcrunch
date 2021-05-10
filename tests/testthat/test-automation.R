@@ -147,6 +147,7 @@ with_mock_crunch({
         expect_equal(
             failures,
             list(
+                last_attempted_script = "RENAME wrong_var_name TO age;",
                 file = NULL,
                 errors = data.frame(
                     column = NA,
@@ -182,6 +183,7 @@ with_mock_crunch({
         expect_equal(
             failures,
             list(
+                last_attempted_script = "RENAME wrong_var_name TO age;\nRENAME wrong_var_name2 TO age;",
                 file = NULL,
                 errors = data.frame(
                     column = c(NA, NA),
