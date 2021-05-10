@@ -220,6 +220,17 @@ with_mock_crunch({
         )
     })
 
+    test_that("Get message on success when dry_run is TRUE", {
+        with_POST(
+            "", # Don't actually need to load anything, just need no POST error
+            expect_message(
+                runCrunchAutomation(ds, "# no commands", dry_run = TRUE),
+                "Script dry run was successful"
+            )
+        )
+
+    })
+
     test_that("error truncation works", {
         expected <- " - (line 1) Error 1\n - (line 2) Error 2\n - ... (Showing first 2 of 3 errors)"
         attr(expected, "truncated") <- TRUE
