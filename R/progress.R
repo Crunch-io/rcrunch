@@ -12,7 +12,7 @@
 #' value.
 #' @export
 #' @importFrom httpcache uncached
-pollProgress <- function(progress_url, wait = .5) {
+pollProgress <- function(progress_url, wait = .5, error_handler = NULL) {
     ## Configure polling interval. Will increase by rate (>1) until reaches max
     max.wait <- 30
     increase.by <- 1.2
@@ -37,7 +37,9 @@ pollProgress <- function(progress_url, wait = .5) {
     }
     close(pb)
 
-    if (status < 0) {
+    if (status < 0 && !is.null(error_handler)) {
+        return(error_handler(prog))
+    } else if (status < 0) {
         email <- "There was an error on the server. Please contact support@crunch.io"
         msg <- prog$message %||% email
         halt(msg)

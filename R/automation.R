@@ -153,10 +153,13 @@ runCrunchAutomation <- function(
     if (length(script) != 1) script <- paste(script, collapse = "\n")
 
     body <- list(body = script, ...)
+    automation_error_env$last_attempted_script <- script
+
     crPOST(
         shojiURL(dataset, "catalogs", "scripts"),
         body = toJSON(wrapEntity(body = body)),
-        status.handlers = list(`400` = crunchAutomationErrorHandler)
+        status.handlers = list(`400` = crunchAutomationErrorHandler),
+        progress.handler = crunchAutomationErrorHandler
     )
     # Provide feedback for dry_run success so that user is confident it was succesful
     if (isTRUE(body$dry_run)) message("Script dry run was successful")
@@ -209,18 +212,27 @@ make_rstudio_markers <- function(errors) {
     rstudioapi::sourceMarkers("crunchAutomation", markers)
 }
 # nocov end
+
 #' @importFrom jsonlite fromJSON
 #' @importFrom httr http_status content
 crunchAutomationErrorHandler <- function(response) {
-    msg <- http_status(response)$message
-    automation_messages <- try(content(response)$resolution, silent = TRUE)
+    # Get data from appropriate place if it's a direct httr response
+    # or if it's from pollProgress (because validation was async)
+    # TODO: If this becomes a common pattern, should probably put
+    # somewhere else
+    if (inherits(response, "response")) {
+        msg <- http_status(response)$message
+        response_content <- content(response)
+    }  else {
+        msg <- response$message$description
+        response_content <- response$message
+    }
+    automation_messages <- try(response_content$resolution, silent = TRUE)
 
     if (!is.error(automation_messages) && !is.null(automation_messages)) {
-        # dig into the response to get the script as we sent it to the server
-        request_body <- fromJSON(rawToChar(response$request$options$postfields))
-        automation_error_env$script <- request_body$body$body
+        automation_error_env$script <- automation_error_env$last_attempted_script
 
-        # And convert the full information of the error messages into a data.frame
+        # convert the full information of the error messages into a data.frame
         automation_error_cols <- c("column", "command", "line", "message")
         errors <- lapply(
             automation_messages,
