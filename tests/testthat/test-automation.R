@@ -200,6 +200,26 @@ with_mock_crunch({
         )
     })
 
+    test_that("Can interpret error from async script failures", {
+        # Override progress with a pre-generated JSON at the url
+        with_mock(
+            `crunch::crPOST` = function(..., progress.handler = NULL) {
+                capture.output(crunch::pollProgress(
+                    "https://app.crunch.io/api/progress-failed-async-script.json",
+                    wait = 0.01,
+                    error_handler = progress.handler
+                ))
+            }, {
+                expect_error(ds <- runCrunchAutomation(ds, "NOT A COMMAND"), "Crunch Automation Error")
+            }
+        )
+
+        expect_message(
+            failures <- showScriptErrors(),
+            "\\(line 1\\) Invalid command: NOT",
+        )
+    })
+
     test_that("error truncation works", {
         expected <- " - (line 1) Error 1\n - (line 2) Error 2\n - ... (Showing first 2 of 3 errors)"
         attr(expected, "truncated") <- TRUE
