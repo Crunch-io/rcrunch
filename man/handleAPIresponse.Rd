@@ -4,12 +4,15 @@
 \alias{handleAPIresponse}
 \title{Do the right thing with the HTTP response}
 \usage{
-handleAPIresponse(response, special.statuses = list())
+handleAPIresponse(response, special.statuses = list(), progress.handler = NULL)
 }
 \arguments{
 \item{response}{an httr response object}
 
 \item{special.statuses}{an optional named list of functions by status code.}
+
+\item{progress.handler}{an optional function that resolves errors raised
+during an async request}
 }
 \value{
 The full HTTP response object, just the content, or any other

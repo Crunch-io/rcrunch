@@ -6,6 +6,8 @@
 #' @param progress_url A Crunch progress URL
 #' @param wait Number of seconds to wait between polling. This time is increased
 #' 20 percent on each poll.
+#' @param error_handler An optional function that takes the status object
+#' when the progress is less than 0 (meaning the request failed)
 #' @return The percent completed of the progress. Assuming the
 #' `options(crunch.timeout)` (default: 15 minutes) hasn't been reached, this
 #' will be 100. If the timeout is reached, it will be the last reported progress
