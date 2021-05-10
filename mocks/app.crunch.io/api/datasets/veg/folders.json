@@ -1,8 +1,5 @@
 {
     "body": {
-        "app_settings": {
-
-        },
         "name": "Root"
     },
     "catalogs": {
@@ -128,6 +125,9 @@
         }
     },
     "self": "https://app.crunch.io/api/datasets/veg/folders/",
-    "size": 9
+    "size": 9,
+    "views": {
+        "script": "https://app.crunch.io/api/datasets/veg/folders/script/"
+    }
 }
 
