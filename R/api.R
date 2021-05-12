@@ -7,7 +7,7 @@
 #' @param status.handlers named list of specific HTTP statuses and a response
 #' function to call in the case where that status is returned. Passed to the
 #' [handleAPIresponse()] function.
-#' progress.handler an optional function that resolves errors raised
+#' @param progress.handler an optional function that resolves errors raised
 #' during an async request. Passed to the [`pollProgress()`] function.
 #' @keywords internal
 crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(), progress.handler = NULL, ...) {
@@ -57,8 +57,9 @@ crDELETE <- function(...) crunchAPI("DELETE", ...)
 #' Do the right thing with the HTTP response
 #' @param response an httr response object
 #' @param special.statuses an optional named list of functions by status code.
-#' @param progress.handler an optional function that resolves errors raised
-#' during an async request
+#' @param progress.handler an optional function to handle errors reported by
+#' a progress result. Default NULL prints the string `message`; other
+#' functions required to handle non-string messages in progress responses.
 #' @return The full HTTP response object, just the content, or any other
 #' status-specific action
 #' @importFrom httr content http_status

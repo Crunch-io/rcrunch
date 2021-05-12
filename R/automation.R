@@ -102,8 +102,9 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' @param is_file The default guesses whether a file or string was
 #' used in the `script` argument, but you can override the heuristics
 #' by specifying `TRUE` for a file, and `FALSE` for a string.
-#' @param encoding The encoding the script file is saved as on your
-#' machine. Defaults to UTF-8.
+#' @param encoding Optional encoding to convert **from**, defaults to UTF-8.
+#' The API accepts only UTF-8, so all text will be converted to UTF-8 before
+#' being sent to the server.
 #' @param ... Additional options, such as `dry_run = TRUE` passed on
 #' to the API
 #'

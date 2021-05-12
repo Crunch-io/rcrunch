@@ -25,8 +25,9 @@ or a string the syntax loaded in R.}
 used in the \code{script} argument, but you can override the heuristics
 by specifying \code{TRUE} for a file, and \code{FALSE} for a string.}
 
-\item{encoding}{The encoding the script file is saved as on your
-machine. Defaults to UTF-8.}
+\item{encoding}{Optional encoding to convert \strong{from}, defaults to UTF-8.
+The API accepts only UTF-8, so all text will be converted to UTF-8 before
+being sent to the server.}
 
 \item{...}{Additional options, such as \code{dry_run = TRUE} passed on
 to the API}

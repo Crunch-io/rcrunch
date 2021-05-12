@@ -11,8 +11,9 @@ handleAPIresponse(response, special.statuses = list(), progress.handler = NULL)
 
 \item{special.statuses}{an optional named list of functions by status code.}
 
-\item{progress.handler}{an optional function that resolves errors raised
-during an async request}
+\item{progress.handler}{an optional function to handle errors reported by
+a progress result. Default NULL prints the string \code{message}; other
+functions required to handle non-string messages in progress responses.}
 }
 \value{
 The full HTTP response object, just the content, or any other

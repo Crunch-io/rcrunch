@@ -22,8 +22,9 @@ crunchAPI(
 
 \item{status.handlers}{named list of specific HTTP statuses and a response
 function to call in the case where that status is returned. Passed to the
-\code{\link[=handleAPIresponse]{handleAPIresponse()}} function.
-progress.handler an optional function that resolves errors raised
+\code{\link[=handleAPIresponse]{handleAPIresponse()}} function.}
+
+\item{progress.handler}{an optional function that resolves errors raised
 during an async request. Passed to the \code{\link[=pollProgress]{pollProgress()}} function.}
 
 \item{...}{additional arguments passed to \code{GET}, \code{PUT},
