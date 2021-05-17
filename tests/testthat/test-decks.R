@@ -1067,12 +1067,12 @@ with_test_authentication({
         settings <- displaySettings(analysis)
         expect_is(settings, "list")
         expect_equal(
-            names(settings),
-            c(
+            sort(names(settings)),
+            sort(c(
                 "percentageDirection", "showEmpty", "showMean", "vizType",
                 "countsOrPercents", "decimalPlaces", "populationMagnitude",
                 "showSignif", "currentTab", "uiView"
-            )
+            ))
         )
         expect_equal(settings$countsOrPercents, "percent")
         settings$countsOrPercents <- "count"
