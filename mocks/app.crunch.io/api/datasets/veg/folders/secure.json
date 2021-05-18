@@ -1,8 +1,5 @@
 {
     "body": {
-        "app_settings": {
-
-        },
         "name": "Secure"
     },
     "element": "shoji:catalog",

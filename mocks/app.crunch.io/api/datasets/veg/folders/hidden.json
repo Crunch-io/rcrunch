@@ -1,8 +1,5 @@
 {
     "body": {
-        "app_settings": {
-
-        },
         "name": "Hidden"
     },
     "element": "shoji:catalog",

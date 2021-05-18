@@ -147,6 +147,7 @@ with_mock_crunch({
         expect_equal(
             failures,
             list(
+                last_attempted_script = "RENAME wrong_var_name TO age;",
                 file = NULL,
                 errors = data.frame(
                     column = NA,
@@ -182,6 +183,7 @@ with_mock_crunch({
         expect_equal(
             failures,
             list(
+                last_attempted_script = "RENAME wrong_var_name TO age;\nRENAME wrong_var_name2 TO age;",
                 file = NULL,
                 errors = data.frame(
                     column = c(NA, NA),
@@ -196,6 +198,37 @@ with_mock_crunch({
                 script = "RENAME wrong_var_name TO age;\nRENAME wrong_var_name2 TO age;"
             )
         )
+    })
+
+    test_that("Can interpret error from async script failures", {
+        # Override progress with a pre-generated JSON at the url
+        with_mock(
+            `crunch::crPOST` = function(..., progress.handler = NULL) {
+                capture.output(crunch::pollProgress(
+                    "https://app.crunch.io/api/progress-failed-async-script.json",
+                    wait = 0.01,
+                    error_handler = progress.handler
+                ))
+            }, {
+                expect_error(ds <- runCrunchAutomation(ds, "NOT A COMMAND"), "Crunch Automation Error")
+            }
+        )
+
+        expect_message(
+            failures <- showScriptErrors(),
+            "\\(line 1\\) Invalid command: NOT",
+        )
+    })
+
+    test_that("Get message on success when dry_run is TRUE", {
+        with_POST(
+            "", # Don't actually need to load anything, just need no POST error
+            expect_message(
+                runCrunchAutomation(ds, "# no commands", dry_run = TRUE),
+                "Script dry run was successful"
+            )
+        )
+
     })
 
     test_that("error truncation works", {

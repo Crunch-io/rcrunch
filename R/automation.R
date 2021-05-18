@@ -102,6 +102,11 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' @param is_file The default guesses whether a file or string was
 #' used in the `script` argument, but you can override the heuristics
 #' by specifying `TRUE` for a file, and `FALSE` for a string.
+#' @param encoding Optional encoding to convert **from**, defaults to UTF-8.
+#' The API accepts only UTF-8, so all text will be converted to UTF-8 before
+#' being sent to the server.
+#' @param ... Additional options, such as `dry_run = TRUE` passed on
+#' to the API
 #'
 #' @return For `runCrunchAutomation()`: an updated dataset (invisibly),
 #' For `showScriptErrors()`, when run after a failure, a list with two items:
@@ -116,6 +121,9 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' # Or a string directly:
 #' ds <- runCrunchAutomation(ds, "RENAME v1 TO age;")
 #'
+#' # A "dry run" that validates the script but does not run it:
+#' runCrunchAutomation(ds, "RENAME V1 TO age;", dry_run = TRUE)
+#'
 #' # After a failed run, some error information prints to console,
 #' # But more details are available with function:
 #' showScriptErrors()
@@ -126,24 +134,36 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' }
 #' @export
 #' @seealso [`automation-undo`] & [`script-catalog`]
-runCrunchAutomation <- function(dataset, script, is_file = string_is_file_like(script)) {
+runCrunchAutomation <- function(
+    dataset,
+    script,
+    is_file = string_is_file_like(script),
+    encoding = "UTF-8",
+    ...
+) {
     reset_automation_error_env()
     stopifnot(is.dataset(dataset))
     stopifnot(is.character(script))
 
     if (is_file) {
         automation_error_env$file <- script
-        script <- readLines(script, encoding = "UTF-8", warn = FALSE)
+        script <- readLines(script, encoding = encoding, warn = FALSE)
     } else {
         automation_error_env$file <- NULL
     }
     if (length(script) != 1) script <- paste(script, collapse = "\n")
 
+    body <- list(body = script, ...)
+    automation_error_env$last_attempted_script <- script
+
     crPOST(
         shojiURL(dataset, "catalogs", "scripts"),
-        body = toJSON(wrapEntity(body = list(body = script))),
-        status.handlers = list(`400` = crunchAutomationErrorHandler)
+        body = toJSON(wrapEntity(body = body)),
+        status.handlers = list(`400` = crunchAutomationErrorHandler),
+        progress.handler = crunchAutomationErrorHandler
     )
+    # Provide feedback for dry_run success so that user is confident it was succesful
+    if (isTRUE(body$dry_run)) message("Script dry run was successful")
     invisible(refresh(dataset))
 }
 
@@ -193,18 +213,27 @@ make_rstudio_markers <- function(errors) {
     rstudioapi::sourceMarkers("crunchAutomation", markers)
 }
 # nocov end
+
 #' @importFrom jsonlite fromJSON
 #' @importFrom httr http_status content
 crunchAutomationErrorHandler <- function(response) {
-    msg <- http_status(response)$message
-    automation_messages <- try(content(response)$resolution, silent = TRUE)
+    # Get data from appropriate place if it's a direct httr response
+    # or if it's from pollProgress (because validation was async)
+    # TODO: If this becomes a common pattern, should probably put
+    # somewhere else
+    if (inherits(response, "response")) {
+        msg <- http_status(response)$message
+        response_content <- content(response)
+    }  else {
+        msg <- response$message$description
+        response_content <- response$message
+    }
+    automation_messages <- try(response_content$resolution, silent = TRUE)
 
-    if (!is.error(automation_messages)) {
-        # dig into the response to get the script as we sent it to the server
-        request_body <- fromJSON(rawToChar(response$request$options$postfields))
-        automation_error_env$script <- request_body$body$body
+    if (!is.error(automation_messages) && !is.null(automation_messages)) {
+        automation_error_env$script <- automation_error_env$last_attempted_script
 
-        # And convert the full information of the error messages into a data.frame
+        # convert the full information of the error messages into a data.frame
         automation_error_cols <- c("column", "command", "line", "message")
         errors <- lapply(
             automation_messages,
@@ -236,6 +265,13 @@ crunchAutomationErrorHandler <- function(response) {
         }
 
         msg <- paste("Crunch Automation Error\n", error_items, more_info_text, sep = "")
+    } else {
+        # could also have information in message property
+        # try to use it if it's a character string
+        other_msg <- try(content(response)[["message"]], silent = TRUE) #nocov
+        if (is.character(other_msg)) { #nocov
+            msg <- paste0(msg, " - ", paste0(other_msg, collapse = "\n")) #nocov
+        }
     }
     halt(msg)
 }

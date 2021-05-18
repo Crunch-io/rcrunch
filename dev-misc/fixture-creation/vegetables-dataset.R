@@ -540,6 +540,26 @@ file_copy(cube_path, here("mocks", "cubes", "numa-x-mr.json"), overwrite = TRUE)
 
 dir_delete(temp_dir)
 
+
+### Generate failed async crunch automation failure
+httpcache::clearCache()
+dir_create(temp_dir)
+
+start_capturing(temp_dir)
+failed <- try(runCrunchAutomation(ds, "NOT A COMMAND", async = TRUE), silent = TRUE)
+stop_capturing()
+
+progress_path <- path(temp_dir, "app.crunch.io/api/progress.json")
+
+file_copy(
+    progress_path,
+    here("mocks", "app.crunch.io", "api", "progress-failed-async-script.json"),
+    overwrite = TRUE
+)
+
+dir_delete(temp_dir)
+
+
 # Cleanup ----
 rm(deck) # Hopefully gets rid of weird message after sourcing script
 with_consent(delete(ds))

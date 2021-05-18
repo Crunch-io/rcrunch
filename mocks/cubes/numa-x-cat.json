@@ -102,7 +102,8 @@
                         "other": 0,
                         "selected": 210
                     }
-                }
+                },
+                "is_cat_date": false
             },
             "filtered": {
                 "unweighted_n": 210,

@@ -4,13 +4,16 @@
 \alias{pollProgress}
 \title{Check a Crunch progress URL until it finishes}
 \usage{
-pollProgress(progress_url, wait = 0.5)
+pollProgress(progress_url, wait = 0.5, error_handler = NULL)
 }
 \arguments{
 \item{progress_url}{A Crunch progress URL}
 
 \item{wait}{Number of seconds to wait between polling. This time is increased
 20 percent on each poll.}
+
+\item{error_handler}{An optional function that takes the status object
+when the progress is less than 0 (meaning the request failed)}
 }
 \value{
 The percent completed of the progress. Assuming the

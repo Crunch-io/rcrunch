@@ -4,7 +4,14 @@
 \alias{crunchAPI}
 \title{Main Crunch API handling function}
 \usage{
-crunchAPI(http.verb, url, config = list(), status.handlers = list(), ...)
+crunchAPI(
+  http.verb,
+  url,
+  config = list(),
+  status.handlers = list(),
+  progress.handler = NULL,
+  ...
+)
 }
 \arguments{
 \item{http.verb}{character in GET, PUT, POST, PATCH, DELETE}
@@ -16,6 +23,9 @@ crunchAPI(http.verb, url, config = list(), status.handlers = list(), ...)
 \item{status.handlers}{named list of specific HTTP statuses and a response
 function to call in the case where that status is returned. Passed to the
 \code{\link[=handleAPIresponse]{handleAPIresponse()}} function.}
+
+\item{progress.handler}{an optional function that resolves errors raised
+during an async request. Passed to the \code{\link[=pollProgress]{pollProgress()}} function.}
 
 \item{...}{additional arguments passed to \code{GET}, \code{PUT},
 \code{POST}, \code{PATCH}, or \code{DELETE}}

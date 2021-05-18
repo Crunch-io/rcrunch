@@ -1,0 +1,22 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/progress/",
+    "views": {
+        "result": "https://app.crunch.io/api/progress/result/"
+    },
+    "value": {
+        "progress": -1,
+        "message": {
+            "resolutions": [
+                {
+                    "column": 1,
+                    "message": "Invalid command: NOT",
+                    "command": 1,
+                    "line": 1
+                }
+            ],
+            "type": "script:syntax",
+            "description": "Errors processing the script"
+        }
+    }
+}

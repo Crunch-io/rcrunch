@@ -7,8 +7,10 @@
 #' @param status.handlers named list of specific HTTP statuses and a response
 #' function to call in the case where that status is returned. Passed to the
 #' [handleAPIresponse()] function.
+#' @param progress.handler an optional function that resolves errors raised
+#' during an async request. Passed to the [`pollProgress()`] function.
 #' @keywords internal
-crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(), ...) {
+crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(), progress.handler = NULL, ...) {
     url ## force lazy eval of url
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
@@ -17,7 +19,11 @@ crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(),
     }
     FUN <- get(http.verb, envir = asNamespace("httpcache"))
     x <- FUN(url, ..., config = c(get_crunch_config(), config, strip_token_if_outside(url)))
-    out <- handleAPIresponse(x, special.statuses = status.handlers)
+    out <- handleAPIresponse(
+        x,
+        special.statuses = status.handlers,
+        progress.handler = progress.handler
+    )
     return(out)
 }
 
@@ -51,11 +57,18 @@ crDELETE <- function(...) crunchAPI("DELETE", ...)
 #' Do the right thing with the HTTP response
 #' @param response an httr response object
 #' @param special.statuses an optional named list of functions by status code.
+#' @param progress.handler an optional function to handle errors reported by
+#' a progress result. Default NULL prints the string `message`; other
+#' functions required to handle non-string messages in progress responses.
 #' @return The full HTTP response object, just the content, or any other
 #' status-specific action
 #' @importFrom httr content http_status
 #' @keywords internal
-handleAPIresponse <- function(response, special.statuses = list()) {
+handleAPIresponse <- function(
+    response,
+    special.statuses = list(),
+    progress.handler = NULL
+) {
     warning <- get_header("Warning", response$headers)
     if (!is.null(warning)) {
         if (startsWith(warning, "299")) {
@@ -81,13 +94,13 @@ handleAPIresponse <- function(response, special.statuses = list()) {
     if (is.function(handler)) {
         invisible(handler(response))
     } else if (tolower(http_status(response)$category) == "success") {
-        handleAPIsuccess(code, response)
+        handleAPIsuccess(code, response, progress.handler)
     } else {
         handleAPIfailure(code, response)
     }
 }
 
-handleAPIsuccess <- function(code, response) {
+handleAPIsuccess <- function(code, response, progress.handler) {
     if (code == 202) {
         ## 202 Continue: a few cases:
         ## 1) Legacy: POST /batches/ returns Batch entity in Location, no
@@ -106,7 +119,7 @@ handleAPIsuccess <- function(code, response) {
                     message(paste0("Checking progress at: ", progress_url))
                 }
                 tryCatch(
-                    pollProgress(progress_url, getOption("crunch.poll.wait", 0.5)),
+                    pollProgress(progress_url, getOption("crunch.poll.wait", 0.5), progress.handler),
                     error = function(e) {
                         message(paste0(
                             "Something went wrong during `pollProgress()` of url: ",

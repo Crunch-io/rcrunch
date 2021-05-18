@@ -5,7 +5,13 @@
 \alias{showScriptErrors}
 \title{Run a crunch automation script}
 \usage{
-runCrunchAutomation(dataset, script, is_file = string_is_file_like(script))
+runCrunchAutomation(
+  dataset,
+  script,
+  is_file = string_is_file_like(script),
+  encoding = "UTF-8",
+  ...
+)
 
 showScriptErrors()
 }
@@ -18,6 +24,13 @@ or a string the syntax loaded in R.}
 \item{is_file}{The default guesses whether a file or string was
 used in the \code{script} argument, but you can override the heuristics
 by specifying \code{TRUE} for a file, and \code{FALSE} for a string.}
+
+\item{encoding}{Optional encoding to convert \strong{from}, defaults to UTF-8.
+The API accepts only UTF-8, so all text will be converted to UTF-8 before
+being sent to the server.}
+
+\item{...}{Additional options, such as \code{dry_run = TRUE} passed on
+to the API}
 }
 \value{
 For \code{runCrunchAutomation()}: an updated dataset (invisibly),
@@ -38,6 +51,9 @@ ds <- runCrunchAutomation(ds, script_file)
 
 # Or a string directly:
 ds <- runCrunchAutomation(ds, "RENAME v1 TO age;")
+
+# A "dry run" that validates the script but does not run it:
+runCrunchAutomation(ds, "RENAME V1 TO age;", dry_run = TRUE)
 
 # After a failed run, some error information prints to console,
 # But more details are available with function:
