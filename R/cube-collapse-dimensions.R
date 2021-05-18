@@ -64,19 +64,18 @@ dimSums <- function(x, margin = NULL) {
 
 only_count_cube <- function(cube) {
     # ensure that the cube is a counts cube
-    # TODO: this should be made more robust by parsing the ZCL from the
-    # expression instead of reaching inside
-    measures <- cube@.Data[[1]]$measures
-    measures_types <- lapply(measures, function(x) {
-        return(x[["function"]])
-    })
+    measure_types <- vapply(
+        names(cube@arrays),
+        function(measure) cubeMeasureType(cube, measure),
+        character(1)
+    )
 
-    noncounts <- setdiff(measures_types, c("cube_count"))
+    noncounts <- setdiff(measure_types, c("count", ".unweighted_counts"))
     if (length(noncounts) > 0) {
         msg <- c(
             "You can't use CrunchCubes with measures other than count. ",
             "The cube you provided included measures: ",
-            serialPaste(noncounts)
+            serialPaste(sort(noncounts))
         )
         halt(msg)
     }
