@@ -483,10 +483,10 @@ with_test_authentication({
             levels = (c("Cats", "Dogs", "Other"))
             )
         )
-        expect_equal_temp_nodata(
+        expect_equal(
             ids(categories(ds$catdog2)), c(1, 2, 99, -1)
         )
-        expect_identical_temp_nodata(
+        expect_identical(
             names(categories(ds$catdog2)), c("Cats", "Dogs", "Other", "No Data")
         )
 

@@ -79,99 +79,53 @@ with_test_authentication({
                 missing = FALSE
             )
         )
-        # Replace this `tryCatch(expect_json_equivalent(new), error =
-        # function(e) expect_json_equivalent(old))` construction with
-        # `expect_json_equivalent(new)` once the "default values" ticket
-        # https://www.pivotaltracker.com/story/show/164939686 is released.
-        tryCatch(
-            expect_json_equivalent(
-                test_cases[[11]],
-                list(
-                    expression = ds$q1 == "Not Asked" & ds$country == "Australia",
-                    name = "Not Asked:Australia",
-                    missing = TRUE
-                )
-            ),
-            error = function(e) expect_json_equivalent(
-                    test_cases[[10]],
-                    list(
-                        expression = ds$q1 == "Not Asked" & ds$country == "Australia",
-                        name = "Not Asked:Australia",
-                        missing = TRUE
-                    )
-                )
+        expect_json_equivalent(
+            test_cases[[11]],
+            list(
+                expression = ds$q1 == "Not Asked" & ds$country == "Australia",
+                name = "Not Asked:Australia",
+                missing = TRUE
+            )
         )
 
         ds$interaction <- interactVariables(ds$q1, ds$country, name = "Pet.Country")
-        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
-        # construction with `expect_equal(new)` once the "default values"
-        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
-        expect_true(
-            isTRUE(all.equal(
-                names(categories(ds$interaction)),
-                c(
-                    apply(
-                        expand.grid(
-                            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data"),
-                            c("Argentina", "Australia", "Austria", "Belgium", "Brazil", "No Data")
-                        ),
-                        1, paste,
-                        collapse = ":"
+
+        expect_equal(
+            names(categories(ds$interaction)),
+            c(
+                apply(
+                    expand.grid(
+                        c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data"),
+                        c("Argentina", "Australia", "Austria", "Belgium", "Brazil", "No Data")
                     ),
-                    "No Data"
-                )
-            ))
-            # Legacy output, if "No Data" categories are not automatically added:
-            || isTRUE(all.equal(
-                    names(categories(ds$interaction)),
-                    apply(
-                        expand.grid(
-                            c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                            c("Argentina", "Australia", "Austria", "Belgium", "Brazil")
-                        ),
-                        1, paste,
-                        collapse = ":"
-                    )
-                ))
+                    1, paste,
+                    collapse = ":"
+                ),
+                "No Data"
+            )
         )
-    })
 
     test_that("makeInteractions accepts opeion arguments", {
         ds$interaction2 <- interactVariables(ds$q1, ds$country,
             name = "Pet.Country2",
             description = "This is a description"
         )
-        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
-        # construction with `expect_equal(new)` once the "default values"
-        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
-        expect_true(
-            isTRUE(all.equal(
-                names(categories(ds$interaction)),
-                c(
-                    apply(
-                        expand.grid(
-                            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data"),
-                            c("Argentina", "Australia", "Austria", "Belgium", "Brazil", "No Data")
-                        ),
-                        1, paste,
-                        collapse = ":"
+
+        expect_equal(
+            names(categories(ds$interaction)),
+            c(
+                apply(
+                    expand.grid(
+                        c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data"),
+                        c("Argentina", "Australia", "Austria", "Belgium", "Brazil", "No Data")
                     ),
-                    "No Data"
-                )
-            ))
-            # Legacy output, if "No Data" categories are not automatically added:
-            || isTRUE(all.equal(
-                    names(categories(ds$interaction)),
-                    apply(
-                        expand.grid(
-                            c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                            c("Argentina", "Australia", "Austria", "Belgium", "Brazil")
-                        ),
-                        1, paste,
-                        collapse = ":"
-                    )
-                ))
+                    1, paste,
+                    collapse = ":"
+                ),
+                "No Data"
+            )
         )
+
         expect_equal(description(ds$interaction2), "This is a description")
     })
 })

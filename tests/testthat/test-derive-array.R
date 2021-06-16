@@ -44,7 +44,7 @@ with_test_authentication({
     test_that("Sending a derived array vardef creates a derived array", {
         expect_true(is.CA(ds$derivedarray))
         expect_identical(names(subvariables(ds$derivedarray)), c("Pet", "Home"))
-        expect_identical_temp_nodata(
+        expect_identical(
             names(categories(ds$derivedarray)),
             c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
@@ -58,7 +58,7 @@ with_test_authentication({
     test_that("deriveArray can also derive MRs", {
         expect_true(is.MR(ds$derivedmr))
         expect_identical(names(subvariables(ds$derivedmr)), c("Pet", "Home"))
-        expect_identical_temp_nodata(
+        expect_identical(
             names(categories(ds$derivedmr)),
             c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
@@ -73,7 +73,7 @@ with_test_authentication({
             c("dsub1", "dsub2")
         )
         names(categories(ds$derivedarray))[1:2] <- c("one", "two")
-        expect_identical_temp_nodata(
+        expect_identical(
             names(categories(ds$derivedarray)),
             c("one", "two", "Bird", "Skipped", "Not Asked", "No Data")
         )
@@ -82,7 +82,7 @@ with_test_authentication({
             aliases(subvariables(ds$derivedarray)),
             c("dsub1", "dsub2")
         )
-        expect_identical_temp_nodata(
+        expect_identical(
             names(categories(ds$derivedarray)),
             c("one", "two", "Bird", "Skipped", "Not Asked", "No Data")
         )
@@ -96,7 +96,7 @@ with_test_authentication({
         )
         ## Parent unaffected
         expect_true(is.Categorical(ds$q1))
-        expect_identical_temp_nodata(
+        expect_identical(
             names(categories(ds$q1)),
             c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
@@ -143,7 +143,7 @@ with_test_authentication({
             names(subvariables(ds$metapetloc)),
             c("Home", "Copy", "Copy", "Home")
         )
-        expect_identical_temp_nodata(
+        expect_identical(
             names(categories(ds$metapetloc)),
             c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "one", "two")
         )
@@ -169,7 +169,7 @@ with_test_authentication({
             names(subvariables(ds$metapet_combined)),
             c("Home", "Copy", "Copy", "Home")
         )
-        expect_identical_temp_nodata(
+        expect_identical(
             names(categories(ds$metapet_combined)),
             c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
@@ -186,18 +186,9 @@ with_test_authentication({
     part2 <- newDatasetFromFixture("apidocs")
     ds <- appendDataset(ds, part2)
     test_that("When appending, derived arrays get data (or missing, as appropriate)", {
-        ## No Data is added to the categories here
-        # Replace this `expect_true(identical(new) || identical(old))`
-        # construction with `expect_identical(new)` once the "default values"
-        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
-        expect_true(
-            identical(
-                names(categories(ds$metapetloc)),
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "one", "two", "No Data")
-            ) || identical(
-                names(categories(ds$metapetloc)),
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "one", "two")
-            )
+        expect_identical(
+            names(categories(ds$metapetloc)),
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "one", "two", "No Data")
         )
         ## metapetloc: subvar 1 is derived from petloc$petloc_home
         expect_identical(
@@ -248,7 +239,7 @@ with_test_authentication({
             aliases(subvariables(ds$derivedarray)),
             c("dsub1", "dsub2")
         )
-        expect_identical_temp_nodata(
+        expect_identical(
             names(categories(ds$derivedarray)),
             c("one", "two", "Bird", "Skipped", "Not Asked", "No Data")
         )
@@ -275,18 +266,10 @@ with_test_authentication({
             aliases(subvariables(ds$petloc)),
             c("petloc_home", "petloc_work", "petloc_school")
         )
-        ## No Data comes in after appending because petloc_work and petloc_school have data gaps
-        # Replace this `expect_true(identical(new) || identical(old))`
-        # construction with `expect_identical(new)` once the "default values"
-        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
-        expect_true(
-            identical(
-                names(categories(ds$petloc)),
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "Beaver", "No Data")
-            ) || identical(
-                names(categories(ds$petloc)),
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "Beaver")
-            )
+
+        expect_identical(
+            names(categories(ds$petloc)),
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "Beaver", "No Data")
         )
     })
 

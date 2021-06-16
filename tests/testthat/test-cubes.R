@@ -219,43 +219,22 @@ with_test_authentication({
                 )
             )
         )
-        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
-        # construction with `expect_equivalent(new)` once the "default values"
-        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
-        expect_true(
-            isTRUE(all.equal(
-                as.array(crtabs(~ v8 + v7, data = ds, useNA = "always")),
-                array(c(
-                    5, 5, 0,
-                    3, 2, 0,
-                    2, 3, 0,
-                    0, 0, 0
-                ),
-                dim = c(3L, 4L),
-                dimnames = list(
-                    v8 = c("1955-11-05", "1955-11-06", "<NA>"),
-                    v7 = c(LETTERS[3:5], "No Data")
-                )
-                ),
-                check.attributes = FALSE
-            ))
-            # Legacy output, if "No Data" categories are not automatically added:
-            || isTRUE(all.equal(
-                    as.array(crtabs(~ v8 + v7, data = ds, useNA = "always")),
-                    array(c(
-                        5, 5,
-                        3, 2,
-                        2, 3,
-                        0, 0
-                    ),
-                    dim = c(2L, 4L),
-                    dimnames = list(
-                        v8 = c("1955-11-05", "1955-11-06"),
-                        v7 = c(LETTERS[3:5], "No Data")
-                    )
-                    ),
-                    check.attributes = FALSE
-                ))
+
+        expect_equal(
+            as.array(crtabs(~ v8 + v7, data = ds, useNA = "always")),
+            array(c(
+                5, 5, 0,
+                3, 2, 0,
+                2, 3, 0,
+                0, 0, 0
+            ),
+            dim = c(3L, 4L),
+            dimnames = list(
+                v8 = c("1955-11-05", "1955-11-06", "<NA>"),
+                v7 = c(LETTERS[3:5], "No Data")
+            )
+            ),
+            check.attributes = FALSE
         )
     })
 
@@ -318,43 +297,22 @@ with_test_authentication({
             )
             )
         )
-        # Replace this `expect_true(isTRUE(all.equal(new)) || isTRUE(all.equal(old)))`
-        # construction with `expect_equivalent(new)` once the "default values"
-        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
-        expect_true(
-            isTRUE(all.equal(
-                as.array(crtabs(~ bin(v3) + v7, data = ds, useNA = "always")),
-                array(c(
-                    2, 5, 3, 0, 0, 0,
-                    0, 0, 2, 3, 0, 0,
-                    0, 0, 0, 2, 3, 0,
-                    0, 0, 0, 0, 0, 0
-                ),
-                dim = c(6L, 4L),
-                dimnames = list(
-                    v3 = c("5-10", "10-15", "15-20", "20-25", "25-30", "<NA>"),
-                    v7 = c(LETTERS[3:5], "No Data")
-                )
-                ),
-                check.attributes = FALSE
-            ))
-            # Legacy output, if "No Data" categories are not automatically added:
-            || isTRUE(all.equal(
-                    as.array(crtabs(~ bin(v3) + v7, data = ds, useNA = "always")),
-                    array(c(
-                        2, 5, 3, 0, 0,
-                        0, 0, 2, 3, 0,
-                        0, 0, 0, 2, 3,
-                        0, 0, 0, 0, 0
-                    ),
-                    dim = c(5L, 4L),
-                    dimnames = list(
-                        v3 = c("5-10", "10-15", "15-20", "20-25", "25-30"),
-                        v7 = c(LETTERS[3:5], "No Data")
-                    )
-                    ),
-                    check.attributes = FALSE
-                ))
+
+        expect_equal(
+            as.array(crtabs(~ bin(v3) + v7, data = ds, useNA = "always")),
+            array(c(
+                2, 5, 3, 0, 0, 0,
+                0, 0, 2, 3, 0, 0,
+                0, 0, 0, 2, 3, 0,
+                0, 0, 0, 0, 0, 0
+            ),
+            dim = c(6L, 4L),
+            dimnames = list(
+                v3 = c("5-10", "10-15", "15-20", "20-25", "25-30", "<NA>"),
+                v7 = c(LETTERS[3:5], "No Data")
+            )
+            ),
+            check.attributes = FALSE
         )
     })
     test_that("unbinned numeric", {
