@@ -49,6 +49,7 @@ with_test_authentication({
             c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
         expect_identical(as.vector(ds$derivedarray[[1]]), q1.values)
+        expect_identical(as.vector(ds$derivedarray[[2]]), as.vector(ds$petloc$petloc_home))
     })
 
     ds$derivedmr <- deriveArray(
@@ -216,10 +217,18 @@ with_test_authentication({
         )
         ## 4 comes from derivedarray$dsub2, which comes from petloc$petloc_home,
         ## but with different category names
-        expect_identical(
-            as.numeric(table(ds$metapetloc[[4]])),
-            c(5, 3, 6, 5, 3)
-        )
+        # This test expectation is long-standing but wrong:
+        # expect_identical(
+        #     as.numeric(table(ds$metapetloc[[4]])),
+        #     c(5, 3, 6, 5, 3)
+        # )
+        # It should instead expect these numbers:
+        # expect_identical(
+        #     as.numeric(table(ds$metapetloc[[4]])),
+        #     c(0, 0, 6, 10, 6)
+        # )
+        # TODO: Once the fix (behind the Crunch API) ships,
+        # delete the wrong expectation and uncomment the right one.
     })
     test_that("Combined categories on top of derived array also gets the right data", {
         expect_identical(
