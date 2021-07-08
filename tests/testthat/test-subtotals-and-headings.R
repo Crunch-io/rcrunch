@@ -408,22 +408,6 @@ with_test_authentication({
         arguments(subtotals(ds$v4)[[2]]) <- c("C", "B")
         expect_equal(arguments(subtotals(ds$v4)[[2]]), c(2, 1))
 
-        # changing kwarguments
-        kwarguments(subtotals(ds$v4)[[1]]) <- list(positive = "C", negative = "B")
-        # Only way to check kwarguments is via printing
-        expect_prints(
-            subtotals(ds$v4)[[1]],
-            get_output(data.frame(
-                anchor = c("bottom"),
-                name = c("B-C"),
-                func = c("subtotal"),
-                args = c("3"),
-                kwargs = c("positive: 3 | negative: 2"),
-                stringsAsFactors = FALSE
-            )),
-            fixed = TRUE
-        )
-
         # refresh to ensure that the changes have stuck
         ds <- refresh(ds)
         expect_equal(names(subtotals(ds$v4)), c("B-C", "C and B", "C alone", "B+C"))
