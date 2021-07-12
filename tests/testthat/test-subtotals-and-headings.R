@@ -296,7 +296,12 @@ with_test_authentication({
     ds <- newDataset(df)
 
     trans <- Transforms(insertions = list(
-        Heading(position = "top", name = "This is a subtitle"),
+        Subtotal(
+            position = "top",
+            name = "B-C",
+            categories = 1,
+            negative = 2
+        ),
         Subtotal(
             after = 1, name = "B alone",
             categories = c(1)
@@ -318,7 +323,12 @@ with_test_authentication({
         expect_null(transforms(ds$v4))
 
         subtotals(ds$v4) <- list(
-            Heading(name = "This is a subtitle", position = "top"),
+            Subtotal(
+                position = "top",
+                name = "B-C",
+                categories = 1,
+                negative = 2
+            ),
             Subtotal(
                 name = "B alone", categories = c("B"),
                 after = 1
@@ -338,19 +348,24 @@ with_test_authentication({
         expect_prints(subtotals(ds$v4),
             get_output(data.frame(
                 anchor = c("top", 1, 2, "bottom"),
-                name = c("This is a subtitle", "B alone", "C alone", "B+C"),
-                func = c(NA, "subtotal", "subtotal", "subtotal"),
-                args = c("NA", "1", "2", "1 and 2"),
-                kwargs = c("", "positive: 1 | ", "positive: 2 | ", "positive: 1 and 2 | "),
+                name = c("B-C", "B alone", "C alone", "B+C"),
+                func = c("subtotal", "subtotal", "subtotal", "subtotal"),
+                args = c("1", "1", "2", "1 and 2"),
+                kwargs = c(
+                    "positive: 1 | negative: 2",
+                    "positive: 1 | ",
+                    "positive: 2 | ",
+                    "positive: 1 and 2 | "
+                ),
                 stringsAsFactors = FALSE
             )),
             fixed = TRUE
         )
 
         # check shape
-        v4_ary <- array(c(NA, 10, 10, 10, 10, 20),
+        v4_ary <- array(c(0, 10, 10, 10, 10, 20),
             dimnames = list(c(
-                "This is a subtitle", "B", "B alone",
+                "B-C", "B", "B alone",
                 "C", "C alone", "B+C"
             ))
         )
@@ -363,18 +378,16 @@ with_test_authentication({
     test_that("Can modify subtotals in place", {
         # assert known shape
         expect_equal(names(subtotals(ds$v4)), c(
-            "This is a subtitle", "B alone",
+            "B-C", "B alone",
             "C alone", "B+C"
         ))
         expect_equal(anchors(subtotals(ds$v4)), c("top", 1, 2, "bottom"))
-        expect_equal(arguments(subtotals(ds$v4)[[1]]), NA)
+        expect_equal(arguments(subtotals(ds$v4)[[1]]), 1)
         expect_equal(arguments(subtotals(ds$v4)[[2]]), 1)
         expect_equal(arguments(subtotals(ds$v4)[[3]]), 2)
         expect_equal(arguments(subtotals(ds$v4)[[4]]), c(1, 2))
 
         # changing names
-        name(subtotals(ds$v4)[[1]]) <- "The new subtitle"
-        expect_equal(name(subtotals(ds$v4)[[1]]), "The new subtitle")
         name(subtotals(ds$v4)[[2]]) <- "C and B"
         expect_equal(name(subtotals(ds$v4)[[2]]), "C and B")
 
@@ -397,9 +410,9 @@ with_test_authentication({
 
         # refresh to ensure that the changes have stuck
         ds <- refresh(ds)
-        expect_equal(names(subtotals(ds$v4)), c("The new subtitle", "C and B", "C alone", "B+C"))
+        expect_equal(names(subtotals(ds$v4)), c("B-C", "C and B", "C alone", "B+C"))
         expect_equal(anchors(subtotals(ds$v4)), c("bottom", 1, 1, "bottom"))
-        expect_equal(arguments(subtotals(ds$v4)[[1]]), NA)
+        expect_equal(arguments(subtotals(ds$v4)[[1]]), 1)
         expect_equal(arguments(subtotals(ds$v4)[[2]]), c(2, 1))
         expect_equal(arguments(subtotals(ds$v4)[[3]]), 2)
         expect_equal(arguments(subtotals(ds$v4)[[4]]), c(1, 2))
