@@ -217,17 +217,10 @@ setMethod("subtotals", "VariableTuple", getSubtotals)
 #' @rdname SubtotalsHeadings
 #' @export
 setMethod("subtotals<-", c("CrunchVariable", "ANY"), function(x, value) {
-    if (is.Subtotal(value) | is.Heading(value)) {
+    if (is.Insertion(value)) {
         # if the value is not a list, make it into one, in case we got a bare
         # Subtotal() or Heading()
         value <- list(value)
-    }
-    if (any(unlist(
-        Map(function(v) {
-            !is.Subtotal(v) & !is.Heading(v)
-        }, value)
-    ))) {
-        halt("value must be a list of Subtotals, Headings, or both.")
     }
 
     inserts <- Insertions(data = lapply(value,

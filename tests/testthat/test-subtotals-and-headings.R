@@ -282,13 +282,6 @@ with_mock_crunch({
             '{"view":{"transform":{"insertions":[]}}}'
         )
     })
-
-    test_that("subtotals and headers can be removed", {
-        expect_error(
-            subtotals(ds$location) <- list("1", "2"),
-            "value must be a list of Subtotals, Headings, or both."
-        )
-    })
 })
 
 
