@@ -426,23 +426,6 @@ Insertion <- function(...) {
         out$args <- as.list(out$args)
     }
 
-    # ensure that kwargs is missing if empty instead of NULL and is a list,
-    # even if it is a single element
-    # Note this is okay because all current kwargs are supposed to be lists
-    # but could cause problems if that changes
-    if (length(out$kwargs) == 0) {
-        out$kwargs <- NULL
-    } else {
-        for (kw in names(out$kwargs)) {
-            if (is.null(out$kwargs[[kw]])) {
-                out$kwargs[[kw]] <- NULL
-            }
-            else if (length(out$kwargs[[kw]]) == 1) {
-                out$kwargs[[kw]] <- as.list(out$kwargs[[kw]])
-            }
-        }
-    }
-
     return(out)
 }
 

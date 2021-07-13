@@ -278,12 +278,29 @@ NULL
 #' @rdname makeInsertion
 #' @export
 setMethod("makeInsertion", "Subtotal", function(x, var_categories) {
-    return(.Insertion(
+    out <- .Insertion(
         anchor = anchor(x, var_categories), name = name(x),
         `function` = "subtotal",
         args = arguments(x, var_categories),
         kwargs = kwarguments(x, var_categories)
-    ))
+    )
+
+    # Remove empty lists and ensure keys that should be lists are stored
+    # that way even if it is a single element
+    list_kws <- c("positive", "negative", "subvariable_ids")
+    if (length(out$kwargs) == 0) {
+        out$kwargs <- NULL
+    } else {
+        for (kw in names(out$kwargs)) {
+            if (is.null(out$kwargs[[kw]])) {
+                out$kwargs[[kw]] <- NULL
+            } else if ((kw %in% list_kws) & length(out$kwargs[[kw]]) == 1) {
+                out$kwargs[[kw]] <- as.list(out$kwargs[[kw]])
+            }
+        }
+    }
+
+    return(out)
 })
 
 #' @rdname makeInsertion
