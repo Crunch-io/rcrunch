@@ -351,9 +351,9 @@ setMethod("anchor", "Insertion", function(x, ...) {
             return(NA_integer_)
         }
         if (is.numeric(x$categories)) {
-            var_cats <- ids(var_items)
+            var_cats <- ids(Filter(is.category, var_items))
         } else {
-            var_cats <- names(var_items)
+            var_cats <- names(Filter(is.category, var_items))
         }
         sub_cats <- x$categories[x$categories %in% var_cats]
         ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
@@ -363,7 +363,13 @@ setMethod("anchor", "Insertion", function(x, ...) {
     # Can distinguish between category insertions and MR insertions by whether
     # we were passed in categories or subvariables as the var_items
     # If no var_items were passed, treat as categorical
-    if (missing(var_items) || is.AbstractCategories(var_items)) {
+    if (missing(var_items)) {
+        if (is.character(x$after)) {
+            halt("Could not find anchor without categories/subvariables passed in.")
+        }
+        return(x$after)
+    } else if (is.AbstractCategories(var_items)) {
+        var_items <- Filter(is.category, var_items) # Can't use other subtotals as anchors
         # map chars/nums to ids
         if (is.character(x$after)) {
             # TODO: better error handling if var_items is null

@@ -394,7 +394,22 @@ setClass("Insertions", contains = "AbstractCategories")
 
 #' @rdname Insertions
 #' @export
-Insertions <- GenericConstructor("Insertions")
+Insertions <- function(..., data = NULL) {
+    if (is.null(data)) data <- list(...)
+    out <- new("Insertions", data)
+
+    # Get a potential id that doesn't clash with any existing ids
+    # for each insertion. Will use existing id if it exists (and is valid)
+    # But if no id exists, we'll use the fallback ids
+    existing_ids <- Filter(is.whole, lapply(out, function(insertion) insertion[["id"]]))
+    fallback_ids <- setdiff(seq_len(length(out) * 2), existing_ids)
+    lapply(seq_along(out), function(insertion_idx) {
+        if (is.null(out[[insertion_idx]][["id"]])) {
+            out[[insertion_idx]]$id <<- fallback_ids[insertion_idx]
+        }
+    })
+    out
+}
 
 #' @rdname Insertions
 #' @export

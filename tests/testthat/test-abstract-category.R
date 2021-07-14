@@ -29,10 +29,10 @@ test_that("modifyCats works like modifyList", {
             list(
                 anchor = 6, name = "Low",
                 `function` = "subtotal",
-                args = c(1, 2)
+                args = c(1, 2), id = 1
             ),
-            list(anchor = 10, name = "High"),
-            list(anchor = 1, name = "New one")
+            list(anchor = 10, name = "High", id = 1),
+            list(anchor = 1, name = "New one", id = 2)
         ))
     )
 })
@@ -50,13 +50,14 @@ test_that("abstract category [ and [[ getters", {
 })
 
 test_that("abstract category [ s etter", {
-    new_insrt <- Insertion(data = list(anchor = 0, name = "here now"))
+    new_insrt <- Insertion(data = list(anchor = 0, name = "here now", id = 1))
     insrts["here now"] <- Insertions(new_insrt)
     expect_equal(insrts[["here now"]], new_insrt)
 
     old_insrt <- Insertion(data = list(
         anchor = 60, name = "Low",
-        `function` = "subtotal", args = c(10, 20)
+        `function` = "subtotal", args = c(10, 20),
+        id = 5
     ))
     insrts["Low"] <- Insertions(old_insrt)
     expect_equal(insrts[["Low"]], old_insrt)

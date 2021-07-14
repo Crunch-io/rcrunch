@@ -126,8 +126,11 @@ findInsertPosition <- function(insert, cats) {
     }
 
     # if the anchor is the id of a non-missing category put it after that cat
-    if (anchr %in% ids(cats)) {
-        which_cat <- which(anchr == ids(cats))
+    # But don't use the ids from the non-categories (eg insertions) because
+    # anchors are only to categories
+    cat_ids <- ifelse(vapply(cats, is.category, logical(1)), ids(cats), NA)
+    if (anchr %in% cat_ids) {
+        which_cat <- which(anchr == cat_ids)
         if (!is.na(cats[[which_cat]])) {
             return(which_cat)
         }

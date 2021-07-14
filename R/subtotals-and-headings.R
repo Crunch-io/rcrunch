@@ -314,6 +314,7 @@ setMethod("makeInsertion", "Subtotal", function(x, var_items, alias) {
         args = arguments(x, var_items),
         kwargs = subtotalTerms(x, var_items, alias)
     )
+    out$id <- x$id # Can be NULL in R, but don't send NULL to server, so add afterwards
 
     # Remove empty lists and ensure keys that should be lists are stored
     # that way even if it is a single element

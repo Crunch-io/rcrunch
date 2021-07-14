@@ -128,21 +128,21 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":',
             '{"insertions":[{"anchor":1,"name":"London+Scotland",',
-            '"function":"subtotal","args":[1,2],"kwargs":{"positive":[1,2]}}]}}}'
+            '"function":"subtotal","args":[1,2],"kwargs":{"positive":[1,2]},"id":1}]}}}'
         )
         expect_PATCH(
             name(subtotals(ds$location)[[1]]) <- "new name",
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":',
             '{"insertions":[{"anchor":3,"name":"new name",',
-            '"function":"subtotal","args":[1,2],"kwargs":{"positive":[1,2]}}]}}}'
+            '"function":"subtotal","args":[1,2],"kwargs":{"positive":[1,2]},"id":1}]}}}'
         )
         expect_PATCH(
             arguments(subtotals(ds$location)[[1]]) <- c(2, 3),
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":',
             '{"insertions":[{"anchor":3,"name":"London+Scotland",',
-            '"function":"subtotal","args":[2,3],"kwargs":{"positive":[2,3]}}]}}}'
+            '"function":"subtotal","args":[2,3],"kwargs":{"positive":[2,3]},"id":1}]}}}'
         )
     })
 
@@ -163,10 +163,10 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/gender/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":2,"name":"Not men","function":"subtotal","args":[1,-1],"kwargs":',
-            '{"positive":[1,-1]}},',
+            '{"positive":[1,-1]},"id":1},',
             '{"anchor":4,"name":"Women","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2]}},',
-            '{"anchor":"top","name":"A subtitle"}]}}}'
+            '{"positive":[2]},"id":2},',
+            '{"anchor":"top","name":"A subtitle","id":3}]}}}'
         )
     })
 
@@ -178,7 +178,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/gender/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":2,"name":"W-M","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2],"negative":[1]}}]}}}'
+            '{"positive":[2],"negative":[1]},"id":1}]}}}'
         )
     })
 
@@ -192,9 +192,9 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/gender/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1],"kwargs":',
-            '{"positive":[-1,1]}},',
+            '{"positive":[-1,1]},"id":1},',
             '{"anchor":2,"name":"Women","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2]}}]}}}'
+            '{"positive":[2]},"id":2}]}}}'
         )
 
         # one supplied category (23) isn't a real category, after should still be -1
@@ -207,9 +207,9 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/gender/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1,23],"kwargs":',
-            '{"positive":[-1,1,23]}},',
+            '{"positive":[-1,1,23]},"id":1},',
             '{"anchor":2,"name":"Women","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2]}}]}}}'
+            '{"positive":[2]},"id":2}]}}}'
         )
     })
 
@@ -223,10 +223,10 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":1,"name":"London alone","function":"subtotal","args":[1],"kwargs":',
-            '{"positive":[1]}},',
+            '{"positive":[1]},"id":1},',
             '{"anchor":2,"name":"Scotland alone","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2]}},',
-            '{"anchor":"top","name":"A subtitle"}]}}}'
+            '{"positive":[2]},"id":2},',
+            '{"anchor":"top","name":"A subtitle","id":3}]}}}'
         )
     })
 
@@ -241,7 +241,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":"top","name":"London+Scotland","function":"subtotal","args":',
-            '[2,1],"kwargs":{"positive":[2,1]}}]}}}'
+            '[2,1],"kwargs":{"positive":[2,1]},"id":1}]}}}'
         )
     })
 
@@ -252,7 +252,7 @@ with_mock_crunch({
             ),
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
-            '{"anchor":1,"name":"London+Scotland"}]}}}'
+            '{"anchor":1,"name":"London+Scotland","id":1}]}}}'
         )
     })
 
@@ -263,7 +263,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":1,"name":"London alone","function":"subtotal","args":[1],"kwargs":',
-            '{"positive":[1]}}]}}}'
+            '{"positive":[1]},"id":1}]}}}'
         )
 
         expect_PATCH(
@@ -271,7 +271,7 @@ with_mock_crunch({
                 Heading(name = "A subtitle", position = "top"),
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
-            '{"anchor":"top","name":"A subtitle"}]}}}'
+            '{"anchor":"top","name":"A subtitle","id":1}]}}}'
         )
     })
 
@@ -280,6 +280,21 @@ with_mock_crunch({
             subtotals(ds$location) <- NULL,
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[]}}}'
+        )
+    })
+
+    test_that("subtotals respect ids if provided", {
+        expect_PATCH(
+            subtotals(ds$location) <- list(
+                Subtotal(name = "London alone", categories = c(1), after = "London"),
+                Subtotal(name = "Scotland alone", categories = "Scotland", after = 2, id = 1)
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/location/",
+            '{"view":{"transform":{"insertions":[',
+            '{"anchor":1,"name":"London alone","function":"subtotal","args":[1],"kwargs":',
+            '{"positive":[1]},"id":2},',
+            '{"anchor":2,"name":"Scotland alone","function":"subtotal","args":[2],"kwargs":',
+            '{"positive":[2]},"id":1}]}}}'
         )
     })
 
