@@ -14,6 +14,7 @@ SummaryStat(
   categories = NULL,
   position = c("relative", "top", "bottom"),
   after = NULL,
+  before = NULL,
   includeNA = FALSE
 )
 
@@ -23,6 +24,7 @@ SummaryStat(
   categories = NULL,
   position = c("relative", "top", "bottom"),
   after = NULL,
+  before = NULL,
   includeNA = FALSE
 )
 

@@ -120,21 +120,27 @@ Subtotal <- function(name,
                      categories = NULL,
                      position = c("relative", "top", "bottom"),
                      after = NULL,
-                     negative = NULL
+                     before = NULL,
+                     negative = NULL,
+                     na.rm = TRUE,
+                     id = NULL
 ) {
     if (is.null(categories) && is.null(negative)) {
         halt("Must specify at least one of categories or negative for a valid Subtotal")
     }
     # match.args position
     position <- match.arg(position)
-    validatePosition(position, after)
+    validatePosition(position, after, before)
 
     subtotal_info <- list(
         name = name,
         categories = categories,
         position = position,
         after = after,
-        negative = negative
+        before = before,
+        negative = negative,
+        na.rm = na.rm,
+        id = id
     )
     # Remove NULLs
     if (is.null(subtotal_info$categories)) subtotal_info$categories <- NULL
@@ -143,11 +149,19 @@ Subtotal <- function(name,
     return(new("Subtotal", subtotal_info))
 }
 
-validatePosition <- function(position, after) {
-    if (position != "relative" && !is.null(after)) {
+validatePosition <- function(position, after, before = NULL) {
+    # `before` is only supported in MR insertions for now
+    if (position != "relative" && (!is.null(after) || !is.null(before))) {
         halt(
             "If position is not relative, you cannot supply a category id",
-            " or name to the ", dQuote("after"), " argument"
+            " or name to the ", dQuote("after"), " or ", dQuote("before"), " arguments"
+        )
+    }
+
+    if (!is.null(after) && !is.null(before)) {
+        halt(
+            "Cannot specify both the ", dQuote("after"), " and ", dQuote("before"),
+            "arguments"
         )
     }
 }
@@ -194,9 +208,10 @@ getSubtotals <- function(x) {
     if (is.null(transforms(x)) || is.null(inserts)) {
         return(NULL)
     }
-
+    # Treat MR insertions of "any"/"anynm" as Subtotals
+    subtotal_functions <- c("subtotal", "any_selected", "any_non_missing_selected")
     sub_heads <- lapply(inserts, function(insrt) {
-        if (is.null(insrt$`function`) || insrt$`function` == "subtotal") {
+        if (is.null(insrt$`function`) || insrt$`function` %in% subtotal_functions) {
             return(insrt)
         }
         return(NULL)
@@ -222,11 +237,14 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function(x, value) {
         # Subtotal() or Heading()
         value <- list(value)
     }
-
-    inserts <- Insertions(data = lapply(value,
-        makeInsertion,
-        var_categories = categories(x)
-    ))
+    if (!is.MR(x)) {
+        var_items <- categories(x)
+    } else {
+        var_items <- subvariables(x)
+    }
+    inserts <- Insertions(
+        data = lapply(value, makeInsertion, var_items = var_items, alias = alias(x))
+    )
 
     bd <- list("transform" = list("insertions" = inserts))
     # setEntitySlot manages old inserts so they are not duplicated
@@ -263,9 +281,12 @@ setMethod("subtotals<-", c("CrunchVariable", "NULL"), function(x, value) {
 #'
 #' @param x an object the is a child of [Insertion][Insertions] (e.g.
 #' `Subtotal`, `Heading`)
-#' @param var_categories categories (from `categories(variable)`) to used by
+#' @param var_items Either categories (from `categories(variable)`) or subvariables
+#' (from `subvariables(variable)`) to used by
 #' `makeInsertions` to make `Insertions` from a child object (e.g. `Subtotal` or
-#' `Heading`)
+#' `Heading`).
+#' @param alias The alias of the variable the insertion is being added to, only
+#' needed for MR insertions.
 #'
 #' @return an Insertion object
 #'
@@ -277,12 +298,21 @@ NULL
 
 #' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "Subtotal", function(x, var_categories) {
+setMethod("makeInsertion", "Subtotal", function(x, var_items, alias) {
+    # Can distinguish between categorical and MR insertions by checking if
+    # var_items are categories or subvariables
+    if (is.AbstractCategories(var_items)) {
+        func <- "subtotal"
+    } else {
+        func <- ifelse(na.rm, "any_selected", "any_non_missing_selected")
+    }
+
     out <- .Insertion(
-        anchor = anchor(x, var_categories), name = name(x),
-        `function` = "subtotal",
-        args = arguments(x, var_categories),
-        kwargs = kwarguments(x, var_categories)
+        anchor = anchor(x, var_items),
+        name = name(x),
+        `function` = func,
+        args = arguments(x, var_items),
+        kwargs = subtotalTerms(x, var_items, alias)
     )
 
     # Remove empty lists and ensure keys that should be lists are stored
@@ -305,14 +335,14 @@ setMethod("makeInsertion", "Subtotal", function(x, var_categories) {
 
 #' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "Heading", function(x, var_categories) {
-    return(.Insertion(anchor = anchor(x, var_categories), name = name(x)))
+setMethod("makeInsertion", "Heading", function(x, var_items, alias) {
+    return(.Insertion(anchor = anchor(x, var_items), name = name(x)))
 })
 
 # makeInsertion(insertion) simply returns an insertion.
 #' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "Insertion", function(x, var_categories) return(x))
+setMethod("makeInsertion", "Insertion", function(x, var_items, alias) return(x))
 
 
 #' Convert from Insertion to Insertion subtypes
@@ -352,11 +382,17 @@ subtypeInsertion <- function(insert) {
     }
 
     anch <- anchor(insert)
-    if (anch %in% c("top", "bottom")) {
+    if (is.list(anch)) {
+        position <- "relative"
+        after <- if (anch$position == "after") anch$alias
+        before <- if (anch$position == "before") anch$alias
+    } else if (anch %in% c("top", "bottom")) {
         after <- NULL
+        before <- NULL
         position <- anch
     } else {
         after <- anch
+        before <- NULL
         position <- "relative"
     }
 
@@ -366,15 +402,24 @@ subtypeInsertion <- function(insert) {
             # we plan to migrate to having `kwargs$positive` instead
             # of `args`. Our migration plan is to have them be duplicated
             # to start, so for now trust the kwargs first
-            kwargs <- kwarguments(insert) #nolint
+            kwargs <- subtotalTerms(insert) #nolint
             positive <- kwargs$positive %||% arguments(insert)
             insert <- Subtotal(
                 name = name(insert), after = after,
                 position = position, categories = positive,
-                negative = kwargs$negative
+                negative = kwargs$negative,
+                id = id(insert)
             )
-        }
-        if (func(insert) %in% names(summaryStatInsertions)) {
+        } else if (func(insert) %in% c("any_selected", "any_non_missing_selected")) {
+            # MR insertion
+            kwargs <- subtotalTerms(insert) #nolint
+            insert <- Subtotal(
+                name = name(insert), after = after, before = before,
+                position = position, variable = kwargs$variable,
+                categories = kwargs$subvar_ids,
+                id = id(insert)
+            )
+        } else if (func(insert) %in% names(summaryStatInsertions)) {
             # this is a summary statistic, make it so
             insert <- SummaryStat(
                 name = name(insert),

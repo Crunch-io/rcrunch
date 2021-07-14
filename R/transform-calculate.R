@@ -118,7 +118,8 @@ collateCats <- function(inserts, var_cats) {
 # for a single Insertion, and a set of categories (or collated categories and
 # insertions) find the position to insert to
 findInsertPosition <- function(insert, cats) {
-    anchr <- anchor(insert)
+    anchr <- anchor(insert, var_items = cats)
+
     # if the anchor is top, put at the beginning
     if (anchr == "top") {
         return(0)

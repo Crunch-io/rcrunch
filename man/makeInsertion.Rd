@@ -9,21 +9,25 @@
 \alias{makeInsertion,SummaryStat-method}
 \title{Convert a child class of Insertion into a proper Insertion}
 \usage{
-\S4method{makeInsertion}{Subtotal}(x, var_categories)
+\S4method{makeInsertion}{Subtotal}(x, var_items, alias)
 
-\S4method{makeInsertion}{Heading}(x, var_categories)
+\S4method{makeInsertion}{Heading}(x, var_items, alias)
 
-\S4method{makeInsertion}{Insertion}(x, var_categories)
+\S4method{makeInsertion}{Insertion}(x, var_items, alias)
 
-\S4method{makeInsertion}{SummaryStat}(x, var_categories)
+\S4method{makeInsertion}{SummaryStat}(x, var_items, alias)
 }
 \arguments{
 \item{x}{an object the is a child of \link[=Insertions]{Insertion} (e.g.
 \code{Subtotal}, \code{Heading})}
 
-\item{var_categories}{categories (from \code{categories(variable)}) to used by
+\item{var_items}{Either categories (from \code{categories(variable)}) or subvariables
+(from \code{subvariables(variable)}) to used by
 \code{makeInsertions} to make \code{Insertions} from a child object (e.g. \code{Subtotal} or
-\code{Heading})}
+\code{Heading}).}
+
+\item{alias}{The alias of the variable the insertion is being added to, only
+needed for MR insertions.}
 }
 \value{
 an Insertion object

@@ -25,7 +25,10 @@ Subtotal(
   categories = NULL,
   position = c("relative", "top", "bottom"),
   after = NULL,
-  negative = NULL
+  before = NULL,
+  negative = NULL,
+  na.rm = TRUE,
+  id = NULL
 )
 
 Heading(name, position = c("relative", "top", "bottom"), after = NULL)
@@ -39,7 +42,10 @@ Subtotal(
   categories = NULL,
   position = c("relative", "top", "bottom"),
   after = NULL,
-  negative = NULL
+  before = NULL,
+  negative = NULL,
+  na.rm = TRUE,
+  id = NULL
 )
 
 is.Subtotal(x)
