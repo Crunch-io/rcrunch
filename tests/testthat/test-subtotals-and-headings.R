@@ -298,24 +298,86 @@ with_mock_crunch({
         )
     })
 
-    test_that("can add a MR insertion via `Insertion()`", {
+    test_that("can add MR Subtotals", {
         expect_PATCH(
             subtotals(ds$mymrset) <- list(
-                Insertion(
-                    anchor = "top",
-                    `function` = "any_selected",
-                    name = "s1 or s2",
-                    id = 1,
-                    kwargs = list(
-                        variable = "mymrset",
-                        subvariable_ids = c("subvar1", "subvar2")
-                    )
-                )
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"), position = "top")
             ),
             "https://app.crunch.io/api/datasets/1/variables/mymrset/",
-            '{"view":{"transform":{"insertions":[{"anchor":"top","function":"any_selected",',
-            '"name":"s1 or s2","id":1,"kwargs":{"variable":"mymrset","subvariable_ids":',
-            '["subvar1","subvar2"]}}]}}}'
+            '{"view":{"transform":{"insertions":[{"anchor":"top","name":"s1 or s2",',
+            '"function":"any_non_missing_selected","kwargs":{"variable":',
+            '"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with after position", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"), after = "subvar1")
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":{"position":"after","alias":',
+            '"subvar1"},"name":"s1 or s2","function":"any_non_missing_selected","kwargs":',
+            '{"variable":"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with before position", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"), before = "subvar1")
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":{"position":"before","alias":',
+            '"subvar1"},"name":"s1 or s2","function":"any_non_missing_selected","kwargs":',
+            '{"variable":"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with na.rm=FALSE", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"), position = "top", na.rm=FALSE)
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":"top","name":"s1 or s2",',
+            '"function":"any_selected","kwargs":{"variable":',
+            '"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with subvar names", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                # Confusing thing: name="Second" matches alias="subvar1"
+                Subtotal(name = "s1 or s2", c("Second", "First"), after = "Second")
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":{"position":"after","alias":',
+            '"subvar1"},"name":"s1 or s2","function":"any_non_missing_selected","kwargs":',
+            '{"variable":"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with default position", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"))
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":{"position":"after","alias":',
+            '"subvar1"},"name":"s1 or s2","function":"any_non_missing_selected","kwargs":',
+            '{"variable":"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+
+    test_that("reasonable error when MR subvariables don't match aliases nor names", {
+        expect_error(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "bad", c("ABC", "subvar2"), position = "top")
+            ),
+            "`subvariable_ids` must be all aliases or all names, but"
         )
     })
 })

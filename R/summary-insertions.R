@@ -136,7 +136,7 @@ setMethod("initialize", "SummaryStat", function(.Object, ...) {
 setMethod("makeInsertion", "SummaryStat", function(x, var_items, alias) {
     if (is.null(arguments(x))) {
         # if there are no arguments, use all category ids
-        args <- ids(var_categories)
+        args <- ids(var_items)
     } else {
         args <- arguments(x, var_items)
     }

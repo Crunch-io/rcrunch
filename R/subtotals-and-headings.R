@@ -304,7 +304,7 @@ setMethod("makeInsertion", "Subtotal", function(x, var_items, alias) {
     if (is.AbstractCategories(var_items)) {
         func <- "subtotal"
     } else {
-        func <- ifelse(na.rm, "any_selected", "any_non_missing_selected")
+        func <- ifelse(x$na.rm, "any_non_missing_selected", "any_selected")
     }
 
     out <- .Insertion(

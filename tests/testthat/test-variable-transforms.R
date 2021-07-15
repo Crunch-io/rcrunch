@@ -287,7 +287,26 @@ with_mock_crunch({
         )
     })
 
-
+    test_that("Can add a MR insertion via `Insertion()`", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Insertion(
+                    anchor = "top",
+                    `function` = "any_selected",
+                    name = "s1 or s2",
+                    id = 1,
+                    kwargs = list(
+                        variable = "mymrset",
+                        subvariable_ids = c("subvar1", "subvar2")
+                    )
+                )
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":"top","function":"any_selected",',
+            '"name":"s1 or s2","id":1,"kwargs":{"variable":"mymrset","subvariable_ids":',
+            '["subvar1","subvar2"]}}]}}}'
+        )
+    })
 
     test_that("Can delete transform", {
         expect_PATCH(
