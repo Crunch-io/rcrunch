@@ -123,6 +123,7 @@ Subtotal <- function(name,
                      before = NULL,
                      negative = NULL,
                      na.rm = TRUE,
+                     variable = NULL,
                      id = NULL
 ) {
     if (is.null(categories) && is.null(negative)) {
@@ -140,6 +141,7 @@ Subtotal <- function(name,
         before = before,
         negative = negative,
         na.rm = na.rm,
+        variable = variable,
         id = id
     )
     # Remove NULLs
@@ -417,7 +419,7 @@ subtypeInsertion <- function(insert) {
             insert <- Subtotal(
                 name = name(insert), after = after, before = before,
                 position = position, variable = kwargs$variable,
-                categories = kwargs$subvar_ids,
+                categories = kwargs$subvariable_ids,
                 id = id(insert)
             )
         } else if (func(insert) %in% names(summaryStatInsertions)) {

@@ -244,7 +244,10 @@ setMethod("arguments", "Subtotal", .convertArgs)
 setMethod("subtotalTerms", "Subtotal", function(x, var_items, alias) {
     # We can distinguish between categorical insertions and MR insertions
     # by checking if the var_items are categories or subvariables
-    if (is.AbstractCategories(var_items)) {
+    # It's not ideal to default to the categories version, but since
+    # we always have `var_items` when we're about to send to the server
+    # the only times we don't have it aren't very important (eg printing)
+    if (missing(var_items) || is.AbstractCategories(var_items)) {
         categoricalSubtotalTerms(x, var_items)
     } else {
         subvariableSubtotalTerms(x, var_items, alias)
@@ -270,7 +273,7 @@ categoricalSubtotalTerms <- function(x, var_items) {
         negative <- x$negative
     }
 
-    list(positive = positive, negative = negative)
+    list(positive = list(positive), negative = negative)
 }
 
 subvariableSubtotalTerms <- function(x, var_items, alias) {
@@ -297,6 +300,9 @@ subvariableSubtotalTerms <- function(x, var_items, alias) {
         }
         subvariable_ids <- aliases(var_items)[matched]
     }
+
+    # Use variable if provided in the insertion, otherwise assume it's what we're inserting into
+    alias <- x$variable %||% alias
     list(variable = alias, subvariable_ids = subvariable_ids)
 }
 
