@@ -1,0 +1,183 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/17173f/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F17173f%2Fvariables%2F4b21f1%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/17173f/variables/4b21f1/"
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "references": {
+                        "alias": "like_dogs",
+                        "name": "like_dogs",
+                        "view": {
+                            "show_counts": false,
+                            "show_numeric_values": false,
+                            "transform": {
+                                "insertions": [
+                                    {
+                                        "function": "subtotal",
+                                        "name": "Love minus Dislike & Hate",
+                                        "args": [
+                                            1
+                                        ],
+                                        "anchor": "top",
+                                        "kwargs": {
+                                            "positive": [
+                                                1
+                                            ],
+                                            "negative": [
+                                                4,
+                                                5
+                                            ]
+                                        },
+                                        "id": 1
+                                    }
+                                ]
+                            },
+                            "include_missing": false,
+                            "column_width": null
+                        }
+                    },
+                    "derived": false,
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "missing": false,
+                                "id": 1,
+                                "name": "Love"
+                            },
+                            {
+                                "numeric_value": 2,
+                                "missing": false,
+                                "id": 2,
+                                "name": "Like"
+                            },
+                            {
+                                "numeric_value": 3,
+                                "missing": false,
+                                "id": 3,
+                                "name": "Neutral"
+                            },
+                            {
+                                "numeric_value": 4,
+                                "missing": false,
+                                "id": 4,
+                                "name": "Dislike"
+                            },
+                            {
+                                "numeric_value": 5,
+                                "missing": false,
+                                "id": 5,
+                                "name": "Hate"
+                            },
+                            {
+                                "numeric_value": null,
+                                "missing": true,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 0,
+            "measures": {
+                "count": {
+                    "data": [
+                        4,
+                        4,
+                        8,
+                        2,
+                        2,
+                        0
+                    ],
+                    "n_missing": 0,
+                    "metadata": {
+                        "references": {
+
+                        },
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {
+
+                            },
+                            "class": "numeric",
+                            "missing_reasons": {
+                                "No Data": -1
+                            }
+                        }
+                    }
+                }
+            },
+            "n": 20,
+            "filter_stats": {
+                "filtered_complete": {
+                    "unweighted": {
+                        "selected": 20,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 20,
+                        "other": 0,
+                        "missing": 0
+                    }
+                },
+                "filtered": {
+                    "unweighted": {
+                        "selected": 20,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 20,
+                        "other": 0,
+                        "missing": 0
+                    }
+                },
+                "is_cat_date": false
+            },
+            "unfiltered": {
+                "unweighted_n": 20,
+                "weighted_n": 20
+            },
+            "filtered": {
+                "unweighted_n": 20,
+                "weighted_n": 20
+            },
+            "counts": [
+                4,
+                4,
+                8,
+                2,
+                2,
+                0
+            ],
+            "element": "crunch:cube"
+        }
+    }
+}

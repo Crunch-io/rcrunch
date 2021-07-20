@@ -1,0 +1,109 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/17173f/variables/000000/",
+    "catalogs": {
+        "subvariables": "/api/datasets/17173f/variables/000000/subvariables/",
+        "parent": "/api/datasets/17173f/variables/",
+        "folder": "/api/datasets/17173f/folders/db2e21/"
+    },
+    "fragments": {
+        "user_settings": "/api/datasets/17173f/variables/000000/user_settings/",
+        "dataset": "/api/datasets/17173f/"
+    },
+    "views": {
+        "frequencies": "/api/datasets/17173f/variables/000000/frequencies/",
+        "cast": "/api/datasets/17173f/variables/000000/cast/",
+        "script": "/api/datasets/17173f/variables/000000/script/",
+        "values": "/api/datasets/17173f/variables/000000/values/",
+        "summary": "/api/datasets/17173f/variables/000000/summary/"
+    },
+    "body": {
+        "uniform_basis": false,
+        "secure": false,
+        "name": "All pets owned",
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "subreferences": {
+            "/api/datasets/17173f/variables/000000/subvariables/0002/": {
+                "alias": "allpets_2",
+                "name": "Dog"
+            },
+            "/api/datasets/17173f/variables/000000/subvariables/0001/": {
+                "alias": "allpets_1",
+                "name": "Cat"
+            },
+            "/api/datasets/17173f/variables/000000/subvariables/0003/": {
+                "alias": "allpets_3",
+                "name": "Bird"
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1,
+            "skipped": 8,
+            "not asked": 9
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "allpets",
+        "dataset_id": "17173f",
+        "owner": null,
+        "subvariables": [
+            "/api/datasets/17173f/variables/000000/subvariables/0001/",
+            "/api/datasets/17173f/variables/000000/subvariables/0002/",
+            "/api/datasets/17173f/variables/000000/subvariables/0003/"
+        ],
+        "hidden": false,
+        "view": {
+            "include_missing": false,
+            "show_counts": false,
+            "column_width": null,
+            "include_noneoftheabove": false
+        },
+        "type": "multiple_response",
+        "id": "000000",
+        "categories": [
+            {
+                "numeric_value": null,
+                "selected": false,
+                "id": 2,
+                "missing": false,
+                "name": "not selected"
+            },
+            {
+                "numeric_value": null,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "selected"
+            },
+            {
+                "numeric_value": 9,
+                "missing": true,
+                "id": 9,
+                "name": "not asked"
+            },
+            {
+                "numeric_value": 8,
+                "missing": true,
+                "id": 8,
+                "name": "skipped"
+            },
+            {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+            }
+        ],
+        "description": "Do you have any of these animals as pets? Please select all that apply."
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "/api/datasets/17173f/"
+    }
+}
