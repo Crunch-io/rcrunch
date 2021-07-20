@@ -273,7 +273,7 @@ categoricalSubtotalTerms <- function(x, var_items) {
         negative <- x$negative
     }
 
-    list(positive = list(positive), negative = negative)
+    list(positive = positive, negative = negative)
 }
 
 subvariableSubtotalTerms <- function(x, var_items, alias) {
