@@ -9,6 +9,8 @@ ARG USER=997
 ARG GROUP=991
 ENV HOMEDIR=${HOMEDIR}
 USER root
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
 RUN apt-get update && apt-get install build-essential libgit2-dev libssl-dev libcurl4-gnutls-dev libxml2-dev libsodium-dev -y
 # Add the user/group jenkins
 RUN groupadd --gid ${GROUP} jenkins \
