@@ -47,6 +47,9 @@ relative to another category in the cube (default)}
 \item{after}{character or numeric if \code{position} is "relative", then the
 category name or id to position the subtotal or heading after}
 
+\item{before}{character or numeric if \code{position} is relative (and the
+insertion type allows it - currently only MR subtotals).}
+
 \item{includeNA}{should missing categories be included in the summary?}
 
 \item{x}{for \code{is.SummaryStat()} only, an object to test if

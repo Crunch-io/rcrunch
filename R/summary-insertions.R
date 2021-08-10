@@ -25,6 +25,8 @@
 #' @param includeNA should missing categories be included in the summary?
 #' @param after character or numeric if `position` is "relative", then the
 #' category name or id to position the subtotal or heading after
+#' @param before character or numeric if `position` is relative (and the
+#' insertion type allows it - currently only MR subtotals).
 #' @param x for `is.SummaryStat()` only, an object to test if
 #' it is a `SummaryStat` object
 #'

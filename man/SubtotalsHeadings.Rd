@@ -28,6 +28,7 @@ Subtotal(
   before = NULL,
   negative = NULL,
   na.rm = TRUE,
+  variable = NULL,
   id = NULL
 )
 
@@ -45,6 +46,7 @@ Subtotal(
   before = NULL,
   negative = NULL,
   na.rm = TRUE,
+  variable = NULL,
   id = NULL
 )
 
@@ -80,8 +82,23 @@ relative to another category in the cube (default).}
 category name or id to position the subtotal or heading after. If not supplied
 this defaults to the last of the \code{categories} supplied to \code{Subtotal}.}
 
+\item{before}{character or numeric if \code{position} is "relative" and also the
+subtotal is on a Multiple Response variable only.}
+
 \item{negative}{character or numeric of the category names or ids to be subtracted
 for subtotals only}
+
+\item{na.rm}{For Multiple Response subtotals, whether to remove missings before
+calculating the subtotal (so that if \code{na.rm=TRUE} and there is one missing and
+one selected, the response would selected instead of missing). This defaults to
+\code{TRUE} to match how the crunch web application behaves.}
+
+\item{variable}{For Multiple Response subtotals, the parent MR variable that
+contains the subvariables that are being subtotaled (defaults to the variable
+that is having the Subtotal added to it)}
+
+\item{id}{For Multiple Response subtotals, an optional number or string to use
+as the new insertion's id (defaults to a sequential number).}
 
 \item{x}{either a variable or CrunchCube object to add or get subtotal
 transforms for, for \code{is.Subtotal()} and \code{is.Heading()} an object to test if
@@ -90,8 +107,8 @@ it is either a Subtotal or Heading}
 \item{value}{For \verb{[<-}, the replacement Subtotal to insert}
 }
 \description{
-Subtotals and headings for categorical Variables and
-CrunchCubes. These are especially useful for making aggregates across
+Subtotals and headings for Categorical Variables and Multiple Response
+Variables. These are especially useful for making aggregates across
 multiple categories (sometimes referred to as \emph{nets}, \emph{top box}, or
 \emph{top 2 box}).
 }

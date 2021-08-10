@@ -25,7 +25,6 @@
 \alias{arguments<-,Heading-method}
 \alias{arguments<-,SummaryStat-method}
 \alias{arguments,Insertion-method}
-\alias{id,Insertion-method}
 \alias{arguments,Subtotal-method}
 \alias{arguments,Heading-method}
 \alias{arguments,SummaryStat-method}
@@ -81,15 +80,13 @@ funcs(x)
 
 \S4method{arguments}{Insertion}(x)
 
-\S4method{id}{Insertion}(x)
-
-\S4method{arguments}{Subtotal}(x, var_categories)
+\S4method{arguments}{Subtotal}(x, var_items)
 
 \S4method{arguments}{Heading}(x)
 
-\S4method{arguments}{SummaryStat}(x, var_categories)
+\S4method{arguments}{SummaryStat}(x, var_items)
 
-\S4method{anchor}{Insertion}(x)
+\S4method{anchor}{Insertion}(x, ...)
 
 \S4method{anchor}{Subtotal}(x, var_items)
 
@@ -122,9 +119,10 @@ Insertion or Insertions}
 
 \item{value}{For \verb{[<-}, the replacement Insertion to insert}
 
-\item{var_categories}{categories (from \code{\link[=categories]{categories()}}) to used by the
-\code{arguments} and \code{anchor} methods when needed to translate between category
-names and category ids.}
+\item{var_items}{categories (from \code{\link[=categories]{categories()}}) or subvariables (from
+\code{\link[=subvariables]{subvariables()}} to used by the \code{arguments} and \code{anchor} methods when
+needed to translate between category/subvariable names and category
+ids/aliases.}
 }
 \description{
 Insertions allow you to insert new categories into a categorical-like

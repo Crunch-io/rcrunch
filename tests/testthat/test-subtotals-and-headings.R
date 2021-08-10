@@ -371,6 +371,22 @@ with_mock_crunch({
         )
     })
 
+    test_that("can add MR Subtotals with explicit alias", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(
+                    name = "s1 or s2",
+                    c("subvar1", "subvar2"),
+                    position = "top",
+                    alias="top2"
+                )
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":"top","name":"s1 or s2",',
+            '"function":"any_non_missing_selected","kwargs":{"variable":',
+            '"mymrset","subvariable_ids":["subvar1","subvar2"]},"alias":"top2","id":1}]}}}'
+        )
+    })
 
     test_that("reasonable error when MR subvariables don't match aliases nor names", {
         expect_error(
