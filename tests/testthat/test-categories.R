@@ -227,6 +227,19 @@ with_mock_crunch({
         )
     })
 
+    test_that("names(categories())<- doesn't have warning message", {
+        expect_warning(
+            expect_PATCH(
+                names(categories(ds$gender)) <- c("a", "b", "No Data"),
+                "https://app.crunch.io/api/datasets/1/variables/gender/",
+                '{"categories":[{"id":1,"missing":false,"name":"a","numeric_value":1},',
+                '{"id":2,"missing":false,"name":"b","numeric_value":2},{"id":-1,"missing":true,',
+                '"name":"No Data","numeric_value":null}]}'
+            ),
+            NA # NA means no warning
+        )
+    })
+
     test_that("categories ids cannot be set", {
         expect_error(
             ids(cats) <- rev(ids(cats)),
