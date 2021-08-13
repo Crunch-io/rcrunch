@@ -10,7 +10,14 @@
 #' @param progress.handler an optional function that resolves errors raised
 #' during an async request. Passed to the [`pollProgress()`] function.
 #' @keywords internal
-crunchAPI <- function(http.verb, url, config = list(), status.handlers = list(), progress.handler = NULL, ...) {
+crunchAPI <- function(
+    http.verb,
+    url,
+    config = list(),
+    status.handlers = list(),
+    progress.handler = NULL,
+    ...
+) {
     url ## force lazy eval of url
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
@@ -119,7 +126,11 @@ handleAPIsuccess <- function(code, response, progress.handler) {
                     message(paste0("Checking progress at: ", progress_url))
                 }
                 tryCatch(
-                    pollProgress(progress_url, getOption("crunch.poll.wait", 0.5), progress.handler),
+                    pollProgress(
+                        progress_url,
+                        getOption("crunch.poll.wait", 0.5),
+                        progress.handler
+                    ),
                     error = function(e) {
                         message(paste0(
                             "Something went wrong during `pollProgress()` of url: ",
