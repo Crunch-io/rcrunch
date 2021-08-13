@@ -106,8 +106,11 @@ emptyObject <- function(...) {
 I <- function(x) {
     ## Because of R deprecation warning:
     ## Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
-    if (!is.null(x)) x <- base::I(x)
-    return(x)
+    if (is.null(x)) return(x)
+    ## In R 4.1 S4 objects get warning if you try to I() them.
+    if (isS4(x)) return(x)
+
+    base::I(x)
 }
 
 null <- function(...) NULL

@@ -25,7 +25,7 @@ with_mock_crunch({
     test_that("Version catalog print method", {
         expect_identical(
             formatVersionCatalog(versions(ds),
-                from = strptime("2015-02-17", "%Y-%m-%d")
+                from = strptime("2015-02-17", "%Y-%m-%d", tz = "UTC")
             ),
             data.frame(
                 Name = c("another version", "initial load"),

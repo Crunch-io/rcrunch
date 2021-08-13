@@ -89,12 +89,17 @@ with_mock_crunch({
     })
 
     test_that("Scripts catalog print method", {
+        # Better error message for problem in R 4.1 and macos-arm64
+        formatted <- formatScriptCatalog(
+            scripts(ds),
+            from = strptime("2020-05-09", "%Y-%m-%d", tz = "UTC"),
+            body_width = 10
+        )
+        expect_equal(formatted$Timestamp, "2 days ago")
+
+        # full test
         expect_identical(
-            formatScriptCatalog(
-                scripts(ds),
-                from = strptime("2020-05-09", "%Y-%m-%d"),
-                body_width = 10
-            ),
+            formatted,
             data.frame(
                 Timestamp = c("2 days ago"),
                 scriptBody = paste0(strtrim(script_text, 7), "..."),
@@ -183,7 +188,9 @@ with_mock_crunch({
         expect_equal(
             failures,
             list(
-                last_attempted_script = "RENAME wrong_var_name TO age;\nRENAME wrong_var_name2 TO age;",
+                last_attempted_script = paste0(
+                    "RENAME wrong_var_name TO age;\nRENAME wrong_var_name2 TO age;"
+                ),
                 file = NULL,
                 errors = data.frame(
                     column = c(NA, NA),
@@ -210,7 +217,10 @@ with_mock_crunch({
                     error_handler = progress.handler
                 ))
             }, {
-                expect_error(ds <- runCrunchAutomation(ds, "NOT A COMMAND"), "Crunch Automation Error")
+                expect_error(
+                    ds <- runCrunchAutomation(ds, "NOT A COMMAND"),
+                    "Crunch Automation Error"
+                )
             }
         )
 
