@@ -4,6 +4,7 @@
 * Can now use `options(crunch.show.progress.url = TRUE)` to show the URL checked for progress (#565)
 * Avoids a possible bug when a hidden or private folder have bad entities in them (#561)
 * Fixed a bug in `as.data.frame()` where it would not respect the `include.hidden` argument (#560)
+* Fixed a warning message in R 4.1 when assigning two levels deep (#578)
 
 # crunch 1.28.0
 * Variables catalogs are now loaded lazily, which means some dataset operations will be much faster. You can override this behavior (useful for eg testing or rare situations when working on many datasets at once by using `forceVariableCatalog()` or `option(crunch.lazy.variable.catalog = FALSE)`).
