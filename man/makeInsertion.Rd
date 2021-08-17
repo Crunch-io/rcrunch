@@ -15,6 +15,12 @@
 
 \S4method{makeInsertion}{Insertion}(x, var_items, alias)
 
+\S4method{makeInsertion}{Subtotal}(x, var_items, alias)
+
+\S4method{makeInsertion}{Heading}(x, var_items, alias)
+
+\S4method{makeInsertion}{Insertion}(x, var_items, alias)
+
 \S4method{makeInsertion}{SummaryStat}(x, var_items, alias)
 }
 \arguments{
@@ -31,8 +37,17 @@ needed for MR insertions.}
 }
 \value{
 an Insertion object
+
+an Insertion object
 }
 \description{
+The Crunch API expects that \link[=SubtotalsHeadings]{Subtotals, Headings}, and
+other insertions all have the same shape. Before sending insertions to the
+server, we need to call \code{makeInsertion} on any insertions to make sure they
+are proper \code{Insertion}s. This process sometimes requires a variable's
+categories object (e.g. in order to convert from category names to category
+ids)
+
 The Crunch API expects that \link[=SubtotalsHeadings]{Subtotals, Headings}, and
 other insertions all have the same shape. Before sending insertions to the
 server, we need to call \code{makeInsertion} on any insertions to make sure they

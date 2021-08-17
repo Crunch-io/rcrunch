@@ -8,6 +8,10 @@
 subtypeInsertions(inserts)
 
 subtypeInsertion(insert)
+
+subtypeInsertions(inserts)
+
+subtypeInsertion(insert)
 }
 \arguments{
 \item{inserts}{an \code{Insertions} object for \code{subtypeInsertions}}
@@ -17,8 +21,15 @@ subtypeInsertion(insert)
 \value{
 an \code{Insertions} object with members subtyped for \code{subtypeInsertions}
 or a \code{Subtotal}, \code{Heading}, or \code{Insertion} for \code{subtypeInsertion}
+
+an \code{Insertions} object with members subtyped for \code{subtypeInsertions}
+or a \code{Subtotal}, \code{Heading}, or \code{Insertion} for \code{subtypeInsertion}
 }
 \description{
+Convert from Insertions with only Insertion objects (the only kind that are
+available from the Crunch API) to the more user-friendly and user-facing
+Subtotal and Heading object classes.
+
 Convert from Insertions with only Insertion objects (the only kind that are
 available from the Crunch API) to the more user-friendly and user-facing
 Subtotal and Heading object classes.
