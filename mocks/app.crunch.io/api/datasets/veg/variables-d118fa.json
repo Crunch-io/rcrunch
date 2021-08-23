@@ -315,6 +315,138 @@
             "notes": "survey weight note",
             "secure": false,
             "type": "numeric"
+        },
+        "var_24/": {
+            "alias": "funnel_aware_1",
+            "derived": false,
+            "description": "Awareness MR - Jicama",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_24",
+            "name": "Aware of Jicama",
+            "notes": "Have you ever heard of the vegetable Jicama?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "var_25/": {
+            "alias": "funnel_aware_2",
+            "derived": false,
+            "description": "Awareness MR - Kohlrabi",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_25",
+            "name": "Aware of Kohlrabi",
+            "notes": "Have you ever heard of the vegetable Kohlrabi?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "var_26/": {
+            "alias": "funnel_aware_mr",
+            "derived": true,
+            "description": "Awareness of Vegetables: Funnel",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_26",
+            "name": "Awareness of Vegetables",
+            "notes": "Have you ever heard of the vegetable...?",
+            "secure": false,
+            "subvariables": [
+                "var_26/subvariables/0001/",
+                "var_26/subvariables/0002/"
+            ],
+            "subvariables_catalog": "var_26/subvariables/",
+            "type": "multiple_response",
+            "uniform_basis": false
+        },
+        "var_27/": {
+            "alias": "funnel_buy_1",
+            "derived": false,
+            "description": "Purchase MR - Jicama",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_27",
+            "name": "Bought Jicama",
+            "notes": "Have you ever bought Jicama?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "var_28/": {
+            "alias": "funnel_buy_2",
+            "derived": false,
+            "description": "Purchase MR - Kohlrabi",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_28",
+            "name": "Bought of Kohlrabi",
+            "notes": "Have you ever bought Kohlrabi?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "var_29/": {
+            "alias": "funnel_buy_mr",
+            "derived": true,
+            "description": "Purchased Vegetables: Funnel",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_29",
+            "name": "Buy Vegetables",
+            "notes": "Have you ever bought...?",
+            "secure": false,
+            "subvariables": [
+                "var_29/subvariables/0001/",
+                "var_29/subvariables/0002/"
+            ],
+            "subvariables_catalog": "var_29/subvariables/",
+            "type": "multiple_response",
+            "uniform_basis": false
+        },
+        "var_30/": {
+            "alias": "funnel_consider_1",
+            "derived": false,
+            "description": "Consideration MR - Jicama",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_30",
+            "name": "Consider Jicama",
+            "notes": "Have you ever consdidered buying Jicama?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "var_31/": {
+            "alias": "funnel_consider_2",
+            "derived": false,
+            "description": "Consideration MR - Kohlrabi",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_31",
+            "name": "Consider of Kohlrabi",
+            "notes": "Have you ever consdidered buying Kohlrabi",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "var_32/": {
+            "alias": "funnel_consider_mr",
+            "derived": true,
+            "description": "Consideration of Vegetables: Funnel",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_32",
+            "name": "Consider Vegetables",
+            "notes": "Have you ever considered buying...?",
+            "secure": false,
+            "subvariables": [
+                "var_32/subvariables/0001/",
+                "var_32/subvariables/0002/"
+            ],
+            "subvariables_catalog": "var_32/subvariables/",
+            "type": "multiple_response",
+            "uniform_basis": false
         }
     },
     "orders": {

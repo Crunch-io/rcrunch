@@ -16,7 +16,13 @@
         "../../variables/var_11/",
         "../../variables/var_12/",
         "../../variables/var_13/",
-        "../../variables/var_14/"
+        "../../variables/var_14/",
+        "../../variables/var_24/",
+        "../../variables/var_25/",
+        "../../variables/var_30/",
+        "../../variables/var_31/",
+        "../../variables/var_27/",
+        "../../variables/var_28/"
     ],
     "index": {
         "../../variables/var_03/": {
@@ -181,9 +187,87 @@
             "scale": "interval",
             "secure": false,
             "type": "categorical"
+        },
+        "../../variables/var_24/": {
+            "alias": "funnel_aware_1",
+            "derived": false,
+            "description": "Awareness MR - Jicama",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_24",
+            "name": "Aware of Jicama",
+            "notes": "Have you ever heard of the vegetable Jicama?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "../../variables/var_25/": {
+            "alias": "funnel_aware_2",
+            "derived": false,
+            "description": "Awareness MR - Kohlrabi",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_25",
+            "name": "Aware of Kohlrabi",
+            "notes": "Have you ever heard of the vegetable Kohlrabi?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "../../variables/var_27/": {
+            "alias": "funnel_buy_1",
+            "derived": false,
+            "description": "Purchase MR - Jicama",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_27",
+            "name": "Bought Jicama",
+            "notes": "Have you ever bought Jicama?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "../../variables/var_28/": {
+            "alias": "funnel_buy_2",
+            "derived": false,
+            "description": "Purchase MR - Kohlrabi",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_28",
+            "name": "Bought of Kohlrabi",
+            "notes": "Have you ever bought Kohlrabi?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "../../variables/var_30/": {
+            "alias": "funnel_consider_1",
+            "derived": false,
+            "description": "Consideration MR - Jicama",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_30",
+            "name": "Consider Jicama",
+            "notes": "Have you ever consdidered buying Jicama?",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "../../variables/var_31/": {
+            "alias": "funnel_consider_2",
+            "derived": false,
+            "description": "Consideration MR - Kohlrabi",
+            "discarded": true,
+            "hidden": true,
+            "id": "var_31",
+            "name": "Consider of Kohlrabi",
+            "notes": "Have you ever consdidered buying Kohlrabi",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
         }
     },
     "self": "https://app.crunch.io/api/datasets/veg/folders/hidden/",
-    "size": 13
+    "size": 19
 }
 

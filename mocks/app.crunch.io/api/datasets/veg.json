@@ -65,12 +65,12 @@
             "view": true
         },
         "size": {
-            "columns": 23,
-            "derivations": 3,
+            "columns": 32,
+            "derivations": 6,
             "rows": 210,
-            "source_columns": 20,
+            "source_columns": 26,
             "unfiltered_rows": 210,
-            "variables": 23
+            "variables": 32
         },
         "start_date": null,
         "streaming": "no",

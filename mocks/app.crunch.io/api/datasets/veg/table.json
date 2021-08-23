@@ -816,6 +816,435 @@
             "name": "Survey Weight",
             "notes": "survey weight note",
             "type": "numeric"
+        },
+        "var_24": {
+            "alias": "funnel_aware_1",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": true,
+                    "name": "N/A",
+                    "numeric_value": 3
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Awareness MR - Jicama",
+            "name": "Aware of Jicama",
+            "notes": "Have you ever heard of the vegetable Jicama?",
+            "type": "categorical"
+        },
+        "var_25": {
+            "alias": "funnel_aware_2",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": true,
+                    "name": "N/A",
+                    "numeric_value": 3
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Awareness MR - Kohlrabi",
+            "name": "Aware of Kohlrabi",
+            "notes": "Have you ever heard of the vegetable Kohlrabi?",
+            "type": "categorical"
+        },
+        "var_26": {
+            "alias": "funnel_aware_mr",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1,
+                    "selected": true
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": true,
+                    "name": "N/A",
+                    "numeric_value": 3
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": true,
+            "description": "Awareness of Vegetables: Funnel",
+            "name": "Awareness of Vegetables",
+            "notes": "Have you ever heard of the vegetable...?",
+            "subreferences": {
+                "0001": {
+                    "alias": "funnel_aware_mr_1",
+                    "description": "Awareness MR - Jicama",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Jicama",
+                    "notes": "Have you ever heard of the vegetable Jicama?",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                },
+                "0002": {
+                    "alias": "funnel_aware_mr_2",
+                    "description": "Awareness MR - Kohlrabi",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Kohlrabi",
+                    "notes": "Have you ever heard of the vegetable Kohlrabi?",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                }
+            },
+            "subvariables": [
+                "0001",
+                "0002"
+            ],
+            "type": "multiple_response"
+        },
+        "var_27": {
+            "alias": "funnel_buy_1",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": true,
+                    "name": "N/A",
+                    "numeric_value": 3
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Purchase MR - Jicama",
+            "name": "Bought Jicama",
+            "notes": "Have you ever bought Jicama?",
+            "type": "categorical"
+        },
+        "var_28": {
+            "alias": "funnel_buy_2",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": true,
+                    "name": "N/A",
+                    "numeric_value": 3
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Purchase MR - Kohlrabi",
+            "name": "Bought of Kohlrabi",
+            "notes": "Have you ever bought Kohlrabi?",
+            "type": "categorical"
+        },
+        "var_29": {
+            "alias": "funnel_buy_mr",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1,
+                    "selected": true
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": true,
+                    "name": "N/A",
+                    "numeric_value": 3
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": true,
+            "description": "Purchased Vegetables: Funnel",
+            "name": "Buy Vegetables",
+            "notes": "Have you ever bought...?",
+            "subreferences": {
+                "0001": {
+                    "alias": "funnel_buy_mr_1",
+                    "description": "Purchase MR - Jicama",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Jicama",
+                    "notes": "Have you ever bought Jicama?",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                },
+                "0002": {
+                    "alias": "funnel_buy_mr_2",
+                    "description": "Purchase MR - Kohlrabi",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Kohlrabi",
+                    "notes": "Have you ever bought Kohlrabi?",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                }
+            },
+            "subvariables": [
+                "0001",
+                "0002"
+            ],
+            "type": "multiple_response"
+        },
+        "var_30": {
+            "alias": "funnel_consider_1",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": true,
+                    "name": "N/A",
+                    "numeric_value": 3
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Consideration MR - Jicama",
+            "name": "Consider Jicama",
+            "notes": "Have you ever consdidered buying Jicama?",
+            "type": "categorical"
+        },
+        "var_31": {
+            "alias": "funnel_consider_2",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": true,
+                    "name": "N/A",
+                    "numeric_value": 3
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "Consideration MR - Kohlrabi",
+            "name": "Consider of Kohlrabi",
+            "notes": "Have you ever consdidered buying Kohlrabi",
+            "type": "categorical"
+        },
+        "var_32": {
+            "alias": "funnel_consider_mr",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "Yes",
+                    "numeric_value": 1,
+                    "selected": true
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "No",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": true,
+                    "name": "N/A",
+                    "numeric_value": 3
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": true,
+            "description": "Consideration of Vegetables: Funnel",
+            "name": "Consider Vegetables",
+            "notes": "Have you ever considered buying...?",
+            "subreferences": {
+                "0001": {
+                    "alias": "funnel_consider_mr_1",
+                    "description": "Consideration MR - Jicama",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Jicama",
+                    "notes": "Have you ever consdidered buying Jicama?",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                },
+                "0002": {
+                    "alias": "funnel_consider_mr_2",
+                    "description": "Consideration MR - Kohlrabi",
+                    "format": {
+                        "summary": {
+                            "digits": 0
+                        }
+                    },
+                    "name": "Kohlrabi",
+                    "notes": "Have you ever consdidered buying Kohlrabi",
+                    "view": {
+                        "column_width": null,
+                        "include_missing": false,
+                        "show_counts": false,
+                        "show_numeric_values": false
+                    }
+                }
+            },
+            "subvariables": [
+                "0001",
+                "0002"
+            ],
+            "type": "multiple_response"
         }
     },
     "self": "https://app.crunch.io/api/datasets/veg/table/"
