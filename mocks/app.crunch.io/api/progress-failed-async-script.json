@@ -1,22 +1,23 @@
 {
     "element": "shoji:view",
     "self": "https://app.crunch.io/api/progress/",
-    "views": {
-        "result": "https://app.crunch.io/api/progress/result/"
-    },
     "value": {
-        "progress": -1,
         "message": {
+            "description": "Errors processing the script",
             "resolutions": [
                 {
                     "column": 1,
-                    "message": "Invalid command: NOT",
                     "command": 1,
-                    "line": 1
+                    "line": 1,
+                    "message": "Invalid command: NOT"
                 }
             ],
-            "type": "script:syntax",
-            "description": "Errors processing the script"
-        }
+            "type": "script:syntax"
+        },
+        "progress": -1
+    },
+    "views": {
+        "result": "https://app.crunch.io/api/progress/result/"
     }
 }
+

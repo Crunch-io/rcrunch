@@ -133,6 +133,7 @@ object_sort <- function(x) {
 }
 
 ids_from_ds <- function(ds, desired_ds_id) {
+    var_alias_order <- stable_var_alias_order(ds)
     ids <- c(
         # User ID
         "user_id" = me()@body$id,
@@ -140,7 +141,7 @@ ids_from_ds <- function(ds, desired_ds_id) {
         setNames(crunch::id(ds), desired_ds_id),
         # Variable IDs
         setNames(
-            ids(allVariables(ds))[order(aliases(allVariables(ds)))],
+            ids(allVariables(ds[var_alias_order])),
             sprintf("var_%02d", seq_along(allVariables(ds)))
         ),
         # Multitable IDs
@@ -159,6 +160,25 @@ ids_from_ds <- function(ds, desired_ds_id) {
     # it's easier to work with `reduce`
     purrr::imap(ids, list)
 }
+
+
+stable_var_alias_order <- function(ds) {
+    saved_order_path <- here::here("dev-misc/fixture-creation/var_order.csv")
+    saved_var_order <- suppressWarnings(try(read.csv(saved_order_path, stringsAsFactors = FALSE)[[1]], silent = TRUE))
+    if (inherits(saved_var_order, "try-error")) {
+        saved_var_order <- c()
+    }
+
+    all_vars <- aliases(allVariables(ds))
+    new_vars <- setdiff(all_vars, saved_var_order)
+    new_order <- c(saved_var_order, sort(new_vars))
+
+    if (!identical(new_order, saved_var_order)) {
+        write.csv(data.frame(alias = new_order), saved_order_path, row.names = FALSE)
+    }
+    new_order
+}
+
 
 ids_from_folders <- function(ds) {
     out <- c(

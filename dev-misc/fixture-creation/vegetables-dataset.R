@@ -492,7 +492,7 @@ dir_copy(
 )
 
 file_copy(
-    dir_ls(path(temp_dir, "player-crunch-io.s3.amazonaws.com"), glob = "*.json", recurse = TRUE),
+    dir_ls(temp_dir, glob = "*player-crunch-io.s3.amazonaws.com*.json", recurse = TRUE),
     here("mocks/app.crunch.io/api/datasets/veg/multitables/mt_01/cat-mr-tabbook.json"),
     overwrite = TRUE
 )
@@ -591,6 +591,7 @@ file_copy(
     overwrite = TRUE
 )
 
+sort_json_keys(path(here("mocks", "app.crunch.io", "api", "progress-failed-async-script.json")))
 dir_delete(temp_dir)
 
 
