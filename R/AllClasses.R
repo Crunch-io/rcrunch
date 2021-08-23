@@ -405,7 +405,7 @@ Insertions <- function(..., data = NULL) {
     fallback_ids <- setdiff(seq_len(length(out) * 2), existing_ids)
     lapply(seq_along(out), function(insertion_idx) {
         if (is.null(out[[insertion_idx]][["id"]])) {
-            out[[insertion_idx]]$id <<- fallback_ids[insertion_idx]
+            out[[insertion_idx]][["id"]] <<- fallback_ids[insertion_idx]
         }
     })
     out

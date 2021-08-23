@@ -279,21 +279,25 @@ categoricalSubtotalTerms <- function(x, var_items) {
 subvariableSubtotalTerms <- function(x, var_items, alias) {
     # If all subvar_items match aliases, assume they are aliases. Otherwise check if
     # they are all subvar names and use that
-    subvariable_ids <- x$categories # Stored as categories because of legacy
+    subvariable_ids <- x$categories # Stored as $categories because of legacy
     if (!all(subvariable_ids %in% aliases(var_items))) {
         matched <- match(subvariable_ids, names(var_items))
         if (any(is.na(matched))) {
             non_alias <- subvariable_ids[!(subvariable_ids %in% aliases(var_items))]
             if (length(non_alias) > 0) {
-                non_alias <- paste0("\n - ", paste0(dQuote(non_alias), collapse = ", "), " don't match any aliases ")
-            } else {
-                non_alias <- ""
+                non_alias <- paste0(
+                    "\n - ",
+                    paste0(dQuote(non_alias), collapse = ", "),
+                    " don't match any aliases "
+                )
             }
-            non_name <- subvariable_ids[!(subvariable_ids %in% aliases(var_items))]
+            non_name <- subvariable_ids[!(subvariable_ids %in% names(var_items))]
             if (length(non_name) > 0) {
-                non_name <- paste0("\n - ", paste(dQuote(non_name), collapse = ", "), " don't match any names")
-            } else {
-                non_name <- ""
+                non_name <- paste0(
+                    "\n - ",
+                    paste(dQuote(non_name), collapse = ", "),
+                    " don't match any names"
+                )
             }
 
             halt("`subvariable_ids` must be all aliases or all names, but:", non_alias, non_name)
