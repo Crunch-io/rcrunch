@@ -6,13 +6,15 @@ with_mock_crunch({
     ds <- cachedLoadDataset("Vegetables example")
     test_that("setup", {
         expect_identical(nrow(ds), 210L)
-        expect_identical(ncol(ds), 9L)
+        expect_identical(ncol(ds), 12L)
 
         expect_identical(
             names(ds),
             c(
                 "wave", "age", "healthy_eater", "enjoy_mr", "veg_enjoy_ca",
-                "ratings_numa", "weight", "last_vegetable", "last_vegetable_date"
+                "ratings_numa", "funnel_aware_mr", "funnel_consider_mr", "funnel_buy_mr",
+                "weight", "last_vegetable", "last_vegetable_date"
+
             )
         )
     })
@@ -109,6 +111,7 @@ with_mock_crunch({
         cdf <- as.data.frame(ds[, vars])
         # test local CDF variables
         cdf$newvar <- expected$newvar <- c(1:209, NA)
+
         expect_identical(csvToDataFrame(csv_df, cdf), expected)
     })
 
@@ -117,7 +120,9 @@ with_mock_crunch({
         csv_df <- read.csv(datasetFixturePath("veg-no-hidden.csv"), stringsAsFactors = FALSE)
         expected <- readRDS(datasetFixturePath("veg_hidden_df.rds"))
         cdf <- as.data.frame(ds, include.hidden = FALSE)
-        expect_identical(csvToDataFrame(csv_df, cdf), expected)
+        actual <- csvToDataFrame(csv_df, cdf)
+        actual <- actual[, !grepl("^funnel", names(actual))] # funnel vars added after test added
+        expect_identical(actual, expected)
     })
 
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
