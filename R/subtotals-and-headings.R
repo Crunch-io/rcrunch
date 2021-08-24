@@ -178,7 +178,7 @@ validatePosition <- function(position, after, before = NULL) {
     if (!is.null(after) && !is.null(before)) {
         halt(
             "Cannot specify both the ", dQuote("after"), " and ", dQuote("before"),
-            "arguments"
+            " arguments"
         )
     }
 }
@@ -640,7 +640,7 @@ validatePosition <- function(position, after, before = NULL) {
     if (!is.null(after) && !is.null(before)) {
         halt(
             "Cannot specify both the ", dQuote("after"), " and ", dQuote("before"),
-            "arguments"
+            " arguments"
         )
     }
 }

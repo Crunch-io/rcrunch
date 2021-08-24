@@ -519,5 +519,20 @@ with_test_authentication({
         expect_equal(arguments(subtotals(ds$v4)[[2]]), c(2, 1))
         expect_equal(arguments(subtotals(ds$v4)[[3]]), 2)
         expect_equal(arguments(subtotals(ds$v4)[[4]]), c(1, 2))
+
+
+        ds_veg <- cachedLoadDataset("Vegetables example") ## Has MR insertions
+        expect_prints(
+            subtotals(ds$funnel_aware_mr),
+            get_output(data.frame(
+                anchor = c("top"),
+                name = c("Jicama or Kohlrabi"),
+                func = c("subtotal"),
+                args = c("funnel_aware_mr_1", "funnel_aware_mr_2"),
+                kwargs = c(""),
+                stringsAsFactors = FALSE
+            )),
+            fixed = TRUE
+        )
     })
 })
