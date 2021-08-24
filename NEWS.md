@@ -1,4 +1,6 @@
-# crunch 1.28.1 (Development version)
+# crunch 1.28.2 (Development version)
+
+# crunch 1.28.1
 * `as.data.frame()` and `as.vector()` work with numeric arrays now (#558)
 * Can now create subtotal differences from rcrunch (#559)
 * Can now use `options(crunch.show.progress.url = TRUE)` to show the URL checked for progress (#565)
