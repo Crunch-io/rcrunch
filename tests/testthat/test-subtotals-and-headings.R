@@ -392,6 +392,42 @@ with_mock_crunch({
             '"mymrset","subvariable_ids":["subvar1","subvar2"]},"alias":"top2","id":1}]}}}'
         )
     })
+
+    test_that("reasonable error when MR subvariables don't match aliases nor names", {
+        expect_error(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "bad", c("ABC", "subvar2"), position = "top")
+            ),
+            "`subvariable_ids` must be all aliases or all names, but"
+        )
+    })
+
+    test_that("can use subtypeInsertion on handcrafted MR insertions", {
+        inserts <- Insertions(Insertion(
+            anchor = "top",
+            `function` = "any_selected",
+            name = "s1 or s2",
+            id = 1L,
+            kwargs = list(
+                variable = "mymrset",
+                subvariable_ids = c("subvar1", "subvar2")
+            ),
+            alias = NULL
+        ))
+
+        expect_equal(
+            subtypeInsertions(inserts),
+            Insertions(Subtotal(
+                "s1 or s2",
+                c("subvar1", "subvar2"),
+                position = "top",
+                id = 1L,
+                variable = "mymrset"
+            ))
+        )
+
+
+    })
 })
 
 
