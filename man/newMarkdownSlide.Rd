@@ -35,7 +35,7 @@ named arguments are passed to the API.}
 
 \item{subtitle}{The slide's subtitle}
 
-\item{file}{Filepath to an image}
+\item{file}{File path to an image}
 }
 \value{
 A \code{MarkdownCrunchSlide}

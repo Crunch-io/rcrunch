@@ -225,7 +225,8 @@ with_mock_crunch({
             paste0(
                 "Private CrunchDeck ", dQuote("2 deck about printing"), " with 3 slides:\n",
                 "    [[1]]: ", dQuote("donut"), " (donut)\n",
-                "    [[2]]: ", dQuote("table with filter and weight"), " | and a subtitle (table)\n",
+                "    [[2]]: ", dQuote("table with filter and weight"),
+                " | and a subtitle (table)\n",
                 "    [[3]]: <Untitled> | markdown slide (markdown)"
             ),
             fixed = TRUE,

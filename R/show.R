@@ -596,7 +596,10 @@ setMethod("show", "CrunchAnalysisSlide", function(object) {
         measures <- object@body$analysis$query$measures
         measures <- paste0(
             "- Measures: ",
-            paste0("\"", names(measures), "\" (", formatExpressionArgs(measures), ")", collapse = ", "),
+            paste0(
+                '"', names(measures), '" (", formatExpressionArgs(measures), ")',
+                collapse = ", "
+            ),
             "\n"
         )
 

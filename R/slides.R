@@ -532,7 +532,7 @@ setMethod("subtitle<-", "CrunchSlide", function(x, value) {
     setEntitySlot(x, "subtitle", value)
 })
 
-#' @rdname newSlide
+#' @rdname analysis-methods
 #' @export
 setMethod("type", "CrunchSlide", function(x) {
     return(x@body$type)
@@ -1078,7 +1078,7 @@ newMarkdownSlide <- function(deck, ..., title = "", subtitle = "") {
 }
 
 #' @rdname newMarkdownSlide
-#' @param file Filepath to an image
+#' @param file File path to an image
 #' @export
 markdownSlideImage <- function(file) {
     if (!file.exists(file)) halt("Could not find file: ", file)

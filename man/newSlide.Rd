@@ -2,7 +2,6 @@
 % Please edit documentation in R/slides.R
 \name{newSlide}
 \alias{newSlide}
-\alias{type,CrunchSlide-method}
 \title{Append a new slide to a Crunch Deck}
 \usage{
 newSlide(
@@ -17,8 +16,6 @@ newSlide(
   transform = NULL,
   ...
 )
-
-\S4method{type}{CrunchSlide}(x)
 }
 \arguments{
 \item{deck}{A Crunch Deck}

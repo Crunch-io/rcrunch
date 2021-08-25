@@ -22,6 +22,7 @@
 \alias{displaySettings<-}
 \alias{vizSpecs}
 \alias{vizSpecs<-}
+\alias{type,CrunchSlide-method}
 \alias{analyses,CrunchAnalysisSlide-method}
 \alias{analysis,CrunchAnalysisSlide-method}
 \alias{analysis<-,CrunchAnalysisSlide,formula-method}
@@ -99,6 +100,8 @@ displaySettings(x) <- value
 vizSpecs(x)
 
 vizSpecs(x) <- value
+
+\S4method{type}{CrunchSlide}(x)
 
 \S4method{analyses}{CrunchAnalysisSlide}(x)
 
