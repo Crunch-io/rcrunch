@@ -597,7 +597,7 @@ setMethod("show", "CrunchAnalysisSlide", function(object) {
         measures <- paste0(
             "- Measures: ",
             paste0(
-                '"', names(measures), '" (", formatExpressionArgs(measures), ")',
+                vapply(names(measures), dQuote, ""), " (", formatExpressionArgs(measures), ")",
                 collapse = ", "
             ),
             "\n"
