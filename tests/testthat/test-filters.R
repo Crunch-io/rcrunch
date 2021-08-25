@@ -1,5 +1,3 @@
-context("Filters")
-
 test_that("show method exists", {
     expect_true(is.character(get_output(CrunchFilter())))
 })

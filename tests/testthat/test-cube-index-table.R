@@ -1,5 +1,3 @@
-context("Index tables")
-
 uni_cube <- loadCube(test_path("cubes/univariate-categorical.json"))
 catXmrXmr_cube <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
 catXcat_cube <- loadCube(test_path("cubes/cat-x-cat.json"))

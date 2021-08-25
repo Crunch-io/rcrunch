@@ -1,5 +1,3 @@
-context("Subvariables")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     mr <- ds$mymrset

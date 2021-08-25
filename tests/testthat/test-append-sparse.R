@@ -1,5 +1,3 @@
-context("Appends with sparse data")
-
 with_test_authentication({
     part1 <- newDataset(data.frame(
         v4 = factor(rep(c("a", "b"), 500)),

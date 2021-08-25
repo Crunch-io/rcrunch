@@ -1,5 +1,3 @@
-context("Interacting with decks")
-
 with_mock_crunch({
     # Deck Catalog ------------------------------------------------------------
     ds <- loadDataset("test ds deck")

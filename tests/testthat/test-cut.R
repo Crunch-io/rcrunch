@@ -1,5 +1,3 @@
-context("cut function")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     gen <- ds$gender

@@ -1,5 +1,3 @@
-context("'Base sizes' in cubes")
-
 all.dims <- list(
     Admit = c("Admitted", "Rejected"),
     Gender = c("Male", "Female")

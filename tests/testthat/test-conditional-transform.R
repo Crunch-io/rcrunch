@@ -1,5 +1,3 @@
-context("Conditional transform")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     ds2 <- cachedLoadDataset("ECON.sav")

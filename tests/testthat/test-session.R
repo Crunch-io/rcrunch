@@ -1,5 +1,3 @@
-context("Sessions")
-
 with_mock_crunch({
     cr <- session()
     test_that("session() returns a session object", {

@@ -1,5 +1,3 @@
-context("Polling progress")
-
 test_that("progressMessage", {
     with(temp.option(crunch.show.progress = FALSE), {
         expect_silent(progressMessage("Message!"))

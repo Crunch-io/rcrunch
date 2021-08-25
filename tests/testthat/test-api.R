@@ -1,5 +1,3 @@
-context("API calling")
-
 test_that("Deleted endpoints tell user to upgrade", {
     fake410 <- fake_response("http://crunch.io/410", status_code = 410)
     expect_error(

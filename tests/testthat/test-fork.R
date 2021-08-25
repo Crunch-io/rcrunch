@@ -1,5 +1,3 @@
-context("Fork and merge")
-
 with_mock_crunch({
     ds1 <- cachedLoadDataset("test ds")
     ds2 <- cachedLoadDataset("ECON.sav")

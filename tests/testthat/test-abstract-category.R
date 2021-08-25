@@ -1,5 +1,3 @@
-context("Abstract Categories")
-
 insrts <- Insertions(data = list(
     list(
         anchor = 6, name = "Low",

@@ -1,5 +1,3 @@
-context("Add a variable to a dataset")
-
 test_that("toVariable parses R numerics", {
     expect_identical(
         toVariable(2L:4L, name = "Numbers!", alias = "num"),

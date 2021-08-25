@@ -1,5 +1,3 @@
-context("Dataset catalog")
-
 with_mock_crunch({
     datcat <- datasets()
 

@@ -1,7 +1,3 @@
-context("Getting values to make local R objects")
-
-
-
 with_mock_crunch({
     ds <- cachedLoadDataset("Vegetables example")
     test_that("setup", {

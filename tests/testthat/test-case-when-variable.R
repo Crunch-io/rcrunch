@@ -1,5 +1,3 @@
-context("caseWhen variable")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
 

@@ -1,5 +1,3 @@
-context("Deleting rows of a dataset")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     test_that("dropRows generates the right request", {

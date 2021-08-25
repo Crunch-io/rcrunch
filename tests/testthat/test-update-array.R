@@ -1,5 +1,3 @@
-context("Update array variables")
-
 with_test_authentication({
     ds <- mrdf.setup(newDataset(mrdf))
     test_that("Subvariable values before trying to update", {

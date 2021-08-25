@@ -1,5 +1,3 @@
-context("Dataset object and methods")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     ds2 <- cachedLoadDataset("ECON.sav")

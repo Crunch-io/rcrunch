@@ -1,5 +1,3 @@
-context("UTF-8 Encoding")
-
 ## Meta test of encoding of the test files
 test_that("All test- files are ASCII (for CHECK)", {
     testfiles <- dir(pattern = "^test.*R$")

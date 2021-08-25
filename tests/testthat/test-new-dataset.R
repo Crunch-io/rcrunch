@@ -1,5 +1,3 @@
-context("Making a new dataset")
-
 test_that("write.csv.gz gzips a csv", {
     df <- data.frame(a = 1:1000)
     f <- tempfile()

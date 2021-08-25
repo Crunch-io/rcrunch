@@ -1,5 +1,3 @@
-context("Versions")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     test_that("Version catalog exists", {

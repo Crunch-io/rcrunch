@@ -1,5 +1,3 @@
-context("changeCategoryID")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
 

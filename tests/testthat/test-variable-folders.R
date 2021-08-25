@@ -1,5 +1,3 @@
-context("Variable folders")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
 

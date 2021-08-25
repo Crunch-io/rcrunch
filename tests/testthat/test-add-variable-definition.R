@@ -1,5 +1,3 @@
-context("VariableDefinition")
-
 test_that("VariableDefinition constructs", {
     expect_is(VariableDefinition(), "VariableDefinition")
     expect_is(VarDef(), "VariableDefinition")

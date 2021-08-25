@@ -1,4 +1,3 @@
-context("Cube subsets")
 test_that("replaceMissingWithTRUE", {
     expect_identical(
         replaceMissingWithTRUE(alist(, 1)),

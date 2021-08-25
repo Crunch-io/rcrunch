@@ -1,5 +1,3 @@
-context("Variable transformations")
-
 insrts_list <- list(
     list(
         anchor = 6, name = "Low",

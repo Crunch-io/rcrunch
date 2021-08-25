@@ -1,5 +1,3 @@
-context("Batch catalog")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     test_that("batches method", {

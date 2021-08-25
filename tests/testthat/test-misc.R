@@ -1,5 +1,3 @@
-context("Various helper functions")
-
 test_that("is.error", {
     e <- try(halt("error in a box"), silent = TRUE)
     expect_true(is.error(e))

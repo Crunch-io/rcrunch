@@ -1,5 +1,3 @@
-context("Searching for datasets and variables")
-
 with_mock_crunch({
     results <- searchDatasets("gender")
 

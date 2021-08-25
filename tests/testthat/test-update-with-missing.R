@@ -1,5 +1,3 @@
-context("Update variables with NAs")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     ds2 <- loadDataset("an archived dataset", kind = "archived")

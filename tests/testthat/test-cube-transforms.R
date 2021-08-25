@@ -1,5 +1,3 @@
-context("Cube transformations")
-
 ##############################################################
 ### Transforms calculation tests (ie the numbers are right)
 ##############################################################

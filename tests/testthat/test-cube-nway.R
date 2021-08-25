@@ -1,5 +1,3 @@
-context("Cubes with >2 dimensions")
-
 with_test_authentication({
     with(test.dataset(newDatasetFromFixture("apidocs")), {
         # Remove this adding of no data chunk once the "default values"

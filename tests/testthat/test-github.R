@@ -1,5 +1,3 @@
-context("GitHub version check")
-
 with(temp.option(crunch.check.updates = NULL), {
     with_mock_crunch({
         without_interactive({

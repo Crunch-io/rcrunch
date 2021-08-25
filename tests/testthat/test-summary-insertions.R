@@ -1,5 +1,3 @@
-context("Summary statistic insertions")
-
 test_that("SummaryStats accepts a variety of inputs", {
     mean1 <- SummaryStat(
         name = "Approval", stat = "mean",

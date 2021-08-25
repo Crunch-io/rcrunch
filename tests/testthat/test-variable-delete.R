@@ -1,5 +1,3 @@
-context("Deleting variables")
-
 test_that("delete() method fallback", {
     expect_error(delete(NULL), "'delete' only valid for Crunch objects")
     expect_error(delete(list()), "'delete' only valid for Crunch objects")

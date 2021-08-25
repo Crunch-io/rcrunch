@@ -1,5 +1,3 @@
-context("CrunchBox")
-
 test_that("Box size limit check", {
     expect_false(boxTooBig(0, 0))
     expect_false(boxTooBig(1, 0))

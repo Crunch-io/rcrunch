@@ -1,5 +1,3 @@
-context("Cubes with categorical array and multiple response")
-
 with_test_authentication({
     cubemrdf <- mrdf
     cubemrdf$v5 <- as.factor(c("A", "A", "B", "B"))

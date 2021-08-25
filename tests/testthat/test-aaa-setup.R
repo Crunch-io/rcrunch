@@ -1,5 +1,3 @@
-context("rcrunch is ready to run tests")
-
 test_that("cube fixtures are up to date", {
     skip_on_cran()
     potential_path <- file.path(testthat::test_path("..", "..", "mocks"))

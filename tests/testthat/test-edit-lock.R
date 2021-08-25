@@ -1,5 +1,3 @@
-context("Locking and unlocking edit privileges")
-
 with_test_authentication({
     ds <- newDataset(df[, 4, drop = FALSE])
     test_that("I can lock the dataset", {

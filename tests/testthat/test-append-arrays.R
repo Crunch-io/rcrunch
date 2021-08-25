@@ -1,5 +1,3 @@
-context("Appending datasets with arrays")
-
 with_test_authentication({
     whereas("Appending arrays with mismatching names and aliases", {
         part1 <- mrdf.setup(newDataset(mrdf), selections = "1.0")

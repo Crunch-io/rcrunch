@@ -1,5 +1,3 @@
-context("datasetReference")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     ds_url <- self(ds)

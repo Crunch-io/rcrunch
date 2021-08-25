@@ -1,5 +1,3 @@
-context("Pretty printing")
-
 tst_array <- array(c(100, NA, 3, 40, 500, 6000, 70000, 80, 9),
     dim = c(3, 3)
 )

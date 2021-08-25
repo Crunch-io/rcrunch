@@ -1,5 +1,3 @@
-context("dimSums can collapse arbitrary cube dimensions")
-
 mr_x_mr <- loadCube("cubes/full-cube.json")
 mr_x_mr_dims <- dimnames(mr_x_mr)
 

@@ -1,5 +1,3 @@
-context("Teams")
-
 with_mock_crunch({
     teams <- getTeams()
     test_that("Getting teams catalog", {

@@ -1,5 +1,3 @@
-context("Datetime formatting")
-
 test_that("from8601 parses", {
     expect_equal(
         from8601("2015-02-12T10:28:05.632000+00:00"),

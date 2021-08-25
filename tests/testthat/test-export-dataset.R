@@ -1,5 +1,3 @@
-context("Export dataset")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     test_that("Export POST request", {

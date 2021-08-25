@@ -1,5 +1,3 @@
-context("Categories")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     cats <- categories(ds$gender)

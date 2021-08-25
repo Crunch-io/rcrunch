@@ -1,5 +1,3 @@
-context("Weights")
-
 with_mock_crunch({
     oldds <- cachedLoadDataset("test ds")
     newds <- cachedLoadDataset("ECON.sav")

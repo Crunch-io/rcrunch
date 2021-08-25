@@ -1,5 +1,3 @@
-context("User access")
-
 user_cat_output <- get_output(data.frame(
     name = c("Bill User", "Roger User"),
     email = c("william.user@example.io", "ruser@crunch.io"),

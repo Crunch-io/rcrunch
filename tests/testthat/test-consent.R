@@ -1,5 +1,3 @@
-context("Consent")
-
 test_that("askForPermission says no if not interactive", {
     expect_false(askForPermission())
 })

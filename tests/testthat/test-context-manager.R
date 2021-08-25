@@ -1,5 +1,3 @@
-context("Context manager")
-
 test_that("Enter and exit are run", {
     a <- NULL
     tester <- ContextManager(

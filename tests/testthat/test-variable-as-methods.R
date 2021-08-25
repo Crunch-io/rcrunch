@@ -1,5 +1,3 @@
-context("Make a derived variable with a new type")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
 

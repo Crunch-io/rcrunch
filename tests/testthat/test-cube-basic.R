@@ -1,5 +1,3 @@
-context("Basic cube methods")
-
 v7 <- v7_ifany <- v7_always <- loadCube("cubes/univariate-categorical.json")
 v7_ifany@useNA <- "ifany"
 v7_always@useNA <- "always"

@@ -1,4 +1,3 @@
-context("CrunchCube computation speed alarms")
 # We don't need to stress test CRAN
 skip_on_cran()
 

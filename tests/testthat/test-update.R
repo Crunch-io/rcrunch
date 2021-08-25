@@ -1,5 +1,3 @@
-context("Update a dataset")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     test_that("Updating values makes a POST request to the table endpoint", {

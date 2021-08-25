@@ -1,5 +1,3 @@
-context("Flipping array subvariables")
-
 with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
 

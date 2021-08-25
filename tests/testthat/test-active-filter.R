@@ -1,5 +1,3 @@
-context("Filtering datasets and variables in the R session")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     ds2 <- ds[ds$gender == "Male", ]

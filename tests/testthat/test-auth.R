@@ -1,5 +1,3 @@
-context("Authentication")
-
 test_that("login checks for email and password before POSTing", {
     expect_error(
         crunchAuth(email = NULL),

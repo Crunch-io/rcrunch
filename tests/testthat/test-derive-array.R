@@ -1,5 +1,3 @@
-context("Deriving array variables")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     test_that("deriveArray works with MR", {

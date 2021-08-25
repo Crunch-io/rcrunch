@@ -1,5 +1,3 @@
-context("Add an array variable to a dataset")
-
 test_that("POSTNewVariable rejects invalid categories", {
     expect_error(
         POSTNewVariable(

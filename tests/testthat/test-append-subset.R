@@ -1,5 +1,3 @@
-context("Appending subsets")
-
 with_mock_crunch({
     ds1 <- cachedLoadDataset("test ds")
     ds2 <- cachedLoadDataset("ECON.sav")

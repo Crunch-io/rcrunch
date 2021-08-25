@@ -1,5 +1,3 @@
-context("Combine categories")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
 

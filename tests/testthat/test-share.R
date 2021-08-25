@@ -1,5 +1,3 @@
-context("Sharing")
-
 me <- "fake.user@example.com"
 
 with_mock_crunch({

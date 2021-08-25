@@ -1,5 +1,3 @@
-context("Hiding variables")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("ECON.sav")
     test_that("hiddenVariables", {

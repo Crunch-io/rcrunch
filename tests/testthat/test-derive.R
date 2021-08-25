@@ -1,5 +1,3 @@
-context("Derive a new variable")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     # manually make a variable from json mock

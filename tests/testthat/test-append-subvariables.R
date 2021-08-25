@@ -1,5 +1,3 @@
-context("Appending datasets with unbound subvariables")
-
 with_test_authentication({
     whereas("When appending a dataset with unbound subvariables", {
         part1 <- mrdf.setup(newDataset(mrdf), selections = "1.0")

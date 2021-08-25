@@ -1,5 +1,3 @@
-context("Dataset stream")
-#
 mock_stream_rows <- data.frame(
     birthyr = c(0.577530, 0.577530),
     gender = c(2, 1), # Female , Male

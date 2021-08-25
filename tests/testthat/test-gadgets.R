@@ -1,5 +1,3 @@
-context("Shiny gadgets")
-
 test_that("callFromOtherPackage", {
     NOTAFUNCTION <- sum <- function(x) {
         call <- match.call()

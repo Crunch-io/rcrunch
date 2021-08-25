@@ -1,5 +1,3 @@
-context("All variable metadata")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     vm <- variableMetadata(ds)

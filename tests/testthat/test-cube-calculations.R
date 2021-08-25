@@ -1,5 +1,3 @@
-context("Cube calculation attributes")
-
 test_that("dimensions attribute is correct on multiple MR cube", {
     cube <- loadCube("cubes/cat-x-mr-x-mr.json")
     marg <- margin.table(cube, 1:2)

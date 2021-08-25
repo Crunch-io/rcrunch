@@ -1,5 +1,3 @@
-context("Handling append conflicts")
-
 with_test_authentication({
     whereas("When attempting to append an array and a numeric", {
         part1 <- mrdf.setup(newDataset(mrdf))

@@ -1,5 +1,3 @@
-context("Folders of variables")
-
 test_that("parseFolderPath", {
     expect_identical(parseFolderPath("foo"), "foo")
     expect_identical(parseFolderPath(c("foo", "bar")), c("foo", "bar"))

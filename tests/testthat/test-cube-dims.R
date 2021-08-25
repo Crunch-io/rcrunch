@@ -1,5 +1,3 @@
-context("Cube dimensions")
-
 test_that("getDimTypes returns the expected cube dimension types", {
     ca_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
     expect_equivalent(

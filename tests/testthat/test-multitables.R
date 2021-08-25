@@ -1,5 +1,3 @@
-context("Multitables")
-
 test_that("default name for formula", {
     expect_identical(RHS_string(a + b ~ c + d + rollup(e)), "c + d + rollup(e)")
     expect_identical(RHS_string("a+b~c+d+rollup(e)"), "c+d+rollup(e)")

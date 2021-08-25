@@ -1,5 +1,3 @@
-context("Retrieving dataset list and single datasets")
-
 with_mock_crunch({
     test_that("listDatasets lists datasets in your personal project (and warns once)", {
         options(crunch.list.personal.msg = NULL)

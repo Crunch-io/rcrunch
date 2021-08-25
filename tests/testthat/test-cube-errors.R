@@ -1,5 +1,3 @@
-context("Cube error handling")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
 

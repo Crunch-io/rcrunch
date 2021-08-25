@@ -1,5 +1,3 @@
-context("Folder methods for projects with the new API")
-
 with_mock_crunch({
     proj <- projects()[["Project One"]]
     ds <- cachedLoadDataset("test ds")

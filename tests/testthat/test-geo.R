@@ -1,5 +1,3 @@
-context("Various geo functions")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     geo_data <- geo(ds$location)

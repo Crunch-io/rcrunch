@@ -1,5 +1,3 @@
-context("Expressions")
-
 test_that(".dispatchFilter uses right numeric function", {
     ## Use expect_prints because toJSON returns class "json" but prints correctly
     expect_prints(

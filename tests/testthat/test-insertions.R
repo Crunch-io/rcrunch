@@ -1,5 +1,3 @@
-context("Insertions")
-
 insrt <- Insertion(anchor = 6, name = "Low", `function` = "subtotal", args = c(1, 2))
 insrts <- Insertions(data = list(
     list(

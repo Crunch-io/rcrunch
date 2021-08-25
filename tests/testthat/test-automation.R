@@ -1,5 +1,3 @@
-context("Automation")
-
 test_that("string_is_file_like behaves", {
     expect_true(string_is_file_like("test.txt"))
     expect_true(string_is_file_like("test.crunch"))

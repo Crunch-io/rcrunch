@@ -1,5 +1,3 @@
-context("Shallow copies of variables")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     test_that("copy creates a correct VariableDefinition", {

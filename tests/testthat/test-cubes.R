@@ -1,5 +1,3 @@
-context("Crosstabbing")
-
 cubedf <- df
 cubedf$v7 <- as.factor(c(rep("C", 10), rep("D", 5), rep("E", 5)))
 cubedf$v8 <- as.Date(0:1, origin = "1955-11-05")

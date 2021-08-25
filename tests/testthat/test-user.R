@@ -1,5 +1,3 @@
-context("User stuff")
-
 with_mock_crunch({
     test_that("Getting user object", {
         expect_is(me(), "UserEntity")

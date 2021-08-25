@@ -1,5 +1,3 @@
-context("Projects")
-
 with_mock_crunch({
     projects <- session()$projects
     test_that("Getting projects catalog", {

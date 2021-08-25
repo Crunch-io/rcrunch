@@ -1,5 +1,3 @@
-context("Comparing datasets and variables")
-
 cat1 <- Categories(
     list(id = 1L, name = "B", numeric_value = 1L, missing = FALSE),
     list(id = 2L, name = "C", numeric_value = 2L, missing = FALSE),

@@ -1,5 +1,3 @@
-context("Sliding Categories")
-
 # Don't have great test fixtures for this so test helper functions hard
 test_that("slide_over works in typical cases", {
   expect_equal(

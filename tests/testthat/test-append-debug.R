@@ -1,5 +1,3 @@
-context("Debugging append")
-
 with_test_authentication({
     whereas("Appending with an exclusion on the incoming dataset", {
         part0 <- createDataset(name = now())

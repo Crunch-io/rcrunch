@@ -1,5 +1,3 @@
-context("Deep copies of variables")
-
 with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
     test_that("Can deep copy categorical", {

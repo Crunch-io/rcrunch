@@ -1,5 +1,3 @@
-context("Update error handling")
-
 with_test_authentication({
     ds <- newDataset(df[, 4, drop = FALSE])
     len <- length(as.vector(ds$v4[ds$v4 == "B"]))

@@ -1,5 +1,3 @@
-context("Variables")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     ds2 <- loadDataset("an archived dataset", "archived")

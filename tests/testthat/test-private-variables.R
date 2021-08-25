@@ -1,5 +1,3 @@
-context("Private variables")
-
 with_mock_crunch({
     ds <- loadDataset("Private test")
     test_that("privateVariables", {

@@ -1,5 +1,3 @@
-context("Derived array variables maintain subvar links")
-
 # nolint start
 # derived ds instantaitor
 new_ds_with_derived_array <- function() {

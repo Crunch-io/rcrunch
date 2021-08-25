@@ -1,5 +1,3 @@
-context("Expression validation")
-
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
     badexpr <- ds$NOTAVARIABLE == 3

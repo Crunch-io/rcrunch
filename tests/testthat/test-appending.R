@@ -1,5 +1,3 @@
-context("Append datasets")
-
 test_that("crunchTimeout", {
     with(
         temp.option(crunch.timeout = 7),

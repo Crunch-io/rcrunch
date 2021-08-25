@@ -1,5 +1,3 @@
-context("Variable grouping and order setting")
-
 test_that("VariableGroup and Order objects can be made", {
     expect_is(VariableGroup(group = "group1", entities = ""), "VariableGroup")
     expect_is(VariableGroup(name = "group1", entities = ""), "VariableGroup")
