@@ -38,6 +38,7 @@ Suggests:
     knitr,
     lintr,
     magrittr,
+    mockery,
     rmarkdown,
     rstudioapi,
     spelling,

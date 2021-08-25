@@ -69,19 +69,21 @@ with_mock_crunch({
 
     test_that("Can retrieve a non-empty scripts catalog", {
         ds_scripts <- scripts(ds)
-        expect_is(ds_scripts, "ScriptCatalog")
+        expect_s4_class(ds_scripts, "ScriptCatalog")
         # On catalog
         expect_equal(
             timestamps(ds_scripts),
-            as.POSIXlt("2020-05-06 17:36:27.237 UTC", tz = "UTC")
+            as.POSIXlt("2020-05-06 17:36:27.237 UTC", tz = "UTC"),
+            tolerance = .01
         )
         expect_equal(scriptBody(ds_scripts), script_text)
         # On single script
-        expect_is(ds_scripts[[1]], "Script")
+        expect_s4_class(ds_scripts[[1]], "Script")
         expect_true(is.script(ds_scripts[[1]]))
         expect_equal(
             timestamps(ds_scripts[[1]]),
-            as.POSIXlt("2020-05-06 17:36:27.237 UTC", tz = "UTC")
+            as.POSIXlt("2020-05-06 17:36:27.237 UTC", tz = "UTC"),
+            tolerance = .01
         )
         expect_equal(scriptBody(ds_scripts[[1]]), script_text)
     })
@@ -207,19 +209,17 @@ with_mock_crunch({
 
     test_that("Can interpret error from async script failures", {
         # Override progress with a pre-generated JSON at the url
-        with_mock(
-            `crunch::crPOST` = function(..., progress.handler = NULL) {
-                capture.output(crunch::pollProgress(
-                    "https://app.crunch.io/api/progress-failed-async-script.json",
-                    wait = 0.01,
-                    error_handler = progress.handler
-                ))
-            }, {
-                expect_error(
-                    ds <- runCrunchAutomation(ds, "NOT A COMMAND"),
-                    "Crunch Automation Error"
-                )
-            }
+        mockery::stub(runCrunchAutomation, "crPOST", function(..., progress.handler = NULL) {
+            capture.output(crunch::pollProgress(
+                "https://app.crunch.io/api/progress-failed-async-script.json",
+                wait = 0.01,
+                error_handler = progress.handler
+            ))
+        })
+
+        expect_error(
+            ds <- runCrunchAutomation(ds, "NOT A COMMAND"),
+            "Crunch Automation Error"
         )
 
         expect_message(
@@ -229,14 +229,12 @@ with_mock_crunch({
     })
 
     test_that("Get message on success when dry_run is TRUE", {
-        with_POST(
-            "", # Don't actually need to load anything, just need no POST error
-            expect_message(
-                runCrunchAutomation(ds, "# no commands", dry_run = TRUE),
-                "Script dry run was successful"
-            )
+        # Don't actually need to load anything, just need no POST error
+        mockery::stub(runCrunchAutomation, "crPOST", list())
+        expect_message(
+            runCrunchAutomation(ds, "# no commands", dry_run = TRUE),
+            "Script dry run was successful"
         )
-
     })
 
     test_that("error truncation works", {

@@ -6,9 +6,12 @@ test_that("toVariable parses R numerics", {
             alias = "num"
         ), class = "VariableDefinition")
     )
-    expect_equivalent(
+    expect_equal(
         toVariable(2L:4L, name = "Numbers!", alias = "num"),
-        list(values = 2L:4L, type = "numeric", name = "Numbers!", alias = "num")
+        structure(
+            list(values = 2L:4L, type = "numeric", name = "Numbers!", alias = "num"),
+            class = "VariableDefinition"
+        )
     )
 })
 test_that("toVariable parses R characters", {
@@ -35,7 +38,7 @@ test_that("toVariable parses factors", {
 })
 
 test_that("toVariable parses logical", {
-    expect_equivalent(
+    expect_equal(
         toVariable(c(TRUE, FALSE, FALSE, NA, TRUE)),
         VarDef(values = c(1L, 0L, 0L, -1L, 1L), type = "categorical", categories = list(
             list(id = 1L, name = "True", numeric_value = 1L, missing = FALSE, selected = TRUE),
@@ -64,26 +67,32 @@ test_that("toVariable parses haven::labelled", {
         rep(LETTERS[1:3], 3),
         structure(LETTERS[1:3], names = LETTERS[1:3])
     )
-    expect_equivalent(
+    expect_equal(
         toVariable(labelled),
-        list(values = rep(1:3, 3), type = "categorical", categories = list(
-            list(id = 1L, name = "A", numeric_value = 1L, missing = FALSE),
-            list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
-            list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
-            list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
-        ))
+        structure(
+            list(values = rep(1:3, 3), type = "categorical", categories = list(
+                list(id = 1L, name = "A", numeric_value = 1L, missing = FALSE),
+                list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
+                list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
+                list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
+            )),
+            class = "VariableDefinition"
+        )
     )
 
     # backwards compatilbity with old class names
     class(labelled) <- "labelled"
-    expect_equivalent(
+    expect_equal(
         toVariable(labelled),
-        list(values = rep(1:3, 3), type = "categorical", categories = list(
-            list(id = 1L, name = "A", numeric_value = 1L, missing = FALSE),
-            list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
-            list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
-            list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
-        ))
+        structure(
+            list(values = rep(1:3, 3), type = "categorical", categories = list(
+                list(id = 1L, name = "A", numeric_value = 1L, missing = FALSE),
+                list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
+                list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
+                list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
+            )),
+            class = "VariableDefinition"
+        )
     )
 
     # even if only some values are labelled, the values are still used
@@ -91,14 +100,17 @@ test_that("toVariable parses haven::labelled", {
         rep(LETTERS[1:3], 3),
         structure(LETTERS[2], names = LETTERS[2])
     )
-    expect_equivalent(
+    expect_equal(
         toVariable(labelled),
-        list(values = rep(1:3, 3), type = "categorical", categories = list(
-            list(id = 1L, name = "A", numeric_value = 1L, missing = FALSE),
-            list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
-            list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
-            list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
-        ))
+        structure(
+            list(values = rep(1:3, 3), type = "categorical", categories = list(
+                list(id = 1L, name = "A", numeric_value = 1L, missing = FALSE),
+                list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
+                list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
+                list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
+            )),
+            class = "VariableDefinition"
+        )
     )
 
 
@@ -109,14 +121,14 @@ test_that("toVariable parses haven::labelled", {
             names = LETTERS[2]
         )
     )
-    expect_equivalent(
+    expect_equal(
         toVariable(labelled),
-        list(values = rep(1:3, 3), type = "categorical", categories = list(
+        structure(list(values = rep(1:3, 3), type = "categorical", categories = list(
             list(id = 1L, name = "1", numeric_value = 1L, missing = FALSE),
             list(id = 2L, name = "2", numeric_value = 2L, missing = FALSE),
             list(id = 3L, name = "3", numeric_value = 3L, missing = FALSE),
             list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
-        ))
+        )), class = "VariableDefinition")
     )
 })
 
@@ -127,14 +139,14 @@ test_that("toVariable parses haven::labelled_spss", {
         ),
         na_values = LETTERS[1]
     )
-    expect_equivalent(
+    expect_equal(
         toVariable(labelled),
-        list(values = rep(1:3, 3), type = "categorical", categories = list(
+        structure(list(values = rep(1:3, 3), type = "categorical", categories = list(
             list(id = 1L, name = "A", numeric_value = 1L, missing = TRUE),
             list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
             list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
             list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
-        ))
+        )), class = "VariableDefinition")
     )
 
     # backwards compatilbity with old class names
@@ -145,14 +157,14 @@ test_that("toVariable parses haven::labelled_spss", {
     if (packageVersion("haven") > "1.1.2") {
         is.na.labelled_spss <<- haven:::is.na.haven_labelled_spss
     }
-    expect_equivalent(
+    expect_equal(
         toVariable(labelled),
-        list(values = rep(1:3, 3), type = "categorical", categories = list(
+        structure(list(values = rep(1:3, 3), type = "categorical", categories = list(
             list(id = 1L, name = "A", numeric_value = 1L, missing = TRUE),
             list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
             list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
             list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
-        ))
+        )), class = "VariableDefinition")
     )
 
     # even if only some values are labelled, the values are still used
@@ -162,14 +174,14 @@ test_that("toVariable parses haven::labelled_spss", {
         ),
         na_values = LETTERS[1]
     )
-    expect_equivalent(
+    expect_equal(
         toVariable(labelled),
-        list(values = rep(1:3, 3), type = "categorical", categories = list(
+        structure(list(values = rep(1:3, 3), type = "categorical", categories = list(
             list(id = 1L, name = "A", numeric_value = 1L, missing = TRUE),
             list(id = 2L, name = "B", numeric_value = 2L, missing = FALSE),
             list(id = 3L, name = "C", numeric_value = 3L, missing = FALSE),
             list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
-        ))
+        )), class = "VariableDefinition")
     )
 
 
@@ -180,14 +192,14 @@ test_that("toVariable parses haven::labelled_spss", {
         ),
         na_values = 1
     )
-    expect_equivalent(
+    expect_equal(
         toVariable(labelled),
-        list(values = rep(1:3, 3), type = "categorical", categories = list(
+        structure(list(values = rep(1:3, 3), type = "categorical", categories = list(
             list(id = 1L, name = "1", numeric_value = 1L, missing = TRUE),
             list(id = 2L, name = "2", numeric_value = 2L, missing = FALSE),
             list(id = 3L, name = "3", numeric_value = 3L, missing = FALSE),
             list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
-        ))
+        )), class = "VariableDefinition")
     )
 })
 
@@ -198,15 +210,15 @@ test_that("toVariable handles duplicate factor levels", {
     ## technically possible to create one like this:
     v <- structure(1:4, .Label = c("a", "b", "b", "c"), class = "factor")
     expect_warning(
-        expect_equivalent(
+        expect_equal(
             toVariable(v),
-            list(values = 1:4, type = "categorical", categories = list(
+            structure(list(values = 1:4, type = "categorical", categories = list(
                 list(id = 1L, name = "a", numeric_value = 1L, missing = FALSE),
                 list(id = 2L, name = "b", numeric_value = 2L, missing = FALSE),
                 list(id = 3L, name = "b  (1)", numeric_value = 3L, missing = FALSE),
                 list(id = 4L, name = "c", numeric_value = 4L, missing = FALSE),
                 list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
-            ))
+            )), class = "VariableDefinition")
         ),
         "Duplicate factor levels given: disambiguating them in translation to Categorical type"
     )
@@ -223,43 +235,43 @@ test_that("categoriesFromLevels parses levels correctly", {
     )
 })
 test_that("toVariable parses R Date class", {
-    expect_equivalent(
+    expect_equal(
         toVariable(as.Date(c("2014-12-16", "2014-12-17"))),
-        list(
+        structure(list(
             values = c("2014-12-16", "2014-12-17"), type = "datetime",
             resolution = "D"
-        )
+        ), class = "VariableDefinition")
     )
 })
 
 test_that("toVariable handles POSIX datetimes (and timezones)", {
     numtime <- 1454238117.123
 
-    expect_equivalent(
+    expect_equal(
         toVariable(as.POSIXct(numtime, origin = "1970-01-01", tz = "UTC")),
-        list(
+        structure(list(
             values = "2016-01-31T11:01:57.123", type = "datetime",
             resolution = "ms"
-        )
+        ), class = "VariableDefinition")
     )
 
     # We store times as UTC when they go between R and crunch's database, but we assume
     # they actually refer to local times, so when we convert a variable of eg 5AM central
     # time it gets stored as 5AM UTC
-    expect_equivalent(
+    expect_equal(
         toVariable(as.POSIXct(numtime, origin = "1970-01-01", tz = "America/Chicago")),
-        list(
+        structure(list(
             values = "2016-01-31T05:01:57.123", type = "datetime",
             resolution = "ms"
-        )
+        ), class = "VariableDefinition")
     )
 
-    expect_equivalent(
+    expect_equal(
         toVariable(as.POSIXct(numtime, origin = "1970-01-01", tz = "America/New_York")),
-        list(
+        structure(list(
             values = "2016-01-31T06:01:57.123", type = "datetime",
             resolution = "ms"
-        )
+        ), class = "VariableDefinition")
     )
 })
 
@@ -267,14 +279,14 @@ test_that("POSTNewVariable rejects invalid categories", {
     expect_error(
         POSTNewVariable(
             "",
-            list(
+            structure(list(
                 type = "categorical", name = "bad ids",
                 categories = list(
                     list(id = -1L, name = "B", numeric_value = 1L, missing = FALSE),
                     list(id = 2L, name = "C", numeric_value = 2L, missing = FALSE),
                     list(id = -1L, name = "No Data", numeric_value = NULL, missing = TRUE)
                 )
-            )
+            ), class = "VariableDefinition")
         ),
         "Invalid category ids: must be unique"
     )
@@ -484,7 +496,7 @@ with_test_authentication({
         v4 <- as.vector(ds$v4)
         expect_identical(levels(v4), c("B", "C"))
         ds$v4a <- v4
-        expect_equivalent(as.vector(ds$v4), as.vector(ds$v4a))
+        expect_equal(as.vector(ds$v4), as.vector(ds$v4a))
     })
     exclusion(ds) <- ds$v3 == 10
     test_that("Categorical to R and back with an exclusion", {
@@ -492,6 +504,6 @@ with_test_authentication({
         expect_identical(levels(v4b), c("B", "C"))
         expect_length(v4b, 19)
         ds$v4b <- v4b
-        expect_equivalent(as.vector(ds$v4b), as.vector(ds$v4a))
+        expect_equal(as.vector(ds$v4b), as.vector(ds$v4a))
     })
 })

@@ -19,18 +19,18 @@ test_that("modifyCats works like modifyList", {
     # modifyCats takes two AbstractCategories objects, and adds elements from the second to
     # the first, replacing any that have the same name in both.
     new_insrts <- modifyCats(insrts, insrts2)
-    expect_is(new_insrts, "AbstractCategories")
-    expect_is(new_insrts, "Insertions")
-    expect_equivalent(
+    expect_s4_class(new_insrts, "AbstractCategories")
+    expect_s4_class(new_insrts, "Insertions")
+    expect_equal(
         new_insrts,
-        AbstractCategories(data = list(
-            list(
+        Insertions(data = list(
+            Insertion(
                 anchor = 6, name = "Low",
                 `function` = "subtotal",
                 args = c(1, 2)
             ),
-            list(anchor = 10, name = "High"),
-            list(anchor = 1, name = "New one")
+            Insertion(anchor = 10, name = "High"),
+            "New one" = Insertion(anchor = 1, name = "New one")
         ))
     )
 })

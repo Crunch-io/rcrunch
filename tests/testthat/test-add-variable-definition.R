@@ -1,16 +1,19 @@
 test_that("VariableDefinition constructs", {
-    expect_is(VariableDefinition(), "VariableDefinition")
-    expect_is(VarDef(), "VariableDefinition")
+    expect_s3_class(VariableDefinition(), "VariableDefinition")
+    expect_s3_class(VarDef(), "VariableDefinition")
     expect_identical(class(VarDef(name = "foo")), "VariableDefinition")
-    expect_equivalent(
+    expect_equal(
         VarDef(name = "Short", description = "More verbose"),
-        list(name = "Short", description = "More verbose")
+        structure(
+            list(name = "Short", description = "More verbose"),
+            class = "VariableDefinition"
+        )
     )
 })
 
 test_that("VarDef takes 'data' and does toVariable on it", {
     ## See test-add-variable.R
-    expect_equivalent(
+    expect_equal(
         VarDef(
             data = as.factor(rep(LETTERS[2:3], 3)),
             name = "Test Cats"
@@ -30,7 +33,7 @@ test_that("VarDef takes 'data' and does toVariable on it", {
 
 test_that("VarDef takes 'values', whatever they are", {
     ## Do any validation here? or just let the API reject invalid requests?
-    expect_equivalent(
+    expect_equal(
         VarDef(name = "var", values = 1:5),
         structure(list(name = "var", values = 1:5), class = "VariableDefinition")
     )

@@ -26,7 +26,7 @@ test_that("cube fixtures are up to date", {
             )
         }
 
-        expect_equivalent(current_file_info, temp_file_info)
+        expect_equal(current_file_info, temp_file_info)
     } else {
         warning(paste0(
             "Could not find cubes directory so could not check if mock fixures are up to date. ",
