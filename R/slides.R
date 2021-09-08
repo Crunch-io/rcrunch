@@ -861,13 +861,15 @@ setMethod("filter", "Analysis", function(x, ...) {
 
 
 setMethod("filters", "Analysis", function(x) {
-    filt <- x@body$query_environment$filter
+    filters <- x@body$query_environment$filter
+    .filtersFromSlide(filters, ds_ref = datasetReference(x))
+})
 
-    if (length(filt) == 0) {
+.filtersFromSlide <- function(filters, ds_ref) {
+    if (length(filters) == 0) {
         return(NULL)
     }
 
-    ds_ref <- datasetReference(x)
     # jsonlite unboxes a single filter so it's no longer a list of lists
     # but to make code more consistent, we add it back.
     if (!is.null(names(filters))) {
@@ -879,7 +881,6 @@ setMethod("filters", "Analysis", function(x) {
             CrunchFilter(crGET(filt$filter))
         } else {
             # an adhoc filter
-            ds_url <- datasetReference(x)
             adhoc_expr <- CrunchLogicalExpr(
                 expression = idsToURLs(
                     # 02/2021: Not sure if this is still needed anymore, server doesn't
@@ -893,42 +894,8 @@ setMethod("filters", "Analysis", function(x) {
             adhoc_expr
         }
     })
-})
+}
 
-
-#' @rdname analysis-methods
-#' @export
-setMethod("filters", "Analysis", function(x) {
-    filters <- x@body$query_environment$filter
-    if (length(filters) == 0) {
-        return(NULL)
-    }
-    ds_url <- datasetReference(x)
-    # jsonlite unboxes a single filter so it's no longer a list of lists
-    # but to make code more consistent, we add it back.
-    if (!is.null(names(filters))) {
-        filters <- list(filters)
-    }
-    lapply(filters, function(filt) {
-        if ("filter" %in% names(filt)) {
-            CrunchFilter(crGET(filt$filter))
-        } else {
-            # an adhoc filter
-            ds_url <- datasetReference(x)
-            adhoc_expr <- CrunchLogicalExpr(
-                expression = idsToURLs(
-                    # 02/2021: Not sure if this is still needed anymore, server doesn't
-                    # currently seem to be sending the `dataset` attributes this takes out.
-                    # But mocks require it (/4/decks/8ad8/slides/72e8/analysies/52fb.json)
-                    fixAdhocFilterExpression(filt),
-                    paste0(ds_url, "/variables/")
-                ),
-                dataset_url = ds_url
-            )
-            adhoc_expr
-        }
-    })
-})
 
 #' @rdname analysis-methods
 #' @export

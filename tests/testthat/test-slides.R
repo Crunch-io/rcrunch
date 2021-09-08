@@ -518,7 +518,7 @@ with_mock_crunch({
                 "    - dimension(veg_enjoy_ca, \"subvariables\")\n",
                 "    - veg_enjoy_ca\n",
                 "- Measures: ", dQuote("count"), " (cube_count())\n",
-                "- Filter:\n",
+                "- Filters:\n",
                 "    - Crunch logical expression: age > 18\n",
                 "- Weight: weight"
             ),
