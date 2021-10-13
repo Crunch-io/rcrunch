@@ -14,7 +14,7 @@
 #' weight variable for `dataset`, or `NULL` for unweighted results.
 #' Default is the currently applied [`weight`].
 #' @param output_format character export format: currently supported values are "json"
-#' (default) and "xlsx".
+#' (default), "xlsx" and "csv".
 #' @param file character local filename to write to. A default filename will be
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
@@ -46,7 +46,7 @@
 #' @importFrom jsonlite fromJSON
 #' @export
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
-                    output_format = c("json", "xlsx"), file, filter = NULL,
+                    output_format = c("json", "xlsx", "csv"), file, filter = NULL,
                     use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
                     ...) {
     dots <- list(...)
@@ -54,7 +54,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
         warning(
             "Passing string to `format` is deprecated in `tabBook()`. Use `output_format` instead."
         )
-        fmt <- match.arg(dots$format, c("json", "xlsx"))
+        fmt <- match.arg(dots$format, c("json", "xlsx", "csv"))
         dots$format <- NULL
     } else {
         fmt <- match.arg(output_format)
@@ -112,6 +112,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
 
 extToContentType <- function(ext) {
     mapping <- list(
+        csv = "text/csv",
         json = "application/json",
         xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         pptx = "application/vnd.openxmlformats-officedocument.presentationml.presentation"

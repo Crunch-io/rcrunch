@@ -8,7 +8,7 @@ tabBook(
   multitable,
   dataset,
   weight = crunch::weight(dataset),
-  output_format = c("json", "xlsx"),
+  output_format = c("json", "xlsx", "csv"),
   file,
   filter = NULL,
   use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
@@ -26,7 +26,7 @@ weight variable for \code{dataset}, or \code{NULL} for unweighted results.
 Default is the currently applied \code{\link{weight}}.}
 
 \item{output_format}{character export format: currently supported values are "json"
-(default) and "xlsx".}
+(default), "xlsx" and "csv".}
 
 \item{file}{character local filename to write to. A default filename will be
 generated from the \code{multitable}'s name if one is not supplied and the
