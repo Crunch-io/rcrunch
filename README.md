@@ -63,9 +63,9 @@ If you prefer, you can set the environment variables `R_CRUNCH_EMAIL`, `R_CRUNCH
 See https://cran.r-project.org/bin/linux/ubuntu/README for more details.
 
 ### Mocks
-The tests for the rcrunch package relies on mocks that are compressed into a tarball 
+The tests for the rcrunch package relies on mocks that are compressed into a tarball
 so that the package stays within the CRAN 5MB size limit. To avoid git merge conflicts
-this file is not checked in so it must be created before you can run tests. It is 
+this file is not checked in so it must be created before you can run tests. It is
 created for you if you run `make test`, or you can create it explicitly by running
 `make compress-fixtures` or `Rscript dev-misc/compress-fixtures.R`.
 
@@ -98,7 +98,7 @@ options(
 
 or by setting the environment variables `R_TEST_USER`, `R_TEST_PW`, and `R_TEST_API`.
 
-If you are a Crunch developer serving a version of the API/backend with Vagrant or Docker, you will have best results if your R_TEST_API/test.api (1) is `local.crunch.io`, thanks to a mapping of localhost to that in your hosts file. In order to avoid self-signed certificate errors use the environment variable `R_TEST_VERIFY_SSL=FALSE`. You might point at "https://local.crunch.io:8443/api/", for example. Some tests that cannot run successfully in the local environment will be skipped when run against a local.crunch.io URL.
+If you are a Crunch developer serving a version of the API/backend with Vagrant or Docker, you will have best results if your R_TEST_API/test.api (1) is `local.crunch.io`, thanks to a mapping of localhost to that in your hosts file. In order to avoid self-signed certificate errors use the environment variable `R_TEST_VERIFY_SSL=FALSE`. You might point at "https://local.crunch.io:28443/api/", for example. Some tests that cannot run successfully in the local environment will be skipped when run against a local.crunch.io URL.
 
 Example of local usage:
 
