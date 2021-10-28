@@ -1,0 +1,279 @@
+{
+  "element": "shoji:entity",
+  "body": {
+    "name": "Standard Pet Dataset Example",
+    "description": "A Pet dataset to illustrate the Crunch API",
+    "table": {
+      "element": "crunch:table",
+      "metadata": {
+        "favorite_pet": {
+          "name": "Pet",
+          "alias": "favorite_pet",
+          "description": "What is your favorite pet?",
+          "type": "categorical",
+          "categories": [
+            {
+              "id": 1,
+              "missing": false,
+              "name": "Cat",
+              "numeric_value": 1
+            },
+            {
+              "id": 2,
+              "missing": false,
+              "name": "Dog",
+              "numeric_value": 2
+            },
+            {
+              "id": 3,
+              "missing": false,
+              "name": "Bird",
+              "numeric_value": 3
+            },
+            {
+              "id": 8,
+              "missing": true,
+              "name": "Skipped",
+              "numeric_value": 8
+            },
+            {
+              "id": 9,
+              "missing": true,
+              "name": "Not Asked",
+              "numeric_value": 9
+            }
+          ]
+        },
+        "favorite_pet_name": {
+          "alias": "favorite_pet_name",
+          "description": "What is your favorite pet's maiden name?",
+          "notes": "Notes like this are shown only when the setting for notes is turned on. It is off by default.",
+          "type": "text",
+          "missing_rules": {
+            "Not asked": {
+              "value": ""
+            }
+          },
+          "name": "Pet name"
+        },
+        "number_of_dogs": {
+          "name": "Number of dogs",
+          "alias": "number_of_dogs",
+          "categories": [],
+          "description": "How many dogs with papers do you have?",
+          "notes": "",
+          "subvariables": [
+            {
+              "alias": "dogs_with_papers",
+              "description": "How many dogs do you have?",
+              "format": {
+                "data": {
+                  "digits": 2
+                },
+                "summary": {
+                  "digits": 2
+                }
+              },
+              "name": "Number of dogs -- With papers",
+              "notes": "",
+              "view": {
+                "column_width": null
+              }
+            },
+            {
+              "alias": "dogs_without_papers",
+              "description": "How many dogs without papers (mutts) do you have?",
+              "format": {
+                "data": {
+                  "digits": 2
+                },
+                "summary": {
+                  "digits": 2
+                }
+              },
+              "name": "Number of dogs -- Mutts",
+              "notes": "",
+              "view": {
+                "column_width": null
+              }
+            }
+          ],
+          "type": "numeric_array"
+        },
+        "allpets": {
+          "name": "All pets owned",
+          "alias": "allpets",
+          "description": "Do you have any of these animals as pets? Please select all that apply.",
+          "categories": [
+            {
+              "id": 2,
+              "missing": false,
+              "name": "not selected",
+              "numeric_value": null,
+              "selected": false
+            },
+            {
+              "id": 1,
+              "missing": false,
+              "name": "selected",
+              "numeric_value": null,
+              "selected": true
+            },
+            {
+              "id": 9,
+              "missing": true,
+              "name": "not asked",
+              "numeric_value": 9
+            },
+            {
+              "id": 8,
+              "missing": true,
+              "name": "skipped",
+              "numeric_value": 8
+            }
+          ],
+          "subvariables": [
+            {
+              "alias": "allpets_cats",
+              "name": "Cat"
+            },
+            {
+              "alias": "allpets_dogs",
+              "name": "Dog"
+            },
+            {
+              "alias": "allpets_birds",
+              "name": "Bird"
+            }
+          ],
+          "type": "multiple_response"
+        },
+        "petloc": {
+          "name": "Pets by location",
+          "alias": "petloc",
+          "categories": [
+            {
+              "id": 1,
+              "missing": false,
+              "name": "Cat",
+              "numeric_value": 1
+            },
+            {
+              "id": 2,
+              "missing": false,
+              "name": "Dog",
+              "numeric_value": 2
+            },
+            {
+              "id": 3,
+              "missing": false,
+              "name": "Bird",
+              "numeric_value": 3
+            },
+            {
+              "id": 8,
+              "missing": true,
+              "name": "Skipped",
+              "numeric_value": 8
+            },
+            {
+              "id": 9,
+              "missing": true,
+              "name": "Not Asked",
+              "numeric_value": 9
+            }
+          ],
+          "description": "Name the kinds of pets you have at these locations.",
+          "subvariables": [
+            {
+              "alias": "petloc_home",
+              "name": "Home"
+            },
+            {
+              "alias": "petloc_work",
+              "name": "Work"
+            }
+          ],
+          "type": "categorical_array"
+        },
+        "country": {
+          "name": "Country",
+          "alias": "country",
+          "categories": [
+            {
+              "id": 1,
+              "missing": false,
+              "name": "Argentina",
+              "numeric_value": null
+            },
+            {
+              "id": 2,
+              "missing": false,
+              "name": "Australia",
+              "numeric_value": null
+            },
+            {
+              "id": 3,
+              "missing": false,
+              "name": "Austria",
+              "numeric_value": null
+            },
+            {
+              "id": 4,
+              "missing": false,
+              "name": "Belgium",
+              "numeric_value": null
+            },
+            {
+              "id": 5,
+              "missing": false,
+              "name": "Brazil",
+              "numeric_value": null
+            }
+          ],
+          "description": "",
+          "type": "categorical"
+        },
+        "wave": {
+          "name": "Wave",
+          "alias": "wave",
+          "description": "",
+          "resolution": "D",
+          "type": "datetime"
+        },
+        "caseid": {
+          "name": "Case ID",
+          "alias": "caseid",
+          "type": "numeric"
+        }
+      },
+      "hidden": [
+        "caseid"
+      ],
+      "order": [
+        {
+          "entities": [
+            "allpets",
+            "favorite_pet",
+            "petloc"
+          ],
+          "group": "Key Pet Indicators"
+        },
+        {
+          "entities": [
+            "favorite_pet_name"
+          ],
+          "group": "Details"
+        },
+        {
+          "entities": [
+            "number_of_dogs",
+            "country",
+            "wave"
+          ],
+          "group": "Dimensions"
+        }
+      ]
+    }
+  }
+}
