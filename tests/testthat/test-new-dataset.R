@@ -196,7 +196,7 @@ with_test_authentication({
         })
     })
 
-    m <- fromJSON(system.file("example-datasets", "standard-pet-dataset.json", package = "crunch"),
+    m <- fromJSON(system.file("example-datasets", "pets.json", package = "crunch"),
         simplifyVector = FALSE
     )
 
@@ -234,7 +234,7 @@ with_test_authentication({
         m2$body$table$metadata$allpets$subvariables[[4]] <- dupe
         expect_error(createWithMetadataAndFile(
             m2,
-            system.file("example-datasets", "standard-pet-dataset.csv", package = "crunch")
+            system.file("example-datasets", "pets.csv", package = "crunch")
         ))
     })
 
