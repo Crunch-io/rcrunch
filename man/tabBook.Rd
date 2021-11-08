@@ -83,7 +83,10 @@ tabBook(
     ),
     sig_threshold = 0.05,
     doc_layout = list(toc = FALSE, variable_sheets = "one_sheet"),
-    fields = c("col_percent", "row_percent", "count_unweighted", "mean", "valid_count_weighted", "valid_count_unweighted"),
+    fields = c(
+        "col_percent", "row_percent", "count_unweighted", "mean",
+        "valid_count_weighted", "valid_count_unweighted"
+    ),
     page_layout = list(
         rows = list(
             top = c("base_weighted", "base_unweighted"),

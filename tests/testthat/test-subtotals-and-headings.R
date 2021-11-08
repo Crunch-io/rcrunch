@@ -37,6 +37,11 @@ test_that("Subtotal validates", {
         Subtotal(name = "Total Approval", after = 2),
         "Must specify at least one of categories or negative for a valid Subtotal"
     )
+
+    expect_error(
+        Subtotal(name = "Total Approval", categories = 1, before = 1, after = 2),
+        "Cannot specify both the .*after.* and .*before.* arguments"
+    )
 })
 
 test_that("Subtotal validates with fixed positions", {
@@ -128,27 +133,28 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":',
             '{"insertions":[{"anchor":1,"name":"London+Scotland",',
-            '"function":"subtotal","args":[1,2],"kwargs":{"positive":[1,2]}}]}}}'
+            '"function":"subtotal","args":[1,2],"kwargs":{"positive":[1,2]},"id":1}]}}}'
         )
         expect_PATCH(
             name(subtotals(ds$location)[[1]]) <- "new name",
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":',
             '{"insertions":[{"anchor":3,"name":"new name",',
-            '"function":"subtotal","args":[1,2],"kwargs":{"positive":[1,2]}}]}}}'
+            '"function":"subtotal","args":[1,2],"kwargs":{"positive":[1,2]},"id":1}]}}}'
         )
         expect_PATCH(
             arguments(subtotals(ds$location)[[1]]) <- c(2, 3),
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":',
             '{"insertions":[{"anchor":3,"name":"London+Scotland",',
-            '"function":"subtotal","args":[2,3],"kwargs":{"positive":[2,3]}}]}}}'
+            '"function":"subtotal","args":[2,3],"kwargs":{"positive":[2,3]},"id":1}]}}}'
         )
     })
 
     test_that("subtotals returns null when there are no subtotals", {
         expect_null(subtotals(ds$gender))
     })
+
     test_that("Assigning NULL if already NULL does nothing", {
         expect_no_request(subtotals(ds$gender) <- NULL)
     })
@@ -163,10 +169,10 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/gender/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":2,"name":"Not men","function":"subtotal","args":[1,-1],"kwargs":',
-            '{"positive":[1,-1]}},',
+            '{"positive":[1,-1]},"id":1},',
             '{"anchor":4,"name":"Women","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2]}},',
-            '{"anchor":"top","name":"A subtitle"}]}}}'
+            '{"positive":[2]},"id":2},',
+            '{"anchor":"top","name":"A subtitle","id":3}]}}}'
         )
     })
 
@@ -178,7 +184,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/gender/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":2,"name":"W-M","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2],"negative":[1]}}]}}}'
+            '{"positive":[2],"negative":[1]},"id":1}]}}}'
         )
     })
 
@@ -192,9 +198,9 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/gender/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1],"kwargs":',
-            '{"positive":[-1,1]}},',
+            '{"positive":[-1,1]},"id":1},',
             '{"anchor":2,"name":"Women","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2]}}]}}}'
+            '{"positive":[2]},"id":2}]}}}'
         )
 
         # one supplied category (23) isn't a real category, after should still be -1
@@ -207,9 +213,9 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/gender/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1,23],"kwargs":',
-            '{"positive":[-1,1,23]}},',
+            '{"positive":[-1,1,23]},"id":1},',
             '{"anchor":2,"name":"Women","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2]}}]}}}'
+            '{"positive":[2]},"id":2}]}}}'
         )
     })
 
@@ -223,10 +229,10 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":1,"name":"London alone","function":"subtotal","args":[1],"kwargs":',
-            '{"positive":[1]}},',
+            '{"positive":[1]},"id":1},',
             '{"anchor":2,"name":"Scotland alone","function":"subtotal","args":[2],"kwargs":',
-            '{"positive":[2]}},',
-            '{"anchor":"top","name":"A subtitle"}]}}}'
+            '{"positive":[2]},"id":2},',
+            '{"anchor":"top","name":"A subtitle","id":3}]}}}'
         )
     })
 
@@ -241,7 +247,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":"top","name":"London+Scotland","function":"subtotal","args":',
-            '[2,1],"kwargs":{"positive":[2,1]}}]}}}'
+            '[2,1],"kwargs":{"positive":[2,1]},"id":1}]}}}'
         )
     })
 
@@ -252,7 +258,7 @@ with_mock_crunch({
             ),
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
-            '{"anchor":1,"name":"London+Scotland"}]}}}'
+            '{"anchor":1,"name":"London+Scotland","id":1}]}}}'
         )
     })
 
@@ -263,7 +269,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
             '{"anchor":1,"name":"London alone","function":"subtotal","args":[1],"kwargs":',
-            '{"positive":[1]}}]}}}'
+            '{"positive":[1]},"id":1}]}}}'
         )
 
         expect_PATCH(
@@ -271,7 +277,7 @@ with_mock_crunch({
                 Heading(name = "A subtitle", position = "top"),
             "https://app.crunch.io/api/datasets/1/variables/location/",
             '{"view":{"transform":{"insertions":[',
-            '{"anchor":"top","name":"A subtitle"}]}}}'
+            '{"anchor":"top","name":"A subtitle","id":1}]}}}'
         )
     })
 
@@ -283,10 +289,161 @@ with_mock_crunch({
         )
     })
 
-    test_that("subtotals and headers can be removed", {
+    test_that("subtotals respect ids if provided", {
+        expect_PATCH(
+            subtotals(ds$location) <- list(
+                Subtotal(name = "London alone", categories = c(1), after = "London"),
+                Subtotal(name = "Scotland alone", categories = "Scotland", after = 2, id = 1)
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/location/",
+            '{"view":{"transform":{"insertions":[',
+            '{"anchor":1,"name":"London alone","function":"subtotal","args":[1],"kwargs":',
+            '{"positive":[1]},"id":2},',
+            '{"anchor":2,"name":"Scotland alone","function":"subtotal","args":[2],"kwargs":',
+            '{"positive":[2]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"), position = "top")
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":"top","name":"s1 or s2",',
+            '"function":"any_non_missing_selected","kwargs":{"variable":',
+            '"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with after position", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"), after = "subvar1")
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":{"position":"after","alias":',
+            '"subvar1"},"name":"s1 or s2","function":"any_non_missing_selected","kwargs":',
+            '{"variable":"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with before position", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"), before = "subvar1")
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":{"position":"before","alias":',
+            '"subvar1"},"name":"s1 or s2","function":"any_non_missing_selected","kwargs":',
+            '{"variable":"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with na.rm=FALSE", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"), position = "top", na.rm=FALSE)
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":"top","name":"s1 or s2",',
+            '"function":"any_selected","kwargs":{"variable":',
+            '"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with subvar names", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                # Confusing thing: name="Second" matches alias="subvar1"
+                Subtotal(name = "s1 or s2", c("Second", "First"), after = "Second")
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":{"position":"after","alias":',
+            '"subvar1"},"name":"s1 or s2","function":"any_non_missing_selected","kwargs":',
+            '{"variable":"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with default position", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"))
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":{"position":"after","alias":',
+            '"subvar1"},"name":"s1 or s2","function":"any_non_missing_selected","kwargs":',
+            '{"variable":"mymrset","subvariable_ids":["subvar1","subvar2"]},"id":1}]}}}'
+        )
+    })
+
+    test_that("can add MR Subtotals with explicit alias", {
+        expect_PATCH(
+            subtotals(ds$mymrset) <- list(
+                Subtotal(
+                    name = "s1 or s2",
+                    c("subvar1", "subvar2"),
+                    position = "top",
+                    alias="top2"
+                )
+            ),
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            '{"view":{"transform":{"insertions":[{"anchor":"top","name":"s1 or s2",',
+            '"function":"any_non_missing_selected","kwargs":{"variable":',
+            '"mymrset","subvariable_ids":["subvar1","subvar2"]},"alias":"top2","id":1}]}}}'
+        )
+    })
+
+    test_that("reasonable error when MR subvariables don't match aliases nor names", {
         expect_error(
-            subtotals(ds$location) <- list("1", "2"),
-            "value must be a list of Subtotals, Headings, or both."
+            subtotals(ds$mymrset) <- list(
+                Subtotal(name = "bad", c("ABC", "subvar2"), position = "top")
+            ),
+            "`subvariable_ids` must be all aliases or all names, but"
+        )
+    })
+
+    test_that("can use subtypeInsertion on handcrafted MR insertions", {
+        inserts <- Insertions(Insertion(
+            anchor = "top",
+            `function` = "any_selected",
+            name = "s1 or s2",
+            id = 1L,
+            kwargs = list(
+                variable = "mymrset",
+                subvariable_ids = c("subvar1", "subvar2")
+            ),
+            alias = NULL
+        ))
+
+        expect_equal(
+            subtypeInsertions(inserts),
+            Insertions(Subtotal(
+                "s1 or s2",
+                c("subvar1", "subvar2"),
+                position = "top",
+                id = 1L,
+                variable = "mymrset"
+            ))
+        )
+
+
+    })
+
+
+    ds_veg <- cachedLoadDataset("Vegetables example") ## Has MR insertions
+    test_that("can print an mr subtotal", {
+        expect_prints(
+            subtotals(ds_veg$funnel_aware_mr),
+            get_output(data.frame(
+                anchor = c("top"),
+                name = c("Jicama or Kohlrabi"),
+                func = c("subtotal"),
+                args = c("funnel_aware_mr_1 and funnel_aware_mr_2"),
+                kwargs = c(""),
+                stringsAsFactors = FALSE
+            )),
+            fixed = TRUE
         )
     })
 })

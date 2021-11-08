@@ -155,6 +155,82 @@ vegetables <- tibble(
         x
     }))
 
+# --- 2021-08-18 add a funnel-style set of MR variables
+vegetables <- vegetables %>%
+    mutate(
+        funnel_aware_1 = random_cat_gen(
+            1, healthy_eater == "Yes",
+            levels = c("Yes", "No"),
+            breaks = 0.7
+        ),
+        funnel_aware_2 = random_cat_gen(
+            -2, age,
+            levels = c("Yes", "No"),
+            breaks = 0.4
+        ),
+        funnel_consider_1 = random_cat_gen(
+            1, healthy_eater == "Yes",
+            levels = c("Yes", "No"),
+            breaks = 0.5
+        ),
+        funnel_consider_2 = random_cat_gen(
+            -2, age,
+            levels = c("Yes", "No"),
+            breaks = 0.85
+        ),
+        funnel_buy_1 = random_cat_gen(
+            1, healthy_eater == "Yes",
+            levels = c("Yes", "No"),
+            breaks = 0.5
+        ),
+        funnel_buy_2 = random_cat_gen(
+            -2, age,
+            levels = c("Yes", "No"),
+            breaks = 0.8
+        ),
+    ) %>%
+    mutate(across(starts_with("funnel"), function(x) {
+        missings <- runif(length(x)) < pct_missing
+        x[missings] <- NA
+        x
+    })) %>%
+    mutate(
+        funnel_aware_1 = factor(funnel_aware_1, levels = c("Yes", "No", "N/A")),
+        funnel_aware_2 = factor(funnel_aware_2, levels = c("Yes", "No", "N/A")),
+        funnel_consider_1 = factor(
+            case_when(
+                funnel_aware_1 %in% c("No", "N/A") ~ "N/A",
+                is.na(funnel_aware_1) ~ NA_character_,
+                TRUE ~ as.character(funnel_consider_1)
+            ),
+            levels = c("Yes", "No", "N/A")
+        ),
+        funnel_consider_2 = factor(
+            case_when(
+                funnel_aware_2  %in% c("No", "N/A") ~ "N/A",
+                is.na(funnel_aware_2) ~ NA_character_,
+                TRUE ~ as.character(funnel_consider_2)
+            ),
+            levels = c("Yes", "No", "N/A")
+        ),
+        funnel_buy_1 = factor(
+            case_when(
+                funnel_consider_1 %in% c("No", "N/A") ~ "N/A",
+                is.na(funnel_consider_1) ~ NA_character_,
+                TRUE ~ as.character(funnel_buy_1)
+            ),
+            levels = c("Yes", "No", "N/A")
+        ),
+        funnel_buy_2 = factor(
+            case_when(
+                funnel_consider_2 %in% c("No", "N/A") ~ "N/A",
+                is.na(funnel_consider_2) ~ NA_character_,
+                TRUE ~ as.character(funnel_buy_2)
+            ),
+            levels = c("Yes", "No", "N/A")
+        )
+    )
+
 
 ## Setup crunch dataset ----
 ds <- newDataset(vegetables, "Vegetables example")
@@ -273,6 +349,48 @@ set_var_meta(
     description = "Downweight the healthy eaters",
     notes = "survey weight note"
 )
+set_var_meta(
+    ds$funnel_aware_1,
+    name = "Aware of Jicama",
+    description = "Awareness MR - Jicama",
+    notes = "Have you ever heard of the vegetable Jicama?"
+)
+is.na(categories(ds$funnel_aware_1)["N/A"]) <- TRUE
+set_var_meta(
+    ds$funnel_aware_2,
+    name = "Aware of Kohlrabi",
+    description = "Awareness MR - Kohlrabi",
+    notes = "Have you ever heard of the vegetable Kohlrabi?"
+)
+is.na(categories(ds$funnel_aware_2)["N/A"]) <- TRUE
+set_var_meta(
+    ds$funnel_consider_1,
+    name = "Consider Jicama",
+    description = "Consideration MR - Jicama",
+    notes = "Have you ever consdidered buying Jicama?"
+)
+is.na(categories(ds$funnel_consider_1)["N/A"]) <- TRUE
+set_var_meta(
+    ds$funnel_consider_2,
+    name = "Consider of Kohlrabi",
+    description = "Consideration MR - Kohlrabi",
+    notes = "Have you ever consdidered buying Kohlrabi"
+)
+is.na(categories(ds$funnel_consider_2)["N/A"]) <- TRUE
+set_var_meta(
+    ds$funnel_buy_1,
+    name = "Bought Jicama",
+    description = "Purchase MR - Jicama",
+    notes = "Have you ever bought Jicama?"
+)
+is.na(categories(ds$funnel_buy_1)["N/A"]) <- TRUE
+set_var_meta(
+    ds$funnel_buy_2,
+    name = "Bought of Kohlrabi",
+    description = "Purchase MR - Kohlrabi",
+    notes = "Have you ever bought Kohlrabi?"
+)
+is.na(categories(ds$funnel_buy_2)["N/A"]) <- TRUE
 ds <- refresh(ds)
 
 ## Derive arrays ----
@@ -324,6 +442,58 @@ hideVariables(ds, c(
     "rating_avocado", "rating_brussel_sprout", "rating_carrot", "rating_daikon",
     "rating_eggplant", "rating_fennel"
 ))
+
+
+ds$funnel_aware_mr <- deriveArray(
+    list(
+        VarDef(ds$funnel_aware_1, alias = "funnel_aware_mr_1", name = "Jicama"),
+        VarDef(ds$funnel_aware_2, alias = "funnel_aware_mr_2", name = "Kohlrabi")
+    ),
+    "Awareness of Vegetables",
+    description = "Awareness of Vegetables: Funnel",
+    notes = "Have you ever heard of the vegetable...?",
+    selections = "Yes",
+    numeric = FALSE
+)
+subtotals(ds$funnel_aware_mr) <- list(
+    Subtotal("Jicama or Kohlrabi", c("funnel_aware_mr_1", "funnel_aware_mr_2"), position = "top")
+)
+
+ds$funnel_consider_mr <- deriveArray(
+    list(
+        VarDef(ds$funnel_consider_1, alias = "funnel_consider_mr_1", name = "Jicama"),
+        VarDef(ds$funnel_consider_2, alias = "funnel_consider_mr_2", name = "Kohlrabi")
+    ),
+    "Consider Vegetables",
+    description = "Consideration of Vegetables: Funnel",
+    notes = "Have you ever considered buying...?",
+    selections = "Yes",
+    numeric = FALSE
+)
+subtotals(ds$funnel_consider_mr) <- list(
+    Subtotal("Jicama or Kohlrabi", c("funnel_consider_mr_1", "funnel_consider_mr_2"), position = "top")
+)
+
+ds$funnel_buy_mr <- deriveArray(
+    list(
+        VarDef(ds$funnel_buy_1, alias = "funnel_buy_mr_1", name = "Jicama"),
+        VarDef(ds$funnel_buy_2, alias = "funnel_buy_mr_2", name = "Kohlrabi")
+    ),
+    "Buy Vegetables",
+    description = "Purchased Vegetables: Funnel",
+    notes = "Have you ever bought...?",
+    selections = "Yes",
+    numeric = FALSE
+)
+subtotals(ds$funnel_buy_mr) <- list(
+    Subtotal("Jicama or Kohlrabi", c("funnel_buy_mr_1", "funnel_buy_mr_2"), position = "top")
+)
+
+hideVariables(ds, c(
+    "funnel_aware_1", "funnel_aware_2", "funnel_consider_1", "funnel_consider_2",
+    "funnel_buy_1", "funnel_buy_2"
+))
+
 
 ## Other metadata ----
 values(categories(ds$wave)) <- NA
@@ -427,6 +597,9 @@ cdf <- as.data.frame(ds, include.hidden = TRUE)
 exporters <- crGET(shojiURL(ds, "views", "export"))
 var_meta <- variableMetadata(ds)
 
+# MR insertion info
+subtotals(ds$funnel_aware_mr)
+
 stop_capturing()
 
 ### Cleanup and move dataset capture ----
@@ -492,7 +665,7 @@ dir_copy(
 )
 
 file_copy(
-    dir_ls(path(temp_dir, "player-crunch-io.s3.amazonaws.com"), glob = "*.json", recurse = TRUE),
+    dir_ls(temp_dir, glob = "*player-crunch-io.s3.amazonaws.com*.json", recurse = TRUE),
     here("mocks/app.crunch.io/api/datasets/veg/multitables/mt_01/cat-mr-tabbook.json"),
     overwrite = TRUE
 )
@@ -591,6 +764,7 @@ file_copy(
     overwrite = TRUE
 )
 
+sort_json_keys(path(here("mocks", "app.crunch.io", "api", "progress-failed-async-script.json")))
 dir_delete(temp_dir)
 
 

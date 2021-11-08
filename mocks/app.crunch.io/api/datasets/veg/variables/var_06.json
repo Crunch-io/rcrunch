@@ -65,6 +65,7 @@
     "views": {
         "cast": "https://app.crunch.io/api/datasets/veg/variables/var_06/cast/",
         "frequencies": "https://app.crunch.io/api/datasets/veg/variables/var_06/frequencies/",
+        "script": "https://app.crunch.io/api/datasets/veg/variables/var_06/script/",
         "summary": "https://app.crunch.io/api/datasets/veg/variables/var_06/summary/",
         "values": "https://app.crunch.io/api/datasets/veg/variables/var_06/values/"
     }

@@ -155,3 +155,36 @@ test_that("Insertion and insertions show methods with subdiffs", {
 test_that("args returns NA when not found", {
     expect_equal(arguments(Insertion(anchor = "foo", name = "bar")), NA)
 })
+
+# Test to get coverage of edge cases
+with_mock_crunch({
+    ds <- cachedLoadDataset("test ds")
+
+    categories <- categories(ds$location)
+    subvars <- subvariables(ds$mymrset)
+
+
+      test_that("can get negative terms from names", {
+          subtotal <- Subtotal("nps", "London", negative = "Scotland")
+          expect_equal(
+              categoricalSubtotalTerms(subtotal, categories),
+              list(positive = 1, negative = 2)
+          )
+      })
+
+      test_that("can get default position from subvariable names", {
+          subtotal <- Subtotal("top2", c("Second", "First"))
+          expect_equal(
+              .convertAnchor(subtotal, subvars),
+              list(position = "after", alias = "subvar1")
+          )
+      })
+
+      test_that("get error when mr anchor doesn't match", {
+          subtotal <- Subtotal("top2", c("Second", "First"), after = "BLAH")
+          expect_error(
+              .convertAnchor(subtotal, subvars),
+              "Could not find anchor `BLAH` in subvariable aliases or names."
+          )
+      })
+})

@@ -1,0 +1,92 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/17173f/variables/000007/",
+    "catalogs": {
+        "parent": "/api/datasets/17173f/variables/",
+        "folder": "/api/datasets/17173f/folders/db2e21/"
+    },
+    "fragments": {
+        "user_settings": "/api/datasets/17173f/variables/000007/user_settings/",
+        "dataset": "/api/datasets/17173f/"
+    },
+    "views": {
+        "frequencies": "/api/datasets/17173f/variables/000007/frequencies/",
+        "cast": "/api/datasets/17173f/variables/000007/cast/",
+        "script": "/api/datasets/17173f/variables/000007/script/",
+        "values": "/api/datasets/17173f/variables/000007/values/",
+        "summary": "/api/datasets/17173f/variables/000007/summary/"
+    },
+    "body": {
+        "secure": false,
+        "name": "Pet",
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1,
+            "Skipped": 8,
+            "Not Asked": 9
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "q1",
+        "dataset_id": "17173f",
+        "owner": null,
+        "hidden": false,
+        "view": {
+            "show_numeric_values": false,
+            "include_missing": false,
+            "show_counts": false,
+            "column_width": null
+        },
+        "type": "categorical",
+        "id": "000007",
+        "categories": [
+            {
+                "numeric_value": 1,
+                "missing": false,
+                "id": 1,
+                "name": "Cat"
+            },
+            {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "Dog"
+            },
+            {
+                "numeric_value": 3,
+                "missing": false,
+                "id": 3,
+                "name": "Bird"
+            },
+            {
+                "numeric_value": 8,
+                "missing": true,
+                "id": 8,
+                "name": "Skipped"
+            },
+            {
+                "numeric_value": 9,
+                "missing": true,
+                "id": 9,
+                "name": "Not Asked"
+            },
+            {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+            }
+        ],
+        "description": "What is your favorite pet?"
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "/api/datasets/17173f/"
+    }
+}

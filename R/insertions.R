@@ -38,9 +38,10 @@
 #' Insertion or Insertions
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
-#' @param var_categories categories (from [categories()]) to used by the
-#' `arguments` and `anchor` methods when needed to translate between category
-#' names and category ids.
+#' @param var_items categories (from [categories()]) or subvariables (from
+#' [subvariables()] to used by the `arguments` and `anchor` methods when
+#' needed to translate between category/subvariable names and category
+#' ids/aliases.
 #' @name Insertions
 #' @aliases anchor anchor<- anchors func func<- funcs arguments arguments<-
 NULL
@@ -64,7 +65,11 @@ insertionValidity <- function(object) {
         )
     }
 
-    if (!is.na(func(object)) && all(is.na(arguments(object))) && length(kwarguments(object)) == 0) {
+    if (
+        !is.na(func(object)) &&
+        all(is.na(arguments(object))) &&
+        length(subtotalTerms(object)) == 0
+    ) {
         # add checking so that args is either a vectorOrList of numerics
         val <- paste0(
             "If an Insertion has a ", dQuote("function"),
@@ -185,14 +190,6 @@ setMethod("arguments<-", "Subtotal", function(x, value) {
 
 #' @rdname Insertions
 #' @export
-setMethod("kwarguments<-", "Subtotal", function(x, value) {
-    # TODO: validate that the arguments are valid
-    x[["kwargs"]] <- value
-    return(x)
-})
-
-#' @rdname Insertions
-#' @export
 setMethod("arguments<-", "Heading", function(x, value) {
     halt("Cannot set arguments on Headings.")
 })
@@ -215,22 +212,25 @@ setMethod("arguments", "Insertion", function(x) {
     return(x[["args"]])
 })
 
-setMethod("kwarguments", "Insertion", function(x) {
+setMethod("subtotalTerms", "Insertion", function(x) {
     return(x$kwargs)
 })
 
-
-
 # method for getting an anchor from a user-friendly abstracted Subtotal or Heading
-.convertArgs <- function(x, var_categories) {
+.convertArgs <- function(x, var_items) {
+    if (!missing(var_items) && inherits(var_items, "Subvariables")) {
+        # don't need to get args for MR insertions
+        return(NULL)
+    }
+
     if (!is.null(x$categories) && is.character(x$categories)) {
-        if (missing(var_categories)) {
+        if (missing(var_items)) {
             halt(
-                "Cannot convert insertion arguments from categories if `var_categories`",
+                "Cannot convert insertion arguments from categories if `var_items`",
                 " argument is not provided"
             )
         }
-        n <- ids(var_categories[x$categories])
+        n <- ids(var_items[x$categories])
     } else {
         n <- x$categories
     }
@@ -241,27 +241,74 @@ setMethod("kwarguments", "Insertion", function(x) {
 #' @export
 setMethod("arguments", "Subtotal", .convertArgs)
 
-setMethod("kwarguments", "Subtotal", function(x, var_categories) {
+setMethod("subtotalTerms", "Subtotal", function(x, var_items, alias) {
+    # We can distinguish between categorical insertions and MR insertions
+    # by checking if the var_items are categories or subvariables
+    # It's not ideal to default to the categories version, but since
+    # we always have `var_items` when we're about to send to the server
+    # the only times we don't have it aren't very important (eg printing)
+    if (missing(var_items) || is.AbstractCategories(var_items)) {
+        categoricalSubtotalTerms(x, var_items)
+    } else {
+        subvariableSubtotalTerms(x, var_items, alias)
+    }
+})
+
+categoricalSubtotalTerms <- function(x, var_items) {
     # We will be migrating to having both `positive` and `negative` terms in the kwargs
     # so grab the positive terms
     # x here is a `Subtotal` object, which is not structured the same as the JSON,
     # it has a `categories` object
-    positive <- .convertArgs(x, var_categories)
+    positive <- .convertArgs(x, var_items)
 
     if (!is.null(x$negative) && is.character(x$negative)) {
-        if (missing(var_categories)) {
+        if (missing(var_items)) {
             halt(
-                "Cannot convert insertion arguments from negative if `var_categories`",
+                "Cannot convert insertion arguments from negative if `var_items`",
                 " argument is not provided"
             )
         }
-        negative <- ids(var_categories[x$negative])
+        negative <- ids(var_items[x$negative])
     } else {
         negative <- x$negative
     }
 
     list(positive = positive, negative = negative)
-})
+}
+
+subvariableSubtotalTerms <- function(x, var_items, alias) {
+    # If all subvar_items match aliases, assume they are aliases. Otherwise check if
+    # they are all subvar names and use that
+    subvariable_ids <- x$categories # Stored as $categories because of legacy
+    if (!all(subvariable_ids %in% aliases(var_items))) {
+        matched <- match(subvariable_ids, names(var_items))
+        if (any(is.na(matched))) {
+            non_alias <- subvariable_ids[!(subvariable_ids %in% aliases(var_items))]
+            if (length(non_alias) > 0) {
+                non_alias <- paste0(
+                    "\n - ",
+                    paste0(dQuote(non_alias), collapse = ", "),
+                    " don't match any aliases "
+                )
+            }
+            non_name <- subvariable_ids[!(subvariable_ids %in% names(var_items))]
+            if (length(non_name) > 0) {
+                non_name <- paste0(
+                    "\n - ",
+                    paste(dQuote(non_name), collapse = ", "),
+                    " don't match any names"
+                )
+            }
+
+            halt("`subvariable_ids` must be all aliases or all names, but:", non_alias, non_name)
+        }
+        subvariable_ids <- aliases(var_items)[matched]
+    }
+
+    # Use variable if provided in the insertion, otherwise assume it's what we're inserting into
+    alias <- x$variable %||% alias
+    list(variable = alias, subvariable_ids = subvariable_ids)
+}
 
 #' @rdname Insertions
 #' @export
@@ -269,39 +316,42 @@ setMethod("arguments", "Heading", function(x) NA)
 
 #' @rdname Insertions
 #' @export
-setMethod("arguments", "SummaryStat", function(x, var_categories) {
+setMethod("arguments", "SummaryStat", function(x, var_items) {
     if (is.null(x[["categories"]])) {
-        # if var_categories is not provided, return the string all this should
+        # if var_items is not provided, return the string all this should
         # only happen when showing insertion objects and not when calculating
-        if (missing(var_categories)) {
+        if (missing(var_items)) {
             return("all")
         }
 
-        x[["categories"]] <- ids(var_categories)
+        x[["categories"]] <- ids(var_items)
     }
 
     # grab the arguments from the call so that we can optionally pass var_cats
-    .args <- as.list(match.call()[-1])
+    .args <- list(x = x)
+    if (!missing(var_items)) .args[["var_items"]] <- var_items
     return(do.call(.convertArgs, .args))
 })
 
 #' @rdname Insertions
 #' @export
-setMethod("anchor", "Insertion", function(x) {
+setMethod("anchor", "Insertion", function(x, ...) {
     n <- x[["anchor"]]
-    return(ifelse(is.null(n), NA_integer_, n))
+    if (is.null(n)) NA_integer_ else n
 })
 
 # method for getting an anchor from a user-friendly abstracted Subtotal or Heading
-.convertAnchor <- function(x, var_categories) {
+# `var_items` can be either categories (regular subtotals) or subvariables
+# for MR insertions
+.convertAnchor <- function(x, var_items) {
     if (x$position != "relative") {
         return(x$position)
     }
 
-    # If after is null (and position is relative) we default to setting after to
-    # be the last category in the Subtotal category.
-    if (is.null(x$after)) {
-        if (missing(var_categories)) {
+    # If after (&before) is null (and position is relative) we default to setting after to
+    # be the last category in the Subtotal category/subvariable
+    if (is.null(x$after) && is.null(x$before)) {
+        if (missing(var_items)) {
             # we don't have the variable this insertion will attach to, so we
             # can't determine which is the last category to use as the anchor.
             # This will be filled in when this insertion is added to a variable
@@ -314,24 +364,58 @@ setMethod("anchor", "Insertion", function(x) {
             )
             return(NA_integer_)
         }
-        if (is.numeric(x$categories)) {
-            var_cats <- ids(var_categories)
+        if (is.categories(var_items)) {
+            if (is.numeric(x$categories)) {
+                var_cats <- ids(Filter(is.category, var_items))
+            } else {
+                var_cats <- names(Filter(is.category, var_items))
+            }
+            sub_cats <- x$categories[x$categories %in% var_cats]
+            ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
+            x$after <- rev(ordered_cats)[1]
         } else {
-            var_cats <- names(var_categories)
+            if (all(x$categories %in% aliases(var_items))) {
+                subvars <- aliases(var_items)
+            } else {
+                subvars <- names(var_items)
+            }
+            sub_subvars <- x$categories[x$categories %in% subvars]
+            ordered_subvars <- sub_subvars[order(match(sub_subvars, subvars))]
+            x$after <- rev(ordered_subvars)[1]
         }
-        sub_cats <- x$categories[x$categories %in% var_cats]
-        ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
-        x$after <- rev(ordered_cats)[1]
     }
 
-    # map chars/nums to ids
-    if (is.character(x$after)) {
-        # TODO: better error handling if var_categories is null
-        n <- ids(var_categories[x$after])
+    # Can distinguish between category insertions and MR insertions by whether
+    # we were passed in categories or subvariables as the var_items
+    # If no var_items were passed, treat as categorical
+    if (missing(var_items)) {
+        if (is.character(x$after)) {
+            halt("Could not find anchor without categories/subvariables passed in.")
+        }
+        return(x$after)
+    } else if (is.AbstractCategories(var_items)) {
+        var_items <- Filter(is.category, var_items) # Can't use other subtotals as anchors
+        # map chars/nums to ids
+        if (is.character(x$after)) {
+            # TODO: better error handling if var_items is null
+            n <- ids(var_items[x$after])
+        } else {
+            n <- x$after
+        }
+        if (is.null(n)) return(NA_integer_) else return(n)
     } else {
-        n <- x$after
+        position <- if (!(is.null(x$after) || is.na(x$after))) "after" else "before"
+        subvar <- if (position == "after") x$after else x$before
+
+        if (!subvar %in% aliases(var_items)) {
+            if (subvar %in% names(var_items)) {
+                subvar <- aliases(var_items)[match(subvar, names(var_items))]
+            } else {
+                halt("Could not find anchor `", subvar, "` in subvariable aliases or names.")
+            }
+        }
+        return(list(position = position, alias = subvar))
     }
-    return(ifelse(is.null(n), NA_integer_, n))
 }
 
 #' @rdname Insertions

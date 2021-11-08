@@ -6,8 +6,7 @@
         "hidden": "https://app.crunch.io/api/datasets/veg/folders/hidden/",
         "parents": "https://app.crunch.io/api/datasets/veg/folders/parents/",
         "personal": "https://app.crunch.io/api/datasets/veg/variables/personal/",
-        "secure": "https://app.crunch.io/api/datasets/veg/folders/secure/",
-        "trash": "https://app.crunch.io/api/datasets/veg/folders/trash/"
+        "secure": "https://app.crunch.io/api/datasets/veg/folders/secure/"
     },
     "description": "This is the variables' folder root",
     "element": "shoji:catalog",
@@ -18,6 +17,9 @@
         "../variables/var_02/",
         "../variables/var_17/",
         "../variables/var_15/",
+        "../variables/var_26/",
+        "../variables/var_32/",
+        "../variables/var_29/",
         "vdir_01/"
     ],
     "index": {
@@ -118,6 +120,60 @@
             "secure": false,
             "type": "categorical"
         },
+        "../variables/var_26/": {
+            "alias": "funnel_aware_mr",
+            "derived": true,
+            "description": "Awareness of Vegetables: Funnel",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_26",
+            "name": "Awareness of Vegetables",
+            "notes": "Have you ever heard of the vegetable...?",
+            "secure": false,
+            "subvariables": [
+                "../variables/var_26/subvariables/0001/",
+                "../variables/var_26/subvariables/0002/"
+            ],
+            "subvariables_catalog": "../variables/var_26/subvariables/",
+            "type": "multiple_response",
+            "uniform_basis": false
+        },
+        "../variables/var_29/": {
+            "alias": "funnel_buy_mr",
+            "derived": true,
+            "description": "Purchased Vegetables: Funnel",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_29",
+            "name": "Buy Vegetables",
+            "notes": "Have you ever bought...?",
+            "secure": false,
+            "subvariables": [
+                "../variables/var_29/subvariables/0001/",
+                "../variables/var_29/subvariables/0002/"
+            ],
+            "subvariables_catalog": "../variables/var_29/subvariables/",
+            "type": "multiple_response",
+            "uniform_basis": false
+        },
+        "../variables/var_32/": {
+            "alias": "funnel_consider_mr",
+            "derived": true,
+            "description": "Consideration of Vegetables: Funnel",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_32",
+            "name": "Consider Vegetables",
+            "notes": "Have you ever considered buying...?",
+            "secure": false,
+            "subvariables": [
+                "../variables/var_32/subvariables/0001/",
+                "../variables/var_32/subvariables/0002/"
+            ],
+            "subvariables_catalog": "../variables/var_32/subvariables/",
+            "type": "multiple_response",
+            "uniform_basis": false
+        },
         "vdir_01/": {
             "name": "Survey variables",
             "size": 3,
@@ -125,7 +181,7 @@
         }
     },
     "self": "https://app.crunch.io/api/datasets/veg/folders/",
-    "size": 9,
+    "size": 12,
     "views": {
         "script": "https://app.crunch.io/api/datasets/veg/folders/script/"
     }

@@ -166,9 +166,7 @@ setGeneric("arguments", function(x, ...) standardGeneric("arguments"))
 #' @rdname Insertions
 setGeneric("arguments<-", function(x, value) standardGeneric("arguments<-"))
 # not exported
-setGeneric("kwarguments", function(x, ...) standardGeneric("kwarguments"))
-#' @rdname Insertions
-setGeneric("kwarguments<-", function(x, value) standardGeneric("kwarguments<-"))
+setGeneric("subtotalTerms", function(x, ...) standardGeneric("subtotalTerms"))
 #' @rdname Insertions
 setGeneric("func", function(x) standardGeneric("func"))
 #' @rdname Insertions
@@ -177,7 +175,7 @@ setGeneric("funcs", function(x) standardGeneric("funcs"))
 setGeneric("subtotals", function(x) standardGeneric("subtotals"))
 #' @rdname SubtotalsHeadings
 setGeneric("subtotals<-", function(x, value) standardGeneric("subtotals<-"))
-setGeneric("makeInsertion", function(x, var_categories) standardGeneric("makeInsertion"))
+setGeneric("makeInsertion", function(x, var_items, alias) standardGeneric("makeInsertion"))
 #' @rdname applyTransforms
 setGeneric("subtotalArray", function(x, ...) standardGeneric("subtotalArray"))
 

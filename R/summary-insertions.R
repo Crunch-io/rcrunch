@@ -25,6 +25,8 @@
 #' @param includeNA should missing categories be included in the summary?
 #' @param after character or numeric if `position` is "relative", then the
 #' category name or id to position the subtotal or heading after
+#' @param before character or numeric if `position` is relative (and the
+#' insertion type allows it - currently only MR subtotals).
 #' @param x for `is.SummaryStat()` only, an object to test if
 #' it is a `SummaryStat` object
 #'
@@ -38,6 +40,7 @@ SummaryStat <- function(name,
                         categories = NULL,
                         position = c("relative", "top", "bottom"),
                         after = NULL,
+                        before = NULL,
                         includeNA = FALSE) {
     # match.args position
     position <- match.arg(position)
@@ -56,6 +59,7 @@ SummaryStat <- function(name,
         categories = categories,
         position = position,
         after = after,
+        before = before,
         includeNA = includeNA
     )))
 }
@@ -131,19 +135,19 @@ setMethod("initialize", "SummaryStat", function(.Object, ...) {
 
 #' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "SummaryStat", function(x, var_categories) {
+setMethod("makeInsertion", "SummaryStat", function(x, var_items, alias) {
     if (is.null(arguments(x))) {
         # if there are no arguments, use all category ids
-        args <- ids(var_categories)
+        args <- ids(var_items)
     } else {
-        args <- arguments(x, var_categories)
+        args <- arguments(x, var_items)
     }
 
     return(.Insertion(
-        anchor = anchor(x, var_categories),
+        anchor = anchor(x, var_items),
         name = name(x),
         `function` = x$stat,
-        args = arguments(x, var_categories),
+        args = arguments(x, var_items),
         includeNA = x$includeNA
     ))
 })

@@ -25,7 +25,12 @@ Subtotal(
   categories = NULL,
   position = c("relative", "top", "bottom"),
   after = NULL,
-  negative = NULL
+  before = NULL,
+  negative = NULL,
+  na.rm = TRUE,
+  variable = NULL,
+  id = NULL,
+  alias = NULL
 )
 
 Heading(name, position = c("relative", "top", "bottom"), after = NULL)
@@ -39,7 +44,43 @@ Subtotal(
   categories = NULL,
   position = c("relative", "top", "bottom"),
   after = NULL,
-  negative = NULL
+  before = NULL,
+  negative = NULL,
+  na.rm = TRUE,
+  variable = NULL,
+  id = NULL,
+  alias = NULL
+)
+
+is.Subtotal(x)
+
+is.Heading(x)
+
+are.Subtotals(x)
+
+are.Headings(x)
+
+Heading(name, position = c("relative", "top", "bottom"), after = NULL)
+
+\S4method{subtotals}{CrunchVariable}(x)
+
+\S4method{subtotals}{VariableTuple}(x)
+
+\S4method{subtotals}{CrunchVariable,ANY}(x) <- value
+
+\S4method{subtotals}{CrunchVariable,`NULL`}(x) <- value
+
+Subtotal(
+  name,
+  categories = NULL,
+  position = c("relative", "top", "bottom"),
+  after = NULL,
+  before = NULL,
+  negative = NULL,
+  na.rm = TRUE,
+  variable = NULL,
+  id = NULL,
+  alias = NULL
 )
 
 is.Subtotal(x)
@@ -74,8 +115,26 @@ relative to another category in the cube (default).}
 category name or id to position the subtotal or heading after. If not supplied
 this defaults to the last of the \code{categories} supplied to \code{Subtotal}.}
 
+\item{before}{character or numeric if \code{position} is "relative" and also the
+subtotal is on a Multiple Response variable only.}
+
 \item{negative}{character or numeric of the category names or ids to be subtracted
 for subtotals only}
+
+\item{na.rm}{For Multiple Response subtotals, whether to remove missings before
+calculating the subtotal (so that if \code{na.rm=TRUE} and there is one missing and
+one selected, the response would selected instead of missing). This defaults to
+\code{TRUE} to match how the crunch web application behaves.}
+
+\item{variable}{For Multiple Response subtotals, the parent MR variable that
+contains the subvariables that are being subtotaled (defaults to the variable
+that is having the Subtotal added to it)}
+
+\item{id}{For Multiple Response subtotals, an optional number or string to use
+as the new insertion's id (defaults to a sequential number).}
+
+\item{alias}{For Multiple Response subtotals, an optional string to use as the
+new insertion's alias (defaults to letting the server choose the alias)}
 
 \item{x}{either a variable or CrunchCube object to add or get subtotal
 transforms for, for \code{is.Subtotal()} and \code{is.Heading()} an object to test if
@@ -84,15 +143,35 @@ it is either a Subtotal or Heading}
 \item{value}{For \verb{[<-}, the replacement Subtotal to insert}
 }
 \description{
-Subtotals and headings for categorical Variables and
-CrunchCubes. These are especially useful for making aggregates across
+Subtotals and headings for Categorical Variables and Multiple Response
+Variables. These are especially useful for making aggregates across
+multiple categories (sometimes referred to as \emph{nets}, \emph{top box}, or
+\emph{top 2 box}).
+
+Subtotals and headings for Categorical Variables and Multiple Response
+Variables. These are especially useful for making aggregates across
 multiple categories (sometimes referred to as \emph{nets}, \emph{top box}, or
 \emph{top 2 box}).
 }
 \details{
 To see the subtotals or headings set for a variable, use \code{subtotals(variable)}
+
+To see the subtotals or headings set for a variable, use \code{subtotals(variable)}
 }
 \section{Adding Subtotals and Headings}{
+
+Subtotals and headings can be added either by passing a list of \code{Subtotal}s
+or \code{Heading}s, or they can be added one at a time by passing \code{Subtotal} or
+\code{Heading} to \code{subtotals(variable)} alone.
+
+Adding subtotals or headings is additive; meaning that subtotals or headings
+that are already set on the variable are not removed when new subtotals or
+headings are added. To remove all subtotals and headings, set
+\code{subtotals(variable)} to \code{NULL}.
+
+To get an array of just the subtotal rows from a CrunchCube, use the function
+\code{subtotalArray(CrunchCube)}.
+
 
 Subtotals and headings can be added either by passing a list of \code{Subtotal}s
 or \code{Heading}s, or they can be added one at a time by passing \code{Subtotal} or
@@ -116,6 +195,15 @@ family of methods are useful here: the singular versions (\code{is.Subtotal} and
 a Subtotal or a Heading and \code{FALSE} if not; the plural versions
 (\code{are.Subtotals} and \code{are.Headings}) take a list of objects (including an
 \code{Insertions} object) and returns a vector of \code{TRUE}/\code{FALSE}s.
+
+
+When interacting programmatically with Subtotals and Headings, it can be
+useful to be able to tell if something is a Subtotal or a Heading. The \verb{is.*}
+family of methods are useful here: the singular versions (\code{is.Subtotal} and
+\code{is.Heading}) take a single object and returns \code{TRUE} if the object is either
+a Subtotal or a Heading and \code{FALSE} if not; the plural versions
+(\code{are.Subtotals} and \code{are.Headings}) take a list of objects (including an
+\code{Insertions} object) and returns a vector of \code{TRUE}/\code{FALSE}s.
 }
 
 \section{Removing transforms}{
@@ -124,9 +212,78 @@ a Subtotal or a Heading and \code{FALSE} if not; the plural versions
 Subtotals and Headings. This action only applies to the CrunchCube object in
 R: it doesn't actually change the variables on Crunch servers or the query
 that generated the CrunchCube.
+
+
+\code{noTransforms()} is useful if you don't want to see or use any transformations like
+Subtotals and Headings. This action only applies to the CrunchCube object in
+R: it doesn't actually change the variables on Crunch servers or the query
+that generated the CrunchCube.
 }
 
 \examples{
+\dontrun{
+# given a variable ds$opinion, with categories: Strongly Agree, Somewhat
+# Agree, Neither Agree nor Disagree, Somewhat Disagree, and Strongly Disagree,
+# to make two subtotals for Agree and Disagree:
+subtotals(ds$opinion) <- list(
+    Subtotal(
+        name = "Agree",
+        categories = c("Strongly Agree", "Somewhat Agree"),
+        after = "Somewhat Agree"
+    ),
+    Subtotal(
+        name = "Disagree",
+        categories = c("Strongly Disagree", "Somewhat Disagree"),
+        after = "Strongly Disagree"
+    )
+)
+
+# headings can also be added:
+subtotals(ds$opinion) <- Heading(name = "All opinions", position = "top")
+
+# to see the subtotals and headings associated with a variable
+subtotals(ds$opinion)
+#        anchor         name     func    args
+# 1      2        Agree subtotal 1 and 2
+# 2      4     Disagree subtotal 4 and 5
+# 3      0 All opinions     <NA>      NA
+
+# when you use a variable with subtotals and headings in a cube, you see them
+# by default
+opinion_cube <- crtabs(~opinion, ds)
+opinion_cube
+#               All opinions
+#             Strongly Agree 23
+#             Somewhat Agree 24
+#                      Agree 47
+# Neither Agree nor Disagree 18
+#          Somewhat Disagree 16
+#          Strongly Disagree 19
+#                   Disagree 35
+
+
+# to get just the subtotals,
+subtotalArray(opinion_cube)
+#    Agree Disagree
+#       47       35
+
+# to remove all subtotals and headings
+subtotals(ds$opinion) <- NULL
+crtabs(~opinion, ds)
+#             Strongly Agree 23
+#             Somewhat Agree 24
+# Neither Agree nor Disagree 18
+#          Somewhat Disagree 16
+#          Strongly Disagree 19
+
+# if you want to temporarily remove subtotals and headings, you can with `noTransforms`
+noTransforms(crtabs(~opinion, ds))
+#             Strongly Agree             Somewhat Agree Neither Agree nor Disagree
+#                         23                         24                         18
+#          Somewhat Disagree          Strongly Disagree
+#                         16                         19
+}
+
 \dontrun{
 # given a variable ds$opinion, with categories: Strongly Agree, Somewhat
 # Agree, Neither Agree nor Disagree, Somewhat Disagree, and Strongly Disagree,

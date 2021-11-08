@@ -90,8 +90,13 @@ setMethod("transforms", "VariableTuple", getTransforms)
 #' @export
 setMethod("transforms<-", c("CrunchVariable", "Transforms"), function(x, value) {
     # ensure that the value is all insertions, and only insertions
-    value$insertions <- lapply(value$insertions, makeInsertion,
-        var_categories = categories(x)
+    if (!is.MR(x)) {
+        var_items <- categories(x)
+    } else {
+        var_items <- subvariables(x)
+    }
+    value$insertions <- lapply(
+        value$insertions, makeInsertion, var_items = var_items, alias = alias(x)
     )
 
     frmt <- wrapEntity("view" = list("transform" = value))

@@ -1,0 +1,90 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/17173f/variables/4b21f1/",
+    "catalogs": {
+        "parent": "/api/datasets/17173f/variables/",
+        "folder": "/api/datasets/17173f/folders/"
+    },
+    "fragments": {
+        "user_settings": "/api/datasets/17173f/variables/4b21f1/user_settings/",
+        "dataset": "/api/datasets/17173f/"
+    },
+    "views": {
+        "frequencies": "/api/datasets/17173f/variables/4b21f1/frequencies/",
+        "cast": "/api/datasets/17173f/variables/4b21f1/cast/",
+        "script": "/api/datasets/17173f/variables/4b21f1/script/",
+        "values": "/api/datasets/17173f/variables/4b21f1/values/",
+        "summary": "/api/datasets/17173f/variables/4b21f1/summary/"
+    },
+    "body": {
+        "secure": false,
+        "name": "like_dogs",
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "like_dogs",
+        "dataset_id": "17173f",
+        "owner": null,
+        "hidden": false,
+        "view": {
+            "show_counts": false,
+            "show_numeric_values": false,
+            "include_missing": false,
+            "column_width": null
+        },
+        "type": "categorical",
+        "id": "4b21f1",
+        "categories": [
+            {
+                "numeric_value": 1,
+                "missing": false,
+                "id": 1,
+                "name": "Love"
+            },
+            {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "Like"
+            },
+            {
+                "numeric_value": 3,
+                "missing": false,
+                "id": 3,
+                "name": "Neutral"
+            },
+            {
+                "numeric_value": 4,
+                "missing": false,
+                "id": 4,
+                "name": "Dislike"
+            },
+            {
+                "numeric_value": 5,
+                "missing": false,
+                "id": 5,
+                "name": "Hate"
+            },
+            {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+            }
+        ],
+        "description": ""
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "/api/datasets/17173f/"
+    }
+}

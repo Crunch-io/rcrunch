@@ -93,7 +93,7 @@ A `Subtotal` must have `name`, `after`, and `categories` properties. `name` is t
 #### Methods
 The same as `Insertion`, however some have customizations: 
 * `func` always returns the string `"subtotal"` (because by definition a `Subtotal` object is an `Insertion` with `function="subtotal"`)
-* `anchor` and `arguments` both have an option `var_categories` which is required if the `Subtotal` is using category names instead of ids in the `after` or `categories` properties. Supplying the categories is required in order to translate from category `name`s to `id`s which are required to be a well-formed `Insertion`.
+* `anchor` and `arguments` both have an option `var_items` which is required if the `Subtotal` is using category names instead of ids in the `after` or `categories` properties. Supplying the categories is required in order to translate from category `name`s to `id`s which are required to be a well-formed `Insertion`.
 
 ### Heading
 A `Heading` must have `name` and `after` properties. Both of which have the same interpretation as `Subtotal` above.
@@ -135,11 +135,11 @@ feeling_subtotals[[3]]$categories
 ```
 
 ### Converting from Subtotal/Heading to Insertion
-Since the Crunch API does not have a distinction between `Subtotal`s `Heading`s, and other `Insertion`s, we sometimes need to convert from `Subtotal`s or `Heading`s to `Insertion`s. This is accomplished with the method `makeInsertion()`. This method takes a `Subtotal` or `Heading` and returns a valid `Insertion`. If the `Subtotal` or `Heading` has category `name` references instead of `id`s, then you must include a `Categories` object as the `var_categories` argument. In general, this is only needed before sending a heterogeneous set of `Insertions` to the Crunch API.
+Since the Crunch API does not have a distinction between `Subtotal`s `Heading`s, and other `Insertion`s, we sometimes need to convert from `Subtotal`s or `Heading`s to `Insertion`s. This is accomplished with the method `makeInsertion()`. This method takes a `Subtotal` or `Heading` and returns a valid `Insertion`. If the `Subtotal` or `Heading` has category `name` references instead of `id`s, then you must include a `Categories` object as the `var_items` argument. In general, this is only needed before sending a heterogeneous set of `Insertions` to the Crunch API.
 
 Using the examples we used before, we can see how this works:
 ```{r}
-feeling_insertions <- Insertions(data = lapply(feeling_subtotals, makeInsertion, var_categories = feeling_cats))
+feeling_insertions <- Insertions(data = lapply(feeling_subtotals, makeInsertion, var_items = feeling_cats))
 ```
 Now, all of the `Subtotal`s and `Heading` from `feeling_subtotals` are proper `Insertion`s:
 ```{r}
