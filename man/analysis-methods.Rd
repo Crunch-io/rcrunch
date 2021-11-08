@@ -237,9 +237,13 @@ on the analyses that are not otherwise available in \code{rcrunch}. The helpers
 # show on the slide)
 
 # Change the filter
-filter(slide) <- NULL # to remove a filter
-filter(slide) <- filters(ds)[["My filter"]]
-filter(deck) <- filters(ds)[["My filter"]] # Can set the same filter on a whole deck too
+filters(slide) <- NULL # to remove a filter
+filters(slide) <- filters(ds)[["My filter"]]
+filters(slide) <- list( # Can set multiple filter
+    filters(ds)[["My filter"]],
+    ds$age_grp == "18-35"
+)
+filters(deck) <- filters(ds)[["My filter"]] # Can set the same filter on a whole deck too
 
 # Change the weight
 weight(slide) <- NULL # to remove

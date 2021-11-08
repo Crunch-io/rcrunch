@@ -596,12 +596,6 @@ setMethod("filters", "CrunchAnalysisSlide", function(x) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("CrunchSlide", "ANY"), function(x, value) {
-    deprecate_filter("CrunchSlide", arrow = TRUE)
-})
-
-#' @rdname analysis-methods
-#' @export
 setMethod("filters<-", c("CrunchAnalysisSlide", "ANY"), function(x, value) {
     # check that there is only on analysis?
     first_analysis <- analyses(x)[[1]]
@@ -859,7 +853,8 @@ setMethod("filter", "Analysis", function(x, ...) {
     deprecate_filter("Analysis")
 })
 
-
+#' @rdname analysis-methods
+#' @export
 setMethod("filters", "Analysis", function(x) {
     filters <- x@body$query_environment$filter
     .filtersFromSlide(filters, ds_ref = datasetReference(x))
@@ -918,10 +913,6 @@ setMethod("filter<-", "CrunchAnalysisSlide", function(x, value) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter<-", "Analysis", function(x, value) {
-    deprecate_filter("Analysis", arrow = TRUE)
-})
-
-setMethod("filter<-", c("Analysis", "ANY"), function(x, value) {
     deprecate_filter("Analysis", arrow = TRUE)
 })
 
