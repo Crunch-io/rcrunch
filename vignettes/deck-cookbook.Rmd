@@ -17,7 +17,9 @@ knitr::opts_chunk$set(eval = FALSE)
 
 Decks are a way to save a set of analyses so that you or your team can refer back to them later,
 export to Excel or PowerPoint, or create a Crunch Dashboard. Each *deck* is made up of a set of
-*slides*, and each *slide* contains an *analysis* and optionally a *title* and *subtitle*.
+*slides*, and slides can either be *analysis* or *markdown* slides. All slides have a title
+& subtitle, while analysis slides contain an analysis and markdown slides contain markdown 
+formatted text.
 
 While a good slide generally appears simple to the viewer, a lot depends on getting the analysis
 exactly right, and so creating them does require setting the analysis's attributes just right. The
@@ -52,7 +54,7 @@ ds <- newExampleDataset()
 
 ## Basic deck and slide manipulation
 
-### Creating a slide on a new deck
+### Creating an analysis slide on a new deck
 #### Problem
 You want to create a new deck and add slides to it.
 
@@ -83,7 +85,7 @@ deck <- refresh(deck)
 ```
 
 
-### Creating a slide on an existing deck
+### Creating an analysis slide on an existing deck
 #### Problem
 You want to add a slide to a deck that has already been made.
 
@@ -105,6 +107,36 @@ slide <- newSlide(
 )
 ```
 
+### Creating a markdown slide
+#### Problem
+You want to add a markdown slide
+
+#### Solution
+You can create a new markdown slide with the function `newMarkdownSlide()`.
+
+```{r}
+slide <- newMarkdownSlide(deck, "This survey included **10,000 participants**!", title = "About")
+```
+
+
+
+### Adding an image to a markdown slide
+#### Problem
+You want to include an image on a markdown slide
+
+#### Solution
+The function `markdownSlideImage()` helps add an image to a markdown slide. The function
+takes a path to an image on your local machine, and you use it as an unnamed arugment
+of `newMarkdownSlide()`. 
+
+```{r}
+slide <- newMarkdownSlide(
+  deck, 
+  "This survey was collected by ACME surveys", 
+  markdownSlideImage("acme-logo.png"),
+)
+```
+
 
 ### Editing an existing slide
 #### Problem
@@ -114,8 +146,9 @@ You want to edit a slide that's already been created.
 Slides can be accessed from the deck's slide catalog, available from the `slides()` command. 
 You can retrieve them by their title or position. 
 
-The helper functions `title<-`, `subtitle<-`, `query<-`, `weight<-`, `filter<-`, `transforms<-`,
-`displaySettings<-` and `vizSpecs<-` help set options on a slide.
+The helper functions `title<-`, `subtitle<-`, `query<-`, `weight<-`, `filters<-`, `transforms<-`,
+`displaySettings<-` and `vizSpecs<-` help set options on a analysis slide, and the function
+`slideMarkdown<-` edits the text of a markdown slide.
 
 ```{r}
 # Move title to subtitle and change the title
@@ -129,6 +162,11 @@ slide <- slides(deck)[[2]]
 transforms(slide) <- list(
     rows_dimension = makeDimTransform(rename = c("AUS" = "Australia"))
 )
+
+
+# Edit a markdown slide
+slide <- slides(deck)[[3]]
+slideMarkdown(slide) <- "**Replacement text**"
 ```
 
 
