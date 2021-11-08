@@ -434,12 +434,12 @@ with_mock_crunch({
     ds_veg <- cachedLoadDataset("Vegetables example") ## Has MR insertions
     test_that("can print an mr subtotal", {
         expect_prints(
-            subtotals(ds$funnel_aware_mr),
+            subtotals(ds_veg$funnel_aware_mr),
             get_output(data.frame(
                 anchor = c("top"),
                 name = c("Jicama or Kohlrabi"),
                 func = c("subtotal"),
-                args = c("funnel_aware_mr_1", "funnel_aware_mr_2"),
+                args = c("funnel_aware_mr_1 and funnel_aware_mr_2"),
                 kwargs = c(""),
                 stringsAsFactors = FALSE
             )),
