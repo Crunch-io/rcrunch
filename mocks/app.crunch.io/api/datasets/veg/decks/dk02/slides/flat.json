@@ -1,0 +1,11 @@
+{
+    "description": "Order of the slides on this deck",
+    "element": "shoji:order",
+    "graph": [
+        "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s01/",
+        "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s02/",
+        "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s03/"
+    ],
+    "self": "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/flat/"
+}
+

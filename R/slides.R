@@ -40,9 +40,13 @@
 #' # show on the slide)
 #'
 #' # Change the filter
-#' filter(slide) <- NULL # to remove a filter
-#' filter(slide) <- filters(ds)[["My filter"]]
-#' filter(deck) <- filters(ds)[["My filter"]] # Can set the same filter on a whole deck too
+#' filters(slide) <- NULL # to remove a filter
+#' filters(slide) <- filters(ds)[["My filter"]]
+#' filters(slide) <- list( # Can set multiple filter
+#'     filters(ds)[["My filter"]],
+#'     ds$age_grp == "18-35"
+#' )
+#' filters(deck) <- filters(ds)[["My filter"]] # Can set the same filter on a whole deck too
 #'
 #' # Change the weight
 #' weight(slide) <- NULL # to remove
@@ -80,6 +84,14 @@ setGeneric("cube", function(x) standardGeneric("cube"))
 #' @rdname analysis-methods
 #' @export
 setGeneric("cubes", function(x) standardGeneric("cubes"))
+
+#' @rdname newMarkdownSlide
+#' @export
+setGeneric("slideMarkdown", function(x) standardGeneric("slideMarkdown"))
+#' @rdname newMarkdownSlide
+#' @export
+setGeneric("slideMarkdown<-", function(x, value) standardGeneric("slideMarkdown<-"))
+
 
 #' @rdname analysis-methods
 #' @export
@@ -216,6 +228,12 @@ reorderSlides <- function(x, order) {
     return(refresh(x))
 }
 
+#' @rdname describe-catalog
+#' @export
+setMethod("types", "SlideCatalog", function(x) {
+    getIndexSlot(x, "type")
+})
+
 # CrunchSlide -------------------------------------------------------------------
 
 # TODO: Find out what the mandatory display settings should be for the app then
@@ -259,6 +277,7 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' @param ... Further options to be passed on to the API
 #'
 #' @return CrunchSlide object
+#' @seealso [`newMarkdownSlide`] for creating a markdown slide
 #' @export
 #'
 #' @examples
@@ -481,13 +500,13 @@ validateSlideQuery <- function(query) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[", "CrunchSlide", function(x, i, ...) {
+setMethod("[[", "CrunchAnalysisSlide", function(x, i, ...) {
     an_cat <- analyses(x)
     return(an_cat[[i]])
 })
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", "CrunchSlide", function(x, i, j, value) {
+setMethod("[[<-", "CrunchAnalysisSlide", function(x, i, j, value) {
     an_cat <- analyses(x)
     an_cat[[i]] <- value
     invisible(refresh(x))
@@ -519,21 +538,28 @@ setMethod("subtitle<-", "CrunchSlide", function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analyses", "CrunchSlide", function(x) {
+setMethod("type", "CrunchSlide", function(x) {
+    return(x@body$type)
+})
+
+
+#' @rdname analysis-methods
+#' @export
+setMethod("analyses", "CrunchAnalysisSlide", function(x) {
     AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
 })
 
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analysis", "CrunchSlide", function(x) {
+setMethod("analysis", "CrunchAnalysisSlide", function(x) {
     out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
     return(out[[1]])
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value) {
+setMethod("analysis<-", c("CrunchAnalysisSlide", "formula"), function(x, value) {
     analysis <- analyses(x)[[1]]
     query(analysis) <- value
     return(invisible(x))
@@ -541,14 +567,14 @@ setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analysis<-", c("CrunchSlide", "Analysis"), function(x, value) {
+setMethod("analysis<-", c("CrunchAnalysisSlide", "Analysis"), function(x, value) {
     analysis_cat <- analyses(x)
     return(invisible(modifyCatalogInPlace(analysis_cat, 1, NULL, value)))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("analysis<-", c("CrunchSlide", "list"), function(x, value) {
+setMethod("analysis<-", c("CrunchAnalysisSlide", "list"), function(x, value) {
     payload <- wrapEntity(body = value)
     url <- self(analysis(x))
     crPATCH(url, body = toJSON(payload))
@@ -557,23 +583,29 @@ setMethod("analysis<-", c("CrunchSlide", "list"), function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter", "CrunchSlide", function(x, ...) {
-    analysis <- analyses(x)[[1]]
-    return(filter(analysis))
+setMethod("filter", "CrunchAnalysisSlide", function(x, ...) {
+    deprecate_filter("CrunchSlide")
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("CrunchSlide", "ANY"), function(x, value) {
+setMethod("filters", "CrunchAnalysisSlide", function(x) {
+    analysis <- analyses(x)[[1]]
+    return(filters(analysis))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filters<-", c("CrunchAnalysisSlide", "ANY"), function(x, value) {
     # check that there is only on analysis?
     first_analysis <- analyses(x)[[1]]
-    filter(first_analysis) <- value
+    filters(first_analysis) <- value
     return(invisible(x))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("query<-", "CrunchSlide", function(x, value) {
+setMethod("query<-", "CrunchAnalysisSlide", function(x, value) {
     analysis <- analyses(x)[[1]]
     query(analysis) <- value
     return(invisible(x))
@@ -581,16 +613,16 @@ setMethod("query<-", "CrunchSlide", function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("cubes", "CrunchSlide", function(x) cubes(analyses(x)))
+setMethod("cubes", "CrunchAnalysisSlide", function(x) cubes(analyses(x)))
 #' @rdname analysis-methods
 #' @export
-setMethod("cube", "CrunchSlide", function(x) cube(analyses(x)[[1]]))
+setMethod("cube", "CrunchAnalysisSlide", function(x) cube(analyses(x)[[1]]))
 #' @rdname analysis-methods
 #' @export
-setMethod("displaySettings", "CrunchSlide", function(x) displaySettings(analyses(x)))
+setMethod("displaySettings", "CrunchAnalysisSlide", function(x) displaySettings(analyses(x)))
 #' @rdname analysis-methods
 #' @export
-setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
+setMethod("displaySettings<-", "CrunchAnalysisSlide", function(x, value) {
     an_cat <- analyses(x)
     displaySettings(an_cat) <- value
     return(invisible(x))
@@ -598,10 +630,10 @@ setMethod("displaySettings<-", "CrunchSlide", function(x, value) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("vizSpecs", "CrunchSlide", function(x) vizSpecs(analyses(x)))
+setMethod("vizSpecs", "CrunchAnalysisSlide", function(x) vizSpecs(analyses(x)))
 #' @rdname analysis-methods
 #' @export
-setMethod("vizSpecs<-", "CrunchSlide", function(x, value) {
+setMethod("vizSpecs<-", "CrunchAnalysisSlide", function(x, value) {
     an_cat <- analyses(x)
     vizSpecs(an_cat) <- value
     return(invisible(x))
@@ -818,28 +850,47 @@ wrapDisplaySettings <- function(settings) {
 #' @rdname analysis-methods
 #' @export
 setMethod("filter", "Analysis", function(x, ...) {
-    filt <- x@body$query_environment$filter
-    if (length(filt) == 0) {
-        return(NULL)
-    } else if (length(filt) == 1 && "filter" %in% names(filt[[1]])) {
-        # a saved filter
-        return(CrunchFilter(crGET(filt[[1]]$filter)))
-    } else {
-        # an adhoc filter
-        ds_url <- datasetReference(x)
-        adhoc_expr <- CrunchLogicalExpr(
-            expression = idsToURLs(
-                # 02/2021: Not sure if this is still needed anymore, server doesn't
-                # currently seem to be sending the `dataset` attributes this takes out.
-                # But mocks require it (/4/decks/8ad8/slides/72e8/analysies/52fb.json)
-                fixAdhocFilterExpression(filt[[1]]),
-                paste0(ds_url, "/variables/")
-            ),
-            dataset_url = ds_url
-        )
-        return(adhoc_expr)
-    }
+    deprecate_filter("Analysis")
 })
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filters", "Analysis", function(x) {
+    filters <- x@body$query_environment$filter
+    .filtersFromSlide(filters, ds_ref = datasetReference(x))
+})
+
+.filtersFromSlide <- function(filters, ds_ref) {
+    if (length(filters) == 0) {
+        return(NULL)
+    }
+
+    # jsonlite unboxes a single filter so it's no longer a list of lists
+    # but to make code more consistent, we add it back.
+    if (!is.null(names(filters))) {
+        filters <- list(filters)
+    }
+
+    lapply(filters, function(filt) {
+        if ("filter" %in% names(filt)) {
+            CrunchFilter(crGET(filt$filter))
+        } else {
+            # an adhoc filter
+            adhoc_expr <- CrunchLogicalExpr(
+                expression = idsToURLs(
+                    # 02/2021: Not sure if this is still needed anymore, server doesn't
+                    # currently seem to be sending the `dataset` attributes this takes out.
+                    # But mocks require it (/4/decks/8ad8/slides/72e8/analysies/52fb.json)
+                    fixAdhocFilterExpression(filt),
+                    paste0(ds_ref, "/variables/")
+                ),
+                dataset_url = ds_ref
+            )
+            adhoc_expr
+        }
+    })
+}
+
 
 #' @rdname analysis-methods
 #' @export
@@ -855,30 +906,42 @@ setMethod("filter", "ANY", function(x, ...) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", "CrunchSlide", function(x, value) {
-    analysis <- analyses(x)[[1]]
-    filter(analysis) <- value
-    return(invisible(x))
+setMethod("filter<-", "CrunchAnalysisSlide", function(x, value) {
+    deprecate_filter("Analysis", arrow = TRUE)
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
+setMethod("filter<-", "Analysis", function(x, value) {
+    deprecate_filter("Analysis", arrow = TRUE)
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filters<-", c("Analysis", "CrunchLogicalExpr"), function(x, value) {
     return(set_analysis_filter_or_weight(x, filter = list(value@expression)))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("Analysis", "CrunchFilter"), function(x, value) {
+setMethod("filters<-", c("Analysis", "CrunchFilter"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
-    return(set_analysis_filter_or_weight(x, filter = list(self(value))))
+    return(set_analysis_filter_or_weight(x, filter = standardize_filter_list(value)))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
+setMethod("filters<-", c("Analysis", "NULL"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
     return(set_analysis_filter_or_weight(x, filter = list()))
+})
+
+
+#' @rdname analysis-methods
+#' @export
+setMethod("filters<-", c("Analysis", "list"), function(x, value) {
+    filter <- standardize_filter_list(value)
+    return(set_analysis_filter_or_weight(x, filter = filter))
 })
 
 #' @rdname analysis-methods
@@ -906,7 +969,10 @@ slideQueryEnv <- function(weight, filter) {
 #' @rdname analysis-methods
 #' @export
 setMethod("cubes", "CrunchDeck", function(x) {
+    slide_types <- types(x)
     out <- lapply(seq_len(length(x)), function(i) {
+        if (slide_types[i] != "analysis") return(NULL) # Markdown slides don't have cubes
+
         cubes <- cubes(x[[i]])
         # If a slide has several analyses we should return a sublist of
         # cubes, but most of the time they will have one analysis so not
@@ -923,14 +989,14 @@ setMethod("cubes", "CrunchDeck", function(x) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("weight", "CrunchSlide", function(x) {
+setMethod("weight", "CrunchAnalysisSlide", function(x) {
     analysis <- analyses(x)[[1]]
     return(weight(analysis))
 })
 
 #' @rdname analysis-methods
 #' @export
-setMethod("weight<-", c("CrunchSlide", "ANY"), function(x, value) {
+setMethod("weight<-", c("CrunchAnalysisSlide", "ANY"), function(x, value) {
     # check that there is only on analysis?
     first_analysis <- analyses(x)[[1]]
     weight(first_analysis) <- value
@@ -946,7 +1012,7 @@ setMethod("weight", "Analysis", function(x) {
     }
     full_ds <- loadDataset(datasetReference(VariableEntity(x)))
     wt_pos <- which(urls(allVariables(full_ds)) == wt)
-    filt <- filter(x)
+    filt <- filters(x)
     if (inherits(filt, "CrunchFilter")) {
         filt <- CrunchLogicalExpr(
             dataset_url = self(full_ds),
@@ -978,6 +1044,7 @@ setMethod("weight<-", c("Analysis", "NULL"), function(x, value) {
 set_analysis_filter_or_weight <- function(x, filter, weight) {
     query_env <- slot(x, "body")[["query_environment"]]
     # The single "[" <- list() notation allows NULLs in weight rather than just removing weight
+    if (!missing(filter) && is.null(filter)) filter <- list()
     if (!missing(filter)) query_env["filter"] <- list(filter)
     if (!missing(weight)) query_env["weight"] <- list(weight)
 
@@ -990,4 +1057,96 @@ set_analysis_filter_or_weight <- function(x, filter, weight) {
         setEntitySlot(x, "query_environment", query_env)
     }
 
+}
+
+# Markdown  ---------------------------------------------------------------
+
+#' Add a new markdown slide to a deck
+#'
+#' Markdown slides allow you to add rich text tiles to your Crunch Dashboards.
+#' `markdownSlideImage()` is a helper for embedding the data of an image from
+#' your computer into the slide.
+#'
+#' @inheritParams newSlide
+#' @param ... Unnamed arguments are text that are combined to create the markdown body
+#' named arguments are passed to the API.
+#' @return A `MarkdownCrunchSlide`
+#' @export
+#'
+#' @seealso [`newSlide()`] for creating an analysis slide
+#' @examples
+#' \dontrun{
+#' newMarkdownSlide(deck, "We contacted 1,000 people by telephone", title = "Methodology")
+#'
+#' newMarkdownSlide(
+#'     deck,
+#'     "The 3 most **popular** vegetables are:\n",
+#'     "- Fennel\n",
+#'     "- Carrots\n",
+#'     "- Avocado\n",
+#'     title = "Key findings"
+#' )
+#'
+#' newMarkdownSlide(
+#'     deck,
+#'     "crunch.io: ",
+#'     markdownSlideImage("logo.png")
+#' )
+#' }
+newMarkdownSlide <- function(deck, ..., title = "", subtitle = "") {
+    # Separate out unnamed dots (markdown body) from named dots (passed to API)
+    dots <- list(...)
+    if (is.null(names(dots))) {
+        named_dots <- NULL
+        unnamed_dots <- dots
+    } else {
+        have_names <- names(dots) != "" & !is.na(names(dots))
+        named_dots <- dots[have_names]
+        unnamed_dots <- dots[!have_names]
+    }
+
+    markdown <- paste0(unnamed_dots, collapse = "")
+
+    body <- c(
+        list(type = "markdown", markdown = markdown, title = title, subtitle = subtitle),
+        named_dots # not actually used yet, but allowed for future expansion
+    )
+
+    payload <- wrapEntity(body = body)
+    url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
+    return(CrunchSlide(crGET(url)))
+}
+
+#' @rdname newMarkdownSlide
+#' @param file File path to an image
+#' @export
+markdownSlideImage <- function(file) {
+    if (!file.exists(file)) halt("Could not find file: ", file)
+    paste0(
+        "![", basename(file), "]",
+        "(", base64enc::dataURI(file = file, mime = mime::guess_type(file)), ")"
+    )
+}
+
+#' @rdname newMarkdownSlide
+#' @param x A `CrunchMarkdownSlide`
+#' @export
+setMethod("slideMarkdown", c("CrunchMarkdownSlide"), function(x) {
+    x@body$markdown
+})
+
+#' @rdname newMarkdownSlide
+#' @param value A string to replace the markdown content with
+#' @export
+setMethod("slideMarkdown<-", c("CrunchMarkdownSlide", "character"), function(x, value) {
+    setEntitySlot(x, "markdown", value)
+})
+
+deprecate_filter <- function(type, arrow = FALSE) {
+    arrow <- if (arrow) "<-" else ""
+    msg <- paste0(
+        "`filter", "()", arrow, "` is no longer supported on ", type, ". Use ",
+        "`filter", crayon::bold(crayon::underline("s")), "()", arrow, "` instead."
+    )
+    halt(msg)
 }

@@ -1,5 +1,13 @@
-expect_prints <- function(object, ..., fixed = TRUE) {
-    expect_output(print(object), ..., fixed = fixed)
+expect_prints <- function(object, ..., fixed = TRUE, crayon.enabled = NULL) {
+    if (is.null(crayon.enabled)) {
+        expect_output(print(object), ..., fixed = fixed)
+    } else {
+        expect_output(
+            with(temp.option(crayon.enabled = crayon.enabled), print(object)),
+            ...,
+            fixed = fixed
+        )
+    }
 }
 
 get_output <- function(x) {

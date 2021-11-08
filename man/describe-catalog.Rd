@@ -48,12 +48,14 @@
 \alias{emails,ShojiCatalog-method}
 \alias{names,CrunchDeck-method}
 \alias{names<-,CrunchDeck-method}
+\alias{types,CrunchDeck-method}
 \alias{names<-,MultitableCatalog-method}
 \alias{types,ShojiFolder-method}
 \alias{names,ShojiOrder-method}
 \alias{names,OrderGroup-method}
 \alias{names,SlideCatalog-method}
 \alias{names<-,SlideCatalog-method}
+\alias{types,SlideCatalog-method}
 \alias{names,ArrayVariable-method}
 \alias{names,TabBookResult-method}
 \alias{aliases,TabBookResult-method}
@@ -154,6 +156,8 @@ dates(x) <- value
 
 \S4method{names}{CrunchDeck}(x) <- value
 
+\S4method{types}{CrunchDeck}(x)
+
 \S4method{names}{MultitableCatalog}(x) <- value
 
 \S4method{types}{ShojiFolder}(x)
@@ -165,6 +169,8 @@ dates(x) <- value
 \S4method{names}{SlideCatalog}(x)
 
 \S4method{names}{SlideCatalog}(x) <- value
+
+\S4method{types}{SlideCatalog}(x)
 
 \S4method{names}{ArrayVariable}(x)
 

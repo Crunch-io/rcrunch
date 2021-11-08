@@ -217,7 +217,7 @@ test_that("standardizeTransformIDs() ignores non-character", {
 
 with_mock_crunch({
     ds <- cachedLoadDataset("Vegetables example")
-    deck <- decks(ds)[["deck about transforms"]]
+    deck <- decks(ds)[["1 deck about transforms"]]
 
     test_that("Can get empty transform from slide/analyses cat/analysis", {
         expect_equivalent(transforms(deck[[1]]), list())

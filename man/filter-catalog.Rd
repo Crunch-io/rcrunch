@@ -5,7 +5,7 @@
 \alias{filters<-}
 \alias{filter-catalog}
 \alias{filters,CrunchDataset-method}
-\alias{filters<-,CrunchDataset-method}
+\alias{filters<-,CrunchDataset,ANY-method}
 \title{Get or set a dataset's filters}
 \usage{
 filters(x)
@@ -14,7 +14,7 @@ filters(x) <- value
 
 \S4method{filters}{CrunchDataset}(x)
 
-\S4method{filters}{CrunchDataset}(x) <- value
+\S4method{filters}{CrunchDataset,ANY}(x) <- value
 }
 \arguments{
 \item{x}{a CrunchDataset}

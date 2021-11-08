@@ -5,11 +5,12 @@
 \alias{filter}
 \alias{filter<-}
 \alias{weight<-,CrunchDeck,ANY-method}
-\alias{filter<-,CrunchDeck,ANY-method}
-\alias{transforms,CrunchSlide-method}
+\alias{filter<-,CrunchDeck-method}
+\alias{filters<-,CrunchDeck,ANY-method}
+\alias{transforms,CrunchAnalysisSlide-method}
 \alias{transforms,AnalysisCatalog-method}
 \alias{transforms,Analysis-method}
-\alias{transforms<-,CrunchSlide,ANY-method}
+\alias{transforms<-,CrunchAnalysisSlide,ANY-method}
 \alias{transforms<-,AnalysisCatalog,ANY-method}
 \alias{transforms<-,Analysis,ANY-method}
 \alias{analyses}
@@ -22,20 +23,22 @@
 \alias{displaySettings<-}
 \alias{vizSpecs}
 \alias{vizSpecs<-}
-\alias{analyses,CrunchSlide-method}
-\alias{analysis,CrunchSlide-method}
-\alias{analysis<-,CrunchSlide,formula-method}
-\alias{analysis<-,CrunchSlide,Analysis-method}
-\alias{analysis<-,CrunchSlide,list-method}
-\alias{filter,CrunchSlide-method}
-\alias{filter<-,CrunchSlide,ANY-method}
-\alias{query<-,CrunchSlide,ANY-method}
-\alias{cubes,CrunchSlide-method}
-\alias{cube,CrunchSlide-method}
-\alias{displaySettings,CrunchSlide-method}
-\alias{displaySettings<-,CrunchSlide,ANY-method}
-\alias{vizSpecs,CrunchSlide-method}
-\alias{vizSpecs<-,CrunchSlide,ANY-method}
+\alias{type,CrunchSlide-method}
+\alias{analyses,CrunchAnalysisSlide-method}
+\alias{analysis,CrunchAnalysisSlide-method}
+\alias{analysis<-,CrunchAnalysisSlide,formula-method}
+\alias{analysis<-,CrunchAnalysisSlide,Analysis-method}
+\alias{analysis<-,CrunchAnalysisSlide,list-method}
+\alias{filter,CrunchAnalysisSlide-method}
+\alias{filters,CrunchAnalysisSlide-method}
+\alias{filters<-,CrunchAnalysisSlide,ANY-method}
+\alias{query<-,CrunchAnalysisSlide,ANY-method}
+\alias{cubes,CrunchAnalysisSlide-method}
+\alias{cube,CrunchAnalysisSlide-method}
+\alias{displaySettings,CrunchAnalysisSlide-method}
+\alias{displaySettings<-,CrunchAnalysisSlide,ANY-method}
+\alias{vizSpecs,CrunchAnalysisSlide-method}
+\alias{vizSpecs<-,CrunchAnalysisSlide,ANY-method}
 \alias{cubes,AnalysisCatalog-method}
 \alias{displaySettings,AnalysisCatalog-method}
 \alias{displaySettings<-,AnalysisCatalog,list-method}
@@ -49,14 +52,18 @@
 \alias{vizSpecs,Analysis-method}
 \alias{vizSpecs<-,Analysis,ANY-method}
 \alias{filter,Analysis-method}
+\alias{filters,Analysis-method}
 \alias{filter,ANY-method}
-\alias{filter<-,Analysis,CrunchLogicalExpr-method}
-\alias{filter<-,Analysis,CrunchFilter-method}
-\alias{filter<-,Analysis,NULL-method}
+\alias{filter<-,CrunchAnalysisSlide-method}
+\alias{filter<-,Analysis-method}
+\alias{filters<-,Analysis,CrunchLogicalExpr-method}
+\alias{filters<-,Analysis,CrunchFilter-method}
+\alias{filters<-,Analysis,NULL-method}
+\alias{filters<-,Analysis,list-method}
 \alias{slideQueryEnv}
 \alias{cubes,CrunchDeck-method}
-\alias{weight,CrunchSlide-method}
-\alias{weight<-,CrunchSlide,ANY-method}
+\alias{weight,CrunchAnalysisSlide-method}
+\alias{weight<-,CrunchAnalysisSlide,ANY-method}
 \alias{weight,Analysis-method}
 \title{Get and set slide analyses}
 \usage{
@@ -66,15 +73,17 @@ filter(x) <- value
 
 \S4method{weight}{CrunchDeck,ANY}(x) <- value
 
-\S4method{filter}{CrunchDeck,ANY}(x) <- value
+\S4method{filter}{CrunchDeck}(x) <- value
 
-\S4method{transforms}{CrunchSlide}(x)
+\S4method{filters}{CrunchDeck,ANY}(x) <- value
+
+\S4method{transforms}{CrunchAnalysisSlide}(x)
 
 \S4method{transforms}{AnalysisCatalog}(x)
 
 \S4method{transforms}{Analysis}(x)
 
-\S4method{transforms}{CrunchSlide,ANY}(x) <- value
+\S4method{transforms}{CrunchAnalysisSlide,ANY}(x) <- value
 
 \S4method{transforms}{AnalysisCatalog,ANY}(x) <- value
 
@@ -100,33 +109,37 @@ vizSpecs(x)
 
 vizSpecs(x) <- value
 
-\S4method{analyses}{CrunchSlide}(x)
+\S4method{type}{CrunchSlide}(x)
 
-\S4method{analysis}{CrunchSlide}(x)
+\S4method{analyses}{CrunchAnalysisSlide}(x)
 
-\S4method{analysis}{CrunchSlide,formula}(x) <- value
+\S4method{analysis}{CrunchAnalysisSlide}(x)
 
-\S4method{analysis}{CrunchSlide,Analysis}(x) <- value
+\S4method{analysis}{CrunchAnalysisSlide,formula}(x) <- value
 
-\S4method{analysis}{CrunchSlide,list}(x) <- value
+\S4method{analysis}{CrunchAnalysisSlide,Analysis}(x) <- value
 
-\S4method{filter}{CrunchSlide}(x, ...)
+\S4method{analysis}{CrunchAnalysisSlide,list}(x) <- value
 
-\S4method{filter}{CrunchSlide,ANY}(x) <- value
+\S4method{filter}{CrunchAnalysisSlide}(x, ...)
 
-\S4method{query}{CrunchSlide,ANY}(x) <- value
+\S4method{filters}{CrunchAnalysisSlide}(x)
 
-\S4method{cubes}{CrunchSlide}(x)
+\S4method{filters}{CrunchAnalysisSlide,ANY}(x) <- value
 
-\S4method{cube}{CrunchSlide}(x)
+\S4method{query}{CrunchAnalysisSlide,ANY}(x) <- value
 
-\S4method{displaySettings}{CrunchSlide}(x)
+\S4method{cubes}{CrunchAnalysisSlide}(x)
 
-\S4method{displaySettings}{CrunchSlide,ANY}(x) <- value
+\S4method{cube}{CrunchAnalysisSlide}(x)
 
-\S4method{vizSpecs}{CrunchSlide}(x)
+\S4method{displaySettings}{CrunchAnalysisSlide}(x)
 
-\S4method{vizSpecs}{CrunchSlide,ANY}(x) <- value
+\S4method{displaySettings}{CrunchAnalysisSlide,ANY}(x) <- value
+
+\S4method{vizSpecs}{CrunchAnalysisSlide}(x)
+
+\S4method{vizSpecs}{CrunchAnalysisSlide,ANY}(x) <- value
 
 \S4method{cubes}{AnalysisCatalog}(x)
 
@@ -154,23 +167,29 @@ formulaToSlideQuery(query, dataset)
 
 \S4method{filter}{Analysis}(x, ...)
 
+\S4method{filters}{Analysis}(x)
+
 \S4method{filter}{ANY}(x, ...)
 
-\S4method{filter}{CrunchSlide,ANY}(x) <- value
+\S4method{filter}{CrunchAnalysisSlide}(x) <- value
 
-\S4method{filter}{Analysis,CrunchLogicalExpr}(x) <- value
+\S4method{filter}{Analysis}(x) <- value
 
-\S4method{filter}{Analysis,CrunchFilter}(x) <- value
+\S4method{filters}{Analysis,CrunchLogicalExpr}(x) <- value
 
-\S4method{filter}{Analysis,`NULL`}(x) <- value
+\S4method{filters}{Analysis,CrunchFilter}(x) <- value
+
+\S4method{filters}{Analysis,`NULL`}(x) <- value
+
+\S4method{filters}{Analysis,list}(x) <- value
 
 slideQueryEnv(weight, filter)
 
 \S4method{cubes}{CrunchDeck}(x)
 
-\S4method{weight}{CrunchSlide}(x)
+\S4method{weight}{CrunchAnalysisSlide}(x)
 
-\S4method{weight}{CrunchSlide,ANY}(x) <- value
+\S4method{weight}{CrunchAnalysisSlide,ANY}(x) <- value
 
 \S4method{weight}{Analysis}(x)
 }
@@ -218,9 +237,13 @@ on the analyses that are not otherwise available in \code{rcrunch}. The helpers
 # show on the slide)
 
 # Change the filter
-filter(slide) <- NULL # to remove a filter
-filter(slide) <- filters(ds)[["My filter"]]
-filter(deck) <- filters(ds)[["My filter"]] # Can set the same filter on a whole deck too
+filters(slide) <- NULL # to remove a filter
+filters(slide) <- filters(ds)[["My filter"]]
+filters(slide) <- list( # Can set multiple filter
+    filters(ds)[["My filter"]],
+    ds$age_grp == "18-35"
+)
+filters(deck) <- filters(ds)[["My filter"]] # Can set the same filter on a whole deck too
 
 # Change the weight
 weight(slide) <- NULL # to remove

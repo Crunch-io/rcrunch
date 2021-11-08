@@ -356,7 +356,8 @@ fixAdhocFilterExpression <- function(expr) {
         return(fixAdhocFilterExpression(expr@expression))
     } else if ("variable" %in% names(expr) && "dataset" %in% names(expr)) {
         dataset <- expr[["dataset"]]
-        var <- expr[["variable"]]
+        # subvariable id is separated by a "."
+        var <- gsub("\\.", "/subvariables/", expr[["variable"]])
         expr[["dataset"]] <- NULL
         path <- paste0("datasets/", dataset, "/variables/", var, "/") # nolint
         expr[["variable"]] <- absoluteURL(path, getOption("crunch.api"))
@@ -532,16 +533,150 @@ setMethod("show", "DeckCatalog", function(object) {
 #' @rdname show
 #' @export
 setMethod("show", "CrunchDeck", function(object) {
-    print(cubes(object))
+    tryCatch({
+        slides <- slides(object)
+        titles <- titles(slides)
+        subtitles <- subtitles(slides)
+        types <- types(slides)
+
+        viz_types <- vapply(seq_along(slides), function(i) {
+            if (types[i] == "markdown") return("markdown")
+            slides@index[[i]]$display_settings$vizType$value %||% "unknown"
+        }, character(1))
+
+        name <- name(object)
+        public <- if (is.public(object)) "Public" else "Private"
+
+        cat(paste0(public, " CrunchDeck ", dQuote(name), " with ", length(slides), " slides:\n"))
+        cat(paste0(
+            "    [[", formatC(seq_along(slides), width = nchar(length(slides))), "]]: ",
+            slideHeaders(titles, subtitles, viz_types),
+            collapse = "\n"
+        ))
+        cat("\n")
+    },
+    error = function(e) {
+        cat("CrunchDeck with complex contents\n")
+    })
 })
+
+slideHeaders <- function(titles, subtitles, viz_types) {
+    paste0(
+        ifelse(titles == "", "<Untitled>", dQuote(titles)),
+        ifelse(subtitles == "", "", paste0(" | ", crayon::italic(subtitles))),
+        " ", crayon::silver(paste0("(", viz_types, ")"))
+    )
+}
 
 #' @rdname show
 #' @export
 setMethod("show", "CrunchSlide", function(object) {
-    out <- cubes(object)
-    names(out) <- title(object)
-    print(out)
+    cat("Crunch Slide of unknown type\n") #nocov
 })
+
+#' @rdname show
+#' @export
+setMethod("show", "CrunchAnalysisSlide", function(object) {
+    tryCatch({
+        title <- title(object)
+        subtitle <- subtitle(object)
+
+        # API recently started adding display_settings & analysis to body
+        # of slide, use it here to avoid a call to the API
+        # TODO: Eventually the functions like `displaySettings()` and `query()`
+        # should use these, but this API is still in transition (eg you can't
+        # set them directly, so rcrunch will mostly use analysis catalogs for now)
+        viz_type <- object@body$display_settings$vizType$value %||% "<unknown vizType>"
+
+        dimensions <- .showSlideHeadingHelper(
+            object@body$analysis$query$dimensions,
+            "Dimensions",
+            formatExpressionArgs
+        )
+
+        measures <- object@body$analysis$query$measures
+        measures <- paste0(
+            "- Measures: ",
+            paste0(
+                vapply(names(measures), dQuote, ""), " (", formatExpressionArgs(measures), ")",
+                collapse = ", "
+            ),
+            "\n"
+        )
+
+        filters <- .showSlideHeadingHelper(
+            .filtersFromSlide(object@body$analysis$query_environment$filter, datasetReference(object)),
+            "Filters",
+            function(filters) {
+                vapply(filters, function(filter) paste0(capture.output(show(filter)), collapse = "\n"), character(1))
+            }
+        )
+
+        weight <- object@body$analysis$query_environment$weight
+        if (!is.null(weight)) {
+            weight <- paste0(
+                "- Weight: ",
+                crGET(object@body$analysis$query_environment$weight)$body$alias %||% "<unknown>",
+                "\n"
+            )
+        } else {
+            weight <- ""
+        }
+
+        cat(paste0(
+            "Crunch analysis slide ", slideHeaders(title, subtitle, viz_type), "\n",
+            dimensions,
+            measures,
+            filters,
+            weight
+        ))
+    },
+    error = function(e) {
+            cat("CrunchAnalysisSlide with complex contents\n")
+        }
+    )
+})
+
+.showSlideHeadingHelper <- function(x, heading, formatter) {
+    if (length(x) == 0) return("")
+    paste0("- ", heading, ":\n", paste0("    - ", formatter(x), collapse = "\n"), "\n")
+}
+
+#' @rdname show
+#' @export
+setMethod("show", "CrunchMarkdownSlide", function(object) {
+    header <- slideHeaders(title(object), subtitle(object), "markdown")
+    cat(paste0(
+        "Crunch markdown slide ", header, "\n",
+        truncateString(slideMarkdown(object), 8)
+    ))
+})
+
+truncateString <- function(text, nlines, width = getOption("width", 80)) {
+    orig_nchar <- nchar(text)
+    # truncate to nlines * width, maximum width possible
+    out <- substring(text, 1, nlines * width)
+    # split line breaks
+    out <- strsplit(out, "\n")[[1]]
+    # substring doesn't include a linebreak as last character
+    if (substring(text, orig_nchar, orig_nchar) == "\n") out <- c(out, "")
+    # split on width num of characters
+    out <- strsplit(out, paste0("(?<=.{", width, "})"), perl = TRUE)
+    # but "" get converted to character(0) by perl strsplit, so add them back in
+    out[lengths(out) == 0] <- ""
+    # Now take at most the first nlines number of lines
+    lines_used <- 0
+    out <- lapply(out, function(x) {
+        lines_left <- nlines - lines_used
+        using_now <- min(lines_left, length(x))
+        combined <- paste0(x[seq_len(using_now)], collapse = "")
+        lines_used <<- lines_used + using_now
+        combined
+    })
+    out <- paste0(out, collapse = "\n")
+    if (nchar(out) < orig_nchar) out <- paste0(out, "...")
+    out
+}
 
 #' @rdname show
 #' @export

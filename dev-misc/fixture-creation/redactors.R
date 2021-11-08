@@ -16,7 +16,10 @@
 #' - variable
 #' - variable folders
 #' - multitables
-#' - (TODO: deck/slide/analysis/filter/version/forks & more?)
+#' - deck
+#' - slide
+#' - slide analyses
+#' - (TODO: filter/version/forks & more?)
 #' @param ds A Crunch Dataset
 #' @param desired_ds_id A string that is the desired ID for the dataset
 #'
@@ -181,12 +184,16 @@ ids_from_decks <- function(ds) {
         deck <- refresh(decks(ds)[[deck_num]])
         slide_ids <- lapply(seq_along(refresh(slides(deck))), function(slide_num) {
             slide <- refresh(slides(deck)[[slide_num]])
-            analyses_ids <- lapply(
-                seq_along(refresh(analyses(slide))),
-                function(a_num) refresh(slide[[a_num]])@body$id
-            )
-            names(analyses_ids) <- sprintf("a%02d", seq_along(analyses_ids))
-            c(slide@body$id, analyses_ids)
+            out <- slide@body$id
+            if (type(slide) == "analysis") {
+                analyses_ids <- lapply(
+                    seq_along(refresh(analyses(slide))),
+                    function(a_num) refresh(slide[[a_num]])@body$id
+                )
+                names(analyses_ids) <- sprintf("a%02d", seq_along(analyses_ids))
+                out <- c(out, analyses_ids)
+            }
+            out
         })
         names(slide_ids) <- sprintf("s%02d", seq_along(slide_ids))
         c(deck@body$id, slide_ids)

@@ -3,9 +3,17 @@
     "element": "shoji:catalog",
     "index": {
         "https://app.crunch.io/api/datasets/veg/decks/dk01/": {
+            "creation_time": "2021-01-02T21:29:59.792000",
+            "is_public": false,
+            "name": "1 deck about transforms",
+            "owner_id": "https://app.crunch.io/api/users/user_id/",
+            "owner_name": "Greg",
+            "team": null
+        },
+        "https://app.crunch.io/api/datasets/veg/decks/dk02/": {
             "creation_time": "2021-01-01T21:29:59.791000",
             "is_public": false,
-            "name": "deck about transforms",
+            "name": "2 deck about printing",
             "owner_id": "https://app.crunch.io/api/users/user_id/",
             "owner_name": "Greg",
             "team": null

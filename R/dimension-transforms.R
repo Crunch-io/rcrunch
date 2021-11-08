@@ -251,7 +251,7 @@ standardizeTransformIDs <- function(x, crosswalk, type) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("transforms", "CrunchSlide", function(x) {
+setMethod("transforms", "CrunchAnalysisSlide", function(x) {
     transforms(analyses(x))
 })
 #' @rdname analysis-methods
@@ -275,7 +275,7 @@ setMethod("transforms", "Analysis", function(x) {
 
 #' @rdname analysis-methods
 #' @export
-setMethod("transforms<-", "CrunchSlide", function(x, value) {
+setMethod("transforms<-", "CrunchAnalysisSlide", function(x, value) {
     all_analyses <- analyses(x)
     transforms(all_analyses) <- value
     invisible(x)

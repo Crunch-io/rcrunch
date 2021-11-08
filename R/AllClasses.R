@@ -252,7 +252,25 @@ CrunchDataset <- setClass("CrunchDataset",
 DeckCatalog <- setClass("DeckCatalog", contains = "ShojiCatalog")
 CrunchDeck <- setClass("CrunchDeck", contains = "ShojiObject")
 SlideCatalog <- setClass("SlideCatalog", contains = "ShojiCatalog")
-CrunchSlide <- setClass("CrunchSlide", contains = "ShojiObject")
+
+
+setClass("CrunchSlide", contains = "ShojiObject")
+CrunchAnalysisSlide <- setClass("CrunchAnalysisSlide", contains = "CrunchSlide")
+CrunchMarkdownSlide <- setClass("CrunchMarkdownSlide", contains = "CrunchSlide")
+
+.slideClasses <- list(
+    "analysis" = "CrunchAnalysisSlide",
+    "markdown" = "CrunchMarkdownSlide"
+)
+CrunchSlide <- function(...) {
+    ## Create correct subclass of crunch slide
+    ## Return a CrunchSlide if unknown type (won't be super useful but better than breaking)
+    cls <- try(.slideClasses[[list(...)[[1]]$body$type]], silent = TRUE)
+    if (is.error(cls)) cls <- "CrunchSlide"
+    return(new(cls, ...))
+}
+
+
 AnalysisCatalog <- setClass("AnalysisCatalog", contains = "ShojiCatalog")
 Analysis <- setClass("Analysis", contains = "ShojiObject")
 

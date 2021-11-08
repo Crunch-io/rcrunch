@@ -1,0 +1,19 @@
+{
+    "body": {
+        "id": "dk02s03",
+        "markdown": "*markdown goes here*",
+        "subtitle": "markdown slide",
+        "title": "",
+        "type": "markdown"
+    },
+    "catalogs": {
+        "analyses": "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s03/analyses/"
+    },
+    "description": "Returns the detail information for a given slide",
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s03/",
+    "views": {
+        "applied": "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s03/applied/"
+    }
+}
+
