@@ -1,4 +1,11 @@
-# crunch 1.28.2 (Development version)
+# crunch 1.28.2
+* You can now export a csv version of a tabbook for use in Tableau or other BI software (#583)
+* Crunch slides have been improved:
+    * Can set multiple filters per slide (#570)
+    * Can create and edit markdown slides (#568)
+* Fixed a warning in R 4.1 when setting attributes on S4 objects (#578)
+* Can create and edit subtotal insertions on Multiple Response variables (#580)
+* Update to the pets example (#585)
 
 # crunch 1.28.1
 * `as.data.frame()` and `as.vector()` work with numeric arrays now (#558)
