@@ -154,6 +154,7 @@ with_mock_crunch({
     test_that("subtotals returns null when there are no subtotals", {
         expect_null(subtotals(ds$gender))
     })
+
     test_that("Assigning NULL if already NULL does nothing", {
         expect_no_request(subtotals(ds$gender) <- NULL)
     })
@@ -428,6 +429,23 @@ with_mock_crunch({
 
 
     })
+
+
+    ds_veg <- cachedLoadDataset("Vegetables example") ## Has MR insertions
+    test_that("can print an mr subtotal", {
+        expect_prints(
+            subtotals(ds$funnel_aware_mr),
+            get_output(data.frame(
+                anchor = c("top"),
+                name = c("Jicama or Kohlrabi"),
+                func = c("subtotal"),
+                args = c("funnel_aware_mr_1", "funnel_aware_mr_2"),
+                kwargs = c(""),
+                stringsAsFactors = FALSE
+            )),
+            fixed = TRUE
+        )
+    })
 })
 
 
@@ -555,20 +573,5 @@ with_test_authentication({
         expect_equal(arguments(subtotals(ds$v4)[[2]]), c(2, 1))
         expect_equal(arguments(subtotals(ds$v4)[[3]]), 2)
         expect_equal(arguments(subtotals(ds$v4)[[4]]), c(1, 2))
-
-
-        ds_veg <- cachedLoadDataset("Vegetables example") ## Has MR insertions
-        expect_prints(
-            subtotals(ds$funnel_aware_mr),
-            get_output(data.frame(
-                anchor = c("top"),
-                name = c("Jicama or Kohlrabi"),
-                func = c("subtotal"),
-                args = c("funnel_aware_mr_1", "funnel_aware_mr_2"),
-                kwargs = c(""),
-                stringsAsFactors = FALSE
-            )),
-            fixed = TRUE
-        )
     })
 })
