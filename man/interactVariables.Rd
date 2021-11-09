@@ -4,7 +4,7 @@
 \alias{interactVariables}
 \title{Create a variable by interacting categorical variables}
 \usage{
-interactVariables(..., name, sep = ":")
+interactVariables(..., name, collapse_missings = FALSE)
 }
 \arguments{
 \item{...}{a sequence of categorical variables to make an interaction from
@@ -13,8 +13,9 @@ description)}
 
 \item{name}{a character to use as the name for the interaction variable}
 
-\item{sep}{a character to separate the values of the individual variables
-(default: \code{:})}
+\item{collapse_missings}{a logical indicating whether to combine all
+new categories that are formed from existing missing categories into
+a single one (defaults to \code{FALSE}).}
 }
 \value{
 A \code{\link{VariableDefinition}} that creates the new interaction variable.

@@ -6,6 +6,9 @@
 * Fixed a warning in R 4.1 when setting attributes on S4 objects (#578)
 * Can create and edit subtotal insertions on Multiple Response variables (#580)
 * Update to the pets example (#585)
+* `interactVariables()` now uses server side logic to create categories so that it's faster,
+but the `sep` argument is no longer supported (it's always set to `" and "`) and the category
+order will not be the same.
 
 # crunch 1.28.1
 * `as.data.frame()` and `as.vector()` work with numeric arrays now (#558)
