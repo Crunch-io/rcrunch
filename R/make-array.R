@@ -424,7 +424,7 @@ flipArrays <- function(variables, suffix = ", flipped") {
     subs <- lapply(variables, subvariables)
     subnames <- lapply(subs, names)
     allnames <- unique(unlist(subnames))
-    with(temp.option(crunch.namekey.array = "name"), {
+    with(temp.option(crunch = list(crunch.namekey.array = "name")), {
         ## Use this option so we can extract subvariables by name
         newvars <- lapply(allnames, function(n) {
             has_this_variable <- vapply(subnames, function(x) n %in% x, logical(1))

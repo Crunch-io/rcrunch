@@ -10,7 +10,7 @@
 #'
 #' Note that the Dataset `names` method returns the aliases of its
 #' variables by default. This behavior is controlled by
-#' `getOption("crunch.namekey.dataset")`.
+#' `envOrOption("crunch.namekey.dataset")`.
 #' Set `options(crunch.namekey.dataset="name")` if you wish to use
 #' variable names. See the variables vignette for more information.
 #'

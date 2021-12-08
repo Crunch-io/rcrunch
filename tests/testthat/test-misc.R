@@ -119,12 +119,15 @@ test_that("toJSON sorts when we want", {
         unsorted
     )
     expect_equal(
-        unclass(with(temp.options(crunch.stabilize.query = TRUE), toJSON(list(b = 1, a = 2)))),
+        unclass(with(
+            temp.options(crunch = list(crunch.stabilize.query = TRUE)),
+            toJSON(list(b = 1, a = 2))
+        )),
         unsorted
     )
     expect_equal(
         unclass(with(
-            temp.options(crunch.stabilize.query = TRUE),
+            temp.options(crunch = list(crunch.stabilize.query = TRUE)),
             toJSON(list(b = 1, a = 2), for_query_string = TRUE)
         )),
         sorted

@@ -73,7 +73,7 @@ with_mock_crunch({
 
     test_that("weightVariables method", {
         expect_identical(weightVariables(newds), "birthyr")
-        with(temp.option(crunch.namekey.dataset = "name"), {
+        with(temp.option(crunch = list(crunch.namekey.dataset = "name")), {
             expect_identical(weightVariables(newds), "Birth Year")
         })
         expect_identical(weightVariables(oldds), c())

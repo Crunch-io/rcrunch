@@ -51,7 +51,7 @@ with_mock_crunch({
         )
     })
     test_that("crunch.debug logging if enabled", {
-        with(temp.option(crunch.debug = TRUE), {
+        with(temp.option(crunch = list(crunch.debug = TRUE)), {
             expect_POST(
                 expect_prints(crPOST("https://app.crunch.io/api/", body = '{"value":1}'),
                     '\n {"value":1} \n',

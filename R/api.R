@@ -19,7 +19,7 @@ crunchAPI <- function(
     ...
 ) {
     url ## force lazy eval of url
-    if (isTRUE(getOption("crunch.debug"))) {
+    if (isTRUE(envOrOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
         payload <- list(...)$body
         if (!is.null(payload)) try(cat("\n", payload, "\n"), silent = TRUE)
@@ -122,13 +122,13 @@ handleAPIsuccess <- function(code, response, progress.handler) {
             progress_url <- handleShoji(content(response))
             ## Quick validation
             if (is.character(progress_url) && length(progress_url) == 1) {
-                if (getOption("crunch.show.progress.url", FALSE)) {
+                if (envOrOption("crunch.show.progress.url", FALSE)) {
                     message(paste0("Checking progress at: ", progress_url))
                 }
                 tryCatch(
                     pollProgress(
                         progress_url,
-                        getOption("crunch.poll.wait", 0.5),
+                        envOrOption("crunch.poll.wait", 0.5),
                         progress.handler
                     ),
                     error = function(e) {
@@ -286,7 +286,7 @@ handleShoji <- function(x) {
     return(x)
 }
 
-getAPIRoot <- function(x = getOption("crunch.api")) {
+getAPIRoot <- function(x = envOrOption("crunch.api")) {
     ShojiObject(crGET(x))
 }
 
@@ -312,7 +312,7 @@ rootURL <- function(x, obj = getAPIRoot()) {
 #' @param expr An expression
 #' @param wait The time in seconds to wait before retrying the expression. Defaults to 0.1.
 #' @param max.tries The number of times to retry the expression
-retry <- function(expr, wait = getOption("crunch_retry_wait", default = 0.1), max.tries = 10) {
+retry <- function(expr, wait = envOrOption("crunch_retry_wait", default = 0.1), max.tries = 10) {
     ## Retry (e.g. a request)
     e <- substitute(expr)
     tries <- 0
@@ -355,7 +355,7 @@ featureFlag <- function(flag) {
 # Don't want Authorization header when going outside crunch domain
 #' @importFrom httr parse_url
 strip_token_if_outside <- function(url) {
-    api_hostname <- parse_url(getOption("crunch.api"))$hostname
+    api_hostname <- parse_url(envOrOption("crunch.api"))$hostname
     url_hostname <- parse_url(url)$hostname
     if (!identical(api_hostname, url_hostname)) add_headers(Authorization = "")
 }

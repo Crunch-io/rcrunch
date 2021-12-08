@@ -4,7 +4,7 @@ with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
 
     test_that("Dataset URLs", {
-        with(temp.options(crunch.api = "https://fake.crunch.io/api/v2/"), {
+        with(temp.options(crunch = list(crunch.api = "https://fake.crunch.io/api/v2/")), {
             expect_identical(
                 APIToWebURL(ds),
                 "https://fake.crunch.io/dataset/1"

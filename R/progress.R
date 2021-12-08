@@ -57,7 +57,7 @@ pollProgress <- function(progress_url, wait = .5, error_handler = NULL) {
 
 #' @importFrom utils txtProgressBar
 setup_progress_bar <- function(...) {
-    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
+    if (isTRUE(envOrOption("crunch.show.progress", TRUE))) {
         return(txtProgressBar(...))
     } else {
         ## Need to return a connection so that `close()` works in silent mode
@@ -67,17 +67,17 @@ setup_progress_bar <- function(...) {
 
 #' @importFrom utils setTxtProgressBar
 update_progress_bar <- function(...) {
-    if (isTRUE(getOption("crunch.show.progress", TRUE))) setTxtProgressBar(...)
+    if (isTRUE(envOrOption("crunch.show.progress", TRUE))) setTxtProgressBar(...)
 }
 
 crunchTimeout <- function() {
-    opt <- getOption("crunch.timeout")
+    opt <- envOrOption("crunch.timeout")
     if (!is.numeric(opt)) opt <- 900
     return(opt)
 }
 
 progressMessage <- function(msg) {
-    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
+    if (isTRUE(envOrOption("crunch.show.progress", TRUE))) {
         message(msg)
     }
 }

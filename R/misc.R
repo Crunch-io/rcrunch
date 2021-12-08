@@ -171,30 +171,93 @@ vectorOrList <- function(obj, type) {
     return(FALSE)
 }
 
-#' Grab either env variable or option
+# nolint start
+#' Get/set options (user-specified, in environment, or in R options)
 #'
-#' .Rprofile options are like "crunch.api", while env vars are "R_CRUNCH_API".
-#' This function will use the environment variable if it is found, otherwise
-#' it looks for the R-based option value.
+#' These functions allow for a consistent framework of options for the
+#' crunch package. When retrieving options, `envOrOption()` first
+#' looks for options set with the `set_crunch_opt()`, followed by
+#' options in the environment (see [`Sys.getenv()`])
+#' and finally in the R options (see [`options`]).
 #'
-#' @param opt the option to get
+#' @details
+#' Environment variables are generally set at the operating system level,
+#' but R does look at a file called `.Renviron` on startup, and you can
+#' also set them using the function [`Sys.setenv()`]. Options are generally
+#' set using a `options()` funciton in the `.Rprofile` file, but can be
+#' set using that function anywhere.
+#'
+#' The main `crunch` R package uses the following options (note that
+#' the option name is in all capital letters, with "." replaced with
+#' "_" and a "R_" prefix when used as an environment variable):
+#'
+#' | Option name                  | Env variable                   | Default value | Explanation                                                                 |
+#' |------------------------------|--------------------------------|---------------|-----------------------------------------------------------------------------|
+#' | crunch.api                   | R_CRUNCH_API                   |               | URL of API to use                                                           |
+#' | crunch.show.progress         | R_CRUNCH_SHOW_PROGRESS         | TRUE          | Whether to show progress bars during interactive sessions                   |
+#' | crunch.timeout               | R_CRUNCH_TIMEOUT               | 900           | Number of seconds to wait before timing out a request                       |
+#' | crunch.show.progress.url     | R_CRUNCH_SHOW_PROGRESS_URL     | FALSE         | Whether to show the URL when checking progress                              |
+#' | crunch_retry_wait            | R_CRUNCH_RETRY_WAIT            | 0.1           | Number of seconds to wait before retrying a download                        |
+#' | crunch.require.confirmation  | R_CRUNCH_REQUIRE_CONFIRMATION  | TRUE          | Whether to require confirmation for destructive actions (like [`delete()`]) |
+#' | crunch.warn.hidden           | R_CRUNCH_WARN_HIDDEN           | TRUE          | Whether to warn when using a hidden variable                                |
+#' | crunch.warn.private          | R_CRUNCH_WARN_PRIVATE          | TRUE          | Whether to warn when using a private variable                               |
+#' | crunch.delimiter             | R_CRUNCH_DELIMITER             | "/"           | What to use as a delimiter when printing folder paths                       |
+#' | crunch.check.updates         | R_CRUNCH_CHECK_UPDATES         | TRUE          | Whether to check for updates to the crunch package                          |
+#' | crunch.debug                 | R_CRUNCH_DEBUG                 | FALSE         | Whether to print verbose information for debugging                          |
+#' | crunch.stabilize.query       | R_CRUNCH_STABILIZE_QUERY       | FALSE         | Whether to stabilize JSON objects for saving as `httptest` objects          |
+#' | crunch.namekey.dataset       | R_CRUNCH_NAMEKEY_DATASET       | "alias"       | What variable identifier (alias or name) to use for a dataset's variables   |
+#' | crunch.namekey.array         | R_CRUNCH_NAMEKEY_ARRAY         | "alias"       | What variable identifier (alias or name) to use for an array's subvariables |
+#' | crunch.namekey.variableorder | R_CRUNCH_NAMEKEY_VARIABLEORDER | "name"        | What variable identifier (alias or name) to use for an order's variables    |
+#' | crunch.email                 | R_CRUNCH_EMAIL                 |               | (Deprecated) Email to use for [`login()`]                                   |
+#' | crunch.pw                    | R_CRUNCH_PW                    |               | (Deprecated) Password to use for [`login()`]                                |
+#' | use.legacy.tabbook.endpoint  | R_USE_LEGACY_TABBOOK_ENDPOINT  | FALSE         | (Deprecated) Whether to use legacy tabbook endpoint in [`tabBook()`]        |
+#'
+#' @param opt the option to get/set
 #' @param default if the specified option is not set in either the option or as
 #' an environment variable, use this instead.
-#'
+#' @param value The value to set the option
 #' @return the value of the option
 #'
 #' @keywords internal
 #' @export
-envOrOption <- function(opt, default = NULL) {
+# nolint end
+envOrOption <- function(opt, default = NULL, expect_lgl = FALSE, expect_num = FALSE) {
+    ## First look in CRUNCH_OPTIONS environment
+    crunch_opt <- get_crunch_opt(opt)
+    if (!is.null(crunch_opt)) {
+        return(crunch_opt)
+    }
+
+    ## Next check in environment variables
     envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed = TRUE)))
     envvar <- Sys.getenv(envvar.name)
 
     if (nchar(envvar)) {
-        ## Let environment variable override .Rprofile, if defined
+        if (expect_lgl) envvar <- as.logical(envvar)
+        if (expect_num) envvar <- as.numeric(envvar)
         return(envvar)
-    } else {
-        return(getOption(opt, default))
     }
+
+    # Finally, check the R options or use default
+    return(getOption(opt, default))
+}
+
+CRUNCH_OPTIONS <- new.env(parent = emptyenv())
+
+get_crunch_opt <- function(opt) {
+    get0(opt, CRUNCH_OPTIONS)
+}
+
+#' @rdname envOrOption
+#' @export
+set_crunch_opt <- function(opt, value) {
+    CRUNCH_OPTIONS[[opt]] <- value
+}
+
+set_crunch_opts <- function(...) {
+    new <- list(...)
+    lapply(names(new), function(nm) set_crunch_opt(nm, new[[nm]]))
+    invisible(new)
 }
 
 #' Change which server to point to

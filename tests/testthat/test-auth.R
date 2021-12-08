@@ -29,8 +29,10 @@ with_mock_auth_settings <- function(
 
   with(
     temp.option(
-      crunch.email = opt_crunch_email,
-      crunch.pw = opt_crunch_pw
+      crunch = list(
+        crunch.email = opt_crunch_email,
+        crunch.pw = opt_crunch_pw
+      )
     ),
     withr::with_envvar(
       env_vars,

@@ -17,7 +17,7 @@
 #' }
 #' @export
 consent <- function() {
-    temp.options(crunch.require.confirmation = FALSE)
+    temp.options(crunch = list(crunch.require.confirmation = FALSE))
 }
 
 #' @rdname consent
@@ -29,7 +29,7 @@ with_consent <- function(expr) {
 askForPermission <- function(prompt = "") {
     ## If options explicitly say we don't need to ask, bail.
     ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
-    must.confirm <- getOption("crunch.require.confirmation", TRUE)
+    must.confirm <- envOrOption("crunch.require.confirmation", TRUE)
     if (must.confirm == FALSE) {
         return(TRUE)
     }
