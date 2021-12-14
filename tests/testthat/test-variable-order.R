@@ -55,7 +55,7 @@ with_mock_crunch({
     })
 
     test_that("Warning that you should be using folders instead", {
-        options(crunch.already.shown.folders.msg = NULL)
+        set_crunch_opts(crunch.already.shown.folders.msg = NULL)
         expect_warning(
             expect_PUT(ordering(ds) <- nested.ord[2:1]),
             "Hey!"

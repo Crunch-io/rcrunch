@@ -25,7 +25,7 @@ crunchAPI <- function(
         if (!is.null(payload)) try(cat("\n", payload, "\n"), silent = TRUE)
     }
     FUN <- get(http.verb, envir = asNamespace("httpcache"))
-    x <- FUN(url, ..., config = c(get_crunch_config(), config, strip_token_if_outside(url)))
+    x <- FUN(url, ..., config = c(get_crunch_config(), get_crunch_auth_config(url), config))
     out <- handleAPIresponse(
         x,
         special.statuses = status.handlers,
@@ -162,7 +162,16 @@ handleAPIsuccess <- function(code, response, progress.handler) {
 
 handleAPIfailure <- function(code, response) {
     if (code == 401) {
-        halt("You are not authenticated. Please `login()` and try again.")
+        key <- get_api_key()
+        if (is.null(key)) {
+            halt("No authentication key found. See `help('crunch-api-key')` for more information.")
+        }
+        api_hostname <- parse_url(envOrOption("crunch.api"))$hostname
+        halt(
+            "Could not connect to '", api_hostname, "' with key ", api_key_source(), ".\n",
+            "Make sure your key is correct and still valid. See `help('crunch-api-key')` for ",
+            "more information."
+        )
     } else if (code == 410) {
         halt(
             "The API resource at ",
@@ -216,6 +225,22 @@ locationHeader <- function(response) {
 }
 
 get_crunch_config <- function() getOption("crunch.httr_config")
+
+get_crunch_auth_config <- function(url) {
+    # --- Don't send token outside of api host (aws downloads fail if you try)
+    api_hostname <- parse_url(envOrOption("crunch.api"))$hostname
+    url_hostname <- parse_url(url)$hostname
+    if (!identical(api_hostname, url_hostname)) return(add_headers())
+
+    key <- get_api_key()
+    if (!is.null(key)) {
+        message_once(
+            option = "message.auth.info",
+            "Connecting to '", api_hostname, "' with key ", api_key_source(), "."
+        )
+        return(add_headers(Authorization = paste0("Bearer ", key)))
+    }
+}
 
 #' Set or modify general Crunch API request configuration
 #'
@@ -350,12 +375,4 @@ featureFlag <- function(flag) {
     url <- sessionURL("feature_flag", "views")
     f <- crGET(url, query = list(feature_name = flag))
     return(isTRUE(f$active))
-}
-
-# Don't want Authorization header when going outside crunch domain
-#' @importFrom httr parse_url
-strip_token_if_outside <- function(url) {
-    api_hostname <- parse_url(envOrOption("crunch.api"))$hostname
-    url_hostname <- parse_url(url)$hostname
-    if (!identical(api_hostname, url_hostname)) add_headers(Authorization = "")
 }

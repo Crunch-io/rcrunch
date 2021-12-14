@@ -114,15 +114,18 @@ assign("entities.created", c(), envir = globalenv())
 test_options <- temp.options(
     # grab env or options
     # use test.api or R_TEST_API if it's available, if not use local
-    crunch.api = crunch::envOrOption(
-        "test.api",
-        "http://local.crunch.io:8080/api/"
-    ),
+    crunch = list(
+        crunch.api = crunch::envOrOption(
+            "test.api",
+            "http://local.crunch.io:8080/api/"
+        ),
 
-    crunch.email = crunch::envOrOption("test.user"),
-    crunch.pw = crunch::envOrOption("test.pw"),
-    crunch.show.progress = FALSE,
-    crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE)
+        crunch.email = crunch::envOrOption("test.user"),
+        crunch.pw = crunch::envOrOption("test.pw"),
+        crunch.show.progress = FALSE,
+        crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE),
+        message.auth.info = TRUE,
+    )
 )
 
 with_test_authentication <- function(expr) {
@@ -131,7 +134,7 @@ with_test_authentication <- function(expr) {
 
         with(test_options, {
             ## Authenticate.
-            try(suppressMessages(login()))
+            try(suppressWarnings(suppressMessages(login())))
             on.exit({
                 ## Delete our seen things
                 purgeEntitiesCreated()

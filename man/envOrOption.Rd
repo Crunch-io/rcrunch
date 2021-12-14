@@ -38,7 +38,8 @@ The main \code{crunch} R package uses the following options (note that
 the option name is in all capital letters, with "." replaced with
 "\emph{" and a "R}" prefix when used as an environment variable):\tabular{llll}{
    Option name \tab Env variable \tab Default value \tab Explanation \cr
-   crunch.api \tab R_CRUNCH_API \tab  \tab URL of API to use \cr
+   crunch.api \tab R_CRUNCH_API \tab "https://app.crunch.io/api/" \tab URL of API to use \cr
+   crunch.api.key \tab R_CRUNCH_API_KEY \tab  \tab Key to use to authenticate with crunch (see ?\code{crunch-api-key}) \cr
    crunch.show.progress \tab R_CRUNCH_SHOW_PROGRESS \tab TRUE \tab Whether to show progress bars during interactive sessions \cr
    crunch.timeout \tab R_CRUNCH_TIMEOUT \tab 900 \tab Number of seconds to wait before timing out a request \cr
    crunch.show.progress.url \tab R_CRUNCH_SHOW_PROGRESS_URL \tab FALSE \tab Whether to show the URL when checking progress \cr

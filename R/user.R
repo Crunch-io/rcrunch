@@ -69,6 +69,7 @@ invite <- function(email, name = NULL, notify = TRUE, id_method = "pwhash",
 #' resetPassword("me@example.com")
 #' }
 resetPassword <- function(email) {
+    deprecate_password("resetPassword")
     app <- envOrOption("crunch.api")
     invisible(crPOST(absoluteURL("public/password_reset/", app),
         body = toJSON(list(

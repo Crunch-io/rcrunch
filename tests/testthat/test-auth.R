@@ -319,7 +319,7 @@ if (run.integration.tests) {
         })
 
         test_that("login returns a session object", {
-            cr <- suppressMessages(login())
+            cr <- suppressWarnings(suppressMessages(login()))
             expect_true(is.list(cr))
             logout()
         })

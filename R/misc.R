@@ -4,14 +4,21 @@ rethrow <- function(x) halt(errorMessage(x))
 
 errorMessage <- function(e) attr(e, "condition")$message
 
-warn_once <- function(..., call. = FALSE, option) {
+display_console_once <- function(..., option, display_func) {
     # Warn the first time, then set an option so we know not to warn again in
     # the current session
-    if (!isTRUE(getOption(option, FALSE))) {
-        warning(..., call. = call.)
-        opts <- structure(list(TRUE), .Names = option)
-        do.call(options, opts)
+    if (!isTRUE(get_crunch_opt(option))) {
+        display_func(...)
+        set_crunch_opt(option, TRUE)
     }
+}
+
+warn_once <- function(..., call. = FALSE, option) {
+    display_console_once(..., call. = call., option = option, display_func = warning)
+}
+
+message_once <- function(..., option) {
+    display_console_once(..., option = option, display_func = message)
 }
 
 vget <- function(name) {
@@ -193,7 +200,8 @@ vectorOrList <- function(obj, type) {
 #'
 #' | Option name                  | Env variable                   | Default value | Explanation                                                                 |
 #' |------------------------------|--------------------------------|---------------|-----------------------------------------------------------------------------|
-#' | crunch.api                   | R_CRUNCH_API                   |               | URL of API to use                                                           |
+#' | crunch.api                   | R_CRUNCH_API                   |"https://app.crunch.io/api/"| URL of API to use                                              |
+#' | crunch.api.key               | R_CRUNCH_API_KEY               |               | Key to use to authenticate with crunch (see `help('crunch-api-key')`)       |
 #' | crunch.show.progress         | R_CRUNCH_SHOW_PROGRESS         | TRUE          | Whether to show progress bars during interactive sessions                   |
 #' | crunch.timeout               | R_CRUNCH_TIMEOUT               | 900           | Number of seconds to wait before timing out a request                       |
 #' | crunch.show.progress.url     | R_CRUNCH_SHOW_PROGRESS_URL     | FALSE         | Whether to show the URL when checking progress                              |
@@ -204,6 +212,7 @@ vectorOrList <- function(obj, type) {
 #' | crunch.delimiter             | R_CRUNCH_DELIMITER             | "/"           | What to use as a delimiter when printing folder paths                       |
 #' | crunch.check.updates         | R_CRUNCH_CHECK_UPDATES         | TRUE          | Whether to check for updates to the crunch package                          |
 #' | crunch.debug                 | R_CRUNCH_DEBUG                 | FALSE         | Whether to print verbose information for debugging                          |
+#' | test.verify.ssl              | R_TEST_VERIFY_SSL              | TRUE          | Whether to verify ssl in curl during crunch tests                           |
 #' | crunch.stabilize.query       | R_CRUNCH_STABILIZE_QUERY       | FALSE         | Whether to stabilize JSON objects for saving as `httptest` objects          |
 #' | crunch.namekey.dataset       | R_CRUNCH_NAMEKEY_DATASET       | "alias"       | What variable identifier (alias or name) to use for a dataset's variables   |
 #' | crunch.namekey.array         | R_CRUNCH_NAMEKEY_ARRAY         | "alias"       | What variable identifier (alias or name) to use for an array's subvariables |
@@ -259,6 +268,7 @@ set_crunch_opts <- function(...) {
     lapply(names(new), function(nm) set_crunch_opt(nm, new[[nm]]))
     invisible(new)
 }
+
 
 #' Change which server to point to
 #'
