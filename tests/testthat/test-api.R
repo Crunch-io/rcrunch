@@ -142,9 +142,16 @@ if (run.integration.tests) {
 
     test_that("API calls throw an error if user is not authenticated", {
         logout()
-        expect_error(
-            getAPIRoot(),
-            "You are not authenticated. Please `login\\(\\)` and try again."
-        )
+        with(temp.option(crunch = list(crunch.api.key = "")), {
+            expect_error(
+                getAPIRoot(),
+                "No authentication key found. See `help('crunch-api-key')` for more information.",
+                fixed = TRUE
+            )
+        })
+
+        with(temp.option(crunch = list(crunch.api.key = "xyz")), {
+            expect_error(getAPIRoot(), "Could not connect to.+")
+        })
     })
 }
