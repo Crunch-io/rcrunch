@@ -55,7 +55,7 @@ deprecate_password <- function(source) {
     .Deprecated(
         msg = paste0(
             "Using the crunch API with a username and password with `",
-            source, "()` is deprecated and may be removed from future releases.\n",
+            source, "()` is deprecated and will be removed from future releases.\n",
             "See `help('crunch-api-key')` to learn how to authenticate using an API key."
         ),
         package = "crunch",

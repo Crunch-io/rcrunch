@@ -166,9 +166,8 @@ handleAPIfailure <- function(code, response) {
         if (is.null(key)) {
             halt("No authentication key found. See `help('crunch-api-key')` for more information.")
         }
-        api_hostname <- parse_url(envOrOption("crunch.api"))$hostname
         halt(
-            "Could not connect to '", api_hostname, "' with key ", api_key_source(), ".\n",
+            "Could not connect to '", envOrOption("crunch.api"), "' with key ", api_key_source(), ".\n",
             "Make sure your key is correct and still valid. See `help('crunch-api-key')` for ",
             "more information."
         )
@@ -228,15 +227,15 @@ get_crunch_config <- function() getOption("crunch.httr_config")
 
 get_crunch_auth_config <- function(url) {
     # --- Don't send token outside of api host (aws downloads fail if you try)
-    api_hostname <- parse_url(envOrOption("crunch.api"))$hostname
-    url_hostname <- parse_url(url)$hostname
+    api_hostname <- parse_url_for_domain(envOrOption("crunch.api"))
+    url_hostname <- parse_url_for_domain(url)
     if (!identical(api_hostname, url_hostname)) return(add_headers())
 
     key <- get_api_key()
     if (!is.null(key)) {
         message_once(
             option = "message.auth.info",
-            "Connecting to '", api_hostname, "' with key ", api_key_source(), "."
+            "Connecting to ", envOrOption("crunch.api"), " with key ", api_key_source(), "."
         )
         return(add_headers(Authorization = paste0("Bearer ", key)))
     }
@@ -375,4 +374,11 @@ featureFlag <- function(flag) {
     url <- sessionURL("feature_flag", "views")
     f <- crGET(url, query = list(feature_name = flag))
     return(isTRUE(f$active))
+}
+
+parse_url_for_domain <- function(x) {
+    hostname <- httr::parse_url(x)$hostname
+    # Remove first subdomain if there are at least 3 domain components
+    # (We want to send token to all crunch.io subdomains)
+    gsub(".+?\\.(.+\\..+)", "\\1", hostname)
 }

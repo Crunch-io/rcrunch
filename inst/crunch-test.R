@@ -119,12 +119,11 @@ test_options <- temp.options(
             "test.api",
             "http://local.crunch.io:8080/api/"
         ),
-
         crunch.email = crunch::envOrOption("test.user"),
         crunch.pw = crunch::envOrOption("test.pw"),
         crunch.show.progress = FALSE,
         crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE),
-        message.auth.info = TRUE,
+        message.auth.info = TRUE
     )
 )
 
