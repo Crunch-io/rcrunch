@@ -39,7 +39,7 @@ the option name is in all capital letters, with "." replaced with
 "\emph{" and a "R}" prefix when used as an environment variable):\tabular{llll}{
    Option name \tab Env variable \tab Default value \tab Explanation \cr
    crunch.api \tab R_CRUNCH_API \tab "https://app.crunch.io/api/" \tab URL of API to use \cr
-   crunch.api.key \tab R_CRUNCH_API_KEY \tab  \tab Key to use to authenticate with crunch (see ?\code{crunch-api-key}) \cr
+   crunch.api.key \tab R_CRUNCH_API_KEY \tab  \tab Key to use to authenticate with crunch (see \code{help('crunch-api-key')}) \cr
    crunch.show.progress \tab R_CRUNCH_SHOW_PROGRESS \tab TRUE \tab Whether to show progress bars during interactive sessions \cr
    crunch.timeout \tab R_CRUNCH_TIMEOUT \tab 900 \tab Number of seconds to wait before timing out a request \cr
    crunch.show.progress.url \tab R_CRUNCH_SHOW_PROGRESS_URL \tab FALSE \tab Whether to show the URL when checking progress \cr
@@ -50,6 +50,7 @@ the option name is in all capital letters, with "." replaced with
    crunch.delimiter \tab R_CRUNCH_DELIMITER \tab "/" \tab What to use as a delimiter when printing folder paths \cr
    crunch.check.updates \tab R_CRUNCH_CHECK_UPDATES \tab TRUE \tab Whether to check for updates to the crunch package \cr
    crunch.debug \tab R_CRUNCH_DEBUG \tab FALSE \tab Whether to print verbose information for debugging \cr
+   test.verify.ssl \tab R_TEST_VERIFY_SSL \tab TRUE \tab Whether to verify ssl in curl during crunch tests \cr
    crunch.stabilize.query \tab R_CRUNCH_STABILIZE_QUERY \tab FALSE \tab Whether to stabilize JSON objects for saving as \code{httptest} objects \cr
    crunch.namekey.dataset \tab R_CRUNCH_NAMEKEY_DATASET \tab "alias" \tab What variable identifier (alias or name) to use for a dataset's variables \cr
    crunch.namekey.array \tab R_CRUNCH_NAMEKEY_ARRAY \tab "alias" \tab What variable identifier (alias or name) to use for an array's subvariables \cr

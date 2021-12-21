@@ -163,11 +163,13 @@ handleAPIsuccess <- function(code, response, progress.handler) {
 handleAPIfailure <- function(code, response) {
     if (code == 401) {
         key <- get_api_key()
-        if (is.null(key)) {
+        sitrep <- crunch_sitrep(verbose = FALSE)
+        if (is.null(sitrep$key)) {
             halt("No authentication key found. See `help('crunch-api-key')` for more information.")
         }
         halt(
-            "Could not connect to '", envOrOption("crunch.api"), "' with key ", api_key_source(), ".\n",
+            "Could not connect to '", sitrep$api, "' with key ", sitrep$key_source, "\n",
+            "(", sitrep$key, ")\n",
             "Make sure your key is correct and still valid. See `help('crunch-api-key')` for ",
             "more information."
         )
@@ -233,9 +235,10 @@ get_crunch_auth_config <- function(url) {
 
     key <- get_api_key()
     if (!is.null(key)) {
+        sitrep <- crunch_sitrep(verbose = FALSE)
         message_once(
             option = "message.auth.info",
-            "Connecting to ", envOrOption("crunch.api"), " with key ", api_key_source(), "."
+            "Connecting to ", sitrep$api, " with key ", sitrep$key_source, "."
         )
         return(add_headers(Authorization = paste0("Bearer ", key)))
     }

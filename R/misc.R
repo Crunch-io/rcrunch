@@ -234,6 +234,7 @@ envOrOption <- function(opt, default = NULL, expect_lgl = FALSE, expect_num = FA
     ## First look in CRUNCH_OPTIONS environment
     crunch_opt <- get_crunch_opt(opt)
     if (!is.null(crunch_opt)) {
+        attributes(crunch_opt) <- NULL
         return(crunch_opt)
     }
 
@@ -249,6 +250,25 @@ envOrOption <- function(opt, default = NULL, expect_lgl = FALSE, expect_num = FA
 
     # Finally, check the R options or use default
     return(getOption(opt, default))
+}
+
+envOrOptionSource <- function(opt) {
+    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed = TRUE)))
+    crunch_opt <- get_crunch_opt(opt)
+    if (!is.null(crunch_opt)) {
+        source <- attr(crunch_opt, "source")
+        if (!is.null(source)) {
+            return(paste0("set using `", source, "`"))
+        }
+        return(paste0("set using `set_crunch_opt(", opt, " = ...)`"))
+    }
+    if (Sys.getenv(envvar.name) != "") {
+        return(paste0("found in environment variable `", envvar.name, "`"))
+    }
+    if (!is.null(getOption(opt))) {
+        return(paste0("found in `options(", opt, " = ...)`"))
+    }
+    return("unknown source")
 }
 
 CRUNCH_OPTIONS <- new.env(parent = emptyenv())

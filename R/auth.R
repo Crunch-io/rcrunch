@@ -33,22 +33,56 @@ get_api_key <- function() {
   key <- envOrOption("crunch.api.key")
   # Treat empty string equal to NULL so we have a way to explicitly
   # turn off keys
-  if (identical(key, "")) key <- NULL
+  if (length(key) == 0 || identical(key, "")) key <- NULL
   key
 }
 
-api_key_source <- function() {
-  if (isTRUE(get_crunch_opt("used.session.token"))) {
-    return("from `login()`")
-  } else if (!is.null(get_crunch_opt("crunch.api.key"))) {
-    return("set using `set_crunch_opt(crunch.api.key = ...)`")
-  } else if (Sys.getenv("R_CRUNCH_API_KEY") != "") {
-    return("found in environment variable `R_CRUNCH_API_KEY`")
-  } else if (!is.null(getOption("crunch.api.key"))) {
-    return("found in `options(crunch.api.key = ...)`")
+
+#' Crunch situation report
+#'
+#' Get a  situation report on how R will connect to crunch.io
+#'
+#' @param redact Whether to redact the API key found (default TRUE)
+#' @param verbose Whether to print information to the console (default TRUE)
+#'
+#' @return Invisibly, a list with information about the API
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' crunch_sitrep()
+#' }
+crunch_sitrep <- function(redact = TRUE, verbose = TRUE) {
+    key <- get_api_key()
+    if (redact) key <- redact_key(key)
+
+    out <- list(
+        api = envOrOption("crunch.api") %||% "NOT FOUND!",
+        api_source = envOrOptionSource("crunch.api"),
+        key = key %||% "NOT FOUND!",
+        key_source = envOrOptionSource("crunch.api.key")
+    )
+
+    if (verbose) {
+        message(
+            "crunch API: ", out$api, "\n",
+            "            (", out$api_source, ")\n",
+            "       key: ", out$key, "\n",
+            "            (", out$key_source, ")"
+        )
+    }
+
+    invisible(out)
+}
+
+redact_key <- function(x) {
+  if (is.null(x)) return(x)
+  if (nchar(x) > 15) {
+      substr(x, 10, nchar(x)) <- paste(rep("*", nchar(x) - 9), collapse = "")
   } else {
-    return("unknown source")
+      substr(x, 1, nchar(x)) <- paste(rep("*", nchar(x)), collapse = "")
   }
+  x
 }
 
 deprecate_password <- function(source) {
@@ -73,7 +107,16 @@ setupCrunchAuth <- function(id) {
         halt("Could not find key in `envOrOption('", paste0("crunch.api.key.", id), "')`")
     }
 
-    set_crunch_opts(crunch.api = api, crunch.api.key = key)
+    set_crunch_opts(
+        crunch.api = structure(
+          api,
+          source = paste0("setupCrunchAuth('", id, "')")
+        ),
+        crunch.api.key = structure(
+          key,
+          source = paste0("setupCrunchAuth('", id, "')")
+        )
+    )
 }
 
 #' Kill the active Crunch session
@@ -81,12 +124,12 @@ setupCrunchAuth <- function(id) {
 #' @importFrom httpcache clearCache
 logout <- function() {
     deprecate_password("logout")
-    # If we didn't login with a session token, there's no real concept of logging out
-    if (!isTRUE(get_crunch_opt("used.session.token"))) return(invisible())
+    clearCache()
+    # If we didn't login, there's no real concept of logging out
+    if (identical(attr(get_crunch_opt("crunch.api.key"), "source"), "login()")) return(invisible())
 
     try(crGET(rootURL("logout")), silent = TRUE)
-    set_crunch_opts(crunch.api.key = NULL, used.session.token = NULL)
-    clearCache()
+    set_crunch_opts(crunch.api.key = NULL)
     old.prompt <- getOption("crunch.old.prompt")
     if (!is.null(old.prompt)) {
         options(prompt = old.prompt, crunch.old.prompt = NULL)
@@ -231,7 +274,7 @@ crunchAuth <- function(email, password = NULL, ...) {
             halt(paste("Unable to authenticate", user))
         })
     )
-    tokenAuth(out$access_token, ua = "login")
+    tokenAuth(out$access_token, ua = "login", source = "login()")
 }
 
 without_echo <- function(expr) {
@@ -262,8 +305,8 @@ read_input <- function(...) readline(...)
 #' @return Nothing; called for its side effects.
 #' @export
 #' @keywords internal
-tokenAuth <- function(token, ua = NULL) {
-    set_crunch_opts("crunch.api.key" = token, "used.session.token" = TRUE)
+tokenAuth <- function(token, ua = NULL, source = "tokenAuth") {
+    set_crunch_opts("crunch.api.key" = structure(token, source = source))
     if (!is.null(ua)) {
         set_crunch_config(
             c(add_headers(`user-agent` = crunch_user_agent(ua))),
@@ -272,4 +315,4 @@ tokenAuth <- function(token, ua = NULL) {
     }
 }
 
-jupyterLogin <- function(token) tokenAuth(token, ua = "jupyter.crunch.io")
+jupyterLogin <- function(token) tokenAuth(token, ua = "jupyter.crunch.io", source = "jupyterLogin")
