@@ -81,9 +81,11 @@ parseTerms <- function(formula, data, side = "RHS") {
         list(expr = f.vars, env = registerCubeFunctions(all.f.vars))
     )
     if (missing(data)) {
-        vars <- eval(v.call, NULL, environment(formula))
+        vars <- eval(v.call, environment(formula))
     } else {
-        vars <- eval(v.call, as.environment(data), environment(formula))
+        data_env <- as.environment(data)
+        parent.env(data_env) <- environment(formula)
+        vars <- eval(v.call, data_env)
     }
 
     ## Validate that vars are non-null
