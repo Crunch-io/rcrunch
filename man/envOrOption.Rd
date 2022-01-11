@@ -2,12 +2,12 @@
 % Please edit documentation in R/misc.R
 \name{envOrOption}
 \alias{envOrOption}
-\alias{set_crunch_opt}
+\alias{set_crunch_opts}
 \title{Get/set options (user-specified, in environment, or in R options)}
 \usage{
 envOrOption(opt, default = NULL, expect_lgl = FALSE, expect_num = FALSE)
 
-set_crunch_opt(opt, value)
+set_crunch_opts(..., .source = NULL)
 }
 \arguments{
 \item{opt}{the option to get/set}
@@ -15,7 +15,9 @@ set_crunch_opt(opt, value)
 \item{default}{if the specified option is not set in either the option or as
 an environment variable, use this instead.}
 
-\item{value}{The value to set the option}
+\item{...}{Named arguments describing which options to set}
+
+\item{.source}{(Optional) A character vector describing where the option was set from}
 }
 \value{
 the value of the option
@@ -23,7 +25,7 @@ the value of the option
 \description{
 These functions allow for a consistent framework of options for the
 crunch package. When retrieving options, \code{envOrOption()} first
-looks for options set with the \code{set_crunch_opt()}, followed by
+looks for options set with the \code{set_crunch_opts()}, followed by
 options in the environment (see \code{\link[=Sys.getenv]{Sys.getenv()}})
 and finally in the R options (see \code{\link{options}}).
 }

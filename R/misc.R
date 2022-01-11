@@ -183,7 +183,7 @@ vectorOrList <- function(obj, type) {
 #'
 #' These functions allow for a consistent framework of options for the
 #' crunch package. When retrieving options, `envOrOption()` first
-#' looks for options set with the `set_crunch_opt()`, followed by
+#' looks for options set with the `set_crunch_opts()`, followed by
 #' options in the environment (see [`Sys.getenv()`])
 #' and finally in the R options (see [`options`]).
 #'
@@ -224,7 +224,8 @@ vectorOrList <- function(obj, type) {
 #' @param opt the option to get/set
 #' @param default if the specified option is not set in either the option or as
 #' an environment variable, use this instead.
-#' @param value The value to set the option
+#' @param ... Named arguments describing which options to set
+#' @param .source (Optional) A character vector describing where the option was set from
 #' @return the value of the option
 #'
 #' @keywords internal
@@ -257,10 +258,10 @@ envOrOptionSource <- function(opt) {
     crunch_opt <- get_crunch_opt(opt)
     if (!is.null(crunch_opt)) {
         source <- attr(crunch_opt, "source")
-        if (!is.null(source)) {
-            return(paste0("set using `", source, "`"))
+        if (is.null(source)) {
+            return(paste0("set using `set_crunch_opts(", opt, " = ...)`"))
         }
-        return(paste0("set using `set_crunch_opt(", opt, " = ...)`"))
+        return(paste0("set using `", source, "`"))
     }
     if (Sys.getenv(envvar.name) != "") {
         return(paste0("found in environment variable `", envvar.name, "`"))
@@ -277,15 +278,16 @@ get_crunch_opt <- function(opt) {
     get0(opt, CRUNCH_OPTIONS)
 }
 
-#' @rdname envOrOption
-#' @export
-set_crunch_opt <- function(opt, value) {
+set_crunch_opt <- function(opt, value, source = NULL) {
+    if (!is.null(source)) value <- structure(value, source = source)
     CRUNCH_OPTIONS[[opt]] <- value
 }
 
-set_crunch_opts <- function(...) {
+#' @rdname envOrOption
+#' @export
+set_crunch_opts <- function(..., .source = NULL) {
     new <- list(...)
-    lapply(names(new), function(nm) set_crunch_opt(nm, new[[nm]]))
+    lapply(names(new), function(nm) set_crunch_opt(nm, new[[nm]], .source))
     invisible(new)
 }
 

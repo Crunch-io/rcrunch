@@ -14,7 +14,7 @@
 #' file. This file is located in your home directory (you can
 #' use `usethis::edit_r_environ()` to open the file if you have the
 #' `usethis` package installed). The .Renviron file has the name of the
-#' environment variable, followed by an equal sign and then the value. It
+#' environment varia ble, followed by an equal sign and then the value. It
 #' is good practice to set the API host too, (usually equal to
 #' "https://app.crunch.io/api/").
 #'
@@ -63,12 +63,14 @@ crunch_sitrep <- function(redact = TRUE, verbose = TRUE) {
         key_source = envOrOptionSource("crunch.api.key")
     )
 
+    key_text <- out$key %||% "NOT FOUND!"
     if (verbose) {
         message(
-            "crunch API: ", out$api, "\n",
-            "            (", out$api_source, ")\n",
-            "       key: ", out$key, "\n",
-            "            (", out$key_source, ")"
+            "crunch API situation report\n",
+            "API: ", out$api, "\n",
+            "     (", out$api_source, ")\n",
+            "key: ", key_text, "\n",
+            "     (", out$key_source, ")"
         )
     }
 
@@ -97,25 +99,54 @@ deprecate_password <- function(source) {
     )
 }
 
+
+#' Helper for switching between API keys and urls
+#'
+#' Credentials can be stored in the options or environment variables with the following
+#' structure (option = `crunch.api.<ID>` or environment variable `R_CRUNCH_API_<ID>`) where
+#' `<ID>` is a string. Then you can use this function to choose which credentials you want to use.
+#'
+#' @param id A string indicating the id of the credentials
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Using crunch options:
+#' set_crunch_opts(
+#'     crunch.api.account1 = "https://company1.crunch.io/api/",
+#'     crunch.api.key.account1 = "MY KEY"
+#' )
+#'
+#' # Or with environment variables
+#' Sys.setenv(
+#'     "R_CRUNCH_API_ACCOUNT2" = "https://company2.crunch.io/api/",
+#'     "R_CRUNCH_API_KEY_ACCOUNT2" = "ANOTHER KEY"
+#' )
+#'
+#' # Can now switch between accounts
+#' setupCrunchAuth("account1")
+#' crunch_sitrep()
+#'
+#' setupCrunchAuth("account2")
+#' crunch_sitrep()
+#' }
+#'
 setupCrunchAuth <- function(id) {
     api <- envOrOption(paste0("crunch.api.", id))
     if (is.null(api)) {
         halt("Could not find api in `envOrOption('", paste0("crunch.api.", id), "')`")
     }
     key <- envOrOption(paste0("crunch.api.key.", id))
-    if (is.null(api)) {
+    if (is.null(key)) {
         halt("Could not find key in `envOrOption('", paste0("crunch.api.key.", id), "')`")
     }
 
     set_crunch_opts(
-        crunch.api = structure(
-          api,
-          source = paste0("setupCrunchAuth('", id, "')")
-        ),
-        crunch.api.key = structure(
-          key,
-          source = paste0("setupCrunchAuth('", id, "')")
-        )
+        crunch.api = api,
+        crunch.api.key = key,
+        .source = paste0("setupCrunchAuth('", id, "')")
     )
 }
 
@@ -306,7 +337,7 @@ read_input <- function(...) readline(...)
 #' @export
 #' @keywords internal
 tokenAuth <- function(token, ua = NULL, source = "tokenAuth") {
-    set_crunch_opts("crunch.api.key" = structure(token, source = source))
+    set_crunch_opts("crunch.api.key" = token, .source = source)
     if (!is.null(ua)) {
         set_crunch_config(
             c(add_headers(`user-agent` = crunch_user_agent(ua))),
