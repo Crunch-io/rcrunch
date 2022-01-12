@@ -11,6 +11,25 @@ test_that("Deleted endpoints tell user to upgrade", {
     )
 })
 
+
+test_that("401 errors give informative errors", {
+    fake401 <- fake_response("http://crunch.io/401", status_code = 401)
+    with(temp.option(crunch = list(crunch.api = "url", crunch.api.key = "key")), {
+        expect_error(
+            handleAPIresponse(fake401),
+            "Could not connect to 'url' with key set with"
+        )
+    })
+
+    with(temp.option(crunch = list(crunch.api.key = "")), {
+        print(str(crunch_sitrep(verbose = FALSE)))
+        expect_error(
+            handleAPIresponse(fake401),
+            "No authentication key found. See"
+        )
+    })
+})
+
 test_that("get_header", {
     expect_identical(get_header("bar", list(bar = 5)), 5)
     expect_identical(get_header("foo", list(bar = 5)), NULL)

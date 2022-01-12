@@ -162,7 +162,6 @@ handleAPIsuccess <- function(code, response, progress.handler) {
 
 handleAPIfailure <- function(code, response) {
     if (code == 401) {
-        key <- get_api_key()
         sitrep <- crunch_sitrep(verbose = FALSE)
         if (is.null(sitrep$key)) {
             halt("No authentication key found. See `help('crunch-api-key')` for more information.")

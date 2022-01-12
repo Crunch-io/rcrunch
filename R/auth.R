@@ -59,7 +59,7 @@ crunch_sitrep <- function(redact = TRUE, verbose = TRUE) {
     out <- list(
         api = envOrOption("crunch.api") %||% "NOT FOUND!",
         api_source = envOrOptionSource("crunch.api"),
-        key = key %||% "NOT FOUND!",
+        key = key,
         key_source = envOrOptionSource("crunch.api.key")
     )
 
