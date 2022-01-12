@@ -232,14 +232,13 @@ get_crunch_auth_config <- function(url) {
     url_hostname <- parse_url_for_domain(url)
     if (!identical(api_hostname, url_hostname)) return(add_headers())
 
-    key <- get_api_key()
-    if (!is.null(key)) {
-        sitrep <- crunch_sitrep(verbose = FALSE)
+    sitrep <- crunch_sitrep(verbose = FALSE, redact = FALSE)
+    if (!is.null(sitrep$key)) {
         message_once(
             option = "message.auth.info",
             "Connecting to ", sitrep$api, " with key ", sitrep$key_source, "."
         )
-        return(add_headers(Authorization = paste0("Bearer ", key)))
+        return(add_headers(Authorization = paste0("Bearer ", sitrep$key)))
     }
 }
 

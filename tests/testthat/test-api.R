@@ -22,7 +22,6 @@ test_that("401 errors give informative errors", {
     })
 
     with(temp.option(crunch = list(crunch.api.key = "")), {
-        print(str(crunch_sitrep(verbose = FALSE)))
         expect_error(
             handleAPIresponse(fake401),
             "No authentication key found. See"
@@ -34,6 +33,28 @@ test_that("get_header", {
     expect_identical(get_header("bar", list(bar = 5)), 5)
     expect_identical(get_header("foo", list(bar = 5)), NULL)
     expect_identical(get_header("foo", list(bar = 5), default = 42), 42)
+})
+
+test_that("get_crunch_auth_config works", {
+    with(temp.option(
+        crunch = list(crunch.api = "https://app.crunch.io/api/", crunch.api.key = "key")
+    ), {
+        # sends to same host
+        expect_equal(
+            get_crunch_auth_config("https://app.crunch.io/api/datasets/"),
+            add_headers(Authorization = paste0("Bearer ", "key"))
+        )
+        # Also sends to other crunch.io subdomains
+        expect_equal(
+            get_crunch_auth_config("https://testing.crunch.io/api/datasets/"),
+            add_headers(Authorization = paste0("Bearer ", "key"))
+        )
+        # But are not send outside of crunch.io
+        expect_equal(
+            get_crunch_auth_config("https://example.com"),
+            httr::add_headers()
+        )
+    })
 })
 
 with_mock_crunch({

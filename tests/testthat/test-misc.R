@@ -198,19 +198,24 @@ with(temp.option(
     foo.other = "other",
     foo.crunch = "y"
 ), {
-    withr::with_envvar(list(R_FOO_BAR = "yes", R_FOO_CRUNCH = "z"), {
-        test_that("envOrOption gets the right thing", {
-            expect_identical(envOrOption("foo.crunch"), "x") ## crunch opt trumps all
-            expect_identical(envOrOption("foo.bar"), "yes") ## Env var trumps option
-            expect_identical(envOrOption("foo.other"), "other") ## Option if there is no env var
-            expect_null(envOrOption("somethingelse")) ## Null if neither
-            ## default works
-            expect_identical(
-                envOrOption("somethingelse", "I'm a default"),
-                "I'm a default"
-            )
-        })
-    })
+    withr::with_envvar(
+        list(R_FOO_BAR = "yes", R_FOO_CRUNCH = "z", R_FOO_NUM = "1", R_FOO_LGL = "TRUE"),
+        {
+            test_that("envOrOption gets the right thing", {
+                expect_identical(envOrOption("foo.crunch"), "x") ## crunch opt trumps all
+                expect_identical(envOrOption("foo.bar"), "yes") ## Env var trumps option
+                expect_identical(envOrOption("foo.other"), "other") ## Option if there is no env var
+                expect_null(envOrOption("somethingelse")) ## Null if neither
+                expect_equal(envOrOption("foo.num", expect_num = TRUE), 1)
+                expect_equal(envOrOption("foo.lgl", expect_lgl = TRUE), TRUE)
+                ## default works
+                expect_identical(
+                    envOrOption("somethingelse", "I'm a default"),
+                    "I'm a default"
+                )
+            })
+        }
+    )
 })
 
 test_that("envOrOptionSource works correctly", {
@@ -237,6 +242,10 @@ test_that("envOrOptionSource works correctly", {
             expect_equal(
                 envOrOptionSource("opt"),
                 "found in `options(opt = ...)`"
+            )
+            expect_equal(
+                envOrOptionSource("not.found"),
+                "unknown source"
             )
         })
     })
