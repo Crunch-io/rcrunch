@@ -17,7 +17,7 @@ test_that("401 errors give informative errors", {
     with(temp.option(crunch = list(crunch.api = "url", crunch.api.key = "key")), {
         expect_error(
             handleAPIresponse(fake401),
-            "Could not connect to 'url' with key set with"
+            "Could not connect to 'url' with key set using"
         )
     })
 

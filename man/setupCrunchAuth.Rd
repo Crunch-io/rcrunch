@@ -9,9 +9,6 @@ setupCrunchAuth(id)
 \arguments{
 \item{id}{A string indicating the id of the credentials}
 }
-\value{
-
-}
 \description{
 Credentials can be stored in the options or environment variables with the following
 structure (option = \verb{crunch.api.<ID>} or environment variable \verb{R_CRUNCH_API_<ID>}) where

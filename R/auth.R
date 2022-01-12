@@ -108,7 +108,6 @@ deprecate_password <- function(source) {
 #'
 #' @param id A string indicating the id of the credentials
 #'
-#' @return
 #' @export
 #'
 #' @examples
