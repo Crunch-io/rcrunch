@@ -4,7 +4,8 @@
 #' Using a username and password with the [`login()`] function is
 #' deprecated and may be removed in a future release.
 #'
-#' To get an API key for your account, (EXISTING DOCUMENTATION??).
+#' To get an API key for your account, follow the instructions in the
+#' [crunch help desk](https://help.crunch.io/hc/en-us/articles/4415963337869-API-Keys)
 #'
 #' The rcrunch package looks for the key in the environmental variable
 #' "R_CRUNCH_API_KEY" or the option "crunch.api.key" (see [`envOrOption()`]
@@ -65,9 +66,15 @@ crunch_sitrep <- function(redact = TRUE, verbose = TRUE) {
 
     key_text <- out$key %||% "NOT FOUND!"
     if (verbose) {
+        if (!grepl("https://.+\\.crunch\\.io/api/", out$api)) {
+            domain_warning <- "     WARNING! API not in expected form: https://xyz.crunch.io/api/\n"
+        } else {
+            domain_warning <- NULL
+        }
         message(
             "crunch API situation report\n",
             "API: ", out$api, "\n",
+            domain_warning,
             "     (", out$api_source, ")\n",
             "key: ", key_text, "\n",
             "     (", out$key_source, ")"

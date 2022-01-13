@@ -310,18 +310,35 @@ test_that("without_echo doesn't crash on this OS", {
 
 
 test_that("sitrep works", {
-    with(temp.option(crunch = list(crunch.api = "url", crunch.api.key = "key12324567890---")), {
+    with(temp.option(crunch = list(
+        crunch.api = "https://app.crunch.io/api/", crunch.api.key = "key12324567890---")
+    ), {
         expect_message(
             crunch_sitrep(),
             paste0(
                 "crunch API situation report\n",
-                "API: url\n",
+                "API: https://app.crunch.io/api/\n",
                 "     (set using `set_crunch_opts(crunch.api = ...)`)\n",
                 "key: key123245********\n",
                 "     (set using `set_crunch_opts(crunch.api.key = ...)`)"
             ),
             fixed = TRUE
         )
+    })
+
+    with(temp.option(crunch = list(crunch.api = "url", crunch.api.key = "key12324567890---")), {
+      expect_message(
+        crunch_sitrep(),
+        paste0(
+          "crunch API situation report\n",
+          "API: url\n",
+          "     WARNING! API not in expected form: https://xyz.crunch.io/api/\n",
+          "     (set using `set_crunch_opts(crunch.api = ...)`)\n",
+          "key: key123245********\n",
+          "     (set using `set_crunch_opts(crunch.api.key = ...)`)"
+        ),
+        fixed = TRUE
+      )
     })
 })
 
