@@ -156,7 +156,7 @@ logout <- function() {
     deprecate_password("logout")
     clearCache()
     # If we didn't login, there's no real concept of logging out
-    if (identical(attr(get_crunch_opt("crunch.api.key"), "source"), "login()")) return(invisible())
+    if (!identical(attr(get_crunch_opt("crunch.api.key"), "source"), "login()")) return(invisible())
 
     try(crGET(rootURL("logout")), silent = TRUE)
     set_crunch_opts(crunch.api.key = NULL)
