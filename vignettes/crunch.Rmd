@@ -39,10 +39,12 @@ R_CRUNCH_API=api-url
 R_CRUNCH_API_KEY=your-secret-key
 ```
 
-Save the file, and then run the following command from your R console:
+After you save the file R will read these environment variables in during startup. However, because you already have R open, it doesn't immediately take effect. If you don't want to restart your R session, you can run the following command from your R console:
 ```{r reload_environ, eval=FALSE}
 readRenviron("~/.Renviron")
 ```
+
+(The next time you start R, you won't need to run this command, it is run automatically.)
 
 Now the `crunch` R package will use your token and connect to the right API.
 
