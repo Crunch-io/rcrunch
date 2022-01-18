@@ -40,7 +40,7 @@ with_mock_crunch({
         )
     })
 
-    with(temp.options(crunch = list(crunch.api = "https://fake.crunch.io/api/v2/")), {
+    with(temp.options(crunch.api = "https://fake.crunch.io/api/v2/"), {
         test_that("Share payload shape", {
             expect_identical(
                 passwordSetURLTemplate(),

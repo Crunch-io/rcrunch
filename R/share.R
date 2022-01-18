@@ -47,7 +47,7 @@ share <- function(dataset, users, edit = FALSE, notify = TRUE, message = NULL) {
 }
 
 passwordSetURLTemplate <- function() {
-    absoluteURL("/password/change/${token}/", envOrOption("crunch.api")) # nolint
+    absoluteURL("/password/change/${token}/", getOption("crunch.api")) # nolint
 }
 
 #' Revoke a user's access to a dataset

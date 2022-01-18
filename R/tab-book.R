@@ -166,9 +166,7 @@ standardize_filter_list <- function(filter, dataset = NULL) {
         }
         return(standardize_filter_list(filters(dataset)[filter], dataset))
     } else if (inherits(filter, "FilterCatalog")) {
-        return(lapply(urls(filter), function(x) {
-            list(filter = x)
-        }))
+        return(lapply(urls(filter), function(x) { list(filter = x) }))
     } else if (inherits(filter, "CrunchFilter")) {
         return(list(list(filter = self(filter))))
     } else if (is.Expr(filter)) {

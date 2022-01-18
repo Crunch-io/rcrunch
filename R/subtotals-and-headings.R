@@ -786,7 +786,7 @@ setMethod("makeInsertion", "Subtotal", function(x, var_items, alias) {
         func <- ifelse(x$na.rm, "any_non_missing_selected", "any_selected")
     }
 
-    out <- .Insertion( # nolint
+    out <- .Insertion(
         anchor = anchor(x, var_items),
         name = name(x),
         `function` = func,

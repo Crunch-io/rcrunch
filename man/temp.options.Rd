@@ -5,15 +5,12 @@
 \alias{temp.option}
 \title{Set some global options temporarily}
 \usage{
-temp.options(..., crunch = list())
+temp.options(...)
 
-temp.option(..., crunch = list())
+temp.option(...)
 }
 \arguments{
-\item{...}{named options to set using \code{options()}}
-
-\item{crunch}{named list of options to set in crunch's higher priority
-options environment}
+\item{...}{named options to set}
 }
 \value{
 an S3 class "contextManager" object

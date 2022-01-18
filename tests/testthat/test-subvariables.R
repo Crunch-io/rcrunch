@@ -166,7 +166,7 @@ with_mock_crunch({
     })
 
     test_that("can extract directly from array variable with different namekey", {
-        with(temp.option(crunch = list(crunch.namekey.array = "name")), {
+        with(temp.option(crunch.namekey.array = "name"), {
             expect_true(is.Categorical(mr[[1]]))
             expect_true(is.Categorical(mr[["Second"]]))
             expect_true(is.Categorical(mr$Second))

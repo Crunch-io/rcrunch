@@ -5,7 +5,7 @@ with_mock_crunch({
     test_that("hiddenVariables", {
         expect_identical(hiddenVariables(ds, "name"), "Birth Year")
         expect_identical(hiddenVariables(ds), "birthyr")
-        with(temp.option(crunch = list(crunch.namekey.dataset = "name")), {
+        with(temp.option(crunch.namekey.dataset = "name"), {
             expect_identical(hiddenVariables(ds), "Birth Year")
         })
     })
@@ -24,7 +24,7 @@ with_mock_crunch({
         expect_true(is.Numeric(z))
     })
     test_that("Option not to warn when accessing hidden variables", {
-        with(temp.option(crunch = list(crunch.warn.hidden = FALSE)), {
+        with(temp.option(crunch.warn.hidden = FALSE), {
             expect_warning(ds$birthyr, NA)
         })
     })

@@ -55,7 +55,7 @@ with_mock_crunch({
     })
 
     test_that("Warning that you should be using folders instead", {
-        set_crunch_opts(crunch.already.shown.folders.msg = NULL)
+        options(crunch.already.shown.folders.msg = NULL)
         expect_warning(
             expect_PUT(ordering(ds) <- nested.ord[2:1]),
             "Hey!"
@@ -138,7 +138,7 @@ with_mock_crunch({
         )
     })
     test_that("Extract with alternative path string", {
-        with(temp.option(crunch = list(crunch.delimiter = "|")), {
+        with(temp.option(crunch.delimiter = "|"), {
             expect_identical(
                 nested.ord[["Group 1|Nested"]],
                 VariableGroup(name = "Nested", entities = ent.urls[2:4])
@@ -561,7 +561,7 @@ with_mock_crunch({
     })
 
     test_that("Order print method follows namekey", {
-        with(temp.option(crunch = list(crunch.namekey.variableorder = "alias")), {
+        with(temp.option(crunch.namekey.variableorder = "alias"), {
             expect_prints(ord,
                 paste(
                     "[+] Arrays",

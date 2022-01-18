@@ -5,7 +5,7 @@ test_that("parseFolderPath", {
     expect_identical(parseFolderPath(c("foo", "bar")), c("foo", "bar"))
     expect_identical(parseFolderPath(c("foo/bar")), c("foo", "bar"))
     expect_identical(parseFolderPath(c("foo/bar", "blech")), c("foo/bar", "blech"))
-    with(temp.option(crunch = list(crunch.delimiter = "|")), {
+    with(temp.option(crunch.delimiter = "|"), {
         expect_identical(parseFolderPath(c("foo|bar")), c("foo", "bar"))
         expect_identical(parseFolderPath(c("foo/bar|blech")), c("foo/bar", "blech"))
     })

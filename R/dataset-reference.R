@@ -35,7 +35,7 @@ setMethod("datasetReference", "character", function(x) {
         return(NULL)
     }
     path <- paste0("datasets/", id, "/")
-    return(absoluteURL(path, envOrOption("crunch.api")))
+    return(absoluteURL(path, getOption("crunch.api")))
 })
 
 #' @rdname dataset-reference
@@ -49,7 +49,7 @@ setMethod("APIToWebURL", "CrunchVariable", function(x) {
 })
 
 setMethod("APIToWebURL", "CrunchDataset", function(x) {
-    return(paste0(absoluteURL("/", envOrOption("crunch.api")), "dataset/", id(x)))
+    return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
 })
 
 setMethod("APIToWebURL", "ANY", function(x) {

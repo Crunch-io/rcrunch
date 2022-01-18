@@ -46,27 +46,16 @@ with.contextManager <- function(data, expr, ...) {
 
 #' Set some global options temporarily
 #'
-#' @param ... named options to set using `options()`
-#' @param crunch named list of options to set in crunch's higher priority
-#' options environment
+#' @param ... named options to set
 #' @return an S3 class "contextManager" object
 #' @seealso [`with-context-manager`] [`ContextManager`]
 #' @export
-temp.options <- function(..., crunch = list()) {
+temp.options <- function(...) {
     new <- list(...)
-    old <- sapply(names(new), envOrOption, simplify = FALSE)
-
-    new_crunch <- crunch
-    old_crunch <- sapply(names(new_crunch), get_crunch_opt, simplify = FALSE)
+    old <- sapply(names(new), getOption, simplify = FALSE)
     return(ContextManager(
-        function() {
-            do.call(options, new)
-            do.call(set_crunch_opts, new_crunch)
-        },
-        function() {
-            do.call(options, old)
-            do.call(set_crunch_opts, old_crunch)
-        }
+        function() do.call(options, new),
+        function() do.call(options, old)
     ))
 }
 

@@ -343,9 +343,7 @@ with_mock_crunch({
     test_that("can add MR Subtotals with na.rm=FALSE", {
         expect_PATCH(
             subtotals(ds$mymrset) <- list(
-                Subtotal(
-                    name = "s1 or s2", c("subvar1", "subvar2"), position = "top", na.rm = FALSE
-                )
+                Subtotal(name = "s1 or s2", c("subvar1", "subvar2"), position = "top", na.rm=FALSE)
             ),
             "https://app.crunch.io/api/datasets/1/variables/mymrset/",
             '{"view":{"transform":{"insertions":[{"anchor":"top","name":"s1 or s2",',
@@ -386,7 +384,7 @@ with_mock_crunch({
                     name = "s1 or s2",
                     c("subvar1", "subvar2"),
                     position = "top",
-                    alias = "top2"
+                    alias="top2"
                 )
             ),
             "https://app.crunch.io/api/datasets/1/variables/mymrset/",

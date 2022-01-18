@@ -1,13 +1,5 @@
 context("Various helper functions")
 
-test_that("can warn and message once", {
-    expect_warning(warn_once("danger!", option = "test_warn_once"), "danger!")
-    expect_warning(warn_once("danger!", option = "test_warn_once"), NA)
-    expect_message(message_once("hi!", option = "test_msg_once"), "hi!")
-    expect_message(message_once("hi!", option = "test_msg_once"), NA)
-})
-
-
 test_that("is.error", {
     e <- try(halt("error in a box"), silent = TRUE)
     expect_true(is.error(e))
@@ -127,15 +119,12 @@ test_that("toJSON sorts when we want", {
         unsorted
     )
     expect_equal(
-        unclass(with(
-            temp.options(crunch = list(crunch.stabilize.query = TRUE)),
-            toJSON(list(b = 1, a = 2))
-        )),
+        unclass(with(temp.options(crunch.stabilize.query = TRUE), toJSON(list(b = 1, a = 2)))),
         unsorted
     )
     expect_equal(
         unclass(with(
-            temp.options(crunch = list(crunch.stabilize.query = TRUE)),
+            temp.options(crunch.stabilize.query = TRUE),
             toJSON(list(b = 1, a = 2), for_query_string = TRUE)
         )),
         sorted
@@ -192,60 +181,16 @@ test_that("setCrunchAPI", {
     })
 })
 
-with(temp.option(
-    crunch = list(foo.crunch = "x"),
-    foo.bar = "no",
-    foo.other = "other",
-    foo.crunch = "y"
-), {
-    withr::with_envvar(
-        list(R_FOO_BAR = "yes", R_FOO_CRUNCH = "z", R_FOO_NUM = "1", R_FOO_LGL = "TRUE"),
-        {
-            test_that("envOrOption gets the right thing", {
-                expect_identical(envOrOption("foo.crunch"), "x") ## crunch opt trumps all
-                expect_identical(envOrOption("foo.bar"), "yes") ## Env var trumps option
-                expect_identical(envOrOption("foo.other"), "other") ## Option if there is no env var
-                expect_null(envOrOption("somethingelse")) ## Null if neither
-                expect_equal(envOrOption("foo.num", expect_num = TRUE), 1)
-                expect_equal(envOrOption("foo.lgl", expect_lgl = TRUE), TRUE)
-                ## default works
-                expect_identical(
-                    envOrOption("somethingelse", "I'm a default"),
-                    "I'm a default"
-                )
-            })
-        }
-    )
-})
-
-test_that("envOrOptionSource works correctly", {
-    with(temp.option(
-        crunch = list(
-            crunch.opt = "a",
-            crunch.opt.source = structure("b", source = "custom")
-        ),
-        opt = "c"
-    ), {
-        withr::with_envvar(list(R_ENV_VAR = "d"), {
-            expect_equal(
-                envOrOptionSource("crunch.opt"),
-                "set using `set_crunch_opts(crunch.opt = ...)`"
-            )
-            expect_equal(
-                envOrOptionSource("crunch.opt.source"),
-                "set using `custom`"
-            )
-            expect_equal(
-                envOrOptionSource("env.var"),
-                "found in environment variable `R_ENV_VAR`"
-            )
-            expect_equal(
-                envOrOptionSource("opt"),
-                "found in `options(opt = ...)`"
-            )
-            expect_equal(
-                envOrOptionSource("not.found"),
-                "unknown source"
+with(temp.option(foo.bar = "no", foo.other = "other"), {
+    withr::with_envvar(list(R_FOO_BAR = "yes"), {
+        test_that("envOrOption gets the right thing", {
+            expect_identical(envOrOption("foo.bar"), "yes") ## Env var trumps option
+            expect_identical(envOrOption("foo.other"), "other") ## Option if there is no env var
+            expect_null(envOrOption("somethingelse")) ## Null if neither
+            ## default works
+            expect_identical(
+                envOrOption("somethingelse", "I'm a default"),
+                "I'm a default"
             )
         })
     })

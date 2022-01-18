@@ -75,7 +75,7 @@ parseFolderPath <- function(path) {
     return(path)
 }
 
-folderDelimiter <- function() envOrOption("crunch.delimiter", "/")
+folderDelimiter <- function() getOption("crunch.delimiter", "/")
 
 parentFolderURL <- function(x) {
     if (is.variable(x) || inherits(x, "VariableFolder")) {
