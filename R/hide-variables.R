@@ -26,7 +26,7 @@
 #' @param value Replacement values for assignment methods.
 #' @param variables Variables to change status of
 #' @param key (for `hiddenVariables()` / `privateVariables()` the Variable attribute to
-#' return. Default is "alias", following `envOrOption("crunch.namekey.dataset")`.
+#' return. Default is "alias", following `getOption("crunch.namekey.dataset")`.
 #' @name hide
 #' @aliases hide unhide hiddenFolder privatize deprivatize privateFolder
 NULL

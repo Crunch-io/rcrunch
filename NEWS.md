@@ -1,7 +1,4 @@
 # crunch 1.28.3 (Development version)
-* Authenticating with an API key is now the recommended way to use the R crunch package. See
-  the `vignette("crunch")` or `?crunch-api-key` for more details. The `login()` authentication
-  flow is deprecated and will be removed from an upcoming release.
 
 # crunch 1.28.2
 * You can now export a csv version of a tabbook for use in Tableau or other BI software (#583)

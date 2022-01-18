@@ -5,7 +5,7 @@ with_mock_crunch({
     test_that("privateVariables", {
         expect_identical(privateVariables(ds, "name"), "ID Number")
         expect_identical(privateVariables(ds), "id")
-        with(temp.option(crunch = list(crunch.namekey.dataset = "name")), {
+        with(temp.option(crunch.namekey.dataset = "name"), {
             expect_identical(privateVariables(ds), "ID Number")
         })
     })
@@ -24,7 +24,7 @@ with_mock_crunch({
         expect_true(is.Numeric(z))
     })
     test_that("Option not to warn when accessing private variables", {
-        with(temp.option(crunch = list(crunch.warn.private = FALSE)), {
+        with(temp.option(crunch.warn.private = FALSE), {
             expect_warning(ds$id, NA)
         })
     })

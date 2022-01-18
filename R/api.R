@@ -19,13 +19,13 @@ crunchAPI <- function(
     ...
 ) {
     url ## force lazy eval of url
-    if (isTRUE(envOrOption("crunch.debug"))) {
+    if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
         payload <- list(...)$body
         if (!is.null(payload)) try(cat("\n", payload, "\n"), silent = TRUE)
     }
     FUN <- get(http.verb, envir = asNamespace("httpcache"))
-    x <- FUN(url, ..., config = c(get_crunch_config(), get_crunch_auth_config(url), config))
+    x <- FUN(url, ..., config = c(get_crunch_config(), config, strip_token_if_outside(url)))
     out <- handleAPIresponse(
         x,
         special.statuses = status.handlers,
@@ -122,13 +122,13 @@ handleAPIsuccess <- function(code, response, progress.handler) {
             progress_url <- handleShoji(content(response))
             ## Quick validation
             if (is.character(progress_url) && length(progress_url) == 1) {
-                if (envOrOption("crunch.show.progress.url", FALSE)) {
+                if (getOption("crunch.show.progress.url", FALSE)) {
                     message(paste0("Checking progress at: ", progress_url))
                 }
                 tryCatch(
                     pollProgress(
                         progress_url,
-                        envOrOption("crunch.poll.wait", 0.5),
+                        getOption("crunch.poll.wait", 0.5),
                         progress.handler
                     ),
                     error = function(e) {
@@ -162,16 +162,7 @@ handleAPIsuccess <- function(code, response, progress.handler) {
 
 handleAPIfailure <- function(code, response) {
     if (code == 401) {
-        sitrep <- crunch_sitrep(verbose = FALSE)
-        if (is.null(sitrep$key)) {
-            halt("No authentication key found. See `help('crunch-api-key')` for more information.")
-        }
-        halt(
-            "Could not connect to '", sitrep$api, "' with key ", sitrep$key_source, "\n",
-            "(", sitrep$key, ")\n",
-            "Make sure your key is correct and still valid. See `help('crunch-api-key')` for ",
-            "more information."
-        )
+        halt("You are not authenticated. Please `login()` and try again.")
     } else if (code == 410) {
         halt(
             "The API resource at ",
@@ -225,22 +216,6 @@ locationHeader <- function(response) {
 }
 
 get_crunch_config <- function() getOption("crunch.httr_config")
-
-get_crunch_auth_config <- function(url) {
-    # --- Don't send token outside of api host (aws downloads fail if you try)
-    api_hostname <- parse_url_for_domain(envOrOption("crunch.api"))
-    url_hostname <- parse_url_for_domain(url)
-    if (!identical(api_hostname, url_hostname)) return(add_headers())
-
-    sitrep <- crunch_sitrep(verbose = FALSE, redact = FALSE)
-    if (!is.null(sitrep$key)) {
-        message_once(
-            option = "message.auth.info",
-            "Connecting to ", sitrep$api, " with key ", sitrep$key_source, "."
-        )
-        return(add_headers(Authorization = paste0("Bearer ", sitrep$key)))
-    }
-}
 
 #' Set or modify general Crunch API request configuration
 #'
@@ -311,7 +286,7 @@ handleShoji <- function(x) {
     return(x)
 }
 
-getAPIRoot <- function(x = envOrOption("crunch.api")) {
+getAPIRoot <- function(x = getOption("crunch.api")) {
     ShojiObject(crGET(x))
 }
 
@@ -337,7 +312,7 @@ rootURL <- function(x, obj = getAPIRoot()) {
 #' @param expr An expression
 #' @param wait The time in seconds to wait before retrying the expression. Defaults to 0.1.
 #' @param max.tries The number of times to retry the expression
-retry <- function(expr, wait = envOrOption("crunch_retry_wait", default = 0.1), max.tries = 10) {
+retry <- function(expr, wait = getOption("crunch_retry_wait", default = 0.1), max.tries = 10) {
     ## Retry (e.g. a request)
     e <- substitute(expr)
     tries <- 0
@@ -377,9 +352,10 @@ featureFlag <- function(flag) {
     return(isTRUE(f$active))
 }
 
-parse_url_for_domain <- function(x) {
-    hostname <- httr::parse_url(x)$hostname
-    # Remove first subdomain if there are at least 3 domain components
-    # (We want to send token to all crunch.io subdomains)
-    gsub(".+?\\.(.+\\..+)", "\\1", hostname)
+# Don't want Authorization header when going outside crunch domain
+#' @importFrom httr parse_url
+strip_token_if_outside <- function(url) {
+    api_hostname <- parse_url(getOption("crunch.api"))$hostname
+    url_hostname <- parse_url(url)$hostname
+    if (!identical(api_hostname, url_hostname)) add_headers(Authorization = "")
 }

@@ -2,15 +2,15 @@ context("Append datasets")
 
 test_that("crunchTimeout", {
     with(
-        temp.option(crunch = list(crunch.timeout = 7)),
+        temp.option(crunch.timeout = 7),
         expect_identical(crunchTimeout(), 7)
     )
     with(
-        temp.option(crunch = list(crunch.timeout = NULL)),
+        temp.option(crunch.timeout = NULL),
         expect_identical(crunchTimeout(), 900)
     )
     with(
-        temp.option(crunch = list(crunch.timeout = list())),
+        temp.option(crunch.timeout = list()),
         expect_identical(crunchTimeout(), 900)
     )
 })

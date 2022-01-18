@@ -24,43 +24,19 @@ Both **crunch** and the Crunch web application communicate with the same applica
 
 ## Authentication
 
-All work with data in Crunch requires authentication with an API key, which you can create from the web application, by following the instructions in the [help center](https://help.crunch.io/hc/en-us/articles/4415963337869-API-Keys).
+All work with data in Crunch requires authentication. Thus, the first step after loading the **crunch** package is to log in. In an interactive R session, provide the email address associated with your Crunch account, and you will be prompted to give your password safely:
 
-The crunch R package will use the key automatically if it is stored in environment variable `R_CRUNCH_API_KEY`. To store your key there, you can run the following code from your R console:
-
-```{r usethis, eval=FALSE}
-if (!require("usethis")) install.packages("usethis")
-usethis::edit_r_environ()
+```{r login, eval=FALSE}
+login("xkcd@crunch.io")
+```
+```
+Crunch.io password for xkcd@crunch.io: *enter your password here*
+## Logged into crunch.io as xkcd@crunch.io
 ```
 
-This will open a file where you can put the following (replacing `your-secret-key` with the key from the web app, and `api-url` with the API for your company, generally something like `"https://your-brand.crunch.io/api/"`):
-```
-R_CRUNCH_API=api-url
-R_CRUNCH_API_KEY=your-secret-key
-```
+If you use an OAuth provider, such as Google, to log into the Crunch web application, you'll need to first set a Crunch password for use here. Do `resetPassword("xkcd@crunch.io")` with your email address, and you'll receive an email with password setting instructions.  
 
-After you save the file R will read these environment variables in during startup. However, because you already have R open, it doesn't immediately take effect. If you don't want to restart your R session, you can run the following command from your R console:
-```{r reload_environ, eval=FALSE}
-readRenviron("~/.Renviron")
-```
-
-(The next time you start R, you won't need to run this command, it is run automatically.)
-
-Now the `crunch` R package will use your token and connect to the right API.
-
-If you're having trouble connecting, use `crunch_sitrep()` to get the situation report on the current status of the `crunch` package.
-
-```{r sitrep-code, eval=FALSE}
-crunch_sitrep()
-```
-```{r sitrep-display, echo=FALSE}
-message(paste0(
-    "crunch API: https://your-brand.crunch.io/api/\n",
-    "            (found in environment variable `R_CRUNCH_API`)\n",
-    "       key: abcdefghi***************************************\n",
-    "            (found in environment variable `R_CRUNCH_API_KEY`)"
-))
-```
+Your email and Crunch password can be set via the `keyring` package, `options` in your .Rprofile (`crunch.email` and `crunch.pw`) or as environment variables (`R_CRUNCH_EMAIL` and `R_CRUNCH_PW`) so that you can simply `login()`. See `?login` for details.
 
 ## Datasets
 

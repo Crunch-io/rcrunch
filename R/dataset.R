@@ -52,7 +52,7 @@ forceVariableCatalog <- function(x) {
 }
 
 useLazyVariableCatalog <- function() {
-    envOrOption("crunch.lazy.variable.catalog", TRUE) && isTRUE(getOption("httpcache.on", TRUE))
+    getOption("crunch.lazy.variable.catalog", TRUE) && isTRUE(getOption("httpcache.on", TRUE))
 }
 
 getDatasetVariables <- function(x) {
@@ -349,11 +349,11 @@ setMethod("ncol", "CrunchDataset", function(x) length(variables(x)))
 
 namekey <- function(x = NULL) {
     if (is.variable(x)) {
-        return(match.arg(envOrOption("crunch.namekey.array"), c("alias", "name")))
+        return(match.arg(getOption("crunch.namekey.array"), c("alias", "name")))
     } else if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
-        return(match.arg(envOrOption("crunch.namekey.variableorder"), c("name", "alias")))
+        return(match.arg(getOption("crunch.namekey.variableorder"), c("name", "alias")))
     } else {
-        return(match.arg(envOrOption("crunch.namekey.dataset"), c("alias", "name")))
+        return(match.arg(getOption("crunch.namekey.dataset"), c("alias", "name")))
     }
 }
 

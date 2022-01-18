@@ -2,7 +2,7 @@
 % Please edit documentation in R/auth.R
 \name{login}
 \alias{login}
-\title{DEPRECATED! Authenticate with the Crunch API}
+\title{Authenticate with the Crunch API}
 \usage{
 login(email = NULL, password = NULL, ...)
 }
@@ -15,15 +15,12 @@ login(email = NULL, password = NULL, ...)
 currently supported by the Crunch API.}
 }
 \description{
-A deprecated method to authenticate to the crunch.io API. See \code{\link{crunch-api-key}}
-for the preferred method, as \code{login()} will be removed from an upcoming release.
-}
-\details{
 Note that you can store your Crunch account info in encrypted format via
 the keyring package, with \code{key_set(service = "crunch", "<USERNAME>", ...)}
 If you do so, you can simply \code{login()} to authenticate. For running batch jobs,
 this could be particularly useful.
-
+}
+\details{
 Your email and password can also be stored in and read from the
 environmental variables \code{R_CRUNCH_EMAIL} and \code{R_CRUNCH_PW},
 or from your .Rprofile under \code{crunch.email} and \code{crunch.pw}.
