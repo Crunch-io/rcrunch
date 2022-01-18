@@ -2,22 +2,64 @@
 % Please edit documentation in R/misc.R
 \name{envOrOption}
 \alias{envOrOption}
-\title{Grab either env variable or option}
+\alias{set_crunch_opts}
+\title{Get/set options (user-specified, in environment, or in R options)}
 \usage{
-envOrOption(opt, default = NULL)
+envOrOption(opt, default = NULL, expect_lgl = FALSE, expect_num = FALSE)
+
+set_crunch_opts(..., .source = NULL)
 }
 \arguments{
-\item{opt}{the option to get}
+\item{opt}{the option to get/set}
 
 \item{default}{if the specified option is not set in either the option or as
 an environment variable, use this instead.}
+
+\item{...}{Named arguments describing which options to set}
+
+\item{.source}{(Optional) A character vector describing where the option was set from}
 }
 \value{
 the value of the option
 }
 \description{
-.Rprofile options are like "crunch.api", while env vars are "R_CRUNCH_API".
-This function will use the environment variable if it is found, otherwise
-it looks for the R-based option value.
+These functions allow for a consistent framework of options for the
+crunch package. When retrieving options, \code{envOrOption()} first
+looks for options set with the \code{set_crunch_opts()}, followed by
+options in the environment (see \code{\link[=Sys.getenv]{Sys.getenv()}})
+and finally in the R options (see \code{\link{options}}).
+}
+\details{
+Environment variables are generally set at the operating system level,
+but R does look at a file called \code{.Renviron} on startup, and you can
+also set them using the function \code{\link[=Sys.setenv]{Sys.setenv()}}. Options are generally
+set using a \code{options()} funciton in the \code{.Rprofile} file, but can be
+set using that function anywhere.
+
+The main \code{crunch} R package uses the following options (note that
+the option name is in all capital letters, with "." replaced with
+"\emph{" and a "R}" prefix when used as an environment variable):\tabular{llll}{
+   Option name \tab Env variable \tab Default value \tab Explanation \cr
+   crunch.api \tab R_CRUNCH_API \tab "https://app.crunch.io/api/" \tab URL of API to use \cr
+   crunch.api.key \tab R_CRUNCH_API_KEY \tab  \tab Key to use to authenticate with crunch (see \code{help('crunch-api-key')}) \cr
+   crunch.show.progress \tab R_CRUNCH_SHOW_PROGRESS \tab TRUE \tab Whether to show progress bars during interactive sessions \cr
+   crunch.timeout \tab R_CRUNCH_TIMEOUT \tab 900 \tab Number of seconds to wait before timing out a request \cr
+   crunch.show.progress.url \tab R_CRUNCH_SHOW_PROGRESS_URL \tab FALSE \tab Whether to show the URL when checking progress \cr
+   crunch_retry_wait \tab R_CRUNCH_RETRY_WAIT \tab 0.1 \tab Number of seconds to wait before retrying a download \cr
+   crunch.require.confirmation \tab R_CRUNCH_REQUIRE_CONFIRMATION \tab TRUE \tab Whether to require confirmation for destructive actions (like \code{\link[=delete]{delete()}}) \cr
+   crunch.warn.hidden \tab R_CRUNCH_WARN_HIDDEN \tab TRUE \tab Whether to warn when using a hidden variable \cr
+   crunch.warn.private \tab R_CRUNCH_WARN_PRIVATE \tab TRUE \tab Whether to warn when using a private variable \cr
+   crunch.delimiter \tab R_CRUNCH_DELIMITER \tab "/" \tab What to use as a delimiter when printing folder paths \cr
+   crunch.check.updates \tab R_CRUNCH_CHECK_UPDATES \tab TRUE \tab Whether to check for updates to the crunch package \cr
+   crunch.debug \tab R_CRUNCH_DEBUG \tab FALSE \tab Whether to print verbose information for debugging \cr
+   test.verify.ssl \tab R_TEST_VERIFY_SSL \tab TRUE \tab Whether to verify ssl in curl during crunch tests \cr
+   crunch.stabilize.query \tab R_CRUNCH_STABILIZE_QUERY \tab FALSE \tab Whether to stabilize JSON objects for saving as \code{httptest} objects \cr
+   crunch.namekey.dataset \tab R_CRUNCH_NAMEKEY_DATASET \tab "alias" \tab What variable identifier (alias or name) to use for a dataset's variables \cr
+   crunch.namekey.array \tab R_CRUNCH_NAMEKEY_ARRAY \tab "alias" \tab What variable identifier (alias or name) to use for an array's subvariables \cr
+   crunch.namekey.variableorder \tab R_CRUNCH_NAMEKEY_VARIABLEORDER \tab "name" \tab What variable identifier (alias or name) to use for an order's variables \cr
+   crunch.email \tab R_CRUNCH_EMAIL \tab  \tab (Deprecated) Email to use for \code{\link[=login]{login()}} \cr
+   crunch.pw \tab R_CRUNCH_PW \tab  \tab (Deprecated) Password to use for \code{\link[=login]{login()}} \cr
+   use.legacy.tabbook.endpoint \tab R_USE_LEGACY_TABBOOK_ENDPOINT \tab FALSE \tab (Deprecated) Whether to use legacy tabbook endpoint in \code{\link[=tabBook]{tabBook()}} \cr
+}
 }
 \keyword{internal}

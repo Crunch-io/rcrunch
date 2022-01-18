@@ -285,7 +285,7 @@ with_mock_crunch({
     test_that("namekey function exists and affects names()", {
         expect_identical(getOption("crunch.namekey.dataset"), "alias")
         expect_identical(names(ds), aliases(variables(ds)))
-        with(temp.option(crunch.namekey.dataset = "name"), {
+        with(temp.option(crunch = list(crunch.namekey.dataset = "name")), {
             expect_identical(names(ds), names(variables(ds)))
         })
     })
@@ -320,7 +320,7 @@ with_mock_crunch({
         expect_identical(ds[[self(ds$gender)]], ds$gender)
     })
 
-    with(temp.option(crunch.namekey.dataset = "name"), {
+    with(temp.option(crunch = list(crunch.namekey.dataset = "name")), {
         test_that("'namekey' feature (that should be deprecated) is respected", {
             expect_true(is.Numeric(ds$`Birth Year`))
             expect_null(ds$birthyr)

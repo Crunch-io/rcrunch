@@ -148,10 +148,16 @@ setMethod("[[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALS
     out <- allVariables(x)[[findVariablesInDataset(x, i)]]
     if (!is.null(out)) {
         out <- CrunchVariable(out, filter = activeFilter(x))
-        if (alias(out) %in% hiddenVariables(x, "alias") && getOption("crunch.warn.hidden", TRUE)) {
+        if (
+            alias(out) %in% hiddenVariables(x, "alias") &&
+            envOrOption("crunch.warn.hidden", TRUE)
+        ) {
             warning("Variable ", alias(out), " is hidden", call. = FALSE)
         }
-        if (alias(out) %in% privateVariables(x, "alias") && getOption("crunch.warn.private", TRUE)) { # nolint
+        if (
+            alias(out) %in% privateVariables(x, "alias") &&
+            envOrOption("crunch.warn.private", TRUE)
+        ) {
             warning("Variable ", alias(out), " is private", call. = FALSE)
         }
     }
@@ -165,7 +171,7 @@ setMethod("$", "CrunchDataset", function(x, name) x[[name]])
 findVariablesInDataset <- function(x, i) {
     allvars <- allVariables(x)
     ## Handle "namekey", which should be deprecated
-    if (getOption("crunch.namekey.dataset", "alias") == "name") {
+    if (envOrOption("crunch.namekey.dataset", "alias") == "name") {
         alt <- names(allvars)
     } else {
         alt <- aliases(allvars)
