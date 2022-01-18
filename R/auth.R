@@ -173,7 +173,10 @@ logout <- function() {
     }
 }
 
-#' Authenticate with the Crunch API
+#' DEPRECATED! Authenticate with the Crunch API
+#'
+#' A deprecated method to authenticate to the crunch.io API. See [`crunch-api-key`]
+#' for the preferred method, as `login()` will be removed from an upcoming release.
 #'
 #' Note that you can store your Crunch account info in encrypted format via
 #' the keyring package, with `key_set(service = "crunch", "<USERNAME>", ...)`

@@ -9,7 +9,8 @@ Using a username and password with the \code{\link[=login]{login()}} function is
 deprecated and may be removed in a future release.
 }
 \details{
-To get an API key for your account, (EXISTING DOCUMENTATION??).
+To get an API key for your account, follow the instructions in the
+\href{https://help.crunch.io/hc/en-us/articles/4415963337869-API-Keys}{crunch help desk}
 
 The rcrunch package looks for the key in the environmental variable
 "R_CRUNCH_API_KEY" or the option "crunch.api.key" (see \code{\link[=envOrOption]{envOrOption()}}
