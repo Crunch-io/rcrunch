@@ -1,7 +1,7 @@
 context("Polling progress")
 
 test_that("progressMessage", {
-    with(temp.option(crunch.show.progress = FALSE), {
+    with(temp.option(crunch = list(crunch.show.progress = FALSE)), {
         expect_silent(progressMessage("Message!"))
     })
     with(temp.option(crunch.show.progress = NULL), {
@@ -13,7 +13,7 @@ with_mock_crunch({
     options(crunch.show.progress = NULL)
     on.exit(options(crunch.show.progress = FALSE))
     test_that("If progress polling gives up, it tells you what to do", {
-        with(temp.option(crunch.timeout = 0.0005), {
+        with(temp.option(crunch = list(crunch.timeout = 0.0005)), {
             expect_error(
                 expect_output(
                     pollProgress("https://app.crunch.io/api/progress/1/", wait = 0.001),
@@ -70,7 +70,7 @@ with_mock_crunch({
         }),
         test_that("Progress polling goes until 100 when silent", {
             counter <<- 1
-            with(temp.option(crunch.show.progress = FALSE), {
+            with(temp.option(crunch = list(crunch.show.progress = FALSE)), {
                 expect_silent(
                     expect_equal(
                         pollProgress("https://app.crunch.io/api/progress/",
@@ -84,7 +84,7 @@ with_mock_crunch({
         test_that("Auto-polling with a progress resource", {
             counter <<- 1
             logfile <- tempfile()
-            with(temp.option(httpcache.log = logfile, crunch.poll.wait = 0.01), {
+            with(temp.option(httpcache.log = logfile, crunch = list(crunch.poll.wait = 0.01)), {
                 expect_output(
                     expect_identical(
                         handleAPIresponse(fakeProg("https://app.crunch.io/api/progress/")),
@@ -104,7 +104,7 @@ with_mock_crunch({
         test_that("Auto-polling when progress reports failure", {
             counter <<- 1
             logfile <- tempfile()
-            with(temp.option(httpcache.log = logfile, crunch.poll.wait = 0.01), {
+            with(temp.option(httpcache.log = logfile, crunch = list(crunch.poll.wait = 0.01)), {
                 expect_output(
                     expect_message(
                         expect_error(
@@ -127,7 +127,9 @@ with_mock_crunch({
         }),
         test_that("'crunch.show.progress.url' option works", {
             counter <<- 1
-            with(temp.option(crunch.poll.wait = 0.01, "crunch.show.progress.url" = TRUE), {
+            with(temp.option(crunch = list(
+                crunch.poll.wait = 0.01, "crunch.show.progress.url" = TRUE
+            )), {
                 expect_message(
                     capture.output(handleAPIresponse(
                         fakeProg("https://app.crunch.io/api/progress/")

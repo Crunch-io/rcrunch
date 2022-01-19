@@ -284,7 +284,7 @@ with_mock_crunch({
     # Because veg dataset captured with queries stabalized, need to set it here.
     # For now do so in a targeted way, but it'd be better to set it globally
     # and get all tests to work that way
-    with(temp.option(crunch.stabilize.query = TRUE), {
+    with(temp.option(crunch = list(crunch.stabilize.query = TRUE)), {
         test_that("Can create slide with transform using slideTransform helper", {
             transform <- list(rows_dimension = makeDimTransform(colors = "#FFFFFF"))
             expect_POST(

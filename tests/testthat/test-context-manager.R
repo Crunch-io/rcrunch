@@ -78,13 +78,19 @@ test_that("'as' specified in the context manager itself", {
 test_that("temp.options", {
     options(crunch.test.option.test = "foo")
     expect_identical(getOption("crunch.test.option.test"), "foo")
+    set_crunch_opt("crunch.test.crunch.preset", "a")
+    expect_identical(get_crunch_opt("crunch.test.crunch.preset"), "a")
     expect_null(getOption("crunch.test.test.test.test"))
+    expect_null(get_crunch_opt("crunch.test.crunch.notset"))
     with(temp.options(
         crunch.test.option.test = "bar",
-        crunch.test.test.test.test = "test"
+        crunch.test.test.test.test = "test",
+        crunch = list(crunch.test.crunch.preset = "bc", crunch.test.crunch.notset = "xyz")
     ), {
         expect_identical(getOption("crunch.test.option.test"), "bar")
         expect_identical(getOption("crunch.test.test.test.test"), "test")
+        expect_identical(get_crunch_opt("crunch.test.crunch.preset"), "bc")
+        expect_identical(get_crunch_opt("crunch.test.crunch.notset"), "xyz")
     })
     expect_identical(getOption("crunch.test.option.test"), "foo")
     expect_null(getOption("crunch.test.test.test.test"))

@@ -360,7 +360,7 @@ fixAdhocFilterExpression <- function(expr) {
         var <- gsub("\\.", "/subvariables/", expr[["variable"]])
         expr[["dataset"]] <- NULL
         path <- paste0("datasets/", dataset, "/variables/", var, "/") # nolint
-        expr[["variable"]] <- absoluteURL(path, getOption("crunch.api"))
+        expr[["variable"]] <- absoluteURL(path, envOrOption("crunch.api"))
         return(expr)
     } else if (is.atomic(expr)) {
         return(expr)
@@ -605,10 +605,17 @@ setMethod("show", "CrunchAnalysisSlide", function(object) {
         )
 
         filters <- .showSlideHeadingHelper(
-            .filtersFromSlide(object@body$analysis$query_environment$filter, datasetReference(object)),
+            .filtersFromSlide(
+                object@body$analysis$query_environment$filter,
+                datasetReference(object)
+            ),
             "Filters",
             function(filters) {
-                vapply(filters, function(filter) paste0(capture.output(show(filter)), collapse = "\n"), character(1))
+                vapply(
+                    filters,
+                    function(filter) paste0(capture.output(show(filter)), collapse = "\n"),
+                    character(1)
+                )
             }
         )
 
