@@ -6,7 +6,7 @@
 \usage{
 retry(
   expr,
-  wait = getOption("crunch_retry_wait", default = 0.1),
+  wait = envOrOption("crunch_retry_wait", default = 0.1),
   max.tries = 10
 )
 }

@@ -11,10 +11,50 @@ test_that("Deleted endpoints tell user to upgrade", {
     )
 })
 
+
+test_that("401 errors give informative errors", {
+    fake401 <- fake_response("http://crunch.io/401", status_code = 401)
+    with(temp.option(crunch = list(crunch.api = "url", crunch.api.key = "key")), {
+        expect_error(
+            handleAPIresponse(fake401),
+            "Could not connect to 'url' with key set using"
+        )
+    })
+
+    with(temp.option(crunch = list(crunch.api.key = "")), {
+        expect_error(
+            handleAPIresponse(fake401),
+            "No authentication key found. See"
+        )
+    })
+})
+
 test_that("get_header", {
     expect_identical(get_header("bar", list(bar = 5)), 5)
     expect_identical(get_header("foo", list(bar = 5)), NULL)
     expect_identical(get_header("foo", list(bar = 5), default = 42), 42)
+})
+
+test_that("get_crunch_auth_config works", {
+    with(temp.option(
+        crunch = list(crunch.api = "https://app.crunch.io/api/", crunch.api.key = "key")
+    ), {
+        # sends to same host
+        expect_equal(
+            get_crunch_auth_config("https://app.crunch.io/api/datasets/"),
+            add_headers(Authorization = paste0("Bearer ", "key"))
+        )
+        # Also sends to other crunch.io subdomains
+        expect_equal(
+            get_crunch_auth_config("https://testing.crunch.io/api/datasets/"),
+            add_headers(Authorization = paste0("Bearer ", "key"))
+        )
+        # But are not send outside of crunch.io
+        expect_equal(
+            get_crunch_auth_config("https://example.com"),
+            httr::add_headers()
+        )
+    })
 })
 
 with_mock_crunch({
@@ -51,7 +91,7 @@ with_mock_crunch({
         )
     })
     test_that("crunch.debug logging if enabled", {
-        with(temp.option(crunch.debug = TRUE), {
+        with(temp.option(crunch = list(crunch.debug = TRUE)), {
             expect_POST(
                 expect_prints(crPOST("https://app.crunch.io/api/", body = '{"value":1}'),
                     '\n {"value":1} \n',
@@ -142,9 +182,16 @@ if (run.integration.tests) {
 
     test_that("API calls throw an error if user is not authenticated", {
         logout()
-        expect_error(
-            getAPIRoot(),
-            "You are not authenticated. Please `login\\(\\)` and try again."
-        )
+        with(temp.option(crunch = list(crunch.api.key = "")), {
+            expect_error(
+                getAPIRoot(),
+                "No authentication key found. See `help('crunch-api-key')` for more information.",
+                fixed = TRUE
+            )
+        })
+
+        with(temp.option(crunch = list(crunch.api.key = "xyz")), {
+            expect_error(getAPIRoot(), "Could not connect to.+")
+        })
     })
 }

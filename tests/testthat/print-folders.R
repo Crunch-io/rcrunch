@@ -43,7 +43,7 @@ expect_output(print(folders(ds)[["Group 1/Nested"]], pretty = TRUE),
 )
 # nolint end
 
-with(temp.option(crunch.delimiter = "|"), {
+with(temp.option(crunch = list(crunch.delimiter = "|")), {
     expect_output(print(folders(ds), depth = 2),
         "|
 ├── Group 1|

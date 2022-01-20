@@ -4,14 +4,21 @@ rethrow <- function(x) halt(errorMessage(x))
 
 errorMessage <- function(e) attr(e, "condition")$message
 
-warn_once <- function(..., call. = FALSE, option) {
+display_console_once <- function(..., option, display_func) {
     # Warn the first time, then set an option so we know not to warn again in
     # the current session
-    if (!isTRUE(getOption(option, FALSE))) {
-        warning(..., call. = call.)
-        opts <- structure(list(TRUE), .Names = option)
-        do.call(options, opts)
+    if (!isTRUE(get_crunch_opt(option))) {
+        display_func(...)
+        set_crunch_opt(option, TRUE)
     }
+}
+
+warn_once <- function(..., call. = FALSE, option) {
+    display_console_once(..., call. = call., option = option, display_func = warning)
+}
+
+message_once <- function(..., option) {
+    display_console_once(..., option = option, display_func = message)
 }
 
 vget <- function(name) {
@@ -171,31 +178,119 @@ vectorOrList <- function(obj, type) {
     return(FALSE)
 }
 
-#' Grab either env variable or option
+# nolint start
+#' Get/set options (user-specified, in environment, or in R options)
 #'
-#' .Rprofile options are like "crunch.api", while env vars are "R_CRUNCH_API".
-#' This function will use the environment variable if it is found, otherwise
-#' it looks for the R-based option value.
+#' These functions allow for a consistent framework of options for the
+#' crunch package. When retrieving options, `envOrOption()` first
+#' looks for options set with the `set_crunch_opts()`, followed by
+#' options in the environment (see [`Sys.getenv()`])
+#' and finally in the R options (see [`options`]).
 #'
-#' @param opt the option to get
+#' @details
+#' Environment variables are generally set at the operating system level,
+#' but R does look at a file called `.Renviron` on startup, and you can
+#' also set them using the function [`Sys.setenv()`]. Options are generally
+#' set using a `options()` funciton in the `.Rprofile` file, but can be
+#' set using that function anywhere.
+#'
+#' The main `crunch` R package uses the following options (note that
+#' the option name is in all capital letters, with "." replaced with
+#' "_" and a "R_" prefix when used as an environment variable):
+#'
+#' | Option name                  | Env variable                   | Default value | Explanation                                                                 |
+#' |------------------------------|--------------------------------|---------------|-----------------------------------------------------------------------------|
+#' | crunch.api                   | R_CRUNCH_API                   |"https://app.crunch.io/api/"| URL of API to use                                              |
+#' | crunch.api.key               | R_CRUNCH_API_KEY               |               | Key to use to authenticate with crunch (see `help('crunch-api-key')`)       |
+#' | crunch.show.progress         | R_CRUNCH_SHOW_PROGRESS         | TRUE          | Whether to show progress bars during interactive sessions                   |
+#' | crunch.timeout               | R_CRUNCH_TIMEOUT               | 900           | Number of seconds to wait before timing out a request                       |
+#' | crunch.show.progress.url     | R_CRUNCH_SHOW_PROGRESS_URL     | FALSE         | Whether to show the URL when checking progress                              |
+#' | crunch_retry_wait            | R_CRUNCH_RETRY_WAIT            | 0.1           | Number of seconds to wait before retrying a download                        |
+#' | crunch.require.confirmation  | R_CRUNCH_REQUIRE_CONFIRMATION  | TRUE          | Whether to require confirmation for destructive actions (like [`delete()`]) |
+#' | crunch.warn.hidden           | R_CRUNCH_WARN_HIDDEN           | TRUE          | Whether to warn when using a hidden variable                                |
+#' | crunch.warn.private          | R_CRUNCH_WARN_PRIVATE          | TRUE          | Whether to warn when using a private variable                               |
+#' | crunch.delimiter             | R_CRUNCH_DELIMITER             | "/"           | What to use as a delimiter when printing folder paths                       |
+#' | crunch.check.updates         | R_CRUNCH_CHECK_UPDATES         | TRUE          | Whether to check for updates to the crunch package                          |
+#' | crunch.debug                 | R_CRUNCH_DEBUG                 | FALSE         | Whether to print verbose information for debugging                          |
+#' | test.verify.ssl              | R_TEST_VERIFY_SSL              | TRUE          | Whether to verify ssl in curl during crunch tests                           |
+#' | crunch.stabilize.query       | R_CRUNCH_STABILIZE_QUERY       | FALSE         | Whether to stabilize JSON objects for saving as `httptest` objects          |
+#' | crunch.namekey.dataset       | R_CRUNCH_NAMEKEY_DATASET       | "alias"       | What variable identifier (alias or name) to use for a dataset's variables   |
+#' | crunch.namekey.array         | R_CRUNCH_NAMEKEY_ARRAY         | "alias"       | What variable identifier (alias or name) to use for an array's subvariables |
+#' | crunch.namekey.variableorder | R_CRUNCH_NAMEKEY_VARIABLEORDER | "name"        | What variable identifier (alias or name) to use for an order's variables    |
+#' | crunch.email                 | R_CRUNCH_EMAIL                 |               | (Deprecated) Email to use for [`login()`]                                   |
+#' | crunch.pw                    | R_CRUNCH_PW                    |               | (Deprecated) Password to use for [`login()`]                                |
+#' | use.legacy.tabbook.endpoint  | R_USE_LEGACY_TABBOOK_ENDPOINT  | FALSE         | (Deprecated) Whether to use legacy tabbook endpoint in [`tabBook()`]        |
+#'
+#' @param opt the option to get/set
 #' @param default if the specified option is not set in either the option or as
 #' an environment variable, use this instead.
-#'
+#' @param ... Named arguments describing which options to set
+#' @param .source (Optional) A character vector describing where the option was set from
 #' @return the value of the option
 #'
 #' @keywords internal
 #' @export
-envOrOption <- function(opt, default = NULL) {
+# nolint end
+envOrOption <- function(opt, default = NULL, expect_lgl = FALSE, expect_num = FALSE) {
+    ## First look in CRUNCH_OPTIONS environment
+    crunch_opt <- get_crunch_opt(opt)
+    if (!is.null(crunch_opt)) {
+        attributes(crunch_opt) <- NULL
+        return(crunch_opt)
+    }
+
+    ## Next check in environment variables
     envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed = TRUE)))
     envvar <- Sys.getenv(envvar.name)
 
     if (nchar(envvar)) {
-        ## Let environment variable override .Rprofile, if defined
+        if (expect_lgl) envvar <- as.logical(envvar)
+        if (expect_num) envvar <- as.numeric(envvar)
         return(envvar)
-    } else {
-        return(getOption(opt, default))
     }
+
+    # Finally, check the R options or use default
+    return(getOption(opt, default))
 }
+
+envOrOptionSource <- function(opt) {
+    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed = TRUE)))
+    crunch_opt <- get_crunch_opt(opt)
+    if (!is.null(crunch_opt)) {
+        source <- attr(crunch_opt, "source")
+        if (is.null(source)) {
+            return(paste0("set using `set_crunch_opts(", opt, " = ...)`"))
+        }
+        return(paste0("set using `", source, "`"))
+    }
+    if (Sys.getenv(envvar.name) != "") {
+        return(paste0("found in environment variable `", envvar.name, "`"))
+    }
+    if (!is.null(getOption(opt))) {
+        return(paste0("found in `options(", opt, " = ...)`"))
+    }
+    return("unknown source")
+}
+
+CRUNCH_OPTIONS <- new.env(parent = emptyenv())
+
+get_crunch_opt <- function(opt) {
+    get0(opt, CRUNCH_OPTIONS)
+}
+
+set_crunch_opt <- function(opt, value, source = NULL) {
+    if (!is.null(source)) value <- structure(value, source = source)
+    CRUNCH_OPTIONS[[opt]] <- value
+}
+
+#' @rdname envOrOption
+#' @export
+set_crunch_opts <- function(..., .source = NULL) {
+    new <- list(...)
+    lapply(names(new), function(nm) set_crunch_opt(nm, new[[nm]], .source))
+    invisible(new)
+}
+
 
 #' Change which server to point to
 #'

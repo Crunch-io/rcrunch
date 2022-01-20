@@ -4,7 +4,7 @@
 \alias{tokenAuth}
 \title{Add an auth token manually}
 \usage{
-tokenAuth(token, ua = "token")
+tokenAuth(token, ua = NULL, source = "tokenAuth")
 }
 \arguments{
 \item{token}{character auth token}

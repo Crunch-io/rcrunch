@@ -1,6 +1,6 @@
 context("GitHub version check")
 
-with(temp.option(crunch.check.updates = NULL), {
+with(temp.option(crunch = list(crunch.check.updates = NULL)), {
     with_mock_crunch({
         without_interactive({
             test_that("checkForNewVersion doesn't check if session is not interactive", {
@@ -24,7 +24,7 @@ with(temp.option(crunch.check.updates = NULL), {
                 )
             })
 
-            with(temp.option(crunch.check.updates = FALSE), {
+            with(temp.option(crunch = list(crunch.check.updates = FALSE)), {
                 test_that("checkForNewVersion doesn't check if option is set", {
                     expect_null(checkForNewVersion("foo", "1.5.1"))
                 })

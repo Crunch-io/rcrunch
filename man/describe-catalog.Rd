@@ -230,7 +230,7 @@ variable. They work like the base R names methods.
 \details{
 Note that the Dataset \code{names} method returns the aliases of its
 variables by default. This behavior is controlled by
-\code{getOption("crunch.namekey.dataset")}.
+\code{envOrOption("crunch.namekey.dataset")}.
 Set \code{options(crunch.namekey.dataset="name")} if you wish to use
 variable names. See the variables vignette for more information.
 }

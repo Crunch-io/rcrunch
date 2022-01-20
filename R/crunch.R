@@ -19,8 +19,8 @@ NULL
 #' @importFrom httr config add_headers
 .onLoad <- function(lib, pkgname = "crunch") {
     setIfNotAlready(
-        crunch.api = "https://app.crunch.io/api/",
         httpcache.on = TRUE,
+        crunch.api = "https://app.crunch.io/api/",
         crunch.namekey.dataset = "alias",
         crunch.namekey.array = "alias"
     )

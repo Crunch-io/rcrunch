@@ -40,7 +40,7 @@ with_mock_crunch({
         )
     })
 
-    with(temp.options(crunch.api = "https://fake.crunch.io/api/v2/"), {
+    with(temp.options(crunch = list(crunch.api = "https://fake.crunch.io/api/v2/")), {
         test_that("Share payload shape", {
             expect_identical(
                 passwordSetURLTemplate(),
@@ -113,7 +113,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    me <- getOption("crunch.email")
+    me <- envOrOption("crunch.email")
     ds <- createDataset(name = now())
     test_that("PermissionsCatalog from real dataset", {
         expect_is(permissions(ds), "PermissionCatalog")
