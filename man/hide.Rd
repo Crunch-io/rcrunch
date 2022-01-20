@@ -110,7 +110,7 @@ privateVariables(dataset, key = namekey(dataset))
 \item{value}{Replacement values for assignment methods.}
 
 \item{key}{(for \code{hiddenVariables()} / \code{privateVariables()} the Variable attribute to
-return. Default is "alias", following \code{getOption("crunch.namekey.dataset")}.}
+return. Default is "alias", following \code{envOrOption("crunch.namekey.dataset")}.}
 }
 \description{
 Both hidden and private are hidden from most views in crunch by default.

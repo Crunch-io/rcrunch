@@ -408,7 +408,7 @@ with_mock_crunch({
     })
 
     test_that("tabBook warning when using legacy endpoint", {
-        with(temp.option(use.legacy.tabbook.endpoint = TRUE), {
+        with(temp.option(crunch = list(use.legacy.tabbook.endpoint = TRUE)), {
             expect_warning(
                 expect_POST(
                     tabBook(mults[[1]],
