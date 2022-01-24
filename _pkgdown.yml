@@ -177,6 +177,7 @@ reference:
   - slides
   - newSlide
   - makeDimTransform
+  - slideMarkdown
   - titles
   - reorderSlides
   - displaySettings
@@ -214,6 +215,8 @@ reference:
 - title: Admin
   contents:
   - archive-and-publish
+  - crunch-api-key
+  - crunch_sitrep
   - dataset-owner
   - getAccountUserCatalog
   - getTeams
@@ -229,6 +232,7 @@ reference:
   - permissions
   - projects
   - resetPassword
+  - setupCrunchAuth
   - share
   - 'members<-,CrunchTeam,MemberCatalog-method'
   - unshare
