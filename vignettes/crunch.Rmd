@@ -30,6 +30,11 @@ The crunch R package will use the key automatically if it is stored in environme
 
 ```{r usethis, eval=FALSE}
 if (!require("usethis")) install.packages("usethis")
+# Note: After running this command, R may ask you one or two questions.
+# While you likely *do* want to update the dependency packages, you likely
+# *do not* want to install any package from source, so you can answer something
+# like "update all packages from CRAN" if it asks which packages to update, 
+# and "No" if it asks you to install from source.
 usethis::edit_r_environ()
 ```
 
