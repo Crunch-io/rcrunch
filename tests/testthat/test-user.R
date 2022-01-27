@@ -40,7 +40,7 @@ with_mock_crunch({
 
     test_that("Reset password", {
         expect_POST(
-            resetPassword("me@example.com"),
+            suppressWarnings(resetPassword("me@example.com")),
             "https://app.crunch.io/api/public/password_reset/",
             '{"email":"me@example.com",',
             '"url_base":"https://app.crunch.io/password/change/${token}/"}'

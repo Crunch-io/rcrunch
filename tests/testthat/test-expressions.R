@@ -1,1068 +1,1071 @@
 context("Expressions")
 
-test_that(".dispatchFilter uses right numeric function", {
-    ## Use expect_prints because toJSON returns class "json" but prints correctly
-    expect_prints(
-        toJSON(.dispatchFilter(5)),
-        paste0(
-            '{"function":"==","args":[{"function":"row",',
-            '"args":[]},{"value":4}]}'
-        )
-    )
-    expect_prints(
-        toJSON(.dispatchFilter(c(5, 7))),
-        paste0(
-            '{"function":"in","args":[{"function":"row",',
-            '"args":[]},{"column":[4,6]}]}'
-        )
-    )
-    expect_prints(
-        toJSON(.dispatchFilter(5:7)),
-        paste0(
-            '{"function":"between","args":[{"function":"row",',
-            '"args":[]},{"value":4},',
-            '{"value":6},{"value":[true,true]}]}'
-        )
-    )
-})
-
-with_mock_crunch({
-    ds <- cachedLoadDataset("test ds")
-
-    test_that("is method works for both expressions and logical expressions", {
-        expect_true(is.CrunchExpr(ds$birthyr + 5))
-        expect_true(is.CrunchExpr(ds$birthyr == 5))
-    })
-
-
-    test_that("Arithmetic generates expressions", {
-        e1 <- ds$birthyr + 5
-        expect_is(e1, "CrunchExpr")
-        zexp <- list(
-            `function` = "+",
-            args = list(
-                list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
-                list(value = 5)
+# Skip tests on windows (because they're slow and CRAN complains)
+if (tolower(Sys.info()[["sysname"]]) != "windows") {
+    test_that(".dispatchFilter uses right numeric function", {
+        ## Use expect_prints because toJSON returns class "json" but prints correctly
+        expect_prints(
+            toJSON(.dispatchFilter(5)),
+            paste0(
+                '{"function":"==","args":[{"function":"row",',
+                '"args":[]},{"value":4}]}'
             )
         )
-        expect_equivalent(zcl(e1), zexp)
-        expect_prints(e1, "Crunch expression: birthyr + 5")
-        e2 <- 5 + ds$birthyr
-        expect_is(e2, "CrunchExpr")
-        expect_prints(e2, "Crunch expression: 5 + birthyr")
-    })
-
-    test_that("Integer printing removes L", {
-        e1 <- ds$birthyr + 1L
-        expect_is(e1, "CrunchExpr")
-        expect_prints(e1, "Crunch expression: birthyr + 1")
-    })
-
-    test_that("Logic generates expressions", {
-        e1 <- ds$birthyr < 0
-        expect_is(e1, "CrunchLogicalExpr")
-        expect_prints(e1, "Crunch logical expression: birthyr < 0")
-    })
-
-    test_that("R logical & CrunchLogicalExpr", {
-        expect_is(
-            c(TRUE, FALSE, TRUE) & ds$gender == "Female",
-            "CrunchLogicalExpr"
-        )
-        expect_is(
-            c(TRUE, FALSE, TRUE) | ds$gender == "Female",
-            "CrunchLogicalExpr"
-        )
-        expect_is(
-            ds$gender == "Female" & c(TRUE, FALSE, TRUE),
-            "CrunchLogicalExpr"
-        )
-        expect_is(
-            ds$gender == "Female" | c(TRUE, FALSE, TRUE),
-            "CrunchLogicalExpr"
-        )
-    })
-
-    test_that("Datetime operations: logical", {
         expect_prints(
-            ds$starttime == "2015-01-01",
-            'Crunch logical expression: starttime == "2015-01-01"'
-        )
-        expect_prints(
-            ds$starttime > "2015-01-01",
-            'Crunch logical expression: starttime > "2015-01-01"'
-        )
-        expect_prints(
-            ds$starttime == as.Date("2015-01-01"),
-            'Crunch logical expression: starttime == "2015-01-01"'
-        )
-        expect_prints(
-            ds$starttime > as.Date("2015-01-01"),
-            'Crunch logical expression: starttime > "2015-01-01"'
-        )
-    })
-
-    test_that("Logical expr with categoricals", {
-        expect_is(ds$gender == "Male", "CrunchLogicalExpr")
-        expect_prints(
-            ds$gender == "Male",
-            'Crunch logical expression: gender == "Male"'
-        )
-        expect_prints(
-            ds$gender == as.factor("Male"),
-            'Crunch logical expression: gender == "Male"'
-        )
-        expect_prints(
-            ds$gender %in% "Male",
-            'Crunch logical expression: gender %in% "Male"'
-        )
-        expect_prints(
-            ds$gender %in% as.factor("Male"),
-            'Crunch logical expression: gender %in% "Male"'
-        )
-        expect_prints(
-            ds$gender %in% c("Male", "Female"),
-            'Crunch logical expression: gender %in% c("Male", "Female")'
-        )
-        expect_prints(
-            ds$gender %in% as.factor(c("Male", "Female")),
-            'Crunch logical expression: gender %in% c("Male", "Female")'
-        )
-        expect_prints(
-            ds$gender != "Female",
-            'Crunch logical expression: gender != "Female"'
-        )
-        expect_prints(
-            ds$gender != as.factor("Female"),
-            'Crunch logical expression: gender != "Female"'
-        )
-    })
-    test_that("Referencing category names that don't exist warns and drops", {
-        expect_warning(
-            expect_prints(
-                ds$gender == "other",
-                "Crunch logical expression: gender %in% character(0)"
-            ),
-            paste("Category not found:", dQuote("other"))
-        )
-        expect_warning(
-            expect_prints(
-                ds$gender %in% c("other", "Male", "another"),
-                'Crunch logical expression: gender %in% "Male"'
-            ),
-            paste(
-                "Categories not found:", dQuote("other"), "and",
-                dQuote("another")
-            )
-        )
-        expect_warning(
-            expect_prints(
-                ds$gender != "other",
-                "Crunch logical expression: !gender %in% character(0)"
-            ),
-            paste("Category not found:", dQuote("other"))
-        )
-    })
-
-    test_that("Show method for logical expressions", {
-        expect_prints(
-            ds$gender %in% c("Male", "Female"),
-            'Crunch logical expression: gender %in% c("Male", "Female"'
-        )
-        expect_prints(
-            ds$gender %in% 1:2,
-            'Crunch logical expression: gender %in% c("Male", "Female"'
-        )
-        expect_prints(
-            ds$birthyr == 1945 | ds$birthyr < 1941,
-            "birthyr == 1945 | birthyr < 1941"
-        )
-        expect_prints(
-            ds$gender %in% "Male" & !is.na(ds$birthyr),
-            'gender %in% "Male" & !is.na(birthyr)'
-        )
-        expect_prints(
-            !(ds$gender == "Male"),
-            'Crunch logical expression: !gender == "Male"'
-        )
-        ## TODO: better parentheses for ^^
-        expect_prints(
-            duplicated(ds$gender),
-            "Crunch logical expression: duplicated(gender)"
-        )
-        expect_prints(
-            duplicated(ds$gender == "Male"),
-            'Crunch logical expression: duplicated(gender == "Male")'
-        )
-    })
-
-    test_that("Can subset a CrunchExpr with R values", {
-        age <- 2016 - ds$birthyr
-        ## Note: no check for correct number of rows
-        expect_is(age[c(TRUE, FALSE, TRUE)], "CrunchExpr")
-        expect_prints(
-            toJSON(activeFilter(age[c(TRUE, FALSE, TRUE)])),
+            toJSON(.dispatchFilter(c(5, 7))),
             paste0(
                 '{"function":"in","args":[{"function":"row",',
-                '"args":[]},{"column":[0,2]}]}'
+                '"args":[]},{"column":[4,6]}]}'
             )
         )
-        expect_is(age[c(1, 3)], "CrunchExpr")
         expect_prints(
-            toJSON(activeFilter(age[c(1, 3)])),
+            toJSON(.dispatchFilter(5:7)),
             paste0(
-                '{"function":"in","args":[{"function":"row",',
-                '"args":[]},{"column":[0,2]}]}'
+                '{"function":"between","args":[{"function":"row",',
+                '"args":[]},{"value":4},',
+                '{"value":6},{"value":[true,true]}]}'
             )
         )
     })
 
-    test_that("Show method for expresssions", {
-        skip("TODO: something intelligent with parentheses and order of operations (GH issue #99)")
-        print(ds$birthyr * 3 + 5)
-        print(3 * (ds$birthyr + 5))
-    })
+    with_mock_crunch({
+        ds <- cachedLoadDataset("test ds")
 
-    test_that("as.vector for 3VL CrunchLogicalExpr returns R logical", {
-        vals <- as.vector(ds$birthyr == 1945 | ds$birthyr < 1941)
-        expect_true(is.logical(vals))
-        expect_equal(which(ds$birthyr == 1945 | ds$birthyr < 1941), 4:20)
-    })
-
-    test_that("crunchDifftime expr", {
-        expr <- crunchDifftime(ds$starttime, ds$starttime)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"difftime","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},', #nolint
-                '{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},null]}'
-            )
-        )
-
-        expect_error(
-            crunchDifftime(ds$gender, ds$gender),
-            "variable must be of type 'Datetime' for crunchDifftime"
-        )
-    })
-
-    test_that("datetimeFromCols expr", {
-        expr <- datetimeFromCols(ds$birthyr, ds$birthyr, ds$birthyr)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"datetime","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},', #nolint
-                '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
-                '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},null,null,null]}' #nolint
-            )
-        )
-
-        expect_error(
-            datetimeFromCols(ds$gender, ds$gender, ds$gender),
-            "variable must be of type 'Numeric' for datetimeFromCols"
-        )
-    })
-
-    test_that("%ornm% expr", {
-        expr <- (ds$birthyr == 1945) %ornm% (ds$birthyr < 1941)
-        expect_is(expr, "CrunchLogicalExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"ornm","args":[{"function":"==","args":',
-                '[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
-                '{"value":1945}]},{"function":"<","args":[{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/birthyr/"},{"value":1941}]}]}'
-            )
-        )
-    })
-
-    test_that("is.valid expr", {
-        expr <- is.valid(ds$birthyr)
-        expect_is(expr, "CrunchLogicalExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"is_valid","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}' #nolint
-            )
-        )
-    })
-
-    test_that("makeFrame categorical vars exoression", {
-        expr <- makeFrame(ds[c("gender", "location")])
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"0001":{"variable":', # nolint
-                '"https://app.crunch.io/api/datasets/1/variables/gender/"},"0002":{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/location/"}}},{"value":',
-                '["0001","0002"]}]}],"kwargs":{"numeric":{"value":false}}}'
-            )
-        )
-    })
-
-    test_that("makeFrame numeric vars expression", {
-        expr <- makeFrame(ds[c("birthyr")])
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"0001":{"variable":', # nolint
-                '"https://app.crunch.io/api/datasets/1/variables/birthyr/"}}},{"value":',
-                '["0001"]}]}],"kwargs":{"numeric":{"value":true}}}'
-            )
-        )
-    })
-
-    test_that("makeFrame from expressions expression works", {
-        expect_json_equivalent(
-            makeFrame(
-                list(VariableDefinition(ds$gender == "Male", name = "male")),
-                numeric = FALSE
-            )@expression,
-            list(
-                `function` = "array",
-                args = list(list(
-                    `function` = "make_frame",
-                    args = list(list(
-                        map = list(
-                            c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
-                        )
-                    ), list(value = I("0001")))
-                )),
-                kwargs = list(numeric = list(value = FALSE))
-            )
-        )
-    })
-
-    test_that("makeFrame from expressions expression requires numeric arg", {
-        expect_error(
-            deriveArray(
-                subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")),
-                name = "Gender MR"
-            ),
-            "Could not guess array type, specify `numeric` argument in `makeFrame()`",
-            fixed = TRUE
-        )
-    })
-
-    test_that("makeFrame type checks numeric arg", {
-        expect_error(
-            deriveArray(
-                subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")),
-                name = "Gender MR",
-                numeric = "WRONG"
-            ),
-            "Expected `numeric` argument of `makeFrame()` to be TRUE or FALSE",
-            fixed = TRUE
-        )
-    })
-
-    test_that("makeFrame errors on single subvar", {
-        expect_error(
-            deriveArray(
-                subvariables = VariableDefinition(ds$gender == "Male", name = "male"),
-                name = "Gender MR"
-            ),
-            "Expected a Variable Catalog or a list of Variables/Expressions/VarDefs",
-            fixed = TRUE
-        )
-
-    })
-
-    test_that("selectCategories expr", {
-        expr <- selectCategories(ds$gender, "Male")
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"as_selected","args":[{"function":"select_categories","args":',
-                '[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
-                '{"value":["Male"]}]}]}'
-            )
-        )
-    })
-
-    test_that("crunchBetween expr", {
-        expr <- crunchBetween(ds$birthyr, 3, 5)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"between","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},', # nolint
-                '{"value":3},{"value":5},{"value":[true,false]}]}'
-            )
-        )
-        expect_error(
-            crunchBetween(ds$gender, 3, 5),
-            "variable must be of type 'Numeric' for crunchBetween"
-        )
-    })
-
-    test_that("rowAll expr", {
-        expr <- rowAll(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"all","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
-            )
-        )
-
-        expect_error(rowAll(ds$gender), "variable must be of type 'Array' for rowAll")
-    })
-
-    test_that("rowAny expr", {
-        expr <- rowAny(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"any","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
-            )
-        )
-
-        expect_error(rowAny(ds$birthyr), "variable must be of type 'Array' for rowAny")
-    })
+        test_that("is method works for both expressions and logical expressions", {
+            expect_true(is.CrunchExpr(ds$birthyr + 5))
+            expect_true(is.CrunchExpr(ds$birthyr == 5))
+        })
 
 
-    test_that("rowAnyNA expr", {
-        expr <- rowAnyNA(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"any_missing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
-            )
-        )
-        expect_error(rowAnyNA(ds$gender), "variable must be of type 'Array' for rowAnyNA")
-    })
-
-    test_that("rowAllNA expr", {
-        expr <- rowAllNA(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"all_missing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
-            )
-        )
-        expect_error(rowAllNA(ds$gender), "variable must be of type 'Array' for rowAllNA")
-    })
-
-    test_that("complete.cases expr", {
-        expr <- complete.cases(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"complete_cases","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
-            )
-        )
-
-        expect_error(
-            complete.cases(ds$gender),
-            "variable must be of type 'Array' for complete.cases"
-        )
-    })
-
-    test_that("is.selected expr", {
-        expr <- is.selected(ds$gender)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]}' # nolint
-            )
-        )
-        expect_error(
-            is.selected(ds$birthyr),
-            "variable must be of type 'Categorical' for is.selected"
-        )
-    })
-
-    test_that("asSelected expr", {
-        expr <- asSelected(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"as_selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
-            )
-        )
-
-        expect_error(
-            asSelected(ds$birthyr),
-            paste0(
-                "variable must be of type 'Categorical', 'Categorical Array', ",
-                "'Multiple Response' for asSelected"
+        test_that("Arithmetic generates expressions", {
+            e1 <- ds$birthyr + 5
+            expect_is(e1, "CrunchExpr")
+            zexp <- list(
+                `function` = "+",
+                args = list(
+                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                    list(value = 5)
                 )
-        )
-    })
-
-    test_that("selectedDepth expr", {
-        expr <- selectedDepth(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"selected_depth","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
             )
-        )
+            expect_equivalent(zcl(e1), zexp)
+            expect_prints(e1, "Crunch expression: birthyr + 5")
+            e2 <- 5 + ds$birthyr
+            expect_is(e2, "CrunchExpr")
+            expect_prints(e2, "Crunch expression: 5 + birthyr")
+        })
 
-        expect_error(
-            selectedDepth(ds$gender),
-            "variable must be of type 'Multiple Response' for selectedDepth"
-        )
-    })
+        test_that("Integer printing removes L", {
+            e1 <- ds$birthyr + 1L
+            expect_is(e1, "CrunchExpr")
+            expect_prints(e1, "Crunch expression: birthyr + 1")
+        })
 
-    test_that("arraySelections expr", {
-        expr <- arraySelections(ds$mymrset)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"selections","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
+        test_that("Logic generates expressions", {
+            e1 <- ds$birthyr < 0
+            expect_is(e1, "CrunchLogicalExpr")
+            expect_prints(e1, "Crunch logical expression: birthyr < 0")
+        })
+
+        test_that("R logical & CrunchLogicalExpr", {
+            expect_is(
+                c(TRUE, FALSE, TRUE) & ds$gender == "Female",
+                "CrunchLogicalExpr"
             )
-        )
-
-        expect_error(
-            arraySelections(ds$gender),
-            "variable must be of type 'Multiple Response' for arraySelections"
-        )
-    })
-
-    test_that("nchar expr", {
-        expr <- nchar(ds$textVar)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"char_length","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/textVar/"}]}' # nolint
+            expect_is(
+                c(TRUE, FALSE, TRUE) | ds$gender == "Female",
+                "CrunchLogicalExpr"
             )
-        )
-
-        expect_error(nchar(ds$gender), "variable must be of type 'Text' for nchar")
-    })
-
-    test_that("trim expr", {
-        expr <- trim(ds$birthyr, 1950, 2000)
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"trim","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},', # nolint
-                '{"value":1950},{"value":2000}]}'
+            expect_is(
+                ds$gender == "Female" & c(TRUE, FALSE, TRUE),
+                "CrunchLogicalExpr"
             )
-        )
-
-        expect_error(trim(ds$gender), "variable must be of type 'Numeric' for trim")
-    })
-
-    test_that("alterCategoriesExpr - var: ids", {
-        expr <- alterCategoriesExpr(
-            ds$catarray,
-            list(list(id = 1, name = "AAA")),
-            c(2, 1, -1),
-            list(list(id = "subvar1", name = "ZZZ"))
-        )
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
-                '"kwargs":{"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},', #nolint
-                '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
+            expect_is(
+                ds$gender == "Female" | c(TRUE, FALSE, TRUE),
+                "CrunchLogicalExpr"
             )
-        )
-    })
+        })
 
-    test_that("alterCategoriesExpr - var: names", {
-        expr <- alterCategoriesExpr(
-            ds$catarray,
-            list(list(old_name = "A", name = "AAA")),
-            c("B", "A", "No Data"),
-            list(list(old_name = "Second", name = "ZZZ"))
-        )
-        expect_is(expr, "CrunchExpr")
-
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
-                '"kwargs":{"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},', #nolint
-                '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
+        test_that("Datetime operations: logical", {
+            expect_prints(
+                ds$starttime == "2015-01-01",
+                'Crunch logical expression: starttime == "2015-01-01"'
             )
-        )
-    })
-
-    test_that("alterCategoriesExpr - var: subvar alias", {
-        expr <- alterCategoriesExpr(
-            ds$catarray,
-            subvariables = list(list(alias = "subvar1", name = "ZZZ"))
-        )
-        expect_is(expr, "CrunchExpr")
-
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
-                '"kwargs":{"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
+            expect_prints(
+                ds$starttime > "2015-01-01",
+                'Crunch logical expression: starttime > "2015-01-01"'
             )
-        )
-    })
-
-    test_that("alterCategoriesExpr - expr: ids", {
-        expr <- alterCategoriesExpr(
-            selectCategories(ds$catarray, "A"),
-            list(list(id = 1, name = "AAA")),
-            c(2, 1, -1),
-            list(list(id = "subvar1", name = "ZZZ"))
-        )
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"alter_categories","args":[{"function":"as_selected","args":',
-                '[{"function":"select_categories","args":',
-                '[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},',
-                '{"value":["A"]}]}]}],"kwargs":{',
-                '"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},',
-                '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
+            expect_prints(
+                ds$starttime == as.Date("2015-01-01"),
+                'Crunch logical expression: starttime == "2015-01-01"'
             )
-        )
-    })
+            expect_prints(
+                ds$starttime > as.Date("2015-01-01"),
+                'Crunch logical expression: starttime > "2015-01-01"'
+            )
+        })
 
-    test_that("alterCategoriesExpr - expr: names (failures)", {
-        # Wrong var type
-        expect_error(
-            alterCategoriesExpr(ds$birthyr, list(list(id = 1, name = "AAA"))),
-            "variable must be of type 'Array', 'Categorical' for alterCategoriesExpr"
-        )
+        test_that("Logical expr with categoricals", {
+            expect_is(ds$gender == "Male", "CrunchLogicalExpr")
+            expect_prints(
+                ds$gender == "Male",
+                'Crunch logical expression: gender == "Male"'
+            )
+            expect_prints(
+                ds$gender == as.factor("Male"),
+                'Crunch logical expression: gender == "Male"'
+            )
+            expect_prints(
+                ds$gender %in% "Male",
+                'Crunch logical expression: gender %in% "Male"'
+            )
+            expect_prints(
+                ds$gender %in% as.factor("Male"),
+                'Crunch logical expression: gender %in% "Male"'
+            )
+            expect_prints(
+                ds$gender %in% c("Male", "Female"),
+                'Crunch logical expression: gender %in% c("Male", "Female")'
+            )
+            expect_prints(
+                ds$gender %in% as.factor(c("Male", "Female")),
+                'Crunch logical expression: gender %in% c("Male", "Female")'
+            )
+            expect_prints(
+                ds$gender != "Female",
+                'Crunch logical expression: gender != "Female"'
+            )
+            expect_prints(
+                ds$gender != as.factor("Female"),
+                'Crunch logical expression: gender != "Female"'
+            )
+        })
+        test_that("Referencing category names that don't exist warns and drops", {
+            expect_warning(
+                expect_prints(
+                    ds$gender == "other",
+                    "Crunch logical expression: gender %in% character(0)"
+                ),
+                paste("Category not found:", dQuote("other"))
+            )
+            expect_warning(
+                expect_prints(
+                    ds$gender %in% c("other", "Male", "another"),
+                    'Crunch logical expression: gender %in% "Male"'
+                ),
+                paste(
+                    "Categories not found:", dQuote("other"), "and",
+                    dQuote("another")
+                )
+            )
+            expect_warning(
+                expect_prints(
+                    ds$gender != "other",
+                    "Crunch logical expression: !gender %in% character(0)"
+                ),
+                paste("Category not found:", dQuote("other"))
+            )
+        })
 
-        # Rely on names when have an expression
-        expect_error(
-            alterCategoriesExpr(
+        test_that("Show method for logical expressions", {
+            expect_prints(
+                ds$gender %in% c("Male", "Female"),
+                'Crunch logical expression: gender %in% c("Male", "Female"'
+            )
+            expect_prints(
+                ds$gender %in% 1:2,
+                'Crunch logical expression: gender %in% c("Male", "Female"'
+            )
+            expect_prints(
+                ds$birthyr == 1945 | ds$birthyr < 1941,
+                "birthyr == 1945 | birthyr < 1941"
+            )
+            expect_prints(
+                ds$gender %in% "Male" & !is.na(ds$birthyr),
+                'gender %in% "Male" & !is.na(birthyr)'
+            )
+            expect_prints(
+                !(ds$gender == "Male"),
+                'Crunch logical expression: !gender == "Male"'
+            )
+            ## TODO: better parentheses for ^^
+            expect_prints(
+                duplicated(ds$gender),
+                "Crunch logical expression: duplicated(gender)"
+            )
+            expect_prints(
+                duplicated(ds$gender == "Male"),
+                'Crunch logical expression: duplicated(gender == "Male")'
+            )
+        })
+
+        test_that("Can subset a CrunchExpr with R values", {
+            age <- 2016 - ds$birthyr
+            ## Note: no check for correct number of rows
+            expect_is(age[c(TRUE, FALSE, TRUE)], "CrunchExpr")
+            expect_prints(
+                toJSON(activeFilter(age[c(TRUE, FALSE, TRUE)])),
+                paste0(
+                    '{"function":"in","args":[{"function":"row",',
+                    '"args":[]},{"column":[0,2]}]}'
+                )
+            )
+            expect_is(age[c(1, 3)], "CrunchExpr")
+            expect_prints(
+                toJSON(activeFilter(age[c(1, 3)])),
+                paste0(
+                    '{"function":"in","args":[{"function":"row",',
+                    '"args":[]},{"column":[0,2]}]}'
+                )
+            )
+        })
+
+        test_that("Show method for expresssions", {
+            skip("TODO: something intelligent with parentheses and order of operations (GH issue #99)")
+            print(ds$birthyr * 3 + 5)
+            print(3 * (ds$birthyr + 5))
+        })
+
+        test_that("as.vector for 3VL CrunchLogicalExpr returns R logical", {
+            vals <- as.vector(ds$birthyr == 1945 | ds$birthyr < 1941)
+            expect_true(is.logical(vals))
+            expect_equal(which(ds$birthyr == 1945 | ds$birthyr < 1941), 4:20)
+        })
+
+        test_that("crunchDifftime expr", {
+            expr <- crunchDifftime(ds$starttime, ds$starttime)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"difftime","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},', #nolint
+                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},null]}'
+                )
+            )
+
+            expect_error(
+                crunchDifftime(ds$gender, ds$gender),
+                "variable must be of type 'Datetime' for crunchDifftime"
+            )
+        })
+
+        test_that("datetimeFromCols expr", {
+            expr <- datetimeFromCols(ds$birthyr, ds$birthyr, ds$birthyr)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"datetime","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},', #nolint
+                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
+                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},null,null,null]}' #nolint
+                )
+            )
+
+            expect_error(
+                datetimeFromCols(ds$gender, ds$gender, ds$gender),
+                "variable must be of type 'Numeric' for datetimeFromCols"
+            )
+        })
+
+        test_that("%ornm% expr", {
+            expr <- (ds$birthyr == 1945) %ornm% (ds$birthyr < 1941)
+            expect_is(expr, "CrunchLogicalExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"ornm","args":[{"function":"==","args":',
+                    '[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
+                    '{"value":1945}]},{"function":"<","args":[{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/birthyr/"},{"value":1941}]}]}'
+                )
+            )
+        })
+
+        test_that("is.valid expr", {
+            expr <- is.valid(ds$birthyr)
+            expect_is(expr, "CrunchLogicalExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"is_valid","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}' #nolint
+                )
+            )
+        })
+
+        test_that("makeFrame categorical vars exoression", {
+            expr <- makeFrame(ds[c("gender", "location")])
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"0001":{"variable":', # nolint
+                    '"https://app.crunch.io/api/datasets/1/variables/gender/"},"0002":{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/location/"}}},{"value":',
+                    '["0001","0002"]}]}],"kwargs":{"numeric":{"value":false}}}'
+                )
+            )
+        })
+
+        test_that("makeFrame numeric vars expression", {
+            expr <- makeFrame(ds[c("birthyr")])
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"0001":{"variable":', # nolint
+                    '"https://app.crunch.io/api/datasets/1/variables/birthyr/"}}},{"value":',
+                    '["0001"]}]}],"kwargs":{"numeric":{"value":true}}}'
+                )
+            )
+        })
+
+        test_that("makeFrame from expressions expression works", {
+            expect_json_equivalent(
+                makeFrame(
+                    list(VariableDefinition(ds$gender == "Male", name = "male")),
+                    numeric = FALSE
+                )@expression,
+                list(
+                    `function` = "array",
+                    args = list(list(
+                        `function` = "make_frame",
+                        args = list(list(
+                            map = list(
+                                c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
+                            )
+                        ), list(value = I("0001")))
+                    )),
+                    kwargs = list(numeric = list(value = FALSE))
+                )
+            )
+        })
+
+        test_that("makeFrame from expressions expression requires numeric arg", {
+            expect_error(
+                deriveArray(
+                    subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")),
+                    name = "Gender MR"
+                ),
+                "Could not guess array type, specify `numeric` argument in `makeFrame()`",
+                fixed = TRUE
+            )
+        })
+
+        test_that("makeFrame type checks numeric arg", {
+            expect_error(
+                deriveArray(
+                    subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")),
+                    name = "Gender MR",
+                    numeric = "WRONG"
+                ),
+                "Expected `numeric` argument of `makeFrame()` to be TRUE or FALSE",
+                fixed = TRUE
+            )
+        })
+
+        test_that("makeFrame errors on single subvar", {
+            expect_error(
+                deriveArray(
+                    subvariables = VariableDefinition(ds$gender == "Male", name = "male"),
+                    name = "Gender MR"
+                ),
+                "Expected a Variable Catalog or a list of Variables/Expressions/VarDefs",
+                fixed = TRUE
+            )
+
+        })
+
+        test_that("selectCategories expr", {
+            expr <- selectCategories(ds$gender, "Male")
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"as_selected","args":[{"function":"select_categories","args":',
+                    '[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+                    '{"value":["Male"]}]}]}'
+                )
+            )
+        })
+
+        test_that("crunchBetween expr", {
+            expr <- crunchBetween(ds$birthyr, 3, 5)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"between","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},', # nolint
+                    '{"value":3},{"value":5},{"value":[true,false]}]}'
+                )
+            )
+            expect_error(
+                crunchBetween(ds$gender, 3, 5),
+                "variable must be of type 'Numeric' for crunchBetween"
+            )
+        })
+
+        test_that("rowAll expr", {
+            expr <- rowAll(ds$mymrset)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"all","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
+                )
+            )
+
+            expect_error(rowAll(ds$gender), "variable must be of type 'Array' for rowAll")
+        })
+
+        test_that("rowAny expr", {
+            expr <- rowAny(ds$mymrset)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"any","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
+                )
+            )
+
+            expect_error(rowAny(ds$birthyr), "variable must be of type 'Array' for rowAny")
+        })
+
+
+        test_that("rowAnyNA expr", {
+            expr <- rowAnyNA(ds$mymrset)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"any_missing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
+                )
+            )
+            expect_error(rowAnyNA(ds$gender), "variable must be of type 'Array' for rowAnyNA")
+        })
+
+        test_that("rowAllNA expr", {
+            expr <- rowAllNA(ds$mymrset)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"all_missing","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
+                )
+            )
+            expect_error(rowAllNA(ds$gender), "variable must be of type 'Array' for rowAllNA")
+        })
+
+        test_that("complete.cases expr", {
+            expr <- complete.cases(ds$mymrset)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"complete_cases","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
+                )
+            )
+
+            expect_error(
+                complete.cases(ds$gender),
+                "variable must be of type 'Array' for complete.cases"
+            )
+        })
+
+        test_that("is.selected expr", {
+            expr <- is.selected(ds$gender)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]}' # nolint
+                )
+            )
+            expect_error(
+                is.selected(ds$birthyr),
+                "variable must be of type 'Categorical' for is.selected"
+            )
+        })
+
+        test_that("asSelected expr", {
+            expr <- asSelected(ds$mymrset)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"as_selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
+                )
+            )
+
+            expect_error(
+                asSelected(ds$birthyr),
+                paste0(
+                    "variable must be of type 'Categorical', 'Categorical Array', ",
+                    "'Multiple Response' for asSelected"
+                )
+            )
+        })
+
+        test_that("selectedDepth expr", {
+            expr <- selectedDepth(ds$mymrset)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"selected_depth","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
+                )
+            )
+
+            expect_error(
+                selectedDepth(ds$gender),
+                "variable must be of type 'Multiple Response' for selectedDepth"
+            )
+        })
+
+        test_that("arraySelections expr", {
+            expr <- arraySelections(ds$mymrset)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"selections","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}' # nolint
+                )
+            )
+
+            expect_error(
+                arraySelections(ds$gender),
+                "variable must be of type 'Multiple Response' for arraySelections"
+            )
+        })
+
+        test_that("nchar expr", {
+            expr <- nchar(ds$textVar)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"char_length","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/textVar/"}]}' # nolint
+                )
+            )
+
+            expect_error(nchar(ds$gender), "variable must be of type 'Text' for nchar")
+        })
+
+        test_that("trim expr", {
+            expr <- trim(ds$birthyr, 1950, 2000)
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"trim","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},', # nolint
+                    '{"value":1950},{"value":2000}]}'
+                )
+            )
+
+            expect_error(trim(ds$gender), "variable must be of type 'Numeric' for trim")
+        })
+
+        test_that("alterCategoriesExpr - var: ids", {
+            expr <- alterCategoriesExpr(
+                ds$catarray,
+                list(list(id = 1, name = "AAA")),
+                c(2, 1, -1),
+                list(list(id = "subvar1", name = "ZZZ"))
+            )
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
+                    '"kwargs":{"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},', #nolint
+                    '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
+                )
+            )
+        })
+
+        test_that("alterCategoriesExpr - var: names", {
+            expr <- alterCategoriesExpr(
+                ds$catarray,
+                list(list(old_name = "A", name = "AAA")),
+                c("B", "A", "No Data"),
+                list(list(old_name = "Second", name = "ZZZ"))
+            )
+            expect_is(expr, "CrunchExpr")
+
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
+                    '"kwargs":{"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},', #nolint
+                    '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
+                )
+            )
+        })
+
+        test_that("alterCategoriesExpr - var: subvar alias", {
+            expr <- alterCategoriesExpr(
+                ds$catarray,
+                subvariables = list(list(alias = "subvar1", name = "ZZZ"))
+            )
+            expect_is(expr, "CrunchExpr")
+
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"alter_categories","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"}],', # nolint
+                    '"kwargs":{"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
+                )
+            )
+        })
+
+        test_that("alterCategoriesExpr - expr: ids", {
+            expr <- alterCategoriesExpr(
                 selectCategories(ds$catarray, "A"),
-                categories = list(list(old_name = "A", name = "AAA"))
-            ),
-            "Must use category ids when modifying categories of an expression"
-        )
-
-        expect_error(
-            alterCategoriesExpr(
-                selectCategories(ds$catarray, "A"),
-                category_order = c("B", "A", "No Data"),
-            ),
-            "Must use category ids when reordering categories of an expression"
-        )
-
-        expect_error(
-            alterCategoriesExpr(
-                selectCategories(ds$catarray, "A"),
-                subvariables = list(list(old_name = "Second", name = "ZZZ"))
-            ),
-            "Must use subvariable ids when modifying subvariable names of an expression"
-        )
-
-        # bad category name modify
-        expect_error(
-            alterCategoriesExpr(
-                ds$catarray,
-                list(list(old_name = "XYZ", name = "AAA")),
-            ),
-            "Could not find category with old name 'XYZ'"
-        )
-
-        # bad category name reorder
-        expect_error(
-            alterCategoriesExpr(
-                ds$catarray,
-                category_order = c("XYZ", "A", "No Data"),
-            ),
-            "Categories 'XYZ' not found in data"
-        )
-
-        # bad subvariable name
-        expect_error(
-            alterCategoriesExpr(
-                ds$catarray,
-                subvariables = list(list(old_name = "XYZ", name = "ZZZ"))
-            ),
-            "Could not find subvariable with old name 'XYZ'"
-        )
-        # bad subvariable alias
-        expect_error(
-            alterCategoriesExpr(
-                ds$catarray,
-                subvariables = list(list(alias = "XYZ", name = "ZZZ"))
-            ),
-            "Could not find subvariable with alias 'XYZ'"
-        )
-    })
-
-
-    test_that("alterArrayExpr - add var and order", {
-        expr <- alterArrayExpr(
-            ds$mymrset,
-            add = list("4" = ds$gender),
-            order = c("gender", "4", "subvar1", "subvar3"),
-            order_id = "id"
-        )
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"alter_array","args":[{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
-                '"kwargs":{"add":{"map":{"4":{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/gender/"}}},',
-                '"order":{"value":["gender","4","subvar1","subvar3"]}}}'
+                list(list(id = 1, name = "AAA")),
+                c(2, 1, -1),
+                list(list(id = "subvar1", name = "ZZZ"))
             )
-        )
-    })
-
-    test_that("alterArrayExpr - add var and order by new alias", {
-        expr <- alterArrayExpr(
-            ds$mymrset,
-            add = list("4" = VarDef(alias = "new_gender", ds$gender)),
-            order = c("subvar2", "new_gender", "subvar1", "subvar3")
-        )
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"alter_array","args":[{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
-                '"kwargs":{"add":{"map":{"4":{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/gender/",',
-                '"references":{"alias":"new_gender"}}}},',
-                '"order":{"value":["gender","4","subvar1","subvar3"]}}}'
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"alter_categories","args":[{"function":"as_selected","args":',
+                    '[{"function":"select_categories","args":',
+                    '[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},',
+                    '{"value":["A"]}]}]}],"kwargs":{',
+                    '"categories":{"value":[{"id":1,"name":"AAA"}]},"order":{"value":[2,1,-1]},',
+                    '"subvariables":{"value":[{"id":"subvar1","name":"ZZZ"}]}}}'
+                )
             )
-        )
-    })
+        })
 
-    test_that("alterArrayExpr - add var no order", {
-        expr <- alterArrayExpr(
-            ds$mymrset,
-            add = list(ds$gender),
-        )
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"alter_array","args":[{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
-                '"kwargs":{"add":{"map":{"1":{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/gender/"}}},',
-                '"order":{"value":["gender","subvar1","subvar3","1"]}}}'
+        test_that("alterCategoriesExpr - expr: names (failures)", {
+            # Wrong var type
+            expect_error(
+                alterCategoriesExpr(ds$birthyr, list(list(id = 1, name = "AAA"))),
+                "variable must be of type 'Array', 'Categorical' for alterCategoriesExpr"
             )
-        )
-    })
 
-    test_that("alterArrayExpr - remove var", {
-        expr <- alterArrayExpr(
-            ds$mymrset,
-            remove = "gender",
-            remove_id = "id"
-        )
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"alter_array","args":[{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
-                '"kwargs":{"remove":{"value":["gender"]}}}'
+            # Rely on names when have an expression
+            expect_error(
+                alterCategoriesExpr(
+                    selectCategories(ds$catarray, "A"),
+                    categories = list(list(old_name = "A", name = "AAA"))
+                ),
+                "Must use category ids when modifying categories of an expression"
             )
-        )
 
-        expect_equal(
-            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "subvar2", remove_id = "alias")@expression)), #nolint
-            unclass(toJSON(expr@expression))
-        )
-
-        expect_equal(
-            unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "First", remove_id = "name")@expression)),  #nolint
-            unclass(toJSON(expr@expression))
-        )
-    })
-
-    test_that("alterArrayExpr - subreferences", {
-        expr <- alterArrayExpr(
-            ds$mymrset,
-            subreferences = list("subvar2" = list(name = "new name"))
-        )
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"alter_array","args":[{"variable":',
-                '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
-                '"kwargs":{"subreferences":{"value":{"gender":{"name":"new name"}}}}}'
+            expect_error(
+                alterCategoriesExpr(
+                    selectCategories(ds$catarray, "A"),
+                    category_order = c("B", "A", "No Data"),
+                ),
+                "Must use category ids when reordering categories of an expression"
             )
-        )
-    })
 
-    test_that("arraySubsetExpr", {
-        # aliases
-        expr <- arraySubsetExpr(ds$catarray, c("subvar1", "subvar3"), "alias")
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"array_subset","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
-                '{"value":["subvar1","subvar3"]}]}'
+            expect_error(
+                alterCategoriesExpr(
+                    selectCategories(ds$catarray, "A"),
+                    subvariables = list(list(old_name = "Second", name = "ZZZ"))
+                ),
+                "Must use subvariable ids when modifying subvariable names of an expression"
             )
-        )
 
-        # names
-        expr <- arraySubsetExpr(ds$catarray, c("Second", "Last"), "name")
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"array_subset","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
-                '{"value":["subvar1","subvar3"]}]}'
+            # bad category name modify
+            expect_error(
+                alterCategoriesExpr(
+                    ds$catarray,
+                    list(list(old_name = "XYZ", name = "AAA")),
+                ),
+                "Could not find category with old name 'XYZ'"
             )
-        )
 
-        # ids
-        expr <- arraySubsetExpr(ds$catarray, c("subvar1", "subvar3"), "id")
-        expect_is(expr, "CrunchExpr")
-        expect_equal(
-            unclass(toJSON(expr@expression)),
-            paste0(
-                '{"function":"array_subset","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
-                '{"value":["subvar1","subvar3"]}]}'
+            # bad category name reorder
+            expect_error(
+                alterCategoriesExpr(
+                    ds$catarray,
+                    category_order = c("XYZ", "A", "No Data"),
+                ),
+                "Categories 'XYZ' not found in data"
             )
-        )
 
-        # fail
-        expect_error(
-            arraySubsetExpr(ds$catarray, c("XYZ", "subvar3"), "alias"),
-            "Could not find subvariables with alias 'XYZ'"
-        )
-
-        # fail
-        expect_error(
-            arraySubsetExpr(asSelected(ds$catarray), c("subvar1", "subvar2"), "alias"),
-            "Must provide subvariable ids when x is an expression"
-        )
-
-        expect_error(
-            arraySubsetExpr(ds$gender),
-            "variable must be of type 'Array' for arraySubsetExpr"
-        )
-    })
-})
-
-with_test_authentication({
-    ds <- newDataset(df)
-    ds$q1 <- factor(rep(c("selected", "not selected"), 10))
-    test_that("Arithmetic expressions evaluate", {
-        e1 <- ds$v3 + 5
-        expect_is(e1, "CrunchExpr")
-        e2 <- 5 + ds$v3
-        expect_is(e2, "CrunchExpr")
-        expect_identical(as.vector(e1), as.vector(ds$v3) + 5)
-        expect_identical(as.vector(e1), as.vector(e2))
-        expect_identical(as.vector(ds$v3 * ds$v3), df$v3^2) # nolint
-    })
+            # bad subvariable name
+            expect_error(
+                alterCategoriesExpr(
+                    ds$catarray,
+                    subvariables = list(list(old_name = "XYZ", name = "ZZZ"))
+                ),
+                "Could not find subvariable with old name 'XYZ'"
+            )
+            # bad subvariable alias
+            expect_error(
+                alterCategoriesExpr(
+                    ds$catarray,
+                    subvariables = list(list(alias = "XYZ", name = "ZZZ"))
+                ),
+                "Could not find subvariable with alias 'XYZ'"
+            )
+        })
 
 
-    ds <- forceVariableCatalog(ds) # force variable catalog so we can count requests
-    uncached({
-        with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
-            with(temp.option(httpcache.log = ""), {
-                avlog <- capture.output(v35 <- as.vector(ds$v3 + 5))
-            })
-            test_that("as.vector with CrunchExpr is paginated", {
-                logdf <- loadLogfile(textConnection(avlog))
-                ## GET /values/ 4x
-                ## to get data, then a 5th GET /values/ that returns 0
-                ## values, which breaks the pagination loop
-                expect_identical(logdf$verb, rep("GET", 5))
-                expect_identical(grep("table", logdf$url), 1:5)
-            })
-            test_that("getValues returns the same result when paginated", {
-                expect_equivalent(v35, df$v3 + 5)
-            })
+        test_that("alterArrayExpr - add var and order", {
+            expr <- alterArrayExpr(
+                ds$mymrset,
+                add = list("4" = ds$gender),
+                order = c("gender", "4", "subvar1", "subvar3"),
+                order_id = "id"
+            )
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"alter_array","args":[{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                    '"kwargs":{"add":{"map":{"4":{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/gender/"}}},',
+                    '"order":{"value":["gender","4","subvar1","subvar3"]}}}'
+                )
+            )
+        })
+
+        test_that("alterArrayExpr - add var and order by new alias", {
+            expr <- alterArrayExpr(
+                ds$mymrset,
+                add = list("4" = VarDef(alias = "new_gender", ds$gender)),
+                order = c("subvar2", "new_gender", "subvar1", "subvar3")
+            )
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"alter_array","args":[{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                    '"kwargs":{"add":{"map":{"4":{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/gender/",',
+                    '"references":{"alias":"new_gender"}}}},',
+                    '"order":{"value":["gender","4","subvar1","subvar3"]}}}'
+                )
+            )
+        })
+
+        test_that("alterArrayExpr - add var no order", {
+            expr <- alterArrayExpr(
+                ds$mymrset,
+                add = list(ds$gender),
+            )
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"alter_array","args":[{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                    '"kwargs":{"add":{"map":{"1":{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/gender/"}}},',
+                    '"order":{"value":["gender","subvar1","subvar3","1"]}}}'
+                )
+            )
+        })
+
+        test_that("alterArrayExpr - remove var", {
+            expr <- alterArrayExpr(
+                ds$mymrset,
+                remove = "gender",
+                remove_id = "id"
+            )
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"alter_array","args":[{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                    '"kwargs":{"remove":{"value":["gender"]}}}'
+                )
+            )
+
+            expect_equal(
+                unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "subvar2", remove_id = "alias")@expression)), #nolint
+                unclass(toJSON(expr@expression))
+            )
+
+            expect_equal(
+                unclass(toJSON(alterArrayExpr(ds$mymrset, remove = "First", remove_id = "name")@expression)),  #nolint
+                unclass(toJSON(expr@expression))
+            )
+        })
+
+        test_that("alterArrayExpr - subreferences", {
+            expr <- alterArrayExpr(
+                ds$mymrset,
+                subreferences = list("subvar2" = list(name = "new name"))
+            )
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"alter_array","args":[{"variable":',
+                    '"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+                    '"kwargs":{"subreferences":{"value":{"gender":{"name":"new name"}}}}}'
+                )
+            )
+        })
+
+        test_that("arraySubsetExpr", {
+            # aliases
+            expr <- arraySubsetExpr(ds$catarray, c("subvar1", "subvar3"), "alias")
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"array_subset","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
+                    '{"value":["subvar1","subvar3"]}]}'
+                )
+            )
+
+            # names
+            expr <- arraySubsetExpr(ds$catarray, c("Second", "Last"), "name")
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"array_subset","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
+                    '{"value":["subvar1","subvar3"]}]}'
+                )
+            )
+
+            # ids
+            expr <- arraySubsetExpr(ds$catarray, c("subvar1", "subvar3"), "id")
+            expect_is(expr, "CrunchExpr")
+            expect_equal(
+                unclass(toJSON(expr@expression)),
+                paste0(
+                    '{"function":"array_subset","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/catarray/"},', # nolint
+                    '{"value":["subvar1","subvar3"]}]}'
+                )
+            )
+
+            # fail
+            expect_error(
+                arraySubsetExpr(ds$catarray, c("XYZ", "subvar3"), "alias"),
+                "Could not find subvariables with alias 'XYZ'"
+            )
+
+            # fail
+            expect_error(
+                arraySubsetExpr(asSelected(ds$catarray), c("subvar1", "subvar2"), "alias"),
+                "Must provide subvariable ids when x is an expression"
+            )
+
+            expect_error(
+                arraySubsetExpr(ds$gender),
+                "variable must be of type 'Array' for arraySubsetExpr"
+            )
         })
     })
 
-    test_that("Logical expressions evaluate", {
-        e1 <- ds$v3 > 10
-        expect_is(e1, "CrunchLogicalExpr")
-        expect_identical(as.vector(e1), df$v3 > 10)
-        expect_identical(which(e1), which(df$v3 > 10))
-    })
+    with_test_authentication({
+        ds <- newDataset(df)
+        ds$q1 <- factor(rep(c("selected", "not selected"), 10))
+        test_that("Arithmetic expressions evaluate", {
+            e1 <- ds$v3 + 5
+            expect_is(e1, "CrunchExpr")
+            e2 <- 5 + ds$v3
+            expect_is(e2, "CrunchExpr")
+            expect_identical(as.vector(e1), as.vector(ds$v3) + 5)
+            expect_identical(as.vector(e1), as.vector(e2))
+            expect_identical(as.vector(ds$v3 * ds$v3), df$v3^2) # nolint
+        })
 
-    test_that("Logical expressions with text variables evaluate", {
-        e2 <- try(ds$v2 == "a")
-        expect_is(e2, "CrunchLogicalExpr")
-        na_filt <- !is.na(df$v2) # Crunch and R evaluate NA == "a" differently
-        expect_identical(as.vector(e2)[na_filt], df[na_filt, ]$v2 == "a")
-        expect_identical(which(e2), which(df$v2 == "a"))
-    })
 
-    test_that("R & Crunch logical together", {
-        e1 <- ds$v3 < 10 | c(rep(FALSE, 15), rep(TRUE, 5))
-        expect_equivalent(
-            as.vector(ds$v3[e1]),
-            c(8, 9, 23, 24, 25, 26, 27)
-        )
-        e2 <- TRUE & is.na(ds$v2)
-        expect_equivalent(
-            as.vector(ds$v3[e2]),
-            23:27
-        )
-        e3 <- df$v4 == "B" & is.na(ds$v1) ## Note df
-        expect_equivalent(
-            as.vector(ds$v3[e3]),
-            c(8, 10, 12)
-        )
-    })
-
-    test_that("expressions on expressions evaluate", {
-        e3 <- ds$v3 + ds$v3 + 10
-        expect_is(e3, "CrunchExpr")
-        expect_prints(e3, "Crunch expression: v3 + v3 + 10")
-        expect_identical(as.vector(e3), 2 * df$v3 + 10)
-        e4 <- ds$v3 + ds$v3 * 2
-        expect_is(e4, "CrunchExpr")
-        expect_prints(e4, "Crunch expression: v3 + v3 * 2")
-        expect_identical(as.vector(e4), 3 * df$v3)
-    })
-
-    varnames <- names(df[-6])
-    test_that("Select values with Numeric inequality filter", {
-        e5 <- ds$v3[ds$v3 < 10]
-        expect_is(e5, "CrunchVariable")
-        expect_identical(as.vector(e5), c(8, 9))
-        for (i in varnames) {
-            expect_equivalent(as.vector(ds[[i]][ds$v3 < 10]),
-                df[[i]][1:2],
-                info = i
-            )
-        }
-    })
-    test_that("Select values with %in% on Numeric", {
-        for (i in varnames) {
-            expect_equivalent(as.vector(ds[[i]][ds$v3 %in% 10]),
-                df[[i]][3],
-                info = i
-            )
-            expect_equivalent(as.vector(ds[[i]][ds$v3 %in% c(10, 12)]),
-                df[[i]][c(3, 5)],
-                info = i
-            )
-        }
-    })
-    test_that("Select values with %in% on Categorical", {
-        expect_length(as.vector(ds$v3[ds$v4 %in% "B"]), 10)
-        for (i in varnames) {
-            expect_equivalent(as.vector(ds[[i]][ds$v4 %in% "B"]),
-                df[[i]][df$v4 %in% "B"],
-                info = i
-            )
-        }
-        expect_length(as.vector(ds$v3[ds$q1 %in% "selected"]), 10)
-    })
-    test_that("Select values with %in% on nonexistent categories", {
-        expect_length(as.vector(ds$v3[ds$v4 %in% numeric(0)]), 0)
-        expect_length(as.vector(ds$v3[!(ds$v4 %in% numeric(0))]), 20)
-        expect_warning(
-            expect_length(as.vector(ds$v3[ds$v4 == "other"]), 0),
-            paste0("Category not found: ", dQuote("other"), ". Dropping.")
-        )
-        expect_warning(
-            expect_length(as.vector(ds$v3[ds$v4 != "other"]), 20),
-            paste0("Category not found: ", dQuote("other"), ". Dropping.")
-        )
-    })
-
-    uncached({
-        with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
-            with(temp.option(httpcache.log = ""), {
-                avlog <- capture.output(v3.5 <- as.vector(ds$v3[ds$v4 %in% "B"]))
-            })
-            test_that("Select values with %in% on Categorical, paginated", {
-                logdf <- loadLogfile(textConnection(avlog))
-                ## GET v3 entity to get /values/ URL,
-                ## GET v3 entity to get categories to construct expr,
-                ## GET /values/ 2x to get data,
-                ## then a 3rd GET /values/ that returns 0
-                ## values, which breaks the pagination loop
-                expect_identical(logdf$verb, rep("GET", 5))
-                expect_identical(grep("values", logdf$url), 3:5)
-                expect_equivalent(v3.5, df$v3[df$v4 %in% "B"])
+        ds <- forceVariableCatalog(ds) # force variable catalog so we can count requests
+        uncached({
+            with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
+                with(temp.option(httpcache.log = ""), {
+                    avlog <- capture.output(v35 <- as.vector(ds$v3 + 5))
+                })
+                test_that("as.vector with CrunchExpr is paginated", {
+                    logdf <- loadLogfile(textConnection(avlog))
+                    ## GET /values/ 4x
+                    ## to get data, then a 5th GET /values/ that returns 0
+                    ## values, which breaks the pagination loop
+                    expect_identical(logdf$verb, rep("GET", 5))
+                    expect_identical(grep("table", logdf$url), 1:5)
+                })
+                test_that("getValues returns the same result when paginated", {
+                    expect_equivalent(v35, df$v3 + 5)
+                })
             })
         })
-    })
-    test_that("Select values with &ed filter", {
-        expect_equivalent(
-            as.vector(ds$v3[ds$v3 >= 10 & ds$v3 < 13]),
-            10:12
-        )
-        f <- ds$v3 >= 10 & ds$v3 < 13
-        expect_is(f, "CrunchLogicalExpr")
-        for (i in varnames) {
-            expect_equivalent(as.vector(ds[[i]][f]),
-                df[[i]][3:5],
-                info = i
+
+        test_that("Logical expressions evaluate", {
+            e1 <- ds$v3 > 10
+            expect_is(e1, "CrunchLogicalExpr")
+            expect_identical(as.vector(e1), df$v3 > 10)
+            expect_identical(which(e1), which(df$v3 > 10))
+        })
+
+        test_that("Logical expressions with text variables evaluate", {
+            e2 <- try(ds$v2 == "a")
+            expect_is(e2, "CrunchLogicalExpr")
+            na_filt <- !is.na(df$v2) # Crunch and R evaluate NA == "a" differently
+            expect_identical(as.vector(e2)[na_filt], df[na_filt, ]$v2 == "a")
+            expect_identical(which(e2), which(df$v2 == "a"))
+        })
+
+        test_that("R & Crunch logical together", {
+            e1 <- ds$v3 < 10 | c(rep(FALSE, 15), rep(TRUE, 5))
+            expect_equivalent(
+                as.vector(ds$v3[e1]),
+                c(8, 9, 23, 24, 25, 26, 27)
             )
-        }
-    })
-    test_that("Select values with negated filter", {
-        expect_equivalent(
-            as.vector(ds$v3[!(ds$v4 %in% "B")]),
-            df$v3[df$v4 %in% "C"]
-        )
-        for (i in varnames) {
-            expect_equivalent(as.vector(ds[[i]][!(ds$v4 %in% "B")]),
-                df[[i]][df$v4 %in% "C"],
-                info = i
+            e2 <- TRUE & is.na(ds$v2)
+            expect_equivalent(
+                as.vector(ds$v3[e2]),
+                23:27
             )
-        }
-    })
+            e3 <- df$v4 == "B" & is.na(ds$v1) ## Note df
+            expect_equivalent(
+                as.vector(ds$v3[e3]),
+                c(8, 10, 12)
+            )
+        })
 
-    test_that("R numeric filter evaluates", {
-        expect_equivalent(as.vector(ds$v3[6]), df$v3[6])
-    })
-    test_that("If R numeric filter is a range, 'between' is correct", {
-        expect_equivalent(as.vector(ds$v3[3:18]), df$v3[3:18])
-        # even if the range is reversed
-        expect_equivalent(as.vector(ds$v3[18:3]), df$v3[3:18])
-    })
-    test_that("If R numeric filter has NAs there are no errors", {
-        expect_equivalent(as.vector(ds$v3[c(1, NA, 2)]), df$v3[c(1, 2)])
-        # even if the NAs are at the beginning or end
-        expect_equivalent(as.vector(ds$v3[c(1, 2, NA)]), df$v3[c(1, 2)])
-        expect_equivalent(as.vector(ds$v3[c(NA, 1, 2)]), df$v3[c(1, 2)])
-    })
-    test_that("R logical filter evaluates", {
-        expect_identical(as.vector(ds$v3[df$v3 < 10]), c(8, 9))
-    })
+        test_that("expressions on expressions evaluate", {
+            e3 <- ds$v3 + ds$v3 + 10
+            expect_is(e3, "CrunchExpr")
+            expect_prints(e3, "Crunch expression: v3 + v3 + 10")
+            expect_identical(as.vector(e3), 2 * df$v3 + 10)
+            e4 <- ds$v3 + ds$v3 * 2
+            expect_is(e4, "CrunchExpr")
+            expect_prints(e4, "Crunch expression: v3 + v3 * 2")
+            expect_identical(as.vector(e4), 3 * df$v3)
+        })
 
-    test_that("filtered categorical returns factor", {
-        expect_equivalent(
-            as.vector(ds$v4[ds$v4 == "B"]),
-            factor(rep("B", 10))
-        )
-    })
+        varnames <- names(df[-6])
+        test_that("Select values with Numeric inequality filter", {
+            e5 <- ds$v3[ds$v3 < 10]
+            expect_is(e5, "CrunchVariable")
+            expect_identical(as.vector(e5), c(8, 9))
+            for (i in varnames) {
+                expect_equivalent(as.vector(ds[[i]][ds$v3 < 10]),
+                                  df[[i]][1:2],
+                                  info = i
+                )
+            }
+        })
+        test_that("Select values with %in% on Numeric", {
+            for (i in varnames) {
+                expect_equivalent(as.vector(ds[[i]][ds$v3 %in% 10]),
+                                  df[[i]][3],
+                                  info = i
+                )
+                expect_equivalent(as.vector(ds[[i]][ds$v3 %in% c(10, 12)]),
+                                  df[[i]][c(3, 5)],
+                                  info = i
+                )
+            }
+        })
+        test_that("Select values with %in% on Categorical", {
+            expect_length(as.vector(ds$v3[ds$v4 %in% "B"]), 10)
+            for (i in varnames) {
+                expect_equivalent(as.vector(ds[[i]][ds$v4 %in% "B"]),
+                                  df[[i]][df$v4 %in% "B"],
+                                  info = i
+                )
+            }
+            expect_length(as.vector(ds$v3[ds$q1 %in% "selected"]), 10)
+        })
+        test_that("Select values with %in% on nonexistent categories", {
+            expect_length(as.vector(ds$v3[ds$v4 %in% numeric(0)]), 0)
+            expect_length(as.vector(ds$v3[!(ds$v4 %in% numeric(0))]), 20)
+            expect_warning(
+                expect_length(as.vector(ds$v3[ds$v4 == "other"]), 0),
+                paste0("Category not found: ", dQuote("other"), ". Dropping.")
+            )
+            expect_warning(
+                expect_length(as.vector(ds$v3[ds$v4 != "other"]), 20),
+                paste0("Category not found: ", dQuote("other"), ". Dropping.")
+            )
+        })
 
-    test_that("duplicated method", {
-        expect_identical(which(duplicated(ds$v3)), integer(0))
-        expect_equivalent(as.vector(ds$v3[duplicated(ds$v4)]), 10:27)
-        expect_identical(which(duplicated(ds$v3 + 4)), integer(0))
-        expect_identical(which(duplicated(ds$v4)), 3:20)
-    })
+        uncached({
+            with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
+                with(temp.option(httpcache.log = ""), {
+                    avlog <- capture.output(v3.5 <- as.vector(ds$v3[ds$v4 %in% "B"]))
+                })
+                test_that("Select values with %in% on Categorical, paginated", {
+                    logdf <- loadLogfile(textConnection(avlog))
+                    ## GET v3 entity to get /values/ URL,
+                    ## GET v3 entity to get categories to construct expr,
+                    ## GET /values/ 2x to get data,
+                    ## then a 3rd GET /values/ that returns 0
+                    ## values, which breaks the pagination loop
+                    expect_identical(logdf$verb, rep("GET", 5))
+                    expect_identical(grep("values", logdf$url), 3:5)
+                    expect_equivalent(v3.5, df$v3[df$v4 %in% "B"])
+                })
+            })
+        })
+        test_that("Select values with &ed filter", {
+            expect_equivalent(
+                as.vector(ds$v3[ds$v3 >= 10 & ds$v3 < 13]),
+                10:12
+            )
+            f <- ds$v3 >= 10 & ds$v3 < 13
+            expect_is(f, "CrunchLogicalExpr")
+            for (i in varnames) {
+                expect_equivalent(as.vector(ds[[i]][f]),
+                                  df[[i]][3:5],
+                                  info = i
+                )
+            }
+        })
+        test_that("Select values with negated filter", {
+            expect_equivalent(
+                as.vector(ds$v3[!(ds$v4 %in% "B")]),
+                df$v3[df$v4 %in% "C"]
+            )
+            for (i in varnames) {
+                expect_equivalent(as.vector(ds[[i]][!(ds$v4 %in% "B")]),
+                                  df[[i]][df$v4 %in% "C"],
+                                  info = i
+                )
+            }
+        })
 
-    test_that("rollupResolution can be set", {
-        expect_null(rollupResolution(ds$v5))
-        rollupResolution(ds$v5) <- "M"
-        expect_identical(rollupResolution(ds$v5), "M")
+        test_that("R numeric filter evaluates", {
+            expect_equivalent(as.vector(ds$v3[6]), df$v3[6])
+        })
+        test_that("If R numeric filter is a range, 'between' is correct", {
+            expect_equivalent(as.vector(ds$v3[3:18]), df$v3[3:18])
+            # even if the range is reversed
+            expect_equivalent(as.vector(ds$v3[18:3]), df$v3[3:18])
+        })
+        test_that("If R numeric filter has NAs there are no errors", {
+            expect_equivalent(as.vector(ds$v3[c(1, NA, 2)]), df$v3[c(1, 2)])
+            # even if the NAs are at the beginning or end
+            expect_equivalent(as.vector(ds$v3[c(1, 2, NA)]), df$v3[c(1, 2)])
+            expect_equivalent(as.vector(ds$v3[c(NA, 1, 2)]), df$v3[c(1, 2)])
+        })
+        test_that("R logical filter evaluates", {
+            expect_identical(as.vector(ds$v3[df$v3 < 10]), c(8, 9))
+        })
+
+        test_that("filtered categorical returns factor", {
+            expect_equivalent(
+                as.vector(ds$v4[ds$v4 == "B"]),
+                factor(rep("B", 10))
+            )
+        })
+
+        test_that("duplicated method", {
+            expect_identical(which(duplicated(ds$v3)), integer(0))
+            expect_equivalent(as.vector(ds$v3[duplicated(ds$v4)]), 10:27)
+            expect_identical(which(duplicated(ds$v3 + 4)), integer(0))
+            expect_identical(which(duplicated(ds$v4)), 3:20)
+        })
+
+        test_that("rollupResolution can be set", {
+            expect_null(rollupResolution(ds$v5))
+            rollupResolution(ds$v5) <- "M"
+            expect_identical(rollupResolution(ds$v5), "M")
+        })
     })
-})
+}
