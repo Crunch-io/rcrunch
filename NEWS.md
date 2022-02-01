@@ -1,3 +1,5 @@
+# crunch 1.29.1 (Development version)
+
 # crunch 1.29.0
 * Authenticating with an API key is now the recommended way to use the R crunch package. See
   the `vignette("crunch")` or `?crunch-api-key` for more details. The `login()` authentication
