@@ -26,20 +26,24 @@ remotes::install_github("Crunch-io/rcrunch")
 
 ## Getting started
 
-Connecting to Crunch and working with datasets is simple: load the `crunch` package and then `login()`.
+The crunch R package needs to know what URL to use for the API and what your token is for authentication.
+For more details on how to get an API token, see the [help center article]((https://help.crunch.io/hc/en-us/articles/4415963337869-API-Keys)).
+
+The `usethis` package can help you set environment environment variables, the following code will
+open a text editor:
 
     $ R
-    > library(crunch)
-    > login("jane.r_user@crunch.io")
-    Crunch password for jane.r_user@crunch.io:
+    > if (!require("usethis")) install.packages("usethis")
+    > usethis::edit_r_environ()
 
-    You are now logged into Crunch as jane.r_user@crunch.io
-    [crunch] >
-    ...
+And then you can add environment variables by adding the following (filling in for `<API-URL>` and `<API-KEY>`).
 
-If you use OAuth to log into the web application, you'll need to create a Crunch password to use with the R package. To set one, load the package, call `resetPassword("your.email@example.com")`, and check your email for instructions. You may need to log out of your current web app session before you click the link in that email to set your Crunch password.
+    R_CRUNCH_API=<API-URL>
+    R_CRUNCH_API_KEY=<API-KEY>
 
-Once you've logged in, check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame`, a .csv or .sav file, or a URL to a file with `newDataset()`. See the help for these functions or [`vignette("crunch")`](https://crunch.io/r/crunch/articles/crunch.html) for more information.
+Restart your R session, or run command `readRenviron("~/.Renviron")`, and then you will be authenticated automatically.
+
+Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame`, a .csv or .sav file, or a URL to a file with `newDataset()`. See the help for these functions or [`vignette("crunch")`](https://crunch.io/r/crunch/articles/crunch.html) for more information.
 
 ## Additional configuration
 
