@@ -45,15 +45,6 @@ Restart your R session, or run command `readRenviron("~/.Renviron")`, and then y
 
 Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame`, a .csv or .sav file, or a URL to a file with `newDataset()`. See the help for these functions or [`vignette("crunch")`](https://crunch.io/r/crunch/articles/crunch.html) for more information.
 
-## Additional configuration
-
-You can set several parameters in your .Rprofile to simplify your workflow:
-
-* `crunch.email` and `crunch.pw`: you can save your Crunch credentials so that you don't have to enter them each time. I.e., you can just `> login()`. Please be advised of the risks of storing your password like this. See `?login` for more information. Also, note that you can opt to store just your `crunch.email` and enter your password each time you log in--a mix of convenience and security.
-* `crunch.api`: if not defined, it defaults to "`https://app.crunch.io/api/`", the production server. To specify a different location, either set it in your .Rprofile or after loading the `crunch` package, do `> options(crunch.api="https://otherapi.crunch.io/api/")`.
-
-If you prefer, you can set the environment variables `R_CRUNCH_EMAIL`, `R_CRUNCH_PW`, and `R_CRUNCH_API`.
-
 ## For developers
 
 `crunch` requires R version 3.0 or greater. Note that if you're on Ubuntu, particularly older versions, you'll need to add an alternative PPA before trying to `apt-get install` R. For 12.04 Precise, for example,
