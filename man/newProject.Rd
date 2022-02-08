@@ -2,7 +2,7 @@
 % Please edit documentation in R/projects.R
 \name{newProject}
 \alias{newProject}
-\title{Create a new project}
+\title{Create a new folder}
 \usage{
 newProject(name, members = NULL, catalog = projects(), ...)
 }

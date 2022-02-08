@@ -2,20 +2,20 @@
 % Please edit documentation in R/projects.R
 \name{projects}
 \alias{projects}
-\title{Get the project catalog}
+\title{List project folders}
 \usage{
 projects(x = getAPIRoot())
 }
 \arguments{
-\item{x}{a \code{ShojiObject} that has an associated project catalog. If omitted,
+\item{x}{a \code{ShojiObject} that has an associated catalog. If omitted,
 the default value for \code{x} means that you will load the user's primary
-project catalog. (Currently, there are no other project catalogs to load.)}
+folder. (Currently, there are no other folders to load.)}
 }
 \value{
 An object of class \code{ProjectFolder}.
 }
 \description{
-Get the project catalog
+List project folders
 }
 \examples{
 \dontrun{
