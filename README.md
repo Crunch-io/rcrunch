@@ -27,7 +27,7 @@ remotes::install_github("Crunch-io/rcrunch")
 ## Getting started
 
 The crunch R package needs to know what URL to use for the API and what your token is for authentication.
-For more details on how to get an API token, see the [help center article]((https://help.crunch.io/hc/en-us/articles/4415963337869-API-Keys)).
+For more details on how to get an API token, see the [help center article](https://help.crunch.io/hc/en-us/articles/4415963337869-API-Keys).
 
 The `usethis` package can help you set environment environment variables, the following code will
 open a text editor:
@@ -47,15 +47,9 @@ Check out `listDatasets()` to see the names of your existing datasets, which you
 
 ## For developers
 
-`crunch` requires R version 3.0 or greater. Note that if you're on Ubuntu, particularly older versions, you'll need to add an alternative PPA before trying to `apt-get install` R. For 12.04 Precise, for example,
-
-    # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-    # echo "deb http://cran.r-project.org/bin/linux/ubuntu precise/" >> /etc/apt/sources.list
-    # apt-get update
-    # apt-get install libcurl4-openssl-dev
-    # sudo apt-get install r-base r-base-dev
-
-See https://cran.r-project.org/bin/linux/ubuntu/README for more details.
+`crunch` requires R version 3.0 or greater. Rstudio has instructions for a variety of platforms
+both [installing from binaries (recommended)](https://docs.rstudio.com/resources/install-r) or 
+[from source](https://docs.rstudio.com/resources/install-r-source/) if necessary.
 
 ### Mocks
 The tests for the rcrunch package relies on mocks that are compressed into a tarball
