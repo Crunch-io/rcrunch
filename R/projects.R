@@ -1,8 +1,8 @@
-#' Get the project catalog
+#' List project folders
 #'
-#' @param x a `ShojiObject` that has an associated project catalog. If omitted,
+#' @param x a `ShojiObject` that has an associated catalog. If omitted,
 #' the default value for `x` means that you will load the user's primary
-#' project catalog. (Currently, there are no other project catalogs to load.)
+#' folder. (Currently, there are no other folders to load.)
 #' @return An object of class `ProjectFolder`.
 #' @name projects
 #' @export
@@ -17,7 +17,7 @@ projects <- function(x = getAPIRoot()) {
 
 is.project <- function(x) inherits(x, "ProjectFolder")
 
-#' Create a new project
+#' Create a new folder
 #'
 #' This function creates a new project. You can achieve the same results by
 #' assigning into the projects catalog, but this may be a more natural way to
