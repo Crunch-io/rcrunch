@@ -103,11 +103,5 @@ if (run.integration.tests) {
                 "Unable to authenticate lkjasdfksdfkjhl"
             )
         })
-
-        test_that("login returns a session object", {
-            expect_warning(cr <- suppressMessages(login()), "deprecated")
-            expect_true(is.list(cr))
-            expect_warning(logout(), "deprecated")
-        })
     })
 }

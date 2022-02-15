@@ -49,7 +49,7 @@ with_test_authentication({
         expect_false(name.of.team1 %in% names(t2))
         t2[[name.of.team1]] <- list()
         expect_true(name.of.team1 %in% names(t2))
-        expect_true(length(t2) == nteams.0 + 1L)
+        expect_equal(length(t2), nteams.0 + 1L)
         expect_is(t2[[name.of.team1]], "CrunchTeam")
         expect_length(members(t2[[name.of.team1]]), 1)
         expect_identical(names(members(t2[[name.of.team1]])), my.name)
@@ -63,7 +63,7 @@ with_test_authentication({
         expect_false(name.of.team2 %in% names(t2))
         t2[[name.of.team2]] <- list()
         expect_true(name.of.team2 %in% names(t2))
-        expect_true(length(t2) == nteams.2 + 1L)
+        expect_equal(length(t2), nteams.2 + 1L)
 
         expect_error(
             delete(t2[[name.of.team2]]),
