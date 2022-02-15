@@ -133,6 +133,7 @@ with_test_authentication <- function(expr) {
         with(test_options, {
             ## Authenticate.
             on.exit({
+                httpcache::clearCache()
                 ## Delete our seen things
                 purgeEntitiesCreated()
             })
