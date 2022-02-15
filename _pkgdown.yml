@@ -266,6 +266,7 @@ reference:
   - crunch
 - title: Internal
   contents:
+  - envOrOption
   - ContextManager
   - show
   - temp.options
