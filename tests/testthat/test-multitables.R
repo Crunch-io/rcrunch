@@ -688,8 +688,12 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
 
             # set teams to use
             teams <- getTeams()
-            teams[["A new team for filters"]] <- list()
-            teams[["A different team for filters"]] <- list()
+            if (!"A new team for filters" %in% names(teams)) {
+                teams[["A new team for filters"]] <- list()
+            }
+            if (!"A different team for filters" %in% names(teams)) {
+                teams[["A different team for filters"]] <- list()
+            }
 
             # can set a team
             team(team_multitab) <- getTeams()[["A new team for filters"]]

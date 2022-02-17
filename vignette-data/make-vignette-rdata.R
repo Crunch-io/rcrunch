@@ -1,9 +1,8 @@
 library(crunch)
-options(crunch.api=getOption("test.api"),
-        crunch.debug=FALSE,
-        crunch.email=getOption("test.user"),
-        crunch.pw=getOption("test.pw"))
-login()
+set_crunch_opts(
+    "crunch.api" = envOrOption("test.api"),
+    "crunch.api.key" = envOrOption("crunch.test.api.key")
+)
 
 ## 1. Getting started
 load("../vignettes/economist.RData")

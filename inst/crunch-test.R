@@ -119,8 +119,7 @@ test_options <- temp.options(
             "test.api",
             "http://local.crunch.io:8080/api/"
         ),
-        crunch.email = crunch::envOrOption("test.user"),
-        crunch.pw = crunch::envOrOption("test.pw"),
+        crunch.api.key = Sys.getenv("CRUNCH_TEST_API_KEY"),
         crunch.show.progress = FALSE,
         crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE),
         message.auth.info = TRUE
@@ -133,11 +132,10 @@ with_test_authentication <- function(expr) {
 
         with(test_options, {
             ## Authenticate.
-            try(suppressWarnings(suppressMessages(login())))
             on.exit({
+                httpcache::clearCache()
                 ## Delete our seen things
                 purgeEntitiesCreated()
-                logout()
             })
             ## Any time an object is created (201 Location responts), store
             ## that URL
