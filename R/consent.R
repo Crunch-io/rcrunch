@@ -29,7 +29,7 @@ with_consent <- function(expr) {
 askForPermission <- function(prompt = "") {
     ## If options explicitly say we don't need to ask, bail.
     ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
-    must.confirm <- envOrOption("crunch.require.confirmation", TRUE)
+    must.confirm <- envOrOption("crunch.require.confirmation", TRUE, expect_lgl = TRUE)
     if (must.confirm == FALSE) {
         return(TRUE)
     }

@@ -149,14 +149,15 @@ setMethod("[[", c("CrunchDataset", "character"), function(x, i, ..., drop = FALS
     if (!is.null(out)) {
         out <- CrunchVariable(out, filter = activeFilter(x))
         if (
-            alias(out) %in% hiddenVariables(x, "alias") &&
-            envOrOption("crunch.warn.hidden", TRUE)
+            envOrOption("crunch.warn.hidden", TRUE, expect_lgl = TRUE) &&
+            alias(out) %in% hiddenVariables(x, "alias")
+
         ) {
             warning("Variable ", alias(out), " is hidden", call. = FALSE)
         }
         if (
             alias(out) %in% privateVariables(x, "alias") &&
-            envOrOption("crunch.warn.private", TRUE)
+            envOrOption("crunch.warn.private", TRUE, expect_lgl = TRUE)
         ) {
             warning("Variable ", alias(out), " is private", call. = FALSE)
         }

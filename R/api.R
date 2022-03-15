@@ -19,7 +19,7 @@ crunchAPI <- function(
     ...
 ) {
     url ## force lazy eval of url
-    if (isTRUE(envOrOption("crunch.debug"))) {
+    if (isTRUE(envOrOption("crunch.debug", expect_lgl = TRUE))) {
         ## TODO: work this into httpcache.log
         payload <- list(...)$body
         if (!is.null(payload)) try(cat("\n", payload, "\n"), silent = TRUE)
@@ -122,13 +122,13 @@ handleAPIsuccess <- function(code, response, progress.handler) {
             progress_url <- handleShoji(content(response))
             ## Quick validation
             if (is.character(progress_url) && length(progress_url) == 1) {
-                if (envOrOption("crunch.show.progress.url", FALSE)) {
+                if (envOrOption("crunch.show.progress.url", FALSE, expect_lgl = TRUE)) {
                     message(paste0("Checking progress at: ", progress_url))
                 }
                 tryCatch(
                     pollProgress(
                         progress_url,
-                        envOrOption("crunch.poll.wait", 0.5),
+                        envOrOption("crunch.poll.wait", 0.5, expect_num = TRUE),
                         progress.handler
                     ),
                     error = function(e) {
@@ -337,7 +337,7 @@ rootURL <- function(x, obj = getAPIRoot()) {
 #' @param expr An expression
 #' @param wait The time in seconds to wait before retrying the expression. Defaults to 0.1.
 #' @param max.tries The number of times to retry the expression
-retry <- function(expr, wait = envOrOption("crunch_retry_wait", default = 0.1), max.tries = 10) {
+retry <- function(expr, wait = envOrOption("crunch_retry_wait", default = 0.1, expect_num = TRUE), max.tries = 10) {
     ## Retry (e.g. a request)
     e <- substitute(expr)
     tries <- 0
