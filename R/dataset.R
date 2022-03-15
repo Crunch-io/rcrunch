@@ -345,7 +345,7 @@ setMethod("dim", "CrunchDataset", function(x) c(getNrow(x), ncol(x)))
 
 #' @rdname dim-dataset
 #' @export
-setMethod("ncol", "CrunchDataset", function(x) length(variables(x)))
+setMethod("ncol", "CrunchDataset", function(x) length(allVariables(x)))
 
 namekey <- function(x = NULL) {
     if (is.variable(x)) {
@@ -360,7 +360,7 @@ namekey <- function(x = NULL) {
 #' @rdname describe-catalog
 #' @export
 setMethod("names", "CrunchDataset", function(x) {
-    getIndexSlot(variables(x), namekey(x))
+    getIndexSlot(allVariables(x), namekey(x))
 })
 
 setMethod("tuple", "CrunchDataset", function(x) x@tuple)
@@ -398,7 +398,7 @@ setMethod("refresh", "CrunchDataset", function(x) {
 
 #' @export
 as.list.CrunchDataset <- function(x, ...) {
-    lapply(seq_along(variables(x)), function(i) x[[i]])
+    lapply(seq_along(allVariables(x)), function(i) x[[i]])
 }
 
 joins <- function(x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
