@@ -36,10 +36,12 @@ open a text editor:
     > if (!require("usethis")) install.packages("usethis")
     > usethis::edit_r_environ()
 
-And then you can add environment variables by adding the following (filling in for `<API-URL>` and `<API-KEY>`).
+And then you can add environment variables by adding the following (filling in the correct values for for 
+`https://my-awesome-brand.crunch.io/api/` and `secret-key-goes-here`, with one set of quotation marks
+around the url and key).
 
-    R_CRUNCH_API=<API-URL>
-    R_CRUNCH_API_KEY=<API-KEY>
+    R_CRUNCH_API="https://my-awesome-brand.crunch.io/api/"
+    R_CRUNCH_API_KEY="secret-key-goes-here"
 
 Restart your R session, or run command `readRenviron("~/.Renviron")`, and then you will be authenticated automatically.
 
