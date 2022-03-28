@@ -1,10 +1,10 @@
 #' @rdname hide
 #' @export
-setMethod("privateFolder", "CrunchDataset", function(x) privateFolder(folders(x)))
+setMethod("privateFolder", "CrunchDataset", function(x) privateFolder(rootVariableFolder(x)))
 
 #' @rdname hide
 #' @export
-setMethod("privateFolder", "VariableCatalog", function(x) privateFolder(folders(x)))
+setMethod("privateFolder", "VariableCatalog", function(x) privateFolder(rootVariableFolder(x)))
 
 #' @rdname hide
 #' @export
@@ -84,7 +84,7 @@ privatiseVariables <- function(dataset, variables) {
 #' @rdname hide
 #' @export
 deprivatizeVariables <- function(dataset, variables) {
-  dataset <- mv(dataset, variables, folders(dataset))
+  dataset <- mv(dataset, variables, rootVariableFolder(dataset))
   return(invisible(refresh(dataset)))
 }
 

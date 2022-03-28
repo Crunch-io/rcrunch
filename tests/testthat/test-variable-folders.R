@@ -4,23 +4,23 @@ with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
 
     test_that("Can load the root variable folder", {
-        expect_is(folders(ds), "VariableFolder")
+        expect_is(rootVariableFolder(ds), "VariableFolder")
     })
     test_that("Folder contents are ordered by @graph", {
-        expect_identical(names(folders(ds)), c("Group 1", "Group 2"))
+        expect_identical(names(rootVariableFolder(ds)), c("Group 1", "Group 2"))
     })
     test_that("Other folder methods", {
-        expect_identical(types(folders(ds)), c("folder", "folder"))
+        expect_identical(types(rootVariableFolder(ds)), c("folder", "folder"))
     })
 
     test_that("Can [[ from a folder", {
-        expect_is(folders(ds)[[1]], "VariableFolder")
-        expect_identical(name(folders(ds)[[1]]), "Group 1")
-        expect_is(folders(ds)[["Group 2"]], "VariableFolder")
-        expect_identical(name(folders(ds)[["Group 2"]]), "Group 2")
+        expect_is(rootVariableFolder(ds)[[1]], "VariableFolder")
+        expect_identical(name(rootVariableFolder(ds)[[1]]), "Group 1")
+        expect_is(rootVariableFolder(ds)[["Group 2"]], "VariableFolder")
+        expect_identical(name(rootVariableFolder(ds)[["Group 2"]]), "Group 2")
     })
 
-    g1 <- folders(ds)[[1]]
+    g1 <- rootVariableFolder(ds)[[1]]
     test_that("Folder with heterogeneous types", {
         expect_identical(names(g1), c("Birth Year", "Nested", "Text variable ftw"))
         expect_identical(types(g1), c("numeric", "folder", "text"))
@@ -48,33 +48,33 @@ with_mock_crunch({
     })
 
     test_that("Extract from a folder by path", {
-        expect_is(folders(ds)[["Group 1/Nested"]], "VariableFolder")
-        expect_identical(folders(ds)[["Group 1/Nested"]], g1$Nested)
-        expect_is(folders(ds)[["Group 1/Birth Year"]], "NumericVariable")
-        expect_identical(name(folders(ds)[["Group 1/Birth Year"]]), "Birth Year")
-        expect_is(folders(ds)[["Group 1/birthyr"]], "NumericVariable")
+        expect_is(rootVariableFolder(ds)[["Group 1/Nested"]], "VariableFolder")
+        expect_identical(rootVariableFolder(ds)[["Group 1/Nested"]], g1$Nested)
+        expect_is(rootVariableFolder(ds)[["Group 1/Birth Year"]], "NumericVariable")
+        expect_identical(name(rootVariableFolder(ds)[["Group 1/Birth Year"]]), "Birth Year")
+        expect_is(rootVariableFolder(ds)[["Group 1/birthyr"]], "NumericVariable")
     })
 
     test_that("Folder extract error handling", {
-        expect_null(folders(ds)[["foo"]])
-        expect_null(folders(ds)[["Group 1/foo"]])
+        expect_null(rootVariableFolder(ds)[["foo"]])
+        expect_null(rootVariableFolder(ds)[["Group 1/foo"]])
         expect_error(
-            folders(ds)[["Group 1/foo/bar/baz"]],
+            rootVariableFolder(ds)[["Group 1/foo/bar/baz"]],
             '"Group 1/foo/bar/baz" is an invalid path: foo is not a folder'
         )
         expect_error(
-            folders(ds)[["Group 1/Birth Year/bar/baz"]],
+            rootVariableFolder(ds)[["Group 1/Birth Year/bar/baz"]],
             '"Group 1/Birth Year/bar/baz" is an invalid path: Birth Year is not a folder'
         )
         expect_error(
-            folders(ds)[["Group 1/birthyr/bar/baz"]],
+            rootVariableFolder(ds)[["Group 1/birthyr/bar/baz"]],
             '"Group 1/birthyr/bar/baz" is an invalid path: birthyr is not a folder'
         )
     })
 
     test_that("Set a folder's name", {
         expect_PATCH(
-            name(folders(ds)[[1]]) <- "First",
+            name(rootVariableFolder(ds)[[1]]) <- "First",
             "https://app.crunch.io/api/datasets/1/folders/1/",
             '{"element":"shoji:catalog","body":{"name":"First"}}'
         )
@@ -84,7 +84,7 @@ with_mock_crunch({
     })
     test_that("Set names of objects inside a folder", {
         expect_PATCH(
-            names(folders(ds)[[1]]) <- c("Year of Birth", "A folder in a folder", "Plain text"),
+            names(rootVariableFolder(ds)[[1]]) <- c("Year of Birth", "A folder in a folder", "Plain text"),
             "https://app.crunch.io/api/datasets/1/folders/1/",
             '{"element":"shoji:catalog","index":',
             '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
@@ -100,7 +100,7 @@ with_mock_crunch({
         ## Historical reasons, plus ensuring that name<- on entity and
         ## names<- on catalog do the same thing
         expect_PATCH(
-            name(folders(ds)[["Group 1/Birth Year"]]) <- "Year of birth",
+            name(rootVariableFolder(ds)[["Group 1/Birth Year"]]) <- "Year of birth",
             "https://app.crunch.io/api/datasets/1/folders/1/",
             '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
             '{"name":"Year of birth"}}'
@@ -108,43 +108,43 @@ with_mock_crunch({
     })
 
     test_that("folder() finds the parent folder", {
-        expect_identical(ds %>% cd("Group 1") %>% folder(), folders(ds))
+        expect_identical(ds %>% cd("Group 1") %>% folder(), rootVariableFolder(ds))
         expect_identical(folder(cd(ds, "Group 1/Nested")), cd(ds, "Group 1"))
         expect_identical(
-            folder(folders(ds)[["Group 1/Birth Year"]]),
+            folder(rootVariableFolder(ds)[["Group 1/Birth Year"]]),
             cd(ds, "Group 1")
         )
-        expect_null(folder(folders(ds)))
+        expect_null(folder(rootVariableFolder(ds)))
         expect_error(folder("string"), "No folder for object of class character")
     })
 
     test_that("rootFolder() finds the top level", {
-        expect_identical(rootFolder(folders(ds)), folders(ds))
-        expect_identical(rootFolder(folders(ds)[["Group 1/Nested"]]), folders(ds))
-        expect_identical(rootFolder(ds$birthyr), folders(ds))
+        expect_identical(rootFolder(rootVariableFolder(ds)), rootVariableFolder(ds))
+        expect_identical(rootFolder(rootVariableFolder(ds)[["Group 1/Nested"]]), rootVariableFolder(ds))
+        expect_identical(rootFolder(ds$birthyr), rootVariableFolder(ds))
     })
 
     test_that("delete folder", {
         expect_error(
-            delete(folders(ds)[["Group 1/Nested"]]),
+            delete(rootVariableFolder(ds)[["Group 1/Nested"]]),
             "Must confirm deleting folder"
         )
         with_consent({
             expect_DELETE(
-                delete(folders(ds)[["Group 1/Nested"]]),
+                delete(rootVariableFolder(ds)[["Group 1/Nested"]]),
                 "https://app.crunch.io/api/datasets/1/folders/3/"
             )
         })
         expect_error(
-            delete(folders(ds)),
+            delete(rootVariableFolder(ds)),
             "Cannot delete root folder"
         )
     })
 
     test_that("path()", {
-        expect_identical(path(folders(ds)[["Group 1/Nested"]]), "/Group 1/Nested") # nolint
+        expect_identical(path(rootVariableFolder(ds)[["Group 1/Nested"]]), "/Group 1/Nested") # nolint
         expect_identical(path(ds$birthyr), "/Group 1/Birth Year") # nolint
-        expect_identical(path(folders(ds)), "/")
+        expect_identical(path(rootVariableFolder(ds)), "/")
     })
 
     with(temp.option(crayon.enabled = FALSE), {
@@ -152,8 +152,8 @@ with_mock_crunch({
             ## Coloring aside, the default print method should look like you
             ## printed the vector of names (plus the path printed above)
             expect_output(
-                print(folders(ds)),
-                capture.output(print(names(folders(ds)))),
+                print(rootVariableFolder(ds)),
+                capture.output(print(names(rootVariableFolder(ds)))),
                 fixed = TRUE
             )
         })
@@ -206,56 +206,56 @@ with_test_authentication({
     ds <- newDataset(df)
     test_that("copyFolders copies across datasets with simple order", {
         ds_fork <- forkDataset(ds)
-        old_order <- capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+        old_order <- capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10))
         ds %>% cd("/") %>% setOrder(c("v1", "v2", "v5", "v6", "v3", "v4"))
         ds <- refresh(ds)
 
         # test that ds_fork has the old order still
         expect_identical(
-            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
+            capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10)),
             old_order
         )
         expect_false(identical(
-            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
-            capture_output_lines(folders(ds) %>% print(depth = 10))
+            capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10)),
+            capture_output_lines(rootVariableFolder(ds) %>% print(depth = 10))
         ))
 
         # copy order, and check that ds_fork has the new order.
         ds_fork <- copyFolders(ds, ds_fork)
 
         expect_identical(
-            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
-            capture_output_lines(folders(ds) %>% print(depth = 10))
+            capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10)),
+            capture_output_lines(rootVariableFolder(ds) %>% print(depth = 10))
         )
     })
 
     test_that("copyFolders copies across datasets with simple(-ish) order (and one nesting)", {
         ds_fork <- forkDataset(ds)
-        old_order <- capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+        old_order <- capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10))
         ds %>% cd("/") %>% mkdir("Group A") %>% mv(c("v4", "v3"), "Group A")
 
         # test that ds_fork has the old order still
         expect_identical(
-            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
+            capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10)),
             old_order
         )
         expect_false(identical(
-            capture_output_lines(folders(ds) %>% print(depth = 10)),
-            capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+            capture_output_lines(rootVariableFolder(ds) %>% print(depth = 10)),
+            capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10))
         ))
 
         # copy order, and check that ds_fork has the new order.
         ds_fork <- copyFolders(ds, ds_fork)
         expect_identical(
-            capture_output(folders(ds_fork) %>% print(depth = 10)),
-            capture_output(folders(ds) %>% print(depth = 10))
+            capture_output(rootVariableFolder(ds_fork) %>% print(depth = 10)),
+            capture_output(rootVariableFolder(ds) %>% print(depth = 10))
         )
     })
 
 
     test_that("copyFolders copies across datasets with nested hierarchical order", {
         ds_fork <- forkDataset(ds)
-        old_order <- capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+        old_order <- capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10))
 
         # reset order
         ds %>% mv(aliases(allVariables(ds)), "/")
@@ -270,19 +270,19 @@ with_test_authentication({
 
         # test that ds_fork has the old order still
         expect_identical(
-            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
+            capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10)),
             old_order
         )
         expect_false(identical(
-            capture_output_lines(folders(ds) %>% print(depth = 10)),
-            capture_output_lines(folders(ds_fork) %>% print(depth = 10))
+            capture_output_lines(rootVariableFolder(ds) %>% print(depth = 10)),
+            capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10))
         ))
 
         # copy order, and check that ds_fork has the new order.
         ds_fork <- copyFolders(ds, ds_fork)
         expect_identical(
-            capture_output_lines(folders(ds_fork) %>% print(depth = 10)),
-            capture_output_lines(folders(ds) %>% print(depth = 10))
+            capture_output_lines(rootVariableFolder(ds_fork) %>% print(depth = 10)),
+            capture_output_lines(rootVariableFolder(ds) %>% print(depth = 10))
         )
     })
 
@@ -296,7 +296,7 @@ with_test_authentication({
         df_alt$new_var2 <- letters[20:1]
         ds_alt <- newDataset(df_alt)
 
-        old_order <- capture_output_lines(folders(ds_alt) %>% print(depth = 10))
+        old_order <- capture_output_lines(rootVariableFolder(ds_alt) %>% print(depth = 10))
 
         # reset order
         with_consent(
@@ -312,13 +312,13 @@ with_test_authentication({
 
         # test that ds_alt has the old order still
         expect_identical(
-            capture_output_lines(folders(ds_alt) %>% print(depth = 10)),
+            capture_output_lines(rootVariableFolder(ds_alt) %>% print(depth = 10)),
             old_order
         )
 
         expect_false(identical(
-            capture_output_lines(folders(ds_alt) %>% print(depth = 10))[-c(4, 5, 6)],
-            capture_output_lines(folders(ds) %>% print(depth = 10))[-c(2, 3)]
+            capture_output_lines(rootVariableFolder(ds_alt) %>% print(depth = 10))[-c(4, 5, 6)],
+            capture_output_lines(rootVariableFolder(ds) %>% print(depth = 10))[-c(2, 3)]
         ))
 
         # copy order, and check that ds_alt has the new order.
@@ -326,10 +326,10 @@ with_test_authentication({
         expect_identical(
             # ignore lines 4, 5, and 6 because they are vars in ds_alt that are
             # not in ds
-            capture_output_lines(folders(ds_alt) %>% print(depth = 10))[-c(4, 5, 6)],
+            capture_output_lines(rootVariableFolder(ds_alt) %>% print(depth = 10))[-c(4, 5, 6)],
             # ignore lines 3 and 2 because they are vars in ds that are
             # not in ds_alt
-            capture_output_lines(folders(ds) %>% print(depth = 10))[-c(2, 3)]
+            capture_output_lines(rootVariableFolder(ds) %>% print(depth = 10))[-c(2, 3)]
         )
     })
 })

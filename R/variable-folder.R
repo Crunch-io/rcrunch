@@ -1,4 +1,4 @@
-folders <- function(x) {
+rootVariableFolder <- function(x) {
     # This function exists because the generic rootFolder() for a dataset will
     # get the root project folder, i.e. the root for moving it.
     # This function gives you the root variable folder for a dataset or thing
@@ -35,7 +35,7 @@ setMethod("folderExtraction", "VariableFolder", function(x, tuple) {
     }
 })
 
-setMethod("rootFolder", "CrunchVariable", folders)
+setMethod("rootFolder", "CrunchVariable", rootVariableFolder)
 
 ## Get variable by alias, name, or URL
 whichFolderEntry <- function(x, i) {

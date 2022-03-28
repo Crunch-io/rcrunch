@@ -33,11 +33,11 @@ NULL
 
 #' @rdname hide
 #' @export
-setMethod("hiddenFolder", "CrunchDataset", function(x) hiddenFolder(folders(x)))
+setMethod("hiddenFolder", "CrunchDataset", function(x) hiddenFolder(rootVariableFolder(x)))
 
 #' @rdname hide
 #' @export
-setMethod("hiddenFolder", "VariableCatalog", function(x) hiddenFolder(folders(x)))
+setMethod("hiddenFolder", "VariableCatalog", function(x) hiddenFolder(rootVariableFolder(x)))
 
 #' @rdname hide
 #' @export
@@ -86,7 +86,7 @@ hideVariables <- function(dataset, variables) {
 #' @rdname hide
 #' @export
 unhideVariables <- function(dataset, variables) {
-    dataset <- mv(dataset, variables, folders(dataset))
+    dataset <- mv(dataset, variables, rootVariableFolder(dataset))
     return(invisible(refresh(dataset)))
 }
 

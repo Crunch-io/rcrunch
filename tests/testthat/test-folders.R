@@ -20,13 +20,13 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
         test_that("cd() returns a folder", {
             expect_identical(
                 cd(ds, "Group 1/Nested"),
-                folders(ds)[["Group 1/Nested"]]
+                rootVariableFolder(ds)[["Group 1/Nested"]]
             )
         })
         test_that("cd() can operate on a folder too", {
             expect_identical(
                 cd(cd(ds, "Group 1"), "Nested"),
-                folders(ds)[["Group 1/Nested"]]
+                rootVariableFolder(ds)[["Group 1/Nested"]]
             )
         })
         test_that("cd() errors if the path isn't a folder or doesn't exist", {
@@ -66,24 +66,24 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             )
             expect_identical(
                 ds %>% cd("Group 1") %>% cd(".."),
-                folders(ds)
+                rootVariableFolder(ds)
             )
             expect_identical(
                 ds %>% cd("Group 1/Nested") %>% cd("../.."),
-                folders(ds)
+                rootVariableFolder(ds)
             )
-            expect_error(folders(ds) %>% cd(".."), '".." is an invalid path')
+            expect_error(rootVariableFolder(ds) %>% cd(".."), '".." is an invalid path')
             expect_error(cd(ds, ".."), '".." is an invalid path')
         })
         test_that("cd /", {
-            expect_identical(ds %>% cd("/"), folders(ds))
+            expect_identical(ds %>% cd("/"), rootVariableFolder(ds))
             expect_identical(
                 ds %>% cd("Group 1") %>% cd("/Group 2"), # nolint
                 cd(ds, "Group 2")
             )
             expect_identical(
                 ds %>% cd("Group 1") %>% cd("/"),
-                folders(ds)
+                rootVariableFolder(ds)
             )
         })
 

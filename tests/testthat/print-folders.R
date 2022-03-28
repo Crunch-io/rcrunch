@@ -1,5 +1,5 @@
 ## These are moved from test-variable-folder.R thanks to R's archaic restriction on UTF-8
-expect_output(print(folders(ds), depth = 2),
+expect_output(print(rootVariableFolder(ds), depth = 2),
     "/
 ├── Group 1/
 │   ├── Birth Year
@@ -14,7 +14,7 @@ expect_output(print(folders(ds), depth = 2),
     fixed = TRUE
 )
 
-expect_output(print(folders(ds), depth = 1),
+expect_output(print(rootVariableFolder(ds), depth = 1),
     "/
 ├── Group 1/
 │   ├── Birth Year
@@ -26,7 +26,7 @@ expect_output(print(folders(ds), depth = 1),
     fixed = TRUE
 )
 
-expect_output(print(folders(ds), pretty = TRUE),
+expect_output(print(rootVariableFolder(ds), pretty = TRUE),
     "/
 ├── Group 1/
 └── Group 2/",
@@ -34,7 +34,7 @@ expect_output(print(folders(ds), pretty = TRUE),
 )
 
 # nolint start
-expect_output(print(folders(ds)[["Group 1/Nested"]], pretty = TRUE),
+expect_output(print(rootVariableFolder(ds)[["Group 1/Nested"]], pretty = TRUE),
     "/Group 1/Nested/
 ├── Gender
 ├── Categorical Location
@@ -44,7 +44,7 @@ expect_output(print(folders(ds)[["Group 1/Nested"]], pretty = TRUE),
 # nolint end
 
 with(temp.option(crunch = list(crunch.delimiter = "|")), {
-    expect_output(print(folders(ds), depth = 2),
+    expect_output(print(rootVariableFolder(ds), depth = 2),
         "|
 ├── Group 1|
 │   ├── Birth Year
