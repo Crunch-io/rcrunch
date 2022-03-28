@@ -75,23 +75,14 @@ You can run tests in an interactive session, or from the command line, `$ make t
 
 Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `INTEGRATION`, which is false by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ make test INTEGRATION=TRUE`.
 
-To run integration tests, you will need to specify a test user, password, and API server to communicate with, either by setting `test.api.key` and `test.api` in your `.Rprofile`, as in:
+To run integration tests, you will need to specify an API key and API server to communicate with. You can do this by setting the environment variables `R_TEST_API` and `CRUNCH_TEST_API_KEY`.
 
-```r
-options(
-    test.api="https://app.crunch.io/api/",
-    test.api.key="<SECRET KEY>"
-)
-```
-
-or by setting the environment variables `R_TEST_API` and `R_TEST_API_KEY`.
-
-If you are a Crunch developer serving a version of the API/backend with Vagrant or Docker, you will have best results if your R_TEST_API/test.api (1) is `local.crunch.io`, thanks to a mapping of localhost to that in your hosts file. In order to avoid self-signed certificate errors use the environment variable `R_TEST_VERIFY_SSL=FALSE`. You might point at "https://local.crunch.io:28443/api/", for example. Some tests that cannot run successfully in the local environment will be skipped when run against a local.crunch.io URL.
+If you are a Crunch developer serving a version of the API/backend with Vagrant or Docker, you will have best results if your R_TEST_API/CRUNCH_TEST_API_KEY (1) is `local.crunch.io`, thanks to a mapping of localhost to that in your hosts file. In order to avoid self-signed certificate errors use the environment variable `R_TEST_VERIFY_SSL=FALSE`. You might point at "https://local.crunch.io:28443/api/", for example. Some tests that cannot run successfully in the local environment will be skipped when run against a local.crunch.io URL.
 
 Example of local usage:
 
 ```bash
-$ R_TEST_VERIFY_SSL=TRUE R_TEST_API_KEY=t0pSecretK3y! R_TEST_API=https://local.crunch.io:28443/api/ make test INTEGRATION=TRUE file=variable-summary
+$ R_TEST_VERIFY_SSL=TRUE CRUNCH_TEST_API_KEY=t0pSecretK3y! R_TEST_API=https://local.crunch.io:28443/api/ make test INTEGRATION=TRUE file=variable-summary
 ```
 
 ### Updating documentation
