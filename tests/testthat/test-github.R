@@ -1,6 +1,6 @@
 context("GitHub version check")
 
-with(temp.option(crunch = list(crunch.check.updates = NULL)), {
+with(temp.option(crunch = list(crunch.check.updates = CRUNCH_OPT_DEFAULT)), {
     with_mock_crunch({
         without_interactive({
             test_that("checkForNewVersion doesn't check if session is not interactive", {

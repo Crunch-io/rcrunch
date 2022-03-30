@@ -1,5 +1,4 @@
 library(httptest)
-crunch:::set_crunch_opts(crunch.check.updates = FALSE)
 if (nchar(Sys.getenv("JENKINS_HOME"))) {
     tt_read_lines <- function(path, n = -1L, encoding = "UTF-8") {
         base::readLines(path, n = n, encoding = encoding, warn = FALSE)
