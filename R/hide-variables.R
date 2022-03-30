@@ -1,5 +1,6 @@
 #' Hide/Unhide or Privatize/Deprivatize Variables
 #'
+#' The public folder is the top level folder of all regular public variables.
 #' Both hidden and private are hidden from most views in crunch by default.
 #' Hidden variables can be accessed by an user, while private variables
 #' (and all variables derived from them) are only accessible
@@ -14,8 +15,8 @@
 #' - `hide()` / `privatize()` - take a `CrunchVariable` or `VariableCatalog` and
 #'    make them hidden/private. (`unhide()` / `deprivatize()` put them back in the main
 #'    variable catalog).
-#' - `hiddenFolder()` / `privateFolder()` - take a dataset and return a folder that
-#'   contains the hidden/private variables. This folder is like other `CrunchFolder`s and
+#' - `hiddenFolder()` / `privateFolder()` / `publicFolder()` - take a dataset and return a folder that
+#'   contains the public/hidden/private variables. This folder is like other `CrunchFolder`s and
 #'   so you can use [`mkdir()`] to create subfolders and [`mv()`] to move them in/out.
 #' - `hiddenVariables()` / `privateVariabiles()` - return a character vector of variables
 #'    that are hidden/private. You can assign into the catalog to add variables or
@@ -31,46 +32,76 @@
 #' @aliases hide unhide hiddenFolder privatize deprivatize privateFolder
 NULL
 
+.firstLevelFolder <- function(x, type) {
+    api_type <- ifelse(type == "private", "secure", type)
+    # private variables not available to non-editors, but pubic and hidden
+    # are available to all
+    api_must_work <- type != "private"
+
+    url <- shojiURL(rootVariableFolder(x), "catalogs", api_type, mustWork = api_must_work)
+    if (is.null(url)) return(url)
+
+    VariableFolder(crGET(url))
+}
+
+.firstLevelFolderMover <- function(type) {
+    mover <- function(x) {
+        dir <- .firstLevelFolder(x, type)
+        # Only private variables can fail lookup
+        if (is.null(x) && type == "private") {
+            halt("Could not access private directory, are you an editor of this dataset?")
+        }
+
+        .moveToFolder(dir, x)
+        # TODO: should these refresh?
+        invisible(x)
+    }
+    return(mover)
+}
+
+
+# ---- Public Variables
 #' @rdname hide
 #' @export
-setMethod("hiddenFolder", "CrunchDataset", function(x) hiddenFolder(rootVariableFolder(x)))
+setMethod("publicFolder", "CrunchDataset", function(x) .firstLevelFolder(x, "public"))
 
 #' @rdname hide
 #' @export
-setMethod("hiddenFolder", "VariableCatalog", function(x) hiddenFolder(rootVariableFolder(x)))
+setMethod("publicFolder", "VariableCatalog", function(x) .firstLevelFolder(x, "public"))
 
 #' @rdname hide
 #' @export
-setMethod("hiddenFolder", "VariableFolder", function(x) {
-    return(VariableFolder(crGET(shojiURL(rootFolder(x), "catalogs", "hidden"))))
-})
+setMethod("publicFolder", "VariableFolder", function(x) .firstLevelFolder(x, "public"))
+
+
+# ---- Hidden Variables ----------------------
+#' @rdname hide
+#' @export
+setMethod("hiddenFolder", "CrunchDataset", function(x) .firstLevelFolder(x, "hidden"))
 
 #' @rdname hide
 #' @export
-setMethod("hide", "CrunchVariable", function(x) {
-    .moveToFolder(hiddenFolder(rootFolder(x)), x)
-    # TODO: should these refresh?
-    invisible(x)
-})
-#' @rdname hide
-#' @export
-setMethod("hide", "VariableCatalog", function(x) {
-    .moveToFolder(hiddenFolder(rootFolder(x)), x)
-    invisible(x)
-})
+setMethod("hiddenFolder", "VariableCatalog", function(x) .firstLevelFolder(x, "hidden"))
 
 #' @rdname hide
 #' @export
-setMethod("unhide", "CrunchVariable", function(x) {
-    .moveToFolder(rootFolder(x), x)
-    invisible(x)
-})
+setMethod("hiddenFolder", "VariableFolder", function(x) .firstLevelFolder(x, "hidden"))
+
 #' @rdname hide
 #' @export
-setMethod("unhide", "VariableCatalog", function(x) {
-    .moveToFolder(rootFolder(x), x)
-    invisible(x)
-})
+setMethod("hide", "CrunchVariable", .firstLevelFolderMover("hidden"))
+
+#' @rdname hide
+#' @export
+setMethod("hide", "VariableCatalog", .firstLevelFolderMover("hidden"))
+
+#' @rdname hide
+#' @export
+setMethod("unhide", "CrunchVariable", .firstLevelFolderMover("public"))
+
+#' @rdname hide
+#' @export
+setMethod("unhide", "VariableCatalog", .firstLevelFolderMover("public"))
 
 #' @rdname hide
 #' @export
@@ -86,7 +117,7 @@ hideVariables <- function(dataset, variables) {
 #' @rdname hide
 #' @export
 unhideVariables <- function(dataset, variables) {
-    dataset <- mv(dataset, variables, rootVariableFolder(dataset))
+    dataset <- mv(dataset, variables, publicFolder(dataset))
     return(invisible(refresh(dataset)))
 }
 

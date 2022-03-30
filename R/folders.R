@@ -157,7 +157,7 @@ cd <- function(x, path, create = FALSE) {
     }
     if (is.dataset(x)) {
         ## Get the variable folders root catalog
-        x <- rootVariableFolder(x)
+        x <- publicFolder(x)
     }
     if (!is.folder(x)) {
         ## Probably user error

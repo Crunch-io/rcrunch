@@ -112,7 +112,7 @@ with_mock_crunch({
     })
 
     unhide_birthyr <- paste0(
-        "https://app.crunch.io/api/datasets/3/folders/",
+        "https://app.crunch.io/api/datasets/3/folders/public/",
         " ",
         "{",
         '"element":"shoji:catalog",',

@@ -20,13 +20,13 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
         test_that("cd() returns a folder", {
             expect_identical(
                 cd(ds, "Group 1/Nested"),
-                rootVariableFolder(ds)[["Group 1/Nested"]]
+                publicFolder(ds)[["Group 1/Nested"]]
             )
         })
         test_that("cd() can operate on a folder too", {
             expect_identical(
                 cd(cd(ds, "Group 1"), "Nested"),
-                rootVariableFolder(ds)[["Group 1/Nested"]]
+                publicFolder(ds)[["Group 1/Nested"]]
             )
         })
         test_that("cd() errors if the path isn't a folder or doesn't exist", {
@@ -66,24 +66,24 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             )
             expect_identical(
                 ds %>% cd("Group 1") %>% cd(".."),
-                rootVariableFolder(ds)
+                publicFolder(ds)
             )
             expect_identical(
                 ds %>% cd("Group 1/Nested") %>% cd("../.."),
-                rootVariableFolder(ds)
+                publicFolder(ds)
             )
-            expect_error(rootVariableFolder(ds) %>% cd(".."), '".." is an invalid path')
+            expect_error(publicFolder(ds) %>% cd(".."), '".." is an invalid path')
             expect_error(cd(ds, ".."), '".." is an invalid path')
         })
         test_that("cd /", {
-            expect_identical(ds %>% cd("/"), rootVariableFolder(ds))
+            expect_identical(ds %>% cd("/"), publicFolder(ds))
             expect_identical(
                 ds %>% cd("Group 1") %>% cd("/Group 2"), # nolint
                 cd(ds, "Group 2")
             )
             expect_identical(
                 ds %>% cd("Group 1") %>% cd("/"),
-                rootVariableFolder(ds)
+                publicFolder(ds)
             )
         })
 
@@ -138,7 +138,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             )
             expect_POST(
                 ds %>% mkdir("bar"),
-                "https://app.crunch.io/api/datasets/1/folders/",
+                "https://app.crunch.io/api/datasets/1/folders/public/",
                 '{"element":"shoji:catalog","body":{"name":"bar"}}'
             )
         })
@@ -212,7 +212,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             # but also trying to move only sends name changes
             expect_POST(
                 ds %>% cd("/") %>% mv("Group 2", "Group 2 New Name"),
-                "https://app.crunch.io/api/datasets/1/folders/",
+                "https://app.crunch.io/api/datasets/1/folders/public/",
                 '{"element":"shoji:catalog","body":{"name":"Group 2 New Name"}}'
             )
         })

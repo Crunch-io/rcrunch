@@ -1,56 +1,29 @@
 #' @rdname hide
 #' @export
-setMethod("privateFolder", "CrunchDataset", function(x) privateFolder(rootVariableFolder(x)))
+setMethod("privateFolder", "CrunchDataset", function(x) .firstLevelFolder(x, "private"))
 
 #' @rdname hide
 #' @export
-setMethod("privateFolder", "VariableCatalog", function(x) privateFolder(rootVariableFolder(x)))
+setMethod("privateFolder", "VariableCatalog", function(x) .firstLevelFolder(x, "private"))
 
 #' @rdname hide
 #' @export
-setMethod("privateFolder", "VariableFolder", function(x) {
-  url <- shojiURL(rootFolder(x), "catalogs", "secure", mustWork = FALSE)
-  if (is.null(url)) return(url)
-
-  VariableFolder(crGET(url))
-})
-
+setMethod("privateFolder", "VariableFolder", function(x) .firstLevelFolder(x, "private"))
 
 #' @rdname hide
 #' @export
-setMethod("privatize", "CrunchVariable", function(x) {
-  private_dir <- privateFolder(rootFolder(x))
-  if (is.null(private_dir)) {
-    halt("Could not access private directory, are you an editor of this dataset?")
-  }
-  .moveToFolder(private_dir, x)
-  # TODO: should these refresh?
-  invisible(x)
-})
-#' @rdname hide
-#' @export
-setMethod("privatize", "VariableCatalog", function(x) {
-  private_dir <- privateFolder(rootFolder(x))
-  if (is.null(private_dir)) {
-    halt("Could not access private directory, are you an editor of this dataset?")
-  }
-  .moveToFolder(private_dir, x)
-  # TODO: should these refresh?
-  invisible(x)
-})
+setMethod("privatize", "CrunchVariable", .firstLevelFolderMover("private"))
 
 #' @rdname hide
 #' @export
-setMethod("deprivatize", "CrunchVariable", function(x) {
-  .moveToFolder(rootFolder(x), x)
-  invisible(x)
-})
+setMethod("privatize", "VariableCatalog", .firstLevelFolderMover("private"))
+
 #' @rdname hide
 #' @export
-setMethod("deprivatize", "VariableCatalog", function(x) {
-  .moveToFolder(rootFolder(x), x)
-  invisible(x)
-})
+setMethod("deprivatize", "CrunchVariable", .firstLevelFolderMover("public"))
+#' @rdname hide
+#' @export
+setMethod("deprivatize", "VariableCatalog", .firstLevelFolderMover("public"))
 
 #' @rdname hide
 #' @export
@@ -84,7 +57,7 @@ privatiseVariables <- function(dataset, variables) {
 #' @rdname hide
 #' @export
 deprivatizeVariables <- function(dataset, variables) {
-  dataset <- mv(dataset, variables, rootVariableFolder(dataset))
+  dataset <- mv(dataset, variables, publicFolder(dataset))
   return(invisible(refresh(dataset)))
 }
 
