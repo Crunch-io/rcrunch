@@ -6,7 +6,7 @@
 #' expression on the rows and a selection of variables on the columns.
 #' @param file character local filename to write to
 #' @param format character export format: currently supported values are "csv"
-#' and "spss".
+#' and "spss" (and experimental support for "parquet").
 #' @param categorical character: export categorical values to CSV as category
 #' "name" (default) or "id". Ignored by the SPSS exporter.
 #' @param na Similar to the argument in [utils::write.table()], 'na'
@@ -33,7 +33,7 @@
 #'
 #' @return Invisibly, `file`.
 #' @export
-exportDataset <- function(dataset, file, format = c("csv", "spss"),
+exportDataset <- function(dataset, file, format = c("csv", "spss", "parquet"),
                           categorical = c("name", "id"), na = NULL,
                           varlabel = c("name", "description"),
                           include.hidden = FALSE, ...) {
