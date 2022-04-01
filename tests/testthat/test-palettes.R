@@ -8,34 +8,35 @@ with_mock_crunch({
         expect_is(palettes[["purple palette"]], "AnalyticPalette")
         expect_equal(
             palettes[[1]]$palette,
-            c("#340043", "#640083", "#9100bf", "#c300ff", "#e17fff")
+            c("#4fc3f7", "#4dd0e1", "#4db6ac", "#81c783", "#aed581", "#dce775", "#cddc39", "#fdae6b")
         )
     })
 
     test_that("Can print palettes", {
         expect_prints(
+            fixed = FALSE,
             palettes,
             paste0(
-                "                                   type default  palette\n",
-                "purple palette              qualitative   FALSE 5 colors\n",
-                "Green Palette for dashboard qualitative    TRUE 8 colors"
+                "                                         type default  palette\n",
+                "Default green palette for fixture qualitative    TRUE 8 colors",
+                ".+"
             )
         )
     })
 
     test_that("Can print a palette", {
         expect_prints(
-            palettes[[1]],
+            palettes[["Default green palette for fixture"]],
             paste0(
-                "Crunch AnalyticPalette ", dQuote("purple palette"), " (qualitative)\n",
-                "#340043 #640083 #9100bf #c300ff #e17fff"
+                "Crunch AnalyticPalette ", dQuote("Default green palette for fixture"), " (qualitative, default)\n",
+                "#4fc3f7 #4dd0e1 #4db6ac #81c783 #aed581 #dce775 #cddc39 #fdae6b"
             )
         )
     })
 
     test_that("Can get default palette from dataset or palette list", {
-        expect_equal(defaultPalette(ds), palettes[[2]])
-        expect_equal(defaultPalette(palettes), palettes[[2]])
+        expect_equal(defaultPalette(ds), palettes[["Default green palette for fixture"]])
+        expect_equal(defaultPalette(palettes), palettes[["Default green palette for fixture"]])
     })
 
 })
