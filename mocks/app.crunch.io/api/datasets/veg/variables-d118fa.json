@@ -1,6 +1,5 @@
 {
     "catalogs": {
-        "applied": "https://app.crunch.io/api/datasets/veg/variables/applied/",
         "private": "https://app.crunch.io/api/datasets/veg/variables/private/"
     },
     "description": "List of Variables of this dataset",
@@ -450,8 +449,8 @@
         }
     },
     "orders": {
+        "favorites": "https://app.crunch.io/api/datasets/veg/variables/favorites/",
         "hier": "https://app.crunch.io/api/datasets/veg/variables/hier/",
-        "personal": "https://app.crunch.io/api/datasets/veg/variables/personal/",
         "weights": "https://app.crunch.io/api/datasets/veg/variables/weights/"
     },
     "self": "https://app.crunch.io/api/datasets/veg/variables/?relative=on"

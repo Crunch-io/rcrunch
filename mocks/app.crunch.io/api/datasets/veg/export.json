@@ -3,6 +3,7 @@
     "self": "https://app.crunch.io/api/datasets/veg/export/",
     "views": {
         "csv": "https://app.crunch.io/api/datasets/veg/export/csv/",
+        "parquet": "https://app.crunch.io/api/datasets/veg/export/parquet/",
         "spss": "https://app.crunch.io/api/datasets/veg/export/spss/"
     }
 }

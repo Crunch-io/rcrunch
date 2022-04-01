@@ -60,7 +60,7 @@
                     {
                         "args": [
                             {
-                                "variable": "var_01"
+                                "variable": "https://app.crunch.io/api/datasets/veg/variables/var_01/"
                             },
                             {
                                 "value": 18
