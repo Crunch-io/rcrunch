@@ -63,3 +63,13 @@ Invisibly, \code{file}.
 \description{
 This function allows you to write a CrunchDataset to a .csv or SPSS .sav file.
 }
+\examples{
+\dontrun{
+csv_file <- exportDataset(ds, "data.csv")
+data <- read.csv(csv_file)
+
+# parquet will likely read more quickly and be a smaller download size
+parquet_file <- exportDataset(ds, "data.parquet")
+# data <- arrow::read_parquet(parquet_file) # The arrow package can read parquet files
+}
+}
