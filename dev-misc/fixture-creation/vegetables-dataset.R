@@ -23,6 +23,10 @@ library(purrr)
 
 source(here("dev-misc/fixture-creation/redactors.R"))
 
+if (!"Vegetables fixture" %in% names(projects())) {
+    stop("Must have project named 'Vegetables fixture' with correct palette")
+}
+
 # Setup dataset ----
 ## Data generation helpers ----
 random_gen_func <- function(...) {
@@ -229,7 +233,6 @@ vegetables <- vegetables %>%
             levels = c("Yes", "No", "N/A")
         )
     )
-
 
 ## Setup crunch dataset ----
 ds <- newDataset(vegetables, "Vegetables example")
@@ -503,8 +506,9 @@ weightVariables(ds) <- ds$weight
 privatizeVariables(ds, "resp_id")
 mv(ds, c("weight", "last_vegetable", "last_vegetable_date"), "Survey variables")
 
+# Move to correct project so that it inherits the right palettes
+mv(projects()[["Vegetables fixture"]], ds, projects()[["Vegetables fixture"]])
 ds <- refresh(ds)
-
 
 ## Multitables ----
 mt <- newMultitable(
