@@ -8,6 +8,7 @@
                 {
                     "column": 1,
                     "command": 1,
+                    "hint": "NOT A COMMAND",
                     "line": 1,
                     "message": "Invalid command: NOT"
                 }

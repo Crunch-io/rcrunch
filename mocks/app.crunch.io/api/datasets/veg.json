@@ -3,7 +3,7 @@
         "access_time": "2021-01-01T21:26:43.038000",
         "account": "https://app.crunch.io/api/accounts/00001/",
         "app_settings": {
-
+            "report_issue_url": ""
         },
         "archived": false,
         "creation_time": "2021-01-01T21:25:59.791000",
@@ -22,10 +22,25 @@
         "modification_time": "2021-01-01T21:26:43.038000",
         "name": "Vegetables example",
         "notes": "",
-        "owner": "https://app.crunch.io/api/users/user_id/",
+        "owner": "https://app.crunch.io/api/projects/proj_id/",
         "owner_name": "User",
         "palette": {
             "analysis": [
+                {
+                    "default": true,
+                    "name": "Default green palette for fixture",
+                    "palette": [
+                        "#4fc3f7",
+                        "#4dd0e1",
+                        "#4db6ac",
+                        "#81c783",
+                        "#aed581",
+                        "#dce775",
+                        "#cddc39",
+                        "#fdae6b"
+                    ],
+                    "type": "qualitative"
+                },
                 {
                     "default": false,
                     "name": "purple palette",
@@ -39,7 +54,7 @@
                     "type": "qualitative"
                 },
                 {
-                    "default": true,
+                    "default": false,
                     "name": "Green Palette for dashboard",
                     "palette": [
                         "#4fc3f7",
@@ -52,11 +67,27 @@
                         "#fdae6b"
                     ],
                     "type": "qualitative"
+                },
+                {
+                    "default": false,
+                    "name": "Rainbow",
+                    "palette": [
+                        "#00bcd4",
+                        "#9575cd",
+                        "#ffa299",
+                        "#4c8cb8",
+                        "#303f9f",
+                        "#0097a7",
+                        "#8fb7ae",
+                        "#d4e3e0",
+                        "#d1c4e9"
+                    ],
+                    "type": "qualitative"
                 }
             ],
             "brand": {
                 "message": "#722580",
-                "primary": "#005283",
+                "primary": "#0064a4",
                 "secondary": "#107f65"
             }
         },
@@ -80,14 +111,15 @@
         "actions": "https://app.crunch.io/api/datasets/veg/actions/",
         "batches": "https://app.crunch.io/api/datasets/veg/batches/",
         "boxdata": "https://app.crunch.io/api/datasets/veg/boxdata/",
+        "dashboards": "https://app.crunch.io/api/datasets/veg/dashboards/",
         "decks": "https://app.crunch.io/api/datasets/veg/decks/",
         "filters": "https://app.crunch.io/api/datasets/veg/filters/",
         "folders": "https://app.crunch.io/api/datasets/veg/folders/",
         "forks": "https://app.crunch.io/api/datasets/veg/forks/",
         "multitables": "https://app.crunch.io/api/datasets/veg/multitables/",
-        "parent": "https://app.crunch.io/api/datasets/",
+        "parent": "https://app.crunch.io/api/projects/proj_id/datasets/",
         "permissions": "https://app.crunch.io/api/datasets/veg/permissions/",
-        "project": "https://app.crunch.io/api/projects/personal/",
+        "project": "https://app.crunch.io/api/projects/proj_id/",
         "savepoints": "https://app.crunch.io/api/datasets/veg/savepoints/",
         "scripts": "https://app.crunch.io/api/datasets/veg/scripts/",
         "tags": "https://app.crunch.io/api/datasets/veg/tags/",
@@ -99,6 +131,12 @@
     },
     "description": "Detail for a given dataset",
     "element": "shoji:entity",
+    "folder_trees": {
+        "hidden": "folders/hidden/",
+        "personal": "folders/personal/",
+        "public": "folders/public/",
+        "secure": "folders/secure/"
+    },
     "fragments": {
         "exclusion": "https://app.crunch.io/api/datasets/veg/exclusion/",
         "pk": "https://app.crunch.io/api/datasets/veg/pk/",
@@ -111,8 +149,8 @@
         "table": "https://app.crunch.io/api/datasets/veg/table/"
     },
     "orders": {
+        "favorites": "https://app.crunch.io/api/datasets/veg/variables/favorites/",
         "variables_hier": "https://app.crunch.io/api/datasets/veg/variables/hier/",
-        "variables_personal": "https://app.crunch.io/api/datasets/veg/variables/personal/",
         "variables_weights": "https://app.crunch.io/api/datasets/veg/variables/weights/"
     },
     "self": "https://app.crunch.io/api/datasets/veg/",
@@ -126,6 +164,7 @@
         "cube": "https://app.crunch.io/api/datasets/veg/cube/",
         "export": "https://app.crunch.io/api/datasets/veg/export/",
         "second_order_analysis": "https://app.crunch.io/api/datasets/veg/second_order_analysis/",
+        "sources": "https://app.crunch.io/api/datasets/veg/sources/",
         "summary": "https://app.crunch.io/api/datasets/veg/summary/"
     }
 }

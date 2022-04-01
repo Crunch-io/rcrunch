@@ -15,7 +15,7 @@
             "is_published": true,
             "modification_time": "2021-01-01T21:26:43.038000",
             "name": "Vegetables example",
-            "owner_id": "https://app.crunch.io/api/users/user_id/",
+            "owner_id": "https://app.crunch.io/api/projects/proj_id/",
             "owner_name": "User",
             "permissions": {
                 "edit": true,
