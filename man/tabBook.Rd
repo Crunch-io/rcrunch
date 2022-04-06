@@ -11,7 +11,8 @@ tabBook(
   output_format = c("json", "xlsx", "csv"),
   file,
   filter = NULL,
-  use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
+  use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE, expect_lgl =
+    TRUE),
   ...
 )
 }

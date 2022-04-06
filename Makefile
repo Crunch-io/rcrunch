@@ -7,7 +7,7 @@ doc:
 test: compress-fixtures | test-no-compress-fixtures
 
 test-no-compress-fixtures:
-	export NOT_CRAN=true && R --slave -e 'library(httptest); options(crunch.check.updates=FALSE); system.time(devtools::test(filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
+	export NOT_CRAN=true && R --slave -e 'library(httptest); system.time(devtools::test(filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 lint:
 	R --slave -e 'styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'

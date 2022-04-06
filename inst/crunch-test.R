@@ -2,7 +2,7 @@ library(httptest)
 
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 
-if (crunch::envOrOption("test.verify.ssl", TRUE) == FALSE) {
+if (crunch::envOrOption("test.verify.ssl", TRUE, expect_lgl = TRUE) == FALSE) {
     crunch::set_crunch_config(httr::config(ssl_verifyhost = FALSE, ssl_verifypeer = FALSE), update = TRUE)
 }
 
@@ -121,7 +121,7 @@ test_options <- temp.options(
         ),
         crunch.api.key = Sys.getenv("CRUNCH_TEST_API_KEY"),
         crunch.show.progress = FALSE,
-        crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE),
+        crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE, expect_lgl = TRUE),
         message.auth.info = TRUE
     )
 )

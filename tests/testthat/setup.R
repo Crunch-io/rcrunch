@@ -16,3 +16,9 @@ source(find_file("crunch-test.R"), local = TRUE)
 
 # untar cubes
 decompress_fixtures()
+
+# use old style app. URLs for API to match existing fixtures
+set_crunch_opts(
+    "old.crunch.api" = crunch:::get_crunch_opt("crunch.api"),
+    "crunch.api" = "https://app.crunch.io/api/"
+)

@@ -185,6 +185,8 @@ setGeneric("type", function(x) standardGeneric("type"))
 setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
 #' @rdname hide
+setGeneric("publicFolder", function(x) standardGeneric("publicFolder"))
+#' @rdname hide
 setGeneric("hiddenFolder", function(x) standardGeneric("hiddenFolder"))
 #' @rdname hide
 setGeneric("privateFolder", function(x) standardGeneric("privateFolder"))

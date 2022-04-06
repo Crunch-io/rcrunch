@@ -1,9 +1,8 @@
-folders <- function(x) {
-    # This function exists because the generic rootFolder() for a dataset will
+rootVariableFolder <- function(x) {
+    # This function exists because the generic rootFolder() for a dataset would
     # get the root project folder, i.e. the root for moving it.
     # This function gives you the root variable folder for a dataset or thing
     # contained in a dataset.
-    # So maybe it should be called `rootVariableFolder`?
     if (!is.dataset(x)) {
         x <- ShojiEntity(crGET(datasetReference(x)))
     }
@@ -35,7 +34,9 @@ setMethod("folderExtraction", "VariableFolder", function(x, tuple) {
     }
 })
 
-setMethod("rootFolder", "CrunchVariable", folders)
+# Walk up the folders above folder containing the variable so that you
+# get to the right folder whether it be public/hidden/private
+setMethod("rootFolder", "CrunchVariable", function(x) rootFolder(folder(x)))
 
 ## Get variable by alias, name, or URL
 whichFolderEntry <- function(x, i) {

@@ -48,7 +48,7 @@ toJSON <- function(x, ..., for_query_string = FALSE) {
         return(jsonlite::toJSON(emptyObject()))
     }
     x <- jsonprep(x)
-    if (for_query_string && envOrOption("crunch.stabilize.query", FALSE)) {
+    if (for_query_string && envOrOption("crunch.stabilize.query", FALSE, expect_lgl = TRUE)) {
         x <- object_sort(x)
     }
 
