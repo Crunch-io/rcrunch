@@ -35,6 +35,6 @@
     },
     "graph": ["../../variables/starttime/", "../../variables/catarray/"],
     "catalogs": {
-        "folder": "https://app.crunch.io/api/datasets/4/folders/"
+        "folder": "https://app.crunch.io/api/datasets/4/folders/public/"
     }
 }

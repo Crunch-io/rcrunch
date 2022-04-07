@@ -1,4 +1,8 @@
 # crunch 1.29.1 (Development version)
+* Fix a bug where environment variables could not set numeric or logical options like
+  "R_CRUNCH_TIMEOUT". (#593)
+* Uses the "public" variable folder rather than the root to pave the way for an upcoming
+  join feature. In general end users should not notice. (#592)
 
 # crunch 1.29.0
 * Authenticating with an API key is now the recommended way to use the R crunch package. See

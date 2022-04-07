@@ -157,7 +157,7 @@ cd <- function(x, path, create = FALSE) {
     }
     if (is.dataset(x)) {
         ## Get the variable folders root catalog
-        x <- folders(x)
+        x <- publicFolder(x)
     }
     if (!is.folder(x)) {
         ## Probably user error
@@ -333,7 +333,7 @@ folder_recurse <- function(folder) {
 }
 
 # take a folder/var tree (from folder_recurse) and copy it to dataset
-plant_tree <- function(tree, dataset, folder_position = folders(dataset)) {
+plant_tree <- function(tree, dataset, folder_position = rootVariableFolder(dataset)) {
     lapply(seq_along(tree), function(i) {
         item <- tree[[i]]
         if(!is.null(names(item))) {
@@ -379,7 +379,7 @@ copyFolders <- function(source, target) {
     if (!is.dataset(source) | !is.dataset(target)) {
         halt("Both source and target must be Crunch datasets.")
     }
-    source_tree <- folder_recurse(folders(source))
+    source_tree <- folder_recurse(rootVariableFolder(source))
     plant_tree(list(source_tree), target)
     return(invisible(refresh(target)))
 }

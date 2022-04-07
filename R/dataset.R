@@ -52,7 +52,8 @@ forceVariableCatalog <- function(x) {
 }
 
 useLazyVariableCatalog <- function() {
-    envOrOption("crunch.lazy.variable.catalog", TRUE) && isTRUE(getOption("httpcache.on", TRUE))
+    envOrOption("crunch.lazy.variable.catalog", TRUE, expect_lgl = TRUE) &&
+        isTRUE(getOption("httpcache.on", TRUE))
 }
 
 getDatasetVariables <- function(x) {

@@ -234,7 +234,9 @@ vectorOrList <- function(obj, type) {
 envOrOption <- function(opt, default = NULL, expect_lgl = FALSE, expect_num = FALSE) {
     ## First look in CRUNCH_OPTIONS environment
     crunch_opt <- get_crunch_opt(opt)
-    if (!is.null(crunch_opt)) {
+    if (is_crunch_opt_default(crunch_opt)) {
+        return(default)
+    } else if (!is.null(crunch_opt)) {
         attributes(crunch_opt) <- NULL
         return(crunch_opt)
     }
@@ -252,6 +254,10 @@ envOrOption <- function(opt, default = NULL, expect_lgl = FALSE, expect_num = FA
     # Finally, check the R options or use default
     return(getOption(opt, default))
 }
+
+CRUNCH_OPT_DEFAULT <- structure(list(), class = "crunch_default_option")
+is_crunch_opt_default <- function(x) inherits(x, "crunch_default_option")
+
 
 envOrOptionSource <- function(opt) {
     envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed = TRUE)))
