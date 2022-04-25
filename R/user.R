@@ -56,29 +56,6 @@ invite <- function(email, name = NULL, notify = TRUE, id_method = "pwhash",
     return(crPOST(url, body = toJSON(do.call("wrapEntity", payload))))
 }
 
-#' Reset your password
-#'
-#' Trigger the password reset process. Password reset
-#' instructions will be emailed to you.
-#'
-#' @param email Your email
-#' @return NULL, invisibly. Called for its side effects.
-#' @export
-#' @examples
-#' \dontrun{
-#' resetPassword("me@example.com")
-#' }
-resetPassword <- function(email) {
-    deprecate_password("resetPassword")
-    app <- envOrOption("crunch.api")
-    invisible(crPOST(absoluteURL("public/password_reset/", app),
-        body = toJSON(list(
-            email = email,
-            url_base = absoluteURL("../password/change/${token}/", app)
-        ))
-    ))
-}
-
 #' @rdname crunch-extract
 #' @export
 setMethod("[", c("UserCatalog", "character"), function(x, i, ...) {

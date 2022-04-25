@@ -5,8 +5,6 @@
 \title{Crunch API Keys}
 \description{
 The rcrunch package recommends using API keys for authentication.
-Using a username and password with the \code{\link[=login]{login()}} function is
-deprecated and may be removed in a future release.
 }
 \details{
 To get an API key for your account, follow the instructions in the

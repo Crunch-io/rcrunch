@@ -22,7 +22,7 @@ test-ci: compress-fixtures |
 	R --slave -e 'library(covr); to_cobertura(package_coverage(quiet=FALSE))'
 
 clean:
-	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); lapply(urls(datasets()), crDELETE)'
+	R --slave -e 'library(crunch); set_crunch_opts(crunch.api=envOrOption("test.api"), crunch.api.key=envOrOption("crunch.test.api.key")); lapply(urls(datasets()), crDELETE)'
 
 build: doc | compress-fixtures
 	R CMD build .

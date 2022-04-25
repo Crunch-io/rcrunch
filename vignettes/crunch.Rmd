@@ -257,7 +257,6 @@ This vignette has gone through some of the basics of working with crunch in R in
 
 
 ```{r, include=FALSE}
-logout()
 end_vignette()
 ```
 

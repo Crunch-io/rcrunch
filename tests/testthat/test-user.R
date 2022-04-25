@@ -38,15 +38,6 @@ with_mock_crunch({
         expect_equal(usercat[["Bill User", secondary = names(usercat)]], usercat[[2]])
     })
 
-    test_that("Reset password", {
-        expect_POST(
-            suppressWarnings(resetPassword("me@example.com")),
-            "https://app.crunch.io/api/public/password_reset/",
-            '{"email":"me@example.com",',
-            '"url_base":"https://app.crunch.io/password/change/${token}/"}'
-        )
-    })
-
     test_that("invite (not currently exported)", {
         expect_POST(
             invite("me@example.com", name = "Me"),

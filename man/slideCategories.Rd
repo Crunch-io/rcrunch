@@ -33,7 +33,6 @@ and selecting potentially overlapping sets of categories.
 }
 \examples{
 \dontrun{
-login()
 data <- data.frame(
     wave = factor(c("a", "b", "c", "d", "e"))
 )

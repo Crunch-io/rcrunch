@@ -48,7 +48,6 @@ suppressPackageStartupMessages({
 
 options("crunch.show.progress" = FALSE)
 
-login()
 ds <- newExampleDataset()
 ```
 

@@ -181,7 +181,6 @@ if (run.integration.tests) {
     })
 
     test_that("API calls throw an error if user is not authenticated", {
-        logout()
         with(temp.option(crunch = list(crunch.api.key = "")), {
             expect_error(
                 getAPIRoot(),

@@ -22,7 +22,6 @@ library(here)
 library(purrr)
 
 source(here("dev-misc/fixture-creation/redactors.R"))
-login()
 
 # Setup dataset ----
 ## Data generation helpers ----
