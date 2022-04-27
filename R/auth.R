@@ -161,6 +161,7 @@ logout <- function() {
 #' A deprecated method to authenticate to the crunch.io API. See [`crunch-api-key`]
 #' for the currently supported method, as `login()`, `logout()` and `resetPassword`()
 #' no longer work.
+#' @param ... Ignored
 #' @export
 login <- function(...) {
     deprecate_password()
@@ -168,7 +169,7 @@ login <- function(...) {
 
 #' @export
 #' @rdname login
-resetPassword <- function(email) {
+resetPassword <- function(...) {
     deprecate_password()
 }
 

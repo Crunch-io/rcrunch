@@ -10,7 +10,10 @@ logout()
 
 login(...)
 
-resetPassword(email)
+resetPassword(...)
+}
+\arguments{
+\item{...}{Ignored}
 }
 \description{
 A deprecated method to authenticate to the crunch.io API. See \code{\link{crunch-api-key}}
