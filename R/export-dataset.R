@@ -47,6 +47,10 @@ exportDataset <- function(dataset, file, format = c("csv", "spss", "parquet"),
                           varlabel = c("name", "description"),
                           include.hidden = FALSE, ...) {
     exporters <- crGET(shojiURL(dataset, "views", "export"))
+    # --- match.arg gets made when there are multiple given and they don't match
+    # --- exactly to the choices. Since choices comes from the API choose the
+    # --- first if it's longer than 1 before sending to match.arg
+    if (length(format) > 1) format <- format[1]
     format <- match.arg(format, choices = names(exporters))
     export_url <- exporters[[format]]
 
