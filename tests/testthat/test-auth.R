@@ -81,15 +81,3 @@ test_that("setupCrunchAuth works", {
         }
     )
 })
-
-
-if (run.integration.tests) {
-    with(test_options, {
-        test_that("crunchAuth succeeds when it should and not when it shouldn't", {
-            expect_error(
-                suppressWarnings(crunchAuth("lkjasdfksdfkjhl", password = "w23nrnsod")),
-                "Unable to authenticate lkjasdfksdfkjhl"
-            )
-        })
-    })
-}
