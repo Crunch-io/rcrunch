@@ -63,6 +63,7 @@
         "dataset_url": "https://app.crunch.io/api/datasets/veg/"
     },
     "views": {
+        "applied": "https://app.crunch.io/api/datasets/veg/variables/var_06/applied/",
         "cast": "https://app.crunch.io/api/datasets/veg/variables/var_06/cast/",
         "frequencies": "https://app.crunch.io/api/datasets/veg/variables/var_06/frequencies/",
         "script": "https://app.crunch.io/api/datasets/veg/variables/var_06/script/",

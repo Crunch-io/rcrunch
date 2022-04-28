@@ -222,8 +222,6 @@ reference:
   - getTeams
   - is-public
   - is.editor
-  - login
-  - logout
   - me
   - users
   - email
@@ -231,7 +229,6 @@ reference:
   - owners
   - permissions
   - projects
-  - resetPassword
   - setupCrunchAuth
   - share
   - 'members<-,CrunchTeam,MemberCatalog-method'

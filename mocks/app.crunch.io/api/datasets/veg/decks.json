@@ -19,9 +19,6 @@
             "team": null
         }
     },
-    "orders": {
-        "order": "https://app.crunch.io/api/datasets/veg/decks/order/"
-    },
     "self": "https://app.crunch.io/api/datasets/veg/decks/"
 }
 

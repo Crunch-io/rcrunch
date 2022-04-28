@@ -1,14 +1,16 @@
 {
     "body": {
-        "name": "Root"
+        "name": "Public"
     },
     "catalogs": {
+        "favorites": "https://app.crunch.io/api/datasets/veg/variables/favorites/",
         "hidden": "https://app.crunch.io/api/datasets/veg/folders/hidden/",
         "parents": "https://app.crunch.io/api/datasets/veg/folders/parents/",
-        "personal": "https://app.crunch.io/api/datasets/veg/variables/personal/",
+        "personal": "https://app.crunch.io/api/datasets/veg/folders/personal",
+        "public": "https://app.crunch.io/api/datasets/veg/folders/public/",
         "secure": "https://app.crunch.io/api/datasets/veg/folders/secure/"
     },
-    "description": "This is the variables' folder root",
+    "description": "The root of the variable folder hierarchy.",
     "element": "shoji:catalog",
     "graph": [
         "../variables/var_22/",
@@ -46,11 +48,11 @@
             "notes": "Do you typically enjoy foods that taste..?",
             "secure": false,
             "subvariables": [
-                "../variables/var_02/subvariables/0001/",
-                "../variables/var_02/subvariables/0002/",
-                "../variables/var_02/subvariables/0003/"
+                "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0002/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0003/"
             ],
-            "subvariables_catalog": "../variables/var_02/subvariables/",
+            "subvariables_catalog": "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/",
             "type": "multiple_response",
             "uniform_basis": false
         },
@@ -78,14 +80,14 @@
             "notes": "On a scale of 0-100, how would you rate...?",
             "secure": false,
             "subvariables": [
-                "../variables/var_15/subvariables/0001/",
-                "../variables/var_15/subvariables/0002/",
-                "../variables/var_15/subvariables/0003/",
-                "../variables/var_15/subvariables/0004/",
-                "../variables/var_15/subvariables/0005/",
-                "../variables/var_15/subvariables/0006/"
+                "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0001/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0002/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0003/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0004/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0005/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0006/"
             ],
-            "subvariables_catalog": "../variables/var_15/subvariables/",
+            "subvariables_catalog": "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/",
             "type": "numeric_array"
         },
         "../variables/var_17/": {
@@ -100,12 +102,12 @@
             "scale": "interval",
             "secure": false,
             "subvariables": [
-                "../variables/var_17/subvariables/0001/",
-                "../variables/var_17/subvariables/0002/",
-                "../variables/var_17/subvariables/0003/",
-                "../variables/var_17/subvariables/0004/"
+                "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0001/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0002/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0003/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0004/"
             ],
-            "subvariables_catalog": "../variables/var_17/subvariables/",
+            "subvariables_catalog": "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/",
             "type": "categorical_array"
         },
         "../variables/var_22/": {
@@ -131,10 +133,10 @@
             "notes": "Have you ever heard of the vegetable...?",
             "secure": false,
             "subvariables": [
-                "../variables/var_26/subvariables/0001/",
-                "../variables/var_26/subvariables/0002/"
+                "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0001/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0002/"
             ],
-            "subvariables_catalog": "../variables/var_26/subvariables/",
+            "subvariables_catalog": "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/",
             "type": "multiple_response",
             "uniform_basis": false
         },
@@ -149,10 +151,10 @@
             "notes": "Have you ever bought...?",
             "secure": false,
             "subvariables": [
-                "../variables/var_29/subvariables/0001/",
-                "../variables/var_29/subvariables/0002/"
+                "https://app.crunch.io/api/datasets/veg/variables/var_29/subvariables/0001/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_29/subvariables/0002/"
             ],
-            "subvariables_catalog": "../variables/var_29/subvariables/",
+            "subvariables_catalog": "https://app.crunch.io/api/datasets/veg/variables/var_29/subvariables/",
             "type": "multiple_response",
             "uniform_basis": false
         },
@@ -167,10 +169,10 @@
             "notes": "Have you ever considered buying...?",
             "secure": false,
             "subvariables": [
-                "../variables/var_32/subvariables/0001/",
-                "../variables/var_32/subvariables/0002/"
+                "https://app.crunch.io/api/datasets/veg/variables/var_32/subvariables/0001/",
+                "https://app.crunch.io/api/datasets/veg/variables/var_32/subvariables/0002/"
             ],
-            "subvariables_catalog": "../variables/var_32/subvariables/",
+            "subvariables_catalog": "https://app.crunch.io/api/datasets/veg/variables/var_32/subvariables/",
             "type": "multiple_response",
             "uniform_basis": false
         },

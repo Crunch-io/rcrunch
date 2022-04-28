@@ -34,6 +34,11 @@ response_redactor <- function(ds, desired_ds_id) {
     # Combine ID redaction with the redaction done in
     # inst/httptest/redact.R
     function(response) {
+        ## Convert from team.crunch.io to app.crunch.io to match old fixtures
+        response <- response %>%
+            gsub_response("https.//team.crunch.io", "https://app.crunch.io") %>%
+            gsub_response("https%3A%2F%2Fteam.crunch.io", "https%3A%2F%2Fapp.crunch.io")
+
         ## Remove multipart form fields because POST sources/ sends a tmpfile path
         ## that's different every time, so the request will never match.
         response$request$fields <- NULL
@@ -137,6 +142,8 @@ ids_from_ds <- function(ds, desired_ds_id) {
     ids <- c(
         # User ID
         "user_id" = me()@body$id,
+        # owner ID (the project generally)
+        "proj_id" = projects()[["Vegetables fixture"]]@body$id,
         # Dataset ID
         setNames(crunch::id(ds), desired_ds_id),
         # Variable IDs
