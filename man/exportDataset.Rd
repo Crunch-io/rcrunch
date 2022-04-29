@@ -9,7 +9,7 @@
 exportDataset(
   dataset,
   file,
-  format = c("csv", "spss"),
+  format = c("csv", "spss", "parquet"),
   categorical = c("name", "id"),
   na = NULL,
   varlabel = c("name", "description"),
@@ -26,7 +26,7 @@ expression on the rows and a selection of variables on the columns.}
 \item{file}{character local filename to write to}
 
 \item{format}{character export format: currently supported values are "csv"
-and "spss".}
+and "spss" (and experimental support for "parquet").}
 
 \item{categorical}{character: export categorical values to CSV as category
 "name" (default) or "id". Ignored by the SPSS exporter.}
@@ -62,4 +62,14 @@ Invisibly, \code{file}.
 }
 \description{
 This function allows you to write a CrunchDataset to a .csv or SPSS .sav file.
+}
+\examples{
+\dontrun{
+csv_file <- exportDataset(ds, "data.csv")
+data <- read.csv(csv_file)
+
+# parquet will likely read more quickly and be a smaller download size
+parquet_file <- exportDataset(ds, "data.parquet")
+# data <- arrow::read_parquet(parquet_file) # The arrow package can read parquet files
+}
 }

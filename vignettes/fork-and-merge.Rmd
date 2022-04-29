@@ -14,14 +14,12 @@ One of the main benefits of Crunch is that it lets analysts and clients work wit
 
 ```{r, eval = FALSE, message=FALSE}
 library(crunch)
-login()
 ```
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
 library(httptest)
 start_vignette("fork-and-merge")
-login()
 ```
 
 ```{r message=FALSE, results='hide'}

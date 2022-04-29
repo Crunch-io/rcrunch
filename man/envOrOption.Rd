@@ -57,8 +57,6 @@ the option name is in all capital letters, with "." replaced with
    crunch.namekey.dataset \tab R_CRUNCH_NAMEKEY_DATASET \tab "alias" \tab What variable identifier (alias or name) to use for a dataset's variables \cr
    crunch.namekey.array \tab R_CRUNCH_NAMEKEY_ARRAY \tab "alias" \tab What variable identifier (alias or name) to use for an array's subvariables \cr
    crunch.namekey.variableorder \tab R_CRUNCH_NAMEKEY_VARIABLEORDER \tab "name" \tab What variable identifier (alias or name) to use for an order's variables \cr
-   crunch.email \tab R_CRUNCH_EMAIL \tab  \tab (Deprecated) Email to use for \code{\link[=login]{login()}} \cr
-   crunch.pw \tab R_CRUNCH_PW \tab  \tab (Deprecated) Password to use for \code{\link[=login]{login()}} \cr
    use.legacy.tabbook.endpoint \tab R_USE_LEGACY_TABBOOK_ENDPOINT \tab FALSE \tab (Deprecated) Whether to use legacy tabbook endpoint in \code{\link[=tabBook]{tabBook()}} \cr
 }
 }

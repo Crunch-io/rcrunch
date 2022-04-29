@@ -3,6 +3,7 @@
 # crunch 1.29.1
 * Fix a bug where environment variables could not set numeric or logical options like
   "R_CRUNCH_TIMEOUT". (#593)
+* Experimental support for parquet export in `exportDataset()` (#595)
 * Uses the "public" variable folder rather than the root to pave the way for an upcoming
   join feature. In general end users should not notice. (#592)
 

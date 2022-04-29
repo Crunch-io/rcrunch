@@ -20,7 +20,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' login()
 #' data <- data.frame(
 #'     wave = factor(c("a", "b", "c", "d", "e"))
 #' )
