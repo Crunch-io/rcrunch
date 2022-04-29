@@ -366,7 +366,7 @@ is.singleCharacter <- function(value) {
 #'
 #' @keywords internal
 checkInstalledPackages <- function(pkgs) {
-    installed <- pkgs %in% rownames(installed.packages())
+    installed <- pkgs %in% rownames(utils::installed.packages())
     if (!all(installed)) {
         halt("Missing required packages: ", serialPaste(dQuote(pkgs[!installed])))
     }
