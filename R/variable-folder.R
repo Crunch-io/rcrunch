@@ -1,14 +1,3 @@
-rootVariableFolder <- function(x) {
-    # This function exists because the generic rootFolder() for a dataset would
-    # get the root project folder, i.e. the root for moving it.
-    # This function gives you the root variable folder for a dataset or thing
-    # contained in a dataset.
-    if (!is.dataset(x)) {
-        x <- ShojiEntity(crGET(datasetReference(x)))
-    }
-    return(VariableFolder(crGET(shojiURL(x, "catalogs", "folders"))))
-}
-
 #' @rdname describe-entity
 #' @export
 setMethod(

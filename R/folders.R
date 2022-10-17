@@ -333,7 +333,7 @@ folder_recurse <- function(folder) {
 }
 
 # take a folder/var tree (from folder_recurse) and copy it to dataset
-plant_tree <- function(tree, dataset, folder_position = rootVariableFolder(dataset)) {
+plant_tree <- function(tree, dataset, folder_position) {
     lapply(seq_along(tree), function(i) {
         item <- tree[[i]]
         if(!is.null(names(item))) {
@@ -379,8 +379,9 @@ copyFolders <- function(source, target) {
     if (!is.dataset(source) | !is.dataset(target)) {
         halt("Both source and target must be Crunch datasets.")
     }
-    source_tree <- folder_recurse(rootVariableFolder(source))
-    plant_tree(list(source_tree), target)
+    source_tree <- folder_recurse(publicFolder(source))
+    plant_tree(list(source_tree), target, publicFolder(target))
+
     return(invisible(refresh(target)))
 }
 
