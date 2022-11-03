@@ -112,7 +112,7 @@ with_mock_crunch({
         # test local CDF variables
         cdf$newvar <- expected$newvar <- c(1:209, NA)
 
-        expect_identical(csvToDataFrame(csv_df, cdf), expected)
+        expect_equal(csvToDataFrame(csv_df, cdf), expected)
     })
 
     test_that("csvToDataFrame respects include.hidden", {
@@ -122,7 +122,7 @@ with_mock_crunch({
         cdf <- as.data.frame(ds, include.hidden = FALSE)
         actual <- csvToDataFrame(csv_df, cdf)
         actual <- actual[, !grepl("^funnel", names(actual))] # funnel vars added after test added
-        expect_identical(actual, expected)
+        expect_equal(actual, expected)
     })
 
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
