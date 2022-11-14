@@ -20,9 +20,11 @@ use \code{usethis::edit_r_environ()} to open the file if you have the
 \code{usethis} package installed). The .Renviron file has the name of the
 environment varia ble, followed by an equal sign and then the value. It
 is good practice to set the API host too, (usually equal to
-"https://app.crunch.io/api/").\preformatted{R_CRUNCH_API=https://app.crunch.io/api/
+"https://app.crunch.io/api/").
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{R_CRUNCH_API=https://app.crunch.io/api/
 R_CRUNCH_API_KEY=YOUR_SECRET_KEY
-}
+}\if{html}{\out{</div>}}
 
 You can either restart your session, or run \code{readRenviron("~/.Renviron")}
 and then rcrunch will know to use your key going forward.

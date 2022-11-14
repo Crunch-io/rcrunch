@@ -85,7 +85,9 @@ variables or expressions, see \code{deriveArray()} for more details
 \item \code{arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))} Take a subset of an
 existing array variable, identifying the subvariables by alias, name, or id (if \code{x} is
 an expression, you must use id).
-\item \preformatted{ alterArrayExpr(
+\item 
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ alterArrayExpr(
    x,
    add = NULL,
    order = NULL,
@@ -95,7 +97,7 @@ an expression, you must use id).
    subreferences = NULL,
    subreferences_id = c("alias", "name", "id")
 )
-}
+}\if{html}{\out{</div>}}
 
 Add, reorder, remove or rename subvariables on an an array variable \code{x}. The \code{add} argument is
 a list of variables or expressions, optionally named with the id they should have. \code{order}

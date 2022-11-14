@@ -6,8 +6,10 @@
 \title{Context managers}
 \usage{
 ContextManager(
-  enter = function() { },
-  exit = function() { },
+  enter = function() {
+ },
+  exit = function() {
+ },
   error = NULL,
   as = NULL
 )
