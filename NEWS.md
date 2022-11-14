@@ -1,3 +1,6 @@
+# crunch 1.30.1
+* Fixes for problems found with R-devel found by CRAN checks.
+
 # crunch 1.30.0
 * Authenticating with crunch via `login()` is no longer supported. See
   the `vignette("crunch")` or `?crunch-api-key` for more details on 
