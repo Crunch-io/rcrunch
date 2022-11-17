@@ -1,3 +1,5 @@
+# crunch 1.30.2 (Development version)
+
 # crunch 1.30.1
 * Fixes for problems found with R-devel found by CRAN checks.
 
