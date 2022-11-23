@@ -160,7 +160,8 @@ runCrunchAutomation <- function(
         shojiURL(dataset, "catalogs", "scripts"),
         body = toJSON(wrapEntity(body = body)),
         status.handlers = list(`400` = crunchAutomationErrorHandler),
-        progress.handler = crunchAutomationErrorHandler
+        progress.handler = crunchAutomationErrorHandler,
+        config = add_headers(`Content-Type` = "application/json")
     )
     # Provide feedback for dry_run success so that user is confident it was succesful
     if (isTRUE(body$dry_run)) message("Script dry run was successful")
