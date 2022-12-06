@@ -38,7 +38,16 @@ NULL
     # are available to all
     api_must_work <- type != "private"
 
-    url <- shojiURL(rootVariableFolder(x), "catalogs", api_type, mustWork = api_must_work)
+    # Get root variables folder (which contains the first levels inside of it
+    # but isn't really used directly). NB can't use `rootFolder()` because
+    # it goes to the folder that contains the dataset, not the root variables
+    # folder.
+    if (!is.dataset(x)) {
+        x <- ShojiEntity(crGET(datasetReference(x)))
+    }
+    root <- VariableFolder(crGET(shojiURL(x, "catalogs", "folders")))
+
+    url <- shojiURL(root, "catalogs", api_type, mustWork = api_must_work)
     if (is.null(url)) return(url)
 
     VariableFolder(crGET(url))
