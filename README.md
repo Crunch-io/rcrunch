@@ -30,7 +30,7 @@ The crunch R package needs to know what URL to use for the API and what your tok
 For more details on how to get an API token, see the [help center article](https://help.crunch.io/hc/en-us/articles/4415963337869-API-Keys).
 
 The `usethis` package can help you set environment environment variables, the following code will
-open a text editor:
+open your text editor:
 
     $ R
     > if (!require("usethis")) install.packages("usethis")
