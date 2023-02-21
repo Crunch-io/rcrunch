@@ -84,7 +84,7 @@ If you are a Crunch developer serving a version of the API/backend with Vagrant 
 Example of local usage:
 
 ```bash
-$ R_TEST_VERIFY_SSL=TRUE CRUNCH_TEST_API_KEY=t0pSecretK3y! R_TEST_API=https://local.crunch.io:28443/api/ make test INTEGRATION=TRUE file=variable-summary
+$ R_TEST_VERIFY_SSL=TRUE CRUNCH_TEST_API_KEY=t0pSecretK3y! R_TEST_API=https://local.crunch.io:28443/api/ make test INTEGRATION=FALSE file=variable-summary
 ```
 
 ### Updating documentation
