@@ -110,7 +110,7 @@ with_test_authentication({
     unifs <- runif(20)
     with(temp.option(httpcache.log = ""), {
         avlog <- capture.output(ds <- addVariables(ds, list(
-            VarDef(1, name = "One", description = "the loneliest"),
+            VarDef(1, name = "One", alias="One", description = "the loneliest"),
             VarDef(unifs, name = "Some random stuff", alias = "runif")
         )))
     })
