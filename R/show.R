@@ -215,8 +215,7 @@ formatVersionCatalog <- function(x, from = Sys.time()) {
 formatScriptCatalog <- function(x, from = Sys.time(), body_width = 20) {
     ts <- timestamps(x)
     ts <- .ts_format(ts, from)
-
-    scriptBody <- vapply(scriptBody(x), function(script) {
+    scriptBody <- vapply(getIndexSlot(x, "body_excerpt"), function(script) {
         if (nchar(script) > body_width) {
             paste0(strtrim(script, max(body_width - 3, 0)), "...")
         } else {
@@ -226,6 +225,8 @@ formatScriptCatalog <- function(x, from = Sys.time(), body_width = 20) {
 
     return(data.frame(
         Timestamp = ts,
+        mutations = getIndexSlot(x, "mutations", logical(1), NA),
+        items_created = getIndexSlot(x, "items_created", numeric(1), NA_real_),
         scriptBody = scriptBody,
         stringsAsFactors = FALSE,
         row.names = NULL

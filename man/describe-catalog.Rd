@@ -28,7 +28,6 @@
 \alias{ids,AbstractCategories-method}
 \alias{timestamps,ScriptCatalog-method}
 \alias{timestamps,Script-method}
-\alias{scriptBody,ScriptCatalog-method}
 \alias{scriptBody,Script-method}
 \alias{names,BatchCatalog-method}
 \alias{ids<-,Categories-method}
@@ -115,8 +114,6 @@ dates(x) <- value
 \S4method{timestamps}{ScriptCatalog}(x)
 
 \S4method{timestamps}{Script}(x)
-
-\S4method{scriptBody}{ScriptCatalog}(x)
 
 \S4method{scriptBody}{Script}(x)
 

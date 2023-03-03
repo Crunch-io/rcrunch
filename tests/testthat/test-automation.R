@@ -77,7 +77,6 @@ with_mock_crunch({
             timestamps(ds_scripts),
             as.POSIXlt("2020-05-06 17:36:27.237 UTC", tz = "UTC")
         )
-        expect_equal(scriptBody(ds_scripts), script_text)
         # On single script
         expect_is(ds_scripts[[1]], "Script")
         expect_true(is.script(ds_scripts[[1]]))
@@ -102,6 +101,8 @@ with_mock_crunch({
             formatted,
             data.frame(
                 Timestamp = c("2 days ago"),
+                mutations = TRUE,
+                items_created = 0,
                 scriptBody = paste0(strtrim(script_text, 7), "..."),
                 stringsAsFactors = FALSE
             )
