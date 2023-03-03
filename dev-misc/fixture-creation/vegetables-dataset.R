@@ -21,6 +21,8 @@ library(fs)
 library(here)
 library(purrr)
 
+setupCrunchAuth("team")
+
 source(here("dev-misc/fixture-creation/redactors.R"))
 
 if (!"Vegetables fixture" %in% names(projects())) {
@@ -624,7 +626,17 @@ stabilize_json_files(
         list(list("body", "creation_time"), "2021-01-01T21:25:59.791000"),
         list(list("body", "modification_time"), "2021-01-01T21:26:43.038000"),
         list(list("body", "access_time"), "2021-01-01T21:26:43.038000"),
+        list(
+            # --- Only keep the palettes from the project folder so changes to crunch org
+            # --- don't affect fixtures. Maybe it'd be better to ask for a rcrunch test
+            # --- account, but this is okay for now
+            list("body", "palette", "analysis"),
+            function(x) {
+                purrr::keep(x, ~.$name %in% c("Default green palette for fixture", "purple palette for fixture"))
+            }
+        ),
         list(list("urls", "owner_url"), "https://app.crunch.io/api/projects/pid/")
+
     ),
     list(
         "app.crunch.io/api/datasets/veg/decks.json",
