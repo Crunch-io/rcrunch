@@ -43,44 +43,13 @@
                 },
                 {
                     "default": false,
-                    "name": "purple palette",
+                    "name": "purple palette for fixture",
                     "palette": [
                         "#340043",
                         "#640083",
                         "#9100bf",
                         "#c300ff",
                         "#e17fff"
-                    ],
-                    "type": "qualitative"
-                },
-                {
-                    "default": false,
-                    "name": "Green Palette for dashboard",
-                    "palette": [
-                        "#4fc3f7",
-                        "#4dd0e1",
-                        "#4db6ac",
-                        "#81c783",
-                        "#aed581",
-                        "#dce775",
-                        "#cddc39",
-                        "#fdae6b"
-                    ],
-                    "type": "qualitative"
-                },
-                {
-                    "default": false,
-                    "name": "Rainbow",
-                    "palette": [
-                        "#00bcd4",
-                        "#9575cd",
-                        "#ffa299",
-                        "#4c8cb8",
-                        "#303f9f",
-                        "#0097a7",
-                        "#8fb7ae",
-                        "#d4e3e0",
-                        "#d1c4e9"
                     ],
                     "type": "qualitative"
                 }
@@ -91,17 +60,18 @@
                 "secondary": "#107f65"
             }
         },
+        "path": "Vegetables fixture|Vegetables example",
         "permissions": {
             "edit": true,
             "view": true
         },
         "size": {
-            "columns": 32,
-            "derivations": 6,
+            "columns": 26,
+            "derivations": 0,
             "rows": 210,
             "source_columns": 26,
             "unfiltered_rows": 210,
-            "variables": 32
+            "variables": 26
         },
         "start_date": null,
         "streaming": "no",
@@ -126,6 +96,7 @@
         "teams": "https://app.crunch.io/api/datasets/veg/teams/",
         "users": "https://app.crunch.io/api/datasets/veg/users/",
         "variables": "https://app.crunch.io/api/datasets/veg/variables/",
+        "variables_by_type": "https://app.crunch.io/api/datasets/veg/variables/?type={type}",
         "variables_private": "https://app.crunch.io/api/datasets/veg/variables/private/",
         "views": "https://app.crunch.io/api/datasets/veg/views/"
     },

@@ -108,53 +108,17 @@
             "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/": {
                 "alias": "enjoy_mr_savory",
                 "description": "Enjoyment of savory food (binary)",
-                "format": {
-                    "summary": {
-                        "digits": 0
-                    }
-                },
-                "name": "Savory",
-                "notes": "Do you typically enjoy food that is savory?",
-                "view": {
-                    "column_width": null,
-                    "include_missing": false,
-                    "show_counts": false,
-                    "show_numeric_values": false
-                }
+                "name": "Savory"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0002/": {
                 "alias": "enjoy_mr_spicy",
                 "description": "Enjoyment of spicy food (binary)",
-                "format": {
-                    "summary": {
-                        "digits": 0
-                    }
-                },
-                "name": "Spicy",
-                "notes": "Do you typically enjoy food that is spicy?",
-                "view": {
-                    "column_width": null,
-                    "include_missing": false,
-                    "show_counts": false,
-                    "show_numeric_values": false
-                }
+                "name": "Spicy"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0003/": {
                 "alias": "enjoy_mr_sweet",
                 "description": "Enjoyment of sweet food (binary)",
-                "format": {
-                    "summary": {
-                        "digits": 0
-                    }
-                },
-                "name": "Sweet",
-                "notes": "Do you typically enjoy food that is sweet?",
-                "view": {
-                    "column_width": null,
-                    "include_missing": false,
-                    "show_counts": false,
-                    "show_numeric_values": false
-                }
+                "name": "Sweet"
             }
         },
         "subvariables": [
@@ -172,7 +136,7 @@
         }
     },
     "catalogs": {
-        "folder": "https://app.crunch.io/api/datasets/veg/folders/",
+        "folder": "https://app.crunch.io/api/datasets/veg/folders/public/",
         "parent": "https://app.crunch.io/api/datasets/veg/variables/",
         "subvariables": "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/"
     },

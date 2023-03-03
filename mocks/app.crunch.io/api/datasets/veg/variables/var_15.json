@@ -91,7 +91,7 @@
         "hidden": false,
         "id": "var_15",
         "missing_reasons": {
-            "No Data": -1
+
         },
         "name": "Vegetable Ratings",
         "notes": "On a scale of 0-100, how would you rate...?",
@@ -102,104 +102,32 @@
             "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0001/": {
                 "alias": "ratings_numa_avocado",
                 "description": "Avocado Rating (100 point scale)",
-                "format": {
-                    "data": {
-                        "digits": 2
-                    },
-                    "summary": {
-                        "digits": 2
-                    }
-                },
-                "name": "Avocado",
-                "notes": "What is your rating between 0 and 100 of: Avocado",
-                "view": {
-                    "column_width": null
-                }
+                "name": "Avocado"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0002/": {
                 "alias": "ratings_numa_brussel_sprout",
                 "description": "Brussel Sprout Rating (100 point scale)",
-                "format": {
-                    "data": {
-                        "digits": 2
-                    },
-                    "summary": {
-                        "digits": 2
-                    }
-                },
-                "name": "Brussel Sprout",
-                "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
-                "view": {
-                    "column_width": null
-                }
+                "name": "Brussel Sprout"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0003/": {
                 "alias": "ratings_numa_carrot",
                 "description": "Carrot Rating (100 point scale)",
-                "format": {
-                    "data": {
-                        "digits": 2
-                    },
-                    "summary": {
-                        "digits": 2
-                    }
-                },
-                "name": "Carrot",
-                "notes": "What is your rating between 0 and 100 of: Carrot",
-                "view": {
-                    "column_width": null
-                }
+                "name": "Carrot"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0004/": {
                 "alias": "ratings_numa_daikon",
                 "description": "Daikon Rating (100 point scale)",
-                "format": {
-                    "data": {
-                        "digits": 2
-                    },
-                    "summary": {
-                        "digits": 2
-                    }
-                },
-                "name": "Daikon",
-                "notes": "What is your rating between 0 and 100 of: Daikon",
-                "view": {
-                    "column_width": null
-                }
+                "name": "Daikon"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0005/": {
                 "alias": "ratings_numa_eggplant",
                 "description": "Eggplant Rating (100 point scale)",
-                "format": {
-                    "data": {
-                        "digits": 2
-                    },
-                    "summary": {
-                        "digits": 2
-                    }
-                },
-                "name": "Eggplant",
-                "notes": "What is your rating between 0 and 100 of: Eggplant",
-                "view": {
-                    "column_width": null
-                }
+                "name": "Eggplant"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0006/": {
                 "alias": "ratings_numa_fennel",
                 "description": "Fennel Rating (100 point scale)",
-                "format": {
-                    "data": {
-                        "digits": 2
-                    },
-                    "summary": {
-                        "digits": 2
-                    }
-                },
-                "name": "Fennel",
-                "notes": "What is your rating between 0 and 100 of: Fennel",
-                "view": {
-                    "column_width": null
-                }
+                "name": "Fennel"
             }
         },
         "subvariables": [
@@ -216,7 +144,7 @@
         }
     },
     "catalogs": {
-        "folder": "https://app.crunch.io/api/datasets/veg/folders/",
+        "folder": "https://app.crunch.io/api/datasets/veg/folders/public/",
         "parent": "https://app.crunch.io/api/datasets/veg/variables/",
         "subvariables": "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/"
     },
