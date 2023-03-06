@@ -22,7 +22,7 @@ with_test_authentication({
             all(c("Home, flipped", "Work, flipped", "Pet, flipped") %in% names(variables(ds)))
         )
         expect_true(
-            all(c("home_flipped", "work_flipped", "pet_flipped") %in% names(ds))
+            all(c("Home_flipped", "Work_flipped", "Pet_flipped") %in% names(ds))
         )
         expect_identical(
             names(subvariables(ds[["home_flipped"]])),
