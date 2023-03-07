@@ -161,7 +161,7 @@ ids_from_ds <- function(ds, desired_ds_id) {
         ),
         # Multitable IDs
         setNames(
-            lapply(multitables(ds), function(mt) mt@body$id),
+            lapply(seq_along(multitables(ds)), function(iii) multitables(ds)[[iii]]@body$id),
             sprintf("mt_%02d", seq_along(multitables(ds)))
         ),
         # Folder IDs

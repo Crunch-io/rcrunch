@@ -29,6 +29,10 @@ if (!"Vegetables fixture" %in% names(projects())) {
     stop("Must have project named 'Vegetables fixture' with correct palette")
 }
 
+if ("Vegetables example" %in% listDatasets()) {
+    stop("Must not already have a dataset named 'Vegetables example'")
+}
+
 # Setup dataset ----
 ## Data generation helpers ----
 random_gen_func <- function(...) {
