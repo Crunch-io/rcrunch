@@ -479,7 +479,7 @@ setGeneric("palettes", function(x) standardGeneric("palettes"))
 #' @export
 setGeneric("defaultPalette", function(x, ...) standardGeneric("defaultPalette"))
 
-# for ggplot to not copmlain when given crunchdata
+# for ggplot to not complain when given crunchdata
 #' Fortify crunch objects for use with ggplot
 #'
 #' @param model model or other R object to convert to data frame
@@ -493,3 +493,5 @@ fortify.CrunchDataFrame <- function(model, data, ...) model
 #' @rdname fortify
 #' @export fortify.CrunchDataset
 fortify.CrunchDataset <- function(model, data, ...) model
+
+setGeneric("sendCrunchAutomationScript", function(x, ...) standardGeneric("sendCrunchAutomationScript"))
