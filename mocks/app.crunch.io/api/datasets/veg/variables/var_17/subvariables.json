@@ -10,7 +10,7 @@
             "hidden": false,
             "id": "0001",
             "name": "Healthy",
-            "notes": "Do you eat vegetables because: they are healthy",
+            "notes": "",
             "scale": "interval",
             "secure": false,
             "type": "categorical"
@@ -23,7 +23,7 @@
             "hidden": false,
             "id": "0002",
             "name": "Tasty",
-            "notes": "Do you eat vegetables because: they taste good",
+            "notes": "",
             "scale": "interval",
             "secure": false,
             "type": "categorical"
@@ -36,7 +36,7 @@
             "hidden": false,
             "id": "0003",
             "name": "Filling",
-            "notes": "Do you eat vegetables because: they are filling",
+            "notes": "",
             "scale": "interval",
             "secure": false,
             "type": "categorical"
@@ -49,7 +49,7 @@
             "hidden": false,
             "id": "0004",
             "name": "Environmental",
-            "notes": "Do you eat vegetables because: eating them is good for the environment",
+            "notes": "",
             "scale": "interval",
             "secure": false,
             "type": "categorical"

@@ -10,7 +10,7 @@
             "hidden": false,
             "id": "0001",
             "name": "Savory",
-            "notes": "Do you typically enjoy food that is savory?",
+            "notes": "",
             "scale": "interval",
             "secure": false,
             "type": "categorical"
@@ -23,7 +23,7 @@
             "hidden": false,
             "id": "0002",
             "name": "Spicy",
-            "notes": "Do you typically enjoy food that is spicy?",
+            "notes": "",
             "scale": "interval",
             "secure": false,
             "type": "categorical"
@@ -36,7 +36,7 @@
             "hidden": false,
             "id": "0003",
             "name": "Sweet",
-            "notes": "Do you typically enjoy food that is sweet?",
+            "notes": "",
             "scale": "interval",
             "secure": false,
             "type": "categorical"

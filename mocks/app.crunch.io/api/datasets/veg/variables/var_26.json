@@ -107,36 +107,12 @@
             "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0001/": {
                 "alias": "funnel_aware_mr_1",
                 "description": "Awareness MR - Jicama",
-                "format": {
-                    "summary": {
-                        "digits": 0
-                    }
-                },
-                "name": "Jicama",
-                "notes": "Have you ever heard of the vegetable Jicama?",
-                "view": {
-                    "column_width": null,
-                    "include_missing": false,
-                    "show_counts": false,
-                    "show_numeric_values": false
-                }
+                "name": "Jicama"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0002/": {
                 "alias": "funnel_aware_mr_2",
                 "description": "Awareness MR - Kohlrabi",
-                "format": {
-                    "summary": {
-                        "digits": 0
-                    }
-                },
-                "name": "Kohlrabi",
-                "notes": "Have you ever heard of the vegetable Kohlrabi?",
-                "view": {
-                    "column_width": null,
-                    "include_missing": false,
-                    "show_counts": false,
-                    "show_numeric_values": false
-                }
+                "name": "Kohlrabi"
             }
         },
         "subvariables": [
@@ -170,7 +146,7 @@
         }
     },
     "catalogs": {
-        "folder": "https://app.crunch.io/api/datasets/veg/folders/",
+        "folder": "https://app.crunch.io/api/datasets/veg/folders/public/",
         "parent": "https://app.crunch.io/api/datasets/veg/variables/",
         "subvariables": "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/"
     },

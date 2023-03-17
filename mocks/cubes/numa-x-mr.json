@@ -70,56 +70,24 @@
                             {
                                 "alias": "enjoy_mr_savory",
                                 "description": "Enjoyment of savory food (binary)",
-                                "format": {
-                                    "summary": {
-                                        "digits": 0
-                                    }
-                                },
-                                "name": "Savory",
-                                "notes": "Do you typically enjoy food that is savory?",
-                                "view": {
-                                    "column_width": null,
-                                    "include_missing": false,
-                                    "show_counts": false,
-                                    "show_numeric_values": false
-                                }
+                                "name": "Savory"
                             },
                             {
                                 "alias": "enjoy_mr_spicy",
                                 "description": "Enjoyment of spicy food (binary)",
-                                "format": {
-                                    "summary": {
-                                        "digits": 0
-                                    }
-                                },
-                                "name": "Spicy",
-                                "notes": "Do you typically enjoy food that is spicy?",
-                                "view": {
-                                    "column_width": null,
-                                    "include_missing": false,
-                                    "show_counts": false,
-                                    "show_numeric_values": false
-                                }
+                                "name": "Spicy"
                             },
                             {
                                 "alias": "enjoy_mr_sweet",
                                 "description": "Enjoyment of sweet food (binary)",
-                                "format": {
-                                    "summary": {
-                                        "digits": 0
-                                    }
-                                },
-                                "name": "Sweet",
-                                "notes": "Do you typically enjoy food that is sweet?",
-                                "view": {
-                                    "column_width": null,
-                                    "include_missing": false,
-                                    "show_counts": false,
-                                    "show_numeric_values": false
-                                }
+                                "name": "Sweet"
                             }
                         ],
-                        "uniform_basis": false
+                        "uniform_basis": false,
+                        "view": {
+                            "include_missing": false,
+                            "show_counts": false
+                        }
                     },
                     "type": {
                         "class": "enum",
@@ -133,19 +101,7 @@
                                     "references": {
                                         "alias": "enjoy_mr_savory",
                                         "description": "Enjoyment of savory food (binary)",
-                                        "format": {
-                                            "summary": {
-                                                "digits": 0
-                                            }
-                                        },
-                                        "name": "Savory",
-                                        "notes": "Do you typically enjoy food that is savory?",
-                                        "view": {
-                                            "column_width": null,
-                                            "include_missing": false,
-                                            "show_counts": false,
-                                            "show_numeric_values": false
-                                        }
+                                        "name": "Savory"
                                     }
                                 }
                             },
@@ -158,19 +114,7 @@
                                     "references": {
                                         "alias": "enjoy_mr_spicy",
                                         "description": "Enjoyment of spicy food (binary)",
-                                        "format": {
-                                            "summary": {
-                                                "digits": 0
-                                            }
-                                        },
-                                        "name": "Spicy",
-                                        "notes": "Do you typically enjoy food that is spicy?",
-                                        "view": {
-                                            "column_width": null,
-                                            "include_missing": false,
-                                            "show_counts": false,
-                                            "show_numeric_values": false
-                                        }
+                                        "name": "Spicy"
                                     }
                                 }
                             },
@@ -183,19 +127,7 @@
                                     "references": {
                                         "alias": "enjoy_mr_sweet",
                                         "description": "Enjoyment of sweet food (binary)",
-                                        "format": {
-                                            "summary": {
-                                                "digits": 0
-                                            }
-                                        },
-                                        "name": "Sweet",
-                                        "notes": "Do you typically enjoy food that is sweet?",
-                                        "view": {
-                                            "column_width": null,
-                                            "include_missing": false,
-                                            "show_counts": false,
-                                            "show_numeric_values": false
-                                        }
+                                        "name": "Sweet"
                                     }
                                 }
                             }
@@ -216,56 +148,24 @@
                             {
                                 "alias": "enjoy_mr_savory",
                                 "description": "Enjoyment of savory food (binary)",
-                                "format": {
-                                    "summary": {
-                                        "digits": 0
-                                    }
-                                },
-                                "name": "Savory",
-                                "notes": "Do you typically enjoy food that is savory?",
-                                "view": {
-                                    "column_width": null,
-                                    "include_missing": false,
-                                    "show_counts": false,
-                                    "show_numeric_values": false
-                                }
+                                "name": "Savory"
                             },
                             {
                                 "alias": "enjoy_mr_spicy",
                                 "description": "Enjoyment of spicy food (binary)",
-                                "format": {
-                                    "summary": {
-                                        "digits": 0
-                                    }
-                                },
-                                "name": "Spicy",
-                                "notes": "Do you typically enjoy food that is spicy?",
-                                "view": {
-                                    "column_width": null,
-                                    "include_missing": false,
-                                    "show_counts": false,
-                                    "show_numeric_values": false
-                                }
+                                "name": "Spicy"
                             },
                             {
                                 "alias": "enjoy_mr_sweet",
                                 "description": "Enjoyment of sweet food (binary)",
-                                "format": {
-                                    "summary": {
-                                        "digits": 0
-                                    }
-                                },
-                                "name": "Sweet",
-                                "notes": "Do you typically enjoy food that is sweet?",
-                                "view": {
-                                    "column_width": null,
-                                    "include_missing": false,
-                                    "show_counts": false,
-                                    "show_numeric_values": false
-                                }
+                                "name": "Sweet"
                             }
                         ],
-                        "uniform_basis": false
+                        "uniform_basis": false,
+                        "view": {
+                            "include_missing": false,
+                            "show_counts": false
+                        }
                     },
                     "type": {
                         "categories": [
@@ -400,104 +300,32 @@
                                 {
                                     "alias": "ratings_numa_avocado",
                                     "description": "Avocado Rating (100 point scale)",
-                                    "format": {
-                                        "data": {
-                                            "digits": 2
-                                        },
-                                        "summary": {
-                                            "digits": 2
-                                        }
-                                    },
-                                    "name": "Avocado",
-                                    "notes": "What is your rating between 0 and 100 of: Avocado",
-                                    "view": {
-                                        "column_width": null
-                                    }
+                                    "name": "Avocado"
                                 },
                                 {
                                     "alias": "ratings_numa_brussel_sprout",
                                     "description": "Brussel Sprout Rating (100 point scale)",
-                                    "format": {
-                                        "data": {
-                                            "digits": 2
-                                        },
-                                        "summary": {
-                                            "digits": 2
-                                        }
-                                    },
-                                    "name": "Brussel Sprout",
-                                    "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
-                                    "view": {
-                                        "column_width": null
-                                    }
+                                    "name": "Brussel Sprout"
                                 },
                                 {
                                     "alias": "ratings_numa_carrot",
                                     "description": "Carrot Rating (100 point scale)",
-                                    "format": {
-                                        "data": {
-                                            "digits": 2
-                                        },
-                                        "summary": {
-                                            "digits": 2
-                                        }
-                                    },
-                                    "name": "Carrot",
-                                    "notes": "What is your rating between 0 and 100 of: Carrot",
-                                    "view": {
-                                        "column_width": null
-                                    }
+                                    "name": "Carrot"
                                 },
                                 {
                                     "alias": "ratings_numa_daikon",
                                     "description": "Daikon Rating (100 point scale)",
-                                    "format": {
-                                        "data": {
-                                            "digits": 2
-                                        },
-                                        "summary": {
-                                            "digits": 2
-                                        }
-                                    },
-                                    "name": "Daikon",
-                                    "notes": "What is your rating between 0 and 100 of: Daikon",
-                                    "view": {
-                                        "column_width": null
-                                    }
+                                    "name": "Daikon"
                                 },
                                 {
                                     "alias": "ratings_numa_eggplant",
                                     "description": "Eggplant Rating (100 point scale)",
-                                    "format": {
-                                        "data": {
-                                            "digits": 2
-                                        },
-                                        "summary": {
-                                            "digits": 2
-                                        }
-                                    },
-                                    "name": "Eggplant",
-                                    "notes": "What is your rating between 0 and 100 of: Eggplant",
-                                    "view": {
-                                        "column_width": null
-                                    }
+                                    "name": "Eggplant"
                                 },
                                 {
                                     "alias": "ratings_numa_fennel",
                                     "description": "Fennel Rating (100 point scale)",
-                                    "format": {
-                                        "data": {
-                                            "digits": 2
-                                        },
-                                        "summary": {
-                                            "digits": 2
-                                        }
-                                    },
-                                    "name": "Fennel",
-                                    "notes": "What is your rating between 0 and 100 of: Fennel",
-                                    "view": {
-                                        "column_width": null
-                                    }
+                                    "name": "Fennel"
                                 }
                             ],
                             "uniform_basis": false

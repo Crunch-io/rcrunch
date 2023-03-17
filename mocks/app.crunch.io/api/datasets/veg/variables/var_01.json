@@ -32,7 +32,7 @@
         }
     },
     "catalogs": {
-        "folder": "https://app.crunch.io/api/datasets/veg/folders/",
+        "folder": "https://app.crunch.io/api/datasets/veg/folders/public/",
         "parent": "https://app.crunch.io/api/datasets/veg/variables/"
     },
     "description": "Details for a given Variable",

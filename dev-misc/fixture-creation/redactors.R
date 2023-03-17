@@ -75,7 +75,9 @@ request_redactor <- function(ds, desired_ds_id) {
 #' @param ... One or more lists, where the first item is a filepath, and
 #' the other items are lists, where the first item is a list indicating
 #' a path to the item in the json using [`purrr::pluck()`] notation and
-#' the second item is what the replacement value should be.
+#' the second item is either an R object of what the replacement value
+#' should be or a function that takes the existing data and returns
+#' the replacement value.
 #'
 #' @return Ignored, used for side effects of changing the files on disk
 #' @examples
@@ -114,7 +116,13 @@ redact_json_file <- function(capture_dir, redaction) {
     json <- jsonlite::read_json(path, simplifyVector = FALSE)
 
     purrr::walk(redaction[-1], function(x) {
-        purrr::pluck(json, !!!x[[1]]) <<- x[[2]]
+        if (is.function(x[[2]])) {
+            val <- x[[2]](purrr::pluck(json, !!!x[[1]]))
+        } else {
+            val <- x[[2]]
+        }
+        purrr::pluck(json, !!!x[[1]]) <<- val
+
     })
 
     jsonlite::write_json(json, path, auto_unbox = TRUE, null = "null", pretty = 4, digits = NA)
@@ -153,7 +161,7 @@ ids_from_ds <- function(ds, desired_ds_id) {
         ),
         # Multitable IDs
         setNames(
-            lapply(multitables(ds), function(mt) mt@body$id),
+            lapply(seq_along(multitables(ds)), function(iii) multitables(ds)[[iii]]@body$id),
             sprintf("mt_%02d", seq_along(multitables(ds)))
         ),
         # Folder IDs
