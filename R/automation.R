@@ -43,11 +43,6 @@ setMethod("timestamps", "Script", function(x) {
 
 #' @rdname describe-catalog
 #' @export
-setMethod("scriptBody", "ScriptCatalog", function(x) {
-    return(getIndexSlot(x, "body"))
-})
-#' @rdname describe-catalog
-#' @export
 setMethod("scriptBody", "Script", function(x) {
     return(x@body$body)
 })
