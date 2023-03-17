@@ -22,12 +22,12 @@
                 "view": true
             },
             "size": {
-                "columns": 32,
-                "derivations": 6,
+                "columns": 26,
+                "derivations": 0,
                 "rows": 210,
                 "source_columns": 26,
                 "unfiltered_rows": 210,
-                "variables": 32
+                "variables": 26
             },
             "start_date": null,
             "streaming": "no",

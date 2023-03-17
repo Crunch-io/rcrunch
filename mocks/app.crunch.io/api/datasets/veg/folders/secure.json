@@ -1,6 +1,10 @@
 {
     "body": {
-        "name": "Secure"
+        "name": "Secure",
+        "path": "|"
+    },
+    "catalogs": {
+        "parents": "https://app.crunch.io/api/datasets/veg/folders/secure/parents/"
     },
     "element": "shoji:catalog",
     "graph": [

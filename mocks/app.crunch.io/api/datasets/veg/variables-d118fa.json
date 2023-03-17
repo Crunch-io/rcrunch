@@ -1,5 +1,6 @@
 {
     "catalogs": {
+        "materialize": "https://app.crunch.io/api/datasets/veg/variables/materialize/",
         "private": "https://app.crunch.io/api/datasets/veg/variables/private/"
     },
     "description": "List of Variables of this dataset",
@@ -34,7 +35,7 @@
             ],
             "subvariables_catalog": "var_02/subvariables/",
             "type": "multiple_response",
-            "uniform_basis": false
+            "uniform_basis": true
         },
         "var_03/": {
             "alias": "enjoy_savory_food",
@@ -228,7 +229,6 @@
             "id": "var_17",
             "name": "Reasons for Enjoying Vegetables",
             "notes": "To what extent do you enjoy vegetables because of...?",
-            "scale": "interval",
             "secure": false,
             "subvariables": [
                 "var_17/subvariables/0001/",
@@ -357,7 +357,7 @@
             ],
             "subvariables_catalog": "var_26/subvariables/",
             "type": "multiple_response",
-            "uniform_basis": false
+            "uniform_basis": true
         },
         "var_27/": {
             "alias": "funnel_buy_1",
@@ -401,7 +401,7 @@
             ],
             "subvariables_catalog": "var_29/subvariables/",
             "type": "multiple_response",
-            "uniform_basis": false
+            "uniform_basis": true
         },
         "var_30/": {
             "alias": "funnel_consider_1",
@@ -445,7 +445,7 @@
             ],
             "subvariables_catalog": "var_32/subvariables/",
             "type": "multiple_response",
-            "uniform_basis": false
+            "uniform_basis": true
         }
     },
     "orders": {

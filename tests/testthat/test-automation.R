@@ -22,7 +22,7 @@ with_mock_crunch({
     temp <- tempfile(fileext = ".txt")
     writeLines(script_text, temp)
 
-    # httptest converts the "\n" to "\\n" in it's capturing
+    # httptest converts the "\n" to "\\n" in its capturing
     script_text_from_request <- gsub("\n", "\\\\n", script_text)
 
     test_that("Query shape is right when coming from string", {
@@ -32,6 +32,28 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/scripts/",
             '{"element":"shoji:entity",',
             '"body":{"body":"', script_text_from_request, '"}}'
+        )
+
+        # Make sure this doesn't fail when there's no error
+        expect_message(showScriptErrors(), NA)
+        # or when reset
+        reset_automation_error_env()
+        expect_message(showScriptErrors(), NA)
+    })
+
+    test_that("Query shape is right when coming from string (with argument named: dataset)", {
+        # Previously, runCrunchAutomation only worked on Crunch datasets,
+        # so its first argument was called dataset;
+        # For backwards compatibility, we want this to still work
+        expect_POST(
+            fixed = TRUE,
+            suppressWarnings(
+                runCrunchAutomation(dataset = ds, script_text, foo = 1, bar = 2)  
+            ),
+            "https://app.crunch.io/api/datasets/1/scripts/",
+            '{"element":"shoji:entity",',
+            '"body":{"body":"', script_text_from_request,
+            '","foo":1,"bar":2}}'
         )
 
         # Make sure this doesn't fail when there's no error
@@ -77,7 +99,6 @@ with_mock_crunch({
             timestamps(ds_scripts),
             as.POSIXlt("2020-05-06 17:36:27.237 UTC", tz = "UTC")
         )
-        expect_equal(scriptBody(ds_scripts), script_text)
         # On single script
         expect_is(ds_scripts[[1]], "Script")
         expect_true(is.script(ds_scripts[[1]]))
@@ -102,6 +123,8 @@ with_mock_crunch({
             formatted,
             data.frame(
                 Timestamp = c("2 days ago"),
+                mutations = TRUE,
+                items_created = 0,
                 scriptBody = paste0(strtrim(script_text, 7), "..."),
                 stringsAsFactors = FALSE
             )
@@ -258,6 +281,97 @@ with_mock_crunch({
             expected
         )
     })
+    
+    test_that("folder-level operation fails on root", {
+        
+        root_project_folder <- projects()
+        script <- "CREATE FOLDER 'My not-to-be folder';"
+        
+        expect_error(
+            runCrunchAutomation(root_project_folder, script),
+            "not support Crunch Automation scripts"
+        )
+    })
+
+    test_that("folder-level operation  works with string script", {
+
+        project_folder   <- cd(projects(), 'Project One')
+        script           <- "CREATE FOLDER 'My to-be folder';"
+        expected_url     <- "https://app.crunch.io/api/projects/project1/execute/"
+        expected_body    <- paste0(
+            '{"element":"shoji:view",',
+            paste0('"value":', '"', script, '"'), '}'
+        )
+
+        expect_POST(
+            runCrunchAutomation(project_folder, script),
+            expected_url, expected_body,
+            fixed = TRUE
+        )
+    })
+    
+    test_that("extra arguments result in an error for folder-level operations", {
+        
+        project_folder   <- cd(projects(), 'Project One')
+        script           <- "CREATE FOLDER 'My to-be folder';"
+        expected_url     <- "https://app.crunch.io/api/projects/project1/execute/"
+        expected_body    <- paste0(
+            '{"element":"shoji:view",',
+            paste0('"value":', '"', script, '"'), '}'
+        )
+        
+        expect_error(
+            expect_POST(
+                runCrunchAutomation(project_folder, script, foo = 1, bar = '2'),
+                expected_url, expected_body,
+                fixed = TRUE
+            ),
+            'not supported'
+        )
+    })
+
+    test_that("folder-level operation works with character vector (length > 1) script", {
+
+        project_folder   <- cd(projects(), 'Project One')
+        script           <- c(
+            "CREATE FOLDER 'My to-be folder';",
+            "CREATE FOLDER 'Another folder';"
+        )
+        expected_url     <- "https://app.crunch.io/api/projects/project1/execute/"
+        # # httptest converts the '\n' to '\\n' in its capturing, that's why
+        # there is '\\n' instead of '\n' below
+        expected_body    <- paste0(
+            '{"element":"shoji:view",',
+            paste0('"value":', '"', paste(script, collapse = '\\n'), '"'), '}'
+        )
+
+        expect_POST(
+            runCrunchAutomation(project_folder, script),
+            expected_url, expected_body,
+            fixed = TRUE
+        )
+    })
+
+    test_that("folder-level operation works with file script", {
+
+        project_folder   <- cd(projects(), 'Project One')
+        script           <- "CREATE FOLDER 'My to-be folder';"
+        temp             <- tempfile(fileext = ".txt")
+        writeLines(script, temp)
+
+        expected_url     <- "https://app.crunch.io/api/projects/project1/execute/"
+        expected_body    <- paste0(
+            '{"element":"shoji:view",',
+            paste0('"value":', '"', paste(script, collapse = '\n'), '"'), '}'
+        )
+
+        expect_POST(
+            runCrunchAutomation(project_folder, temp),
+            expected_url, expected_body,
+            fixed = TRUE
+        )
+    })
+
 })
 
 with_test_authentication({

@@ -7,6 +7,11 @@
         "members": "https://app.crunch.io/api/projects/project1/members/",
         "project": "https://app.crunch.io/api/projects/"
     },
+    "views": {
+        "templates": "https://app.crunch.io/api/projects/project1/templates/",
+        "logo": "https://app.crunch.io/api/projects/project1/logo/",
+        "execute": "https://app.crunch.io/api/projects/project1/execute/"
+    },
     "description": "Details for a specific project",
     "body": {
         "name": "Project One",

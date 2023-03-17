@@ -5,7 +5,7 @@ with_mock_crunch({
     test_that("Can get palettes from dataset", {
         expect_is(palettes, "AnalyticPalettes")
         expect_is(palettes[[1]], "AnalyticPalette")
-        expect_is(palettes[["purple palette"]], "AnalyticPalette")
+        expect_is(palettes[["purple palette for fixture"]], "AnalyticPalette")
         expect_equal(
             palettes[[1]]$palette,
             c("#4fc3f7", "#4dd0e1", "#4db6ac", "#81c783", "#aed581", "#dce775", "#cddc39", "#fdae6b")

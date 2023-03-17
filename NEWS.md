@@ -1,4 +1,7 @@
 # crunch 1.30.2 (Development version)
+* Fix for printing `ScriptCatalog` (and removal of the `ScriptCatalog` method for
+  `ScriptBody` the full body, subset to the particular script if you need the body
+  text with `vapply(scripts(ds), function(x) scriptBody(x), character(1))`).
 
 # crunch 1.30.1
 * Fixes for problems found with R-devel found by CRAN checks.

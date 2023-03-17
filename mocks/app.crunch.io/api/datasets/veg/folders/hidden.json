@@ -1,6 +1,10 @@
 {
     "body": {
-        "name": "Hidden"
+        "name": "Hidden",
+        "path": "|"
+    },
+    "catalogs": {
+        "parents": "https://app.crunch.io/api/datasets/veg/folders/hidden/parents/"
     },
     "element": "shoji:catalog",
     "graph": [
