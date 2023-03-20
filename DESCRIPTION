@@ -13,7 +13,8 @@ Authors@R: c(
     person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
     person("Mike", "Malecki", role="aut", email="mike@crunch.io"),
     person("Neal", "Richardson", role="aut", email="neal.p.richardson@gmail.com"),
-    person("Gordon", "Shotwell", role="aut", email="gordon.shotwell@gmail.com"))
+    person("Gordon", "Shotwell", role="aut", email="gordon.shotwell@gmail.com"),
+    person("Aljaž", "Sluga", role="aut", email="aljaz.sluga@crunch.io"))
 URL: https://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
