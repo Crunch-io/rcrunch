@@ -28,3 +28,4 @@
 ^docker$
 ^\.github$
 ^LICENSE\.md$
+^CRAN-SUBMISSION$
