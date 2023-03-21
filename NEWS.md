@@ -1,7 +1,10 @@
 # crunch 1.30.2 (Development version)
+* You can now run crunch automation scripts on project folders. For a list of commands
+see https://help.crunch.io/hc/en-us/sections/10343332025101-Folder-commands. (#617)
 * Fix for printing `ScriptCatalog` (and removal of the `ScriptCatalog` method for
   `ScriptBody` the full body, subset to the particular script if you need the body
   text with `vapply(scripts(ds), function(x) scriptBody(x), character(1))`).
+* Bug fix for setting the encoding type when running crunch automation commands.
 
 # crunch 1.30.1
 * Fixes for problems found with R-devel found by CRAN checks.

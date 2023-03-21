@@ -70,6 +70,7 @@ DatetimeVariable
 DeckCatalog
 deduplicated
 DELETEing
+Deprecations
 Deprivatize
 deprivatize
 deserialization
@@ -78,6 +79,7 @@ df
 dichotomization
 dichotomize
 Dichotomize
+eg
 embeddable
 env
 errored
@@ -138,6 +140,7 @@ OrderGroup
 OrderGroups
 PermissionCatalog
 pid
+pkgdown
 POSIXt
 POSTed
 POSTing
@@ -150,10 +153,13 @@ ProjectFolder
 querystring
 rcrunch
 recode
+recoding
 recurse
 recurses
 repo
+Renviron
 RMarkdown
+Rstudio
 rollup
 Rprofile
 RStudio
@@ -164,6 +170,7 @@ Savepoints
 scalable
 ScriptCatalog
 sd
+searchpath
 SearchResults
 selectable
 shoji
@@ -178,6 +185,8 @@ SlideCatalog
 Snowden
 Snowden's
 spss
+ssl
+SSL
 subclasses
 subfolder
 subreferences
@@ -190,6 +199,8 @@ Subvariables
 SummaryStat
 sym
 symlink
+tabbook
+TABBOOK
 TabBookResult
 TabBookResults
 tidyverse

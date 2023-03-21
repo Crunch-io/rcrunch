@@ -191,7 +191,7 @@ vectorOrList <- function(obj, type) {
 #' Environment variables are generally set at the operating system level,
 #' but R does look at a file called `.Renviron` on startup, and you can
 #' also set them using the function [`Sys.setenv()`]. Options are generally
-#' set using a `options()` funciton in the `.Rprofile` file, but can be
+#' set using a `options()` function in the `.Rprofile` file, but can be
 #' set using that function anywhere.
 #'
 #' The main `crunch` R package uses the following options (note that

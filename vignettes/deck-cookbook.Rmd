@@ -125,7 +125,7 @@ You want to include an image on a markdown slide
 
 #### Solution
 The function `markdownSlideImage()` helps add an image to a markdown slide. The function
-takes a path to an image on your local machine, and you use it as an unnamed arugment
+takes a path to an image on your local machine, and you use it as an unnamed argument
 of `newMarkdownSlide()`. 
 
 ```{r}

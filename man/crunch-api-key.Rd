@@ -18,7 +18,7 @@ One way to establish your key is to add it to your ".Renviron"
 file. This file is located in your home directory (you can
 use \code{usethis::edit_r_environ()} to open the file if you have the
 \code{usethis} package installed). The .Renviron file has the name of the
-environment varia ble, followed by an equal sign and then the value. It
+environment variable, followed by an equal sign and then the value. It
 is good practice to set the API host too, (usually equal to
 "https://app.crunch.io/api/").
 

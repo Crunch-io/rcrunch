@@ -33,7 +33,7 @@ and finally in the R options (see \code{\link{options}}).
 Environment variables are generally set at the operating system level,
 but R does look at a file called \code{.Renviron} on startup, and you can
 also set them using the function \code{\link[=Sys.setenv]{Sys.setenv()}}. Options are generally
-set using a \code{options()} funciton in the \code{.Rprofile} file, but can be
+set using a \code{options()} function in the \code{.Rprofile} file, but can be
 set using that function anywhere.
 
 The main \code{crunch} R package uses the following options (note that
