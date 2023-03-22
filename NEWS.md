@@ -1,4 +1,6 @@
-# crunch 1.30.2 (Development version)
+# crunch 1.30.3 (Development version)
+
+# crunch 1.30.2
 * You can now run crunch automation scripts on project folders. For a list of commands
 see https://help.crunch.io/hc/en-us/sections/10343332025101-Folder-commands. (#617)
 * Fix for printing `ScriptCatalog` (and removal of the `ScriptCatalog` method for
