@@ -285,11 +285,21 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
         })
 
         test_that("namekey function exists and affects names()", {
-            expect_identical(getOption("crunch.namekey.dataset"), "alias")
+            expect_identical(envOrOption("crunch.namekey.dataset"), "alias")
             expect_identical(names(ds), aliases(variables(ds)))
             with(temp.option(crunch = list(crunch.namekey.dataset = "name")), {
                 expect_identical(names(ds), names(variables(ds)))
             })
+        })
+
+        test_that("crunch.exclude.hidden.private affects names()", {
+            ds_econ <- cachedLoadDataset("ECON.sav")  # --- Has hidden variables
+            expect_identical(envOrOption("crunch.exclude.hidden.private"), TRUE)
+            expect_identical(names(ds_econ), aliases(variables(ds_econ)))
+            with(temp.option(crunch = list(crunch.exclude.hidden.private = FALSE)), {
+                expect_identical(names(ds_econ), aliases(allVariables(ds_econ)))
+            })
+            expect_false(identical(aliases(variables(ds_econ)), aliases(allVariables(ds_econ))))
         })
 
         test_that("Dataset ncol doesn't make any requests if variables have been forced", {
