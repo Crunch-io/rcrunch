@@ -361,7 +361,12 @@ namekey <- function(x = NULL) {
 #' @rdname describe-catalog
 #' @export
 setMethod("names", "CrunchDataset", function(x) {
-    getIndexSlot(variables(x), namekey(x))
+    if (envOrOption("crunch.exclude.hidden.private", TRUE, expect_lgl = TRUE)) {
+        vars <- variables(x)
+    } else {
+        vars <- allVariables(x)
+    }
+    getIndexSlot(vars, namekey(x))
 })
 
 setMethod("tuple", "CrunchDataset", function(x) x@tuple)

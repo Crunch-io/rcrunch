@@ -209,6 +209,7 @@ vectorOrList <- function(obj, type) {
 #' | crunch.require.confirmation  | R_CRUNCH_REQUIRE_CONFIRMATION  | TRUE          | Whether to require confirmation for destructive actions (like [`delete()`]) |
 #' | crunch.warn.hidden           | R_CRUNCH_WARN_HIDDEN           | TRUE          | Whether to warn when using a hidden variable                                |
 #' | crunch.warn.private          | R_CRUNCH_WARN_PRIVATE          | TRUE          | Whether to warn when using a private variable                               |
+#' | crunch.exclude.hidden.private| R_CRUNCH_EXCLUDE_HIDDEN_PRIVATE| TRUE          | Whether to exclude hidden/private variables from names(ds)                  |
 #' | crunch.delimiter             | R_CRUNCH_DELIMITER             | "/"           | What to use as a delimiter when printing folder paths                       |
 #' | crunch.check.updates         | R_CRUNCH_CHECK_UPDATES         | TRUE          | Whether to check for updates to the crunch package                          |
 #' | crunch.debug                 | R_CRUNCH_DEBUG                 | FALSE         | Whether to print verbose information for debugging                          |
