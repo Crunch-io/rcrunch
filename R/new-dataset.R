@@ -291,11 +291,22 @@ newDatasetByColumn <- function(x,
 #' @seealso [newDataset()]
 #' @keywords internal
 newDatasetFromFile <- function(x, name = basename(x), schema, ...) {
-    # TODO: check file extensions of the files to not return "Error: An error
-    # occurred processing your request. We have been notified"
     if (!missing(schema)) {
-        schema_source <- createSource(schema)
-        body_payload <- list(name = name, table = list(source = schema_source))
+        schema_type <- tools::file_ext(schema)
+        if (schema_type %in% c('xml', 'sss')){
+            schema_source <- createSource(schema)
+            body_payload <- list(
+                name = name, table = list(source = schema_source)
+            )
+        } else if (schema_type %in% c('json')){
+            schema_source <- NULL
+            body_payload <- jsonlite::read_json(schema)
+        } else{
+            halt(
+                'Unsupported schema type: ', schema_type,
+                ' (see ?newDatasetFromFile)'
+            )
+        }
         ds <- createDataset(body = body_payload, ...)
         ds <- addBatchFile(ds, x, first_batch = TRUE, schema = schema_source)
     } else {
