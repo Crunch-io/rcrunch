@@ -94,29 +94,32 @@ with_mock_crunch({
         )
     })
     test_that("newDataset with an .sss schema posts to sources", {
+        temp_file <- tempfile("schema", fileext = ".sss")
+        file.create(temp_file)
         expect_POST(
-            newDataset(x = "helper.R", schema = "schema.sss"),
+            newDataset(x = "helper.R", schema = temp_file),
             "https://app.crunch.io/api/sources/",
-            "list\\(uploaded_file = list\\(path = .*schema.sss",
+            paste0("list\\(uploaded_file = list\\(path = .*", temp_file),
             fixed = FALSE
         )
     })
     test_that("newDataset with an .xml schema posts to sources", {
+        temp_file <- tempfile("schema", fileext = ".xml")
+        file.create(temp_file)
         expect_POST(
-            newDataset(x = "helper.R", schema = "schema.xml"),
+            newDataset(x = "helper.R", schema = temp_file),
             "https://app.crunch.io/api/sources/",
-            "list\\(uploaded_file = list\\(path = .*schema.xml",
+            paste0("list\\(uploaded_file = list\\(path = .*", temp_file),
             fixed = FALSE
         )
     })
     test_that("newDataset with a .json schema posts to datasets", {
-        expected_json <- readLines(
-            system.file("tests", "testthat", "schema.json", package = "crunch")
-        )
+        path_json <- system.file("example-datasets", "pets.json", package = "crunch")
+        content_json <- readLines(path_json)
         expect_POST(
-            newDataset(x = "helper.R", schema = "schema.json"),
+            newDataset(x = "helper.R", schema = path_json),
             "https://app.crunch.io/api/datasets/",
-            expected_json
+            content_json
         )
     })
     test_that("newDataset with an unsupported schema format throws an error", {
@@ -133,7 +136,9 @@ with_mock_crunch({
         with_POST("https://app.crunch.io/api/datasets/1/", {
             # the batch had to be mocked in tests/testthat/app.crunch.io/... because
             # we supressMessages which makes detecting it harder
-            ds <- newDataset(x = "teardown.R", schema = "schema.sss")
+            temp_file <- tempfile("schema", fileext = ".sss")
+            file.create(temp_file)
+            ds <- newDataset(x = "teardown.R", schema = temp_file)
         })
     })
     test_that("newDataset(FromFile) cleans up the dataset entity if the file is invalid", {
