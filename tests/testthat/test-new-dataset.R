@@ -99,7 +99,7 @@ with_mock_crunch({
         expect_POST(
             newDataset(x = "helper.R", schema = temp_file),
             "https://app.crunch.io/api/sources/",
-            paste0("list\\(uploaded_file = list\\(path = .*", temp_file),
+            paste0("list\\(uploaded_file = list\\(path = .*", basename(temp_file)),
             fixed = FALSE
         )
     })
@@ -109,7 +109,7 @@ with_mock_crunch({
         expect_POST(
             newDataset(x = "helper.R", schema = temp_file),
             "https://app.crunch.io/api/sources/",
-            paste0("list\\(uploaded_file = list\\(path = .*", temp_file),
+            paste0("list\\(uploaded_file = list\\(path = .*", basename(temp_file)),
             fixed = FALSE
         )
     })
