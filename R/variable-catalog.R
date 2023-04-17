@@ -1,7 +1,7 @@
 setMethod("initialize", "VariableCatalog", function(.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     h_url <- .Object@orders$hier
-    if (!is.null(h_url)) {
+    if (!is.null(h_url) && envOrOption("crunch.order.var.catalog", TRUE, expect_lgl = TRUE)) {
         o <- crGET(h_url, query = list(relative = "on"))
         .Object@order <- VariableOrder(o)
         ## Sort catalog based on the order, but be forgiving if the order isn't
