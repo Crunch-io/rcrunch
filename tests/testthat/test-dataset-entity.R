@@ -292,11 +292,12 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             })
         })
 
-        test_that("crunch.exclude.hidden.private affects names()", {
+        test_that("crunch.names.includes.hidden.private.variables affects names()", {
+            opt_name <- "crunch.names.includes.hidden.private.variables"
             ds_econ <- cachedLoadDataset("ECON.sav")  # --- Has hidden variables
-            expect_identical(envOrOption("crunch.exclude.hidden.private"), TRUE)
+            expect_identical(envOrOption(opt_name), FALSE)
             expect_identical(names(ds_econ), aliases(variables(ds_econ)))
-            with(temp.option(crunch = list(crunch.exclude.hidden.private = FALSE)), {
+            with(temp.option(crunch = setNames(list(TRUE), opt_name)), {
                 expect_identical(names(ds_econ), aliases(allVariables(ds_econ)))
             })
             expect_false(identical(aliases(variables(ds_econ)), aliases(allVariables(ds_econ))))

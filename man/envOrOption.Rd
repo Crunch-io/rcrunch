@@ -49,7 +49,7 @@ the option name is in all capital letters, with "." replaced with
    crunch.require.confirmation \tab R_CRUNCH_REQUIRE_CONFIRMATION \tab TRUE \tab Whether to require confirmation for destructive actions (like \code{\link[=delete]{delete()}}) \cr
    crunch.warn.hidden \tab R_CRUNCH_WARN_HIDDEN \tab TRUE \tab Whether to warn when using a hidden variable \cr
    crunch.warn.private \tab R_CRUNCH_WARN_PRIVATE \tab TRUE \tab Whether to warn when using a private variable \cr
-   crunch.exclude.hidden.private \tab R_CRUNCH_EXCLUDE_HIDDEN_PRIVATE \tab TRUE \tab Whether to exclude hidden/private variables from names(ds) \cr
+   crunch.names.includes.hidden.private.variables \tab R_NAMES_INCLUDES_HIDDEN_PRIVATE_VARIABLES \tab TRUE \tab Whether to include hidden/private variables from names(ds) \cr
    crunch.delimiter \tab R_CRUNCH_DELIMITER \tab "/" \tab What to use as a delimiter when printing folder paths \cr
    crunch.check.updates \tab R_CRUNCH_CHECK_UPDATES \tab TRUE \tab Whether to check for updates to the crunch package \cr
    crunch.debug \tab R_CRUNCH_DEBUG \tab FALSE \tab Whether to print verbose information for debugging \cr
