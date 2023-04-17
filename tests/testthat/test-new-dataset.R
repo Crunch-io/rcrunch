@@ -93,19 +93,52 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{"name":"helper.R"}}'
         )
     })
-    test_that("newDataset with a schema posts to sources", {
+    test_that("newDataset with an .sss schema posts to sources", {
+        temp_file <- tempfile("schema", fileext = ".sss")
+        file.create(temp_file)
         expect_POST(
-            newDataset(x = "helper.R", schema = "helper.R"),
+            newDataset(x = "helper.R", schema = temp_file),
             "https://app.crunch.io/api/sources/",
-            "list\\(uploaded_file = list\\(path = .*helper.R",
+            paste0("list\\(uploaded_file = list\\(path = .*", basename(temp_file)),
             fixed = FALSE
+        )
+    })
+    test_that("newDataset with an .xml schema posts to sources", {
+        temp_file <- tempfile("schema", fileext = ".xml")
+        file.create(temp_file)
+        expect_POST(
+            newDataset(x = "helper.R", schema = temp_file),
+            "https://app.crunch.io/api/sources/",
+            paste0("list\\(uploaded_file = list\\(path = .*", basename(temp_file)),
+            fixed = FALSE
+        )
+    })
+    test_that("newDataset with a .json schema posts to datasets", {
+        path_json <- system.file("example-datasets", "pets.json", package = "crunch")
+        content_json <- readLines(path_json)
+        expect_POST(
+            newDataset(x = "helper.R", schema = path_json),
+            "https://app.crunch.io/api/datasets/",
+            content_json
+        )
+    })
+    test_that("newDataset with an unsupported schema format throws an error", {
+        unsupported_format <- sample(
+            c('foo', 'bar', 'txt', 'csv', 'doc', "prosciutto"),
+            1
+        )
+        expect_error(
+            newDataset(x = "helper.R", schema = paste0("schema.", unsupported_format)),
+            "Unsupported schema type:"
         )
     })
     test_that("newDataset with schema and data posts, adds to batches and appends", {
         with_POST("https://app.crunch.io/api/datasets/1/", {
             # the batch had to be mocked in tests/testthat/app.crunch.io/... because
             # we supressMessages which makes detecting it harder
-            ds <- newDataset(x = "teardown.R", schema = "setup.R")
+            temp_file <- tempfile("schema", fileext = ".sss")
+            file.create(temp_file)
+            ds <- newDataset(x = "teardown.R", schema = temp_file)
         })
     })
     test_that("newDataset(FromFile) cleans up the dataset entity if the file is invalid", {
