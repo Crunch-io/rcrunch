@@ -282,14 +282,19 @@ with_mock_crunch({
         )
     })
     
-    test_that("folder-level operation fails on root", {
+    test_that("folder-level operation works on root/account", {
         
-        root_project_folder <- projects()
-        script <- "CREATE FOLDER 'My not-to-be folder';"
-        
-        expect_error(
-            runCrunchAutomation(root_project_folder, script),
-            "not support Crunch Automation scripts"
+        project_folder <- projects()
+        script         <- "CREATE FOLDER 'My to-be folder';"
+        expected_url   <- "https://app.crunch.io/api/account/execute/"
+        expected_body  <- paste0(
+            '{"element":"shoji:view",',
+            paste0('"value":', '"', script, '"'), '}'
+        )
+        expect_POST(
+            runCrunchAutomation(project_folder, script),
+            expected_url, expected_body,
+            fixed = TRUE
         )
     })
 

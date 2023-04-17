@@ -1,0 +1,6 @@
+{
+    "element": "shoji:entity",
+    "views": {
+        "execute": "https://app.crunch.io/api/account/execute/"
+    }
+}

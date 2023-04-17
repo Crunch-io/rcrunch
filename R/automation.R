@@ -206,10 +206,13 @@ setMethod("sendCrunchAutomationScript", "ProjectFolder", function(x,
     # which gives us the URL to hit;
     # but the account ('top-level folder', what you get from: `projects()`)
     # is also of class ProjectFolder, but doesn't include this info;
-    # running CA scripts on the account is not supported currently
+    # previously, we function raised an error in this case;
+    # now, following what frontend did, we execute the script on the account
     if (!is.crunchURL(x@views$execute)) {
-        halt(
-            "This folder does not support Crunch Automation scripts at this time."
+        x <- ShojiObject(
+            crGET(
+                shojiURL(getAPIRoot(), "views", "account")
+            )
         )
     }
 
@@ -217,7 +220,7 @@ setMethod("sendCrunchAutomationScript", "ProjectFolder", function(x,
     if (length(dots) > 0) {
         # could have been a warning, but went with error in case a user
         # would try running a destructive operation with dry_run = TRUE
-        stop("extra arguments (...) are not supported when x is a ProjectFolder")
+        halt("extra arguments (...) are not supported when x is a ProjectFolder")
     }
 
     crPOST(
