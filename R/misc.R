@@ -232,16 +232,22 @@ vectorOrList <- function(obj, type) {
 #' @export
 # nolint end
 envOrOption <- function(opt, default = NULL, expect_lgl = FALSE, expect_num = FALSE) {
-    ## First look in CRUNCH_OPTIONS environment
+
+    # First look in CRUNCH_OPTIONS environment
     crunch_opt <- get_crunch_opt(opt)
     if (is_crunch_opt_default(crunch_opt)) {
         return(default)
+    } else if (is.function(crunch_opt)){
+        crunch_opt <- crunch_opt()
+        if (!is.null(crunch_opt)){
+            return(crunch_opt)
+        }
     } else if (!is.null(crunch_opt)) {
         attributes(crunch_opt) <- NULL
         return(crunch_opt)
     }
 
-    ## Next check in environment variables
+    # Next check in environment variables
     envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed = TRUE)))
     envvar <- Sys.getenv(envvar.name)
 
