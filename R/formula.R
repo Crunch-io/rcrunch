@@ -15,8 +15,9 @@ formulaToQuery <- function(formula, data) {
         halt(dQuote("formula"), " is not a valid formula")
     }
 
-    vars <- parseTerms(formula, data, side = "RHS")
-    measures <- parseTerms(formula, data, side = "LHS")
+    parsed_terms <- parseTerms(formula, data)
+    vars <- parsed_terms$RHS
+    measures <- parsed_terms$LHS
 
     ## Construct the "measures", either from the formula or default "count"
     if (!length(measures)) {
@@ -61,7 +62,7 @@ formulaToQuery <- function(formula, data) {
     return(list(dimensions = dimensions, measures = measures))
 }
 
-parseTerms <- function(formula, data, side = "RHS") {
+parseTerms <- function(formula, data) {
     terms <- terms(formula, allowDotAsName = TRUE)
     f.vars <- attr(terms, "variables")
     all.f.vars <- all.vars(f.vars)
@@ -101,18 +102,15 @@ parseTerms <- function(formula, data, side = "RHS") {
     }
 
     resp <- attr(terms, "response")
-    if (side == "RHS") {
-        if (resp > 0) {
-            # remove response vars only if there are any
-            vars <- vars[-resp]
-        }
-    } else if (side == "LHS") {
-        vars <- vars[resp]
+    if (resp > 0) {
+        # remove response vars only if there are any
+        RHS <- vars[-resp]
     } else {
-        halt("unknown side specification for parsing formulae.")
+        RHS <- vars
     }
+    LHS <- vars[resp]
 
-    return(vars)
+    return(list(LHS = LHS, RHS = RHS))
 }
 
 registerCubeFunctions <- function(varnames = c()) {
