@@ -123,12 +123,18 @@ registerCubeFunctions <- function(varnames = c()) {
     numfunc <- function(func, ...) {
         force(func)
         moreArgs <- list(...)
-        return(function(x) {
+        return(function(x, ...) {
             if (is.Categorical(x)) {
                 ## "Cast" it on the fly
                 x <- list(zfunc("cast", x, "numeric"))
             }
-            do.call("zfunc", c(func, x, moreArgs))
+            dots <- list(...)
+            if ("na.rm" %in% names(dots)) {
+                # --- Translate R's `na.rm` to zz9's `ignore_missing`
+                dots[["ignore_missing"]] <- list(value = dots[["na.rm"]])
+                dots[["na.rm"]] <- NULL
+            }
+            do.call("zfunc", c(func, x, moreArgs, dots))
             # zfunc(func, x)
         })
     }
@@ -212,8 +218,8 @@ getCubeMeasureNames <- function(measures) {
 }
 
 isCubeAggregation <- function(x) {
-    length(names(x)) == 2L &&
-        setequal(names(x), c("function", "args")) &&
+    # --- Must have function and args and possibly kwargs, but nothing else
+    setequal(setdiff(names(x), "kwargs"), c("function", "args")) &&
         grepl("^cube_", x[["function"]])
 }
 
