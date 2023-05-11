@@ -30,10 +30,10 @@ setGeneric("median")
     cube <- CrunchCube(crGET(cubeURL(x), query = query))
     out <- as.array(cube)
     # --- Convert from NaN to NA because the zz9 doesn't distinguish
-    # --- Try to do it minimally so that if it's really NaN we preserve it
+    # --- Only do it if not `na.rm` so if it's really NaN we might preserve it
     # --- but in reality we don't have enough information to know for sure
-    if (!na.rm && any(vapply(out, is.nan, logical(1)))) {
-        out[vapply(out, is.nan, logical(1))] <- NA
+    if (!na.rm) {
+        out[is.nan(out)] <- NA
     }
 
     return(out)

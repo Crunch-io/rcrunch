@@ -219,8 +219,8 @@ getCubeMeasureNames <- function(measures) {
 
 isCubeAggregation <- function(x) {
     # --- Must have function and args and possibly kwargs, but nothing else
-    setequal(setdiff(names(x), "kwargs"), c("function", "args")) &&
-        grepl("^cube_", x[["function"]])
+    allowed <- c("function", "args", "kwargs")
+    length(setdiff(names(x), allowed) == 0) && grepl("^cube_", x[["function"]])
 }
 
 is.zfunc <- function(x, func) {
