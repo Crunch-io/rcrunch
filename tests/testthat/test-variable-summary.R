@@ -2,6 +2,7 @@ context("Variable summaries")
 
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
+    ds_veg <- cachedLoadDataset("Vegetables example")
     gen <- ds$gender
 
     test_that("table 'method' dispatch", {
@@ -63,6 +64,14 @@ with_mock_crunch({
     })
     test_that("min", {
         expect_equal(min(ds$birthyr), -1.4967)
+    })
+    # Because veg dataset captured with queries stabalized, need to set it here.
+    # For now do so in a targeted way, but it'd be better to set it globally
+    # and get all tests to work that way
+    with(temp.option(crunch = list(crunch.stabilize.query = TRUE)), {
+        test_that("mean when na.rm=FALSE", {
+            expect_equal(mean(ds_veg$age, na.rm = FALSE), NA_real_)
+        })
     })
 })
 

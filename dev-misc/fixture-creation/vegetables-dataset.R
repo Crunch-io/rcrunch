@@ -587,6 +587,9 @@ wt <- crGET(self(ds$weight)) # needed for printing of slide with weights
 # than getting the cube from a slide. So for the newSlide test, we make this request explicitly
 cube3 <- crtabs(~ds$healthy_eater, ds)
 
+# Get cube that returns missing values
+cube4 <- mean(ds$age, na.rm = FALSE)
+
 # as.vector and as.data.frame captures
 ds_dim <- dim(ds)
 cat <- as.vector(ds$healthy_eater)

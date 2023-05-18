@@ -5,22 +5,14 @@ with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
 
     test_that("parseTerms", {
-        rhs_data <- parseTerms(~ gender + birthyr, data = ds)
-        expect_equivalent(rhs_data, list(ds$gender, ds$birthyr))
-        lhs_data <- parseTerms(birthyr ~ gender, data = ds, side = "LHS")
-        expect_equivalent(lhs_data, list(ds$birthyr))
-        lhs_data <- parseTerms(~gender, data = ds, side = "LHS")
-        expect_equivalent(lhs_data, list())
+        parsed <- parseTerms(~ gender + birthyr, data = ds)
+        expect_equivalent(parsed, list(LHS = list(), RHS = list(ds$gender, ds$birthyr)))
+        parsed <- parseTerms(birthyr ~ gender, data = ds)
+        expect_equivalent(parsed, list(LHS = list(ds$birthyr), RHS = list(ds$gender)))
+
+        expect_error(parseTerms(~1, data = ds), "Must supply one or more variables")
         expect_error(
-            parseTerms(~gender, data = ds, side = "not a side"),
-            "unknown side specification for parsing formulae."
-        )
-        expect_error(
-            parseTerms(~1, data = ds, side = "LHS"),
-            "Must supply one or more variables"
-        )
-        expect_error(
-            parseTerms(. ~ gender, data = ds, side = "LHS"),
+            parseTerms(. ~ gender, data = ds),
             paste0("Crunch formulae do not support ", dQuote("."), " in formula")
         )
     })
