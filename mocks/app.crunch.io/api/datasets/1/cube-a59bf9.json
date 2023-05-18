@@ -29,7 +29,6 @@
             "measures": {
                 "max": {
                     "data": 1.6662,
-                    "n_missing": 0,
                     "metadata": {
                         "references": {
                             "alias": "birthyr",

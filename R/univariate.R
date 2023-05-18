@@ -15,7 +15,7 @@ setGeneric("sd")
 setGeneric("median")
 
 .summary.stat <- function(x, stat, na.rm = FALSE, ...) {
-    measure <- list(registerCubeFunctions()[[stat]](x))
+    measure <- list(registerCubeFunctions()[[stat]](x, na.rm = na.rm))
     measure_name <- getCubeMeasureNames(measure)
     names(measure) <- measure_name
 
@@ -28,11 +28,15 @@ setGeneric("median")
         filter = toJSON(zcl(activeFilter(x)), for_query_string = TRUE)
     )
     cube <- CrunchCube(crGET(cubeURL(x), query = query))
-    if (!na.rm && cube$result$measures[[measure_name]][["n_missing"]] > 0) {
-        return(NA_real_)
-    } else {
-        return(as.array(cube))
+    out <- as.array(cube)
+    # --- Convert from NaN to NA because the zz9 doesn't distinguish
+    # --- Only do it if not `na.rm` so if it's really NaN we might preserve it
+    # --- but in reality we don't have enough information to know for sure
+    if (!na.rm) {
+        out[is.nan(out)] <- NA
     }
+
+    return(out)
 }
 
 

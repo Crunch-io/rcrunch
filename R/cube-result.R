@@ -121,6 +121,7 @@ cToA <- function(x, dims) {
     nas <- names(d) %in% "?"
     d[nas & d == -8] <- NaN
     d[nas & d != -8] <- NA
+    names(d) <- NULL
 
     dimsizes <- dim(dims)
     ndims <- length(dims)
