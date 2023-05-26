@@ -73,7 +73,7 @@ tabBook(m, ds, format = "xlsx", file = "wealthy-tab-book.xlsx", filter = "wealth
 
 # csv export
 tabBook(
-    mt,
+    m,
     ds[c("q5a", "q8", "q2a_1", "q2a_2")],
     output_format = "csv",
     file = "tabbook.csv",
