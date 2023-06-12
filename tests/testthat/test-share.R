@@ -113,35 +113,33 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    me <- me()@body$email
+    # Because this is a dataset in the personal proejct, the user does not get added
+    # to the dataset permissions
+    # TODO: test permissions in a non-personal project (also?). Would require giving
+    # the test user access to other projects
     ds <- createDataset(name = now())
-    test_that("PermissionsCatalog from real dataset", {
-        expect_is(permissions(ds), "PermissionCatalog")
-        expect_identical(urls(permissions(ds)), userURL())
-        expect_identical(emails(permissions(ds)), me)
-        expect_identical(is.editor(permissions(ds)), structure(TRUE, .Names = me))
-    })
-
     test_that("share and unshare methods for dataset", {
         ds <- share(ds, "foo@crunch.io", notify = FALSE)
-        expect_true(setequal(
-            emails(permissions(ds)),
-            c(me, "foo@crunch.io")
-        ))
+        expect_true(
+            c("foo@crunch.io") %in% emails(permissions(ds))
+        )
         ds <- unshare(ds, "foo@crunch.io")
-        expect_identical(emails(permissions(ds)), me)
+        expect_true(
+            !(c("foo@crunch.io") %in% emails(permissions(ds)))
+        )
     })
 
     test_that("re-sharing doesn't change the state", {
         share(ds, "foo@crunch.io", notify = FALSE)
-        expect_true(setequal(emails(permissions(ds)), c(me, "foo@crunch.io")))
+        expect_true(
+            c("foo@crunch.io") %in% emails(permissions(ds))
+        )
     })
 
     others <- c("foo@crunch.io", "a@crunch.io", "b@crunch.io")
     test_that("can share dataset with multiple at same time", {
         share(ds, c("a@crunch.io", "b@crunch.io"), notify = FALSE)
-        expect_true(setequal(emails(permissions(ds)), c(me, others)))
-        expect_true(is.editor(permissions(ds)[[me]]))
+        expect_true(all(others %in% emails(permissions(ds))))
         for (user in others) {
             expect_false(is.editor(permissions(ds)[[user]]), info = user)
         }
