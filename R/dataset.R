@@ -63,7 +63,7 @@ getDatasetVariables <- function(x) {
 
     ## Check cache
     if (useLazyVariableCatalog()) {
-        key <- httpcache::buildCacheKey(varcat_url, query_params, extra = "VariableCatalog")
+        key <- httpcache::buildCacheKey(varcat_url, query_params, extras = "VariableCatalog")
         cache <- httpcache::getCache(key)
         if (!is.null(cache)) {
             return(cache)
@@ -80,7 +80,7 @@ getDatasetVariables <- function(x) {
 getDatasetHiddenVariables <- function(x) {
     varcat_url <- variableCatalogURL(x)
     if (useLazyVariableCatalog()) {
-        key <- httpcache::buildCacheKey(varcat_url, extra = "HiddenVariableCatalog")
+        key <- httpcache::buildCacheKey(varcat_url, extras = "HiddenVariableCatalog")
         cache <- httpcache::getCache(key)
         if (!is.null(cache)) {
             return(cache)
@@ -97,7 +97,7 @@ getDatasetHiddenVariables <- function(x) {
 getDatasetPrivateVariables <- function(x) {
     if (useLazyVariableCatalog()) {
         varcat_url <- variableCatalogURL(x)
-        key <- httpcache::buildCacheKey(varcat_url, extra = "PrivateVariableCatalog")
+        key <- httpcache::buildCacheKey(varcat_url, extras = "PrivateVariableCatalog")
         cache <- httpcache::getCache(key)
         if (!is.null(cache)) {
             return(cache)
