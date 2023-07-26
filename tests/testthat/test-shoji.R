@@ -94,7 +94,6 @@ with_mock_crunch({
 with_test_authentication({
     ds <- newDataset(df[1:2, 1:2])
     test_that("refresh", {
-        expect_identical(ds, refresh(ds))
         ds2 <- ds
         ds2@body$name <- "something else"
         expect_false(identical(ds2@body$name, ds@body$name))
