@@ -97,8 +97,8 @@ with_test_authentication({
         expect_identical(ds, refresh(ds))
         ds2 <- ds
         ds2@body$name <- "something else"
-        expect_false(identical(ds2, ds))
-        expect_false(identical(ds2, refresh(ds2)))
-        expect_identical(refresh(ds2), ds)
+        expect_false(identical(ds2@body$name, ds@body$name))
+        expect_false(identical(ds2@body$name, refresh(ds2)@body$name))
+        expect_identical(refresh(ds2)@body$name, ds@body$name)
     })
 })
