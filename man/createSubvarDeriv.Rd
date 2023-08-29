@@ -20,8 +20,6 @@ createSubvarDeriv(var, str, delim, selected, not_selected, unanswered)
 "not_selected"}
 
 \item{unanswered}{Character string indicating non-response, defaults to NA.}
-
-\item{missing}{A logical vector indicating which variable entries are missing}
 }
 \value{
 A VariableDefinition

@@ -85,15 +85,13 @@ only_count_cube <- function(cube) {
 #'
 #' This is an internal function that powers `dimSums()`
 #'
-#' @param array the array from a CrunchCube to collapse
+#' @param array_in the array from a CrunchCube to collapse
 #' @param margins_to_collapse the margins that should be collapsed
-#' @param margins_to_keep the margins that should be kept
 #' @param collapsed_items vector of logicals if any of the dimensions in
 #'   `margins_to_collapse` are of the `_items` type
 #'
 #' @return a duly-collapsed array
 #' @keywords internal
-#'
 collapse_dims <- function(array_in,
                           margins_to_collapse,
                           collapsed_items) {

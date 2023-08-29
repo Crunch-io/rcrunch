@@ -66,11 +66,6 @@ entity(x)
 \item{value}{What to set in a given slot}
 
 \item{i}{In [[, a Tuple slot to get}
-
-\item{object}{Same as \code{x} but for the \code{alias} method, in order to
-match the generic from another package.}
-
-\item{...}{additional arguments to [[, ignored}
 }
 \description{
 ShojiTuples are objects extracted from ShojiCatalogs. They are internally
