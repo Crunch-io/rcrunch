@@ -8,7 +8,7 @@ name: test-coverage-and-lint
 
 jobs:
   test-coverage:
-    runs-on: unbuntu-latest
+    runs-on: ubuntu-latest
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
