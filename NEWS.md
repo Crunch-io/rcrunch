@@ -1,3 +1,5 @@
+# crunch 1.30.4 (Development Version)
+
 # crunch 1.30.3
 * Fix typo which relied on partial argument matching when using the variable catalog cache
   (#625, thanks @rossellhayes)
