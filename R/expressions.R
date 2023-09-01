@@ -3,7 +3,7 @@
 #' See [`expressions`] for more details.
 #'
 #' @param x,e1,e2 inputs
-#' @param table,na.rm,upper,lower,inclusive,regex,ignore_case,selections,collapse,tiers,
+#' @param table,na.rm,upper,lower,inclusive,selections,collapse,
 #' cases,data,resolution,year,month,day,hours,minutes,seconds,min,max,categories,category_order,
 #' subvariables,remove,remove_id,subreferences,subreferences_id
 #' Other parameters used in some functions, see details of [`expressions`] for more details.

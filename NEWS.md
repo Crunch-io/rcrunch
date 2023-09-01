@@ -1,4 +1,17 @@
-# crunch 1.30.3 (Development version)
+# crunch 1.30.4 (Development Version)
+
+# crunch 1.30.3
+* Fix typo which relied on partial argument matching when using the variable catalog cache
+  (#625, thanks @rossellhayes)
+* Can now upload a dataset with metadata stored as a .json file (#620)
+* Avoid traversing hidden/private variable folder tree in more situations when the
+  `crunch.warn.hidden` & `crunch.warn.private` options are set (#619).
+* Support for including hidden/private variables in `names()` to avoid issues with
+  stuttering by RStudio auto-complete with option
+  `crunch.names.includes.hidden.private.variables` (#619).
+* Experimental support for avoiding loading the variable order with option
+  `crunch.order.var.catalog` (#619).
+* Miscellaneous fixes for CRAN checks
 
 # crunch 1.30.2
 * You can now run crunch automation scripts on project folders. For a list of commands

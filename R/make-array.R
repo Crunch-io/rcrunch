@@ -254,7 +254,6 @@ makeMRFromText <- function(var,
 #'
 #' @inheritParams makeMRFromText
 #' @param str A string whose presence indicates a selection
-#' @param missing A logical vector indicating which variable entries are missing
 #' @keywords internal
 #'
 #' @return A VariableDefinition

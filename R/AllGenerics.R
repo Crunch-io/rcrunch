@@ -67,8 +67,7 @@ setGeneric("names<-")
 #'
 #' @param x a Dataset or Variable.
 #' @param object Same as `x` but for the `alias` method, in order to
-#' match the generic from another package. Note that `alias` and `digits` are
-#' only defined for Variables.
+#' match the generic from another package.
 #' @param value For the setters, a length-1 character vector to assign
 #' @param ... additional arguments in the `alias` generic, ignored.
 #' @return Getters return the character object in the specified slot; setters
