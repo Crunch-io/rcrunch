@@ -141,7 +141,7 @@ makeFrame(x, numeric = NULL)
 \arguments{
 \item{x, e1, e2}{inputs}
 
-\item{table, na.rm, upper, lower, inclusive, regex, ignore_case, selections, collapse, tiers, }{cases,data,resolution,year,month,day,hours,minutes,seconds,min,max,categories,category_order,
+\item{table, na.rm, upper, lower, inclusive, selections, collapse, }{cases,data,resolution,year,month,day,hours,minutes,seconds,min,max,categories,category_order,
 subvariables,remove,remove_id,subreferences,subreferences_id
 Other parameters used in some functions, see details of \code{\link{expressions}} for more details.}
 }

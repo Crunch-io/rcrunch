@@ -13,8 +13,9 @@ shojifyDatasetMetadata(metadata, order = I(names(metadata)), ...)
 list(group, entities)}
 
 \item{...}{dataset entity metadata. "name" is required.}
-
-\item{return}{list suitable for JSONing and POSTing to create a dataset}
+}
+\value{
+list suitable for JSONing and POSTing to create a dataset
 }
 \description{
 Wrap variable metadata inside a dataset entity

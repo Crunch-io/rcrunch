@@ -291,9 +291,6 @@ GenericConstructor <- function(class) {
 #' `AbstractCategories`, you can either pass in attributes via `...` or you
 #' can create the objects with a fully defined `list` representation of
 #' the objects via the `data` argument. See the examples.
-#' @param x For the attribute getters and setters, an object of class
-#' AbstractCategory or AbstractCategories
-#' @param value For `[<-`, the replacement AbstractCategory to insert
 #' @rdname AbstractCategory
 #' @aliases AbstractCategory
 #'

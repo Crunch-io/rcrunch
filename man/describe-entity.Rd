@@ -205,8 +205,7 @@ notes(x) <- value
 \item{value}{For the setters, a length-1 character vector to assign}
 
 \item{object}{Same as \code{x} but for the \code{alias} method, in order to
-match the generic from another package. Note that \code{alias} and \code{digits} are
-only defined for Variables.}
+match the generic from another package.}
 
 \item{...}{additional arguments in the \code{alias} generic, ignored.}
 }

@@ -2,32 +2,27 @@
 % Please edit documentation in R/transform-calculate.R
 \name{calcTransforms}
 \alias{calcTransforms}
-\title{Calculate transforms for an array}
+\alias{calcInsertions}
+\title{Given a vector of values and elements, calculate the insertions}
 \usage{
 calcTransforms(array, insert_funcs, dim_names = names(insert_funcs))
+
+calcInsertions(vec, insert_funcs, dim_names = names(insert_funcs))
 }
 \arguments{
-\item{array}{the array to use (this is most likely from a \verb{CrunchCube`` object). The cells from this array are the cube_cells referred to in }include`}
+\item{insert_funcs}{a (named) list of functions that return the correct vector
+of the array (with desired insertions and transformations included)}
 
-\item{trans}{a \code{Transform} object to get the transformations to calculate}
+\item{dim_names}{the names of the dimensions (although this is calculable at
+call-time, it's much more efficient to provide this to the call)}
 
-\item{var_cats}{a \code{Categories} object that are the categories for the
-variable the transforms are being calculated for}
-
-\item{include}{what values should be included in the output?
-(default: "subtotals", "headings", "cube_cells", "other_insertions")
-\itemize{
-\item cube_cells -- the values from the array given in \code{array}
-\item subtotals -- insertions that have the function subtotal
-\item headings -- insertions that have no function specified
-\item other_insertions -- any other insertion that is present in the transforms
-}}
+\item{vec, array}{values to transform (a single dimension of an array)}
 }
 \value{
-an array with transforms calculated and added or applied
+the values given in \code{vec}, with any insertions specified in
+\code{trans} calculated and inserted
 }
 \description{
-Given an array and transforms calculate values based on the transforms and
-then return the values calculated that are specified.
+Given a vector of values and elements, calculate the insertions
 }
 \keyword{internal}

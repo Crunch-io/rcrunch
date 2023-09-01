@@ -1,21 +1,13 @@
-#' Calculate transforms for an array
+#' Given a vector of values and elements, calculate the insertions
 #'
-#' Given an array and transforms calculate values based on the transforms and
-#' then return the values calculated that are specified.
+#' @param vec,array values to transform (a single dimension of an array)
+#' @param insert_funcs a (named) list of functions that return the correct vector
+#'  of the array (with desired insertions and transformations included)
+#' @param dim_names the names of the dimensions (although this is calculable at
+#'   call-time, it's much more efficient to provide this to the call)
 #'
-#' @param array the array to use (this is most likely from a `CrunchCube`` object).
-#' The cells from this array are the cube_cells referred to in `include`
-#' @param trans a `Transform` object to get the transformations to calculate
-#' @param var_cats a `Categories` object that are the categories for the
-#' variable the transforms are being calculated for
-#' @param include what values should be included in the output?
-#' (default: "subtotals", "headings", "cube_cells", "other_insertions")
-#' * cube_cells -- the values from the array given in `array`
-#' * subtotals -- insertions that have the function subtotal
-#' * headings -- insertions that have no function specified
-#' * other_insertions -- any other insertion that is present in the transforms
-#'
-#' @return an array with transforms calculated and added or applied
+#' @return the values given in `vec`, with any insertions specified in
+#' `trans` calculated and inserted
 #' @keywords internal
 calcTransforms <- function(array, insert_funcs, dim_names = names(insert_funcs)) {
     # TODO: other possible Transforms
@@ -140,17 +132,7 @@ findInsertPosition <- function(insert, cats) {
     return(which("__fake__bottom__category__" == names(cats)))
 }
 
-#' Given a vector of values and elements, calculate the insertions
-#'
-#' @param vec values to transform (a single dimension of an array)
-#' @param trans_funcs a (named) list of functions that return the correct vector
-#'  of the array (with desired insertions and transformations included)
-#' @param dim_names the names of the dimensions (although this is calculable at
-#'   call-time, it's much more efficient to provide this to the call)
-#'
-#' @return the values given in `vec`, with any insertions specified in
-#' `trans` calculated and inserted
-#' @keywords internal
+#' @rdname calcTransforms
 calcInsertions <- function(vec, insert_funcs, dim_names = names(insert_funcs)) {
     # we always calculate insertions at the lowest dimension so warn if there is
     # more than one dimension.

@@ -7,14 +7,12 @@
 collapse_dims(array_in, margins_to_collapse, collapsed_items)
 }
 \arguments{
+\item{array_in}{the array from a CrunchCube to collapse}
+
 \item{margins_to_collapse}{the margins that should be collapsed}
 
 \item{collapsed_items}{vector of logicals if any of the dimensions in
 \code{margins_to_collapse} are of the \verb{_items} type}
-
-\item{array}{the array from a CrunchCube to collapse}
-
-\item{margins_to_keep}{the margins that should be kept}
 }
 \value{
 a duly-collapsed array
