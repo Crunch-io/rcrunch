@@ -1,13 +1,10 @@
 FROM rstudio/r-base:3.6-bionic
 ARG RPROXY_CREDS
 ARG HOMEDIR=/home/jenkins
-ARG R_LIB
-ARG R_LIBS
-ENV R_LIB=${HOMEDIR}/R/master
-ENV R_LIBS=${R_LIB}
 ARG USER=997
 ARG GROUP=991
 ENV HOMEDIR=${HOMEDIR}
+ENV R_LIBS=${HOMEDIR}/R/master
 USER root
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
@@ -22,5 +19,5 @@ RUN echo 'local({\n\
     r["Nexus"] <- "https://'${RPROXY_CREDS}'@ui.nexus.crint.net/repository/rcrunch/"\n\
     options(repos = r)\n\
 })'> /usr/lib/R/etc/Rprofile.site
-RUN make install-ci
 USER jenkins
+RUN mkdir ${R_LIBS} && make install-ci
