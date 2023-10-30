@@ -11,16 +11,16 @@
 \usage{
 crGET(...)
 
-crPUT(...)
+crPUT(url, config = list(), ..., body)
 
-crPATCH(...)
+crPATCH(url, config = list(), ..., body)
 
-crPOST(...)
+crPOST(url, config = list(), ..., body)
 
 crDELETE(...)
 }
 \arguments{
-\item{...}{see \code{\link{crunchAPI}} for details. \code{url} is the first
+\item{url, config, body, ...}{see \code{\link{crunchAPI}} for details. \code{url} is the first
 named argument and is required; \code{body} is also required for PUT,
 PATCH, and POST.}
 }
