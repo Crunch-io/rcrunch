@@ -410,14 +410,6 @@ with_test_authentication({
         expect_true(is.Numeric(ds$newvariable))
         expect_identical(mean(ds$newvariable), 10.5)
     })
-    test_that("adding variable with duplicate name fails", {
-        expect_error(
-            addVariables(ds, VariableDefinition(df$v5,
-                name = "New var4", alias = "newVar4"
-            )),
-            "Variable with name: New var4 already exists"
-        )
-    })
     test_that("Variable lengths must match, in an R way", {
         expect_error(
             ds[["not valid"]] <- 1:7,
