@@ -191,13 +191,6 @@ handleAPIfailure <- function(code, response) {
         return(crGET(response$url))
     }
     msg <- http_status(response)$message
-    if (code == 409 && grepl("current editor", msg)) {
-        halt(
-            "You are not the current editor of this dataset. `unlock()` ",
-            "it and try again."
-        )
-    }
-
     msg2 <- NULL
     if (code == 404) {
         # Add the URL that was "not found" (there isn't going to be any
@@ -208,9 +201,12 @@ handleAPIfailure <- function(code, response) {
         if (!is.error(err_content) && is.list(err_content)) {
             if (!is.null(err_content$message)) {
                 msg2 <- err_content$message
-            } else if (is.shoji.like(err_content)) {
-                message_desc <- try(err_content$value$message$description, silent = TRUE)
-                if (!is.error(message_desc)) msg2 <- message_desc
+            } else if (
+                !is.null(err_content$element) &&
+                err_content$element == "crunch:error" &&
+                !is.null(err_content$description)
+            ) {
+                msg2 <- err_content$description
             }
         }
     }
@@ -218,6 +214,14 @@ handleAPIfailure <- function(code, response) {
     if (!is.null(msg2)) {
         msg <- paste(msg, msg2, sep = ": ")
     }
+
+    if (code == 409 && grepl("current editor", msg)) {
+        halt(
+            "You are not the current editor of this dataset. `unlock()` ",
+            "it and try again."
+        )
+    }
+
     halt(msg)
 }
 
