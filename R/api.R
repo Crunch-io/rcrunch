@@ -39,7 +39,7 @@ crunchAPI <- function(
 #' These methods let you communicate with the Crunch API, for more background
 #' see [Crunch Internals](https://crunch.io/r/crunch/articles/crunch-internals.html).
 #'
-#' @param ... see [`crunchAPI`] for details. `url` is the first
+#' @param url,config,body,... see [`crunchAPI`] for details. `url` is the first
 #' named argument and is required; `body` is also required for PUT,
 #' PATCH, and POST.
 #' @return Depends on the response status of the HTTP request and any custom
@@ -50,16 +50,30 @@ crunchAPI <- function(
 crGET <- function(...) crunchAPI("GET", ...)
 #' @rdname http-methods
 #' @export
-crPUT <- function(...) crunchAPI("PUT", ...)
+crPUT <- function(url, config = list(), ..., body) {
+    crAutoDetectBodyContentType("PUT", url, config = config, ..., body = body)
+}
 #' @rdname http-methods
 #' @export
-crPATCH <- function(...) crunchAPI("PATCH", ...)
+crPATCH <- function(url, config = list(), ..., body) crAutoDetectBodyContentType("PATCH", url, config = config, ..., body = body)
 #' @rdname http-methods
 #' @export
-crPOST <- function(...) crunchAPI("POST", ...)
+crPOST <- function(url, config = list(), ..., body) crAutoDetectBodyContentType("POST", url, config = config, ..., body = body)
 #' @rdname http-methods
 #' @export
 crDELETE <- function(...) crunchAPI("DELETE", ...)
+
+# Helper to auto-detect json class in body to set content type
+crAutoDetectBodyContentType <- function(httr.verb, url, config = list(), ..., body) {
+    if (!missing(body)) {
+        if (inherits(body, "json")) {
+            config <- c(add_headers(`Content-Type` = "application/json"), config)
+        }
+        crunchAPI(httr.verb, url, config, ..., body = body)
+    } else {
+        crunchAPI(httr.verb, url, config, ...)
+    }
+}
 
 #' Do the right thing with the HTTP response
 #' @param response an httr response object
