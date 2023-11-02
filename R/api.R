@@ -47,7 +47,7 @@ crunchAPI <- function(
 #' @importFrom httpcache GET PUT PATCH POST DELETE
 #' @name http-methods
 #' @export
-crGET <- function(...) crunchAPI("GET", ...)
+crGET <- function(url, config = list(), ...) crunchAPI("GET", url, config = config, ...)
 #' @rdname http-methods
 #' @export
 crPUT <- function(url, config = list(), ..., body) {
@@ -55,16 +55,21 @@ crPUT <- function(url, config = list(), ..., body) {
 }
 #' @rdname http-methods
 #' @export
-crPATCH <- function(url, config = list(), ..., body) crAutoDetectBodyContentType("PATCH", url, config = config, ..., body = body)
+crPATCH <- function(url, config = list(), ..., body) {
+    crAutoDetectBodyContentType("PATCH", url, config = config, ..., body = body)
+}
 #' @rdname http-methods
 #' @export
-crPOST <- function(url, config = list(), ..., body) crAutoDetectBodyContentType("POST", url, config = config, ..., body = body)
+crPOST <- function(url, config = list(), ..., body) {
+    crAutoDetectBodyContentType("POST", url, config = config, ..., body = body)
+}
 #' @rdname http-methods
 #' @export
-crDELETE <- function(...) crunchAPI("DELETE", ...)
+crDELETE <- function(url, config = list(), ...) crunchAPI("DELETE", url, config = config, ...)
 
 # Helper to auto-detect json class in body to set content type
 crAutoDetectBodyContentType <- function(httr.verb, url, config = list(), ..., body) {
+    ignore <- list(...)
     if (!missing(body)) {
         if (inherits(body, "json")) {
             config <- c(add_headers(`Content-Type` = "application/json"), config)
@@ -212,14 +217,13 @@ handleAPIfailure <- function(code, response) {
         msg2 <- response$url
     } else {
         err_content <- try(content(response), silent = TRUE)
-        if (!is.error(err_content) && is.list(err_content)) {
-            if (!is.null(err_content$message)) {
+        if (is.list(err_content)) {
+            # Most API errors have info in message
+            # But some are starting to wrap in a "crunch:error" with a description (and other keys,
+            # but we adapt to those on a case-by-case basis, like crunchAutomationErrorHandler)
+            if (is.character(err_content$message) && length(err_content$message) == 1) {
                 msg2 <- err_content$message
-            } else if (
-                !is.null(err_content$element) &&
-                err_content$element == "crunch:error" &&
-                !is.null(err_content$description)
-            ) {
+            } else if (is.character(err_content$description) && length(err_content$description) == 1) {
                 msg2 <- err_content$description
             }
         }

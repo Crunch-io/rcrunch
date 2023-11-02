@@ -9,7 +9,7 @@
 \alias{crDELETE}
 \title{HTTP methods for communicating with the Crunch API}
 \usage{
-crGET(...)
+crGET(url, config = list(), ...)
 
 crPUT(url, config = list(), ..., body)
 
@@ -17,7 +17,7 @@ crPATCH(url, config = list(), ..., body)
 
 crPOST(url, config = list(), ..., body)
 
-crDELETE(...)
+crDELETE(url, config = list(), ...)
 }
 \arguments{
 \item{url, config, body, ...}{see \code{\link{crunchAPI}} for details. \code{url} is the first
