@@ -25,6 +25,24 @@ with_mock_crunch({
         expect_equal(ftq_with_data, ftq_without_data)
     })
 
+    test_that("parseTerms can see inside formula's environment", {
+        make_formula_ds_object <- function() {
+            a <- ds$gender
+            return(~a)
+        }
+        result <- parseTerms(make_formula_ds_object())
+        expect_equal(result, parseTerms(~ds$gender))
+    })
+
+    test_that("parseTerms can see inside formula's environment for functions", {
+        skip("Doesn't work (functions defined in registerCubeFunctions aren't available to end user)")
+        subvar_func <- function(var) {
+            list(categories(var), subvariables(var))
+        }
+        result <- parseTerms(~subvar_func(mymrset), ds)
+        expect_equal(result, parseTerms(~categories(mymrset) + subvariables(mymrset), ds))
+    })
+
     test_that("formulaToQuery expands dimensions for as_selected expressions", {
         expect_equal(
             formulaToQuery(~selectCategories(ds$catarray, 1)),
