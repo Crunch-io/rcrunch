@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install build-essential libtiff5-dev libfribidi-de
 RUN groupadd --gid ${GROUP} jenkins \
     && useradd --uid ${USER} --gid jenkins --shell /bin/bash --create-home -d ${HOMEDIR} jenkins
 # Copy only the minimal amount of the package to install dependencies
-COPY --chown=jenkins:jenkins ./DESCRIPTION ./Makefile ${HOMEDIR}
+COPY --chown=jenkins:jenkins ./DESCRIPTION ./Makefile ${HOMEDIR}/
 WORKDIR ${HOMEDIR}
 RUN echo 'local({\n\
     r <- getOption("repos")\n\
