@@ -10,6 +10,8 @@
 \alias{derivation<-,CrunchVariable,ANY-method}
 \alias{derivation<-,CrunchVariable,NULL-method}
 \alias{is.derived,CrunchVariable-method}
+\alias{is.derived,VariableTuple-method}
+\alias{is.derived,VariableCatalog-method}
 \alias{is.derived<-,CrunchVariable,logical-method}
 \title{Get or set a derived variable's expression}
 \usage{
@@ -28,6 +30,10 @@ is.derived(x) <- value
 \S4method{derivation}{CrunchVariable,`NULL`}(x) <- value
 
 \S4method{is.derived}{CrunchVariable}(x)
+
+\S4method{is.derived}{VariableTuple}(x)
+
+\S4method{is.derived}{VariableCatalog}(x)
 
 \S4method{is.derived}{CrunchVariable,logical}(x) <- value
 }
