@@ -39,7 +39,7 @@ crunchAPI <- function(
 #' These methods let you communicate with the Crunch API, for more background
 #' see [Crunch Internals](https://crunch.io/r/crunch/articles/crunch-internals.html).
 #'
-#' @param ... see [`crunchAPI`] for details. `url` is the first
+#' @param url,config,body,... see [`crunchAPI`] for details. `url` is the first
 #' named argument and is required; `body` is also required for PUT,
 #' PATCH, and POST.
 #' @return Depends on the response status of the HTTP request and any custom
@@ -47,19 +47,38 @@ crunchAPI <- function(
 #' @importFrom httpcache GET PUT PATCH POST DELETE
 #' @name http-methods
 #' @export
-crGET <- function(...) crunchAPI("GET", ...)
+crGET <- function(url, config = list(), ...) crunchAPI("GET", url, config = config, ...)
 #' @rdname http-methods
 #' @export
-crPUT <- function(...) crunchAPI("PUT", ...)
+crPUT <- function(url, config = list(), ..., body) {
+    crAutoDetectBodyContentType("PUT", url, config = config, ..., body = body)
+}
 #' @rdname http-methods
 #' @export
-crPATCH <- function(...) crunchAPI("PATCH", ...)
+crPATCH <- function(url, config = list(), ..., body) {
+    crAutoDetectBodyContentType("PATCH", url, config = config, ..., body = body)
+}
 #' @rdname http-methods
 #' @export
-crPOST <- function(...) crunchAPI("POST", ...)
+crPOST <- function(url, config = list(), ..., body) {
+    crAutoDetectBodyContentType("POST", url, config = config, ..., body = body)
+}
 #' @rdname http-methods
 #' @export
-crDELETE <- function(...) crunchAPI("DELETE", ...)
+crDELETE <- function(url, config = list(), ...) crunchAPI("DELETE", url, config = config, ...)
+
+# Helper to auto-detect json class in body to set content type
+crAutoDetectBodyContentType <- function(httr.verb, url, config = list(), ..., body) {
+    ignore <- list(...)
+    if (!missing(body)) {
+        if (inherits(body, "json")) {
+            config <- c(add_headers(`Content-Type` = "application/json"), config)
+        }
+        crunchAPI(httr.verb, url, config, ..., body = body)
+    } else {
+        crunchAPI(httr.verb, url, config, ...)
+    }
+}
 
 #' Do the right thing with the HTTP response
 #' @param response an httr response object
@@ -191,22 +210,36 @@ handleAPIfailure <- function(code, response) {
         return(crGET(response$url))
     }
     msg <- http_status(response)$message
+    msg2 <- NULL
     if (code == 404) {
         # Add the URL that was "not found" (there isn't going to be any
         # useful response content message)
         msg2 <- response$url
     } else {
-        msg2 <- try(content(response)$message, silent = TRUE)
+        err_content <- try(content(response), silent = TRUE)
+        if (is.list(err_content)) {
+            # Most API errors have info in message
+            # But some are starting to wrap in a "crunch:error" with a description (and other keys,
+            # but we adapt to those on a case-by-case basis, like crunchAutomationErrorHandler)
+            if (is.character(err_content$message) && length(err_content$message) == 1) {
+                msg2 <- err_content$message
+            } else if (is.character(err_content$description) && length(err_content$description) == 1) {
+                msg2 <- err_content$description
+            }
+        }
     }
-    if (!is.error(msg2)) {
+
+    if (!is.null(msg2)) {
         msg <- paste(msg, msg2, sep = ": ")
     }
+
     if (code == 409 && grepl("current editor", msg)) {
         halt(
             "You are not the current editor of this dataset. `unlock()` ",
             "it and try again."
         )
     }
+
     halt(msg)
 }
 
