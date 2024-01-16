@@ -1,4 +1,5 @@
-# crunch 1.30.4 (Development Version)
+# crunch 1.30.4
+* Update for backend change when creating Decks (#633)
 
 # crunch 1.30.3
 * Fix typo which relied on partial argument matching when using the variable catalog cache
