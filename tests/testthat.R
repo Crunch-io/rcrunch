@@ -3,6 +3,13 @@ if (nchar(Sys.getenv("JENKINS_HOME"))) {
     if (!dir.exists(Sys.getenv("WORKSPACE"))) {
         dir.create(Sys.getenv("WORKSPACE"))
     }
+    print("---- DEBUGGING SAVING .XML FILE ----")
+    print("-- LIST WORKSPACE FILES --")
+    print(Sys.getenv("WORKSPACE"))
+    print(system("ls -al"))
+    print("-- TRY SAVING TO WORKSPACE --")
+    writeLines("TEST WRITE", file.path(Sys.getenv("WORKSPACE"), "test_write.txt"))
+    print("---- END DEBUGGING ----")
 
     tt_read_lines <- function(path, n = -1L, encoding = "UTF-8") {
         base::readLines(path, n = n, encoding = encoding, warn = FALSE)
