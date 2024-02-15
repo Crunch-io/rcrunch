@@ -1,5 +1,9 @@
 library(httptest)
 if (nchar(Sys.getenv("JENKINS_HOME"))) {
+    if (!dir.exists(Sys.getenv("WORKSPACE"))) {
+        dir.create(Sys.getenv("WORKSPACE"))
+    }
+
     tt_read_lines <- function(path, n = -1L, encoding = "UTF-8") {
         base::readLines(path, n = n, encoding = encoding, warn = FALSE)
     }
