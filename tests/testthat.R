@@ -6,7 +6,7 @@ if (nchar(Sys.getenv("JENKINS_HOME"))) {
     print("---- DEBUGGING SAVING .XML FILE ----")
     print("-- LIST WORKSPACE FILES --")
     print(Sys.getenv("WORKSPACE"))
-    print(system("ls -al"))
+    system(paste0("ls -al ", Sys.getenv("WORKSPACE")))
     print("-- TRY SAVING TO WORKSPACE --")
     writeLines("TEST WRITE", file.path(Sys.getenv("WORKSPACE"), "test_write.txt"))
     print("---- END DEBUGGING ----")
