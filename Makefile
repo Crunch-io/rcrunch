@@ -19,7 +19,7 @@ install-ci: deps
 	R -e 'devtools::session_info(installed.packages()[, "Package"])'
 
 test-ci: compress-fixtures |
-	R --slave -e 'library(covr); install_dir <- tempfile(); to_cobertura(package_coverage(quiet=FALSE, install_path=install_dir, clean=FALSE)); for (file in list.files(install_dir, pattern = "\\.Rout(\\.fail)?$$", recursive=TRUE, full.names=TRUE)) { cat(readLines(file), sep = "\n"); cat("\n") }'
+	R --slave -e 'library(covr); install_dir <- tempfile(); try(to_cobertura(package_coverage(quiet=FALSE, install_path=install_dir, clean=FALSE))); for (file in list.files(install_dir, pattern = "\\.Rout(\\.fail)?$$", recursive=TRUE, full.names=TRUE)) { cat(readLines(file), sep = "\n"); cat("\n") }'
 
 clean:
 	R --slave -e 'library(crunch); set_crunch_opts(crunch.api=envOrOption("test.api"), crunch.api.key=envOrOption("crunch.test.api.key")); lapply(urls(datasets()), crDELETE)'
