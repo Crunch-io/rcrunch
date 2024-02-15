@@ -19,7 +19,7 @@ install-ci: deps
 	R -e 'devtools::session_info(installed.packages()[, "Package"])'
 
 test-ci: compress-fixtures |
-	R --slave -e 'library(covr); install_dir <- tempfile(); test_run <- try(to_cobertura(package_coverage(quiet=FALSE, install_path=install_dir, clean=FALSE))); for (file in list.files(install_dir, pattern = "\\.Rout(\\.fail)?$$", recursive=TRUE, full.names=TRUE)) { cat(readLines(file), sep = "\n"); cat("\n") }; if (inherits(test_run, "try-error")) stop("Test failed!\n", attr(test_run, "condition")$message, "\n", format(attr(test_run, "condition")$call))'
+	R --slave -e 'library(covr); install_dir <- tempfile(); test_run <- try(to_cobertura(package_coverage(quiet=FALSE, install_path=install_dir, clean=FALSE))); for (file in list.files(install_dir, pattern = "\\.Rout(\\.fail)?$$", recursive=TRUE, full.names=TRUE)) { cat(readLines(file), sep = "\n"); cat("\n") }; if (inherits(test_run, "try-error")) stop("Test failed!\n", attr(test_run, "condition")[["message"]], "\n", format(attr(test_run, "condition")[["call"]]))'
 
 clean:
 	R --slave -e 'library(crunch); set_crunch_opts(crunch.api=envOrOption("test.api"), crunch.api.key=envOrOption("crunch.test.api.key")); lapply(urls(datasets()), crDELETE)'
