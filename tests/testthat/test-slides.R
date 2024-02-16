@@ -467,11 +467,11 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                 'gender","dataset":"1"}]}}],"name":"Adhoc filter"}],"weight":',
                 '"https://app.crunch.io/api/datasets/4/variables/birthyr/"},"query":{"measures":{',
                 '"count":{"function":"cube_count","args":[]}},"dimensions":[{"each":',
-                '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"},',
+                '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"},', # nolint
                 '{"function":"as_selected","args":[{"variable":',
-                '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"',
+                '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"', # nolint
                 '}]},{"function":"bin","args":[{"variable":',
-                '"https://app.crunch.io/api/datasets/4/variables/0127c71ba3094ea4a12ca5823050991c/"}]}',
+                '"https://app.crunch.io/api/datasets/4/variables/0127c71ba3094ea4a12ca5823050991c/"}]}', # nolint
                 '],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}'
             )
             # Can add a filter when weight exists

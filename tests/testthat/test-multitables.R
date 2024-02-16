@@ -186,7 +186,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                 '{"element":"shoji:entity","body":',
                 '{"template":[{"query":[{"variable":',
                 '"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
-                '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
+                '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]', # nolint
                 ',"name":"mt again"}}'
             )
             expect_PATCH(
@@ -195,7 +195,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                 '{"element":"shoji:entity","body":',
                 '{"template":[{"query":[{"variable":',
                 '"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
-                '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
+                '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]', # nolint
                 "}}"
             )
             expect_PATCH(
@@ -204,10 +204,13 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                 '{"element":"shoji:entity","body":',
                 '{"template":[{"query":[{"variable":',
                 '"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
-                '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
+                '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]', # nolint
                 "}}"
             )
-            expect_error(multitables(ds)[[999]] <- ~ gender + birthyr, "subscript out of bounds: 999")
+            expect_error(
+                multitables(ds)[[999]] <- ~ gender + birthyr,
+                "subscript out of bounds: 999"
+            )
         })
 
         test_that("newMultitable validation", {
@@ -419,7 +422,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                         "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
                         '{\"filter\":null,\"weight\":null,\"options\":[]}'
                     ),
-                    "The legacy tabbook endpoint has been deprecated and will be removed in the future."
+                    "The legacy tabbook endpoint has been deprecated and will be removed in the future." # nolint
                 )
             })
         })
@@ -465,7 +468,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                           16, 41, 5, 10, 8, 28, 56, 10),
                         .Dim = c(5L, 6L, 4L),
                         .Dimnames = list(
-                            c("Strongly Disagree", "Disagree", "Neither", "Agree", "Strongly Agree"),
+                            c("Strongly Disagree", "Disagree", "Neither", "Agree", "Strongly Agree"), # nolint
                             c("", "Savory", "Spicy", "Sweet", "No", "Yes"),
                             c("Healthy", "Tasty", "Filling", "Environmental")
                         )
@@ -511,7 +514,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                           68.5178571429, 86.4910714286),
                         .Dim = c(6L, 6L),
                         .Dimnames = list(
-                            c("Avocado", "Brussel Sprout", "Carrot", "Daikon", "Eggplant", "Fennel"),
+                            c("Avocado", "Brussel Sprout", "Carrot", "Daikon", "Eggplant", "Fennel"), # nolint
                             c("", "Savory", "Spicy", "Sweet", "No", "Yes")
                         )
                     )

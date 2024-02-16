@@ -102,7 +102,10 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                 )
             )
         )
-        expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[1]], 1:2, "categorical"), expected)
+        expect_identical(
+            subsetArrayDimension(cat_x_mr_x_mr@dims[[1]], 1:2, "categorical"),
+            expected
+        )
     })
 
     test_that("subsetArrayDimension MR dimension", {
@@ -285,9 +288,15 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
         expect_equal(as.array(subset_cat_x_mr_x_mr), as.array(cat_x_mr_x_mr)[1:2, , ])
 
         subset_cat_x_mr_x_mr_withNA <- cat_x_mr_x_mr_withNA[c(1, 3), , ]
-        expect_equal(as.array(subset_cat_x_mr_x_mr_withNA), as.array(cat_x_mr_x_mr_withNA)[c(1, 3), , ])
+        expect_equal(
+            as.array(subset_cat_x_mr_x_mr_withNA),
+            as.array(cat_x_mr_x_mr_withNA)[c(1, 3), , ]
+        )
         subset_cat_x_mr_x_mr_withNA <- cat_x_mr_x_mr_withNA[c(1, 2), , ]
-        expect_equal(as.array(subset_cat_x_mr_x_mr_withNA), as.array(cat_x_mr_x_mr_withNA)[c(1, 2), , ])
+        expect_equal(
+            as.array(subset_cat_x_mr_x_mr_withNA),
+            as.array(cat_x_mr_x_mr_withNA)[c(1, 2), , ]
+        )
 
         # subset cols
         # drop the No Data row which is #2 here!
@@ -298,9 +307,15 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
         expect_equal(as.array(subset_cat_x_mr_x_mr), as.array(cat_x_mr_x_mr)[, c(1, 3), ])
 
         subset_cat_x_mr_x_mr_withNA <- cat_x_mr_x_mr_withNA[, c(1, 3), ]
-        expect_equal(as.array(subset_cat_x_mr_x_mr_withNA), as.array(cat_x_mr_x_mr_withNA)[, c(1, 3), ])
+        expect_equal(
+            as.array(subset_cat_x_mr_x_mr_withNA),
+            as.array(cat_x_mr_x_mr_withNA)[, c(1, 3), ]
+        )
         subset_cat_x_mr_x_mr_withNA <- cat_x_mr_x_mr_withNA[, c(1, 2), ]
-        expect_equal(as.array(subset_cat_x_mr_x_mr_withNA), as.array(cat_x_mr_x_mr_withNA)[, c(1, 2), ])
+        expect_equal(
+            as.array(subset_cat_x_mr_x_mr_withNA),
+            as.array(cat_x_mr_x_mr_withNA)[, c(1, 2), ]
+        )
 
         # subset cols with drop
         subset_cat_x_mr_x_mr <- cat_x_mr_x_mr[, 3, ]

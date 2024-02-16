@@ -48,7 +48,7 @@ with_mock_crunch({
         expect_POST(
             fixed = TRUE,
             suppressWarnings(
-                runCrunchAutomation(dataset = ds, script_text, foo = 1, bar = 2)  
+                runCrunchAutomation(dataset = ds, script_text, foo = 1, bar = 2)
             ),
             "https://app.crunch.io/api/datasets/1/scripts/",
             '{"element":"shoji:entity",',
@@ -281,12 +281,12 @@ with_mock_crunch({
             expected
         )
     })
-    
+
     test_that("folder-level operation fails on root", {
-        
+
         root_project_folder <- projects()
         script <- "CREATE FOLDER 'My not-to-be folder';"
-        
+
         expect_error(
             runCrunchAutomation(root_project_folder, script),
             "not support Crunch Automation scripts"
@@ -309,9 +309,9 @@ with_mock_crunch({
             fixed = TRUE
         )
     })
-    
+
     test_that("extra arguments result in an error for folder-level operations", {
-        
+
         project_folder   <- cd(projects(), 'Project One')
         script           <- "CREATE FOLDER 'My to-be folder';"
         expected_url     <- "https://app.crunch.io/api/projects/project1/execute/"
@@ -319,7 +319,7 @@ with_mock_crunch({
             '{"element":"shoji:view",',
             paste0('"value":', '"', script, '"'), '}'
         )
-        
+
         expect_error(
             expect_POST(
                 runCrunchAutomation(project_folder, script, foo = 1, bar = '2'),

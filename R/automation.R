@@ -197,39 +197,45 @@ setMethod("sendCrunchAutomationScript", "CrunchDataset", function(x,
     invisible(NULL)
 })
 
-setMethod("sendCrunchAutomationScript", "ProjectFolder", function(x,
-                                                                  script,
-                                                                  is_file = string_is_file_like(script),
-                                                                  encoding = "UTF-8",
-                                                                  ...) {
-    # project folders include a slot views with element execute,
-    # which gives us the URL to hit;
-    # but the account ('top-level folder', what you get from: `projects()`)
-    # is also of class ProjectFolder, but doesn't include this info;
-    # running CA scripts on the account is not supported currently
-    if (!is.crunchURL(x@views$execute)) {
-        halt(
-            "This folder does not support Crunch Automation scripts at this time."
+setMethod(
+    "sendCrunchAutomationScript",
+    "ProjectFolder",
+    function(
+        x,
+        script,
+        is_file = string_is_file_like(script),
+        encoding = "UTF-8",
+        ...
+    ) {
+        # project folders include a slot views with element execute,
+        # which gives us the URL to hit;
+        # but the account ('top-level folder', what you get from: `projects()`)
+        # is also of class ProjectFolder, but doesn't include this info;
+        # running CA scripts on the account is not supported currently
+        if (!is.crunchURL(x@views$execute)) {
+            halt(
+                "This folder does not support Crunch Automation scripts at this time."
+            )
+        }
+
+        dots <- list(...)
+        if (length(dots) > 0) {
+            # could have been a warning, but went with error in case a user
+            # would try running a destructive operation with dry_run = TRUE
+            stop("extra arguments (...) are not supported when x is a ProjectFolder")
+        }
+
+        crPOST(
+            shojiURL(x, "views", "execute"),
+            body = toJSON(wrapView(value = script)),
+            status.handlers = list(`400` = crunchAutomationErrorHandler),
+            progress.handler = crunchAutomationErrorHandler,
+            config = add_headers(`Content-Type` = "application/json")
         )
+
+        invisible(NULL)
     }
-
-    dots <- list(...)
-    if (length(dots) > 0) {
-        # could have been a warning, but went with error in case a user
-        # would try running a destructive operation with dry_run = TRUE
-        stop("extra arguments (...) are not supported when x is a ProjectFolder")
-    }
-
-    crPOST(
-        shojiURL(x, "views", "execute"),
-        body = toJSON(wrapView(value = script)),
-        status.handlers = list(`400` = crunchAutomationErrorHandler),
-        progress.handler = crunchAutomationErrorHandler,
-        config = add_headers(`Content-Type` = "application/json")
-    )
-
-    invisible(NULL)
-})
+)
 
 string_is_file_like <- function(x) {
     length(x) == 1 && # length 1 string

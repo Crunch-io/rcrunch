@@ -493,4 +493,7 @@ fortify.CrunchDataFrame <- function(model, data, ...) model
 #' @export fortify.CrunchDataset
 fortify.CrunchDataset <- function(model, data, ...) model
 
-setGeneric("sendCrunchAutomationScript", function(x, ...) standardGeneric("sendCrunchAutomationScript"))
+setGeneric(
+    "sendCrunchAutomationScript",
+    function(x, ...) standardGeneric("sendCrunchAutomationScript")
+)
