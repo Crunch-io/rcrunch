@@ -73,11 +73,15 @@ with_test_authentication({
             ds1 <- refresh(ds1)
             ds1$comb <- combine(ds1$petloc,
                                 name = "Comb 1",
-                                combinations = list(list(name = "Mammals", categories = c("Cat", "Dog")))
+                                combinations = list(
+                                    list(name = "Mammals", categories = c("Cat", "Dog"))
+                                )
             )
             ds1$comb2 <- combine(ds1$petloc,
                                  name = "Comb 2",
-                                 combinations = list(list(name = "Mammals", categories = c("Cat", "Dog")))
+                                 combinations = list(
+                                     list(name = "Mammals", categories = c("Cat", "Dog"))
+                                 )
             )
             test_that("The array has one fewer subvars in ds1", {
                 expect_identical(aliases(subvariables(ds1$petloc)), "petloc_home")

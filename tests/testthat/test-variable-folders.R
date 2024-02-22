@@ -84,7 +84,9 @@ with_mock_crunch({
     })
     test_that("Set names of objects inside a folder", {
         expect_PATCH(
-            names(publicFolder(ds)[[1]]) <- c("Year of Birth", "A folder in a folder", "Plain text"),
+            names(publicFolder(ds)[[1]]) <- c(
+                "Year of Birth", "A folder in a folder", "Plain text"
+            ),
             "https://app.crunch.io/api/datasets/1/folders/1/",
             '{"element":"shoji:catalog","index":',
             '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',

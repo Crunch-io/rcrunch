@@ -8,7 +8,7 @@ with_mock_crunch({
         expect_is(palettes[["purple palette for fixture"]], "AnalyticPalette")
         expect_equal(
             palettes[[1]]$palette,
-            c("#4fc3f7", "#4dd0e1", "#4db6ac", "#81c783", "#aed581", "#dce775", "#cddc39", "#fdae6b")
+            c("#4fc3f7", "#4dd0e1", "#4db6ac", "#81c783", "#aed581", "#dce775", "#cddc39", "#fdae6b") # nolint
         )
     })
 
@@ -28,7 +28,8 @@ with_mock_crunch({
         expect_prints(
             palettes[["Default green palette for fixture"]],
             paste0(
-                "Crunch AnalyticPalette ", dQuote("Default green palette for fixture"), " (qualitative, default)\n",
+                "Crunch AnalyticPalette ", dQuote("Default green palette for fixture"),
+                " (qualitative, default)\n",
                 "#4fc3f7 #4dd0e1 #4db6ac #81c783 #aed581 #dce775 #cddc39 #fdae6b"
             )
         )

@@ -220,7 +220,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
         })
 
         test_that("Show method for expresssions", {
-            skip("TODO: something intelligent with parentheses and order of operations (GH issue #99)")
+            skip("TODO: something smart with parentheses and order of operations (GH issue #99)")
             print(ds$birthyr * 3 + 5)
             print(3 * (ds$birthyr + 5))
         })
@@ -238,7 +238,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                 unclass(toJSON(expr@expression)),
                 paste0(
                     '{"function":"difftime","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},', #nolint
-                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},null]}'
+                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},null]}' # nolint
                 )
             )
 

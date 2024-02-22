@@ -15,9 +15,9 @@
 #' - `hide()` / `privatize()` - take a `CrunchVariable` or `VariableCatalog` and
 #'    make them hidden/private. (`unhide()` / `deprivatize()` put them back in the main
 #'    variable catalog).
-#' - `hiddenFolder()` / `privateFolder()` / `publicFolder()` - take a dataset and return a folder that
-#'   contains the public/hidden/private variables. This folder is like other `CrunchFolder`s and
-#'   so you can use [`mkdir()`] to create subfolders and [`mv()`] to move them in/out.
+#' - `hiddenFolder()` / `privateFolder()` / `publicFolder()` - take a dataset and return a folder
+#'   that contains the public/hidden/private variables. This folder is like other `CrunchFolder`s
+#'   and so you can use [`mkdir()`] to create subfolders and [`mv()`] to move them in/out.
 #' - `hiddenVariables()` / `privateVariabiles()` - return a character vector of variables
 #'    that are hidden/private. You can assign into the catalog to add variables or
 #'    assign to `NULL` to remove all of them.

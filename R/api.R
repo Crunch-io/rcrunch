@@ -223,7 +223,10 @@ handleAPIfailure <- function(code, response) {
             # but we adapt to those on a case-by-case basis, like crunchAutomationErrorHandler)
             if (is.character(err_content$message) && length(err_content$message) == 1) {
                 msg2 <- err_content$message
-            } else if (is.character(err_content$description) && length(err_content$description) == 1) {
+            } else if (
+                is.character(err_content$description) &&
+                length(err_content$description) == 1
+            ) {
                 msg2 <- err_content$description
             }
         }

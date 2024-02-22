@@ -259,7 +259,9 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             )
             ## Duplicates are resolved
             expect_PATCH(
-                ds %>% cd("Group 1") %>% mv(c(starts_with("Birth"), ends_with("Year")), "../Group 2"),
+                ds %>%
+                    cd("Group 1") %>%
+                    mv(c(starts_with("Birth"), ends_with("Year")), "../Group 2"),
                 add_birthyr_to_group2
             )
             expect_PATCH(
