@@ -42,28 +42,30 @@ with_test_authentication({
                     "Contains subvariables found in other arrays after matching: CA2"
                 )
             })
-            test_that("The append fails", {
-                expect_error(
-                    appendDataset(part1, part2),
-                    "Subvariable 'mr_1' cannot be bound to both arrays 'CA2' and 'CA1'."
-                )
-            })
-            part1 <- cleanseBatches(part1)
-
-            test_that(paste0(
-                "Can re-alias array variables to make them line up ",
-                "**and then drop rows** (and old refs don't reappear)"
-            ), {
-                alias(part2$CA2) <- "CA1"
-                ## This is the critical piece to trigger the error: delete rows after realiasing
-                part2 <- dropRows(part2, seq_len(nrow(part2)) == 1)
-                out <- appendDataset(part1, part2)
-                expect_equal(dim(out), c(2 * nrow(part2) + 1, ncol(part2)))
-                expect_identical(
-                    aliases(subvariables(out$CA1)),
-                    c("mr_1", "mr_2", "mr_3")
-                )
-            })
+            # Revisit after https://www.pivotaltracker.com/n/projects/2172644/stories/186660623
+            # (reusable subvar codes) ships
+            # test_that("The append fails", {
+            #     expect_error(
+            #         appendDataset(part1, part2),
+            #         "Subvariable 'mr_1' cannot be bound to both arrays 'CA2' and 'CA1'."
+            #     )
+            # })
+            # part1 <- cleanseBatches(part1)
+            #
+            # test_that(paste0(
+            #     "Can re-alias array variables to make them line up ",
+            #     "**and then drop rows** (and old refs don't reappear)"
+            # ), {
+            #     alias(part2$CA2) <- "CA1"
+            #     ## This is the critical piece to trigger the error: delete rows after realiasing
+            #     part2 <- dropRows(part2, seq_len(nrow(part2)) == 1)
+            #     out <- appendDataset(part1, part2)
+            #     expect_equal(dim(out), c(2 * nrow(part2) + 1, ncol(part2)))
+            #     expect_identical(
+            #         aliases(subvariables(out$CA1)),
+            #         c("mr_1", "mr_2", "mr_3")
+            #     )
+            # })
         })
 
         whereas("Appending arrays with different subvars and derived vars", {
