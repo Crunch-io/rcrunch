@@ -19,7 +19,7 @@ uncached <- httpcache::uncached
 ## See other options in inst/crunch-test.R
 crunch:::set_crunch_opts(
     crunch.debug = FALSE,
-    crunch.timeout = 20, ## In case an import fails to start, don't wait forever
+    crunch.timeout = 30, ## In case an import fails to start, don't wait forever
     crunch.require.confirmation = TRUE,
     crunch.check.updates = FALSE,
     crunch.namekey.dataset = "alias",
