@@ -76,7 +76,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     test_that("can fetch variable summaries", {
         summ <- getSummary(ds$v1)
         expect_true(is.list(summ))

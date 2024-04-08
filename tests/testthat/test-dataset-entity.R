@@ -548,7 +548,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
 
     with_test_authentication({
         whereas("When editing dataset metadata", {
-            ds <- createDataset(name = now())
+            ds <- flakyRecoverCreateDataset(name = now())
             test_that("Name and description setters push to server", {
                 d2 <- ds
                 name(ds) <- "Bond. James Bond."

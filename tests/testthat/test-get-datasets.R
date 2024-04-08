@@ -176,7 +176,7 @@ with_mock_crunch({
 
 with_test_authentication({
     personal <- cd(projects(), "~")
-    ds <- createDataset(name = now())
+    ds <- flakyRecoverCreateDataset(name = now())
     dsname <- name(ds)
     test_that("When a dataset is created, it goes to the personal project", {
         skip_on_jenkins("#163665209")

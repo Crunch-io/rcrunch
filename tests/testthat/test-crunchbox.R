@@ -338,7 +338,7 @@ with_test_authentication({
     testdf <- as.data.frame(sapply(letters[1:8], function(x) df$v4, simplify = FALSE))
     testdf$cat <- as.factor(letters[1:10])
     testdf$num <- 1
-    ds <- newDataset(testdf)
+    ds <- flakyRecoverNewDataset(testdf)
     ds$mr <- makeMR(ds[letters[1:8]],
         name = "Excessively long variable name to trigger the check for length",
         selections = "B"

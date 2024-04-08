@@ -48,7 +48,7 @@ with_mock_crunch({
 
 with_test_authentication({
     test_that("Type changing alters data on the server", {
-        ds <- newDataset(df[, 1, drop = FALSE])
+        ds <- flakyRecoverNewDataset(df[, 1, drop = FALSE])
 
         testvar <- ds$v1
         expect_true(is.Numeric(testvar))

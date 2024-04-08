@@ -117,7 +117,7 @@ with_test_authentication({
     # to the dataset permissions
     # TODO: test permissions in a non-personal project (also?). Would require giving
     # the test user access to other projects
-    ds <- createDataset(name = now())
+    ds <- flakyRecoverCreateDataset(name = now())
     test_that("share and unshare methods for dataset", {
         ds <- share(ds, "foo@crunch.io", notify = FALSE)
         expect_true(

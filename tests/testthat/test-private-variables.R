@@ -181,7 +181,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("Privatize and deprivatize variables and checking that the remote dataset updates", {
-        ds <- newDataset(df)
+        ds <- flakyRecoverNewDataset(df)
 
         test_that("There are no private variables to start", {
             expect_equivalent(index(privateFolder(ds)), list())
@@ -254,7 +254,7 @@ with_test_authentication({
     })
 
     test_that("Can privatize array variables even if they only have one subvar", {
-        ds <- mrdf.setup(newDataset(mrdf[c(1, 4)]))
+        ds <- mrdf.setup(flakyRecoverNewDataset(mrdf[c(1, 4)]))
         expect_identical(names(ds), c("CA", "v4"))
         expect_length(subvariables(ds$CA), 1)
         privateVariables(ds) <- "CA"

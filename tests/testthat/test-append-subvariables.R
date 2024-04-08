@@ -4,7 +4,7 @@ with_test_authentication({
     # Revisit after https://www.pivotaltracker.com/n/projects/2172644/stories/186660623
     # (reusable subvar codes) ships
     # whereas("When appending a dataset with unbound subvariables", {
-    #     part1 <- mrdf.setup(newDataset(mrdf), selections = "1.0")
+    #     part1 <- mrdf.setup(flakyRecoverNewDataset(mrdf), selections = "1.0")
     #     mr_cats <- categories(part1$MR)
     #     subvar_cats <- categories(part1$MR$mr_1)
     #     dichotomized_cats <- Categories(
@@ -15,7 +15,7 @@ with_test_authentication({
     #     ## Dichotomize this way so that categories get aligned
     #     ## (via supertype)
     #
-    #     part2 <- mrdf.setup(newDataset(mrdf))
+    #     part2 <- mrdf.setup(flakyRecoverNewDataset(mrdf))
     #     unbind(part2$CA)
     #     part2 <- refresh(part2)
     #     undichotomized_cats <- Categories(
@@ -93,9 +93,9 @@ with_test_authentication({
     # })
 
     whereas("When appending arrays with different subsets of subvariables", {
-        part1 <- mrdf.setup(newDataset(mrdf[-3]), selections = "1.0")
+        part1 <- mrdf.setup(flakyRecoverNewDataset(mrdf[-3]), selections = "1.0")
         part1 <- saveVersion(part1, "Before appending")
-        part2 <- mrdf.setup(newDataset(mrdf[-1]), selections = "1.0")
+        part2 <- mrdf.setup(flakyRecoverNewDataset(mrdf[-1]), selections = "1.0")
         test_that("set up MR for appending", {
             expect_true(is.Multiple(part1$MR))
             expect_identical(

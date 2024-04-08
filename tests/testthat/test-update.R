@@ -116,7 +116,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     test_that("Can update numeric variable with values", {
         ds$v3 <- 9:28
         test <- as.vector(ds$v3) - df$v3

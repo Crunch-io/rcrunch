@@ -51,7 +51,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(data.frame(
+    ds <- flakyRecoverNewDataset(data.frame(
         samevalue = df$v4[1:4],
         diffvalue = df$v4[1:4],
         excluded = df$v4[1:4],

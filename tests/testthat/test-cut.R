@@ -625,7 +625,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
 
     test_that("cut returns the same thing for Crunch variables and identical vectors", {
         ds$cat_var1 <- cut(ds$v1, 3,

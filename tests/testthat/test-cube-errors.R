@@ -154,7 +154,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df[, 1:4])
+    ds <- flakyRecoverNewDataset(df[, 1:4])
     test_that("All variables must be present in data", {
         expect_error(
             crtabs(~ aaa + v3, data = ds),

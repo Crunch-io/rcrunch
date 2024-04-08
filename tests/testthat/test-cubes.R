@@ -164,7 +164,7 @@ test_that("margin.table with missing", {
 })
 
 with_test_authentication({
-    ds <- newDataset(cubedf)
+    ds <- flakyRecoverNewDataset(cubedf)
     test_that("cubedf setup", {
         expect_identical(
             names(categories(ds$v7)),
@@ -493,7 +493,7 @@ with_test_authentication({
 
     test_that("scorecard query works", {
         # Setup a dataset for scorecards
-        ds_scorecard <- newDataset(
+        ds_scorecard <- flakyRecoverNewDataset(
             data.frame(
                 x1 = factor(c("a", "b", "c", "a", "c"), letters[1:3]),
                 x2 = factor(c("c", "c", "b", "c", "b"), letters[1:3])

@@ -92,7 +92,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df[1:2, 1:2])
+    ds <- flakyRecoverNewDataset(df[1:2, 1:2])
     test_that("refresh", {
         ds2 <- ds
         ds2@body$name <- "something else"

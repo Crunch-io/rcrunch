@@ -3,7 +3,7 @@ context("Debugging append")
 with_test_authentication({
     with(temp.option(crunch = list(crunch.timeout = 60)), {
         whereas("Appending with an exclusion on the incoming dataset", {
-            part0 <- createDataset(name = now())
+            part0 <- flakyRecoverCreateDataset(name = now())
             part1 <- newDatasetFromFixture("apidocs")
             exclusion(part1) <- part1$q1 == "Dog"
             part2 <- newDatasetFromFixture("apidocs")
@@ -22,8 +22,8 @@ with_test_authentication({
         })
 
         whereas("When appending different arrays containing the same subvars", {
-            part1 <- mrdf.setup(newDataset(mrdf), name = "CA1")
-            part2 <- mrdf.setup(newDataset(mrdf), name = "CA2")
+            part1 <- mrdf.setup(flakyRecoverNewDataset(mrdf), name = "CA1")
+            part2 <- mrdf.setup(flakyRecoverNewDataset(mrdf), name = "CA2")
 
             test_that("The arrays with different aliases have the same subvar aliases", {
                 expect_identical(
@@ -116,10 +116,10 @@ with_test_authentication({
 
         test_that("Derivations with comparison operators can be appended", {
             df1 <- data.frame(foo = rnorm(100), bar = c(1:100))
-            ds1 <- newDataset(df1)
+            ds1 <- flakyRecoverNewDataset(df1)
 
             df2 <- data.frame(bar = c(100:1))
-            ds2 <- newDataset(df2)
+            ds2 <- flakyRecoverNewDataset(df2)
 
             ds1$new1 <- makeCaseVariable(
                 `less than one` = ds1$foo < 1,

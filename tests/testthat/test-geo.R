@@ -328,7 +328,7 @@ with_test_authentication({
     #                 "owner_id" = "00002")
     # crPOST("http://local.crunch.io:8080/api/geodata/", body=toJSON(payload))
 
-    geo_ds <- newDataset(df)
+    geo_ds <- flakyRecoverNewDataset(df)
     test_that("Can match and set geodata on a text variable", {
         skip_on_local_backend("Vagrant doesn't currently have hosted geodata")
         geo_ds$region <- rep(c("South", "West", "West", "South", "West"), 4)

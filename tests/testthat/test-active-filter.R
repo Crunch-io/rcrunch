@@ -214,7 +214,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     ds2 <- ds[ds$v4 == "C", ]
     ds2b <- ds[ds$v4 != "B", ]
     ds3 <- ds[ds$v3 > 11, ]

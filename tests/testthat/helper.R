@@ -19,7 +19,8 @@ uncached <- httpcache::uncached
 ## See other options in inst/crunch-test.R
 crunch:::set_crunch_opts(
     crunch.debug = FALSE,
-    crunch.timeout = 60, ## In case an import fails to start, don't wait forever
+    crunch.timeout = 20, ## In case an import fails to start, don't wait forever
+    crunch.max.flaky.new.datasets = 2,
     crunch.require.confirmation = TRUE,
     crunch.check.updates = FALSE,
     crunch.namekey.dataset = "alias",
@@ -39,6 +40,37 @@ crunch:::.onLoad()
 
 ## Test serialize and deserialize
 cereal <- function(x) fromJSON(toJSON(x), simplifyVector = FALSE)
+
+assign("dataset.retries", 0, envir = globalenv())
+flakyDatasetExpr <- function(expr) {
+    # Because of flaky builds, when uploading a new dataset fails
+    # Try once to upload it again, on up to MAX_RETRIES datasets
+    # during all of testing
+    MEX_RETRIES <- envOrOption("crunch.max.flaky.new.datasets", 2)
+
+    out <- try(expr)
+    if (!inherits(out, "try-error")) return(out)
+
+    num_failures <- get("dataset.retries", envir = globalenv()) + 1
+    assign("dataset.retries", num_failures, envir = globalenv())
+    err_msg <- attr(out, "condition")$message
+
+    if (num_failures > MEX_RETRIES) {
+        stop("Failed to create more than ", MAX_RETRIES, " datasets. ", err_msg)
+    }
+
+    warning(paste0(
+        "Failed to create new Dataset (#", num_failures, ") - ", err_msg, ". Trying again."
+    ))
+    expr
+}
+
+flakyRecoverNewDataset <- function(...) {
+    flakyDatasetExpr(newDataset(...))
+}
+flakyRecoverCreateDataset <- function(...) {
+    flakyDatasetExpr(createDataset(...))
+}
 
 
 datasetFixturePath <- function(filename) {
@@ -67,10 +99,10 @@ newDatasetFromFixture <- function(filename) {
     m <- fromJSON(datasetFixturePath(paste0(filename, ".json")),
         simplifyVector = FALSE
     )
-    return(suppressMessages(createWithMetadataAndFile(
+    return(suppressMessages(flakyDatasetExpr(createWithMetadataAndFile(
         m,
         datasetFixturePath(paste0(filename, ".csv"))
-    )))
+    ))))
 }
 
 ## Data frames to make datasets with

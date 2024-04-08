@@ -66,7 +66,7 @@ test_that("Can make a VarDef with no values", {
 
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     test_that("Wrapping VarDef has same result as just ds<-", {
         ds$newvar <- VarDef(df$v4)
         expect_true("newvar" %in% names(ds))
