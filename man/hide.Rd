@@ -142,9 +142,9 @@ back in the main variable catalog).
 \item \code{hide()} / \code{privatize()} - take a \code{CrunchVariable} or \code{VariableCatalog} and
 make them hidden/private. (\code{unhide()} / \code{deprivatize()} put them back in the main
 variable catalog).
-\item \code{hiddenFolder()} / \code{privateFolder()} / \code{publicFolder()} - take a dataset and return a folder that
-contains the public/hidden/private variables. This folder is like other \code{CrunchFolder}s and
-so you can use \code{\link[=mkdir]{mkdir()}} to create subfolders and \code{\link[=mv]{mv()}} to move them in/out.
+\item \code{hiddenFolder()} / \code{privateFolder()} / \code{publicFolder()} - take a dataset and return a folder
+that contains the public/hidden/private variables. This folder is like other \code{CrunchFolder}s
+and so you can use \code{\link[=mkdir]{mkdir()}} to create subfolders and \code{\link[=mv]{mv()}} to move them in/out.
 \item \code{hiddenVariables()} / \code{privateVariabiles()} - return a character vector of variables
 that are hidden/private. You can assign into the catalog to add variables or
 assign to \code{NULL} to remove all of them.
