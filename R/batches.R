@@ -10,9 +10,13 @@ addBatch <- function(ds, ..., strict = TRUE, first_batch = FALSE, body = list(..
         ## if it fails--no need to keep a worthless dataset entity around
         do_it <- function(expr) {
             tryCatch(eval(expr), error = function(e) {
+                warning("Failed to upload to ", batches_url)
                 ## We failed to add the batch successfully, so we don't really have
                 ## a useful dataset. So delete the entity that was created initially
-                with_consent(delete(ds))
+                tryCatch(
+                    with_consent(delete(ds)),
+                    error = function(e2) warning("Couldn't delete dataset - ", e2)
+                )
                 stop(e)
             })
         }
