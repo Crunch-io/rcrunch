@@ -29,7 +29,13 @@ setMethod("weight", "CrunchDataset", function(x) {
         # weight. `loadDataset` shouldn't be costly because the dataset is
         # already cached.
         full_ds <- loadDataset(datasetReference(x))
-        w <- CrunchVariable(allVariables(full_ds)[[w]], filter = activeFilter(x))
+        w_var <- allVariables(full_ds)[[w]]
+        # If the variable doesn't exist return NULL to mimic old backend
+        # behavior, since we already have everything we need to check
+        if (is.null(w_var)) {
+            return(NULL)
+        }
+        w <- CrunchVariable(w_var, filter = activeFilter(x))
     }
     return(w)
 })
