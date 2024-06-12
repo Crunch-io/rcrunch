@@ -1,4 +1,4 @@
-FROM rstudio/r-base:3.6-bionic
+FROM docker-proxy.nexus.crint.net/rstudio/r-base:4.3-jammy
 ARG RPROXY_CREDS
 ARG HOMEDIR=/home/jenkins
 ARG USER=997
