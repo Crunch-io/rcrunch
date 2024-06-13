@@ -220,7 +220,7 @@ with_test_authentication({
         df2 <- read.csv(filename)
         expect_identical(dim(df2), c(10L, 2L))
         expect_identical(names(df2), c("v2", "v4"))
-        expect_identical(levels(df2$v4), "C")
+        expect_identical(unique(df2$v4), "C")
     })
 
     test_that("Can export category ids", {
