@@ -172,7 +172,7 @@ with_mock_crunch({
 validExport <- function(df2) {
     expect_identical(dim(df2), dim(ds))
     expect_equal(df2$v3, df$v3)
-    expect_identical(levels(df2$v4), c("B", "C"))
+    expect_identical(sort(unique(df2$v4)), c("B", "C"))
     ## assert more
 }
 # nolint end
@@ -201,7 +201,7 @@ with_test_authentication({
         write.csv(ds[ds$v4 == "C", ], file = filename)
         df2 <- read.csv(filename)
         expect_identical(nrow(df2), 10L)
-        expect_identical(levels(df2$v4), "C")
+        expect_identical(unique(df2$v4), "C")
     })
 
     test_that("Can filter columns in export", {
@@ -220,7 +220,7 @@ with_test_authentication({
         df2 <- read.csv(filename)
         expect_identical(dim(df2), c(10L, 2L))
         expect_identical(names(df2), c("v2", "v4"))
-        expect_identical(levels(df2$v4), "C")
+        expect_identical(unique(df2$v4), "C")
     })
 
     test_that("Can export category ids", {
