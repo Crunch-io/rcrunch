@@ -1,5 +1,7 @@
 # crunch 1.30.4 (Development Version)
 
+* New function `findVariables` accepts a Crunch dataset or variable folder and returns a data.frame whose rows correspond to variables and their location (#641).
+
 # crunch 1.30.3
 * Fix typo which relied on partial argument matching when using the variable catalog cache
   (#625, thanks @rossellhayes)
