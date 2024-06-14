@@ -319,7 +319,7 @@ with_test_authentication({
         expect_identical(names(members(tp)), my.name)
     })
 
-    ds <- createDataset(name = now())
+    ds <- flakyRecoverCreateDataset(name = now())
     tp <- newProject(name = now())
     test_that("Can add datasets to project", {
         expect_true(is.project(tp))

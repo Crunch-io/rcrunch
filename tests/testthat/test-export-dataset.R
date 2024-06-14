@@ -178,7 +178,7 @@ validExport <- function(df2) {
 # nolint end
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     test_that("Can download a csv of a dataset", {
         skip_on_local_backend("Vagrant host doesn't serve files correctly")
         filename <- tempfile()

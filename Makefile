@@ -10,7 +10,7 @@ test-no-compress-fixtures:
 	export NOT_CRAN=true && R --slave -e 'library(httptest); system.time(devtools::test(filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 lint:
-	R --slave -e 'styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'
+	R --slave -e 'if (!requireNamespace("styler")) install.packages("styler"); styler::style_pkg(transformers = styler::tidyverse_style(indent_by = 4))'
 
 deps:
 	R --slave -e 'Nexus <- "https://rproxy:I0VktB3jZdplfsEgeiAR@ui.nexus.crint.net/repository/rcrunch/"; if (!dir.exists(file.path(.libPaths()[1], "devtools"))) install.packages("devtools", repo=Nexus); devtools::install_deps(dependencies=TRUE)'

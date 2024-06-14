@@ -642,7 +642,7 @@ with_mock_crunch({
 
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     test_that("Can get VariableOrder from dataset", {
         expect_true(setequal(
             unlist(entities(ordering(ds))),
@@ -930,7 +930,7 @@ with_test_authentication({
         df_alt$v2 <- NULL
         df_alt$new_var <- 1
         df_alt$new_var2 <- letters[20:1]
-        ds_alt <- newDataset(df_alt)
+        ds_alt <- flakyRecoverNewDataset(df_alt)
 
         old_order <- ordering(ds_alt)
         new_order <- VariableOrder(

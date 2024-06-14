@@ -92,7 +92,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("Attempting to delete variables by various means", {
-        ds <- newDataset(df)
+        ds <- flakyRecoverNewDataset(df)
         v1 <- ds$v1
         test_that("Setup", {
             expect_valid_df_import(ds)

@@ -348,7 +348,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     test_that("addVariable creates a new remote numeric variable", {
         ds <- addVariables(
             ds,
@@ -420,7 +420,7 @@ with_test_authentication({
     })
 
     test_that("Adding text variables (debugging)", {
-        ds <- newDataset(data.frame(x = 1:1024))
+        ds <- flakyRecoverNewDataset(data.frame(x = 1:1024))
         ds$a_text_var <- "12345 Some text that is definitely >4 characters"
         ds$a_factor <- factor("Different text")
         ds$the_name <- name(ds)
@@ -463,7 +463,7 @@ with_test_authentication({
         )
     })
 
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     test_that("Categorical to R and back", {
         v4 <- as.vector(ds$v4)
         expect_identical(levels(v4), c("B", "C"))

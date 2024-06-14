@@ -25,7 +25,7 @@ with_mock_crunch({
 
 with_test_authentication({
     test_that("dropRows really removes rows", {
-        ds1 <- newDataset(df)
+        ds1 <- flakyRecoverNewDataset(df)
         ds1 <- dropRows(ds1, ds1$v4 == "C")
         expect_identical(dim(ds1), c(10L, ncol(df)))
         expect_identical(as.vector(ds1$v4, mode = "id"), rep(1, 10))
@@ -33,7 +33,7 @@ with_test_authentication({
     })
 
     test_that("dropRows correctly drops with an exclusion applied", {
-        ds2 <- newDataset(df)
+        ds2 <- flakyRecoverNewDataset(df)
         exclusion(ds2) <- ds2$v4 == "B"
         expect_identical(nrow(ds2), 10L)
         ds2 <- dropRows(ds2, ds2$v3 > 10 & ds2$v3 <= 15)

@@ -861,7 +861,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
     })
 
     with_test_authentication({
-        ds <- newDataset(df)
+        ds <- flakyRecoverNewDataset(df)
         ds$q1 <- factor(rep(c("selected", "not selected"), 10))
         test_that("Arithmetic expressions evaluate", {
             e1 <- ds$v3 + 5

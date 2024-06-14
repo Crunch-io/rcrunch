@@ -52,8 +52,8 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds1 <- newDataset(df[1:3])
-    ds2 <- newDataset(df[2:5])
+    ds1 <- flakyRecoverNewDataset(df[1:3])
+    ds2 <- flakyRecoverNewDataset(df[2:5])
     test_that("We can select variables to append", {
         ds1 <- appendDataset(ds1, ds2[c("v2", "v5")])
         expect_equal(ncol(ds1), 4)

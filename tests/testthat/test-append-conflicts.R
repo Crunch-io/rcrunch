@@ -2,8 +2,8 @@ context("Handling append conflicts")
 
 with_test_authentication({
     whereas("When attempting to append an array and a numeric", {
-        part1 <- mrdf.setup(newDataset(mrdf))
-        part2 <- newDataset(mrdf[c("mr_3", "v4")])
+        part1 <- mrdf.setup(flakyRecoverNewDataset(mrdf))
+        part2 <- flakyRecoverNewDataset(mrdf[c("mr_3", "v4")])
         alias(part2$mr_3) <- "CA"
         name(part2$CA) <- "Bad var"
         test_that("setup for append array type mismatch", {
@@ -44,10 +44,10 @@ with_test_authentication({
     })
 
     whereas("When attempting to append text and numeric", {
-        part1 <- newDataset(df[, 2:5])
+        part1 <- flakyRecoverNewDataset(df[, 2:5])
         d2 <- df
         d2$v2 <- d2$v3 ## v2 was text, now is numeric
-        part2 <- newDataset(d2)
+        part2 <- flakyRecoverNewDataset(d2)
         test_that("compareDatasets catches that", {
             comp <- compareDatasets(part1, part2)
             expect_prints(summary(comp), "Type mismatch: 1")

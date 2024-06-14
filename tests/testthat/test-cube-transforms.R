@@ -1271,7 +1271,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             rep(NA, 10)
         ), stringsAsFactors = TRUE)
 
-        ds <- newDataset(df)
+        ds <- flakyRecoverNewDataset(df)
 
         # set rocks to be missing
         is.na(categories(ds$pets)) <- c(FALSE, FALSE, FALSE, FALSE, TRUE, TRUE)

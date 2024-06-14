@@ -150,7 +150,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
 
     test_that("show methods", {
         expect_identical(getShowContent(ds$v3), c(

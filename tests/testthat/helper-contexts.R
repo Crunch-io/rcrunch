@@ -34,9 +34,9 @@ new.dataset.with.setup <- function(df = NULL, ...) {
         ## Just return it
         out <- df
     } else if (is.null(df)) {
-        out <- createDataset(name = unique.name, ...)
+        out <- flakyRecoverCreateDataset(name = unique.name, ...)
     } else {
-        out <- suppressMessages(newDataset(df, name = unique.name, ...))
+        out <- suppressMessages(flakyRecoverNewDataset(df, name = unique.name, ...))
     }
     objects_to_purge <<- c(objects_to_purge, self(out))
     return(out)

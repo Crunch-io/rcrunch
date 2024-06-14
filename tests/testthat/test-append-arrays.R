@@ -2,10 +2,10 @@ context("Appending datasets with arrays")
 
 with_test_authentication({
     whereas("Appending arrays with mismatching names and aliases", {
-        part1 <- mrdf.setup(newDataset(mrdf), selections = "1.0")
+        part1 <- mrdf.setup(flakyRecoverNewDataset(mrdf), selections = "1.0")
         names(subvariables(part1$MR)) <- c("One", "Two", "Three")
         ## Aliases are c("mr_1", "mr_2", "mr_3")
-        part2 <- mrdf.setup(newDataset(mrdf), selections = "1.0")
+        part2 <- mrdf.setup(flakyRecoverNewDataset(mrdf), selections = "1.0")
         names(subvariables(part2$MR)) <- c("Loneliest", "Two", "Three")
         aliases(subvariables(part2$MR))[3] <- "alt"
         ## Aliases are c("mr_1", "mr_2", "alt")

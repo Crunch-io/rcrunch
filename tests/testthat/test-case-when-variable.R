@@ -195,7 +195,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(
+    ds <- flakyRecoverNewDataset(
         data.frame(
             fav_brand1 = factor(
                 c("Coke", "Diet Coke", "Diet Pepsi", "Coke", "Pepsi", "Water"),

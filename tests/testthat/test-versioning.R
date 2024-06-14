@@ -87,7 +87,7 @@ with_mock_crunch({
 
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     test_that("Dataset imported correctly", {
         expect_valid_df_import(ds)
     })

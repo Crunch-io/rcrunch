@@ -1,7 +1,7 @@
 context("Update error handling")
 
 with_test_authentication({
-    ds <- newDataset(df[, 4, drop = FALSE])
+    ds <- flakyRecoverNewDataset(df[, 4, drop = FALSE])
     len <- length(as.vector(ds$v4[ds$v4 == "B"]))
     test_that("setup for update with wrong number of values", {
         expect_identical(len, 10L)

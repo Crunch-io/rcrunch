@@ -183,7 +183,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     test_that("We have an empty filter catalog", {
         expect_is(filters(ds), "FilterCatalog")
         expect_length(filters(ds), 0)

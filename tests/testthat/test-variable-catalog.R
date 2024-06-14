@@ -258,7 +258,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     ds <- forceVariableCatalog(ds) # Force variables catalog beause we're counting requests
     test_that("Can set descriptions (and doing so doesn't PUT order)", {
         with(temp.options(httpcache.log = ""), {

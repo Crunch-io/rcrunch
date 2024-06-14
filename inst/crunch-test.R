@@ -144,6 +144,7 @@ with_DELETE <- function(resp, expr) {
 }
 
 assign("entities.created", c(), envir = globalenv())
+assign("all.dataset.entities.created", c(), envir = globalenv())
 
 test_options <- temp.options(
     # grab env or options
@@ -206,7 +207,10 @@ with_timing <- function (global.varname, expr) {
 purgeEntitiesCreated <- function() {
     with_timing("cleanup.runtime", {
         seen <- get("entities.created", envir = globalenv())
+        seen.ds <- get0("all.dataset.entities.created", envir = globalenv())
         ds.urls <- grep("/datasets/(.*?)/$", seen, value = TRUE)
+        assign("all.dataset.entities.created", c(seen.ds, ds.urls), envir = globalenv())
+
         if (length(ds.urls)) {
             ## Filter out variables, batches, anything under a dataset
             ## since we're going to delete the datasets
@@ -244,6 +248,11 @@ with_test_authentication({
 crunch_test_teardown_check <- function() {
     with_timing("cleanup.runtime", {
         with_test_authentication({
+            message(
+                length(unique(get0("all.dataset.entities.created", envir = globalenv()))),
+                " datasets created during testing"
+            )
+
             datasets.end <- urls(datasets())
             leftovers <- setdiff(datasets.end, datasets.start)
             if (length(leftovers)) {

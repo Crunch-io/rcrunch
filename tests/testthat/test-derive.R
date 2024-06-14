@@ -86,7 +86,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     ds$v3a <- ds$v3 + 5
     test_that("A derived variable is created on the server", {
         expect_true("v3a" %in% names(allVariables(refresh(ds))))

@@ -215,7 +215,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(data.frame(x = c(LETTERS[1:10])), name = "test for notes")
+    ds <- flakyRecoverNewDataset(data.frame(x = c(LETTERS[1:10])), name = "test for notes")
 
     test_that("empty variable description are empty string", {
         expect_equal(description(ds$x), "")

@@ -278,7 +278,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("We bind with makeArray", {
-        ds <- mrdf.setup(newDataset(mrdf), name = "arrayVar")
+        ds <- mrdf.setup(flakyRecoverNewDataset(mrdf), name = "arrayVar")
 
         test_that("can make Categorical Array with Dataset subset", {
             expect_equal(c("arrayVar", "v4"), names(ds))
@@ -292,7 +292,7 @@ with_test_authentication({
     })
 
     whereas("Testing dichotomizing and undichotomizing", {
-        ds <- mrdf.setup(newDataset(mrdf), name = "arrayVar")
+        ds <- mrdf.setup(flakyRecoverNewDataset(mrdf), name = "arrayVar")
         var <- ds$arrayVar
         test_that("setup to make MultipleResponse from CategoricalArray", {
             expect_true(is.CA(var))
@@ -338,7 +338,7 @@ with_test_authentication({
     })
 
     test_that("can make MultipleResponse directly", {
-        ds <- newDataset(mrdf)
+        ds <- flakyRecoverNewDataset(mrdf)
         cast.these <- grep("mr_", names(ds))
         ds[cast.these] <- lapply(ds[cast.these], castVariable, "categorical")
         ds$arrayVar <- makeMR(ds[cast.these], name = "arrayVar", selections = "1.0")
@@ -355,7 +355,7 @@ with_test_authentication({
         expect_identical(ncol(ds), 4L)
     })
     whereas("makeMRFromText functions as expected", {
-        ds <- mrdf.setup(newDataset(mrdf))
+        ds <- mrdf.setup(flakyRecoverNewDataset(mrdf))
         v <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
         ds$delim <- c(
             "ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak"
@@ -368,7 +368,7 @@ with_test_authentication({
     })
 
     whereas("deriveArray with subvariables functions as expected", {
-        ds <- newDataset(mrdf)
+        ds <- flakyRecoverNewDataset(mrdf)
         ds$mrVar <- deriveArray(
             list(VariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias")),
             name = "MR Variable",

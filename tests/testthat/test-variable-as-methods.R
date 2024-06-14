@@ -238,7 +238,7 @@ test_that("cast expressions modifies zcl expression", {
 
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
     # make a text variable with numbers
     ds$num_as_text <- as.character(c(1:20))
 

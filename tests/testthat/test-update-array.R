@@ -1,7 +1,7 @@
 context("Update array variables")
 
 with_test_authentication({
-    ds <- mrdf.setup(newDataset(mrdf))
+    ds <- mrdf.setup(flakyRecoverNewDataset(mrdf))
     test_that("Subvariable values before trying to update", {
         expect_equivalent(
             as.vector(ds$CA$mr_1),

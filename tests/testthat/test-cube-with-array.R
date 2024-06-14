@@ -3,7 +3,7 @@ context("Cubes with categorical array and multiple response")
 with_test_authentication({
     cubemrdf <- mrdf
     cubemrdf$v5 <- as.factor(c("A", "A", "B", "B"))
-    mrds <- mrdf.setup(newDataset(cubemrdf), selections = "1.0")
+    mrds <- mrdf.setup(flakyRecoverNewDataset(cubemrdf), selections = "1.0")
 
     test_that("univariate multiple response cube", {
         kube <- crtabs(~MR, data = mrds)

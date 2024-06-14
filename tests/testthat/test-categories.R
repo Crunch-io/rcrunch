@@ -410,7 +410,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("When editing categories", {
-        ds <- newDataset(df[, 4, drop = FALSE])
+        ds <- flakyRecoverNewDataset(df[, 4, drop = FALSE])
         test_that("categories setters persist to the server", {
             expect_equal(names(categories(ds$v4)), c("B", "C", "No Data"))
             expect_equivalent(

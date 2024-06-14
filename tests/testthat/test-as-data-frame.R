@@ -185,7 +185,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- flakyRecoverNewDataset(df)
 
     # change the alias of v6 to be something that includes spaces/punctuation
     alias(ds$v6) <- "vee six !"
@@ -297,7 +297,7 @@ with_test_authentication({
 
     test_that("Multiple response variables in as.data.frame(force=TRUE)", {
         skip_on_local_backend("Vagrant host doesn't serve files correctly")
-        mrds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
+        mrds <- mrdf.setup(flakyRecoverNewDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
         mrds_df <- as.data.frame(mrds, force = TRUE)
         expect_equal(ncol(mrds_df), 4)
         expect_equal(names(mrds_df), c("mr_1", "mr_2", "mr_3", "v4"))

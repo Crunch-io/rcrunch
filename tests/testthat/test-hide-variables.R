@@ -158,7 +158,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("Hiding and unhiding variables and checking that the remote dataset updates", {
-        ds <- newDataset(df)
+        ds <- flakyRecoverNewDataset(df)
 
         test_that("There are no hidden variables to start", {
             expect_equivalent(index(hiddenFolder(ds)), list())
@@ -216,7 +216,7 @@ with_test_authentication({
     })
 
     test_that("Can hide array variables even if they only have one subvar", {
-        ds <- mrdf.setup(newDataset(mrdf[c(1, 4)]))
+        ds <- mrdf.setup(flakyRecoverNewDataset(mrdf[c(1, 4)]))
         expect_identical(names(ds), c("CA", "v4"))
         expect_length(subvariables(ds$CA), 1)
         hiddenVariables(ds) <- "CA"

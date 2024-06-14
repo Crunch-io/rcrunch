@@ -44,8 +44,8 @@ with_mock_crunch({
 
 
 with_test_authentication({
-    part1 <- newDataset(df)
-    part2 <- newDataset(df)
+    part1 <- flakyRecoverNewDataset(df)
+    part2 <- flakyRecoverNewDataset(df)
     cats <- categories(part1$v4)
 
     ## Set a primary key to test that it gets unset
