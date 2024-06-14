@@ -274,7 +274,7 @@ setMethod(
         out <- NA
         if (add.type) {
             out <- list(value = NA, type = list(class = x_type))
-            if (type == "datetime") out$resolution <- resolution(x)
+            if (x_type == "datetime") out$resolution <- resolution(x)
         }
         return(out)
     }
