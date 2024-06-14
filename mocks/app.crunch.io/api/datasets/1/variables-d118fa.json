@@ -11,7 +11,8 @@
             "type": "categorical",
             "id": "66ae9881e3524f7db84970d556c34552",
             "notes": "",
-            "description": "Gender"
+            "description": "Gender",
+            "derived": false
         },
         "birthyr/": {
             "name": "Birth Year",
@@ -20,7 +21,8 @@
             "type": "numeric",
             "id": "f78ca47313144b57adfb495893968e70",
             "description": null,
-            "notes": "Asked instead of age"
+            "notes": "Asked instead of age",
+            "derived": false
         },
         "starttime/": {
             "name": "starttime",
@@ -31,7 +33,8 @@
             "description": "Interview Start Time",
             "notes": "",
             "resolution": "D",
-            "rollup_resolution": "s"
+            "rollup_resolution": "s",
+            "derived": false
         },
         "mymrset/": {
             "name": "mymrset",
@@ -47,7 +50,8 @@
                 "mymrset/subvariables/subvar1/",
                 "mymrset/subvariables/subvar3/"
             ],
-            "subvariables_catalog": "mymrset/subvariables/"
+            "subvariables_catalog": "mymrset/subvariables/",
+            "derived": false
         },
         "catarray/": {
             "name": "Cat Array",
@@ -62,7 +66,8 @@
                 "mymrset/subvariables/subvar1/",
                 "mymrset/subvariables/subvar3/"
             ],
-            "subvariables_catalog": "mymrset/subvariables/"
+            "subvariables_catalog": "mymrset/subvariables/",
+            "derived": false
         },
         "textVar/": {
             "name": "Text variable ftw",
@@ -71,7 +76,8 @@
             "type": "text",
             "id": "text",
             "description": "Budějovický Budvar",
-            "notes": ""
+            "notes": "",
+            "derived": false
         },
         "location/": {
             "name": "Categorical Location",
@@ -80,7 +86,8 @@
             "type": "categorical",
             "id": "loc",
             "description": "Location test",
-            "notes": ""
+            "notes": "",
+            "derived": false
         }
     },
     "orders": {
