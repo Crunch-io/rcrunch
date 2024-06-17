@@ -51,7 +51,7 @@
             if (any(missings)) {
                 x$column <- as.list(x$column)
                 x$column[missings] <- rep(
-                    list(.no.data.value(type(variable))), sum(missings)
+                    list(.no.data.value(variable)), sum(missings)
                 )
             }
         }
@@ -246,7 +246,7 @@ setMethod(
     function(x, i, j, value) {
         if (all(is.na(value))) {
             ## For assigning NA
-            value <- .no.data.value(type(x), add.type = TRUE)
+            value <- .no.data.value(x, add.type = TRUE)
             if (has.categories(x)) {
                 return(.categorical.update[["numeric"]](x, i, j, value))
             }
@@ -267,12 +267,14 @@ setMethod(
 )
 
 .no.data.value <- function(x, add.type = FALSE) {
-    if (has.categories(x)) {
+    x_type <- type(x)
+    if (has.categories(x_type)) {
         return(NA)
     } else {
         out <- NA
         if (add.type) {
-            out <- list(value = NA, type = list(class = x))
+            out <- list(value = NA, type = list(class = x_type))
+            if (x_type == "datetime") out$type$resolution <- resolution(x)
         }
         return(out)
     }
