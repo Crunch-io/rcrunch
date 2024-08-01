@@ -113,7 +113,7 @@ notes(x) <- value
 
 \S4method{name}{AbstractCategory}(x) <- value
 
-\S4method{name}{`NULL`}(x) <- value
+\S4method{name}{NULL}(x) <- value
 
 \S4method{id}{AbstractCategory}(x)
 

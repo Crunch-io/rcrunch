@@ -24,7 +24,7 @@ geo(x) <- value
 
 \S4method{geo}{CrunchVariable,CrunchGeography}(x) <- value
 
-\S4method{geo}{CrunchVariable,`NULL`}(x) <- value
+\S4method{geo}{CrunchVariable,NULL}(x) <- value
 
 availableGeodata(x = getAPIRoot())
 }

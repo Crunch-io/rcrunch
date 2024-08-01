@@ -34,7 +34,7 @@ transforms(x) <- value
 
 \S4method{transforms}{CrunchVariable,Transforms}(x) <- value
 
-\S4method{transforms}{CrunchVariable,`NULL`}(x) <- value
+\S4method{transforms}{CrunchVariable,NULL}(x) <- value
 
 \S4method{transforms}{CrunchCube}(x)
 
@@ -44,7 +44,7 @@ transforms(x) <- value
 
 \S4method{transforms}{CrunchCube,TransformsList}(x) <- value
 
-\S4method{transforms}{CrunchCube,`NULL`}(x) <- value
+\S4method{transforms}{CrunchCube,NULL}(x) <- value
 }
 \arguments{
 \item{...}{For the constructor function \code{Transforms} you can pass

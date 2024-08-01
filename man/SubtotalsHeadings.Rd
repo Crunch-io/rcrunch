@@ -68,7 +68,7 @@ Heading(name, position = c("relative", "top", "bottom"), after = NULL)
 
 \S4method{subtotals}{CrunchVariable,ANY}(x) <- value
 
-\S4method{subtotals}{CrunchVariable,`NULL`}(x) <- value
+\S4method{subtotals}{CrunchVariable,NULL}(x) <- value
 
 Subtotal(
   name,
@@ -99,7 +99,7 @@ Heading(name, position = c("relative", "top", "bottom"), after = NULL)
 
 \S4method{subtotals}{CrunchVariable,ANY}(x) <- value
 
-\S4method{subtotals}{CrunchVariable,`NULL`}(x) <- value
+\S4method{subtotals}{CrunchVariable,NULL}(x) <- value
 }
 \arguments{
 \item{name}{character the name of the subtotal or heading}
