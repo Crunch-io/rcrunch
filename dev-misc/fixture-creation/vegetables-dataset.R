@@ -564,8 +564,11 @@ temp_dir <- tempfile()
 httpcache::clearCache()
 dir_create(temp_dir)
 
+# Load by ID now that it's in a project
+# This means that the fixtures from each aren't 100% complete, but that's okay
+ds_url <- self(ds)
 start_capturing(temp_dir)
-ds <- loadDataset("Vegetables example")
+ds <- loadDataset(ds_url)
 mt <- multitables(ds)[[1]]
 tb <- tabBook(mt, ds[c("healthy_eater", "veg_enjoy_ca", "enjoy_mr", "age", "ratings_numa")])
 
@@ -618,14 +621,14 @@ stop_capturing()
 # File level modifications needed to scrub attributes that change over time
 stabilize_json_files(
     temp_dir,
-    list(
-        "app.crunch.io/api/datasets/by_name/Vegetables%20example.json",
-        list(list("index", 1, "current_editor_name"), "User"),
-        list(list("index", 1, "owner_name"), "User"),
-        list(list("index", 1, "creation_time"), "2021-01-01T21:25:59.791000"),
-        list(list("index", 1, "modification_time"), "2021-01-01T21:26:43.038000"),
-        list(list("index", 1, "access_time"), "2021-01-01T21:26:43.038000")
-    ),
+    # list( # No longer loading by id
+    #     "app.crunch.io/api/datasets/by_name/Vegetables%20example.json",
+    #     list(list("index", 1, "current_editor_name"), "User"),
+    #     list(list("index", 1, "owner_name"), "User"),
+    #     list(list("index", 1, "creation_time"), "2021-01-01T21:25:59.791000"),
+    #     list(list("index", 1, "modification_time"), "2021-01-01T21:26:43.038000"),
+    #     list(list("index", 1, "access_time"), "2021-01-01T21:26:43.038000")
+    # ),
     list(
         "app.crunch.io/api/datasets/veg.json",
         list(list("body", "current_editor_name"), "User"),
@@ -667,11 +670,15 @@ path(temp_dir, "app.crunch.io/api/datasets/veg/multitables/mt_01") %>%
     file_delete()
 
 # Now move to the mocks folder
-file_copy(
-    path(temp_dir, "app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
-    here("mocks/app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
-    overwrite = TRUE
-)
+
+# Since we loaded by id, this isn't available (it comes from before we had a project folder) ----
+# But it should exist from the old fixtures
+# file_copy(
+#     path(temp_dir, "app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
+#     here("mocks/app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
+#     overwrite = TRUE
+# )
+# ----
 
 file_copy(
     path(temp_dir, "app.crunch.io/api/datasets/veg.json"),
