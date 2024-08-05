@@ -65,6 +65,8 @@ is.subvariable <- function(x) {
 
 CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
+ARRAY_TYPES <- c("categorical_array", "multiple_response", "numeric_array")
+
 #' Change Crunch variable types
 #'
 #' Numeric, text, and categorical variables can be cast to one another by

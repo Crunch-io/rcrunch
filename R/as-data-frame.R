@@ -46,6 +46,14 @@
 #' @param categorical.mode what mode should categoricals be pulled as? One of
 #' factor, numeric, id (default: factor)
 #' @param include.hidden logical: should hidden variables be included? (default: `TRUE`)
+#' @param array_strategy Strategy to import array variables: "alias" (the default)
+#' reads them as flat variables with the subvariable aliases, unless there are duplicate
+#' aliases in which case they are qualified in brackets after the array alias,
+#' like "array_alias\[subvar_alias\]". "qualified_alias" always uses the bracket notation.
+#' "packed" reads them in what the tidyverse calls "packed" data.frame columns, with the
+#' alias from the array variable, and subvariables as the columns of the data.frame.
+#' @param verbose Whether to output a message to the console when subvariable aliases
+#' are qualified when array_strategy="alias" (defaults to TRUE)
 #' @param ... additional arguments passed to `as.data.frame` (default method).
 #' @return When called on a `CrunchDataset`, the method returns an object of
 #' class `CrunchDataFrame` unless `force = TRUE`, in which case the return is a
@@ -70,7 +78,7 @@ as.data.frame.CrunchDataset <- function(x,
         include.hidden = include.hidden
     )
     if (force) {
-        out <- as.data.frame(out)
+        out <- as.data.frame(out, ...)
     }
     return(out)
 }
@@ -82,62 +90,150 @@ as.data.frame.CrunchDataFrame <- function(x,
                                           row.names = NULL,
                                           optional = FALSE,
                                           include.hidden = attr(x, "include.hidden"),
+                                          array_strategy = c("alias", "qualified_alias", "packed"),
+                                          verbose = TRUE,
                                           ...) {
+    array_strategy <- match.arg(array_strategy)
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     on.exit(unlink(tmp))
-    write.csv(ds, tmp, categorical = "id", include.hidden = include.hidden)
-    # TODO: use variableMetadata to provide all `colClasses`?
-    # meta <- variableMetadata(ds)
-    ds_out <- read.csv(tmp, stringsAsFactors = FALSE, check.names = FALSE)
-    return(csvToDataFrame(ds_out, x))
+    write.csv(
+        ds,
+        tmp,
+        categorical = "id",
+        header_field = "qualified_alias",
+        missing_values = "",
+        include.hidden = include.hidden
+    )
+
+    parsing_info <- csvColInfo(ds, verbose = verbose && array_strategy == "alias")
+
+    # guessing has been good enough (and distinguishes between Date and POSIXct class for us)
+    # except for text variables, so continue to guess the parsing info for all columns besides text
+    col_classes <- setNames(
+        ifelse(parsing_info$var_type == "text", "character", NA_character_),
+        parsing_info$qualified_alias
+    )
+
+    ds_out <- read.csv(
+        tmp,
+        stringsAsFactors = FALSE,
+        check.names = FALSE,
+        colClasses = col_classes,
+        na.strings = ""
+    )
+    dup_csv_names <- duplicated(names(ds_out))
+    if (any(dup_csv_names)) {
+        stop(
+            "csv has duplicate column headers, cannot parse: ",
+            paste0(unique(names(ds_out)[dup_csv_names]), collapse = ", ")
+        )
+    }
+    return(csvToDataFrame(ds_out, x, parsing_info, array_strategy, categorical.mode = attr(x, "mode")))
 }
 
-csvToDataFrame <- function(csv_df, crdf) {
-    ds <- attr(crdf, "crunchDataset")
-    mode <- attr(crdf, "mode")
-    ## Use `variableMetadata` to avoid a GET on each variable entity for
-    ## categories and subvariables
-    ## Subset variableMetadata on the urls of the variables in the ds in case
-    ## `ds` has only a subset of variables
-    ds@variables <- variableMetadata(ds)[urls(allVariables(ds))]
+csvColInfo <- function(ds, verbose = TRUE) {
+    # Get variable metadata for variables included in the export
+    meta <- variableMetadata(ds)[urls(allVariables(ds))]
+    flattened_meta <- flattenVariableMetadata(meta)
+
+    orig_aliases <- aliases(flattened_meta)
+    parent_aliases <- vapply(flattened_meta, function(x) x$parent_alias %||% NA_character_, character(1))
+    qualified_aliases <- ifelse(
+        is.na(parent_aliases),
+        orig_aliases,
+        paste0(parent_aliases, "[", orig_aliases, "]")
+    )
+    # cond_qualified_aliases are only qualified if there are duplicates
+    dup_aliases <- orig_aliases[duplicated(orig_aliases)]
+    cond_qualified_aliases <- ifelse(orig_aliases %in% dup_aliases, qualified_aliases, orig_aliases)
+    out <- data.frame(
+        orig_alias = orig_aliases,
+        parent_alias = parent_aliases,
+        qualified_alias = qualified_aliases,
+        cond_qualified_alias = cond_qualified_aliases,
+        var_type = types(flattened_meta)
+    )
+    out <- out[!out$var_type %in% ARRAY_TYPES, ]
+
+    if (verbose) {
+        msg_rows <- out$cond_qualified_alias != out$orig_alias
+        if (any(msg_rows)) {
+            alias_info <- paste0(out$orig_alias[msg_rows], " -> ", out$cond_qualified_alias[msg_rows])
+            message(
+                "Some column names are qualified because there were duplicate aliases ",
+                "in dataset: ", paste0(alias_info, collapse = ", ")
+            )
+        }
+    }
+
+    attr(out, "meta") <- meta
+    out
+}
+
+csvToDataFrame <- function(csv_df,
+                           cr_data,
+                           parsing_info,
+                           array_strategy = c("alias", "qualified_alias", "packed"),
+                           categorical.mode = "factor") {
+    array_strategy <- match.arg(array_strategy)
+    meta <- attr(parsing_info, "meta")
     ## CrunchDataFrames contain both server variables and local variables.
-    ## Iterate over the names of crdf to preserve the desired order.
-    ## Nest individual columns in a list and then unlist all because array
-    ## variables can return multiple columns
-    out <- unlist(lapply(names(crdf), function(a) {
-        v <- ds[[a]]
+    var_order <- if (inherits(cr_data, "CrunchDataFrame")) names(cr_data) else aliases(allVariables(cr_data))
+    ## Iterate over the names of cr_data to preserve the desired order.
+    ## Nest everything in an extra layer of lists because one layer is removed
+    out <- unlist(lapply(var_order, function(a) {
+        meta_idx <- match(a, aliases(meta))
+        v <- if (!is.na(meta_idx)) meta[[meta_idx[1]]] else NULL
         if (is.null(v)) {
             ## Not in the dataset, so it exists only in the CRDF. Get it there.
-            return(structure(list(crdf[[a]]), .Names = a))
-        } else if (is.Array(v)) {
+            return(structure(list(cr_data[[a]]), .Names = a))
+        } else if (type(v) %in% ARRAY_TYPES) {
             ## Find the subvar columns in the csv_df and parse them as categorical
-            if (is.NumericArray(v)) {
-                cp <- columnParser("numeric")
+            if (type(v) == "numeric_array") {
+                cp <- numericCsvParser
             } else {
                 cp <- columnParser("categorical")
             }
-            sub_a <- aliases(subvariables(v))
-            return(structure(lapply(csv_df[sub_a], cp, v, mode), .Names = sub_a))
-        } else if (is.Numeric(v)) {
-            # When data is downloaded using write.csv it includes the name of
-            # the No Data category instead of a missing value, and this is read
-            # into R as a character vector. The data needs to be downloaded in
-            # this form to preserve the missing categories for categorical data.
-            # We use as.numeric to convert this to numeric and coerce the "No
-            # Data" elements to NA. So c("1", "No Data", "2.7") becomes c(1, NA,
-            # 2.7). as.numeric issues a warning when coercion creates NAs, and
-            # because we expect that, we suppress the warning.
-            df_vect <- suppressWarnings(as.numeric(csv_df[[a]]))
-            return(structure(list(df_vect), .Names = a))
+            subvar_info <- parsing_info[!is.na(parsing_info$parent_alias) & parsing_info$parent_alias == alias(v), ]
+            cols <- csv_df[, subvar_info$qualified_alias]
+            if (array_strategy == "alias"){
+                return(structure(lapply(cols, cp, v, categorical.mode), .Names = subvar_info$cond_qualified_alias))
+            } else if (array_strategy == "qualified_alias") {
+                return(structure(lapply(cols, cp, v, categorical.mode), .Names = subvar_info$qualified_alias))
+            } else { # array_strategy==packed
+                # Extra list layer to hold the array variable's alias
+                return(structure(
+                    list(
+                        structure(
+                            lapply(cols, cp, v, categorical.mode),
+                            class = "data.frame",
+                            .Names = subvar_info$orig_alias,
+                            row.names = c(NA, -nrow(csv_df))
+                        )
+                    ),
+                    .Names = alias(v)
+                ))
+            }
         } else {
-            cp <- columnParser(type(v))
-            return(structure(list(cp(csv_df[[a]], v, mode)), .Names = a))
+            type <- type(v)
+            cp <- switch(type, "numeric" = numericCsvParser, "text" = textCsvParser, columnParser(type))
+            return(structure(list(cp(csv_df[[a]], v, categorical.mode)), .Names = a))
         }
     }), recursive = FALSE)
+
     ## Wrap that list of columns in a data.frame structure
-    return(structure(out, class = "data.frame", row.names = c(NA, -nrow(ds))))
+    return(structure(out, class = "data.frame", row.names = c(NA, -nrow(csv_df))))
 }
+
+# We pass missing_values to export so no longer have to worry about finding text
+# in a numeric variable
+numericCsvParser <- function(col, ...) col
+
+# When data comes from a csv it should already be text (and definitely won't be
+# a list with missing reasons included like JSON's text columnParser)
+textCsvParser <- function(col, ...) col
+
 
 #' as.data.frame method for catalog objects
 #'

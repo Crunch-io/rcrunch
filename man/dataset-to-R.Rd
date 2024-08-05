@@ -22,6 +22,8 @@
   row.names = NULL,
   optional = FALSE,
   include.hidden = attr(x, "include.hidden"),
+  array_strategy = c("alias", "qualified_alias", "packed"),
+  verbose = TRUE,
   ...
 )
 }
@@ -45,6 +47,16 @@ Crunch Dataset order will be used.}
 \item{include.hidden}{logical: should hidden variables be included? (default: \code{TRUE})}
 
 \item{...}{additional arguments passed to \code{as.data.frame} (default method).}
+
+\item{array_strategy}{Strategy to import array variables: "alias" (the default)
+reads them as flat variables with the subvariable aliases, unless there are duplicate
+aliases in which case they are qualified in brackets after the array alias,
+like "array_alias[subvar_alias]". "qualified_alias" always uses the bracket notation.
+"packed" reads them in what the tidyverse calls "packed" data.frame columns, with the
+alias from the array variable, and subvariables as the columns of the data.frame.}
+
+\item{verbose}{Whether to output a message to the console when subvariable aliases
+are qualified when array_strategy="alias" (defaults to TRUE)}
 }
 \value{
 When called on a \code{CrunchDataset}, the method returns an object of
