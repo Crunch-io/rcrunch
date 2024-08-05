@@ -395,13 +395,22 @@ with_test_authentication({
     test_that("Multiple response variables in as.data.frame(force=TRUE)", {
         skip_on_local_backend("Vagrant host doesn't serve files correctly")
         mrds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
+        mrds$MR2 <- deriveArray(
+            list(
+                VarDef(ds$MR$mr_1, name = "dup mr_1", alias = "mr_1"),
+                VarDef(ds$MR$mr_2, name = "dup v4", alias = "v4")
+            ),
+            name = "MR 2"
+        )
         mrds_df <- as.data.frame(mrds, force = TRUE)
         expect_equal(ncol(mrds_df), 4)
-        expect_equal(names(mrds_df), c("mr_1", "mr_2", "mr_3", "v4"))
-        expect_equal(mrds_df$mr_1, as.vector(mrds$MR$mr_1))
+        expect_equal(names(mrds_df), c("MR[mr_1]", "mr_2", "mr_3", "v4", "MR2[mr_1]", "MR2[v4]"))
+        expect_equal(mrds_df[["MR[mr_1]"]], as.vector(mrds$MR$mr_1))
         expect_equal(mrds_df$mr_2, as.vector(mrds$MR$mr_2))
         expect_equal(mrds_df$mr_3, as.vector(mrds$MR$mr_3))
         expect_equal(mrds_df$v4, as.vector(mrds$v4))
+        expect_equal(mrds_df[["MR2[mr_1]"]], as.vector(mrds$MR2$mr_1))
+        expect_equal(mrds_df[["MR2[v4]"]], as.vector(mrds$MR2$v4))
     })
 
     v2 <- ds$v2
