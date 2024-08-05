@@ -10,7 +10,7 @@
             "hidden": false,
             "id": "0001",
             "name": "Avocado",
-            "notes": "",
+            "notes": "What is your rating between 0 and 100 of: Avocado",
             "secure": false,
             "type": "numeric"
         },
@@ -22,7 +22,7 @@
             "hidden": false,
             "id": "0002",
             "name": "Brussel Sprout",
-            "notes": "",
+            "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
             "secure": false,
             "type": "numeric"
         },
@@ -34,7 +34,7 @@
             "hidden": false,
             "id": "0003",
             "name": "Carrot",
-            "notes": "",
+            "notes": "What is your rating between 0 and 100 of: Carrot",
             "secure": false,
             "type": "numeric"
         },
@@ -46,7 +46,7 @@
             "hidden": false,
             "id": "0004",
             "name": "Daikon",
-            "notes": "",
+            "notes": "What is your rating between 0 and 100 of: Daikon",
             "secure": false,
             "type": "numeric"
         },
@@ -58,7 +58,7 @@
             "hidden": false,
             "id": "0005",
             "name": "Eggplant",
-            "notes": "",
+            "notes": "What is your rating between 0 and 100 of: Eggplant",
             "secure": false,
             "type": "numeric"
         },
@@ -70,7 +70,7 @@
             "hidden": false,
             "id": "0006",
             "name": "Fennel",
-            "notes": "",
+            "notes": "What is your rating between 0 and 100 of: Fennel",
             "secure": false,
             "type": "numeric"
         }

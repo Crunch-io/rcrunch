@@ -52,6 +52,7 @@
     "views": {
         "applied": "https://app.crunch.io/api/datasets/veg/multitables/mt_01/applied/",
         "export": "https://app.crunch.io/api/datasets/veg/multitables/mt_01/export/",
+        "script": "https://app.crunch.io/api/datasets/veg/multitables/mt_01/script/",
         "tabbook": "https://app.crunch.io/api/datasets/veg/multitables/mt_01/tabbook/"
     }
 }

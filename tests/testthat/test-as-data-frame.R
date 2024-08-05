@@ -101,6 +101,7 @@ with_mock_crunch({
             '{"filter":null,"options":{"use_category_ids":true}}'
         )
     })
+
     test_that("csvToDataFrame produces the correct data frame", {
         csv_df <- read.csv(datasetFixturePath("veg.csv"), stringsAsFactors = FALSE)
         expected <- readRDS(datasetFixturePath("veg_df.rds"))

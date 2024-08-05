@@ -123,22 +123,26 @@
             "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0001/": {
                 "alias": "veg_enjoy_ca_healthy",
                 "description": "Vegetables are healthy (5 point scale)",
-                "name": "Healthy"
+                "name": "Healthy",
+                "notes": "Do you eat vegetables because: they are healthy"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0002/": {
                 "alias": "veg_enjoy_ca_tasty",
                 "description": "Vegetables are Tasty (5 point scale)",
-                "name": "Tasty"
+                "name": "Tasty",
+                "notes": "Do you eat vegetables because: they taste good"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0003/": {
                 "alias": "veg_enjoy_ca_filling",
                 "description": "Vegetables are filling (5 point scale)",
-                "name": "Filling"
+                "name": "Filling",
+                "notes": "Do you eat vegetables because: they are filling"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0004/": {
                 "alias": "veg_enjoy_ca_env",
                 "description": "Vegetables are environmental (5 point scale)",
-                "name": "Environmental"
+                "name": "Environmental",
+                "notes": "Do you eat vegetables because: eating them is good for the environment"
             }
         },
         "subvariables": [
