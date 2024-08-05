@@ -4,6 +4,7 @@ context("Getting values to make local R objects")
 
 with_mock_crunch({
     ds <- cachedLoadDataset("Vegetables example")
+    ds_dup <- loadDataset(paste0(envOrOption("crunch.api"), "datasets/dup"))
     test_that("setup", {
         expect_identical(nrow(ds), 210L)
         expect_identical(ncol(ds), 12L)
@@ -98,12 +99,67 @@ with_mock_crunch({
         expect_POST(
             as.data.frame(ds, force = TRUE, include.hidden = FALSE),
             "https://app.crunch.io/api/datasets/veg/export/csv/",
-            '{"filter":null,"options":{"use_category_ids":true}}'
+            '{"filter":null,"options":{"header_field":"qualified_alias",',
+            '"missing_values":"","use_category_ids":true}}'
         )
     })
 
+    test_that("csvColInfo works in simple case with no duplicate aliases", {
+        col_info <- csvColInfo(
+            ds[, c("wave", "age", "enjoy_mr", "last_vegetable", "last_vegetable_date")]
+        )
+
+        expect_s4_class(attr(col_info, "meta"), "VariableCatalog")
+        attr(col_info, "meta") <- NULL
+
+        expected <- data.frame(
+            stringsAsFactors = FALSE,
+            orig_alias = c("wave","age",
+                      "last_vegetable","last_vegetable_date","enjoy_mr_savory",
+                      "enjoy_mr_spicy","enjoy_mr_sweet"),
+            parent_alias = c(NA, NA, NA, NA, "enjoy_mr", "enjoy_mr", "enjoy_mr"),
+            qualified_alias = c("wave","age",
+                                      "last_vegetable","last_vegetable_date",
+                                      "enjoy_mr[enjoy_mr_savory]","enjoy_mr[enjoy_mr_spicy]",
+                                      "enjoy_mr[enjoy_mr_sweet]"),
+            cond_qualified_alias = c("wave","age",
+                                "last_vegetable","last_vegetable_date","enjoy_mr_savory",
+                                "enjoy_mr_spicy","enjoy_mr_sweet"),
+            var_type = c("categorical",
+                         "numeric","text","datetime","categorical",
+                         "categorical","categorical")
+        )
+
+        expect_equivalent(col_info, expected)
+    })
+
+    test_that("csvColInfo works when there are duplicate aliases", {
+        col_info <- csvColInfo(ds_dup)
+
+        expect_s4_class(attr(col_info, "meta"), "VariableCatalog")
+        attr(col_info, "meta") <- NULL
+
+        expected <- data.frame(
+            stringsAsFactors = FALSE,
+            orig_alias = c("x1","x2","y1",
+                      "y2","z","x1","x2_derived","y1","z"),
+            parent_alias = c(NA, NA, NA, NA, NA, "x", "x", "y", "y"),
+            qualified_alias = c("x1","x2","y1",
+                                      "y2","z","x[x1]","x[x2_derived]","y[y1]","y[z]"),
+            cond_qualified_alias = c("x1","x2","y1",
+                                "y2","z","x[x1]","x2_derived","y[y1]","y[z]"),
+            var_type = c("numeric","numeric",
+                         "categorical","categorical","categorical",
+                         "numeric","numeric","categorical","categorical")
+        )
+        expect_equivalent(col_info, expected)
+    })
+
     test_that("csvToDataFrame produces the correct data frame", {
-        csv_df <- read.csv(datasetFixturePath("veg.csv"), stringsAsFactors = FALSE)
+        csv_df <- read.csv(
+            datasetFixturePath("veg.csv"),
+            stringsAsFactors = FALSE, check.names = FALSE#, na.strings = ""
+        )
         expected <- readRDS(datasetFixturePath("veg_df.rds"))
         vars <- c(
             "wave", "age", "healthy_eater", "enjoy_mr", "veg_enjoy_ca", "ratings_numa",
@@ -112,18 +168,58 @@ with_mock_crunch({
         cdf <- as.data.frame(ds[, vars])
         # test local CDF variables
         cdf$newvar <- expected$newvar <- c(1:209, NA)
-
-        expect_equal(csvToDataFrame(csv_df, cdf), expected)
+        col_info <- csvColInfo(ds[, vars])
+        actual <- csvToDataFrame(csv_df, cdf, col_info)
+        expect_equal(actual, expected)
     })
 
     test_that("csvToDataFrame respects include.hidden", {
         # mock the include.hidden=FALSE by removing variables from csv_df
-        csv_df <- read.csv(datasetFixturePath("veg-no-hidden.csv"), stringsAsFactors = FALSE)
+        col_info <- csvColInfo(ds)
+        csv_df <- read.csv(datasetFixturePath("veg-no-hidden.csv"), stringsAsFactors = FALSE, check.names = FALSE)
         expected <- readRDS(datasetFixturePath("veg_hidden_df.rds"))
         cdf <- as.data.frame(ds, include.hidden = FALSE)
-        actual <- csvToDataFrame(csv_df, cdf)
-        actual <- actual[, !grepl("^funnel", names(actual))] # funnel vars added after test added
+        actual <- csvToDataFrame(csv_df, cdf, col_info)
         expect_equal(actual, expected)
+    })
+
+    test_that("csvToDataFrame handles duplicate aliases", {
+        csv_df <- read.csv(datasetFixturePath("dup.csv"), stringsAsFactors = FALSE, check.names = FALSE)
+        col_info <- csvColInfo(ds_dup)
+
+        expected_flat_df <- data.frame(
+            v1 = 1:3,
+            v2 = 2:4,
+            v3 = factor(letters[1:3], levels = letters[1:5]),
+            v4 = factor(letters[2:4], levels = letters[1:5]),
+            v5 = factor(letters[11:13], levels = letters[11:15]),
+            v6 = 1:3,
+            v7 = 2:4,
+            v8 = factor(letters[1:3], levels = letters[1:5]),
+            v9 = factor(letters[2:4], levels = letters[1:5])
+        )
+
+        df_cond_qualified <- csvToDataFrame(csv_df, ds_dup, col_info)
+        cond_qualified_names <- c("x1", "x2", "y1", "y2", "z", "x[x1]", "x2_derived", "y[y1]", "y[z]")
+        expect_equal(names(df_cond_qualified), cond_qualified_names)
+        expect_equivalent(
+            setNames(df_cond_qualified, paste0("v", seq_len(ncol(df_cond_qualified)))),
+            expected_flat_df
+        )
+
+        df_qualified <- csvToDataFrame(csv_df, ds_dup, col_info, "qualified_alias")
+        qualified_names <- c("x1", "x2", "y1", "y2", "z", "x[x1]", "x[x2_derived]", "y[y1]", "y[z]")
+        expect_equal(names(df_qualified), qualified_names)
+        expect_equivalent(
+            setNames(df_qualified, paste0("v", seq_len(ncol(df_qualified)))),
+            expected_flat_df
+        )
+
+        expected_packed_df <- setNames(expected_flat_df[, 1:5], c("x1", "x2", "y1", "y2", "z"))
+        expected_packed_df$v6 <- setNames(expected_flat_df[, 6:7], c("x1", "x2_derived"))
+        expected_packed_df$v7 <- setNames(expected_flat_df[, 8:9], c("y1", "z"))
+        df_packed <- csvToDataFrame(csv_df, ds_dup, col_info, "packed")
+        expect_equivalent(df_packed, expected_packed_df)
     })
 
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
