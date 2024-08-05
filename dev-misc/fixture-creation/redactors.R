@@ -178,6 +178,8 @@ ids_from_ds <- function(ds, desired_ds_id) {
 
 
 stable_var_alias_order <- function(ds) {
+    if (name(ds) != "Vegetables example") return(aliases(allVariables(ds)))
+
     saved_order_path <- here::here("dev-misc/fixture-creation/var_order.csv")
     saved_var_order <- suppressWarnings(try(read.csv(saved_order_path, stringsAsFactors = FALSE)[[1]], silent = TRUE))
     if (inherits(saved_var_order, "try-error")) {
@@ -203,6 +205,7 @@ ids_from_folders <- function(ds) {
     )
 
     out <- unlist(out)
+    if (length(out) == 0) return()
     setNames(out, sprintf("vdir_%02d", seq_along(out)))
 }
 
@@ -214,7 +217,7 @@ ids_below <- function(folder) {
 }
 
 ids_from_decks <- function(ds) {
-    if (length(decks(ds)) == 0) return
+    if (length(decks(ds)) == 0) return()
     deck_ids <- lapply(seq_along(decks(ds)), function(deck_num) {
         deck <- refresh(decks(ds)[[deck_num]])
         slide_ids <- lapply(seq_along(refresh(slides(deck))), function(slide_num) {
