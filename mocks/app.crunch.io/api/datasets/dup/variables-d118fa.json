@@ -1,0 +1,116 @@
+{
+    "catalogs": {
+        "materialize": "https://app.crunch.io/api/datasets/dup/variables/materialize/",
+        "private": "https://app.crunch.io/api/datasets/dup/variables/private/",
+        "suggest_alias": "https://app.crunch.io/api/datasets/dup/variables/suggest_alias/"
+    },
+    "description": "List of Variables of this dataset",
+    "element": "shoji:catalog",
+    "index": {
+        "var_01/": {
+            "alias": "x1",
+            "derived": false,
+            "description": "",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_01",
+            "name": "x1",
+            "notes": "",
+            "secure": false,
+            "type": "numeric"
+        },
+        "var_02/": {
+            "alias": "x2",
+            "derived": false,
+            "description": "",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_02",
+            "name": "x2",
+            "notes": "",
+            "secure": false,
+            "type": "numeric"
+        },
+        "var_03/": {
+            "alias": "y1",
+            "derived": false,
+            "description": "",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_03",
+            "name": "y1",
+            "notes": "",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "var_04/": {
+            "alias": "y2",
+            "derived": false,
+            "description": "",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_04",
+            "name": "y2",
+            "notes": "",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "var_05/": {
+            "alias": "z",
+            "derived": false,
+            "description": "",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_05",
+            "name": "z",
+            "notes": "",
+            "scale": "interval",
+            "secure": false,
+            "type": "categorical"
+        },
+        "var_06/": {
+            "alias": "x",
+            "derived": true,
+            "description": "",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_06",
+            "name": "x",
+            "notes": "",
+            "secure": false,
+            "subvariables": [
+                "var_06/subvariables/0001/",
+                "var_06/subvariables/0002/"
+            ],
+            "subvariables_catalog": "var_06/subvariables/",
+            "type": "numeric_array"
+        },
+        "var_07/": {
+            "alias": "y",
+            "derived": true,
+            "description": "",
+            "discarded": false,
+            "hidden": false,
+            "id": "var_07",
+            "name": "y",
+            "notes": "",
+            "scale": "interval",
+            "secure": false,
+            "subvariables": [
+                "var_07/subvariables/0001/",
+                "var_07/subvariables/0002/"
+            ],
+            "subvariables_catalog": "var_07/subvariables/",
+            "type": "categorical_array"
+        }
+    },
+    "orders": {
+        "favorites": "https://app.crunch.io/api/datasets/dup/variables/favorites/",
+        "hier": "https://app.crunch.io/api/datasets/dup/variables/hier/",
+        "weights": "https://app.crunch.io/api/datasets/dup/variables/weights/"
+    },
+    "self": "https://app.crunch.io/api/datasets/dup/variables/?relative=on"
+}
+

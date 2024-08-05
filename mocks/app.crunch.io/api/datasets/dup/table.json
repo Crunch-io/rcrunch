@@ -1,0 +1,283 @@
+{
+    "description": "A Crunch Table of data for this dataset.",
+    "element": "crunch:table",
+    "metadata": {
+        "var_01": {
+            "alias": "x1",
+            "derived": false,
+            "description": "",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "x1",
+            "notes": "",
+            "type": "numeric"
+        },
+        "var_02": {
+            "alias": "x2",
+            "derived": false,
+            "description": "",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "x2",
+            "notes": "",
+            "type": "numeric"
+        },
+        "var_03": {
+            "alias": "y1",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "a",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "b",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": false,
+                    "name": "c",
+                    "numeric_value": 3
+                },
+                {
+                    "id": 4,
+                    "missing": false,
+                    "name": "d",
+                    "numeric_value": 4
+                },
+                {
+                    "id": 5,
+                    "missing": false,
+                    "name": "e",
+                    "numeric_value": 5
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "",
+            "name": "y1",
+            "notes": "",
+            "type": "categorical"
+        },
+        "var_04": {
+            "alias": "y2",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "a",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "b",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": false,
+                    "name": "c",
+                    "numeric_value": 3
+                },
+                {
+                    "id": 4,
+                    "missing": false,
+                    "name": "d",
+                    "numeric_value": 4
+                },
+                {
+                    "id": 5,
+                    "missing": false,
+                    "name": "e",
+                    "numeric_value": 5
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "",
+            "name": "y2",
+            "notes": "",
+            "type": "categorical"
+        },
+        "var_05": {
+            "alias": "z",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "k",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "l",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": false,
+                    "name": "m",
+                    "numeric_value": 3
+                },
+                {
+                    "id": 4,
+                    "missing": false,
+                    "name": "n",
+                    "numeric_value": 4
+                },
+                {
+                    "id": 5,
+                    "missing": false,
+                    "name": "o",
+                    "numeric_value": 5
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": false,
+            "description": "",
+            "name": "z",
+            "notes": "",
+            "type": "categorical"
+        },
+        "var_06": {
+            "alias": "x",
+            "derived": true,
+            "description": "",
+            "missing_reasons": {
+                "No Data": -1
+            },
+            "name": "x",
+            "notes": "",
+            "subreferences": {
+                "0001": {
+                    "alias": "x1",
+                    "description": "",
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "x1",
+                    "notes": "",
+                    "view": {
+                        "column_width": null
+                    }
+                },
+                "0002": {
+                    "alias": "x2_derived",
+                    "description": "",
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "x2_derived",
+                    "notes": "",
+                    "view": {
+                        "column_width": null
+                    }
+                }
+            },
+            "subvariables": [
+                "0001",
+                "0002"
+            ],
+            "type": "numeric_array"
+        },
+        "var_07": {
+            "alias": "y",
+            "categories": [
+                {
+                    "id": 1,
+                    "missing": false,
+                    "name": "a",
+                    "numeric_value": 1
+                },
+                {
+                    "id": 2,
+                    "missing": false,
+                    "name": "b",
+                    "numeric_value": 2
+                },
+                {
+                    "id": 3,
+                    "missing": false,
+                    "name": "c",
+                    "numeric_value": 3
+                },
+                {
+                    "id": 4,
+                    "missing": false,
+                    "name": "d",
+                    "numeric_value": 4
+                },
+                {
+                    "id": 5,
+                    "missing": false,
+                    "name": "e",
+                    "numeric_value": 5
+                },
+                {
+                    "id": -1,
+                    "missing": true,
+                    "name": "No Data",
+                    "numeric_value": null
+                }
+            ],
+            "derived": true,
+            "description": "",
+            "name": "y",
+            "notes": "",
+            "subreferences": {
+                "0001": {
+                    "alias": "y1",
+                    "description": "",
+                    "name": "y1",
+                    "notes": ""
+                },
+                "0002": {
+                    "alias": "z",
+                    "description": "",
+                    "name": "z",
+                    "notes": ""
+                }
+            },
+            "subvariables": [
+                "0001",
+                "0002"
+            ],
+            "type": "categorical_array"
+        }
+    },
+    "self": "https://app.crunch.io/api/datasets/dup/table/"
+}
+

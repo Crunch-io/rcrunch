@@ -1,0 +1,148 @@
+{
+    "body": {
+        "access_time": "2024-01-01T21:26:43.038000",
+        "account": "https://app.crunch.io/api/accounts/00001/",
+        "app_settings": {
+            "report_issue_url": ""
+        },
+        "archived": false,
+        "creation_time": "2024-01-01T21:25:59.791000",
+        "current_editor": "https://app.crunch.io/api/users/user_id/",
+        "current_editor_name": "User",
+        "description": "",
+        "end_date": null,
+        "id": "dup",
+        "is_published": true,
+        "logo": {
+            "favicon": "",
+            "large": "",
+            "small": ""
+        },
+        "maintainer": "https://app.crunch.io/api/users/user_id/",
+        "modification_time": "2024-01-01T21:26:43.038000",
+        "name": "dup test",
+        "notes": "",
+        "owner": "https://app.crunch.io/api/projects/proj_id/",
+        "owner_name": "User",
+        "palette": {
+            "analysis": [
+                {
+                    "default": true,
+                    "name": "Default green palette for fixture",
+                    "palette": [
+                        "#4fc3f7",
+                        "#4dd0e1",
+                        "#4db6ac",
+                        "#81c783",
+                        "#aed581",
+                        "#dce775",
+                        "#cddc39",
+                        "#fdae6b"
+                    ],
+                    "type": "qualitative"
+                },
+                {
+                    "default": false,
+                    "name": "purple palette for fixture",
+                    "palette": [
+                        "#340043",
+                        "#640083",
+                        "#9100bf",
+                        "#c300ff",
+                        "#e17fff"
+                    ],
+                    "type": "qualitative"
+                }
+            ],
+            "brand": {
+                "message": "#712480",
+                "primary": "#0064a4",
+                "secondary": "#107e64"
+            }
+        },
+        "path": "Vegetables fixture|dup test",
+        "permissions": {
+            "edit": true,
+            "view": true
+        },
+        "project_inherited_settings": {
+            "disallow_dataset_shares": false,
+            "stop_dataset_shares": true
+        },
+        "size": {
+            "columns": 7,
+            "derivations": 2,
+            "rows": 3,
+            "source_columns": 5,
+            "unfiltered_rows": 3,
+            "variables": 7
+        },
+        "start_date": null,
+        "streaming": "no",
+        "type": "dataset",
+        "view_of": null
+    },
+    "catalogs": {
+        "actions": "https://app.crunch.io/api/datasets/dup/actions/",
+        "batches": "https://app.crunch.io/api/datasets/dup/batches/",
+        "boxdata": "https://app.crunch.io/api/datasets/dup/boxdata/",
+        "dashboards": "https://app.crunch.io/api/datasets/dup/dashboards/",
+        "decks": "https://app.crunch.io/api/datasets/dup/decks/",
+        "filters": "https://app.crunch.io/api/datasets/dup/filters/",
+        "folders": "https://app.crunch.io/api/datasets/dup/folders/",
+        "forks": "https://app.crunch.io/api/datasets/dup/forks/",
+        "multitables": "https://app.crunch.io/api/datasets/dup/multitables/",
+        "parent": "https://app.crunch.io/api/projects/proj_id/datasets/",
+        "permissions": "https://app.crunch.io/api/datasets/dup/permissions/",
+        "project": "https://app.crunch.io/api/projects/proj_id/",
+        "savepoints": "https://app.crunch.io/api/datasets/dup/savepoints/",
+        "scripts": "https://app.crunch.io/api/datasets/dup/scripts/",
+        "tags": "https://app.crunch.io/api/datasets/dup/tags/",
+        "teams": "https://app.crunch.io/api/datasets/dup/teams/",
+        "users": "https://app.crunch.io/api/datasets/dup/users/",
+        "variables": "https://app.crunch.io/api/datasets/dup/variables/",
+        "variables_by_type": "https://app.crunch.io/api/datasets/dup/variables/?type={type}",
+        "variables_private": "https://app.crunch.io/api/datasets/dup/variables/private/",
+        "views": "https://app.crunch.io/api/datasets/dup/views/"
+    },
+    "description": "Detail for a given dataset",
+    "element": "shoji:entity",
+    "folder_trees": {
+        "hidden": "folders/hidden/",
+        "personal": "folders/personal/",
+        "public": "folders/public/",
+        "secure": "folders/secure/"
+    },
+    "fragments": {
+        "exclusion": "https://app.crunch.io/api/datasets/dup/exclusion/",
+        "pk": "https://app.crunch.io/api/datasets/dup/pk/",
+        "preferences": "https://app.crunch.io/api/datasets/dup/preferences/",
+        "publish": "https://app.crunch.io/api/datasets/dup/publish/",
+        "schema": "https://app.crunch.io/api/datasets/dup/schema/",
+        "settings": "https://app.crunch.io/api/datasets/dup/settings/",
+        "state": "https://app.crunch.io/api/datasets/dup/state/",
+        "stream": "https://app.crunch.io/api/datasets/dup/stream/",
+        "table": "https://app.crunch.io/api/datasets/dup/table/"
+    },
+    "orders": {
+        "favorites": "https://app.crunch.io/api/datasets/dup/variables/favorites/",
+        "variables_hier": "https://app.crunch.io/api/datasets/dup/variables/hier/",
+        "variables_weights": "https://app.crunch.io/api/datasets/dup/variables/weights/"
+    },
+    "self": "https://app.crunch.io/api/datasets/dup/",
+    "urls": {
+        "editor_url": "https://app.crunch.io/api/users/user_id/",
+        "owner_url": "https://app.crunch.io/api/projects/pid/",
+        "user_url": "https://app.crunch.io/api/users/user_id/"
+    },
+    "views": {
+        "applied_filters": "https://app.crunch.io/api/datasets/dup/filters/applied/",
+        "cube": "https://app.crunch.io/api/datasets/dup/cube/",
+        "export": "https://app.crunch.io/api/datasets/dup/export/",
+        "second_order_analysis": "https://app.crunch.io/api/datasets/dup/second_order_analysis/",
+        "sources": "https://app.crunch.io/api/datasets/dup/sources/",
+        "summary": "https://app.crunch.io/api/datasets/dup/summary/",
+        "var_by_alias": "https://app.crunch.io/api/datasets/dup/var_by_alias/"
+    }
+}
+
