@@ -115,7 +115,7 @@ with_mock_crunch({
     })
     test_that("newDataset with a .json schema posts to datasets", {
         path_json <- system.file("example-datasets", "pets.json", package = "crunch")
-        content_json <- readLines(path_json)
+        content_json <- jsonlite::minify(readLines(path_json))
         expect_POST(
             newDataset(x = "helper.R", schema = path_json),
             "https://app.crunch.io/api/datasets/",
