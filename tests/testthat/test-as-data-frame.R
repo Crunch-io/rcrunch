@@ -401,7 +401,8 @@ with_test_authentication({
             paste0(
                 "Some column names are qualified because there were duplicate aliases ",
                 "in dataset:\nmr_1 -> MR[mr_1], mr_1 -> MR2[mr_1], v4 -> MR2[v4]"
-            )
+            ),
+            fixed = TRUE
         )
 
         expect_equal(ncol(mrds_df), 6)
