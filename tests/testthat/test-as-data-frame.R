@@ -379,16 +379,10 @@ with_test_authentication({
         df <- as.data.frame(ds, force = TRUE, include.hidden = FALSE)
         expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "vee six !"))
 
-        expect_warning(
-            df <- as.data.frame(ds, force = TRUE, include.hidden = TRUE),
-            "Variable hidden_var is hidden"
-        )
+        df <- as.data.frame(ds, force = TRUE, include.hidden = TRUE)
         expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "vee six !", "hidden_var"))
 
-        expect_warning(
-            df <- as.data.frame(ds[, c("v1", "hidden_var")], force = TRUE),
-            "Variable hidden_var is hidden"
-        )
+        df <- as.data.frame(ds[, c("v1", "hidden_var")], force = TRUE)
         expect_equal(names(df), c("v1", "hidden_var"))
     })
 
@@ -397,13 +391,20 @@ with_test_authentication({
         mrds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
         mrds$MR2 <- deriveArray(
             list(
-                VarDef(ds$MR$mr_1, name = "dup mr_1", alias = "mr_1"),
-                VarDef(ds$MR$mr_2, name = "dup v4", alias = "v4")
+                VarDef(mrds$MR$mr_1, name = "dup mr_1", alias = "mr_1"),
+                VarDef(mrds$MR$mr_2, name = "dup v4", alias = "v4")
             ),
-            name = "MR 2"
+            name = "MR 2", numeric = FALSE
         )
-        mrds_df <- as.data.frame(mrds, force = TRUE)
-        expect_equal(ncol(mrds_df), 4)
+        expect_message(
+            mrds_df <- as.data.frame(mrds, force = TRUE),
+            paste0(
+                "Some column names are qualified because there were duplicate aliases ",
+                "in dataset:\nmr_1 -> MR[mr_1], mr_1 -> MR2[mr_1], v4 -> MR2[v4]"
+            )
+        )
+
+        expect_equal(ncol(mrds_df), 6)
         expect_equal(names(mrds_df), c("MR[mr_1]", "mr_2", "mr_3", "v4", "MR2[mr_1]", "MR2[v4]"))
         expect_equal(mrds_df[["MR[mr_1]"]], as.vector(mrds$MR$mr_1))
         expect_equal(mrds_df$mr_2, as.vector(mrds$MR$mr_2))

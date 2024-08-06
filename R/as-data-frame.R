@@ -162,7 +162,7 @@ csvColInfo <- function(ds, verbose = TRUE) {
             alias_info <- paste0(out$orig_alias[msg_rows], " -> ", out$cond_qualified_alias[msg_rows])
             message(
                 "Some column names are qualified because there were duplicate aliases ",
-                "in dataset: ", paste0(alias_info, collapse = ", ")
+                "in dataset:\n", paste0(alias_info, collapse = ", ")
             )
         }
     }
