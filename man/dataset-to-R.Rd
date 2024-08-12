@@ -94,9 +94,9 @@ values into their R equivalents using the following rules:
 levels matching the Crunch Variable's categories (the default), or, if
 \code{categorical.mode} is specified as "id" or "numeric", a numeric vector of
 category ids or numeric values, respectively
-\item Array variables (Categorical Array, Multiple Response) are decomposed into
-their constituent categorical subvariables. An array with three subvariables,
-for example, will result in three columns in the \code{data.frame}.
+\item Array variables (Categorical Array, Multiple Response) can be decomposed into
+their constituent categorical subvariables or put in 'packed' data.frame columns,
+see the \code{array_strategy} argument.
 }
 
 Column names in the \code{data.frame} are the variable/subvariable aliases.
