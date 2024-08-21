@@ -179,7 +179,7 @@ formulaToSlideQuery(query, dataset)
 
 \S4method{filters}{Analysis,CrunchFilter}(x) <- value
 
-\S4method{filters}{Analysis,`NULL`}(x) <- value
+\S4method{filters}{Analysis,NULL}(x) <- value
 
 \S4method{filters}{Analysis,list}(x) <- value
 

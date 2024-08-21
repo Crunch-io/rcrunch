@@ -25,7 +25,7 @@ is.derived(x) <- value
 
 \S4method{derivation}{CrunchVariable,ANY}(x) <- value
 
-\S4method{derivation}{CrunchVariable,`NULL`}(x) <- value
+\S4method{derivation}{CrunchVariable,NULL}(x) <- value
 
 \S4method{is.derived}{CrunchVariable}(x)
 

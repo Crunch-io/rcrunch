@@ -44,17 +44,20 @@
                 "0001": {
                     "alias": "enjoy_mr_savory",
                     "description": "Enjoyment of savory food (binary)",
-                    "name": "Savory"
+                    "name": "Savory",
+                    "notes": "Do you typically enjoy food that is savory?"
                 },
                 "0002": {
                     "alias": "enjoy_mr_spicy",
                     "description": "Enjoyment of spicy food (binary)",
-                    "name": "Spicy"
+                    "name": "Spicy",
+                    "notes": "Do you typically enjoy food that is spicy?"
                 },
                 "0003": {
                     "alias": "enjoy_mr_sweet",
                     "description": "Enjoyment of sweet food (binary)",
-                    "name": "Sweet"
+                    "name": "Sweet",
+                    "notes": "Do you typically enjoy food that is sweet?"
                 }
             },
             "subvariables": [
@@ -270,7 +273,7 @@
             "derived": true,
             "description": "Rating of Vegetables: Scale of 0-100",
             "missing_reasons": {
-
+                "No Data": -1
             },
             "name": "Vegetable Ratings",
             "notes": "On a scale of 0-100, how would you rate...?",
@@ -278,32 +281,104 @@
                 "0001": {
                     "alias": "ratings_numa_avocado",
                     "description": "Avocado Rating (100 point scale)",
-                    "name": "Avocado"
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Avocado",
+                    "notes": "What is your rating between 0 and 100 of: Avocado",
+                    "view": {
+                        "column_width": null
+                    }
                 },
                 "0002": {
                     "alias": "ratings_numa_brussel_sprout",
                     "description": "Brussel Sprout Rating (100 point scale)",
-                    "name": "Brussel Sprout"
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Brussel Sprout",
+                    "notes": "What is your rating between 0 and 100 of: Brussel Sprout",
+                    "view": {
+                        "column_width": null
+                    }
                 },
                 "0003": {
                     "alias": "ratings_numa_carrot",
                     "description": "Carrot Rating (100 point scale)",
-                    "name": "Carrot"
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Carrot",
+                    "notes": "What is your rating between 0 and 100 of: Carrot",
+                    "view": {
+                        "column_width": null
+                    }
                 },
                 "0004": {
                     "alias": "ratings_numa_daikon",
                     "description": "Daikon Rating (100 point scale)",
-                    "name": "Daikon"
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Daikon",
+                    "notes": "What is your rating between 0 and 100 of: Daikon",
+                    "view": {
+                        "column_width": null
+                    }
                 },
                 "0005": {
                     "alias": "ratings_numa_eggplant",
                     "description": "Eggplant Rating (100 point scale)",
-                    "name": "Eggplant"
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Eggplant",
+                    "notes": "What is your rating between 0 and 100 of: Eggplant",
+                    "view": {
+                        "column_width": null
+                    }
                 },
                 "0006": {
                     "alias": "ratings_numa_fennel",
                     "description": "Fennel Rating (100 point scale)",
-                    "name": "Fennel"
+                    "format": {
+                        "data": {
+                            "digits": 2
+                        },
+                        "summary": {
+                            "digits": 2
+                        }
+                    },
+                    "name": "Fennel",
+                    "notes": "What is your rating between 0 and 100 of: Fennel",
+                    "view": {
+                        "column_width": null
+                    }
                 }
             },
             "subvariables": [
@@ -375,22 +450,26 @@
                 "0001": {
                     "alias": "veg_enjoy_ca_healthy",
                     "description": "Vegetables are healthy (5 point scale)",
-                    "name": "Healthy"
+                    "name": "Healthy",
+                    "notes": "Do you eat vegetables because: they are healthy"
                 },
                 "0002": {
                     "alias": "veg_enjoy_ca_tasty",
                     "description": "Vegetables are Tasty (5 point scale)",
-                    "name": "Tasty"
+                    "name": "Tasty",
+                    "notes": "Do you eat vegetables because: they taste good"
                 },
                 "0003": {
                     "alias": "veg_enjoy_ca_filling",
                     "description": "Vegetables are filling (5 point scale)",
-                    "name": "Filling"
+                    "name": "Filling",
+                    "notes": "Do you eat vegetables because: they are filling"
                 },
                 "0004": {
                     "alias": "veg_enjoy_ca_env",
                     "description": "Vegetables are environmental (5 point scale)",
-                    "name": "Environmental"
+                    "name": "Environmental",
+                    "notes": "Do you eat vegetables because: eating them is good for the environment"
                 }
             },
             "subvariables": [
@@ -766,12 +845,14 @@
                 "0001": {
                     "alias": "funnel_aware_mr_1",
                     "description": "Awareness MR - Jicama",
-                    "name": "Jicama"
+                    "name": "Jicama",
+                    "notes": "Have you ever heard of the vegetable Jicama?"
                 },
                 "0002": {
                     "alias": "funnel_aware_mr_2",
                     "description": "Awareness MR - Kohlrabi",
-                    "name": "Kohlrabi"
+                    "name": "Kohlrabi",
+                    "notes": "Have you ever heard of the vegetable Kohlrabi?"
                 }
             },
             "subvariables": [
@@ -885,12 +966,14 @@
                 "0001": {
                     "alias": "funnel_buy_mr_1",
                     "description": "Purchase MR - Jicama",
-                    "name": "Jicama"
+                    "name": "Jicama",
+                    "notes": "Have you ever bought Jicama?"
                 },
                 "0002": {
                     "alias": "funnel_buy_mr_2",
                     "description": "Purchase MR - Kohlrabi",
-                    "name": "Kohlrabi"
+                    "name": "Kohlrabi",
+                    "notes": "Have you ever bought Kohlrabi?"
                 }
             },
             "subvariables": [
@@ -1004,12 +1087,14 @@
                 "0001": {
                     "alias": "funnel_consider_mr_1",
                     "description": "Consideration MR - Jicama",
-                    "name": "Jicama"
+                    "name": "Jicama",
+                    "notes": "Have you ever consdidered buying Jicama?"
                 },
                 "0002": {
                     "alias": "funnel_consider_mr_2",
                     "description": "Consideration MR - Kohlrabi",
-                    "name": "Kohlrabi"
+                    "name": "Kohlrabi",
+                    "notes": "Have you ever consdidered buying Kohlrabi"
                 }
             },
             "subvariables": [

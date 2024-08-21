@@ -81,7 +81,30 @@
                 "alias": "funnel_aware_mr",
                 "description": "Awareness of Vegetables: Funnel",
                 "name": "Awareness of Vegetables",
-                "notes": "Have you ever heard of the vegetable...?"
+                "notes": "Have you ever heard of the vegetable...?",
+                "view": {
+                    "column_width": null,
+                    "include_missing": false,
+                    "include_noneoftheabove": false,
+                    "show_counts": false,
+                    "transform": {
+                        "insertions": [
+                            {
+                                "anchor": "top",
+                                "function": "any_non_missing_selected",
+                                "id": 1,
+                                "kwargs": {
+                                    "subvariable_ids": [
+                                        "funnel_aware_mr_1",
+                                        "funnel_aware_mr_2"
+                                    ],
+                                    "variable": "funnel_aware_mr"
+                                },
+                                "name": "Jicama or Kohlrabi"
+                            }
+                        ]
+                    }
+                }
             }
         },
         "derived": true,
@@ -107,12 +130,14 @@
             "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0001/": {
                 "alias": "funnel_aware_mr_1",
                 "description": "Awareness MR - Jicama",
-                "name": "Jicama"
+                "name": "Jicama",
+                "notes": "Have you ever heard of the vegetable Jicama?"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0002/": {
                 "alias": "funnel_aware_mr_2",
                 "description": "Awareness MR - Kohlrabi",
-                "name": "Kohlrabi"
+                "name": "Kohlrabi",
+                "notes": "Have you ever heard of the vegetable Kohlrabi?"
             }
         },
         "subvariables": [

@@ -20,7 +20,7 @@ weight(x) <- value
 
 \S4method{weight}{Analysis,CrunchVariable}(x) <- value
 
-\S4method{weight}{Analysis,`NULL`}(x) <- value
+\S4method{weight}{Analysis,NULL}(x) <- value
 
 \S4method{weight}{CrunchDataset}(x)
 

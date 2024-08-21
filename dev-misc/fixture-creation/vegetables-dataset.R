@@ -564,8 +564,11 @@ temp_dir <- tempfile()
 httpcache::clearCache()
 dir_create(temp_dir)
 
+# Load by ID now that it's in a project
+# This means that the fixtures from each aren't 100% complete, but that's okay
+ds_url <- self(ds)
 start_capturing(temp_dir)
-ds <- loadDataset("Vegetables example")
+ds <- loadDataset(ds_url)
 mt <- multitables(ds)[[1]]
 tb <- tabBook(mt, ds[c("healthy_eater", "veg_enjoy_ca", "enjoy_mr", "age", "ratings_numa")])
 
@@ -618,14 +621,14 @@ stop_capturing()
 # File level modifications needed to scrub attributes that change over time
 stabilize_json_files(
     temp_dir,
-    list(
-        "app.crunch.io/api/datasets/by_name/Vegetables%20example.json",
-        list(list("index", 1, "current_editor_name"), "User"),
-        list(list("index", 1, "owner_name"), "User"),
-        list(list("index", 1, "creation_time"), "2021-01-01T21:25:59.791000"),
-        list(list("index", 1, "modification_time"), "2021-01-01T21:26:43.038000"),
-        list(list("index", 1, "access_time"), "2021-01-01T21:26:43.038000")
-    ),
+    # list( # No longer loading by id
+    #     "app.crunch.io/api/datasets/by_name/Vegetables%20example.json",
+    #     list(list("index", 1, "current_editor_name"), "User"),
+    #     list(list("index", 1, "owner_name"), "User"),
+    #     list(list("index", 1, "creation_time"), "2021-01-01T21:25:59.791000"),
+    #     list(list("index", 1, "modification_time"), "2021-01-01T21:26:43.038000"),
+    #     list(list("index", 1, "access_time"), "2021-01-01T21:26:43.038000")
+    # ),
     list(
         "app.crunch.io/api/datasets/veg.json",
         list(list("body", "current_editor_name"), "User"),
@@ -667,11 +670,15 @@ path(temp_dir, "app.crunch.io/api/datasets/veg/multitables/mt_01") %>%
     file_delete()
 
 # Now move to the mocks folder
-file_copy(
-    path(temp_dir, "app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
-    here("mocks/app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
-    overwrite = TRUE
-)
+
+# Since we loaded by id, this isn't available (it comes from before we had a project folder) ----
+# But it should exist from the old fixtures
+# file_copy(
+#     path(temp_dir, "app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
+#     here("mocks/app.crunch.io/api/datasets/by_name/Vegetables%20example.json"),
+#     overwrite = TRUE
+# )
+# ----
 
 file_copy(
     path(temp_dir, "app.crunch.io/api/datasets/veg.json"),
@@ -679,7 +686,7 @@ file_copy(
     overwrite = TRUE
 )
 
-dir_delete(here("mocks/app.crunch.io/api/datasets/veg/"))
+dir_delete(here("mocks/app.crunch.io/api/datasets/veg/"), )
 dir_copy(
     path(temp_dir, "app.crunch.io/api/datasets/veg/"),
     here("mocks/app.crunch.io/api/datasets/veg/"),
@@ -701,15 +708,54 @@ write.csv(
     ds,
     here("mocks", "dataset-fixtures", "veg.csv"),
     categorical = "id",
-    include.hidden = TRUE
+    include.hidden = TRUE,
+    missing_values = ""#,
+    # header_field = "qualified_alias" # This will only work after #188045851 ships
 )
 
 write.csv(
     ds,
     here("mocks", "dataset-fixtures", "veg-no-hidden.csv"),
     categorical = "id",
-    include.hidden = FALSE
+    include.hidden = FALSE,
+    missing_values = ""#,
+    # header_field = "qualified_alias" # This will only work after #188045851 ships
 )
+
+# Mock what header_field="qualified_alias" will look like after #188045851 ships
+lines <- readLines(here("mocks", "dataset-fixtures", "veg.csv"))
+lines[1] <- paste0(
+    "wave,age,healthy_eater,enjoy_mr[enjoy_mr_savory],enjoy_mr[enjoy_mr_spicy],",
+    "enjoy_mr[enjoy_mr_sweet],veg_enjoy_ca[veg_enjoy_ca_healthy],veg_enjoy_ca[veg_enjoy_ca_tasty],",
+    "veg_enjoy_ca[veg_enjoy_ca_filling],veg_enjoy_ca[veg_enjoy_ca_env],",
+    "ratings_numa[ratings_numa_avocado],ratings_numa[ratings_numa_brussel_sprout],",
+    "ratings_numa[ratings_numa_carrot],ratings_numa[ratings_numa_daikon],",
+    "ratings_numa[ratings_numa_eggplant],ratings_numa[ratings_numa_fennel],",
+    "funnel_aware_mr[funnel_aware_mr_1],funnel_aware_mr[funnel_aware_mr_2],",
+    "funnel_consider_mr[funnel_consider_mr_1],funnel_consider_mr[funnel_consider_mr_2],",
+    "funnel_consider_mr[funnel_buy_mr_1],funnel_consider_mr[funnel_buy_mr_2],",
+    "weight,last_vegetable,last_vegetable_date,rating_daikon,funnel_aware_1,funnel_consider_1,",
+    "funnel_buy_2,veg_environmental,funnel_aware_2,funnel_consider_2,enjoy_savory_food,",
+    "resp_id,veg_tasty,rating_fennel,rating_carrot,enjoy_sweet_food,veg_filling,",
+    "rating_brussel_sprout,rating_eggplant,funnel_buy_1,enjoy_spicy_food,rating_avocado,veg_healthy"
+)
+writeLines(lines,here("mocks", "dataset-fixtures", "veg.csv"))
+
+lines <- readLines(here("mocks", "dataset-fixtures", "veg-no-hidden.csv"))
+lines[1] <- paste0(
+    "wave,age,healthy_eater,enjoy_mr[enjoy_mr_savory],enjoy_mr[enjoy_mr_spicy],",
+    "enjoy_mr[enjoy_mr_sweet],veg_enjoy_ca[veg_enjoy_ca_healthy],veg_enjoy_ca[veg_enjoy_ca_tasty],",
+    "veg_enjoy_ca[veg_enjoy_ca_filling],veg_enjoy_ca[veg_enjoy_ca_env],",
+    "ratings_numa[ratings_numa_avocado],ratings_numa[ratings_numa_brussel_sprout],",
+    "ratings_numa[ratings_numa_carrot],ratings_numa[ratings_numa_daikon],",
+    "ratings_numa[ratings_numa_eggplant],ratings_numa[ratings_numa_fennel],",
+    "funnel_aware_mr[funnel_aware_mr_1],funnel_aware_mr[funnel_aware_mr_2],",
+    "funnel_consider_mr[funnel_consider_mr_1],funnel_consider_mr[funnel_consider_mr_2],",
+    "funnel_buy_mr[funnel_buy_mr_1],funnel_buy_mr[funnel_buy_mr_2],",
+    "weight,last_vegetable,last_vegetable_date"
+)
+writeLines(lines,here("mocks", "dataset-fixtures", "veg-no-hidden.csv"))
+
 
 ## Generate cube fixtures ----
 ### Numeric array alone (numa.json) ----

@@ -55,9 +55,9 @@
                 }
             ],
             "brand": {
-                "message": "#722580",
+                "message": "#712480",
                 "primary": "#0064a4",
-                "secondary": "#107f65"
+                "secondary": "#107e64"
             }
         },
         "path": "Vegetables fixture|Vegetables example",
@@ -65,16 +65,21 @@
             "edit": true,
             "view": true
         },
+        "project_inherited_settings": {
+            "disallow_dataset_shares": false,
+            "stop_dataset_shares": true
+        },
         "size": {
-            "columns": 26,
-            "derivations": 0,
+            "columns": 32,
+            "derivations": 6,
             "rows": 210,
             "source_columns": 26,
             "unfiltered_rows": 210,
-            "variables": 26
+            "variables": 32
         },
         "start_date": null,
         "streaming": "no",
+        "type": "dataset",
         "view_of": null
     },
     "catalogs": {
@@ -136,7 +141,8 @@
         "export": "https://app.crunch.io/api/datasets/veg/export/",
         "second_order_analysis": "https://app.crunch.io/api/datasets/veg/second_order_analysis/",
         "sources": "https://app.crunch.io/api/datasets/veg/sources/",
-        "summary": "https://app.crunch.io/api/datasets/veg/summary/"
+        "summary": "https://app.crunch.io/api/datasets/veg/summary/",
+        "var_by_alias": "https://app.crunch.io/api/datasets/veg/var_by_alias/"
     }
 }
 

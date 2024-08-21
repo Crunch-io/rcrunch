@@ -1,22 +1,27 @@
 {
     "body": {
+        "can_convert": true,
         "creation_time": "2021-01-01T21:29:59.791000",
         "description": "",
         "id": "dk01",
         "is_public": false,
+        "is_scriptable": false,
         "name": "1 deck about transforms",
         "owner_id": "https://app.crunch.io/api/users/user_id/",
         "owner_name": "Greg",
         "team": null
     },
     "catalogs": {
-        "slides": "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/"
+        "slides": "https://app.crunch.io/api/datasets/veg/decks/dk01/slides/",
+        "variables": "https://app.crunch.io/api/datasets/veg/decks/dk01/variables/"
     },
     "description": "Detail of one deck",
     "element": "shoji:entity",
     "self": "https://app.crunch.io/api/datasets/veg/decks/dk01/",
     "views": {
-        "export": "https://app.crunch.io/api/datasets/veg/decks/dk01/export/"
+        "deck": "https://app.crunch.io/api/datasets/veg/decks/dk01/deck/",
+        "export": "https://app.crunch.io/api/datasets/veg/decks/dk01/export/",
+        "script": "https://app.crunch.io/api/datasets/veg/decks/dk01/script/"
     }
 }
 

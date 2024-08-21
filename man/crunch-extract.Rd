@@ -224,7 +224,7 @@
 
 \S4method{[}{CrunchCube,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[[}{TransformsList,ANY,missing,`NULL`}(x, i, j) <- value
+\S4method{[[}{TransformsList,ANY,missing,NULL}(x, i, j) <- value
 
 \S4method{[[}{DatasetCatalog,numeric}(x, i, j, ...)
 
@@ -262,9 +262,9 @@
 
 \S4method{[[}{CrunchDataset,ANY,ANY,ANY}(x, i) <- value
 
-\S4method{[[}{CrunchDataset,character,missing,`NULL`}(x, i) <- value
+\S4method{[[}{CrunchDataset,character,missing,NULL}(x, i) <- value
 
-\S4method{[[}{CrunchDataset,ANY,missing,`NULL`}(x, i) <- value
+\S4method{[[}{CrunchDataset,ANY,missing,NULL}(x, i) <- value
 
 \S4method{$}{CrunchDataset}(x, name) <- value
 
@@ -332,7 +332,7 @@
 
 \S4method{[[}{MemberCatalog,ANY,missing,ANY}(x, i, j) <- value
 
-\S4method{[[}{MemberCatalog,character,missing,`NULL`}(x, i, j) <- value
+\S4method{[[}{MemberCatalog,character,missing,NULL}(x, i, j) <- value
 
 \S4method{[[}{MultitableCatalog,numeric}(x, i, j, ...)
 
@@ -342,7 +342,7 @@
 
 \S4method{[[}{MultitableCatalog,ANY,missing,Multitable}(x, i, j) <- value
 
-\S4method{[[}{MultitableCatalog,ANY,missing,`NULL`}(x, i, j) <- value
+\S4method{[[}{MultitableCatalog,ANY,missing,NULL}(x, i, j) <- value
 
 \S4method{[[}{PermissionCatalog,character}(x, i, j, ...)
 
@@ -378,9 +378,9 @@
 
 \S4method{[[}{ShojiOrder,ANY,missing,ANY}(x, i, j) <- value
 
-\S4method{[[}{ShojiOrder,ANY,missing,`NULL`}(x, i, j) <- value
+\S4method{[[}{ShojiOrder,ANY,missing,NULL}(x, i, j) <- value
 
-\S4method{[[}{ShojiOrder,character,missing,`NULL`}(x, i, j) <- value
+\S4method{[[}{ShojiOrder,character,missing,NULL}(x, i, j) <- value
 
 \S4method{[[}{ShojiOrder,character,missing,ShojiOrder}(x, i, j) <- value
 
@@ -406,9 +406,9 @@
 
 \S4method{[[}{OrderGroup,ANY,missing,OrderGroup}(x, i, j) <- value
 
-\S4method{[[}{OrderGroup,numeric,missing,`NULL`}(x, i, j) <- value
+\S4method{[[}{OrderGroup,numeric,missing,NULL}(x, i, j) <- value
 
-\S4method{[[}{OrderGroup,character,missing,`NULL`}(x, i, j) <- value
+\S4method{[[}{OrderGroup,character,missing,NULL}(x, i, j) <- value
 
 \S4method{$}{OrderGroup}(x, name) <- value
 
@@ -438,7 +438,7 @@
 
 \S4method{[[}{Subvariables,ANY,missing,CrunchVariable}(x, i) <- value
 
-\S4method{[[}{Subvariables,ANY,missing,`NULL`}(x, i) <- value
+\S4method{[[}{Subvariables,ANY,missing,NULL}(x, i) <- value
 
 \S4method{[[}{Subvariables,ANY,missing,ANY}(x, i) <- value
 
@@ -502,7 +502,7 @@
 
 \S4method{[}{CrunchVariable,ANY,missing,ANY}(x, i, j) <- value
 
-\S4method{[}{CrunchVariable,ANY,missing,`NULL`}(x, i, j) <- value
+\S4method{[}{CrunchVariable,ANY,missing,NULL}(x, i, j) <- value
 
 \S4method{[}{TextVariable,ANY,missing,character}(x, i, j) <- value
 

@@ -1,3 +1,4 @@
+setMethod("tuple", "VariableTuple", function(x) x)
 setMethod("tuple", "CrunchVariable", function(x) x@tuple)
 setMethod("tuple<-", "CrunchVariable", function(x, value) {
     x@tuple <- value

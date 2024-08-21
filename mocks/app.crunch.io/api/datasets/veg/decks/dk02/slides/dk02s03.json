@@ -13,7 +13,8 @@
     "element": "shoji:entity",
     "self": "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s03/",
     "views": {
-        "applied": "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s03/applied/"
+        "applied": "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s03/applied/",
+        "script": "https://app.crunch.io/api/datasets/veg/decks/dk02/slides/dk02s03/script/"
     }
 }
 

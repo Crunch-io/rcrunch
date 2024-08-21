@@ -108,17 +108,20 @@
             "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0001/": {
                 "alias": "enjoy_mr_savory",
                 "description": "Enjoyment of savory food (binary)",
-                "name": "Savory"
+                "name": "Savory",
+                "notes": "Do you typically enjoy food that is savory?"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0002/": {
                 "alias": "enjoy_mr_spicy",
                 "description": "Enjoyment of spicy food (binary)",
-                "name": "Spicy"
+                "name": "Spicy",
+                "notes": "Do you typically enjoy food that is spicy?"
             },
             "https://app.crunch.io/api/datasets/veg/variables/var_02/subvariables/0003/": {
                 "alias": "enjoy_mr_sweet",
                 "description": "Enjoyment of sweet food (binary)",
-                "name": "Sweet"
+                "name": "Sweet",
+                "notes": "Do you typically enjoy food that is sweet?"
             }
         },
         "subvariables": [

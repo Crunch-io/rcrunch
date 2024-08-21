@@ -56,6 +56,7 @@ flattenVariableMetadata <- function(vm) {
                 ## Add the parent ref
                 x$parent <- u
                 x$parent_alias <- this$alias
+                x$type <- if (this$type == "numeric_array") "numeric" else "categorical"
                 return(x)
             })
             return(out)
