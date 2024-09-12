@@ -1,0 +1,25 @@
+FROM docker-proxy.nexus.crint.net/rstudio/r-base:4.3-jammy
+ARG HOMEDIR=/var/lib/crunchapp
+ARG USER=1001
+ARG GROUP=1002
+ENV HOMEDIR=${HOMEDIR}
+ENV R_LIBS=${HOMEDIR}/rlibs
+USER root
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+RUN apt-get update && apt-get install build-essential libtiff5-dev libfribidi-dev libfontconfig1-dev libgit2-dev libssl-dev libcurl4-gnutls-dev libxml2-dev libsodium-dev libharfbuzz-dev libfribidi-dev -y
+# Add the user/group crunchapp
+RUN groupadd --gid ${GROUP} crunchapp \
+    && useradd --uid ${USER} --gid crunchapp --shell /bin/bash --create-home -d ${HOMEDIR} crunchapp
+# Copy only the minimal amount of the package to install dependencies
+COPY --chown=crunchapp:crunchapp ./DESCRIPTION ./Makefile ${HOMEDIR}/
+WORKDIR ${HOMEDIR}
+RUN echo 'local({\n\
+    r <- getOption("repos")\n\
+    r["Nexus"] <- "https://crunchbot:No.1.gmo9@ui.nexus.crint.net/repository/rcrunch/"\n\
+    options(repos = r)\n\
+})'> /usr/lib/R/etc/Rprofile.site
+RUN apt-get install -y git
+USER crunchapp
+RUN mkdir ${R_LIBS} && make install-ci
+# docker build --cache-from docker.nexus.crint.net/rcrunch_docker_rproxy:3.6-circleci -t docker.nexus.crint.net/rcrunch_docker_rproxy:3.6-circleci -f docker/jenkins/Dockerfile.rcrunch .
