@@ -213,7 +213,8 @@ with_mock_crunch({
                 ),
                 list(value = I("selected"))
             ),
-            name = "New Mr"
+            name = "New Mr",
+            derived = FALSE
         )
         varDef <- makeMRFromText(ds2$delimed_text,
             delim = "; ",
@@ -245,7 +246,8 @@ with_mock_crunch({
                         ), list(value = I("0001")))
                     )),
                     kwargs = list(numeric = list(value = FALSE))
-                )
+                ),
+                derived = FALSE
             )
         )
     })
@@ -258,6 +260,7 @@ with_mock_crunch({
                 numeric = TRUE
             ),
             list(
+                derived = FALSE,
                 name = "birthyr addition",
                 derivation = list(
                     `function` = "array",

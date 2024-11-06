@@ -173,6 +173,7 @@ with_mock_crunch({
     })
     expected_weight_definition <- list(
         name = "weight",
+        derived = FALSE,
         derivation = list(
             `function` = "rake",
             args = list(
@@ -186,6 +187,7 @@ with_mock_crunch({
     expected_attribute_definition <- list(
         alias = "test_alias",
         name = "weight",
+        derived = FALSE,
         derivation = list(
             `function` = "rake",
             args = list(

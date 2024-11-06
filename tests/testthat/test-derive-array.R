@@ -14,7 +14,7 @@ with_mock_crunch({
             '[{"function":"array","args":[{"function":"make_frame","args":',
             '[{"map":{"0001":{"variable":"https://app.crunch.io/api/datasets',
             '/1/variables/gender/"}}},{"value":["0001"]}]}],"kwargs":{"numeric":{"value":false}}},', # nolint
-            '{"value":["Female"]}]},"name":"derivedMR","alias":"derived_mr"}'
+            '{"value":["Female"]}]},"derived":false,"name":"derivedMR","alias":"derived_mr"}'
         )
     })
 })

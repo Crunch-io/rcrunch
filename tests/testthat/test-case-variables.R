@@ -125,7 +125,8 @@ with_mock_crunch({
                     )
                 )
             )
-        )
+        ),
+        derived = FALSE
     )
 
     test_that("evalSide works with and without data", {

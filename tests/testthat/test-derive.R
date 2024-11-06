@@ -80,7 +80,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"derivation":{"function":">","args":[{"variable":',
             '"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
-            '{"value":2000}]},"name":"kids","alias":"kids"}'
+            '{"value":2000}]},"derived":false,"name":"kids","alias":"kids"}'
         )
     })
 })

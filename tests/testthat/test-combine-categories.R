@@ -5,6 +5,7 @@ with_mock_crunch({
 
     both <- VariableDefinition(
         name = "Gender 1 cat",
+        derived = FALSE,
         description = "Gender",
         discarded = FALSE,
         notes = "",
