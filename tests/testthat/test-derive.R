@@ -83,6 +83,19 @@ with_mock_crunch({
             '{"value":2000}]},"derived":false,"name":"kids","alias":"kids"}'
         )
     })
+
+    test_that("derive from logical expression respects crunch.default.derived", {
+        with(temp.option(crunch = list(crunch.default.derived = TRUE)), {
+            expect_POST(
+                ds$kids <- ds$birthyr > 2000,
+                "https://app.crunch.io/api/datasets/1/variables/",
+                '{"derivation":{"function":">","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
+                '{"value":2000}]},"derived":true,"name":"kids","alias":"kids"}'
+            )
+        })
+    })
+
 })
 
 with_test_authentication({
