@@ -211,6 +211,7 @@ vectorOrList <- function(obj, type) {
 #' | crunch.warn.private          | R_CRUNCH_WARN_PRIVATE          | TRUE          | Whether to warn when using a private variable                               |
 #' | crunch.names.includes.hidden.private.variables | R_NAMES_INCLUDES_HIDDEN_PRIVATE_VARIABLES| TRUE | Whether to include hidden/private variables from names(ds) |
 #' | crunch.order.var.catalog     | R_CRUNCH_ORDER_VAR_CATALOG     | TRUE          | Whether to set the variable catalog in the order of the hierarchical order  |
+#' | crunch.default.derived       | R_CRUNCH_DEFAULT_DERIVED.      | FALSE         | Whether to create variables from expressions that are derived (TRUE) or materialized (FALSE) |
 #' | crunch.delimiter             | R_CRUNCH_DELIMITER             | "/"           | What to use as a delimiter when printing folder paths                       |
 #' | crunch.check.updates         | R_CRUNCH_CHECK_UPDATES         | TRUE          | Whether to check for updates to the crunch package                          |
 #' | crunch.debug                 | R_CRUNCH_DEBUG                 | FALSE         | Whether to print verbose information for debugging                          |
