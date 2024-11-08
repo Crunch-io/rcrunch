@@ -1,4 +1,7 @@
-# crunch 1.30.4 (Development Version)
+# crunch 1.31.0 (Development Version)
+* Variables are now created as materialized by default instead of derived. If you prefer the 
+  old behavior set environment variable `R_CRUNCH_DEFAULT_DERIVED` or option 
+  `crunch.default.derived` to TRUE. See `?toVariable` for more information (#648).
 
 # crunch 1.30.3
 * Fix typo which relied on partial argument matching when using the variable catalog cache
