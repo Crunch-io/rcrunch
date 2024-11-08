@@ -1,7 +1,7 @@
 context("Debugging append")
 
 with_test_authentication({
-    with(temp.option(crunch = list(crunch.timeout = 60)), {
+    with(temp.option(crunch = list(crunch.timeout = 60, crunch.default.derived = TRUE)), {
         whereas("Appending with an exclusion on the incoming dataset", {
             part0 <- createDataset(name = now())
             part1 <- newDatasetFromFixture("apidocs")
