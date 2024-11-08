@@ -15,7 +15,7 @@ library(crunch)
 ```
 
 ```{r, results='hide', include = FALSE}
-set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
+set_crunch_opts("crunch.api" = "https://team.crunch.io/api/")
 library(httptest)
 start_vignette("crunch")
 ```
