@@ -48,10 +48,14 @@ with_mock_crunch({
     })
 
     test_that("derivation()<-NULL and is.derived()<-FALSE issues a PATCH", {
-        expect_PATCH(
-            derivation(birthyrPlus) <- NULL,
-            "https://app.crunch.io/api/datasets/1/variables/birthyrPlus/",
-            '{"derived":false}'
+        set_crunch_opts("warnIntegrateDerivedVar" = FALSE)
+        expect_warning(
+            expect_PATCH(
+                derivation(birthyrPlus) <- NULL,
+                "https://app.crunch.io/api/datasets/1/variables/birthyrPlus/",
+                '{"derived":false}'
+            ),
+            "Materializing an existing derived variable is deprecated"
         )
         expect_PATCH(
             is.derived(birthyrPlus) <- FALSE,
