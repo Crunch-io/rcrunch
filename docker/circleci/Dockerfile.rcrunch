@@ -22,4 +22,4 @@ RUN echo 'local({\n\
 RUN apt-get install -y git
 USER crunchapp
 RUN mkdir ${R_LIBS} && make install-ci
-# docker build --cache-from docker.nexus.crint.net/rcrunch_docker_rproxy:3.6-circleci -t docker.nexus.crint.net/rcrunch_docker_rproxy:3.6-circleci -f docker/jenkins/Dockerfile.rcrunch .
+# docker build --cache-from docker.nexus.crint.net/rcrunch_docker_rproxy:3.6-circleci -t docker.nexus.crint.net/rcrunch_docker_rproxy:3.6-circleci -f docker/circleci/Dockerfile.rcrunch .

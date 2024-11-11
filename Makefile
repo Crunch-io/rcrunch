@@ -18,8 +18,18 @@ deps:
 install-ci: deps
 	R -e 'devtools::session_info(installed.packages()[, "Package"])'
 
-test-ci: compress-fixtures |
-	R --slave -e 'library(covr); install_dir <- tempfile(); test_run <- try(to_cobertura(package_coverage(quiet=FALSE, install_path=install_dir, clean=FALSE))); for (file in list.files(install_dir, pattern = "\\.Rout(\\.fail)?$$", recursive=TRUE, full.names=TRUE)) { cat(readLines(file), sep = "\n"); cat("\n") }; if (inherits(test_run, "try-error")) stop("Test failed!\n", attr(test_run, "condition")[["message"]], "\n", format(attr(test_run, "condition")[["call"]]))'
+run-tests-split:
+ R --slave -e 'library(covr); install_dir <- tempfile(); Sys.setenv(INSTALL_DIR = install_dir); test_files <- unlist(strsplit(Sys.getenv("TEST_FILES"), " ")); test_run <- try(to_cobertura(package_coverage(test_files, quiet=FALSE, install_path=install_dir, clean=FALSE))); if (inherits(test_run, "try-error")) stop("Test failed!\n", attr(test_run, "condition")[["message"]], "\n", format(attr(test_run, "condition")[["call"]]))'
+
+run-tests:
+	R --slave -e 'library(covr); install_dir <- tempfile(); Sys.setenv(INSTALL_DIR = install_dir); test_run <- try(to_cobertura(package_coverage(quiet=FALSE, install_path=install_dir, clean=FALSE))); if (inherits(test_run, "try-error")) stop("Test failed!\n", attr(test_run, "condition")[["message"]], "\n", format(attr(test_run, "condition")[["call"]]))'
+
+output-test-logs:
+	R --slave -e 'install_dir <- Sys.getenv("INSTALL_DIR"); for (file in list.files(install_dir, pattern = "\\.Rout(\\.fail)?$$", recursive=TRUE, full.names=TRUE)) { cat(readLines(file), sep = "\n"); cat("\n") }'
+
+test-ci: compress-fixtures run-tests output-test-logs
+
+test-cci: compress-fixtures run-tests-split output-test-logs
 
 clean:
 	R --slave -e 'library(crunch); set_crunch_opts(crunch.api=envOrOption("test.api"), crunch.api.key=envOrOption("crunch.test.api.key")); lapply(urls(datasets()), crDELETE)'
