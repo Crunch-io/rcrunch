@@ -24,13 +24,14 @@ test_that("newDataset input validation", {
     )
 })
 
+project_url <- "https://app.crunch.io/api/projects/abc"
 with_mock_crunch({
     test_that("Basic exercise of turning data.frame to Crunch payload", {
         expect_POST(
-            newDataset(data.frame(a = 1), name = "Testing"),
+            newDataset(data.frame(a = 1), name = "Testing", project = project_url),
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:entity","body":{"name":"Testing",',
-            '"table":{"element":"crunch:table",',
+            '{"element":"shoji:entity","body":{"name":"Testing","project":"',
+            project_url, '","table":{"element":"crunch:table",',
             '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
             '"order":["a"]}}}'
         )
@@ -38,10 +39,10 @@ with_mock_crunch({
 
     test_that("Turning data.frame to Crunch payload without a name", {
         expect_POST(
-            newDataset(data.frame(a = 1)),
+            newDataset(data.frame(a = 1), project = project_url),
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"data.frame(a = 1)",',
-            '"table":{"element":"crunch:table",',
+            '"project":"', project_url, '","table":{"element":"crunch:table",',
             '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
             '"order":["a"]}}}'
         )
@@ -49,10 +50,11 @@ with_mock_crunch({
 
     test_that("Turning data.frame to Crunch payload with a long name", {
         expect_POST(
-            newDataset(data.frame(a = 1, really_really_long_name = 2)),
+            newDataset(data.frame(a = 1, really_really_long_name = 2), project = project_url),
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"data.frame(a = 1, ',
-            'really_really_long_nam","table":{"element":"crunch:table",',
+            'really_really_long_nam","project":"', project_url,
+            '","table":{"element":"crunch:table",',
             '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"},',
             '"really_really_long_name":{"type":"numeric",',
             '"name":"really_really_long_name","alias":"really_really_long_name"}},',
@@ -74,30 +76,31 @@ with_mock_crunch({
 
     test_that("createDataset with named args", {
         expect_POST(
-            createDataset(name = "Foo", description = "Bar."),
+            createDataset(name = "Foo", description = "Bar.", project = project_url),
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Foo",',
-            '"description":"Bar."}}'
+            '"description":"Bar.","project":"', project_url, '"}}'
         )
     })
     test_that("createDataset returns a dataset", {
         with_POST(
             "https://app.crunch.io/api/datasets/1/",
-            expect_true(is.dataset(createDataset(name = "Foo")))
+            expect_true(is.dataset(createDataset(name = "Foo", project = project_url)))
         )
     })
     test_that("newDataset calls newDatasetFromFile if given a string", {
         expect_POST(
-            newDataset("helper.R"),
+            newDataset("helper.R", project = project_url),
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:entity","body":{"name":"helper.R"}}'
+            '{"element":"shoji:entity","body":{"name":"helper.R","project":"',
+            project_url, '"}}'
         )
     })
     test_that("newDataset with an .sss schema posts to sources", {
         temp_file <- tempfile("schema", fileext = ".sss")
         file.create(temp_file)
         expect_POST(
-            newDataset(x = "helper.R", schema = temp_file),
+            newDataset(x = "helper.R", schema = temp_file, project = project_url),
             "https://app.crunch.io/api/sources/",
             paste0("list\\(uploaded_file = list\\(path = .*", basename(temp_file)),
             fixed = FALSE
@@ -107,7 +110,7 @@ with_mock_crunch({
         temp_file <- tempfile("schema", fileext = ".xml")
         file.create(temp_file)
         expect_POST(
-            newDataset(x = "helper.R", schema = temp_file),
+            newDataset(x = "helper.R", schema = temp_file, project = project_url),
             "https://app.crunch.io/api/sources/",
             paste0("list\\(uploaded_file = list\\(path = .*", basename(temp_file)),
             fixed = FALSE
@@ -128,7 +131,7 @@ with_mock_crunch({
             1
         )
         expect_error(
-            newDataset(x = "helper.R", schema = paste0("schema.", unsupported_format)),
+            newDataset(x = "helper.R", schema = paste0("schema.", unsupported_format), project = project_url),
             "Unsupported schema type:"
         )
     })
@@ -138,18 +141,18 @@ with_mock_crunch({
             # we supressMessages which makes detecting it harder
             temp_file <- tempfile("schema", fileext = ".sss")
             file.create(temp_file)
-            ds <- newDataset(x = "teardown.R", schema = temp_file)
+            ds <- newDataset(x = "teardown.R", schema = temp_file, project = project_url)
         })
     })
     test_that("newDataset(FromFile) cleans up the dataset entity if the file is invalid", {
         with_POST("https://app.crunch.io/api/datasets/1/", {
             expect_DELETE(
-                newDataset("NOTAFILE.exe"),
+                newDataset("NOTAFILE.exe", project = project_url),
                 "https://app.crunch.io/api/datasets/1/"
             )
             with_DELETE(NULL, {
                 expect_error(
-                    newDataset("NOTAFILE.exe"),
+                    newDataset("NOTAFILE.exe", project = project_url),
                     "File not found"
                 )
             })
@@ -158,7 +161,7 @@ with_mock_crunch({
     test_that("newDataset(FromFile) can take an s3 URL", {
         with_DELETE(NULL, {
             expect_POST(
-                newDataset("s3://httpbin.org/get"),
+                newDataset("s3://httpbin.org/get", project = project_url),
                 "https://app.crunch.io/api/datasets/1/batches/",
                 '{"element":"shoji:entity",',
                 '"body":{"url":"s3://httpbin.org/get"}}'
@@ -168,7 +171,7 @@ with_mock_crunch({
     test_that("newDataset(FromFile) can take an http(s) URL", {
         with_DELETE(NULL, {
             expect_POST(
-                newDataset("https://httpbin.org/get"),
+                newDataset("https://httpbin.org/get", project = project_url),
                 "https://app.crunch.io/api/sources/",
                 '{"element":"shoji:entity",',
                 '"body":{"location":"https://httpbin.org/get"}}'
@@ -178,9 +181,9 @@ with_mock_crunch({
 
     test_that("newDatasetByColumn", {
         expect_POST(
-            newDatasetByColumn(data.frame(a = 1), name = "Bam!"),
+            newDatasetByColumn(data.frame(a = 1), name = "Bam!", project = project_url),
             "https://app.crunch.io/api/datasets/",
-            '{"element":"shoji:entity","body":{"name":"Bam!"}}'
+            '{"element":"shoji:entity","body":{"name":"Bam!","project":"', project_url, '"}}'
         )
     })
 
