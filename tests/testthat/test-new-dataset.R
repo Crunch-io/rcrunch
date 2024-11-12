@@ -200,7 +200,7 @@ with_mock_crunch({
 
     test_that("newExampleDataset", {
         expect_POST(
-            newExampleDataset(),
+            newExampleDataset(project = project_url),
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Example dataset",'
         )

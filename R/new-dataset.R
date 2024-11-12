@@ -333,14 +333,16 @@ newDatasetFromFile <- function(x, name = basename(x), schema, ...) {
 #'
 #' @param name string name of the fixture dataset. Currently "pets" is the only
 #' one available.
+#' @inheritParams newDataset
 #' @return A new `CrunchDataset` entity.
 #' @export
-newExampleDataset <- function(name = "pets") {
+newExampleDataset <- function(name = "pets", project = defaultCrunchProject()) {
     name <- match.arg(name)
     m <- fromJSON(
         system.file("example-datasets", paste0(name, ".json"), package = "crunch"),
         simplifyVector = FALSE
     )
+    m$body$project <- resolveProjectURL(project)
     return(createWithMetadataAndFile(
         m,
         system.file("example-datasets", paste0(name, ".csv"), package = "crunch")
