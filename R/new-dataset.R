@@ -349,9 +349,9 @@ newExampleDataset <- function(name = "pets", project = defaultCrunchProject()) {
     ))
 }
 
-defaultCrunchProject <- function() {
+defaultCrunchProject <- function(must_work = TRUE) {
     path <- envOrOption("crunch.default.project")
-    if (is.null(path)) {
+    if (must_work && is.null(path)) {
         halt("No default project found in `envOrOption('crunch.default.project')`, must specify project")
     }
     path
@@ -359,7 +359,7 @@ defaultCrunchProject <- function() {
 
 
 resolveProjectURL <- function(x) {
-    if (inherits(x, "ProjectFolder")) {
+    if (is.project(x)) {
         return(self(x))
     } else if (is.character(x) && startsWith(x, "http")) {
         return(x)
@@ -367,7 +367,7 @@ resolveProjectURL <- function(x) {
         project <- try(cd(projects(), x), silent = TRUE)
         if (inherits(project, "try-error")) {
             halt(
-                "Could not create dataset in project ", x, " because ",
+                "Could not get project ", x, " because ",
                 conditionMessage(attr(project, "condition"))
             )
         }

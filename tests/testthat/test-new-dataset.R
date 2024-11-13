@@ -236,7 +236,7 @@ with_mock_crunch({
     test_that("newDataset project - It gives a good error when invalid path", {
         expect_error(
             createDataset(name = "Foo", project = "./INVALID"),
-            "Could not create dataset in project ./INVALID because \"./INVALID\" is not a folder"
+            "Could not get project ./INVALID because \"./INVALID\" is not a folder"
         )
     })
 

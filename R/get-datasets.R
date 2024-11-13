@@ -240,6 +240,8 @@ lookupDataset <- function(x, project = NULL) {
     dspath <- parseFolderPath(x)
     x <- tail(dspath, 1)
     if (length(dspath) == 1 && is.null(project)) {
+        # TODO: Does finding a dataset by name work after removal of personal project
+        # folders in 2024-11?
         # If don't have a project, query by name
         return(findDatasetsByName(x))
     }
@@ -248,18 +250,9 @@ lookupDataset <- function(x, project = NULL) {
     if (is.null(project)) {
         project <- projects()
     } else if (!is.project(project)) {
-        ## Project name, URL, or index
-        project <- projects()[[project]]
-    }
-    if (is.null(project)) {
-        ## Means a project was specified (like by name) but it didn't exist
-        halt(
-            "Project ", deparseAndFlatten(eval.parent(Call$project)),
-            " is not valid"
-        )
+        project <- ProjectFolder(crGET(resolveProjectURL(project)))
     }
 
-    # If there is a path in `x`, walk it within `project`
     if (length(dspath) > 1) {
         project <- cd(project, dspath[-length(dspath)])
     }

@@ -150,7 +150,7 @@ with_mock_crunch({
         )
         expect_error(
             loadDataset("not a dataset", project = 42),
-            "Project 42 is not valid"
+            "project must be a `CrunchProject` object, a URL, or a path to a project from the root"
         )
         expect_error(
             loadDataset(c("test ds", "ECON.sav")),
