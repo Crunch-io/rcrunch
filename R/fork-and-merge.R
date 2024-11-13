@@ -24,13 +24,16 @@ forks <- function(dataset) {
 #' @param draft logical: Should the dataset be a draft, visible only to
 #' those with edit permissions? Default is `FALSE`.
 #' @param ... Additional dataset metadata to provide to the fork
+#' @param project A `ProjectFolder` object, string path that could be passed to [`cd()`]
+#' relative to the root project, or a URL for a `ProjectFolder`. Defaults to the same
+#' folder as the existing dataset.
 #' @return The new fork, a `CrunchDataset`.
 #' @seealso [mergeFork()]
 #' @export
-forkDataset <- function(dataset, name = defaultForkName(dataset), draft = FALSE, ...) {
+forkDataset <- function(dataset, name = defaultForkName(dataset), draft = FALSE, ..., project = folder(dataset)) {
     ## TODO: add owner field, default to self(me())
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
-        body = toJSON(wrapEntity(name = name, is_published = !draft, ...))
+        body = toJSON(wrapEntity(name = name, is_published = !draft, ..., project = resolveProjectURL(project)))
     )
     dropOnly(sessionURL("datasets"))
     invisible(loadDatasetFromURL(fork_url))

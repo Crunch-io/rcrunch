@@ -51,10 +51,12 @@ with_test_authentication({
         expect_identical(name(f1), f1.name)
         expect_identical(names(forks(ds)), f1.name)
         expect_true(is.published(f1))
+        expect_identical(folder(f1), folder(ds))
     })
 
+    fork_project <- newProject("RCRUNCH TEST FORK")
     exclusion(f1) <- f1$v3 < 11
-    f2 <- forkDataset(f1, "Fork yeah!", draft = TRUE)
+    f2 <- forkDataset(f1, "Fork yeah!", draft = TRUE, project = fork_project)
     test_that("Editing values of data in a new fork doesn't fail", {
         f2$v1[is.na(f2$v1)] <- 42
         expect_equal(as.numeric(table(is.na(f2$v1))["TRUE"]), 0)
@@ -64,6 +66,7 @@ with_test_authentication({
         expect_identical(name(f2), "Fork yeah!")
         expect_true("Fork yeah!" %in% names(forks(f1)))
         expect_false(is.published(f2))
+        expect_identical(folder(f2), fork_project)
     })
 
     test_that("Forking preserves exclusion filters", {
