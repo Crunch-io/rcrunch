@@ -228,6 +228,8 @@ folder <- function(x) {
         cls <- class(x)
     } else if (is.variable(x)) {
         cls <- "VariableFolder"
+    } else if (is.dataset(x)) {
+        cls <- "ProjectFolder"
     } else {
         halt("No folder for object of class ", class(x))
     }
