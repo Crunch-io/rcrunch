@@ -159,7 +159,8 @@ test_options <- temp.options(
         ),
         crunch.show.progress = FALSE,
         crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE, expect_lgl = TRUE),
-        message.auth.info = TRUE
+        message.auth.info = TRUE,
+        crunch.default.project = "RCRUNCH_TESTS"
     )
 )
 
@@ -169,6 +170,7 @@ with_test_authentication <- function(expr) {
 
         with(test_options, {
             ## Authenticate.
+            newProject(envOrOption("crunch.default.project"))
             on.exit({
                 httpcache::clearCache()
                 ## Delete our seen things
