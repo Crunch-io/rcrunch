@@ -205,6 +205,67 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{"name":"Example dataset",'
         )
     })
+
+    test_that("newDataset project - It can take a ProjectFolder argument", {
+        expect_POST(
+            createDataset(name = "Foo", project = projects()[["Project One"]]),
+            "https://app.crunch.io/api/datasets/",
+            '{"element":"shoji:entity","body":{"name":"Foo",',
+            '"project":"https://app.crunch.io/api/projects/project1/"}}'
+        )
+    })
+
+    test_that("newDataset project - It can take a URL argument", {
+        expect_POST(
+            createDataset(name = "Foo", project = "https://app.crunch.io/api/projects/project1/"),
+            "https://app.crunch.io/api/datasets/",
+            '{"element":"shoji:entity","body":{"name":"Foo",',
+            '"project":"https://app.crunch.io/api/projects/project1/"}}'
+        )
+    })
+
+    test_that("newDataset project - It can take a path argument", {
+        expect_POST(
+            createDataset(name = "Foo", project = "./Project One"),
+            "https://app.crunch.io/api/datasets/",
+            '{"element":"shoji:entity","body":{"name":"Foo",',
+            '"project":"https://app.crunch.io/api/projects/project1/"}}'
+        )
+    })
+
+    test_that("newDataset project - It gives a good error when invalid path", {
+        expect_error(
+            createDataset(name = "Foo", project = "./INVALID"),
+            "Could not create dataset in project ./INVALID because \"./INVALID\" is not a folder"
+        )
+    })
+
+    test_that("newDataset project - It gives a good error when invalid project", {
+        expect_error(
+            createDataset(name = "Foo", project = 1),
+            "project must be a `CrunchProject` object, a URL, or a path to a project from the root"
+        )
+    })
+
+    test_that("newDataset project - It fails when there's no project specified and no default", {
+        with(temp.option(crunch = list(crunch.default.project = NULL)), {
+            expect_error(
+                createDataset(name = "Foo"),
+                "No default project found in "
+            )
+        })
+    })
+
+    test_that("newDataset project - It can get the default from the environemnt", {
+        with(temp.option(crunch = list(crunch.default.project = "./Project One" )), {
+            expect_POST(
+                createDataset(name = "Foo"),
+                "https://app.crunch.io/api/datasets/",
+                '{"element":"shoji:entity","body":{"name":"Foo",',
+                '"project":"https://app.crunch.io/api/projects/project1/"}}'
+            )
+        })
+    })
 })
 
 with_test_authentication({
