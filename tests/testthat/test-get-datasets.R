@@ -175,21 +175,22 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    personal <- cd(projects(), "~")
+    default_project <- cd(projects(), envOrOption("crunch.default.project"))
     ds <- createDataset(name = now())
     dsname <- name(ds)
-    test_that("When a dataset is created, it goes to the personal project", {
-        skip_on_jenkins("#163665209")
-        expect_equal(length(cd(projects(), "~")), length(personal) + 1)
+    test_that("When a dataset is created, it goes to the default project", {
+        expect_equal(
+            length(cd(projects(), envOrOption("crunch.default.project"))),
+            length(default_project) + 1
+        )
     })
 
     test_that("Dataset list can be retrieved if authenticated", {
-        expect_true(is.character(listDatasets()))
-        skip_on_jenkins("#163665209")
-        expect_true(length(listDatasets()) > 0)
+        expect_true(is.character(listDatasets(project = default_project)))
+        expect_true(length(listDatasets(project = default_project)) > 0)
         expect_true(is.character(dsname))
         expect_true(nchar(dsname) > 0)
-        expect_true(dsname %in% listDatasets())
+        expect_true(dsname %in% listDatasets(project = default_project))
     })
 
     test_that("A dataset object can be retrieved, if it exists", {
@@ -199,14 +200,13 @@ with_test_authentication({
     newname <- paste0("New name ", now())
     test_that("renaming a dataset refreshes the dataset list", {
         name(ds) <- newname
-        expect_false(dsname %in% listDatasets())
-        skip_on_jenkins("#163665209")
-        expect_true(newname %in% listDatasets())
+        expect_false(dsname %in% listDatasets(project = default_project))
+        expect_true(newname %in% listDatasets(project = default_project))
     })
 
     test_that("deleting a dataset refreshes the dataset list", {
         with_consent(delete(ds))
-        expect_false(dsname %in% listDatasets())
-        expect_false(newname %in% listDatasets())
+        expect_false(dsname %in% listDatasets(project = default_project))
+        expect_false(newname %in% listDatasets(project = default_project))
     })
 })
