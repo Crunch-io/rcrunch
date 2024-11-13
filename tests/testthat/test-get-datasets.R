@@ -186,27 +186,30 @@ with_test_authentication({
     })
 
     test_that("Dataset list can be retrieved if authenticated", {
-        expect_true(is.character(listDatasets(project = default_project)))
-        expect_true(length(listDatasets(project = default_project)) > 0)
+        listed_datests <- listDatasets(project = default_project, refresh = TRUE)
+        expect_true(is.character(listed_datests))
+        expect_true(length(listed_datests) > 0)
         expect_true(is.character(dsname))
         expect_true(nchar(dsname) > 0)
-        expect_true(dsname %in% listDatasets(project = default_project))
+        expect_true(dsname %in% listed_datests)
     })
 
     test_that("A dataset object can be retrieved, if it exists", {
-        expect_true(is.dataset(loadDataset(dsname)))
+        expect_true(is.dataset(loadDataset(dsname, project = default_project)))
     })
 
     newname <- paste0("New name ", now())
     test_that("renaming a dataset refreshes the dataset list", {
         name(ds) <- newname
-        expect_false(dsname %in% listDatasets(project = default_project))
-        expect_true(newname %in% listDatasets(project = default_project))
+        listed_datests <- listDatasets(project = default_project, refresh = TRUE)
+        expect_false(dsname %in% listed_datests)
+        expect_true(newname %in% listed_datests)
     })
 
     test_that("deleting a dataset refreshes the dataset list", {
         with_consent(delete(ds))
-        expect_false(dsname %in% listDatasets(project = default_project))
-        expect_false(newname %in% listDatasets(project = default_project))
+        listed_datests <- listDatasets(project = default_project, refresh = TRUE)
+        expect_false(dsname %in% listed_datests)
+        expect_false(newname %in% listed_datests)
     })
 })
