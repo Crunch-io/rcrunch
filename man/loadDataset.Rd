@@ -7,25 +7,23 @@
 loadDataset(
   dataset,
   kind = c("active", "all", "archived"),
-  project = NULL,
+  project = defaultCrunchProject("."),
   refresh = FALSE
 )
 }
 \arguments{
-\item{dataset}{character, the name or path to a Crunch dataset to load, or a
+\item{dataset}{character, the path to a Crunch dataset to load, or a
 dataset URL. If \code{dataset} is a path to a dataset in a project, the path will
-be be parsed and walked, relative to \code{project} if specified, and the
-function will look for the dataset inside that project. If no path is
-specified and no \code{project} provided, the function will call a search API to
-do an exact string match on dataset names.}
+be be parsed and walked, relative to \code{project}, and the  function will look
+for the dataset inside that project. If \code{dataset} is just a string and \code{project}
+is set to \code{NULL}, the function will assume that \code{dataset} is the dataset id.}
 
 \item{kind}{character specifying whether to look in active, archived, or all
 datasets. Default is "active", i.e. non-archived.}
 
-\item{project}{\code{ProjectFolder} entity, character name (path) to a project, or
-\code{NULL}, the default. If a Project entity or reference is supplied, either
-here or as a path in \code{dataset}, the dataset lookup will be limited to that
-project only.}
+\item{project}{\code{ProjectFolder} entity, character name (path) to a project.
+Defaults to the project set in \code{envOrOption('crunch.default.project')}
+or "./" (the project root), if the default is not set.}
 
 \item{refresh}{logical: should the function check the Crunch API for new
 datasets? Default is \code{FALSE}.}
@@ -40,8 +38,8 @@ and analysis as if the dataset were fully resident on your computer, without
 having to pull data locally.
 }
 \details{
-You can specify a dataset to load by its human-friendly "name", possibly also
-by indicating a project (folder) to find it in. This makes code more
+You can specify a dataset to load by its human-friendly "name", within
+the project (folder) to find it in. This makes code more
 readable, but it does mean that if the dataset is renamed or moved to a
 different folder, your code may no longer work. The fastest, most reliable
 way to use \code{loadDataset()} is to provide a URL to the dataset--the dataset's

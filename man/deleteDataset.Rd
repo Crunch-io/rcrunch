@@ -4,7 +4,7 @@
 \alias{deleteDataset}
 \title{Delete a dataset from the dataset list}
 \usage{
-deleteDataset(x, ...)
+deleteDataset(x, ..., project = defaultCrunchProject("./"))
 }
 \arguments{
 \item{x}{The name (character) of a dataset, a path to a dataset, or a
@@ -12,6 +12,10 @@ deleteDataset(x, ...)
 length 1--for your protection, this function is not vectorized.}
 
 \item{...}{additional parameters passed to \code{\link[=delete]{delete()}}}
+
+\item{project}{\code{ProjectFolder} entity, character name (path) to a project.
+Defaults to the project set in \code{envOrOption('crunch.default.project')}
+or "./" (the project root), if the default is not set.}
 }
 \value{
 (Invisibly) the API response from deleting the dataset

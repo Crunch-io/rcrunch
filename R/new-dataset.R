@@ -349,9 +349,9 @@ newExampleDataset <- function(name = "pets", project = defaultCrunchProject()) {
     ))
 }
 
-defaultCrunchProject <- function(must_work = TRUE) {
-    path <- envOrOption("crunch.default.project")
-    if (must_work && is.null(path)) {
+defaultCrunchProject <- function(default = NULL) {
+    path <- envOrOption("crunch.default.project", default = default)
+    if (is.null(path)) {
         halt("No default project found in `envOrOption('crunch.default.project')`, must specify project")
     }
     path

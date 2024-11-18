@@ -116,25 +116,23 @@ listDatasets <- function(kind = c("active", "all", "archived"),
 #' and analysis as if the dataset were fully resident on your computer, without
 #' having to pull data locally.
 #'
-#' You can specify a dataset to load by its human-friendly "name", possibly also
-#' by indicating a project (folder) to find it in. This makes code more
+#' You can specify a dataset to load by its human-friendly "name", within
+#' the project (folder) to find it in. This makes code more
 #' readable, but it does mean that if the dataset is renamed or moved to a
 #' different folder, your code may no longer work. The fastest, most reliable
 #' way to use `loadDataset()` is to provide a URL to the dataset--the dataset's
 #' URL will never change.
 #'
-#' @param dataset character, the name or path to a Crunch dataset to load, or a
+#' @param dataset character, the path to a Crunch dataset to load, or a
 #' dataset URL. If `dataset` is a path to a dataset in a project, the path will
-#' be be parsed and walked, relative to `project` if specified, and the
-#' function will look for the dataset inside that project. If no path is
-#' specified and no `project` provided, the function will call a search API to
-#' do an exact string match on dataset names.
+#' be be parsed and walked, relative to `project`, and the  function will look
+#' for the dataset inside that project. If `dataset` is just a string and `project`
+#' is set to `NULL`, the function will assume that `dataset` is the dataset id.
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
-#' @param project `ProjectFolder` entity, character name (path) to a project, or
-#' `NULL`, the default. If a Project entity or reference is supplied, either
-#' here or as a path in `dataset`, the dataset lookup will be limited to that
-#' project only.
+#' @param project `ProjectFolder` entity, character name (path) to a project.
+#' Defaults to the project set in `envOrOption('crunch.default.project')`
+#' or "./" (the project root), if the default is not set.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is `FALSE`.
 #' @return An object of class `CrunchDataset`.
@@ -151,7 +149,7 @@ listDatasets <- function(kind = c("active", "all", "archived"),
 #' paths.
 loadDataset <- function(dataset,
                         kind = c("active", "all", "archived"),
-                        project = NULL,
+                        project = defaultCrunchProject("."),
                         refresh = FALSE) {
     if (inherits(dataset, "DatasetTuple")) {
         return(entity(dataset))
@@ -174,6 +172,12 @@ loadDataset <- function(dataset,
             archived = archived(found)
         )
         if (length(found) == 0) {
+            if (missing(project)) {
+                warn_once(
+                    "Finding datasets by name without specifying a path is no longer supported.",
+                    option = "find_dataset_no_project"
+                )
+            }
             halt(dQuote(dataset), " not found")
         }
         ## This odd selecting behavior handles the multiple matches case
@@ -240,10 +244,25 @@ lookupDataset <- function(x, project = NULL) {
     dspath <- parseFolderPath(x)
     x <- tail(dspath, 1)
     if (length(dspath) == 1 && is.null(project)) {
-        # TODO: Does finding a dataset by name work after removal of personal project
-        # folders in 2024-11?
-        # If don't have a project, query by name
-        return(findDatasetsByName(x))
+        # This code path used to use the datasets by_name endpoint. However
+        # As of 2024-11, that endpoint is no longer very useful because it only
+        # surfaces datasets that are in personal folders (going away very soon) &
+        # direct dataset shares (deprecated).
+        # So we use this to load by dataset id, a nice convenience feature.
+        # To get here, a user had to explicitly set `project=NULL` so they're
+        # presumably not here accidentally
+        pseudo_shoji <- tryCatch({
+            ds_base_url <- absoluteURL(paste0("datasets/", x, "/"), envOrOption("crunch.api"))
+            ds_entity <- crGET(paste0(ds_base_url, "/", x))
+            # Need to make this pseudo DatasetCatalog to match old API call (because `loadDataset`
+            # will later pass it through `active()`/`archived()`)
+            structure(list(
+                self = ds_base_url,
+                index = setNames(list(ds_entity$body), ds_entity$self)
+            ), class = "shoji")
+        }, error = function(...) NULL) # But if we don't find it just return empty catalog
+
+        return(DatasetCatalog(pseudo_shoji))
     }
 
     # Resolve `project`
