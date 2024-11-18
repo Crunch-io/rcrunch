@@ -361,7 +361,7 @@ defaultCrunchProject <- function(must_work = TRUE) {
 resolveProjectURL <- function(x) {
     if (is.project(x)) {
         return(self(x))
-    } else if (is.character(x) && startsWith(x, "http")) {
+    } else if (is.character(x) && is.crunchURL(x)) {
         return(x)
     } else if (is.character(x)) {
         project <- try(cd(projects(), x), silent = TRUE)
