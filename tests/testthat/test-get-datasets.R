@@ -73,13 +73,13 @@ with_mock_crunch({
     })
 
     test_that("loadDataset loads", {
-        ds <- loadDataset("test ds")
+        ds <- loadDataset("test ds", project = "Project One")
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
     })
 
     test_that("loadDataset by index is deprecated", {
-        expect_deprecated(ds <- loadDataset(1))
+        expect_deprecated(ds <- loadDataset(1, project = "Project One"))
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
         expect_error(
@@ -100,7 +100,7 @@ with_mock_crunch({
     })
 
     test_that("loadDataset by URL when in main catalog", {
-        ds <- loadDataset("test ds")
+        ds <- loadDataset("test ds", project = "Project One")
         ds_by_url <- loadDataset(self(ds))
         expect_is(ds_by_url, "CrunchDataset")
         expect_identical(name(ds), name(ds_by_url))
@@ -134,19 +134,23 @@ with_mock_crunch({
     test_that("loadDataset(refresh=TRUE) drops caches", {
         with(temp.option(httpcache.log = ""), {
             logs <- capture.output({
-                loadDataset("test ds", refresh = TRUE)
+                loadDataset("test ds", refresh = TRUE, project = "Project One")
             })
         })
         in_logs <- function(str, loglines) {
             any(grepl(str, loglines, fixed = TRUE))
         }
-        expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/datasets/by_name/", logs))
+        expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/projects/", logs))
     })
 
     test_that("loadDataset error handling", {
-        expect_error(
-            loadDataset("not a dataset"),
-            paste(dQuote("not a dataset"), "not found")
+        options(find.dataset.no.project = NULL)
+        expect_warning(
+            expect_error(
+                loadDataset("not a dataset"),
+                paste(dQuote("not a dataset"), "not found")
+            ),
+            "Finding datasets by name without specifying a path is no longer supported"
         )
         expect_error(
             loadDataset("not a dataset", project = 42),

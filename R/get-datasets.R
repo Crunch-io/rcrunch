@@ -175,7 +175,7 @@ loadDataset <- function(dataset,
             if (missing(project)) {
                 warn_once(
                     "Finding datasets by name without specifying a path is no longer supported.",
-                    option = "find_dataset_no_project"
+                    option = "find.dataset.no.project"
                 )
             }
             halt(dQuote(dataset), " not found")
@@ -243,6 +243,7 @@ lookupDataset <- function(x, project = NULL) {
     # `project`
     dspath <- parseFolderPath(x)
     x <- tail(dspath, 1)
+
     if (length(dspath) == 1 && is.null(project)) {
         # This code path used to use the datasets by_name endpoint. However
         # As of 2024-11, that endpoint is no longer very useful because it only
@@ -252,7 +253,7 @@ lookupDataset <- function(x, project = NULL) {
         # To get here, a user had to explicitly set `project=NULL` so they're
         # presumably not here accidentally
         pseudo_shoji <- tryCatch({
-            ds_base_url <- absoluteURL(paste0("datasets/", x, "/"), envOrOption("crunch.api"))
+            ds_base_url <- absoluteURL("datasets/", envOrOption("crunch.api"))
             ds_entity <- crGET(paste0(ds_base_url, "/", x))
             # Need to make this pseudo DatasetCatalog to match old API call (because `loadDataset`
             # will later pass it through `active()`/`archived()`)

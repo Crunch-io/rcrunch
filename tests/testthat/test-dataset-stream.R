@@ -11,9 +11,9 @@ mock_stream_rows <- data.frame(
 )
 
 with_mock_crunch({
-    ds <- loadDataset("streaming test ds") ## has 2 messages waiting, 4 rows received
-    ds2 <- loadDataset("an archived dataset", kind = "archived") ## Has no streams mock
-    ds3 <- loadDataset("streaming no messages") ## has 0 messages waiting, 0 rows received
+    ds <- loadDataset("1streaming", project = NULL) ## has 2 messages waiting, 4 rows received
+    ds2 <- loadDataset("2", "archived", project = NULL) ## Has no streams mock
+    ds3 <- loadDataset("streaming-no-msg", project = NULL) ## has 0 messages waiting, 0 rows received
     test_that("pendingStream gets pending messages", {
         expect_equal(pendingStream(ds), 2)
         expect_GET(pendingStream(ds2), "https://app.crunch.io/api/datasets/2/stream")
