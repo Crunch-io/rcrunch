@@ -28,7 +28,7 @@ Find and move entities to a new folder
 }
 \examples{
 \dontrun{
-ds <- loadDataset("Example survey")
+ds <- loadDataset("Example survey", project = "Studies")
 folder(ds$income) <- "Demographics/Economic"
 folder(ds$income)
 ## [1] "Demographics"    "Economic"

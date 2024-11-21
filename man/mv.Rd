@@ -44,7 +44,7 @@ call \code{mkdir} along the way.
 }
 \examples{
 \dontrun{
-ds <- loadDataset("Example survey")
+ds <- loadDataset("Example survey", project = "Studies")
 ds <- mv(ds, c("gender", "age", "educ"), "Demographics")
 ds <- mkdir(ds, "Key Performance Indicators/Brand X")
 # These can also be chained together

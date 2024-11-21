@@ -29,8 +29,8 @@
 #' @return If successful, an object of class CrunchDataset.
 #' @examples
 #' \dontrun{
-#' ds <- newDataset(mtcars, "cars")
-#' ds <- newDataset("mysurvey.sav")
+#' ds <- newDataset(mtcars, "cars", project = "studies/cars")
+#' ds <- newDataset("mysurvey.sav", project = "client1")
 #' }
 #' @export
 #' @seealso [newDatasetFromFile()]; [newDatasetByColumn()] for an alternate

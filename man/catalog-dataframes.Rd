@@ -79,7 +79,7 @@ in the variable catalog, for example. See \code{vingette("variables", package = 
 }
 \examples{
 \dontrun{
-ds <- loadDataset("iris")
+ds <- loadDataset("iris", project = "ACME")
 vars <- variables(ds)
 var_df <- as.data.frame(vars, keys = TRUE)
 # With row names

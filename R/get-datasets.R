@@ -25,7 +25,7 @@
 #'     names()
 #' # The assignment method lets you move a dataset to a project
 #' proj <- cd(projects(), "Important Clients")
-#' ds <- loadDataset("New important client survey")
+#' ds <- loadDataset("New important client survey", project = "Studies")
 #' datasets(proj) <- ds
 #' }
 datasets <- function(x = getAPIRoot()) {
@@ -139,9 +139,9 @@ listDatasets <- function(kind = c("active", "all", "archived"),
 #'
 #' @examples
 #' \dontrun{
-#' ds <- loadDatasets("A special dataset")
-#' ds2 <- loadDatasets("~/My dataset")
-#' ds3 <- loadDataset("My dataset", project = "~") # Same as ds2
+#' ds <- loadDatasets("A special dataset", project = "Studies")
+#' ds2 <- loadDatasets("~/My dataset", project = "Studies")
+#' ds3 <- loadDataset("My dataset", project = projects()[["Studies"]]) # Same as ds2
 #' ds4 <- loadDataset("https://app.crunch.io/api/datasets/bd3ad2/")
 #' }
 #' @export

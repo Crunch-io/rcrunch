@@ -40,7 +40,7 @@ and set the weight attribute in one step with
 \dontrun{
 mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$gear <- as.factor(mtcars$gear)
-ds <- newDataset(mtcars)
+ds <- newDataset(mtcars, project = "examples/cars")
 # Create a new "raked" variable
 ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0),
     ds$gear ~ c(20, 20, 60, 0),

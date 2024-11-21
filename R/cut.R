@@ -37,7 +37,7 @@
 #' it as a derived variable on the server.
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("mtcars")
+#' ds <- loadDataset("mtcars", project = "p1")
 #' ds$cat_var <- cut(ds$mpg,
 #'     breaks = c(10, 15, 20),
 #'     labels = c("small", "medium"), name = "Fuel efficiency"
@@ -198,7 +198,7 @@ generateNumCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
 #' it as a derived variable on the server.
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("example")
+#' ds <- loadDataset("example", project = "client 1")
 #' ds$month_cat <- cut(ds$date, breaks = "month", name = "monthly")
 #' ds$four_weeks_cat <- cut(ds$date, breaks = "4 weeks", name = "four week categorical date")
 #'

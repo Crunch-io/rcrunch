@@ -76,7 +76,7 @@ defaultForkName <- function(dataset) {
 #' @seealso [forkDataset()]
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("My survey")
+#' ds <- loadDataset("My survey", project = "Studies")
 #' fork <- forkDataset(ds)
 #' # Do stuff to fork
 #' ds <- mergeFork(ds, fork)

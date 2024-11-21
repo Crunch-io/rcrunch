@@ -44,8 +44,8 @@ can with SPSS files. You should use the filename to the data file (ending in
 }
 \examples{
 \dontrun{
-ds <- newDataset(mtcars, "cars")
-ds <- newDataset("mysurvey.sav")
+ds <- newDataset(mtcars, "cars", project = "studies/cars")
+ds <- newDataset("mysurvey.sav", project = "client1")
 }
 }
 \seealso{
