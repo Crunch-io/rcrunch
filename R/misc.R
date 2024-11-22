@@ -293,7 +293,7 @@ get_crunch_opt <- function(opt) {
 }
 
 set_crunch_opt <- function(opt, value, source = NULL) {
-    if (!is.null(source)) value <- structure(value, source = source)
+    if (!is.null(source) && !is.null(value)) value <- structure(value, source = source)
     CRUNCH_OPTIONS[[opt]] <- value
 }
 
