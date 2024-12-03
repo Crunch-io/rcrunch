@@ -1,8 +1,15 @@
 addBatch <- function(ds, ..., strict = TRUE, first_batch = FALSE, body = list(...)) {
     batches_url <- shojiURL(ds, "catalogs", "batches")
     if (!strict) {
-        ## This is apparently deprecated in favor of passing in "strict" differently
-        batches_url <- paste0(batches_url, "?strict=0")
+        # TODO: strict is a property of the source, but we've already created the
+        # source when we get here, so I think we need to do some refactoring
+        # This is just a temporary band-aid. Note that also we're
+        # obliterating existing settings if they were added somehow
+        if (!is.crunchURL(body$source)) {
+            stop("Can't set strict on this type of source. Are you using s3? We ",
+            "need to check if we can `createSource()` with s3")
+        }
+        crPATCH(body$source, body = toJSON(list(settings = list(strict = FALSE))))
     }
 
     if (first_batch) {
