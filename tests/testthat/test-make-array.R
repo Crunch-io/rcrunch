@@ -213,7 +213,8 @@ with_mock_crunch({
                 ),
                 list(value = I("selected"))
             ),
-            name = "New Mr"
+            name = "New Mr",
+            derived = FALSE
         )
         varDef <- makeMRFromText(ds2$delimed_text,
             delim = "; ",
@@ -245,7 +246,8 @@ with_mock_crunch({
                         ), list(value = I("0001")))
                     )),
                     kwargs = list(numeric = list(value = FALSE))
-                )
+                ),
+                derived = FALSE
             )
         )
     })
@@ -258,6 +260,7 @@ with_mock_crunch({
                 numeric = TRUE
             ),
             list(
+                derived = FALSE,
                 name = "birthyr addition",
                 derivation = list(
                     `function` = "array",
@@ -362,7 +365,6 @@ with_test_authentication({
         )
         test_that("makeMRFromText creates a variable", {
             ds$mr_5 <- makeMRFromText(ds$delim, delim = "; ", name = "myMR")
-            expect_true(is.derived(ds$mr_5))
             expect_equivalent(dim(as.vector(ds$mr_5)), c(nrow(ds), 5))
         })
     })

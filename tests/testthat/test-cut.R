@@ -142,6 +142,7 @@ with_mock_crunch({
                     )
                 )
             ),
+            derived = FALSE,
             name = "new_var"
         )
 
@@ -235,6 +236,7 @@ with_mock_crunch({
                     )
                 )
             ),
+            derived = FALSE,
             name = "new_var"
         )
 
@@ -304,6 +306,7 @@ with_mock_crunch({
                     )
                 )
             ),
+            derived = FALSE,
             name = "new_var"
         )
 
@@ -398,6 +401,7 @@ with_mock_crunch({
                     )
                 )
             ),
+            derived = FALSE,
             name = "new_var"
         )
 
@@ -545,7 +549,7 @@ with_mock_crunch({
     })
 
     test_that("cut date returns expected output", {
-        ds_catdate <- loadDataset("cat date test")
+        ds_catdate <- loadDataset("b9d811", project = NULL)
 
         simple_date_cut <- structure(list(
             derivation = list(
@@ -614,6 +618,7 @@ with_mock_crunch({
                         )
                     )
                 ),
+            derived = FALSE,
             name = "cut month"
             ), class = "VariableDefinition")
 

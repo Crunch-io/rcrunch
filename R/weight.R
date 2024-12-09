@@ -266,7 +266,7 @@ setMethod("is.weightVariable<-", "NumericVariable", function(x, value) {
 #' \dontrun{
 #' mtcars$cyl <- as.factor(mtcars$cyl)
 #' mtcars$gear <- as.factor(mtcars$gear)
-#' ds <- newDataset(mtcars)
+#' ds <- newDataset(mtcars, project = "examples/cars")
 #' # Create a new "raked" variable
 #' ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0),
 #'     ds$gear ~ c(20, 20, 60, 0),
@@ -284,6 +284,7 @@ makeWeight <- function(..., name) {
     all_dots <- list(..., name = name)
     named_entries <- names(all_dots) != ""
     out <- all_dots[named_entries]
+    if (!"derived" %in% names(out)) out$derived <- derivedVariableDefault()
     expr_list <- all_dots[!named_entries]
 
     # args below must be an unnamed list, so we remove the names from expr_list

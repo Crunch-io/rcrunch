@@ -43,7 +43,7 @@ the changes back into the original dataset. For more on this workflow, see
 }
 \examples{
 \dontrun{
-ds <- loadDataset("My survey")
+ds <- loadDataset("My survey", project = "Studies")
 fork <- forkDataset(ds)
 # Do stuff to fork
 ds <- mergeFork(ds, fork)
