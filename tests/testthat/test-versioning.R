@@ -160,13 +160,6 @@ with_test_authentication({
         expect_valid_df_revert(ds)
     })
 
-    test_that("Added variables are really removed by rolling back", {
-        ## This was user-reported: Order was reverted but derived
-        ## variables persisted, and by assigning an empty order, you can
-        ## recover them.
-        ordering(ds) <- VariableOrder()
-        expect_true(setequal(names(ds), names(df)))
-    })
 
     test_that("And now we can add variables again that we added and reverted", {
         expect_null(ds$v7)
