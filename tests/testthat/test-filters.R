@@ -258,6 +258,20 @@ with_test_authentication({
         )
     })
 
+    test_that("We have an applied filters view", {
+        expect_length(appliedFilters(ds), 0)
+    })
+
+    test_that("We can 'apply' a filter", {
+        appliedFilters(ds) <- filters(ds)[["Test filter"]]
+        expect_length(appliedFilters(ds), 1)
+    })
+
+    test_that("'applied filters' for the UI don't affect R", {
+        expect_length(appliedFilters(ds), 1)
+        expect_valid_df_import(ds)
+    })
+
     test_that("We also have 'active filter' for the R object", {
         expect_null(activeFilter(ds))
     })
