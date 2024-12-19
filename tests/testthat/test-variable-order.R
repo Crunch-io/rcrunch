@@ -55,9 +55,15 @@ with_mock_crunch({
     })
 
     test_that("Warning that you should be using folders instead", {
-        expect_error(
-            ordering(ds) <- nested.ord[2:1],
+        set_crunch_opts(crunch.already.shown.folders.msg = NULL)
+        expect_warning(
+            expect_PUT(ordering(ds) <- nested.ord[2:1]),
             "Hey!"
+        )
+        ## Second time it doesn't warn. One nag per session
+        expect_warning(
+            expect_PUT(ordering(ds) <- nested.ord[2:1]),
+            NA
         )
     })
 
@@ -615,12 +621,15 @@ with_mock_crunch({
         )
     })
 
-    test_that("copyOrder has been removed", {
+    test_that("copyOrder returns the order of target as a VariableOrder", {
         ds_again <- cachedLoadDataset("test ds")
-        expect_error(
+        # because copyOrder is deprecated, there will be a warning.
+        expect_warning(
             new_order <- copyOrder(ds, ds_again),
             "There's a new way to copy ordering and folders: `copyFolders`!"
         )
+        expect_is(new_order, "VariableOrder")
+        expect_identical(entities(ordering(ds)), entities(new_order))
     })
 
     test_that("copyOrder input validation", {
@@ -639,5 +648,324 @@ with_test_authentication({
             unlist(entities(ordering(ds))),
             urls(allVariables(ds))
         ))
+    })
+    test_that("Can construct VariableOrder from variables", {
+        # TODO: probably covered by unit tests
+        vg <- VariableOrder(
+            VariableGroup(
+                name = "Group 1",
+                variables = ds[c("v1", "v3", "v5")]
+            ),
+            VariableGroup(name = "Group 2.5", entities = ds["v4"]),
+            VariableGroup(
+                name = "Group 2",
+                entities = ds[c("v6", "v2")]
+            )
+        )
+        vglist <- cereal(vg)
+        expect_identical(vglist, list(graph = list(
+            list(`Group 1` = list(self(ds$v1), self(ds$v3), self(ds$v5))),
+            list(`Group 2.5` = list(self(ds$v4))),
+            list(`Group 2` = list(self(ds$v6), self(ds$v2)))
+        )))
+    })
+    starting.vg <- vg <- VariableOrder(
+        VariableGroup(
+            name = "Group 1",
+            entities = ds[c("v1", "v3", "v5")]
+        ),
+        VariableGroup(name = "Group 2.5", variables = ds["v4"]),
+        VariableGroup(
+            name = "Group 2",
+            entities = ds[c("v6", "v2")]
+        )
+    )
+
+    try(entities(vg[[2]]) <- self(ds$v2))
+    test_that("Set URLs -> entities on VariableGroup", {
+        # TODO: move to unit test
+        expect_identical(urls(vg[[2]]), self(ds$v2))
+        expect_identical(
+            urls(vg),
+            c(
+                self(ds$v1), self(ds$v3), self(ds$v5), self(ds$v2),
+                self(ds$v6)
+            )
+        )
+    })
+    try(entities(vg[[2]]) <- list(ds$v3))
+    test_that("Set variables -> entities on VariableGroup", {
+        # TODO: move to unit test
+        expect_identical(urls(vg[[2]]), self(ds$v3))
+    })
+
+    try(name(vg[[2]]) <- "Group 3")
+    test_that("Set name on VariableGroup", {
+        # TODO: move to unit test
+        expect_identical(names(vg), c("Group 1", "Group 3", "Group 2"))
+    })
+    try(names(vg) <- c("G3", "G1", "G2"))
+    test_that("Set names on VariableOrder", {
+        # TODO: move to unit test
+        expect_identical(names(vg), c("G3", "G1", "G2"))
+    })
+
+    original.order <- ordering(ds)
+    test_that("Can set VariableOrder on dataset", {
+        expect_false(identical(starting.vg, original.order))
+        ordering(ds) <- starting.vg
+        expect_identical(
+            entities(grouped(ordering(ds))),
+            entities(starting.vg)
+        )
+        expect_identical(
+            entities(grouped(ordering(refresh(ds)))),
+            entities(starting.vg)
+        )
+        expect_is(ungrouped(ordering(ds)), "VariableGroup")
+        expect_is(ungrouped(ordering(refresh(ds))), "VariableGroup")
+        expect_identical(
+            names(ordering(ds)),
+            c("Group 1", "Group 2.5", "Group 2")
+        )
+
+        ## Test that can reorder groups
+        ordering(ds) <- starting.vg[c(2, 1, 3)]
+        expect_identical(
+            entities(grouped(ordering(ds))),
+            entities(starting.vg[c(2, 1, 3)])
+        )
+        expect_identical(
+            names(ordering(ds)),
+            c("Group 2.5", "Group 1", "Group 2")
+        )
+        expect_identical(
+            names(ordering(refresh(ds))),
+            c("Group 2.5", "Group 1", "Group 2")
+        )
+
+        ds <- refresh(ds)
+        expect_false(identical(
+            entities(ordering(variables(ds))),
+            entities(original.order)
+        ))
+        ordering(variables(ds)) <- original.order
+        expect_identical(
+            entities(ordering(variables(ds))),
+            entities(original.order)
+        )
+        expect_identical(
+            entities(ordering(variables(refresh(ds)))),
+            entities(original.order)
+        )
+    })
+
+    test_that("A partial order results in 'ungrouped' variables", {
+        ordering(ds) <- starting.vg[1:2]
+        expect_is(grouped(ordering(ds)), "VariableOrder")
+        expect_identical(
+            entities(grouped(ordering(ds))),
+            entities(starting.vg[1:2])
+        )
+        expect_is(ungrouped(ordering(ds)), "VariableGroup")
+        expect_true(setequal(
+            unlist(entities(ungrouped(ordering(ds)))),
+            c(self(ds$v6), self(ds$v2))
+        ))
+    })
+
+    test_that("grouped and ungrouped within a group", {
+        nesting <- VariableGroup("Nest", self(ds$v3))
+        ordering(ds) <- starting.vg
+        ordering(ds)[["Group 1"]][[2]] <- nesting
+        ## Update fixture with duplicates=TRUE, as it should be found
+        ## after setting on a duplicates=TRUE order
+        expect_identical(
+            grouped(ordering(ds)[["Group 1"]]),
+            VariableGroup("Group 1", list(nesting))
+        )
+        expect_identical(
+            ungrouped(ordering(ds)[["Group 1"]]),
+            VariableGroup("ungrouped", list(self(ds$v1), self(ds$v5)))
+        )
+    })
+
+    test_that("Can manipulate VariableOrder that's part of a dataset", {
+        ordering(ds) <- starting.vg
+        expect_identical(
+            names(ordering(ds)),
+            c("Group 1", "Group 2.5", "Group 2")
+        )
+        names(ordering(ds))[3] <- "Three"
+        expect_identical(
+            names(ordering(ds)),
+            c("Group 1", "Group 2.5", "Three")
+        )
+        expect_identical(
+            names(grouped(ordering(ds))),
+            c("Group 1", "Group 2.5", "Three")
+        )
+    })
+
+    test_that("ordering<- validation", {
+        # TODO: move to unit test
+        bad.vg <- starting.vg
+        entities(bad.vg[[1]]) <- c(
+            entities(bad.vg[[1]])[-2],
+            "/not/a/variable" # nolint
+        )
+        expect_error(
+            ordering(ds) <- bad.vg,
+            "Variable URL referenced in Order not present in catalog: /not/a/variable"
+        )
+    })
+
+    test_that("Creating VariableOrder with named list doesn't break", {
+        bad.vg <- do.call(VariableOrder, c(sapply(names(starting.vg),
+            function(i) starting.vg[[i]],
+            simplify = FALSE
+        )))
+        ## The list of entities is named because sapply default is
+        ## USE.NAMES=TRUE, but the VariableOrder constructor should
+        ## handle this
+        ordering(ds) <- bad.vg
+        expect_identical(ordering(ds)@graph, starting.vg@graph)
+    })
+
+    test_that("copyOrder copies across datasets with simple order", {
+        ds_fork <- forkDataset(ds)
+        old_order <- ordering(ds_fork)
+        new_order <- VariableOrder(
+            self(ds$v1), self(ds$v2), self(ds$v5),
+            self(ds$v6), self(ds$v3), self(ds$v4)
+        )
+        new_order_fork <- VariableOrder(
+            self(ds_fork$v1), self(ds_fork$v2),
+            self(ds_fork$v5), self(ds_fork$v6),
+            self(ds_fork$v3), self(ds_fork$v4)
+        )
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_fork has the old order still
+        expect_identical(entities(ordering(ds_fork)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
+
+        # copy order, and check that ds_fork has the new order.
+        expect_warning(copied_order <- copyOrder(ds, ds_fork))
+        ordering(ds_fork) <- copied_order
+        expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
+    })
+
+    test_that("copyOrder copies across datasets with simple(-ish) order (and one nesting)", {
+        ds_fork <- forkDataset(ds)
+        old_order <- ordering(ds_fork)
+        new_order <- VariableOrder(
+            self(ds$v1), self(ds$v2), self(ds$v5),
+            self(ds$v6), VariableGroup(
+                "Group A",
+                list(self(ds$v4), self(ds$v3))
+            )
+        )
+        new_order_fork <- VariableOrder(
+            self(ds_fork$v1), self(ds_fork$v2),
+            self(ds_fork$v5), self(ds_fork$v6),
+            VariableGroup(
+                "Group A",
+                list(self(ds_fork$v4), self(ds_fork$v3))
+            )
+        )
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_fork has the old order still
+        expect_identical(entities(ordering(ds_fork)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
+
+        # copy order, and check that ds_fork has the new order.
+        expect_warning(copied_order <- copyOrder(ds, ds_fork))
+        ordering(ds_fork) <- copied_order
+        expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
+    })
+
+
+    test_that("copyOrder copies across datasets with nested hierarchical order", {
+        ds_fork <- forkDataset(ds)
+        old_order <- ordering(ds_fork)
+        new_order <- VariableOrder(
+            VariableGroup("Group 1", list(
+                self(ds$v1), self(ds$v2),
+                VariableGroup("Group 1.5", list(self(ds$v5), self(ds$v6)))
+            )),
+            VariableGroup("Group 2", list(self(ds$v4), self(ds$v3)))
+        )
+        new_order_fork <- VariableOrder(
+            VariableGroup("Group 1", list(
+                self(ds_fork$v1), self(ds_fork$v2),
+                VariableGroup("Group 1.5", list(self(ds_fork$v5), self(ds_fork$v6)))
+            )),
+            VariableGroup("Group 2", list(self(ds_fork$v4), self(ds_fork$v3)))
+        )
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_fork has the old order still
+        expect_identical(entities(ordering(ds_fork)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
+
+        # copy order, and check that ds_fork has the new order.
+        expect_warning(copied_order <- copyOrder(ds, ds_fork))
+        ordering(ds_fork) <- copied_order
+        expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
+    })
+
+    test_that("copyOrder copies across disparate datasets", {
+        # setup an alternative dataset that has some overlap with ds
+        df_alt <- df
+        df_alt$v12 <- df_alt$v1
+        df_alt$v1 <- NULL
+        df_alt$v2 <- NULL
+        df_alt$new_var <- 1
+        df_alt$new_var2 <- letters[20:1]
+        ds_alt <- newDataset(df_alt)
+
+        old_order <- ordering(ds_alt)
+        new_order <- VariableOrder(
+            self(ds$v1), self(ds$v2), self(ds$v5),
+            self(ds$v6), VariableGroup(
+                "Group A",
+                list(self(ds$v4), self(ds$v3))
+            )
+        )
+        new_order_alt <- VariableOrder(
+            self(ds_alt$v5), self(ds_alt$v6),
+            VariableGroup(
+                "Group A",
+                list(self(ds_alt$v4), self(ds_alt$v3))
+            ),
+            # the following variables do not overlap with ds,
+            # and therefor will be appended to the end,
+            # but their order will not be garuanteed
+            self(ds_alt$v12), self(ds_alt$new_var), self(ds_alt$new_var2)
+        )
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_alt has the old order still
+        expect_identical(entities(ordering(ds_alt)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_alt)), entities(new_order_alt)))
+
+        # copy order, and check that ds_alt has the new order.
+        expect_warning(copied_order <- copyOrder(ds, ds_alt))
+        ordering(ds_alt) <- copied_order
+        # ignore the last three variables because their order was not specified
+        expect_identical(
+            entities(ordering(ds_alt))[-c(4, 5, 6)],
+            entities(new_order_alt)[-c(4, 5, 6)]
+        )
     })
 })

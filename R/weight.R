@@ -157,7 +157,7 @@ modifyWeightVariables <- function(x, vars, type = "append") {
     ## variaous inputs into a list of variables.
     if (is.null(vars)) {
         # If NULL change type to replace to clear the weight variables
-        new$graph <- list()
+        new$graph <- NULL
         type <- "replace"
     } else {
         if (is.variable(vars) || (length(vars) == 1) & !is.character(vars)) {
