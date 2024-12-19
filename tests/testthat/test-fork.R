@@ -108,17 +108,23 @@ with_test_authentication({
     # 2. Edit dataset metadata
     description(f1) <- "A dataset for testing"
 
-    # 3. Add non-derived variable
+    # 3. Reorder variables
+    ordering(f1) <- VariableOrder(
+        VariableGroup("Even", f1[c(2, 4, 6)]),
+        VariableGroup("Odd", f1[c(1, 3, 5)])
+    )
+
+    # 4. Add non-derived variable
     f1$v8 <- rep(1:5, 4)[4:20]
 
-    # 4. Derive variable
+    # 5. Derive variable
     f1$v7 <- f1$v3 - 6
 
-    # 5. Conditionally edit values of categorical variable
+    # 6. Conditionally edit values of categorical variable
     f1$v4[f1$v8 == 5] <- "F"
     f1$v4[f1$v8 == 4] <- "F"
 
-    # 6. Delete a variable and replace it with one of the same name
+    # 7. Delete a variable and replace it with one of the same name
     new_vect <- rev(as.vector(f1$v1))
     v1copy <- VariableDefinition(new_vect, name = name(f1$v1), alias = alias(f1$v1))
     test_that("Just asserting that the new var has the same name/alias as old", {
@@ -148,6 +154,10 @@ with_test_authentication({
         expect_identical(as.vector(dataset$v7), df$v3[4:20] - 6)
         expect_equivalent(as.vector(dataset$v8), rep(1:5, 4)[4:20])
         expect_equivalent(as.vector(dataset$v1), rev(df$v1[4:20]))
+        expect_identical(
+            aliases(variables(dataset)),
+            paste0("v", c(2, 4, 6, 3, 5, 8, 7, 1))
+        )
     }
     test_that("The edits are made to the fork", {
         expect_fork_edits(f1)

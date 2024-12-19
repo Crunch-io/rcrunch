@@ -106,7 +106,10 @@ with_test_authentication({
     # No longer supported
 
     # 3. Reorder variables
-    # No longer supported
+    ordering(ds) <- VariableOrder(
+        VariableGroup("Even", ds[c(2, 4, 6)]),
+        VariableGroup("Odd", ds[c(1, 3, 5)])
+    )
 
     # 4. Derive variable
     ds$v7 <- ds$v3 - 6
@@ -124,6 +127,10 @@ with_test_authentication({
         )
         expect_identical(as.vector(ds$v7), df$v3 - 6)
         expect_equivalent(as.vector(ds$v8), rep(1:5, 4))
+        expect_identical(
+            aliases(variables(ds)),
+            paste0("v", c(2, 4, 6, 1, 3, 5, 7, 8))
+        )
     })
 
     ## Assert those things again
@@ -136,7 +143,10 @@ with_test_authentication({
         )
         expect_identical(as.vector(ds$v7), df$v3 - 6)
         expect_equivalent(as.vector(ds$v8), rep(1:5, 4))
-
+        expect_identical(
+            aliases(variables(ds)),
+            paste0("v", c(2, 4, 6, 1, 3, 5, 7, 8))
+        )
     })
 
     ## Save a version
@@ -160,6 +170,13 @@ with_test_authentication({
         expect_valid_df_revert(ds)
     })
 
+    test_that("Added variables are really removed by rolling back", {
+        ## This was user-reported: Order was reverted but derived
+        ## variables persisted, and by assigning an empty order, you can
+        ## recover them.
+        ordering(ds) <- VariableOrder()
+        expect_true(setequal(names(ds), names(df)))
+    })
 
     test_that("And now we can add variables again that we added and reverted", {
         expect_null(ds$v7)
