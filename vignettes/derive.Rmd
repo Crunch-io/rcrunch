@@ -16,7 +16,25 @@ load("vignettes.RData")
 options(width=120)
 ```
 
-One of the powerful features of working with Crunch is that you and all of your collaborators work off of the same data, whether you use the web client or use R. Circumstances may arise in which you are working in R and want to add or modify variables in a Crunch dataset, and the `crunch` package facilitates that. It provides an idiomatic R interface to manipulating a Dataset, doing so efficiently, without copying data off of the server to transform it. In addition, when you create variables that are derived from other variables, they retain their functional connection on the server, such that changes to the input variables automatically propagate to the derived variable.
+One of the powerful features of working with Crunch is that you and all of your collaborators work off of the same data, whether you use the web client or use R. Circumstances may arise in which you are working in R and want to add or modify variables in a Crunch dataset, and the `crunch` package facilitates that. It provides an idiomatic R interface to manipulating a Dataset, doing so efficiently, without copying data off of the server to transform it.
+
+## Materialized vs Derived Variables
+A powerful feature of crunch is that when you create variables derived from other variables, they retain their functional connection on the server, such that changes to the input variables automatically propagate to the derived variable. In contrast, materialized variables are saved as the data and so do not update when the underly data updates.
+
+Before rcrunch version 1.31.0, the default was to create derived variables. However we've found that it is often preferable to work wit the more performant materialized variables and so that is now the default.
+
+The rest of this vignette is talking about derived variables, and so we'll use the global option to create derived variables instead of materialized. Alternatively, most variable creation functions have a derived argument which you can set on a per-variable basis, or if you're working with an expression directly, you can pass a `derived` argument to the `VariableDefinition()` function.
+
+```{r, eval=FALSE}
+# Setting the global default to TRUE (derived)
+set_crunch_opts(crunch.default.derived = TRUE)
+
+# Using the `derive` argument in `VariableDefinition()`
+ds$force_materialized_age <- VariableDefinition(2015 - ds$birthyr, derived = FALSE)
+
+# Using the `derive` argument in `deriveArray()`
+ds$force_materialiazed_array <- deriveArray(list(ds$v1, ds$v2), name = "v_arry", derived = FALSE)
+```
 
 ## Creating derived variables
 In our sample dataset, we don't have an "Age" variable, but we do have "Birth Year" (`birthyr`). We can create an age variable simply by taking the current year and subtracting the "Birth Year" variable from it--just as you would do if you were working with a `data.frame`:
