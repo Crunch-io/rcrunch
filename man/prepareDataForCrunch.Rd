@@ -4,7 +4,7 @@
 \alias{prepareDataForCrunch}
 \title{Translate a data.frame to Crunch format}
 \usage{
-prepareDataForCrunch(data, ...)
+prepareDataForCrunch(data, ..., project = defaultCrunchProject())
 }
 \arguments{
 \item{data}{A \code{data.frame} or other rectangular R object}
@@ -12,6 +12,11 @@ prepareDataForCrunch(data, ...)
 \item{...}{additional arguments passed to \link{createDataset}.
 "name" will be required by the Crunch server but is not required by this
 function.}
+
+\item{project}{A \code{ProjectFolder} object, string path that could be passed to \code{\link[=cd]{cd()}}
+relative to the root project, or a URL for a \code{ProjectFolder}. If left empty,
+rcrunch will look in \code{envOrOption('crunch.default.project')} and error if nothing
+is found.}
 }
 \value{
 A data.frame that is a transformation of \code{data} suitable for

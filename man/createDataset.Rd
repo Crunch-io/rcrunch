@@ -4,7 +4,7 @@
 \alias{createDataset}
 \title{Create an empty dataset}
 \usage{
-createDataset(name, body, ...)
+createDataset(name, body, ..., project = defaultCrunchProject())
 }
 \arguments{
 \item{name}{character, the name to give the new Crunch dataset. This is
@@ -15,6 +15,11 @@ the \href{https://crunch.io/api/reference/#post-/datasets/}{Crunch API documenta
 
 \item{...}{additional arguments for the POST to create the dataset, such as
 "description".}
+
+\item{project}{A \code{ProjectFolder} object, string path that could be passed to \code{\link[=cd]{cd()}}
+relative to the root project, or a URL for a \code{ProjectFolder}. If left empty,
+rcrunch will look in \code{envOrOption('crunch.default.project')} and error if nothing
+is found.}
 }
 \value{
 An object of class CrunchDataset.
