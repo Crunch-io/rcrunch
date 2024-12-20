@@ -48,10 +48,14 @@ with_mock_crunch({
     })
 
     test_that("derivation()<-NULL and is.derived()<-FALSE issues a PATCH", {
-        expect_PATCH(
-            derivation(birthyrPlus) <- NULL,
-            "https://app.crunch.io/api/datasets/1/variables/birthyrPlus/",
-            '{"derived":false}'
+        set_crunch_opts("warnIntegrateDerivedVar" = FALSE)
+        expect_warning(
+            expect_PATCH(
+                derivation(birthyrPlus) <- NULL,
+                "https://app.crunch.io/api/datasets/1/variables/birthyrPlus/",
+                '{"derived":false}'
+            ),
+            "Materializing an existing derived variable is deprecated"
         )
         expect_PATCH(
             is.derived(birthyrPlus) <- FALSE,
@@ -80,82 +84,111 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"derivation":{"function":">","args":[{"variable":',
             '"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
-            '{"value":2000}]},"name":"kids","alias":"kids"}'
+            '{"value":2000}]},"derived":false,"name":"kids","alias":"kids"}'
         )
     })
+
+    test_that("derive from logical expression respects crunch.default.derived", {
+        with(temp.option(crunch = list(crunch.default.derived = TRUE)), {
+            expect_POST(
+                ds$kids <- ds$birthyr > 2000,
+                "https://app.crunch.io/api/datasets/1/variables/",
+                '{"derivation":{"function":">","args":[{"variable":',
+                '"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
+                '{"value":2000}]},"derived":true,"name":"kids","alias":"kids"}'
+            )
+        })
+    })
+
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
-    ds$v3a <- ds$v3 + 5
-    test_that("A derived variable is created on the server", {
-        expect_true("v3a" %in% names(allVariables(refresh(ds))))
-    })
-    test_that("The derived variable has been added to the hierarchical order", {
-        expect_true("v3a" %in% names(variables(refresh(ds))))
-        expect_true("v3a" %in% names(variables(ds)))
-        expect_true(is.variable(ds$v3a))
-    })
-    test_that("Can derive a numeric from a numeric", {
-        expect_true(is.Numeric(ds$v3a))
-        expect_identical(as.vector(ds$v3a), as.vector(ds$v3) + 5)
+    with(temp.option(crunch = list("crunch.default.derived" = TRUE)), {
+        ds <- newDataset(df)
+        ds$v3a <- ds$v3 + 5
+        test_that("A derived variable is created on the server", {
+            expect_true("v3a" %in% names(allVariables(refresh(ds))))
+        })
+        test_that("The derived variable has been added to the hierarchical order", {
+            expect_true("v3a" %in% names(variables(refresh(ds))))
+            expect_true("v3a" %in% names(variables(ds)))
+            expect_true(is.variable(ds$v3a))
+        })
+        test_that("Can derive a numeric from a numeric", {
+            expect_true(is.Numeric(ds$v3a))
+            expect_identical(as.vector(ds$v3a), as.vector(ds$v3) + 5)
+        })
+
+        test_that("derivation pulls the derivation", {
+            expect_is(derivation(ds$v3a), "CrunchExpr")
+            expect_prints(derivation(ds$v3a), "Crunch expression: v3 + 5")
+        })
+
+        test_that("derivation returns NULL if the variable is not derived", {
+            expect_null(derivation(ds$v3))
+        })
+
+        ds$v3l <- ds$v3 > 10
+        test_that("can derive a logical expression", {
+            expect_true(is.derived(ds$v3l))
+            expect_true(is.Categorical(ds$v3l))
+            expect_prints(derivation(ds$v3l), "Crunch expression: v3 > 10")
+            expect_equivalent(as.vector(ds$v3l), df$v3 > 10)
+        })
+
+        test_that("derivation()<- can change a derived variable", {
+            ds$v3d <- ds$v3 + 10
+            expect_true(is.derived(ds$v3d))
+            expect_prints(derivation(ds$v3d), "Crunch expression: v3 + 10")
+            derivation(ds$v3d) <- ds$v3 + 1
+            expect_true(is.derived(ds$v3d))
+            expect_prints(derivation(ds$v3d), "Crunch expression: v3 + 1")
+        })
+
+        ## Now update v3's values and confirm that v3a is still linked
+        ds$v3 <- df$v3 + 7
+        test_that("The source variable was in fact updated", {
+            expect_equivalent(as.vector(ds$v3), df$v3 + 7)
+        })
+
+        test_that("A derived numeric is updated when its source variable is modified", {
+            expect_identical(as.vector(ds$v3a), as.vector(ds$v3) + 5)
+            expect_equivalent(as.vector(ds$v3a), df$v3 + 12)
+        })
+
+        test_that("derivation()<-NULL and is.derived()<-FALSE removes derivations and instantiates", {
+            # refresh to catch derivations made in previous tests
+            ds <- refresh(ds)
+            expect_true(is.derived(ds$v3a))
+            suppressWarnings(derivation(ds$v3a) <- NULL)
+            expect_false(is.derived(ds$v3a))
+            expect_null(derivation(ds$v3a))
+            expect_equal(
+                as.vector(ds$v3a),
+                c(20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39)
+            )
+
+            suppressWarnings(is.derived(ds$v3d) <- FALSE)
+            expect_false(is.derived(ds$v3d))
+            expect_null(derivation(ds$v3d))
+            expect_equal(
+                as.vector(ds$v3d),
+                c(16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35)
+            )
+        })
     })
 
-    test_that("derivation pulls the derivation", {
-        expect_is(derivation(ds$v3a), "CrunchExpr")
-        expect_prints(derivation(ds$v3a), "Crunch expression: v3 + 5")
-    })
-
-    test_that("derivation returns NULL if the variable is not derived", {
-        expect_null(derivation(ds$v3))
-    })
-
-    ds$v3l <- ds$v3 > 10
-    test_that("can derive a logical expression", {
-        expect_true(is.derived(ds$v3l))
-        expect_true(is.Categorical(ds$v3l))
-        expect_prints(derivation(ds$v3l), "Crunch expression: v3 > 10")
-        expect_equivalent(as.vector(ds$v3l), df$v3 > 10)
-    })
-
-    test_that("derivation()<- can change a derived variable", {
-        ds$v3d <- ds$v3 + 10
-        expect_true(is.derived(ds$v3d))
-        expect_prints(derivation(ds$v3d), "Crunch expression: v3 + 10")
-        derivation(ds$v3d) <- ds$v3 + 1
-        expect_true(is.derived(ds$v3d))
-        expect_prints(derivation(ds$v3d), "Crunch expression: v3 + 1")
-    })
-
-    ## Now update v3's values and confirm that v3a is still linked
-    ds$v3 <- df$v3 + 7
-    test_that("The source variable was in fact updated", {
-        expect_equivalent(as.vector(ds$v3), df$v3 + 7)
-    })
-
-    test_that("A derived numeric is updated when its source variable is modified", {
-        expect_identical(as.vector(ds$v3a), as.vector(ds$v3) + 5)
-        expect_equivalent(as.vector(ds$v3a), df$v3 + 12)
-    })
-
-    test_that("derivation()<-NULL and is.derived()<-FALSE removes derivations and instantiates", {
-        # refresh to catch derivations made in previous tests
-        ds <- refresh(ds)
-        expect_true(is.derived(ds$v3a))
-        expect_silent(derivation(ds$v3a) <- NULL)
-        expect_false(is.derived(ds$v3a))
-        expect_null(derivation(ds$v3a))
-        expect_equal(
-            as.vector(ds$v3a),
-            c(20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39)
-        )
-
-        expect_silent(is.derived(ds$v3d) <- FALSE)
-        expect_false(is.derived(ds$v3d))
-        expect_null(derivation(ds$v3d))
-        expect_equal(
-            as.vector(ds$v3d),
-            c(16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35)
-        )
+    with(temp.option(crunch = list("crunch.default.derived" = FALSE)), {
+        ds$v3a_materialized <- ds$v3 + 5
+        test_that("A materialized variable is created on the server", {
+            expect_true("v3a_materialized" %in% names(allVariables(refresh(ds))))
+        })
+        test_that("Can derive a materialized numeric from a numeric", {
+            expect_true(is.Numeric(ds$v3a_materialized))
+            expect_identical(as.vector(ds$v3a_materialized), as.vector(ds$v3) + 5)
+        })
+        test_that("The variable is materialized", {
+            expect_false(is.derived(ds$v3a_materialized))
+        })
     })
 })
