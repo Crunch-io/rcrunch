@@ -57,6 +57,7 @@ test_that("setupCrunchAuth works", {
             crunch.api.key = "key",
             crunch.api.test = "test_url",
             crunch.api.key.test = "test_key",
+            crunch.default.project.test = "./",
             crunch.api.missingkey = "xxx"
         )), {
             setupCrunchAuth("test")
@@ -67,6 +68,10 @@ test_that("setupCrunchAuth works", {
             expect_identical(
                 get_crunch_opt("crunch.api.key"),
                 structure("test_key", source = "setupCrunchAuth('test')")
+            )
+            expect_identical(
+                get_crunch_opt("crunch.default.project"),
+                structure("./", source = "setupCrunchAuth('test')")
             )
             expect_error(
                 setupCrunchAuth("missingboth"),

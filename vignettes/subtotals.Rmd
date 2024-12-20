@@ -15,17 +15,19 @@ library(crunch)
 
 [Previous: exporting data](export.html)
 ```{r, results='hide', include = FALSE}
-set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
+set_crunch_opts("crunch.api" = "https://team.crunch.io/api/")
 options(width=120)
 library(httptest)
-if (!dir.exists("subtotals")) {
 
-    if ("example vignette ds - subtotal" %in% listDatasets()) {
-        ds <- loadDataset("example vignette ds - subtotal")
-        with_consent(deleteDataset("example vignette ds - subtotal"))
+remake_fixtures <- !dir.exists("subtotals")
+if (remake_fixtures) {
+    if ("rcrunch subtotal vignette" %in% names(datasets(cd(projects(), "examples/rcrunch vignette data")))) {
+        ds <- loadDataset("example vignette ds - subtotal", project = "examples/rcrunch vignette data")
+        with_consent(delete(ds))
     }
     
-    ds <- newExampleDataset()
+    my_project <- newProject("examples/rcrunch vignette data")
+    ds <- newExampleDataset(project = my_project)
     name(ds) <- "example vignette ds - subtotal"
     lvls <- c("Love", "Like", "Neutral", "Dislike", "Hate")
     ds$like_dogs <- factor(rep(lvls, c(4, 4, 8, 2, 2)), lvls)
@@ -33,8 +35,10 @@ if (!dir.exists("subtotals")) {
     
     httpcache::clearCache()
 }
+httpcache::clearCache()
 start_vignette("subtotals")
-ds <- loadDataset("example vignette ds - subtotal")
+
+ds <- loadDataset("example vignette ds - subtotal", project = "examples/rcrunch vignette data")
 ```
 
 A common task in the market research world is to collapse two or more categories together to see how the collapsed categories compare to one another. For example, if you asked people to rate their preference on a scale of 1 to 10, you might want to see how the people who provide a rating between 1 and 5 compare to those who rated it between 6 and 10. This goes by a number of names, including "_Top Box_" or "_Nets_", depending on the use case. In Crunch, we call this family of features _Subtotals_. This vignette shows how to define, manage, and analyze variables with subtotals.
@@ -190,6 +194,12 @@ cube
 
 ```{r, include=FALSE}
 end_vignette()
+if (remake_fixtures) {
+    with_consent({
+        delete(ds)
+        delete(my_project)
+    })
+}
 ```
 
 [Next: Crunch internals](crunch-internals.html)
