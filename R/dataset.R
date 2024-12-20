@@ -560,3 +560,12 @@ setDashboardURL <- function(x, value) {
 #' @rdname dashboard
 #' @export
 "dashboard<-" <- setDashboardURL
+
+
+setMethod("rootFolder", "CrunchDataset", function(x) {
+    halt(
+        "Can't find root folder of a dataset. To find the root variable folder use",
+        "`rootFolder(allVariables(ds))` or to find the root project folder use ",
+        "`rootFolder(folder(ds))`"
+        )
+})

@@ -7,7 +7,9 @@
         "id": "95c0b45fe0af492594863f818cb913d2",
         "name": "ECON.sav",
         "description": "",
-        "streaming": "no"
+        "streaming": "no",
+        "archived": false,
+        "is_published": false
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/3/variables/",

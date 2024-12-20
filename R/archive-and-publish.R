@@ -17,7 +17,7 @@
 #' is.published<- publish
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("mtcars")
+#' ds <- loadDataset("mtcars", project = "current")
 #' is.draft(ds) # FALSE
 #' is.published(ds) # TRUE
 #' identical(is.draft(ds), !is.published(ds))
