@@ -4,7 +4,12 @@
 \alias{shojifyDatasetMetadata}
 \title{Wrap variable metadata inside a dataset entity}
 \usage{
-shojifyDatasetMetadata(metadata, order = I(names(metadata)), ...)
+shojifyDatasetMetadata(
+  metadata,
+  order = I(names(metadata)),
+  ...,
+  project = defaultCrunchProject()
+)
 }
 \arguments{
 \item{metadata}{list of variable metadata}
@@ -13,6 +18,11 @@ shojifyDatasetMetadata(metadata, order = I(names(metadata)), ...)
 list(group, entities)}
 
 \item{...}{dataset entity metadata. "name" is required.}
+
+\item{project}{A \code{ProjectFolder} object, string path that could be passed to \code{\link[=cd]{cd()}}
+relative to the root project, or a URL for a \code{ProjectFolder}. If left empty,
+rcrunch will look in \code{envOrOption('crunch.default.project')} and error if nothing
+is found.}
 }
 \value{
 list suitable for JSONing and POSTing to create a dataset

@@ -4,7 +4,13 @@
 \alias{forkDataset}
 \title{Create a fork of a dataset}
 \usage{
-forkDataset(dataset, name = defaultForkName(dataset), draft = FALSE, ...)
+forkDataset(
+  dataset,
+  name = defaultForkName(dataset),
+  draft = FALSE,
+  ...,
+  project = folder(dataset)
+)
 }
 \arguments{
 \item{dataset}{The \code{CrunchDataset} to fork}
@@ -16,6 +22,10 @@ for you}
 those with edit permissions? Default is \code{FALSE}.}
 
 \item{...}{Additional dataset metadata to provide to the fork}
+
+\item{project}{A \code{ProjectFolder} object, string path that could be passed to \code{\link[=cd]{cd()}}
+relative to the root project, or a URL for a \code{ProjectFolder}. Defaults to the same
+folder as the existing dataset.}
 }
 \value{
 The new fork, a \code{CrunchDataset}.

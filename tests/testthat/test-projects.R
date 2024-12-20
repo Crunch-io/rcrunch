@@ -172,11 +172,14 @@ with_mock_crunch({
     test_that("loadDataset project arg error handling", {
         expect_error(
             loadDataset("foo", project = 12),
-            "Project 12 is not valid"
+            "project must be a `CrunchProject` object, a URL, or a path to a project from the root"
         )
         expect_error(
             loadDataset("foo", project = "Not a project"),
-            'Project "Not a project" is not valid'
+            paste0(
+                'Could not get project Not a project ',
+                'because "Not a project" is not a folder'
+            )
         )
     })
 
