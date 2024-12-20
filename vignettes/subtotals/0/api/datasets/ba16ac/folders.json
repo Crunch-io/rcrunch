@@ -1,0 +1,18 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/ba16ac/folders/",
+    "catalogs": {
+        "public": "/api/datasets/ba16ac/folders/public/",
+        "hidden": "/api/datasets/ba16ac/folders/hidden/",
+        "personal": "/api/datasets/ba16ac/folders/personal/",
+        "parents": "/api/datasets/ba16ac/folders/public/parents/",
+        "secure": "/api/datasets/ba16ac/folders/secure/"
+    },
+    "description": "The collection of variable folders for this dataset. Individual folders are available at folders/{id}/, but their arrangement is represented by multiple \"folder trees\", which you can visit recursively as the user navigates the tree.",
+    "views": {
+        "script": "/api/datasets/ba16ac/folders/script/"
+    },
+    "index": {
+
+    }
+}

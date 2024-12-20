@@ -261,7 +261,7 @@ textCsvParser <- function(col, ...) col
 #' provided to the function, and each row represents a entity.
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("iris")
+#' ds <- loadDataset("iris", project = "ACME")
 #' vars <- variables(ds)
 #' var_df <- as.data.frame(vars, keys = TRUE)
 #' # With row names
