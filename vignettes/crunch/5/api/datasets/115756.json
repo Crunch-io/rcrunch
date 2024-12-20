@@ -1,0 +1,224 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/115756/",
+    "catalogs": {
+        "filters": "/api/datasets/115756/filters/",
+        "variables": "/api/datasets/115756/variables/",
+        "folders": "/api/datasets/115756/folders/",
+        "batches": "/api/datasets/115756/batches/",
+        "multitables": "/api/datasets/115756/multitables/",
+        "permissions": "/api/datasets/115756/permissions/",
+        "users": "/api/datasets/115756/users/",
+        "teams": "/api/datasets/115756/teams/",
+        "savepoints": "/api/datasets/115756/savepoints/",
+        "actions": "/api/datasets/115756/actions/",
+        "tags": "/api/datasets/115756/tags/",
+        "scripts": "/api/datasets/115756/scripts/",
+        "forks": "/api/datasets/115756/forks/",
+        "decks": "/api/datasets/115756/decks/",
+        "dashboards": "/api/datasets/115756/dashboards/",
+        "views": "/api/datasets/115756/views/",
+        "boxdata": "/api/datasets/115756/boxdata/",
+        "parent": "/api/datasets/",
+        "project": "/api/projects/personal/",
+        "variables_private": "/api/datasets/115756/variables/private/",
+        "variables_by_type": "/api/datasets/115756/variables/?type={type}"
+    },
+    "fragments": {
+        "preferences": "/api/datasets/115756/preferences/",
+        "settings": "/api/datasets/115756/settings/",
+        "bucket_suggestion": "/api/datasets/115756/bucket_suggestion/",
+        "publish": "/api/datasets/115756/publish/",
+        "schema": "/api/datasets/115756/schema/",
+        "table": "/api/datasets/115756/table/",
+        "exclusion": "/api/datasets/115756/exclusion/",
+        "state": "/api/datasets/115756/state/",
+        "stream": "/api/datasets/115756/stream/",
+        "pk": "/api/datasets/115756/pk/"
+    },
+    "views": {
+        "sources": "/api/datasets/115756/sources/",
+        "var_by_alias": "/api/datasets/115756/var_by_alias/",
+        "summary": "/api/datasets/115756/summary/",
+        "cube": "/api/datasets/115756/cube/",
+        "second_order_analysis": "/api/datasets/115756/second_order_analysis/",
+        "export": "/api/datasets/115756/export/",
+        "applied_filters": "/api/datasets/115756/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "account": "/api/accounts/00001/",
+        "id": "115756",
+        "name": "Stack Overflow Developer Survey 2017",
+        "type": "dataset",
+        "description": "Subset of the main survey, restricted to self-reported R users",
+        "folder_card_label": "",
+        "notes": "",
+        "path": "__users__|Greg|Stack Overflow Developer Survey 2017",
+        "streaming": "no",
+        "archived": false,
+        "is_published": true,
+        "owner": "/api/users/27a158/",
+        "owner_name": "Greg",
+        "current_editor": "/api/users/27a158/",
+        "current_editor_name": "Greg",
+        "maintainer": "/api/users/27a158/",
+        "app_settings": {
+            "profiles_mode": false,
+            "report_issue_url": "https://yougov.com"
+        },
+        "palette": {
+            "brand": {
+                "primary": "#0064a4",
+                "secondary": "#107e64",
+                "message": "#712480"
+            },
+            "analysis": [
+                {
+                    "palette": [
+                        "#340043",
+                        "#640083",
+                        "#9100bf",
+                        "#c300ff",
+                        "#e17fff"
+                    ],
+                    "default": false,
+                    "name": "purple palette",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#4fc3f7",
+                        "#4dd0e1",
+                        "#4db6ac",
+                        "#81c783",
+                        "#aed581",
+                        "#dce775",
+                        "#cddc39",
+                        "#fdae6b"
+                    ],
+                    "default": false,
+                    "name": "Green Palette for dashboard",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#00bcd4",
+                        "#9575cd",
+                        "#ffa299",
+                        "#4c8cb8",
+                        "#303f9f",
+                        "#0097a7",
+                        "#8fb7ae",
+                        "#d4e3e0",
+                        "#d1c4e9"
+                    ],
+                    "default": true,
+                    "name": "Rainbow",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#bf1001",
+                        "#ff1600",
+                        "#0064A4",
+                        "#0074bf",
+                        "#ffa299",
+                        "#019cff",
+                        "#80cdff",
+                        "#e0e0e0"
+                    ],
+                    "default": false,
+                    "name": "France palette",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#202020",
+                        "#d32f2f",
+                        "#bf1001",
+                        "#fbc02e",
+                        "#ff1600",
+                        "#ffa299",
+                        "#ffce00",
+                        "#ffe67f",
+                        "#fff9c4"
+                    ],
+                    "default": false,
+                    "name": "Germany palette",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#2d4e68",
+                        "#a4c242",
+                        "#406680",
+                        "#dfe590",
+                        "#6992a8",
+                        "#618630"
+                    ],
+                    "default": false,
+                    "name": "Homeware Haven",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#be1622",
+                        "#7f0a00",
+                        "#ffa299",
+                        "#999999",
+                        "#5f5f5f",
+                        "#e0e0e0",
+                        "#430400"
+                    ],
+                    "default": false,
+                    "name": "Heart&Home",
+                    "type": "qualitative"
+                }
+            ]
+        },
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "project_inherited_settings": {
+            "disallow_dataset_shares": false,
+            "stop_dataset_shares": true
+        },
+        "view_of": null,
+        "size": {
+            "rows": 1634,
+            "columns": 15,
+            "variables": 15,
+            "unfiltered_rows": 1634,
+            "source_columns": 57,
+            "derivations": 0
+        },
+        "creation_time": "2024-11-08T16:13:57.750000",
+        "modification_time": "2024-11-08T16:14:11.881000",
+        "start_date": null,
+        "end_date": null,
+        "access_time": "2024-11-08T16:13:57.683000",
+        "permissions": {
+            "view": true,
+            "edit": true
+        }
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/115756/variables/weights/",
+        "favorites": "/api/datasets/115756/variables/favorites/",
+        "variables_hier": "/api/datasets/115756/variables/hier/"
+    },
+    "folder_trees": {
+        "public": "folders/public/",
+        "hidden": "folders/hidden/",
+        "personal": "folders/personal/",
+        "secure": "folders/secure/"
+    },
+    "urls": {
+        "user_url": "/api/users/27a158/",
+        "owner_url": "/api/projects/378ad4/",
+        "editor_url": "/api/users/27a158/"
+    }
+}
