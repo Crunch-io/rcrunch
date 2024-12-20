@@ -2,33 +2,37 @@
     "element": "shoji:catalog",
     "self": "/api/",
     "catalogs": {
-        "datasets": "/api/datasets/",
-        "users": "/api/users/",
-        "roles": "/api/roles/",
-        "integrations": "/api/integrations/",
-        "dashboards": "/api/dashboards/",
+        "public": "/api/public/",
         "sources": "/api/sources/",
+        "datasources": "/api/datasources/",
+        "users": "/api/users/",
+        "datasets": "/api/datasets/",
+        "teams": "/api/teams/",
         "projects": "/api/projects/",
         "geodata": "/api/geodata/",
-        "teams": "/api/teams/",
-        "public": "/api/public/",
+        "dashboards": "/api/dashboards/",
         "lobs": "/api/lobs/",
+        "roles": "/api/roles/",
+        "integrations": "/api/integrations/",
+        "exchanges": "/api/exchanges/",
+        "apikeys": "/api/apikeys/",
         "datasets_by_name": "/api/datasets/by_name/{name}/"
     },
     "views": {
-        "progress": "/api/progress/",
         "search": "/api/search/",
         "feature_flag": "/api/feature_flag/",
-        "migration": "/api/migration/",
+        "progress": "/api/progress/",
         "account": "/api/account/",
         "user": "/api/users/27a158/"
     },
+    "profile_settings": "/api/profile_settings/",
     "urls": {
+        "profile_settings_url": "/api/profile_settings/",
+        "account_url": "/api/account/",
         "user_url": "/api/users/27a158/",
-        "account_roles_url": "/api/roles/accounts/",
-        "notebook_url": "https://jupyter.crunch.io/",
         "logout_url": "/api/logout/",
-        "account_url": "/api/account/"
+        "account_roles_url": "/api/roles/accounts/",
+        "notebook_url": "https://jupyter.crunch.io/"
     },
     "description": "The API root. GET user_url to access your Crunch resources. GET logout_url to sign out."
 }
