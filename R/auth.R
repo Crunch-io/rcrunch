@@ -133,10 +133,13 @@ setupCrunchAuth <- function(id) {
     if (is.null(key)) {
         halt("Could not find key in `envOrOption('", paste0("crunch.api.key.", id), "')`")
     }
+    # Allowed to be NULL
+    default_project <- envOrOption(paste0("crunch.default.project.", id))
 
     set_crunch_opts(
         crunch.api = api,
         crunch.api.key = key,
+        crunch.default.project = default_project,
         .source = paste0("setupCrunchAuth('", id, "')")
     )
 }
