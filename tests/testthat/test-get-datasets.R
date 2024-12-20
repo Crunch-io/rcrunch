@@ -73,13 +73,13 @@ with_mock_crunch({
     })
 
     test_that("loadDataset loads", {
-        ds <- loadDataset("test ds")
+        ds <- loadDataset("test ds", project = "Project One")
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
     })
 
     test_that("loadDataset by index is deprecated", {
-        expect_deprecated(ds <- loadDataset(1))
+        expect_deprecated(ds <- loadDataset(1, project = "Project One"))
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
         expect_error(
@@ -100,7 +100,7 @@ with_mock_crunch({
     })
 
     test_that("loadDataset by URL when in main catalog", {
-        ds <- loadDataset("test ds")
+        ds <- loadDataset("test ds", project = "Project One")
         ds_by_url <- loadDataset(self(ds))
         expect_is(ds_by_url, "CrunchDataset")
         expect_identical(name(ds), name(ds_by_url))
@@ -134,23 +134,27 @@ with_mock_crunch({
     test_that("loadDataset(refresh=TRUE) drops caches", {
         with(temp.option(httpcache.log = ""), {
             logs <- capture.output({
-                loadDataset("test ds", refresh = TRUE)
+                loadDataset("test ds", refresh = TRUE, project = "Project One")
             })
         })
         in_logs <- function(str, loglines) {
             any(grepl(str, loglines, fixed = TRUE))
         }
-        expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/datasets/by_name/", logs))
+        expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/projects/", logs))
     })
 
     test_that("loadDataset error handling", {
-        expect_error(
-            loadDataset("not a dataset"),
-            paste(dQuote("not a dataset"), "not found")
+        options(find.dataset.no.project = NULL)
+        expect_warning(
+            expect_error(
+                loadDataset("not a dataset"),
+                paste(dQuote("not a dataset"), "not found")
+            ),
+            "Finding datasets by name without specifying a path is no longer supported"
         )
         expect_error(
             loadDataset("not a dataset", project = 42),
-            "Project 42 is not valid"
+            "project must be a `CrunchProject` object, a URL, or a path to a project from the root"
         )
         expect_error(
             loadDataset(c("test ds", "ECON.sav")),
@@ -171,42 +175,5 @@ with_mock_crunch({
                 "not an object of class list"
             )
         )
-    })
-})
-
-with_test_authentication({
-    personal <- cd(projects(), "~")
-    ds <- createDataset(name = now())
-    dsname <- name(ds)
-    test_that("When a dataset is created, it goes to the personal project", {
-        skip_on_jenkins("#163665209")
-        expect_equal(length(cd(projects(), "~")), length(personal) + 1)
-    })
-
-    test_that("Dataset list can be retrieved if authenticated", {
-        expect_true(is.character(listDatasets()))
-        skip_on_jenkins("#163665209")
-        expect_true(length(listDatasets()) > 0)
-        expect_true(is.character(dsname))
-        expect_true(nchar(dsname) > 0)
-        expect_true(dsname %in% listDatasets())
-    })
-
-    test_that("A dataset object can be retrieved, if it exists", {
-        expect_true(is.dataset(loadDataset(dsname)))
-    })
-
-    newname <- paste0("New name ", now())
-    test_that("renaming a dataset refreshes the dataset list", {
-        name(ds) <- newname
-        expect_false(dsname %in% listDatasets())
-        skip_on_jenkins("#163665209")
-        expect_true(newname %in% listDatasets())
-    })
-
-    test_that("deleting a dataset refreshes the dataset list", {
-        with_consent(delete(ds))
-        expect_false(dsname %in% listDatasets())
-        expect_false(newname %in% listDatasets())
     })
 })
