@@ -1,0 +1,82 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/projects/264e6b/",
+    "catalogs": {
+        "datasets": "/api/projects/264e6b/datasets/",
+        "members": "/api/projects/264e6b/members/",
+        "users": "/api/projects/264e6b/users/",
+        "teams": "/api/projects/264e6b/teams/",
+        "documents": "/api/projects/264e6b/documents/",
+        "project": "/api/projects/"
+    },
+    "views": {
+        "templates": "/api/projects/264e6b/templates/",
+        "logo": "/api/projects/264e6b/logo/",
+        "execute": "/api/projects/264e6b/execute/"
+    },
+    "body": {
+        "name": "examples",
+        "id": "264e6b",
+        "description": "",
+        "account": "/api/accounts/00001/",
+        "permissions": {
+            "view": true,
+            "edit": true,
+            "moderator": true
+        },
+        "auth_role_names": [
+            "Admin",
+            "-",
+            "-"
+        ],
+        "modification_time": null,
+        "access_time": null,
+        "suspended": false,
+        "homepage": null,
+        "path": "examples",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "palette": {
+            "brand": {
+                "primary": "#0064a4",
+                "secondary": "#107e64",
+                "message": "#712480"
+            }
+        },
+        "profiles_branding": false,
+        "templates": {
+            "powerpoint": "https://s.crunch.io/act_templates/account-crunch-dxtwsa-powerpoint.pptx"
+        },
+        "app_settings": {
+            "email_templates": {
+                "ADD_RECOGNIZED_USER_TO_PROJECT": {
+                    "body": "You have been granted {permission_type} access to the {folder_name} in the {organization_name} organization at <a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">Crunch.io<\/a>.\n\nThis access was granted by {inviter_name}\n\nYou can access this folder at {folder_link}",
+                    "subject": "You have been given access to the {folder_name} folder in {organization_name}"
+                },
+                "ADD_UNRECOGNIZED_USER_TO_PROJECT": {
+                    "body": "You have been invited to access {organization_name}'s data on <a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">Crunch.io<\/a> by {inviter_name}.\n\n<a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">Crunch.io<\/a> is a collaborative platform for advanced analytics in the cloud - a friendly environment for data exploration, modeling, and interactive graphics.\n\nTo create a password and sign in, click the following link or cut and paste this link into your browser:\n\n{password_reset_link}\n\nFor more information about <a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">Crunch.io<\/a>, go to <a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">www.crunch.io<\/a>.",
+                    "subject": "You have been invited to join {organization_name} on Crunch.io."
+                }
+            },
+            "report_issue_url": "https://yougov.com",
+            "email_sender_name": "",
+            "profiles_mode": false
+        },
+        "settings": {
+
+        },
+        "inherited_settings": {
+            "disallow_dataset_shares": false,
+            "stop_dataset_shares": true
+        }
+    },
+    "index": {
+
+    },
+    "graph": [
+
+    ]
+}

@@ -2,7 +2,7 @@ context("Variables")
 
 with_mock_crunch({
     ds <- cachedLoadDataset("test ds")
-    ds2 <- loadDataset("an archived dataset", "archived")
+    ds2 <- loadDataset("2", "archived", project = NULL)
 
     test_that("Variable init, as, is", {
         expect_true(is.variable(ds[[1]]))
