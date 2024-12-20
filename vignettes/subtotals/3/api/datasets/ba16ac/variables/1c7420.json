@@ -1,0 +1,113 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/ba16ac/variables/1c7420/",
+    "catalogs": {
+        "parent": "/api/datasets/ba16ac/variables/",
+        "folder": "/api/datasets/ba16ac/folders/public/"
+    },
+    "fragments": {
+        "user_settings": "/api/datasets/ba16ac/variables/1c7420/user_settings/",
+        "dataset": "/api/datasets/ba16ac/"
+    },
+    "views": {
+        "applied": "/api/datasets/ba16ac/variables/1c7420/applied/",
+        "cast": "/api/datasets/ba16ac/variables/1c7420/cast/",
+        "frequencies": "/api/datasets/ba16ac/variables/1c7420/frequencies/",
+        "summary": "/api/datasets/ba16ac/variables/1c7420/summary/",
+        "values": "/api/datasets/ba16ac/variables/1c7420/values/",
+        "script": "/api/datasets/ba16ac/variables/1c7420/script/"
+    },
+    "body": {
+        "name": "like_dogs",
+        "alias": "like_dogs",
+        "description": "",
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "type": "categorical",
+        "id": "1c7420",
+        "view": {
+            "column_width": null,
+            "show_numeric_values": false,
+            "show_counts": false,
+            "include_missing": false,
+            "transform": {
+                "insertions": [
+                    {
+                        "anchor": "top",
+                        "name": "Love minus Dislike & Hate",
+                        "function": "subtotal",
+                        "args": [
+                            1
+                        ],
+                        "kwargs": {
+                            "positive": [
+                                1
+                            ],
+                            "negative": [
+                                4,
+                                5
+                            ]
+                        },
+                        "id": 1
+                    }
+                ]
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "discarded": false,
+        "hidden": false,
+        "secure": false,
+        "categories": [
+            {
+                "missing": false,
+                "numeric_value": 1,
+                "id": 1,
+                "name": "Love"
+            },
+            {
+                "missing": false,
+                "numeric_value": 2,
+                "id": 2,
+                "name": "Like"
+            },
+            {
+                "missing": false,
+                "numeric_value": 3,
+                "id": 3,
+                "name": "Neutral"
+            },
+            {
+                "missing": false,
+                "numeric_value": 4,
+                "id": 4,
+                "name": "Dislike"
+            },
+            {
+                "missing": false,
+                "numeric_value": 5,
+                "id": 5,
+                "name": "Hate"
+            },
+            {
+                "missing": true,
+                "numeric_value": null,
+                "id": -1,
+                "name": "No Data"
+            }
+        ],
+        "dataset_id": "ba16ac",
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "owner": null,
+        "private": false
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "/api/datasets/ba16ac/"
+    }
+}
