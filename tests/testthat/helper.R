@@ -25,7 +25,8 @@ crunch:::set_crunch_opts(
     crunch.namekey.dataset = "alias",
     crunch.namekey.array = "alias",
     crunch.already.shown.folders.msg = TRUE,
-    crunch.names.includes.hidden.private.variables = FALSE
+    crunch.names.includes.hidden.private.variables = FALSE,
+    crunch.default.derived = FALSE
 )
 
 options(
