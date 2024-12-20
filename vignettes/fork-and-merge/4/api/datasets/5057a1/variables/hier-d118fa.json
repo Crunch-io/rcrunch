@@ -1,0 +1,30 @@
+{
+    "element": "shoji:order",
+    "self": "/api/datasets/5057a1/variables/hier/?relative=on",
+    "description": "Hierarchical order from folder structure of dataset variables",
+    "graph": [
+        "../3pq619/",
+        "../3pq617/",
+        "../3pq601/",
+        "../3pq600/",
+        "../3pq616/",
+        "../3pq606/",
+        "../3pq614/",
+        "../3pq607/",
+        "../3pq611/",
+        "../3pq612/",
+        "../3pq608/",
+        "../3pq615/",
+        "../3pq609/",
+        "../3pq613/",
+        "../3pq610/",
+        "../3pq604/",
+        "../3pq618/",
+        "../3pq602/",
+        "../3pq620/",
+        "../3pq603/",
+        "../3pq621/",
+        "../3pq622/",
+        "../3pq605/"
+    ]
+}

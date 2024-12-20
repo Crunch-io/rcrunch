@@ -32,7 +32,7 @@
 #' `mkdir()` does not do
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("Example survey")
+#' ds <- loadDataset("Example survey", project = "Studies")
 #' ds <- mv(ds, c("gender", "age", "educ"), "Demographics")
 #' ds <- mkdir(ds, "Key Performance Indicators/Brand X")
 #' # These can also be chained together
@@ -129,7 +129,7 @@ setName <- function(object, nm) {
 #' directory in your local file system, which `cd()` does not do
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("Example survey")
+#' ds <- loadDataset("Example survey", project = "Studies")
 #' demo <- cd(ds, "Demographics")
 #' names(demo)
 #' # Or with %>%
@@ -185,7 +185,7 @@ cd <- function(x, path, create = FALSE) {
 #' from your local file system, which `rmdir()` does not do
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("Example survey")
+#' ds <- loadDataset("Example survey", project = "Studies")
 #' rmdir(ds, "Demographics")
 #' # Or with %>%
 #' require(magrittr)
@@ -216,7 +216,7 @@ rmdir <- function(x, path) {
 #' @export
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("Example survey")
+#' ds <- loadDataset("Example survey", project = "Studies")
 #' folder(ds$income) <- "Demographics/Economic"
 #' folder(ds$income)
 #' ## [1] "Demographics"    "Economic"
@@ -228,6 +228,8 @@ folder <- function(x) {
         cls <- class(x)
     } else if (is.variable(x)) {
         cls <- "VariableFolder"
+    } else if (is.dataset(x)) {
+        cls <- "ProjectFolder"
     } else {
         halt("No folder for object of class ", class(x))
     }

@@ -2,6 +2,21 @@
 * Variables are now created as materialized by default instead of derived. If you prefer the 
   old behavior set environment variable `R_CRUNCH_DEFAULT_DERIVED` or option 
   `crunch.default.derived` to TRUE. See `?toVariable` for more information (#648).
+  
+* The concept of a personal folder is being removed from the API imminently. This has
+  a few implications for rcrunch:
+  
+  * All datasets must be created with a project (eg via the `project` argument of `newDataset()`)
+  
+  * Dataset forks will be created in the same folder as their parent
+  
+  * Because loading datasets by name doesn't work for datasets in projects, it's not really
+  possible to load a dataset by name without specifying the full project path.
+  
+  * To make things easier, it is possible to set a default project path with environment
+  variable `R_CRUNCH_DEFAULT_PROJECT` or option `crunch.default.project`. This will be used
+  as the default project folder when creating and loading datasets. Forks will still be put
+  next to parents.
 
 # crunch 1.30.3
 * Fix typo which relied on partial argument matching when using the variable catalog cache
