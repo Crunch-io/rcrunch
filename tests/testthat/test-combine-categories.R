@@ -5,6 +5,7 @@ with_mock_crunch({
 
     both <- VariableDefinition(
         name = "Gender 1 cat",
+        derived = FALSE,
         description = "Gender",
         discarded = FALSE,
         notes = "",
@@ -271,6 +272,7 @@ with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
     ds$combined_pets <- combine(ds$q1,
         name = "Pets (combined)",
+        derived = TRUE,
         list(list(name = "Mammals", categories = c("Cat", "Dog")))
     )
     test_that("We can create a new categorical by combining", {

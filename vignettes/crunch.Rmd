@@ -15,7 +15,7 @@ library(crunch)
 ```
 
 ```{r, results='hide', include = FALSE}
-set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
+set_crunch_opts("crunch.api" = "https://team.crunch.io/api/")
 library(httptest)
 start_vignette("crunch")
 ```
@@ -220,7 +220,7 @@ Crunch also has a special variable type for multiple-response data. These are su
 knitr::kable(SO_survey[1:5, "HaveWorkedLanguage", drop = FALSE], row.names = FALSE)
 ```
 
-To analyze this data without Crunch you would usually go through an elaborate data cleaning process to split the delimited variable up into its constituent parts, and then reshape it into a format which is more amenable to analysis. With Crunch, you can make use of multiple response variables to store it in a compact form, and analyze it just like any other variable. Since delimited text is such a common way of storing this kind of answer, Crunch allows you to create a variable directly from the text. This function creates a _derived variable_, which means that if you make changes to the data in the initial variable, the derived variable will change along with it.
+To analyze this data without Crunch you would usually go through an elaborate data cleaning process to split the delimited variable up into its constituent parts, and then reshape it into a format which is more amenable to analysis. With Crunch, you can make use of multiple response variables to store it in a compact form, and analyze it just like any other variable. Since delimited text is such a common way of storing this kind of answer, Crunch allows you to create a variable directly from the text.
 
 ```{r state change6, include=FALSE}
 change_state()
