@@ -4,11 +4,16 @@
 \alias{newExampleDataset}
 \title{Import a fixture dataset for testing}
 \usage{
-newExampleDataset(name = "pets")
+newExampleDataset(name = "pets", project = defaultCrunchProject())
 }
 \arguments{
 \item{name}{string name of the fixture dataset. Currently "pets" is the only
 one available.}
+
+\item{project}{A \code{ProjectFolder} object, string path that could be passed to \code{\link[=cd]{cd()}}
+relative to the root project, or a URL for a \code{ProjectFolder}. If left empty,
+rcrunch will look in \code{envOrOption('crunch.default.project')} and error if nothing
+is found.}
 }
 \value{
 A new \code{CrunchDataset} entity.
