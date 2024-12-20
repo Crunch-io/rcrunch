@@ -1,7 +1,7 @@
 context("Private variables")
 
 with_mock_crunch({
-    ds <- loadDataset("Private test")
+    ds <- loadDataset("5", project = NULL)
     test_that("privateVariables", {
         expect_identical(privateVariables(ds, "name"), "ID Number")
         expect_identical(privateVariables(ds), "id")

@@ -40,7 +40,7 @@ projects() \%>\%
     names()
 # The assignment method lets you move a dataset to a project
 proj <- cd(projects(), "Important Clients")
-ds <- loadDataset("New important client survey")
+ds <- loadDataset("New important client survey", project = "Studies")
 datasets(proj) <- ds
 }
 }
