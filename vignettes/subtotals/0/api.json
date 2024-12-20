@@ -4,27 +4,31 @@
     "catalogs": {
         "public": "/api/public/",
         "sources": "/api/sources/",
+        "datasources": "/api/datasources/",
         "users": "/api/users/",
         "datasets": "/api/datasets/",
         "teams": "/api/teams/",
         "projects": "/api/projects/",
         "geodata": "/api/geodata/",
         "dashboards": "/api/dashboards/",
-        "scripts": "/api/scripts/",
+        "documents": "/api/documents/",
         "lobs": "/api/lobs/",
         "roles": "/api/roles/",
         "integrations": "/api/integrations/",
+        "exchanges": "/api/exchanges/",
+        "apikeys": "/api/apikeys/",
         "datasets_by_name": "/api/datasets/by_name/{name}/"
     },
     "views": {
         "search": "/api/search/",
-        "migration": "/api/migration/",
         "feature_flag": "/api/feature_flag/",
         "progress": "/api/progress/",
         "account": "/api/account/",
         "user": "/api/users/27a158/"
     },
+    "profile_settings": "/api/profile_settings/",
     "urls": {
+        "profile_settings_url": "/api/profile_settings/",
         "account_url": "/api/account/",
         "user_url": "/api/users/27a158/",
         "logout_url": "/api/logout/",

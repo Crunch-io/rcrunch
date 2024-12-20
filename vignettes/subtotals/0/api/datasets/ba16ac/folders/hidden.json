@@ -1,0 +1,29 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/ba16ac/folders/hidden/",
+    "catalogs": {
+        "parents": "/api/datasets/ba16ac/folders/hidden/parents/"
+    },
+    "index": {
+        "../../variables/000001/": {
+            "name": "Case ID",
+            "description": "",
+            "notes": "",
+            "alias": "caseid",
+            "discarded": true,
+            "secure": false,
+            "hidden": true,
+            "derived": false,
+            "id": "000001",
+            "type": "numeric"
+        }
+    },
+    "body": {
+        "name": "Hidden",
+        "path": "|"
+    },
+    "graph": [
+        "../../variables/000001/"
+    ],
+    "size": 1
+}

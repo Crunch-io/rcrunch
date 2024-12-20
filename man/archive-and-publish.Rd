@@ -84,7 +84,7 @@ set the properties by assigning into the function. The verb functions
 }
 \examples{
 \dontrun{
-ds <- loadDataset("mtcars")
+ds <- loadDataset("mtcars", project = "current")
 is.draft(ds) # FALSE
 is.published(ds) # TRUE
 identical(is.draft(ds), !is.published(ds))
