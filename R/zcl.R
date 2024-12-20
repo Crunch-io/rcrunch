@@ -46,7 +46,7 @@ setMethod("zcl", "zcl", function(x) x)
 setMethod("zcl", "list", function(x) x) ## is this a good idea?
 setMethod("zcl", "CrunchFilter", function(x) x@body$expression)
 setMethod("zcl", "VariableDefinition", function(x) {
-    non_ref_names <- c("derivation", "values", "type", "categories", "resolution")
+    non_ref_names <- c("derivation", "values", "type", "categories", "resolution", "derived")
     if ("derivation" %in% names(x)) {
         out <- x$derivation
     } else {
