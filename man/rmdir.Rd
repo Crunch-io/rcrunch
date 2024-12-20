@@ -25,7 +25,7 @@ file-system version, it does not require the folders to be empty.
 }
 \examples{
 \dontrun{
-ds <- loadDataset("Example survey")
+ds <- loadDataset("Example survey", project = "Studies")
 rmdir(ds, "Demographics")
 # Or with \%>\%
 require(magrittr)

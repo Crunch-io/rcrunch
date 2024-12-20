@@ -1,0 +1,43 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/ba16ac/variables/000000/subvariables/",
+    "description": "Contains the subvariables for this array variable.",
+    "index": {
+        "/api/datasets/ba16ac/variables/000000/subvariables/0001/": {
+            "name": "Cat",
+            "description": "",
+            "notes": "",
+            "alias": "allpets_1",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "0001",
+            "type": "categorical"
+        },
+        "/api/datasets/ba16ac/variables/000000/subvariables/0002/": {
+            "name": "Dog",
+            "description": "",
+            "notes": "",
+            "alias": "allpets_2",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "0002",
+            "type": "categorical"
+        },
+        "/api/datasets/ba16ac/variables/000000/subvariables/0003/": {
+            "name": "Bird",
+            "description": "",
+            "notes": "",
+            "alias": "allpets_3",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "0003",
+            "type": "categorical"
+        }
+    }
+}
