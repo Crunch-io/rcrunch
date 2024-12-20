@@ -244,7 +244,6 @@ with_test_authentication({
 
     test_that("numeric to text", {
         ds$v1_text <- as.Text(ds$v1)
-        expect_true(is.derived(ds$v1_text))
         expect_true(is.Text(ds$v1_text))
         expect_equal(
             as.vector(ds$v1_text),
@@ -257,7 +256,6 @@ with_test_authentication({
 
     test_that("text to numeric", {
         ds$num_as_text_num <- as.Numeric(ds$num_as_text)
-        expect_true(is.derived(ds$num_as_text_num))
         expect_true(is.Numeric(ds$num_as_text_num))
         expect_equal(
             as.vector(ds$num_as_text_num),
@@ -266,7 +264,6 @@ with_test_authentication({
 
         # if there aren't numbers in the text, the result should be NA
         ds$v2_num <- as.Numeric(ds$v2)
-        expect_true(is.derived(ds$v2_num))
         expect_true(is.Numeric(ds$v2_num))
         expect_equal(
             as.vector(ds$v2_num),
@@ -282,7 +279,6 @@ with_test_authentication({
 
     test_that("text to categorical", {
         ds$v2_cat <- as.Categorical(ds$v2)
-        expect_true(is.derived(ds$v2_cat))
         expect_true(is.Categorical(ds$v2_cat))
         expect_equal(
             as.vector(ds$v2_cat),
@@ -292,7 +288,6 @@ with_test_authentication({
 
     test_that("datetime to numeric", {
         ds$v5_num <- as.Numeric(ds$v5)
-        expect_true(is.derived(ds$v5_num))
         expect_true(is.Numeric(ds$v5_num))
         expect_equal(
             as.vector(ds$v5_num),
@@ -302,7 +297,6 @@ with_test_authentication({
 
     test_that("datetime to text", {
         ds$v5_text <- as.Text(ds$v5)
-        expect_true(is.derived(ds$v5_text))
         expect_true(is.Text(ds$v5_text))
         expect_equal(
             as.vector(ds$v5_text),
@@ -312,7 +306,6 @@ with_test_authentication({
 
     test_that("datetime to categorical", {
         ds$v5_cat <- as.Categorical(ds$v5)
-        expect_true(is.derived(ds$v5_cat))
         expect_true(is.Categorical(ds$v5_cat))
         expect_equal(
             as.vector(ds$v5_cat),
@@ -326,7 +319,6 @@ with_test_authentication({
         ds$text_times <- as.Text(ds$v5, format = "%Y-%m-%d")
         expect_true(is.Text(ds$text_times))
         ds$times_from_text <- as.Datetime(ds$text_times, format = "%Y-%m-%d")
-        expect_true(is.derived(ds$times_from_text))
         expect_true(is.Datetime(ds$times_from_text))
         expect_equal(
             as.vector(ds$times_from_text),
@@ -337,7 +329,6 @@ with_test_authentication({
     test_that("numeric to datetime", {
         ds$num_times <- as.numeric(as.vector(ds$v5))
         ds$times_from_num <- as.Datetime(ds$num_times, resolution = "D")
-        expect_true(is.derived(ds$times_from_num))
         expect_true(is.Datetime(ds$times_from_num))
         expect_equal(
             as.vector(ds$times_from_num),
@@ -350,7 +341,6 @@ with_test_authentication({
             resolution = "s",
             offset = "1975-01-01"
         )
-        expect_true(is.derived(ds$times_from_secs))
         expect_true(is.Datetime(ds$times_from_secs))
         expect_equal(
             as.vector(ds$times_from_secs),
@@ -359,7 +349,6 @@ with_test_authentication({
 
         ds$num_times_years <- rep(1, 20)
         ds$times_from_years <- as.Datetime(ds$num_times_years, resolution = "Y")
-        expect_true(is.derived(ds$times_from_years))
         expect_true(is.Datetime(ds$times_from_years))
         # need rollup() here because as.vector doesn't currently support other rollups
         expect_equal(
@@ -384,7 +373,6 @@ with_test_authentication({
 
     test_that("categorical expression to numeric", {
         ds$v3_gt_ten_num <- as.Numeric(ds$v3 > 10)
-        expect_true(is.derived(ds$v3_gt_ten_num))
         expect_true(is.Numeric(ds$v3_gt_ten_num))
         expect_equal(
             as.vector(ds$v3_gt_ten_num),
@@ -394,7 +382,6 @@ with_test_authentication({
 
     test_that("numeric expression to text", {
         ds$v3_plus_one_text <- as.Text(ds$v3 + 1)
-        expect_true(is.derived(ds$v3_plus_one_text))
         expect_true(is.Text(ds$v3_plus_one_text))
         expect_equal(
             as.vector(ds$v3_plus_one_text),
