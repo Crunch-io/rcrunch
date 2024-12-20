@@ -10,6 +10,7 @@ with_mock_crunch({
         name = "MR combined",
         description = "Please select all that apply",
         discarded = FALSE,
+        derived = FALSE,
         notes = "",
         format = list(summary = list(digits = 2), data = list(digits = 2)),
         view = list(
