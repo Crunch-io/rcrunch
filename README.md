@@ -60,6 +60,10 @@ this file is not checked in so it must be created before you can run tests. It i
 created for you if you run `make test`, or you can create it explicitly by running
 `make compress-fixtures` or `Rscript dev-misc/compress-fixtures.R`.
 
+If you need to adapt a vignette that uses `httptest` to save the mocks (eg has 
+`start_vignettte()`), you can delete the folder with the same name as the vignette
+and the next time you build the vignette it will update the fixtures for you.
+
 ### Contributing
 
 See the [contribution guidelines](CONTRIBUTING.md).
