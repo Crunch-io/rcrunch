@@ -51,7 +51,7 @@ the option name is in all capital letters, with "." replaced with
    crunch.warn.private \tab R_CRUNCH_WARN_PRIVATE \tab TRUE \tab Whether to warn when using a private variable \cr
    crunch.names.includes.hidden.private.variables \tab R_NAMES_INCLUDES_HIDDEN_PRIVATE_VARIABLES \tab TRUE \tab Whether to include hidden/private variables from names(ds) \cr
    crunch.order.var.catalog \tab R_CRUNCH_ORDER_VAR_CATALOG \tab TRUE \tab Whether to set the variable catalog in the order of the hierarchical order \cr
-   crunch.default.derived \tab R_CRUNCH_DEFAULT_DERIVED. \tab FALSE \tab Whether to create variables from expressions that are derived (TRUE) or materialized (FALSE) \cr
+   crunch.default.derived \tab R_CRUNCH_DEFAULT_DERIVED. \tab TRUE \tab Whether to create variables from expressions that are derived (TRUE) or materialized (FALSE) \cr
    crunch.default.project \tab R_CRUNCH_DEFAULT_PROJECT \tab - \tab Path to a project folder to put new datasets in by default. \cr
    crunch.delimiter \tab R_CRUNCH_DELIMITER \tab "/" \tab What to use as a delimiter when printing folder paths \cr
    crunch.check.updates \tab R_CRUNCH_CHECK_UPDATES \tab TRUE \tab Whether to check for updates to the crunch package \cr

@@ -1,7 +1,7 @@
 # crunch 1.31.0 (Development Version)
-* Variables are now created as materialized by default instead of derived. If you prefer the 
-  old behavior set environment variable `R_CRUNCH_DEFAULT_DERIVED` or option 
-  `crunch.default.derived` to TRUE. See `?toVariable` for more information (#648).
+* Variables can now be created as materialized by default instead of derived, 
+  by setting environment variable `R_CRUNCH_DEFAULT_DERIVED` or option 
+  `crunch.default.derived` to `FALSE`. See `?toVariable` for more information (#648).
   
 * The concept of a personal folder is being removed from the API imminently. This has
   a few implications for rcrunch:

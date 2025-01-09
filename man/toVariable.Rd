@@ -56,7 +56,7 @@ for a complete list of valid attributes.}
 materialized on creation (saved as data, which can have performance benefits
 in certain situation) and when \code{TRUE} indicates it should remain derived
 (saved as an expression that can update along with the underlying data)
-Defaults to \code{FALSE} unless \code{envOrOption('crunch.default.derived')} has been set.}
+Defaults to \code{TRUE} unless \code{envOrOption('crunch.default.derived')} has been set.}
 }
 \value{
 A \code{VariableDefinition} object. To add this to a dataset, either
