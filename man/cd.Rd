@@ -31,7 +31,7 @@ given a relative path specification.
 }
 \examples{
 \dontrun{
-ds <- loadDataset("Example survey")
+ds <- loadDataset("Example survey", project = "Studies")
 demo <- cd(ds, "Demographics")
 names(demo)
 # Or with \%>\%

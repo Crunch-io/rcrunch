@@ -5,7 +5,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
     with_mock_crunch({
         ds <- cachedLoadDataset("test ds")
         ds2 <- cachedLoadDataset("ECON.sav")
-        ds3 <- loadDataset("an archived dataset", kind = "archived")
+        ds3 <- loadDataset("2", "archived", project = NULL)
 
         today <- "2016-02-11"
 
@@ -15,7 +15,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
 
         test_that(
             "Dataset can be loaded without cache (tests otherwise unused lazy-var-cat code path)", {
-                httpcache::uncached(ds <- loadDataset("test ds"))
+                httpcache::uncached(ds <- loadDataset("1", project = NULL)) # test ds
                 expect_true(is.dataset(ds))
             })
 
@@ -486,7 +486,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
 
         with_consent({
             test_that("deleteDataset by name", {
-                expect_DELETE(deleteDataset("test ds"), self(ds))
+                expect_DELETE(deleteDataset("test ds", project = "Project One"), self(ds))
             })
             test_that("deleteDataset by URL", {
                 expect_DELETE(deleteDataset(self(ds)), self(ds))
@@ -512,7 +512,8 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             })
             expect_error(deleteDataset(ds), "Must confirm")
             expect_error(
-                deleteDataset("duplicated dataset"),
+                # I don't think this will be possible any more but it used to be in personal project?
+                deleteDataset("duplicated dataset", project = "http://app.crunch.io/api/projects/project_dup"),
                 paste(
                     dQuote("duplicated dataset"), "identifies 2 datasets.",
                     "To delete, please identify the dataset uniquely by URL or path."

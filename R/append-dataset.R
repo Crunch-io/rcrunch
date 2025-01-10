@@ -36,8 +36,8 @@
 #' variables, appended to it.
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("Survey, 2016")
-#' new_wave <- loadDataset("Survey, 2017")
+#' ds <- loadDataset("Survey, 2016", project = "client 1")
+#' new_wave <- loadDataset("Survey, 2017", project = "client 1")
 #' ds <- appendDataset(ds, new_wave)
 #' }
 #' @export

@@ -11,6 +11,7 @@
         "projects": "/api/projects/",
         "geodata": "/api/geodata/",
         "dashboards": "/api/dashboards/",
+        "documents": "/api/documents/",
         "lobs": "/api/lobs/",
         "roles": "/api/roles/",
         "integrations": "/api/integrations/",

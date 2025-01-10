@@ -46,7 +46,7 @@ setGeneric("toVariable", function(x, ...) standardGeneric("toVariable"))
 #' materialized on creation (saved as data, which can have performance benefits
 #' in certain situation) and when `TRUE` indicates it should remain derived
 #' (saved as an expression that can update along with the underlying data)
-#' Defaults to `FALSE` unless `envOrOption('crunch.default.derived')` has been set.
+#' Defaults to `TRUE` unless `envOrOption('crunch.default.derived')` has been set.
 setMethod("toVariable", "CrunchVarOrExpr", function(
         x,
         ...,
@@ -233,5 +233,5 @@ categoriesFromLevels <- function(level_vect) {
 }
 
 derivedVariableDefault <- function() {
-    envOrOption("crunch.default.derived", FALSE, expect_lgl = TRUE)
+    envOrOption("crunch.default.derived", TRUE, expect_lgl = TRUE)
 }

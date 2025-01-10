@@ -67,7 +67,7 @@ whether the numeric vector falls between 1 and 5 or 5 and 10.
 }
 \examples{
 \dontrun{
-ds <- loadDataset("mtcars")
+ds <- loadDataset("mtcars", project = "p1")
 ds$cat_var <- cut(ds$mpg,
     breaks = c(10, 15, 20),
     labels = c("small", "medium"), name = "Fuel efficiency"

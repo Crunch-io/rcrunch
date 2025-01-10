@@ -386,7 +386,7 @@ with_mock_crunch({
     })
 
 
-    ds_catdate <- loadDataset("cat date test")
+    ds_catdate <- loadDataset("b9d811", project = NULL)
     cats <- categories(ds_catdate$cat_set)
 
     test_that("catdates getters/setters", {

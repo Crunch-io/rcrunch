@@ -21,19 +21,18 @@ One of the powerful features of working with Crunch is that you and all of your 
 ## Materialized vs Derived Variables
 A powerful feature of crunch is that when you create variables derived from other variables, they retain their functional connection on the server, such that changes to the input variables automatically propagate to the derived variable. In contrast, materialized variables are saved as the data and so do not update when the underly data updates.
 
-Before rcrunch version 1.31.0, the default was to create derived variables. However we've found that it is often preferable to work wit the more performant materialized variables and so that is now the default.
-
-The rest of this vignette is talking about derived variables, and so we'll use the global option to create derived variables instead of materialized. Alternatively, most variable creation functions have a derived argument which you can set on a per-variable basis, or if you're working with an expression directly, you can pass a `derived` argument to the `VariableDefinition()` function.
+The default is to create derived variables. However we've found that it is often preferable to work wit the more performant materialized variables and so there is a global default option that you can set to change the behavior. Also, most variable creation functions have a derived argument which you can set on a per-variable basis, or if you're working with an expression directly, you can pass a `derived` argument to the `VariableDefinition()` function.
 
 ```{r, eval=FALSE}
-# Setting the global default to TRUE (derived)
-set_crunch_opts(crunch.default.derived = TRUE)
-
 # Using the `derive` argument in `VariableDefinition()`
 ds$force_materialized_age <- VariableDefinition(2015 - ds$birthyr, derived = FALSE)
 
 # Using the `derive` argument in `deriveArray()`
 ds$force_materialiazed_array <- deriveArray(list(ds$v1, ds$v2), name = "v_arry", derived = FALSE)
+
+# Could set the global default to FALSE (materialized)
+# set_crunch_opts(crunch.default.derived = FALSE)
+# (Note that the rest of this vignette assumes derived)
 ```
 
 ## Creating derived variables

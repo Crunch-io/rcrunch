@@ -1,0 +1,114 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/projects/f8eec3/",
+    "catalogs": {
+        "datasets": "/api/projects/f8eec3/datasets/",
+        "members": "/api/projects/f8eec3/members/",
+        "users": "/api/projects/f8eec3/users/",
+        "teams": "/api/projects/f8eec3/teams/",
+        "documents": "/api/projects/f8eec3/documents/",
+        "project": "/api/projects/264e6b/"
+    },
+    "views": {
+        "templates": "/api/projects/f8eec3/templates/",
+        "logo": "/api/projects/f8eec3/logo/",
+        "execute": "/api/projects/f8eec3/execute/"
+    },
+    "body": {
+        "name": "rcrunch vignette data",
+        "id": "f8eec3",
+        "description": "",
+        "account": "/api/accounts/00001/",
+        "permissions": {
+            "view": true,
+            "edit": true,
+            "moderator": true
+        },
+        "auth_role_names": [
+            "Admin",
+            "-",
+            "-"
+        ],
+        "modification_time": "2024-11-21T19:04:10.835000",
+        "access_time": "2024-11-21T19:04:10.781000",
+        "suspended": false,
+        "homepage": null,
+        "path": "examples|rcrunch vignette data",
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "palette": {
+            "brand": {
+                "primary": "#0064a4",
+                "secondary": "#107e64",
+                "message": "#712480"
+            }
+        },
+        "profiles_branding": false,
+        "templates": {
+            "powerpoint": "https://s.crunch.io/act_templates/account-crunch-dxtwsa-powerpoint.pptx"
+        },
+        "app_settings": {
+            "email_templates": {
+                "ADD_RECOGNIZED_USER_TO_PROJECT": {
+                    "body": "You have been granted {permission_type} access to the {folder_name} in the {organization_name} organization at <a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">Crunch.io<\/a>.\n\nThis access was granted by {inviter_name}\n\nYou can access this folder at {folder_link}",
+                    "subject": "You have been given access to the {folder_name} folder in {organization_name}"
+                },
+                "ADD_UNRECOGNIZED_USER_TO_PROJECT": {
+                    "body": "You have been invited to access {organization_name}'s data on <a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">Crunch.io<\/a> by {inviter_name}.\n\n<a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">Crunch.io<\/a> is a collaborative platform for advanced analytics in the cloud - a friendly environment for data exploration, modeling, and interactive graphics.\n\nTo create a password and sign in, click the following link or cut and paste this link into your browser:\n\n{password_reset_link}\n\nFor more information about <a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">Crunch.io<\/a>, go to <a style=\"font-size:16px; font-family:Arial, sans-serif; color:#626262; font-weight:normal; text-decoration:none;\" href=\"http://crunch.io/\">www.crunch.io<\/a>.",
+                    "subject": "You have been invited to join {organization_name} on Crunch.io."
+                }
+            },
+            "report_issue_url": "https://yougov.com",
+            "email_sender_name": "",
+            "profiles_mode": false
+        },
+        "settings": {
+
+        },
+        "inherited_settings": {
+            "disallow_dataset_shares": false,
+            "stop_dataset_shares": true
+        }
+    },
+    "index": {
+        "/api/datasets/ba16ac/": {
+            "account": "/api/accounts/00001/",
+            "creation_time": "2024-11-21T19:04:02.213000+00:00",
+            "modification_time": "2024-11-21T19:04:10.835000+00:00",
+            "name": "example vignette ds - subtotal",
+            "description": "A dataset to illustrate the API",
+            "folder_card_label": "",
+            "id": "ba16ac",
+            "type": "dataset",
+            "is_published": true,
+            "view_of": null,
+            "archived": false,
+            "streaming": "no",
+            "owner_id": "/api/projects/f8eec3/",
+            "owner_name": "rcrunch vignette data",
+            "current_editor": "/api/users/27a158/",
+            "current_editor_name": "Greg",
+            "start_date": null,
+            "end_date": null,
+            "access_time": "2024-11-21T19:04:02.155000+00:00",
+            "permissions": {
+                "view": true,
+                "edit": true
+            },
+            "size": {
+                "rows": 20,
+                "unfiltered_rows": 20,
+                "columns": 12,
+                "variables": 12,
+                "source_columns": 15,
+                "derivations": 0
+            }
+        }
+    },
+    "graph": [
+        "/api/datasets/ba16ac/"
+    ]
+}

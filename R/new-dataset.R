@@ -22,16 +22,20 @@
 #' function uses the name of the R object, or, if passing a file, the file name.
 #' @param ... additional arguments passed to [createDataset()], or `schema` if
 #'  you're upload Triple-S
+#' @param project A `ProjectFolder` object, string path that could be passed to [`cd()`]
+#' relative to the root project, or a URL for a `ProjectFolder`. If left empty,
+#' rcrunch will look in `envOrOption('crunch.default.project')` and error if nothing
+#' is found.
 #' @return If successful, an object of class CrunchDataset.
 #' @examples
 #' \dontrun{
-#' ds <- newDataset(mtcars, "cars")
-#' ds <- newDataset("mysurvey.sav")
+#' ds <- newDataset(mtcars, "cars", project = "studies/cars")
+#' ds <- newDataset("mysurvey.sav", project = "client1")
 #' }
 #' @export
 #' @seealso [newDatasetFromFile()]; [newDatasetByColumn()] for an alternate
 #' upload method.
-newDataset <- function(x, name = NULL, ...) {
+newDataset <- function(x, name = NULL, ..., project = defaultCrunchProject()) {
     Call <- match.call()
     if (is.character(x)) {
         ## Assume we have a file/URL
@@ -51,7 +55,7 @@ newDataset <- function(x, name = NULL, ...) {
         name <- deparseAndFlatten(substitute(x), max_length = 40)
     }
     ## TODO: something with paginating the CSV batching if lots of data
-    d <- prepareDataForCrunch(x, name = name, ...)
+    d <- prepareDataForCrunch(x, name = name, ..., project = project)
     ds <- createWithPreparedData(d)
     invisible(ds)
 }
@@ -68,13 +72,14 @@ newDataset <- function(x, name = NULL, ...) {
 #' the [Crunch API documentation](https://crunch.io/api/reference/#post-/datasets/).
 #' @param ... additional arguments for the POST to create the dataset, such as
 #' "description".
+#' @inheritParams newDataset
 #' @return An object of class CrunchDataset.
 #' @seealso [newDataset()]
 #' @keywords internal
 #' @export
-createDataset <- function(name, body, ...) {
+createDataset <- function(name, body, ..., project = defaultCrunchProject()) {
     if (missing(body)) {
-        body <- wrapEntity(name = name, ...)
+        body <- wrapEntity(name = name, ..., project = resolveProjectURL(project))
     }
     dataset_url <- crPOST(sessionURL("datasets"), body = toJSON(body))
     dropDatasetsCache()
@@ -91,12 +96,13 @@ createDataset <- function(name, body, ...) {
 #' @param ... additional arguments passed to [createDataset].
 #' "name" will be required by the Crunch server but is not required by this
 #' function.
+#' @inheritParams newDataset
 #' @return A data.frame that is a transformation of \code{data} suitable for
 #' uploading to Crunch, also containing a "metadata" attribute that is
 #' the associated Crunch metadata.
 #' @seealso createWithPreparedData writePreparedData
 #' @export
-prepareDataForCrunch <- function(data, ...) {
+prepareDataForCrunch <- function(data, ..., project = defaultCrunchProject()) {
     ## Get all the things
     progressMessage("Processing the data")
     vars <- lapply(
@@ -116,7 +122,7 @@ prepareDataForCrunch <- function(data, ...) {
         v[["values"]] <- NULL
         return(v)
     })
-    meta <- shojifyDatasetMetadata(vars, ...)
+    meta <- shojifyDatasetMetadata(vars, ..., project = project)
 
     ## Return the data frame to write to csv to upload, with the metadata to
     ## POST as an attribute on it.
@@ -228,12 +234,15 @@ uploadData <- function(dataset, data, strict = TRUE, first_batch = TRUE) {
 #' @param order a valid "order" payload: list containing either aliases or
 #' list(group, entities)
 #' @param ... dataset entity metadata. "name" is required.
+#' @inheritParams newDataset
 #' @return list suitable for JSONing and POSTing to create a dataset
 #' @export
 #' @keywords internal
-shojifyDatasetMetadata <- function(metadata, order = I(names(metadata)), ...) {
+shojifyDatasetMetadata <- function(
+        metadata, order = I(names(metadata)), ..., project = defaultCrunchProject()
+) {
     tbl <- list(element = "crunch:table", metadata = metadata, order = order)
-    return(wrapEntity(..., table = tbl))
+    return(wrapEntity(..., project = resolveProjectURL(project), table = tbl))
 }
 
 #' Upload a data.frame column-by-column to make a new dataset
@@ -324,16 +333,46 @@ newDatasetFromFile <- function(x, name = basename(x), schema, ...) {
 #'
 #' @param name string name of the fixture dataset. Currently "pets" is the only
 #' one available.
+#' @inheritParams newDataset
 #' @return A new `CrunchDataset` entity.
 #' @export
-newExampleDataset <- function(name = "pets") {
+newExampleDataset <- function(name = "pets", project = defaultCrunchProject()) {
     name <- match.arg(name)
     m <- fromJSON(
         system.file("example-datasets", paste0(name, ".json"), package = "crunch"),
         simplifyVector = FALSE
     )
+    m$body$project <- resolveProjectURL(project)
     return(createWithMetadataAndFile(
         m,
         system.file("example-datasets", paste0(name, ".csv"), package = "crunch")
     ))
+}
+
+defaultCrunchProject <- function(default = NULL) {
+    path <- envOrOption("crunch.default.project", default = default)
+    if (is.null(path)) {
+        halt("No default project found in `envOrOption('crunch.default.project')`, must specify project")
+    }
+    path
+}
+
+
+resolveProjectURL <- function(x) {
+    if (is.project(x)) {
+        return(self(x))
+    } else if (is.character(x) && is.crunchURL(x)) {
+        return(x)
+    } else if (is.character(x)) {
+        project <- try(cd(projects(), x), silent = TRUE)
+        if (inherits(project, "try-error")) {
+            halt(
+                "Could not get project ", x, " because ",
+                conditionMessage(attr(project, "condition"))
+            )
+        }
+        return(self(project))
+    }
+
+    halt("project must be a `CrunchProject` object, a URL, or a path to a project from the root")
 }

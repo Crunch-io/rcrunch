@@ -1,0 +1,25 @@
+structure(list(url = "/api/datasets/", status_code = 202L, headers = structure(list(
+    date = "Thu, 21 Nov 2024 18:53:15 GMT", `content-type` = "application/json;charset=utf-8", 
+    `content-length` = "175", location = "/api/datasets/8bf19e/", 
+    server = "CherryPy/18.9.0", allow = "GET, HEAD, OPTIONS, PATCH, POST", 
+    vary = "Cookie, Accept-Encoding", `x-frame-options` = "DENY", 
+    `x-xss-protection` = "1; mode=block", `strict-transport-security` = "max-age=31536000; includeSubDomains", 
+    `x-content-type-options` = "nosniff", `x-timing` = "", `content-encoding` = "gzip"), class = c("insensitive", 
+"list")), all_headers = list(list(status = 202L, version = "HTTP/2", 
+    headers = structure(list(date = "Thu, 21 Nov 2024 18:53:15 GMT", 
+        `content-type` = "application/json;charset=utf-8", `content-length` = "175", 
+        location = "/api/datasets/8bf19e/", server = "CherryPy/18.9.0", 
+        allow = "GET, HEAD, OPTIONS, PATCH, POST", vary = "Cookie, Accept-Encoding", 
+        `x-frame-options` = "DENY", `x-xss-protection` = "1; mode=block", 
+        `strict-transport-security` = "max-age=31536000; includeSubDomains", 
+        `x-content-type-options` = "nosniff", `x-timing` = "", 
+        `content-encoding` = "gzip"), class = c("insensitive", 
+    "list")))), cookies = structure(list(domain = logical(0), 
+    flag = logical(0), path = logical(0), secure = logical(0), 
+    expiration = structure(numeric(0), class = c("POSIXct", "POSIXt"
+    )), name = logical(0), value = logical(0)), row.names = integer(0), class = "data.frame"), 
+    content = charToRaw("{\"element\": \"shoji:view\", \"self\": \"/api/datasets/\", \"value\": \"/api/progress/\"}"), 
+    date = structure(1732215195, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 2e-05, 
+    connect = 0, pretransfer = 0.000323, starttransfer = 0.579913, 
+    total = 0.579996)), class = "response")

@@ -8,17 +8,17 @@
         "progress": 100,
         "message": "complete",
         "result": {
-            "id": "import-batch:115756$538f1434-6cb4-40c9-b143-9f5bd02fe6a2",
+            "id": "import-batch:0e7d58$5c5d81e8-482c-4740-8918-badfa3a2b49a",
             "response": {
-                "id": 173108243942,
-                "source_id": "deebda",
+                "id": 173652430339,
+                "source_id": "839935",
                 "target_columns": 23,
                 "target_rows": 0,
                 "status": "imported",
                 "source_columns": 23,
                 "source_rows": 1634,
-                "task_id": "import-batch:115756$538f1434-6cb4-40c9-b143-9f5bd02fe6a2",
-                "dataset_id": "115756"
+                "task_id": "import-batch:0e7d58$5c5d81e8-482c-4740-8918-badfa3a2b49a",
+                "dataset_id": "0e7d58"
             },
             "type": "response"
         }

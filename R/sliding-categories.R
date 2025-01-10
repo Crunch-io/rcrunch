@@ -24,7 +24,7 @@
 #'     wave = factor(c("a", "b", "c", "d", "e"))
 #' )
 #'
-#' ds <- newDataset(data, "Sliding Categories")
+#' ds <- newDataset(data, "Sliding Categories", project = "p1")
 #'
 #' # Make an MR variable where subvariable is 1 step apart, and with 3 categories wide
 #' # and name subvariables with vector

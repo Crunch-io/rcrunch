@@ -159,7 +159,8 @@ test_options <- temp.options(
         ),
         crunch.show.progress = FALSE,
         crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE, expect_lgl = TRUE),
-        message.auth.info = TRUE
+        message.auth.info = TRUE,
+        crunch.default.project = "RCRUNCH_TESTS"
     )
 )
 
@@ -169,6 +170,7 @@ with_test_authentication <- function(expr) {
 
         with(test_options, {
             ## Authenticate.
+            newProject(envOrOption("crunch.default.project"))
             on.exit({
                 httpcache::clearCache()
                 ## Delete our seen things
@@ -290,8 +292,18 @@ cachedLoadDataset <- function(dataset, ...) {
         stop("non-dataset arguments ignored in cached datasets")
     }
     if (!dataset %in% names(ds_cache_env)) {
+        # replicate old dataset by name behavior
+        ds_id <- switch(
+            dataset,
+            "test ds" = "1",
+            "ECON.sav" = "3",
+            "test ds deck" = "4",
+            "Vegetables example" = "veg",
+            stop("Update cachedLoadDataset name->id crosswalk")
+        )
+
         # Don't need `with_mock_crunch()` because caller is already inside it
-        ds_cache_env[[dataset]] <- loadDataset(dataset)
+        ds_cache_env[[dataset]] <- loadDataset(ds_id, project = NULL)
     }
     ds_cache_env[[dataset]]
 }

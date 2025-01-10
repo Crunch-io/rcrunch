@@ -1,0 +1,178 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/ba16ac/variables/?relative=on",
+    "catalogs": {
+        "private": "/api/datasets/ba16ac/variables/private/",
+        "suggest_alias": "/api/datasets/ba16ac/variables/suggest_alias/"
+    },
+    "orders": {
+        "hier": "/api/datasets/ba16ac/variables/hier/",
+        "favorites": "/api/datasets/ba16ac/variables/favorites/",
+        "weights": "/api/datasets/ba16ac/variables/weights/"
+    },
+    "description": "List of Variables of this dataset",
+    "index": {
+        "000007/": {
+            "name": "Pet",
+            "description": "What is your favorite pet?",
+            "notes": "",
+            "alias": "q1",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "000007",
+            "type": "categorical",
+            "scale": "interval"
+        },
+        "000008/": {
+            "name": "Pet name",
+            "description": "What is your favorite pet's maiden name?",
+            "notes": "",
+            "alias": "q3",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "000008",
+            "type": "text"
+        },
+        "000003/": {
+            "name": "Number of dogs",
+            "description": "",
+            "notes": "",
+            "alias": "ndogs",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "000003",
+            "type": "numeric"
+        },
+        "000000/": {
+            "name": "All pets owned",
+            "description": "Do you have any of these animals as pets? Please select all that apply.",
+            "notes": "",
+            "alias": "allpets",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "000000",
+            "type": "multiple_response",
+            "uniform_basis": false,
+            "subvariables": [
+                "000000/subvariables/0001/",
+                "000000/subvariables/0002/",
+                "000000/subvariables/0003/"
+            ],
+            "subvariables_catalog": "000000/subvariables/"
+        },
+        "000006/": {
+            "name": "Pets by location",
+            "description": "Name the kinds of pets you have at these locations.",
+            "notes": "",
+            "alias": "petloc",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "000006",
+            "type": "categorical_array",
+            "scale": "interval",
+            "subvariables": [
+                "000006/subvariables/0001/",
+                "000006/subvariables/0002/"
+            ],
+            "subvariables_catalog": "000006/subvariables/"
+        },
+        "000004/": {
+            "name": "Number of dogs -- With papers",
+            "description": "How many dogs do you have?",
+            "notes": "",
+            "alias": "ndogs_a",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "000004",
+            "type": "numeric"
+        },
+        "000005/": {
+            "name": "Number of dogs -- Mutts",
+            "description": "How many dogs do you have?",
+            "notes": "",
+            "alias": "ndogs_b",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "000005",
+            "type": "numeric"
+        },
+        "000002/": {
+            "name": "Country",
+            "description": "",
+            "notes": "",
+            "alias": "country",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "000002",
+            "type": "categorical"
+        },
+        "000009/": {
+            "name": "Wave",
+            "description": "",
+            "notes": "",
+            "alias": "wave",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "000009",
+            "type": "datetime",
+            "resolution": "D",
+            "rollup_resolution": null
+        },
+        "000001/": {
+            "name": "Case ID",
+            "description": "",
+            "notes": "",
+            "alias": "caseid",
+            "discarded": true,
+            "secure": false,
+            "hidden": true,
+            "derived": false,
+            "id": "000001",
+            "type": "numeric"
+        },
+        "1c7420/": {
+            "name": "like_dogs",
+            "description": "",
+            "notes": "",
+            "alias": "like_dogs",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "1c7420",
+            "type": "categorical",
+            "scale": "interval"
+        },
+        "67a6b3/": {
+            "name": "like_cats",
+            "description": "",
+            "notes": "",
+            "alias": "like_cats",
+            "discarded": false,
+            "secure": false,
+            "hidden": false,
+            "derived": false,
+            "id": "67a6b3",
+            "type": "categorical",
+            "scale": "interval"
+        }
+    }
+}

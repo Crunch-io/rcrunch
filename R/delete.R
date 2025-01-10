@@ -161,11 +161,14 @@ setMethod("delete", "ANY", function(x, ...) {
 #' `CrunchDataset`. Unless `x` is a parsed folder path, it can only be of
 #' length 1--for your protection, this function is not vectorized.
 #' @param ... additional parameters passed to [delete()]
+#' @param project `ProjectFolder` entity, character name (path) to a project.
+#' Defaults to the project set in `envOrOption('crunch.default.project')`
+#' or "./" (the project root), if the default is not set.
 #' @return (Invisibly) the API response from deleting the dataset
 #' @seealso [delete()]; [cd()] for details of parsing and walking dataset
 #' folder/project paths.
 #' @export
-deleteDataset <- function(x, ...) {
+deleteDataset <- function(x, ..., project = defaultCrunchProject("./")) {
     if (is.dataset(x)) {
         return(delete(x, ...))
     }
@@ -178,7 +181,7 @@ deleteDataset <- function(x, ...) {
             }
         } else {
             # Assume it is a path or name
-            found <- lookupDataset(x)
+            found <- lookupDataset(x, project = project)
             if (length(found) != 1) {
                 halt(
                     dQuote(x), " identifies ", length(found),

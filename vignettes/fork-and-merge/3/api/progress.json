@@ -6,6 +6,21 @@
     },
     "value": {
         "progress": 100,
-        "message": "complete"
+        "message": "complete",
+        "result": {
+            "id": "import-batch:5057a1$20be2032-ccbd-4eae-aa43-ea47a335797a",
+            "response": {
+                "id": 173221521594,
+                "source_id": "da5c55",
+                "target_columns": 23,
+                "target_rows": 0,
+                "status": "imported",
+                "source_columns": 23,
+                "source_rows": 1634,
+                "task_id": "import-batch:5057a1$20be2032-ccbd-4eae-aa43-ea47a335797a",
+                "dataset_id": "5057a1"
+            },
+            "type": "response"
+        }
     }
 }
