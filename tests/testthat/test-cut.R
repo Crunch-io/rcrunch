@@ -142,6 +142,7 @@ with_mock_crunch({
                     )
                 )
             ),
+            derived = FALSE,
             name = "new_var"
         )
 
@@ -235,6 +236,7 @@ with_mock_crunch({
                     )
                 )
             ),
+            derived = FALSE,
             name = "new_var"
         )
 
@@ -304,6 +306,7 @@ with_mock_crunch({
                     )
                 )
             ),
+            derived = FALSE,
             name = "new_var"
         )
 
@@ -398,6 +401,7 @@ with_mock_crunch({
                     )
                 )
             ),
+            derived = FALSE,
             name = "new_var"
         )
 
@@ -614,6 +618,7 @@ with_mock_crunch({
                         )
                     )
                 ),
+            derived = FALSE,
             name = "cut month"
             ), class = "VariableDefinition")
 

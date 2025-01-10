@@ -284,6 +284,7 @@ makeWeight <- function(..., name) {
     all_dots <- list(..., name = name)
     named_entries <- names(all_dots) != ""
     out <- all_dots[named_entries]
+    if (!"derived" %in% names(out)) out$derived <- derivedVariableDefault()
     expr_list <- all_dots[!named_entries]
 
     # args below must be an unnamed list, so we remove the names from expr_list

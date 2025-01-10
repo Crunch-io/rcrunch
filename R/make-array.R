@@ -241,7 +241,11 @@ makeMRFromText <- function(var,
 
     # hide the original variable
     var <- hide(var)
-    return(VariableDefinition(derivation = derivation, name = name, ...))
+    # Add default derived behavior
+    args <- list(derivation = derivation, name = name, ...)
+    if (!"derived" %in% names(args)) args$derived <- derivedVariableDefault()
+
+    return(do.call(VariableDefinition, args))
 }
 
 #' Create subvariable derivation expressions

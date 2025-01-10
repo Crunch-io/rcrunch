@@ -19,7 +19,7 @@
 \usage{
 toVariable(x, ...)
 
-\S4method{toVariable}{CrunchVarOrExpr}(x, ...)
+\S4method{toVariable}{CrunchVarOrExpr}(x, ..., derived = derivedVariableDefault())
 
 \S4method{toVariable}{character}(x, ...)
 
@@ -51,6 +51,12 @@ toVariable(x, ...)
 \item{...}{Additional metadata fields for the variable, such as "name" and
 "description". See the \href{https://crunch.io/api/reference/#post-/datasets/-dataset_id-/variables/}{API documentation}
 for a complete list of valid attributes.}
+
+\item{derived}{Logical, when \code{FALSE} indicates a variable should be
+materialized on creation (saved as data, which can have performance benefits
+in certain situation) and when \code{TRUE} indicates it should remain derived
+(saved as an expression that can update along with the underlying data)
+Defaults to \code{FALSE} unless \code{envOrOption('crunch.default.derived')} has been set.}
 }
 \value{
 A \code{VariableDefinition} object. To add this to a dataset, either
