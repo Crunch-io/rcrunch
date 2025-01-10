@@ -37,6 +37,21 @@
             "suspended": false,
             "subproject_count": 0
         },
+        "/api/projects/264e6b/": {
+            "name": "examples",
+            "id": "264e6b",
+            "account": "/api/accounts/00001/",
+            "description": "",
+            "permissions": {
+                "view": true,
+                "edit": true
+            },
+            "type": "project",
+            "modification_time": "2024-11-21T19:04:24.194000",
+            "access_time": "2024-11-21T19:04:27.085000",
+            "suspended": false,
+            "subproject_count": 1
+        },
         "/api/projects/5c7dfd/": {
             "name": "DRNS",
             "id": "5c7dfd",
@@ -148,7 +163,7 @@
             "account": "/api/accounts/00001/",
             "description": "",
             "permissions": {
-                "view": true,
+                "view": false,
                 "edit": false
             },
             "type": "project",
@@ -182,8 +197,8 @@
                 "edit": true
             },
             "type": "project",
-            "modification_time": "2024-09-05T17:27:56.245000",
-            "access_time": "2024-09-05T17:27:55.143000",
+            "modification_time": "2025-01-08T19:21:25.990000",
+            "access_time": "2025-01-09T20:16:48.835000",
             "suspended": false,
             "subproject_count": 1
         },
@@ -193,7 +208,7 @@
             "account": "/api/accounts/00001/",
             "description": "",
             "permissions": {
-                "view": true,
+                "view": false,
                 "edit": false
             },
             "type": "project",
@@ -226,8 +241,8 @@
             "edit": true
         },
         "auth_role_names": null,
-        "modification_time": "2024-11-13T15:38:24.226000",
-        "access_time": "2024-11-13T17:53:21.269000",
+        "modification_time": "2025-01-08T19:21:25.990000",
+        "access_time": "2025-01-09T20:16:48.835000",
         "suspended": false,
         "homepage": null,
         "path": "Projects catalog"

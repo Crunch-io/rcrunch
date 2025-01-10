@@ -1,0 +1,29 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/0e7d58/folders/hidden/",
+    "catalogs": {
+        "parents": "/api/datasets/0e7d58/folders/hidden/parents/"
+    },
+    "index": {
+        "../../variables/000022/": {
+            "name": "WantWorkLanguage",
+            "description": "Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?",
+            "notes": "",
+            "alias": "WantWorkLanguage",
+            "discarded": true,
+            "secure": false,
+            "hidden": true,
+            "derived": false,
+            "id": "000022",
+            "type": "text"
+        }
+    },
+    "body": {
+        "name": "Hidden",
+        "path": "|"
+    },
+    "graph": [
+        "../../variables/000022/"
+    ],
+    "size": 1
+}

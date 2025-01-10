@@ -1,22 +1,22 @@
 {
     "element": "shoji:entity",
-    "self": "/api/projects/264e6b/",
+    "self": "/api/projects/ad45c0/",
     "catalogs": {
-        "datasets": "/api/projects/264e6b/datasets/",
-        "members": "/api/projects/264e6b/members/",
-        "users": "/api/projects/264e6b/users/",
-        "teams": "/api/projects/264e6b/teams/",
-        "documents": "/api/projects/264e6b/documents/",
-        "project": "/api/projects/"
+        "datasets": "/api/projects/ad45c0/datasets/",
+        "members": "/api/projects/ad45c0/members/",
+        "users": "/api/projects/ad45c0/users/",
+        "teams": "/api/projects/ad45c0/teams/",
+        "documents": "/api/projects/ad45c0/documents/",
+        "project": "/api/projects/264e6b/"
     },
     "views": {
-        "templates": "/api/projects/264e6b/templates/",
-        "logo": "/api/projects/264e6b/logo/",
-        "execute": "/api/projects/264e6b/execute/"
+        "templates": "/api/projects/ad45c0/templates/",
+        "logo": "/api/projects/ad45c0/logo/",
+        "execute": "/api/projects/ad45c0/execute/"
     },
     "body": {
-        "name": "examples",
-        "id": "264e6b",
+        "name": "rcrunch vignette data",
+        "id": "ad45c0",
         "description": "",
         "account": "/api/accounts/00001/",
         "permissions": {
@@ -29,11 +29,11 @@
             "-",
             "-"
         ],
-        "modification_time": "2024-11-21T19:04:24.194000",
-        "access_time": "2024-11-21T19:04:27.085000",
+        "modification_time": null,
+        "access_time": null,
         "suspended": false,
         "homepage": null,
-        "path": "examples",
+        "path": "examples|rcrunch vignette data",
         "logo": {
             "large": "",
             "small": "",
@@ -75,22 +75,9 @@
         }
     },
     "index": {
-        "/api/projects/ad45c0/": {
-            "name": "rcrunch vignette data",
-            "id": "ad45c0",
-            "account": "/api/accounts/00001/",
-            "description": "",
-            "permissions": {
-                "view": true,
-                "edit": true
-            },
-            "type": "project",
-            "modification_time": null,
-            "access_time": null,
-            "suspended": false
-        }
+
     },
     "graph": [
-        "/api/projects/ad45c0/"
+
     ]
 }
