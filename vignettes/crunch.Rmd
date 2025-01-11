@@ -15,8 +15,10 @@ library(crunch)
 ```
 
 ```{r, results='hide', include = FALSE}
-set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
+set_crunch_opts("crunch.api" = "https://team.crunch.io/api/")
 library(httptest)
+run_cleanup <- !dir.exists("crunch")
+httpcache::clearCache()
 start_vignette("crunch")
 ```
 
@@ -77,6 +79,13 @@ To get started, we're going to import a dataset from R to Crunch. If you already
 
 There are multiple ways to create a new dataset. In the web application, you can upload files to create datasets using the file loader. From **crunch**, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats.
 
+Crunch datasets are stored in "Project folders". You can create one like this:
+```{r project}
+my_project <- newProject("examples/rcrunch vignette data")
+```
+
+Then when creating or loading datasets, you can pass in either `my_project` or the path to it ("examples/vignette data").
+
 We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/) which is filtered on those respondents who reported having been R users and selecting a handful of variables.
 
 ```{r dimensions}
@@ -86,7 +95,7 @@ dim(SO_survey)
 You can create a dataset from any `data.frame` you have in your R session with `newDataset`. Let's use that sample dataset:
 
 ```{r load dataset, message=FALSE}
-ds <- newDataset(SO_survey, name="Stack Overflow Developer Survey 2017")
+ds <- newDataset(SO_survey, name="Stack Overflow Developer Survey 2017", project=my_project)
 dim(ds)
 ```
 
@@ -220,7 +229,7 @@ Crunch also has a special variable type for multiple-response data. These are su
 knitr::kable(SO_survey[1:5, "HaveWorkedLanguage", drop = FALSE], row.names = FALSE)
 ```
 
-To analyze this data without Crunch you would usually go through an elaborate data cleaning process to split the delimited variable up into its constituent parts, and then reshape it into a format which is more amenable to analysis. With Crunch, you can make use of multiple response variables to store it in a compact form, and analyze it just like any other variable. Since delimited text is such a common way of storing this kind of answer, Crunch allows you to create a variable directly from the text. This function creates a _derived variable_, which means that if you make changes to the data in the initial variable, the derived variable will change along with it.
+To analyze this data without Crunch you would usually go through an elaborate data cleaning process to split the delimited variable up into its constituent parts, and then reshape it into a format which is more amenable to analysis. With Crunch, you can make use of multiple response variables to store it in a compact form, and analyze it just like any other variable. Since delimited text is such a common way of storing this kind of answer, Crunch allows you to create a variable directly from the text.
 
 ```{r state change6, include=FALSE}
 change_state()
@@ -251,13 +260,25 @@ subvariables(ds$WantWorkLanguageMR) <- subvariables(ds$WantWorkLanguageMR)[names
 knitr::include_graphics("images/WantWorkMRReodered.png")
 ```
 
-#### Conclusion
+
+## Default Project Folder
+In the past there was a "Personal Folder" that users used as their default project. Though there no
+longer is a universal default folder like this, you can set one for yourself, by using the environment
+variable `R_CRUNCH_DEFAULT_PROJECT` and set that in your environment with `usethis::edit_r_environ()`
+like the API and API key.
+
+
+## Conclusion
 
 This vignette has gone through some of the basics of working with crunch in R including loading data, manipulating dataset properties, and creating array variables. The **crunch** package provides an extensive set of tools for working with survey data and nearly everything that can be done in the crunch web app can be accomplished programmatically using R. To learn more about specific use cases, check out some of the other articles:
 
 
 ```{r, include=FALSE}
 end_vignette()
+if (run_cleanup) {
+    with_consent(delete(ds))
+    with_consent(delete(my_project))
+}
 ```
 
 * [Variables](variables.html): cleaning and defining variable metadata

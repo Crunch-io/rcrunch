@@ -4,7 +4,7 @@
 \alias{newDataset}
 \title{Upload data to Crunch to make a new dataset}
 \usage{
-newDataset(x, name = NULL, ...)
+newDataset(x, name = NULL, ..., project = defaultCrunchProject())
 }
 \arguments{
 \item{x}{a \code{data.frame} or other rectangular R data object, or a string
@@ -16,6 +16,11 @@ function uses the name of the R object, or, if passing a file, the file name.}
 
 \item{...}{additional arguments passed to \code{\link[=createDataset]{createDataset()}}, or \code{schema} if
 you're upload Triple-S}
+
+\item{project}{A \code{ProjectFolder} object, string path that could be passed to \code{\link[=cd]{cd()}}
+relative to the root project, or a URL for a \code{ProjectFolder}. If left empty,
+rcrunch will look in \code{envOrOption('crunch.default.project')} and error if nothing
+is found.}
 }
 \value{
 If successful, an object of class CrunchDataset.
@@ -39,8 +44,8 @@ can with SPSS files. You should use the filename to the data file (ending in
 }
 \examples{
 \dontrun{
-ds <- newDataset(mtcars, "cars")
-ds <- newDataset("mysurvey.sav")
+ds <- newDataset(mtcars, "cars", project = "studies/cars")
+ds <- newDataset("mysurvey.sav", project = "client1")
 }
 }
 \seealso{

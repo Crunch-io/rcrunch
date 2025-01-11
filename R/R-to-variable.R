@@ -42,8 +42,20 @@ setGeneric("toVariable", function(x, ...) standardGeneric("toVariable"))
 
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "CrunchVarOrExpr", function(x, ...) {
-    structure(list(derivation = zcl(x), ...), class = "VariableDefinition")
+#' @param derived Logical, when `FALSE` indicates a variable should be
+#' materialized on creation (saved as data, which can have performance benefits
+#' in certain situation) and when `TRUE` indicates it should remain derived
+#' (saved as an expression that can update along with the underlying data)
+#' Defaults to `TRUE` unless `envOrOption('crunch.default.derived')` has been set.
+setMethod("toVariable", "CrunchVarOrExpr", function(
+        x,
+        ...,
+        derived = derivedVariableDefault()
+) {
+    structure(
+        list(derivation = zcl(x), ..., derived = derived),
+        class = "VariableDefinition"
+    )
 })
 
 #' @rdname toVariable
@@ -218,4 +230,8 @@ categoriesFromLevels <- function(level_vect) {
     return(c(lapply(seq_along(level_vect), function(i) {
         list(id = i, name = level_vect[i], numeric_value = i, missing = FALSE)
     }), list(.no.data)))
+}
+
+derivedVariableDefault <- function() {
+    envOrOption("crunch.default.derived", TRUE, expect_lgl = TRUE)
 }

@@ -1,0 +1,18 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/d0a0bf/folders/",
+    "catalogs": {
+        "public": "/api/datasets/d0a0bf/folders/public/",
+        "hidden": "/api/datasets/d0a0bf/folders/hidden/",
+        "personal": "/api/datasets/d0a0bf/folders/personal/",
+        "parents": "/api/datasets/d0a0bf/folders/public/parents/",
+        "secure": "/api/datasets/d0a0bf/folders/secure/"
+    },
+    "description": "The collection of variable folders for this dataset. Individual folders are available at folders/{id}/, but their arrangement is represented by multiple \"folder trees\", which you can visit recursively as the user navigates the tree.",
+    "views": {
+        "script": "/api/datasets/d0a0bf/folders/script/"
+    },
+    "index": {
+
+    }
+}

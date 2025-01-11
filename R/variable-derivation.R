@@ -123,6 +123,11 @@ setMethod("derivation<-", c("CrunchVariable", "ANY"), function(x, value) {
 # silently takes and discards `value` to make method dispatch easier
 integrateDerivedVar <- function(x, value) {
     if (is.derived(x)) {
+        warn_once(paste0(
+            "Materializing an existing derived variable is deprecated and will not work in the future. ",
+            "Prefer setting `derived=FALSE` when creating a variable over changing it later."
+        ), option = "warnIntegrateDerivedVar")
+
         payload <- toJSON(list(derived = FALSE))
         crPATCH(self(x), body = payload)
 

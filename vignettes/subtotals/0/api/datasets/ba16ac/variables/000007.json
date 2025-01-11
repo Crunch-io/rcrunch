@@ -1,0 +1,93 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/ba16ac/variables/000007/",
+    "catalogs": {
+        "parent": "/api/datasets/ba16ac/variables/",
+        "folder": "/api/datasets/ba16ac/folders/9ac2d8/"
+    },
+    "fragments": {
+        "user_settings": "/api/datasets/ba16ac/variables/000007/user_settings/",
+        "dataset": "/api/datasets/ba16ac/"
+    },
+    "views": {
+        "applied": "/api/datasets/ba16ac/variables/000007/applied/",
+        "cast": "/api/datasets/ba16ac/variables/000007/cast/",
+        "frequencies": "/api/datasets/ba16ac/variables/000007/frequencies/",
+        "summary": "/api/datasets/ba16ac/variables/000007/summary/",
+        "values": "/api/datasets/ba16ac/variables/000007/values/",
+        "script": "/api/datasets/ba16ac/variables/000007/script/"
+    },
+    "body": {
+        "name": "Pet",
+        "alias": "q1",
+        "description": "What is your favorite pet?",
+        "format": {
+            "summary": {
+                "digits": 0
+            }
+        },
+        "type": "categorical",
+        "id": "000007",
+        "view": {
+            "column_width": null,
+            "show_numeric_values": false,
+            "show_counts": false,
+            "include_missing": false
+        },
+        "notes": "",
+        "derived": false,
+        "discarded": false,
+        "hidden": false,
+        "secure": false,
+        "categories": [
+            {
+                "missing": false,
+                "numeric_value": 1,
+                "id": 1,
+                "name": "Cat"
+            },
+            {
+                "missing": false,
+                "numeric_value": 2,
+                "id": 2,
+                "name": "Dog"
+            },
+            {
+                "missing": false,
+                "numeric_value": 3,
+                "id": 3,
+                "name": "Bird"
+            },
+            {
+                "missing": true,
+                "numeric_value": 8,
+                "id": 8,
+                "name": "Skipped"
+            },
+            {
+                "missing": true,
+                "numeric_value": 9,
+                "id": 9,
+                "name": "Not Asked"
+            },
+            {
+                "id": -1,
+                "name": "No Data",
+                "numeric_value": null,
+                "missing": true
+            }
+        ],
+        "dataset_id": "ba16ac",
+        "missing_reasons": {
+            "Skipped": 8,
+            "Not Asked": 9,
+            "No Data": -1
+        },
+        "owner": null,
+        "private": false
+    },
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "/api/datasets/ba16ac/"
+    }
+}

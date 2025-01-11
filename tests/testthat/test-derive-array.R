@@ -14,7 +14,7 @@ with_mock_crunch({
             '[{"function":"array","args":[{"function":"make_frame","args":',
             '[{"map":{"0001":{"variable":"https://app.crunch.io/api/datasets',
             '/1/variables/gender/"}}},{"value":["0001"]}]}],"kwargs":{"numeric":{"value":false}}},', # nolint
-            '{"value":["Female"]}]},"name":"derivedMR","alias":"derived_mr"}'
+            '{"value":["Female"]}]},"derived":false,"name":"derivedMR","alias":"derived_mr"}'
         )
     })
 })
@@ -36,7 +36,7 @@ with_test_authentication({
     #  Cat  Dog Bird
     #    6    4    6
 
-    vd <- deriveArray(list(ds$q1, ds$petloc$petloc_home), name = "Derived pets")
+    vd <- deriveArray(list(ds$q1, ds$petloc$petloc_home), name = "Derived pets", derived = TRUE)
     test_that("deriveArray returns a VarDef", {
         expect_is(vd, "VariableDefinition")
     })
@@ -54,10 +54,12 @@ with_test_authentication({
 
     ds$derivedmr <- deriveArray(
         list(ds$q1, ds$petloc$petloc_home),
-        selections = "Dog", name = "Derived pets MR"
+        selections = "Dog", name = "Derived pets MR",
+        derived = TRUE
     ) # cat dog has id 2
     test_that("deriveArray can also derive MRs", {
         expect_true(is.MR(ds$derivedmr))
+        expect_true(is.derived(ds$derivedmr))
         expect_identical(names(subvariables(ds$derivedmr)), c("Pet", "Home"))
         expect_identical_temp_nodata(
             names(categories(ds$derivedmr)),
@@ -112,13 +114,15 @@ with_test_authentication({
         name = "Pet Location: Home", subreferences = list(
             list(name = "Copy", alias = "pla_copy"),
             list(name = "Original", alias = "pla_orig")
-        )
+        ),
+        derived = TRUE
     )
     ds$petloc_b <- deriveArray(list(ds$petloc2$pl2_b, ds$petloc$petloc_work),
         name = "Pet Location: Work", subreferences = list(
             list(name = "Copy", alias = "plb_copy"),
             list(name = "Original", alias = "plb_orig")
-        )
+        ),
+        derived = TRUE
     )
 
     test_that("Deriving arrays with subreferences specified", {
@@ -137,7 +141,8 @@ with_test_authentication({
         ds$petloc$petloc_home, ds$petloc_a$pla_copy,
         ds$petloc_b$plb_copy, ds$derivedarray$dsub2
     ),
-    name = "Derived from derived and real"
+    name = "Derived from derived and real",
+    derived = TRUE
     )
     test_that("Derived arrays of derived array subvariables with different categories", {
         expect_identical(
@@ -163,7 +168,8 @@ with_test_authentication({
         combinations = list(
             list(name = "Cat", categories = c("Cat", "one")),
             list(name = "Dog", categories = c("Dog", "two"))
-        )
+        ),
+        derived = TRUE
     )
     test_that("Combine categories of derived array", {
         expect_identical(

@@ -1,0 +1,204 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/ba16ac/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fba16ac%2Fvariables%2F000007%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "result": {
+            "n": 20,
+            "counts": [
+                6,
+                4,
+                3,
+                3,
+                4,
+                0
+            ],
+            "dimensions": [
+                {
+                    "type": {
+                        "class": "categorical",
+                        "ordinal": false,
+                        "categories": [
+                            {
+                                "missing": false,
+                                "numeric_value": 1,
+                                "id": 1,
+                                "name": "Cat"
+                            },
+                            {
+                                "missing": false,
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "Dog"
+                            },
+                            {
+                                "missing": false,
+                                "numeric_value": 3,
+                                "id": 3,
+                                "name": "Bird"
+                            },
+                            {
+                                "missing": true,
+                                "numeric_value": 8,
+                                "id": 8,
+                                "name": "Skipped"
+                            },
+                            {
+                                "missing": true,
+                                "numeric_value": 9,
+                                "id": 9,
+                                "name": "Not Asked"
+                            },
+                            {
+                                "id": -1,
+                                "name": "No Data",
+                                "numeric_value": null,
+                                "missing": true
+                            }
+                        ]
+                    },
+                    "references": {
+                        "view": {
+                            "column_width": null,
+                            "show_numeric_values": false,
+                            "show_counts": false,
+                            "include_missing": false,
+                            "transform": {
+                                "insertions": [
+                                    {
+                                        "anchor": 2,
+                                        "name": "Mammals",
+                                        "function": "subtotal",
+                                        "args": [
+                                            1,
+                                            2
+                                        ],
+                                        "kwargs": {
+                                            "positive": [
+                                                1,
+                                                2
+                                            ]
+                                        },
+                                        "id": 1
+                                    },
+                                    {
+                                        "anchor": 3,
+                                        "name": "Can speak on command",
+                                        "function": "subtotal",
+                                        "args": [
+                                            2,
+                                            3
+                                        ],
+                                        "kwargs": {
+                                            "positive": [
+                                                2,
+                                                3
+                                            ]
+                                        },
+                                        "id": 2
+                                    }
+                                ]
+                            }
+                        },
+                        "format": {
+                            "summary": {
+                                "digits": 0
+                            }
+                        },
+                        "description": "What is your favorite pet?",
+                        "notes": "",
+                        "name": "Pet",
+                        "alias": "q1"
+                    },
+                    "derived": false
+                }
+            ],
+            "measures": {
+                "count": {
+                    "metadata": {
+                        "type": {
+                            "class": "numeric",
+                            "integer": true,
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "missing_rules": {
+
+                            }
+                        },
+                        "references": {
+
+                        },
+                        "derived": true
+                    },
+                    "data": [
+                        6,
+                        4,
+                        3,
+                        3,
+                        4,
+                        0
+                    ],
+                    "n_missing": 7
+                }
+            },
+            "missing": 7,
+            "filter_stats": {
+                "is_cat_date": false,
+                "filtered": {
+                    "unweighted": {
+                        "selected": 20,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 20,
+                        "other": 0,
+                        "missing": 0
+                    }
+                },
+                "filtered_complete": {
+                    "unweighted": {
+                        "selected": 20,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 20,
+                        "other": 0,
+                        "missing": 0
+                    }
+                }
+            },
+            "unfiltered": {
+                "unweighted_n": 20,
+                "weighted_n": 20
+            },
+            "filtered": {
+                "unweighted_n": 20,
+                "weighted_n": 20
+            },
+            "element": "crunch:cube"
+        },
+        "query": {
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/ba16ac/variables/000007/"
+                }
+            ],
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        }
+    }
+}

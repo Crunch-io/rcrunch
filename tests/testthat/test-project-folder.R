@@ -56,6 +56,14 @@ with_mock_crunch({
         )
     })
 
+    test_that("folder() and rootFolder() for datasets", {
+        expect_identical(folder(ds), cd(projects(), "~"))
+        expect_error(
+            rootFolder(ds),
+            "Can't find root folder of a dataset"
+        )
+    })
+
     test_that("path()", {
         expect_identical(path(projects()), "/")
         expect_identical(path(cd(projects(), "Project One")), "/Project One") # nolint
