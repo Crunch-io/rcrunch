@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GITHUB_PAT: ${{ secrets.TA_DA_ACCESS }}
+      GITHUB_PAT: ${{ secrets.TA_DA_ACCESS_NEW }}
 
     steps:
       - uses: actions/checkout@v3
