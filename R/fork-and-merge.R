@@ -37,7 +37,7 @@ forks <- function(dataset) {
 #' # But you can specify a project by path, `ProjectFolder` object or URL
 #' ds_fork2 <- forkDataset(ds, project = "/Client1/forks/")
 #' ds_fork3 <- forkDataset(ds, project = projects()[["My forks"]])
-#' ds_fork4 <- forkDataset(ds, project = "https://app.crunch.io/api/projects/abc")
+#' ds_fork4 <- forkDataset(ds, project = "https://app.crunch.io/api/projects/abc/")
 #' }
 #' @export
 forkDataset <- function(dataset, name = defaultForkName(dataset), draft = FALSE, ..., project = folder(dataset)) {
