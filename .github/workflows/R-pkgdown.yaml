@@ -7,11 +7,11 @@ on:
 name: pkgdown
 
 jobs:
-  test-coverage:
+  pkgdown:
     runs-on: ubuntu-latest
 
     env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.TA_DA_ACCESS }}
 
     steps:
       - uses: actions/checkout@v3
