@@ -21,6 +21,9 @@ install-ci: deps
 test-ci: compress-fixtures |
 	R --slave -e 'library(covr); install_dir <- tempfile(); test_run <- try(to_cobertura(package_coverage(quiet=FALSE, install_path=install_dir, clean=FALSE))); for (file in list.files(install_dir, pattern = "\\.Rout(\\.fail)?$$", recursive=TRUE, full.names=TRUE)) { cat(readLines(file), sep = "\n"); cat("\n") }; if (inherits(test_run, "try-error")) stop("Test failed!\n", attr(test_run, "condition")[["message"]], "\n", format(attr(test_run, "condition")[["call"]]))'
 
+test-ci-partial: compress-fixtures |
+	cd tests/ && R --slave -e 'library(devtools); source("../inst/junit_fix.R"); library(testthat); test(filter="${file_regex}", reporter = MultiReporter$$new(list(SummaryReporter$$new(), JunitReporterFix$$new(file = file.path(Sys.getenv("WORKSPACE"), "rcrunch.xml")))));'
+
 clean:
 	R --slave -e 'library(crunch); set_crunch_opts(crunch.api=envOrOption("test.api"), crunch.api.key=envOrOption("crunch.test.api.key")); lapply(urls(datasets()), crDELETE)'
 
