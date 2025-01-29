@@ -43,7 +43,11 @@ ordering(x) <- value
 \verb{ordering<-} sets the VariableOrder
 }
 \description{
-The \code{ordering} methods allow you to get and set a \code{\link{VariableOrder}} on a
+The \code{ordering} methods allow you to get a \code{\link{VariableOrder}} on a
 \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that the dataset contains.
+}
+\details{
+Crunch datasets work with folders, and the ordering is deprecated. It is no
+longer possible to set the ordering of a variable catalog from rcrunch.
 }
 \keyword{internal}
