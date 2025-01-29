@@ -141,19 +141,6 @@ setMethod(
     }
 )
 
-setMethod("appliedFilters", "CrunchDataset", function(x) {
-    out <- ShojiOrder(crGET(shojiURL(x, "views", "applied_filters")))
-    return(out@graph)
-})
-
-setMethod(
-    "appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
-    function(x, value) {
-        b <- list(graph = I(list(self(value))))
-        crPUT(shojiURL(x, "views", "applied_filters"), body = toJSON(b))
-        return(x)
-    }
-)
 
 .getActiveFilter <- function(x) {
     f <- expr <- x@filter
