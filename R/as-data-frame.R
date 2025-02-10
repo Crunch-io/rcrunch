@@ -196,7 +196,7 @@ csvToDataFrame <- function(csv_df,
                 cp <- columnParser("categorical")
             }
             subvar_info <- parsing_info[!is.na(parsing_info$parent_alias) & parsing_info$parent_alias == alias(v), ]
-            cols <- csv_df[, subvar_info$qualified_alias]
+            cols <- csv_df[, subvar_info$qualified_alias, drop = FALSE]
             if (array_strategy == "alias"){
                 return(structure(lapply(cols, cp, v, categorical.mode), .Names = subvar_info$cond_qualified_alias))
             } else if (array_strategy == "qualified_alias") {
