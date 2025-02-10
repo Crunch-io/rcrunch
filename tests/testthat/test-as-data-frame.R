@@ -222,6 +222,16 @@ with_mock_crunch({
         expect_equivalent(df_packed, expected_packed_df)
     })
 
+    test_that("csvToDataFrame handles 1 column subvariables", {
+        csv_df <- structure(list(`x[x1]` = 1:3, `x[x2_derived]` = 1:3, `y[y1]` = 1:3), class = "data.frame", row.names = c(NA, -3L))
+        expected <- data.frame(`x[x1]` = 1:3, `x2_derived` = 1:3, `y[y1]` = factor(letters[1:3], levels = letters[1:5]), check.names = FALSE)
+        col_info <- csvColInfo(ds_dup)
+
+        df_actual <- csvToDataFrame(csv_df, ds_dup, col_info[6:8, ])[c("x[x1]", "x2_derived", "y[y1]")]
+
+        expect_equal(df_actual, expected)
+    })
+
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
         t2 <- forceVariableCatalog(ds)
 
