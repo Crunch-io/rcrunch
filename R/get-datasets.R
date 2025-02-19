@@ -49,10 +49,6 @@ datasets <- function(x = getAPIRoot()) {
 #' are in a project. It is equivalent to `names(datasets(proj))`, with some
 #' additional optional arguments.
 #'
-#' Specifying `listDatasets(shiny = TRUE)` will, instead of printing dataset
-#' names, load a Shiny gadget that provides a GUI for navigating the project
-#' tree to find a dataset, if you're running in RStudio.
-#'
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
 #' @param project `ProjectFolder` entity, character name of a project, or
@@ -61,9 +57,7 @@ datasets <- function(x = getAPIRoot()) {
 #' your personal folder will be used.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is FALSE.
-#' @param shiny logical: launch a Shiny gadget to help select the right dataset.
-#' The gadget will return a valid `loadDataset()` call which loads the selected
-#' dataset. The gadget requires RStudio, as well as the `crunchy` package.
+#' @param shiny deprecated, no longer works
 #' @return A character vector of dataset names, each of which would be a valid
 #' input for [loadDataset()]
 #' @export
@@ -72,7 +66,7 @@ listDatasets <- function(kind = c("active", "all", "archived"),
                          refresh = FALSE,
                          shiny = FALSE) {
     if (shiny) {
-        listDatasetGadget(kind, refresh)
+        halt("listDatsets(shiny = TRUE) is no longer supported")
     } else {
         Call <- match.call()
         if (refresh) {
