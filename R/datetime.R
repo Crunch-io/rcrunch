@@ -18,13 +18,23 @@ from8601 <- function(x) {
         return(as.Date(x))
     }
 
+    ## We know it has a day and a time component. In most places there is a "T"
+    ## separating the date and time, but csvs have a space between them.
+    ## I don't think there's a way to specify either in base R so check which
+    ## we're dealing with
+    if (all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}T", na.omit(x)))) {
+        time_delim <- "T"
+    } else {
+        time_delim <- " "
+    }
+
     ## Check for timezone
     if (any(grepl("+", x, fixed = TRUE))) {
         ## First, strip out the : in the time zone
         x <- sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x)
-        pattern <- "%Y-%m-%dT%H:%M:%OS%z"
+        pattern <- paste0("%Y-%m-%d", time_delim, "%H:%M:%OS%z")
     } else {
-        pattern <- "%Y-%m-%dT%H:%M:%OS"
+        pattern <- paste0("%Y-%m-%d", time_delim, "%H:%M:%OS")
     }
     ## Then parse
     return(strptime(x, pattern, tz = "UTC"))

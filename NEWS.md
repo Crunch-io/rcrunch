@@ -1,4 +1,6 @@
 # crunch 1.31.0 (Development Version)
+* Fix for datetimes when running `as.data.frame(force = TRUE)` (#666, thanks @rossellhayes)
+
 * The crunchy gadgets have been removed.
 
 * Variables can now be created as materialized by default instead of derived, 
