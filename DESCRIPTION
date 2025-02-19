@@ -32,7 +32,6 @@ Imports:
 Suggests:
     base64enc,
     covr,
-    crunchy,
     devtools,
     haven,
     httptest (>= 3.0.0),
@@ -121,7 +120,6 @@ Collate:
     'folders.R'
     'fork-and-merge.R'
     'formula.R'
-    'gadgets.R'
     'geo.R'
     'get-datasets.R'
     'github.R'
