@@ -12,8 +12,8 @@ test_that("callFromOtherPackage", {
     )
 })
 
-with_mock(
-    `crunch::callFromOtherPackage` = function(call, pkg) {
+with_mocked_bindings(
+    callFromOtherPackage = function(call, pkg) {
         call <- capture.output(print(call))
         halt(pkg, "::", call, " called")
     }, {

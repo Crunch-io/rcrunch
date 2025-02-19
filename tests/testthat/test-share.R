@@ -87,8 +87,8 @@ with_mock_crunch({
         })
     })
 
-    with_mock(
-        `crunch::PermissionCatalog` = function(...) {
+    with_mocked_bindings(
+        PermissionCatalog = function(...) {
             out <- new("PermissionCatalog", ...)
             out@index <- list()
             return(out)

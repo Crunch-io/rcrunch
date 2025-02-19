@@ -232,8 +232,8 @@ with_mock_crunch({
 
     test_that("Can interpret error from async script failures", {
         # Override progress with a pre-generated JSON at the url
-        with_mock(
-            `crunch::crPOST` = function(..., progress.handler = NULL) {
+        with_mocked_bindings(
+            crPOST = function(..., progress.handler = NULL) {
                 capture.output(crunch::pollProgress(
                     "https://app.crunch.io/api/progress-failed-async-script.json",
                     wait = 0.01,

@@ -438,7 +438,7 @@ with_test_authentication({
 
     ds <- forceVariableCatalog(ds)
     uncached({
-        with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
+        with_mocked_bindings(.crunchPageSize = function(x) 5L, {
             with(temp.option(httpcache.log = ""), {
                 avlog <- capture.output(v1 <- as.vector(ds$v1))
             })

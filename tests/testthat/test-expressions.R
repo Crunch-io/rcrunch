@@ -876,7 +876,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
 
         ds <- forceVariableCatalog(ds) # force variable catalog so we can count requests
         uncached({
-            with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
+            with_mocked_bindings(.crunchPageSize = function(x) 5L, {
                 with(temp.option(httpcache.log = ""), {
                     avlog <- capture.output(v35 <- as.vector(ds$v3 + 5))
                 })
@@ -986,7 +986,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
         })
 
         uncached({
-            with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
+            with_mocked_bindings(.crunchPageSize = function(x) 5L, {
                 with(temp.option(httpcache.log = ""), {
                     avlog <- capture.output(v3.5 <- as.vector(ds$v3[ds$v4 %in% "B"]))
                 })
