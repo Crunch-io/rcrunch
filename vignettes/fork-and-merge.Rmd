@@ -65,10 +65,10 @@ ds <- forceVariableCatalog(ds)
 ds_to_delete[length(ds_to_delete) + 1] <- self(ds)
 ```
 
-Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decision makers to make sure that the data is accurate before sharing it with clients. To do this you call `forkDataset()` to create a copy of the dataset. By default the forked dataset will be placed in the same project folder as the original, but you can specify a different project folder. 
+Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decision makers to make sure that the data is accurate before sharing it with clients. To do this you call `forkDataset()` to create a copy of the dataset. The fork is placed in a folder following the same logic as new datasets, requiring you to specify a project folder unless you have option `R_CRUNCH_DEFAULT_PROJECT` set.
 
 ```{r fork dataset}
-forked_ds <- forkDataset(ds)
+forked_ds <- forkDataset(ds, project = "examples/rcrunch vignette data")
 ```
 ```{r forcevarcat2, include=FALSE}
 # Force catalog so that catalog is loaded at a consistent time
@@ -135,7 +135,7 @@ change_state()
 ds_to_delete[length(ds_to_delete) + 1] <- self(wave2)
 ```
 ```{r fork-and-append, results='hide'}
-ds_fork <- forkDataset(ds)
+ds_fork <- forkDataset(ds, project = "examples/rcrunch vignette data")
 ds_fork <- appendDataset(ds_fork, wave2)
 ```
 `ds_fork` now has twice as many rows as `ds` which we can verify with `nrow`:
@@ -179,7 +179,7 @@ house_ds <- newDataset(house_table, "House Size", project = my_project)
 There are a few reasons why we might not want to merge this new table onto our user facing data. For instance we might make a mistake in constructing the table, or have some category names which don't quite match up. Merging the data onto a forked dataset again gives us the safety to make changes and verify accuracy without affecting client-facing data.
 
 ```{r fork and merge recode, message=FALSE, results='hide'}
-ds_fork <- forkDataset(ds)
+ds_fork <- forkDataset(ds, project = "examples/rcrunch vignette data")
 ds_fork <- merge(ds_fork, house_ds, by = "Respondent")
 ```
 

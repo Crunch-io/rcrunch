@@ -1,0 +1,36 @@
+{
+    "element": "shoji:order",
+    "self": "/api/datasets/37cc49/variables/hier/?relative=on",
+    "description": "Hierarchical order from folder structure of dataset variables",
+    "graph": [
+        "../6qUD19/",
+        "../6qUD17/",
+        "../6qUD01/",
+        "../6qUD00/",
+        "../6qUD16/",
+        "../6qUD06/",
+        "../143652/",
+        "../6qUD07/",
+        "../6qUD11/",
+        "../6qUD08/",
+        "../6qUD15/",
+        "../6qUD09/",
+        "../6qUD13/",
+        "../6qUD10/",
+        "../6qUD04/",
+        "../6qUD18/",
+        "../6qUD02/",
+        "../6qUD20/",
+        "../6qUD03/",
+        "../6qUD21/",
+        "../6qUD22/",
+        "../6qUD05/",
+        "../6D4g14/",
+        "../6D4g12/",
+        {
+            "House Size": [
+                "../5qSZ00/"
+            ]
+        }
+    ]
+}
