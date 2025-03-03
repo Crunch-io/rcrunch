@@ -45,7 +45,7 @@ can with SPSS files. You should use the filename to the data file (ending in
 \examples{
 \dontrun{
 ds <- newDataset(mtcars, "cars", project = "studies/cars")
-ds <- newDataset("mysurvey.sav", project = "client1")
+ds <- newDataset("mysurvey.sav", project = "https://app.crunch.io/api/projects/abc/")
 }
 }
 \seealso{
