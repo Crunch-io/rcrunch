@@ -25,8 +25,9 @@ forks <- function(dataset) {
 #' those with edit permissions? Default is `FALSE`.
 #' @param ... Additional dataset metadata to provide to the fork
 #' @param project A `ProjectFolder` object, string path that could be passed to [`cd()`]
-#' relative to the root project, or a URL for a `ProjectFolder`. Defaults to the same
-#' folder as the existing dataset.
+#' relative to the root project, or a URL for a `ProjectFolder`. If left empty,
+#' rcrunch will look in `envOrOption('crunch.default.project')` and error if nothing
+#' is found.
 #' @return The new fork, a `CrunchDataset`.
 #' @seealso [mergeFork()]
 #' @examples
@@ -40,7 +41,7 @@ forks <- function(dataset) {
 #' ds_fork4 <- forkDataset(ds, project = "https://app.crunch.io/api/projects/abc/")
 #' }
 #' @export
-forkDataset <- function(dataset, name = defaultForkName(dataset), draft = FALSE, ..., project = folder(dataset)) {
+forkDataset <- function(dataset, name = defaultForkName(dataset), draft = FALSE, ..., project = defaultCrunchProject()) {
     ## TODO: add owner field, default to self(me())
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
         body = toJSON(wrapEntity(name = name, is_published = !draft, ..., project = resolveProjectURL(project)))

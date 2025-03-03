@@ -10,9 +10,7 @@
 * The concept of a personal folder is being removed from the API imminently. This has
   a few implications for rcrunch:
   
-  * All datasets must be created with a project (eg via the `project` argument of `newDataset()`)
-  
-  * Dataset forks will be created in the same folder as their parent
+  * All datasets must be created with a project (eg via the `project` argument of `newDataset()` or `forkDataset()`)
   
   * Because loading datasets by name doesn't work for datasets in projects, it's not really
   possible to load a dataset by name without specifying the full project path.

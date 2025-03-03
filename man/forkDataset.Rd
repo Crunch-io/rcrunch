@@ -9,7 +9,7 @@ forkDataset(
   name = defaultForkName(dataset),
   draft = FALSE,
   ...,
-  project = folder(dataset)
+  project = defaultCrunchProject()
 )
 }
 \arguments{
@@ -24,8 +24,9 @@ those with edit permissions? Default is \code{FALSE}.}
 \item{...}{Additional dataset metadata to provide to the fork}
 
 \item{project}{A \code{ProjectFolder} object, string path that could be passed to \code{\link[=cd]{cd()}}
-relative to the root project, or a URL for a \code{ProjectFolder}. Defaults to the same
-folder as the existing dataset.}
+relative to the root project, or a URL for a \code{ProjectFolder}. If left empty,
+rcrunch will look in \code{envOrOption('crunch.default.project')} and error if nothing
+is found.}
 }
 \value{
 The new fork, a \code{CrunchDataset}.
