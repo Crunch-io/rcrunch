@@ -22,7 +22,7 @@ from8601 <- function(x) {
     ## separating the date and time, but csvs have a space between them.
     ## I don't think there's a way to specify either in base R so check which
     ## we're dealing with
-    if (all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}T", na.omit(x)))) {
+    if (all(grepl("T", na.omit(x)))) {
         time_delim <- "T"
     } else {
         time_delim <- " "
