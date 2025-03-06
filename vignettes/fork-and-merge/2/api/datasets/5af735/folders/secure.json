@@ -1,0 +1,18 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/5af735/folders/secure/",
+    "catalogs": {
+        "parents": "/api/datasets/5af735/folders/secure/parents/"
+    },
+    "index": {
+
+    },
+    "body": {
+        "name": "Secure",
+        "path": "|"
+    },
+    "graph": [
+
+    ],
+    "size": 0
+}

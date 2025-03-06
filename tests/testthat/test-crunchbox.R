@@ -321,7 +321,7 @@ with_mock_crunch({
         )
     })
     test_that("Box too big message", {
-        with_mock(`crunch:::.boxlimit` = function() -1, {
+        with_mocked_bindings(.boxlimit = function() -1, {
             expect_error(
                 crunchBox(ds[2:5], filters = filters(ds)[1]),
                 "4 variables and 1 filter results in too many cubes"

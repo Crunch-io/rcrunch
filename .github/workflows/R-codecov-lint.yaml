@@ -26,6 +26,7 @@ jobs:
           extra-packages: |
             any::covr
             any::lintr
+            any::cyclocomp
           needs: check
 
       - name: Decompress cubes

@@ -23,9 +23,7 @@ your personal folder will be used.}
 \item{refresh}{logical: should the function check the Crunch API for new
 datasets? Default is FALSE.}
 
-\item{shiny}{logical: launch a Shiny gadget to help select the right dataset.
-The gadget will return a valid \code{loadDataset()} call which loads the selected
-dataset. The gadget requires RStudio, as well as the \code{crunchy} package.}
+\item{shiny}{deprecated, no longer works}
 }
 \value{
 A character vector of dataset names, each of which would be a valid
@@ -35,9 +33,4 @@ input for \code{\link[=loadDataset]{loadDataset()}}
 \code{listDatasets()} is a convenience function for quickly seeing what datasets
 are in a project. It is equivalent to \code{names(datasets(proj))}, with some
 additional optional arguments.
-}
-\details{
-Specifying \code{listDatasets(shiny = TRUE)} will, instead of printing dataset
-names, load a Shiny gadget that provides a GUI for navigating the project
-tree to find a dataset, if you're running in RStudio.
 }

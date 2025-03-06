@@ -1,0 +1,261 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/37cc49/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F37cc49%2Fvariables%2F6qUD21%2F%22%7D%2C%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2F37cc49%2Fvariables%2F5qSZ00%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "result": {
+            "n": 3268,
+            "counts": [
+                158,
+                124,
+                96,
+                106,
+                102,
+                0,
+                214,
+                256,
+                282,
+                282,
+                228,
+                0,
+                318,
+                268,
+                230,
+                272,
+                308,
+                0,
+                4,
+                4,
+                8,
+                6,
+                2,
+                0
+            ],
+            "dimensions": [
+                {
+                    "type": {
+                        "class": "categorical",
+                        "ordinal": false,
+                        "categories": [
+                            {
+                                "missing": false,
+                                "numeric_value": 1,
+                                "id": 1,
+                                "name": "Both"
+                            },
+                            {
+                                "missing": false,
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "Spaces"
+                            },
+                            {
+                                "missing": false,
+                                "numeric_value": 3,
+                                "id": 3,
+                                "name": "Tabs"
+                            },
+                            {
+                                "missing": true,
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data"
+                            }
+                        ]
+                    },
+                    "references": {
+                        "view": {
+                            "column_width": null,
+                            "show_numeric_values": false,
+                            "show_counts": false,
+                            "include_missing": false
+                        },
+                        "notes": "",
+                        "description": "",
+                        "format": {
+                            "summary": {
+                                "digits": 0
+                            }
+                        },
+                        "name": "TabsSpaces",
+                        "alias": "TabsSpaces"
+                    },
+                    "derived": false
+                },
+                {
+                    "type": {
+                        "class": "enum",
+                        "subtype": {
+                            "class": "numeric",
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "missing_rules": {
+
+                            }
+                        },
+                        "elements": [
+                            {
+                                "id": 0,
+                                "value": 1.0,
+                                "missing": false
+                            },
+                            {
+                                "id": 1,
+                                "value": 2.0,
+                                "missing": false
+                            },
+                            {
+                                "id": 2,
+                                "value": 3.0,
+                                "missing": false
+                            },
+                            {
+                                "id": 3,
+                                "value": 4.0,
+                                "missing": false
+                            },
+                            {
+                                "id": 4,
+                                "value": 5.0,
+                                "missing": false
+                            },
+                            {
+                                "id": -1,
+                                "value": {
+                                    "?": -1
+                                },
+                                "missing": true
+                            }
+                        ]
+                    },
+                    "references": {
+                        "view": {
+                            "column_width": null
+                        },
+                        "notes": "",
+                        "description": "",
+                        "format": {
+                            "data": {
+                                "digits": 2
+                            },
+                            "summary": {
+                                "digits": 2
+                            }
+                        },
+                        "name": "HouseholdSize",
+                        "alias": "HouseholdSize"
+                    },
+                    "derived": true
+                }
+            ],
+            "measures": {
+                "count": {
+                    "metadata": {
+                        "type": {
+                            "class": "numeric",
+                            "integer": true,
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "missing_rules": {
+
+                            }
+                        },
+                        "references": {
+
+                        },
+                        "derived": true
+                    },
+                    "data": [
+                        158,
+                        124,
+                        96,
+                        106,
+                        102,
+                        0,
+                        214,
+                        256,
+                        282,
+                        282,
+                        228,
+                        0,
+                        318,
+                        268,
+                        230,
+                        272,
+                        308,
+                        0,
+                        4,
+                        4,
+                        8,
+                        6,
+                        2,
+                        0
+                    ],
+                    "n_missing": 24
+                }
+            },
+            "missing": 24,
+            "filter_stats": {
+                "is_cat_date": false,
+                "filtered": {
+                    "unweighted": {
+                        "selected": 3268,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 3268,
+                        "other": 0,
+                        "missing": 0
+                    }
+                },
+                "filtered_complete": {
+                    "unweighted": {
+                        "selected": 3268,
+                        "other": 0,
+                        "missing": 0
+                    },
+                    "weighted": {
+                        "selected": 3268,
+                        "other": 0,
+                        "missing": 0
+                    }
+                }
+            },
+            "unfiltered": {
+                "unweighted_n": 3268,
+                "weighted_n": 3268
+            },
+            "filtered": {
+                "unweighted_n": 3268,
+                "weighted_n": 3268
+            },
+            "element": "crunch:cube"
+        },
+        "query": {
+            "dimensions": [
+                {
+                    "variable": "/api/datasets/37cc49/variables/6qUD21/"
+                },
+                {
+                    "variable": "/api/datasets/37cc49/variables/5qSZ00/"
+                }
+            ],
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": [
+
+                    ]
+                }
+            },
+            "weight": null
+        },
+        "query_environment": {
+            "filter": [
+
+            ]
+        }
+    }
+}

@@ -1,0 +1,226 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/3e463e/",
+    "catalogs": {
+        "filters": "/api/datasets/3e463e/filters/",
+        "variables": "/api/datasets/3e463e/variables/",
+        "folders": "/api/datasets/3e463e/folders/",
+        "batches": "/api/datasets/3e463e/batches/",
+        "multitables": "/api/datasets/3e463e/multitables/",
+        "permissions": "/api/datasets/3e463e/permissions/",
+        "users": "/api/datasets/3e463e/users/",
+        "teams": "/api/datasets/3e463e/teams/",
+        "savepoints": "/api/datasets/3e463e/savepoints/",
+        "actions": "/api/datasets/3e463e/actions/",
+        "tags": "/api/datasets/3e463e/tags/",
+        "scripts": "/api/datasets/3e463e/scripts/",
+        "forks": "/api/datasets/3e463e/forks/",
+        "decks": "/api/datasets/3e463e/decks/",
+        "dashboards": "/api/datasets/3e463e/dashboards/",
+        "views": "/api/datasets/3e463e/views/",
+        "boxdata": "/api/datasets/3e463e/boxdata/",
+        "parent": "/api/projects/711d98/datasets/",
+        "project": "/api/projects/711d98/",
+        "variables_private": "/api/datasets/3e463e/variables/private/",
+        "variables_by_type": "/api/datasets/3e463e/variables/?type={type}"
+    },
+    "fragments": {
+        "preferences": "/api/datasets/3e463e/preferences/",
+        "settings": "/api/datasets/3e463e/settings/",
+        "bucket_suggestion": "/api/datasets/3e463e/bucket_suggestion/",
+        "publish": "/api/datasets/3e463e/publish/",
+        "schema": "/api/datasets/3e463e/schema/",
+        "table": "/api/datasets/3e463e/table/",
+        "exclusion": "/api/datasets/3e463e/exclusion/",
+        "state": "/api/datasets/3e463e/state/",
+        "stream": "/api/datasets/3e463e/stream/",
+        "pk": "/api/datasets/3e463e/pk/"
+    },
+    "views": {
+        "sources": "/api/datasets/3e463e/sources/",
+        "var_by_alias": "/api/datasets/3e463e/var_by_alias/",
+        "summary": "/api/datasets/3e463e/summary/",
+        "cube": "/api/datasets/3e463e/cube/",
+        "second_order_analysis": "/api/datasets/3e463e/second_order_analysis/",
+        "export": "/api/datasets/3e463e/export/",
+        "applied_filters": "/api/datasets/3e463e/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "account": "/api/accounts/00001/",
+        "id": "3e463e",
+        "name": "Fork #2 of stackoverflow_survey",
+        "type": "dataset",
+        "description": "",
+        "folder_card_label": "",
+        "notes": "",
+        "path": "examples|rcrunch vignette data|Fork #2 of stackoverflow_survey",
+        "streaming": "no",
+        "archived": false,
+        "is_published": true,
+        "owner": "/api/projects/711d98/",
+        "owner_name": "rcrunch vignette data",
+        "project": "/api/projects/711d98/",
+        "project_name": "rcrunch vignette data",
+        "current_editor": "/api/users/27a158/",
+        "current_editor_name": "Greg",
+        "maintainer": "/api/users/27a158/",
+        "app_settings": {
+            "profiles_mode": false,
+            "report_issue_url": "https://yougov.com"
+        },
+        "palette": {
+            "brand": {
+                "primary": "#0064a4",
+                "secondary": "#107e64",
+                "message": "#712480"
+            },
+            "analysis": [
+                {
+                    "palette": [
+                        "#340043",
+                        "#640083",
+                        "#9100bf",
+                        "#c300ff",
+                        "#e17fff"
+                    ],
+                    "default": false,
+                    "name": "purple palette",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#4fc3f7",
+                        "#4dd0e1",
+                        "#4db6ac",
+                        "#81c783",
+                        "#aed581",
+                        "#dce775",
+                        "#cddc39",
+                        "#fdae6b"
+                    ],
+                    "default": false,
+                    "name": "Green Palette for dashboard",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#00bcd4",
+                        "#9575cd",
+                        "#ffa299",
+                        "#4c8cb8",
+                        "#303f9f",
+                        "#0097a7",
+                        "#8fb7ae",
+                        "#d4e3e0",
+                        "#d1c4e9"
+                    ],
+                    "default": true,
+                    "name": "Rainbow",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#bf1001",
+                        "#ff1600",
+                        "#0064A4",
+                        "#0074bf",
+                        "#ffa299",
+                        "#019cff",
+                        "#80cdff",
+                        "#e0e0e0"
+                    ],
+                    "default": false,
+                    "name": "France palette",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#202020",
+                        "#d32f2f",
+                        "#bf1001",
+                        "#fbc02e",
+                        "#ff1600",
+                        "#ffa299",
+                        "#ffce00",
+                        "#ffe67f",
+                        "#fff9c4"
+                    ],
+                    "default": false,
+                    "name": "Germany palette",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#2d4e68",
+                        "#a4c242",
+                        "#406680",
+                        "#dfe590",
+                        "#6992a8",
+                        "#618630"
+                    ],
+                    "default": false,
+                    "name": "Homeware Haven",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#be1622",
+                        "#7f0a00",
+                        "#ffa299",
+                        "#999999",
+                        "#5f5f5f",
+                        "#e0e0e0",
+                        "#430400"
+                    ],
+                    "default": false,
+                    "name": "Heart&Home",
+                    "type": "qualitative"
+                }
+            ]
+        },
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "project_inherited_settings": {
+            "stop_dataset_shares": true,
+            "disallow_dataset_shares": false
+        },
+        "view_of": null,
+        "size": {
+            "rows": 3268,
+            "columns": 24,
+            "variables": 24,
+            "unfiltered_rows": 3268,
+            "source_columns": 25,
+            "derivations": 0
+        },
+        "creation_time": "2025-03-03T17:55:38.856000",
+        "modification_time": "2025-03-03T17:55:42.405000",
+        "start_date": null,
+        "end_date": null,
+        "access_time": "2025-03-03T17:55:41.013000",
+        "permissions": {
+            "view": true,
+            "edit": true
+        }
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/3e463e/variables/weights/",
+        "favorites": "/api/datasets/3e463e/variables/favorites/",
+        "variables_hier": "/api/datasets/3e463e/variables/hier/"
+    },
+    "folder_trees": {
+        "public": "folders/public/",
+        "hidden": "folders/hidden/",
+        "personal": "folders/personal/",
+        "secure": "folders/secure/"
+    },
+    "urls": {
+        "user_url": "/api/users/27a158/",
+        "owner_url": "/api/projects/711d98/",
+        "editor_url": "/api/users/27a158/"
+    }
+}

@@ -1,0 +1,226 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/55d13a/",
+    "catalogs": {
+        "filters": "/api/datasets/55d13a/filters/",
+        "variables": "/api/datasets/55d13a/variables/",
+        "folders": "/api/datasets/55d13a/folders/",
+        "batches": "/api/datasets/55d13a/batches/",
+        "multitables": "/api/datasets/55d13a/multitables/",
+        "permissions": "/api/datasets/55d13a/permissions/",
+        "users": "/api/datasets/55d13a/users/",
+        "teams": "/api/datasets/55d13a/teams/",
+        "savepoints": "/api/datasets/55d13a/savepoints/",
+        "actions": "/api/datasets/55d13a/actions/",
+        "tags": "/api/datasets/55d13a/tags/",
+        "scripts": "/api/datasets/55d13a/scripts/",
+        "forks": "/api/datasets/55d13a/forks/",
+        "decks": "/api/datasets/55d13a/decks/",
+        "dashboards": "/api/datasets/55d13a/dashboards/",
+        "views": "/api/datasets/55d13a/views/",
+        "boxdata": "/api/datasets/55d13a/boxdata/",
+        "parent": "/api/projects/711d98/datasets/",
+        "project": "/api/projects/711d98/",
+        "variables_private": "/api/datasets/55d13a/variables/private/",
+        "variables_by_type": "/api/datasets/55d13a/variables/?type={type}"
+    },
+    "fragments": {
+        "preferences": "/api/datasets/55d13a/preferences/",
+        "settings": "/api/datasets/55d13a/settings/",
+        "bucket_suggestion": "/api/datasets/55d13a/bucket_suggestion/",
+        "publish": "/api/datasets/55d13a/publish/",
+        "schema": "/api/datasets/55d13a/schema/",
+        "table": "/api/datasets/55d13a/table/",
+        "exclusion": "/api/datasets/55d13a/exclusion/",
+        "state": "/api/datasets/55d13a/state/",
+        "stream": "/api/datasets/55d13a/stream/",
+        "pk": "/api/datasets/55d13a/pk/"
+    },
+    "views": {
+        "sources": "/api/datasets/55d13a/sources/",
+        "var_by_alias": "/api/datasets/55d13a/var_by_alias/",
+        "summary": "/api/datasets/55d13a/summary/",
+        "cube": "/api/datasets/55d13a/cube/",
+        "second_order_analysis": "/api/datasets/55d13a/second_order_analysis/",
+        "export": "/api/datasets/55d13a/export/",
+        "applied_filters": "/api/datasets/55d13a/filters/applied/"
+    },
+    "description": "Detail for a given dataset",
+    "body": {
+        "account": "/api/accounts/00001/",
+        "id": "55d13a",
+        "name": "House Size",
+        "type": "dataset",
+        "description": "",
+        "folder_card_label": "",
+        "notes": "",
+        "path": "examples|rcrunch vignette data|House Size",
+        "streaming": "no",
+        "archived": false,
+        "is_published": true,
+        "owner": "/api/projects/711d98/",
+        "owner_name": "rcrunch vignette data",
+        "project": "/api/projects/711d98/",
+        "project_name": "rcrunch vignette data",
+        "current_editor": "/api/users/27a158/",
+        "current_editor_name": "Greg",
+        "maintainer": "/api/users/27a158/",
+        "app_settings": {
+            "profiles_mode": false,
+            "report_issue_url": "https://yougov.com"
+        },
+        "palette": {
+            "brand": {
+                "primary": "#0064a4",
+                "secondary": "#107e64",
+                "message": "#712480"
+            },
+            "analysis": [
+                {
+                    "palette": [
+                        "#340043",
+                        "#640083",
+                        "#9100bf",
+                        "#c300ff",
+                        "#e17fff"
+                    ],
+                    "default": false,
+                    "name": "purple palette",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#4fc3f7",
+                        "#4dd0e1",
+                        "#4db6ac",
+                        "#81c783",
+                        "#aed581",
+                        "#dce775",
+                        "#cddc39",
+                        "#fdae6b"
+                    ],
+                    "default": false,
+                    "name": "Green Palette for dashboard",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#00bcd4",
+                        "#9575cd",
+                        "#ffa299",
+                        "#4c8cb8",
+                        "#303f9f",
+                        "#0097a7",
+                        "#8fb7ae",
+                        "#d4e3e0",
+                        "#d1c4e9"
+                    ],
+                    "default": true,
+                    "name": "Rainbow",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#bf1001",
+                        "#ff1600",
+                        "#0064A4",
+                        "#0074bf",
+                        "#ffa299",
+                        "#019cff",
+                        "#80cdff",
+                        "#e0e0e0"
+                    ],
+                    "default": false,
+                    "name": "France palette",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#202020",
+                        "#d32f2f",
+                        "#bf1001",
+                        "#fbc02e",
+                        "#ff1600",
+                        "#ffa299",
+                        "#ffce00",
+                        "#ffe67f",
+                        "#fff9c4"
+                    ],
+                    "default": false,
+                    "name": "Germany palette",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#2d4e68",
+                        "#a4c242",
+                        "#406680",
+                        "#dfe590",
+                        "#6992a8",
+                        "#618630"
+                    ],
+                    "default": false,
+                    "name": "Homeware Haven",
+                    "type": "qualitative"
+                },
+                {
+                    "palette": [
+                        "#be1622",
+                        "#7f0a00",
+                        "#ffa299",
+                        "#999999",
+                        "#5f5f5f",
+                        "#e0e0e0",
+                        "#430400"
+                    ],
+                    "default": false,
+                    "name": "Heart&Home",
+                    "type": "qualitative"
+                }
+            ]
+        },
+        "logo": {
+            "large": "",
+            "small": "",
+            "favicon": ""
+        },
+        "project_inherited_settings": {
+            "stop_dataset_shares": true,
+            "disallow_dataset_shares": false
+        },
+        "view_of": null,
+        "size": {
+            "rows": 1634,
+            "columns": 2,
+            "variables": 2,
+            "unfiltered_rows": 1634,
+            "source_columns": 2,
+            "derivations": 0
+        },
+        "creation_time": "2025-03-03T17:55:52.093000",
+        "modification_time": "2025-03-03T17:55:54.489000",
+        "start_date": null,
+        "end_date": null,
+        "access_time": "2025-03-03T17:55:52.009000",
+        "permissions": {
+            "view": true,
+            "edit": true
+        }
+    },
+    "orders": {
+        "variables_weights": "/api/datasets/55d13a/variables/weights/",
+        "favorites": "/api/datasets/55d13a/variables/favorites/",
+        "variables_hier": "/api/datasets/55d13a/variables/hier/"
+    },
+    "folder_trees": {
+        "public": "folders/public/",
+        "hidden": "folders/hidden/",
+        "personal": "folders/personal/",
+        "secure": "folders/secure/"
+    },
+    "urls": {
+        "user_url": "/api/users/27a158/",
+        "owner_url": "/api/projects/711d98/",
+        "editor_url": "/api/users/27a158/"
+    }
+}

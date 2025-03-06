@@ -2,7 +2,6 @@
     "element": "shoji:catalog",
     "self": "/api/projects/",
     "catalogs": {
-        "personal": "/api/projects/personal/",
         "shared": "/api/projects/shared/",
         "recents": "/api/projects/recents/"
     },
@@ -47,10 +46,25 @@
                 "edit": true
             },
             "type": "project",
-            "modification_time": "2024-11-21T18:37:00.932000",
-            "access_time": "2024-11-21T18:37:09.826000",
+            "modification_time": "2025-03-03T17:55:20.637000",
+            "access_time": "2025-03-03T17:55:22.965000",
             "suspended": false,
             "subproject_count": 1
+        },
+        "/api/projects/378ad4/": {
+            "name": "Greg",
+            "id": "378ad4",
+            "account": "/api/accounts/00001/",
+            "description": "",
+            "permissions": {
+                "view": true,
+                "edit": true
+            },
+            "type": "project",
+            "modification_time": "2025-02-27T02:54:25.302000",
+            "access_time": "2025-02-14T18:28:52.147000",
+            "suspended": false,
+            "subproject_count": 4
         },
         "/api/projects/5c7dfd/": {
             "name": "DRNS",
@@ -64,21 +78,6 @@
             "type": "project",
             "modification_time": "2021-03-18T23:05:10.241000",
             "access_time": null,
-            "suspended": false,
-            "subproject_count": 0
-        },
-        "/api/projects/7ef526/": {
-            "name": "RCRUNCH TESTS",
-            "id": "7ef526",
-            "account": "/api/accounts/00001/",
-            "description": "",
-            "permissions": {
-                "view": true,
-                "edit": true
-            },
-            "type": "project",
-            "modification_time": "2024-11-13T14:37:15.945000",
-            "access_time": "2024-11-13T14:37:21.158000",
             "suspended": false,
             "subproject_count": 0
         },
@@ -96,21 +95,6 @@
             "access_time": "2024-09-05T17:26:07.987000",
             "suspended": false,
             "subproject_count": 4
-        },
-        "/api/projects/8722a3/": {
-            "name": "RCRUNCH_TESTS",
-            "id": "8722a3",
-            "account": "/api/accounts/00001/",
-            "description": "",
-            "permissions": {
-                "view": true,
-                "edit": true
-            },
-            "type": "project",
-            "modification_time": null,
-            "access_time": null,
-            "suspended": false,
-            "subproject_count": 0
         },
         "/api/projects/8fd3b9/": {
             "name": "abc",
@@ -137,10 +121,10 @@
                 "edit": true
             },
             "type": "project",
-            "modification_time": null,
-            "access_time": null,
+            "modification_time": "2025-02-18T20:48:10.699000",
+            "access_time": "2025-02-18T20:51:18.263000",
             "suspended": false,
-            "subproject_count": 0
+            "subproject_count": 1
         },
         "/api/projects/bb75fc/": {
             "name": "rcrunch fixture project",
@@ -163,11 +147,11 @@
             "account": "/api/accounts/00001/",
             "description": "",
             "permissions": {
-                "view": true,
+                "view": false,
                 "edit": false
             },
             "type": "project",
-            "modification_time": "2023-09-12T09:18:48.474000",
+            "modification_time": "2025-02-11T10:24:31.734000",
             "access_time": "2024-06-05T17:57:25.202000",
             "suspended": false,
             "subproject_count": 0
@@ -182,8 +166,8 @@
                 "edit": true
             },
             "type": "project",
-            "modification_time": "2024-11-13T15:38:24.226000",
-            "access_time": "2024-11-13T17:53:21.269000",
+            "modification_time": "2025-03-03T16:13:43.099000",
+            "access_time": "2025-03-03T16:13:49.797000",
             "suspended": false,
             "subproject_count": 1
         },
@@ -197,8 +181,8 @@
                 "edit": true
             },
             "type": "project",
-            "modification_time": "2024-09-05T17:27:56.245000",
-            "access_time": "2024-09-05T17:27:55.143000",
+            "modification_time": "2025-01-29T20:38:45.816000",
+            "access_time": "2025-01-31T15:26:13.408000",
             "suspended": false,
             "subproject_count": 1
         },
@@ -208,7 +192,7 @@
             "account": "/api/accounts/00001/",
             "description": "",
             "permissions": {
-                "view": true,
+                "view": false,
                 "edit": false
             },
             "type": "project",
@@ -241,8 +225,8 @@
             "edit": true
         },
         "auth_role_names": null,
-        "modification_time": "2024-11-21T18:37:00.932000",
-        "access_time": "2024-11-21T18:37:09.826000",
+        "modification_time": "2025-03-03T17:55:20.637000",
+        "access_time": "2025-03-03T17:55:22.965000",
         "suspended": false,
         "homepage": null,
         "path": "Projects catalog"

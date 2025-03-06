@@ -7,7 +7,7 @@ Description: The Crunch.io service <https://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.30.4
+Version: 1.31.0
 Authors@R: c(
     person("Greg", "Freedman Ellis", role = c("aut", "cre"), email = "greg@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
@@ -32,7 +32,6 @@ Imports:
 Suggests:
     base64enc,
     covr,
-    crunchy,
     devtools,
     haven,
     httptest (>= 3.0.0),
@@ -121,7 +120,6 @@ Collate:
     'folders.R'
     'fork-and-merge.R'
     'formula.R'
-    'gadgets.R'
     'geo.R'
     'get-datasets.R'
     'github.R'

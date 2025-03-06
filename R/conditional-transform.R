@@ -67,7 +67,6 @@ conditionalTransform <- function(..., data, else_condition = NA, type = NULL,
         formulas <- dot_formulas
     }
     var_def <- Filter(Negate(is_formula), dots)
-    if (!"derived" %in% names(var_def)) var_def$derived <- derivedVariableDefault()
 
     if (length(formulas) == 0) {
         halt(

@@ -129,7 +129,6 @@ reference:
   - flipArrays
   - makeArray
   - makeMRFromText
-  - makeArrayGadget
   - dichotomize
   - unbind
 - title: Folders and organization

@@ -1,0 +1,18 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/55d13a/folders/hidden/",
+    "catalogs": {
+        "parents": "/api/datasets/55d13a/folders/hidden/parents/"
+    },
+    "index": {
+
+    },
+    "body": {
+        "name": "Hidden",
+        "path": "|"
+    },
+    "graph": [
+
+    ],
+    "size": 0
+}

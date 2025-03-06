@@ -43,10 +43,11 @@ with_mock_crunch({
     }
 
     counter <- 1
-    with_mock(
+    with_mocked_bindings(
         ## GET something slightly different each time through so we can
         ## approximate polling a changing resource
-        `httr::GET` = function(url, ...) {
+        .package = "httr",
+        GET = function(url, ...) {
             url <- build_mock_url(paste0(url, counter)) ## Add counter
             counter <<- counter + 1 ## Increment
             return(fake_response(url, "GET",
@@ -54,89 +55,91 @@ with_mock_crunch({
                 status_code = 200, headers = list(`Content-Type` = "application/json")
             ))
         },
-        test_that("Progress polling goes until 100 and has a newline", {
-            ## Use capture.output rather than expect_output because the latter
-            ## concatenates things together and does not easily capture the effect
-            ## of closing the progress bar, which is another item on the buffer.
-            out <- capture.output(
-                expect_equal(
-                    pollProgress("https://app.crunch.io/api/progress/", wait = .001),
-                    100
-                ), cat("command on next line")
-            )
-            expect_equal(length(out), 2)
-            expect_match(out[1], "=| 100%", fixed = TRUE)
-            expect_match(out[2], "command on next line", fixed = TRUE)
-        }),
-        test_that("Progress polling goes until 100 when silent", {
-            counter <<- 1
-            with(temp.option(crunch = list(crunch.show.progress = FALSE)), {
-                expect_silent(
+        {
+            test_that("Progress polling goes until 100 and has a newline", {
+                ## Use capture.output rather than expect_output because the latter
+                ## concatenates things together and does not easily capture the effect
+                ## of closing the progress bar, which is another item on the buffer.
+                out <- capture.output(
                     expect_equal(
-                        pollProgress("https://app.crunch.io/api/progress/",
-                            wait = .001
-                        ),
+                        pollProgress("https://app.crunch.io/api/progress/", wait = .001),
                         100
+                    ), cat("command on next line")
+                )
+                expect_equal(length(out), 2)
+                expect_match(out[1], "=| 100%", fixed = TRUE)
+                expect_match(out[2], "command on next line", fixed = TRUE)
+            })
+            test_that("Progress polling goes until 100 when silent", {
+                counter <<- 1
+                with(temp.option(crunch = list(crunch.show.progress = FALSE)), {
+                    expect_silent(
+                        expect_equal(
+                            pollProgress("https://app.crunch.io/api/progress/",
+                                         wait = .001
+                            ),
+                            100
+                        )
                     )
-                )
+                })
             })
-        }),
-        test_that("Auto-polling with a progress resource", {
-            counter <<- 1
-            logfile <- tempfile()
-            with(temp.option(httpcache.log = logfile, crunch = list(crunch.poll.wait = 0.01)), {
-                expect_output(
-                    expect_identical(
-                        handleAPIresponse(fakeProg("https://app.crunch.io/api/progress/")),
-                        "https://app.crunch.io/api/datasets/"
-                    ),
-                    "=| 100%",
-                    fixed = TRUE
-                )
-            })
-            logs <- loadLogfile(logfile)
-            expect_identical(logs$verb, c("GET", "GET"))
-            expect_identical(
-                sub("\\.json$", "", logs$url),
-                c("app.crunch.io/api/progress/1", "app.crunch.io/api/progress/2")
-            )
-        }),
-        test_that("Auto-polling when progress reports failure", {
-            counter <<- 1
-            logfile <- tempfile()
-            with(temp.option(httpcache.log = logfile, crunch = list(crunch.poll.wait = 0.01)), {
-                expect_output(
-                    expect_message(
-                        expect_error(
-                            handleAPIresponse(fakeProg("https://app.crunch.io/api/progress2/")),
-                            paste("progress returned -1"),
-                            fixed = TRUE
+            test_that("Auto-polling with a progress resource", {
+                counter <<- 1
+                logfile <- tempfile()
+                with(temp.option(httpcache.log = logfile, crunch = list(crunch.poll.wait = 0.01)), {
+                    expect_output(
+                        expect_identical(
+                            handleAPIresponse(fakeProg("https://app.crunch.io/api/progress/")),
+                            "https://app.crunch.io/api/datasets/"
                         ),
-                        "Result URL: https://app.crunch.io/api/datasets/"
-                    ),
-                    "|  23%",
-                    fixed = TRUE
+                        "=| 100%",
+                        fixed = TRUE
+                    )
+                })
+                logs <- loadLogfile(logfile)
+                expect_identical(logs$verb, c("GET", "GET"))
+                expect_identical(
+                    sub("\\.json$", "", logs$url),
+                    c("app.crunch.io/api/progress/1", "app.crunch.io/api/progress/2")
                 )
             })
-            logs <- loadLogfile(logfile)
-            expect_identical(logs$verb, c("GET", "GET"))
-            expect_identical(
-                sub("\\.json$", "", logs$url),
-                c("app.crunch.io/api/progress2/1", "app.crunch.io/api/progress2/2")
-            )
-        }),
-        test_that("'crunch.show.progress.url' option works", {
-            counter <<- 1
-            with(temp.option(crunch = list(
-                crunch.poll.wait = 0.01, "crunch.show.progress.url" = TRUE
-            )), {
-                expect_message(
-                    capture.output(handleAPIresponse(
-                        fakeProg("https://app.crunch.io/api/progress/")
-                    )),
-                    "Checking progress at: https://app.crunch.io/api/progress/"
+            test_that("Auto-polling when progress reports failure", {
+                counter <<- 1
+                logfile <- tempfile()
+                with(temp.option(httpcache.log = logfile, crunch = list(crunch.poll.wait = 0.01)), {
+                    expect_output(
+                        expect_message(
+                            expect_error(
+                                handleAPIresponse(fakeProg("https://app.crunch.io/api/progress2/")),
+                                paste("progress returned -1"),
+                                fixed = TRUE
+                            ),
+                            "Result URL: https://app.crunch.io/api/datasets/"
+                        ),
+                        "|  23%",
+                        fixed = TRUE
+                    )
+                })
+                logs <- loadLogfile(logfile)
+                expect_identical(logs$verb, c("GET", "GET"))
+                expect_identical(
+                    sub("\\.json$", "", logs$url),
+                    c("app.crunch.io/api/progress2/1", "app.crunch.io/api/progress2/2")
                 )
             })
-        })
+            test_that("'crunch.show.progress.url' option works", {
+                counter <<- 1
+                with(temp.option(crunch = list(
+                    crunch.poll.wait = 0.01, "crunch.show.progress.url" = TRUE
+                )), {
+                    expect_message(
+                        capture.output(handleAPIresponse(
+                            fakeProg("https://app.crunch.io/api/progress/")
+                        )),
+                        "Checking progress at: https://app.crunch.io/api/progress/"
+                    )
+                })
+            })
+        }
     )
 })

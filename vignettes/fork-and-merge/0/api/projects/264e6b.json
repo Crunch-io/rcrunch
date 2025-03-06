@@ -29,8 +29,8 @@
             "-",
             "-"
         ],
-        "modification_time": "2024-11-21T18:37:00.932000",
-        "access_time": "2024-11-21T18:37:09.826000",
+        "modification_time": "2025-03-03T17:55:20.637000",
+        "access_time": "2025-03-03T17:55:22.965000",
         "suspended": false,
         "homepage": null,
         "path": "examples",
@@ -47,6 +47,7 @@
             }
         },
         "profiles_branding": false,
+        "recurring_datasets": false,
         "templates": {
             "powerpoint": "https://s.crunch.io/act_templates/account-crunch-dxtwsa-powerpoint.pptx"
         },
@@ -63,7 +64,8 @@
             },
             "report_issue_url": "https://yougov.com",
             "email_sender_name": "",
-            "profiles_mode": false
+            "profiles_mode": false,
+            "vector_search": false
         },
         "settings": {
 
@@ -74,9 +76,9 @@
         }
     },
     "index": {
-        "/api/projects/f8eec3/": {
+        "/api/projects/711d98/": {
             "name": "rcrunch vignette data",
-            "id": "f8eec3",
+            "id": "711d98",
             "account": "/api/accounts/00001/",
             "description": "",
             "permissions": {
@@ -84,12 +86,12 @@
                 "edit": true
             },
             "type": "project",
-            "modification_time": "2024-11-21T18:37:00.932000",
-            "access_time": "2024-11-21T18:37:09.826000",
+            "modification_time": "2025-03-03T17:55:20.637000",
+            "access_time": "2025-03-03T17:55:22.965000",
             "suspended": false
         }
     },
     "graph": [
-        "/api/projects/f8eec3/"
+        "/api/projects/711d98/"
     ]
 }

@@ -5,6 +5,8 @@
         "public": "/api/public/",
         "sources": "/api/sources/",
         "datasources": "/api/datasources/",
+        "datadestinations": "/api/datadestinations/",
+        "notifications": "/api/notifications/",
         "users": "/api/users/",
         "datasets": "/api/datasets/",
         "teams": "/api/teams/",
