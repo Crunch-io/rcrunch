@@ -42,7 +42,6 @@ Suggests:
     rmarkdown,
     rstudioapi,
     spelling,
-    styler,
     testthat (>= 2.0.0),
     withr
 VignetteBuilder: knitr
