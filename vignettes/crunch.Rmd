@@ -86,7 +86,7 @@ my_project <- newProject("examples/rcrunch vignette data")
 
 Then when creating or loading datasets, you can pass in either `my_project` or the path to it ("examples/vignette data").
 
-We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/) which is filtered on those respondents who reported having been R users and selecting a handful of variables.
+We've included with the package a sample from the [2017 Stack Overflow developer survey](https://survey.stackoverflow.co) which is filtered on those respondents who reported having been R users and selecting a handful of variables.
 
 ```{r dimensions}
 dim(SO_survey)
