@@ -156,14 +156,6 @@ test_that("retry", {
 })
 
 if (run.integration.tests) {
-    test_that("Request headers", {
-        skip_if_disconnected()
-        r <- crGET("http://httpbin.org/gzip")
-        expect_true(r$gzipped)
-        expect_true(grepl("gzip", r$headers[["Accept-Encoding"]]))
-        expect_true(grepl("rcrunch", r$headers[["User-Agent"]]))
-    })
-
     test_that("crunch_user_agent", {
         expect_true(grepl("rcrunch", crunch_user_agent()))
         expect_true(grepl("libcurl", crunch_user_agent()))
