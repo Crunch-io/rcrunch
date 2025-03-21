@@ -33,7 +33,7 @@ A data frame with 1634 rows and 25 variables.
 }
 }
 \source{
-\url{https://insights.stackoverflow.com/survey/}
+\url{https://survey.stackoverflow.co}
 }
 \usage{
 SO_survey
