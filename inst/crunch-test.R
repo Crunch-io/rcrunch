@@ -128,19 +128,19 @@ with_mock_crunch <- function(expr) {
 with_POST <- function(resp, expr) {
     ## Mock a POST that returns something, like a Location header pulled from 201
     force(resp)
-    with_mocked_bindings(crPOST = function(...) resp, eval.parent(expr))
+    with_mocked_bindings(crPOST = function(...) resp, eval.parent(expr), .package = "crunch")
 }
 
 with_PATCH <- function(resp, expr) {
     ## Mock a PATCH that returns something, or nothing
     force(resp)
-    with_mocked_bindings(crPATCH = function(...) resp, eval.parent(expr))
+    with_mocked_bindings(crPATCH = function(...) resp, eval.parent(expr), .package = "crunch")
 }
 
 with_DELETE <- function(resp, expr) {
     ## Mock a DELETE that returns something, or nothing
     force(resp)
-    with_mocked_bindings(crDELETE = function(...) resp, eval.parent(expr))
+    with_mocked_bindings(crDELETE = function(...) resp, eval.parent(expr), .package = "crunch")
 }
 
 assign("entities.created", c(), envir = globalenv())

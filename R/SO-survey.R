@@ -30,7 +30,7 @@
 #'     \item{WantWorkLanguage}{Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?}
 #'     \item{HaveWorkedLanguage}{Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?}
 #' }
-#' @source \url{https://insights.stackoverflow.com/survey/}
+#' @source \url{https://survey.stackoverflow.co}
 "SO_survey"
 
 #' Schema for the 2017 Stack Overflow developer survey
