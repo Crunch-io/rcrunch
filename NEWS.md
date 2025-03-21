@@ -1,4 +1,6 @@
-# crunch 1.31.0 (Development Version)
+# crunch 1.31.0.9000 (Development version)
+
+# crunch 1.31.0
 * Fix for datetimes when running `as.data.frame(force = TRUE)` (#666, thanks @rossellhayes)
 
 * The crunchy gadgets have been removed.
