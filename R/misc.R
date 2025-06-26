@@ -216,6 +216,7 @@ vectorOrList <- function(obj, type) {
 #' | crunch.delimiter             | R_CRUNCH_DELIMITER             | "/"           | What to use as a delimiter when printing folder paths                       |
 #' | crunch.check.updates         | R_CRUNCH_CHECK_UPDATES         | TRUE          | Whether to check for updates to the crunch package                          |
 #' | crunch.debug                 | R_CRUNCH_DEBUG                 | FALSE         | Whether to print verbose information for debugging                          |
+#' | crunch.skip.startup          | R_CRUNCH_SKIP_STARTUP          | FALSE         | Whether to skip package startup (useful for webR)                           |
 #' | test.verify.ssl              | R_TEST_VERIFY_SSL              | TRUE          | Whether to verify ssl in curl during crunch tests                           |
 #' | crunch.stabilize.query       | R_CRUNCH_STABILIZE_QUERY       | FALSE         | Whether to stabilize JSON objects for saving as `httptest` objects          |
 #' | crunch.namekey.dataset       | R_CRUNCH_NAMEKEY_DATASET       | "alias"       | What variable identifier (alias or name) to use for a dataset's variables   |
