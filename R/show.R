@@ -282,6 +282,8 @@ formatExpression <- function(expr) {
         }
     } else if ("variable" %in% names(expr)) {
         return(crGET(expr[["variable"]])$body$alias)
+    } else if ("var" %in% names(expr)) {
+        return(expr[["var"]])
     } else if (length(intersect(c("column", "value"), names(expr)))) {
         return(deparseAndFlatten(expressionValue(expr)))
     } else {
