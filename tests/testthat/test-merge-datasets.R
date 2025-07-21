@@ -20,11 +20,8 @@ with_mock_crunch({
         genderFilter, "}"
     )
     testSubsetPayloadPart1 <- paste0(
-        '{"function":"select","args":[{"map":{',
-        '"66ae9881e3524f7db84970d556c34552":',
-        '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
-        '"f78ca47313144b57adfb495893968e70":',
-        '{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}],',
+        '{"function":"frame_subset","args":[{"frame":"primary"},{"value":',
+        '["66ae9881e3524f7db84970d556c34552","f78ca47313144b57adfb495893968e70"]},{"value":null}],',
         '"frame":'
     )
     testSubsetPayload <- paste0(testSubsetPayloadPart1, testPayload, "}")
