@@ -148,15 +148,9 @@ with_mock_crunch({
             crunchBox(ds[2:5], filters = NULL),
             "https://app.crunch.io/api/datasets/1/boxdata/",
             '{"element":"shoji:entity","body":{"filters":[],"weight":null,',
-            '"where":{"function":"select","args":[{"map":{',
-            '"66ae9881e3524f7db84970d556c34552":',
-            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
-            '"loc":',
-            '{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"},',
-            '"949d2dc7e7a24e6090cc88bb92e1d2fb":',
-            '{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},',
-            '"text":{"variable":"https://app.crunch.io/api/datasets/1/variables/textVar/"}',
-            "}}]}}}"
+            '"where":{"function":"frame_subset","args":[{"frame":"primary"},',
+            '{"value":["66ae9881e3524f7db84970d556c34552","loc",',
+            '"949d2dc7e7a24e6090cc88bb92e1d2fb","text"]},{"value":null}]}}}'
         )
     })
     test_that("Hidden variables are automatically 'selected' out (and weight is used)", {
@@ -165,11 +159,9 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/3/boxdata/",
             '{"element":"shoji:entity","body":{"filters":[],',
             '"weight":"https://app.crunch.io/api/datasets/3/variables/birthyr/",',
-            '"where":{"function":"select","args":[{"map":{',
-            '"66ae9881e3524f7db84970d556c34552":',
-            '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
-            '"d7c21314ca9e453c93069168681a285c":',
-            '{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]}}}'
+            '"where":{"function":"frame_subset","args":[{"frame":"primary"},',
+            '{"value":["66ae9881e3524f7db84970d556c34552","d7c21314ca9e453c93069168681a285c"]},',
+            '{"value":null}]}}}'
         )
     })
     test_that("Can override the current weight", {
@@ -178,11 +170,9 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/3/boxdata/",
             '{"element":"shoji:entity","body":{"filters":[],',
             '"weight":null,',
-            '"where":{"function":"select","args":[{"map":{',
-            '"66ae9881e3524f7db84970d556c34552":',
-            '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
-            '"d7c21314ca9e453c93069168681a285c":',
-            '{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]}}}'
+            '"where":{"function":"frame_subset","args":[{"frame":"primary"},',
+            '{"value":["66ae9881e3524f7db84970d556c34552","d7c21314ca9e453c93069168681a285c"]},',
+            '{"value":null}]}}}'
         )
     })
     test_that("Select filters in box", {

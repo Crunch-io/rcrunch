@@ -86,13 +86,11 @@ variablesFilter <- function(dataset, include.hidden = FALSE) {
     ## query from self. Adding it here so that we hit cache.
     dsvars <- ShojiCatalog(crGET(self(allvars), query = list(relative = "on")))
     if (include.hidden || (length(allvars) != length(dsvars))) {
-        v <- structure(lapply(urls(allvars), function(x) list(variable = x)),
-            .Names = ids(allvars)
-        )
+        v <- ids(allvars)
         ## Make sure that duplicate variables haven't been referenced (surely
         ## by accident).
         ## TODO: move this to a ShojiCatalog subset method?
-        dupes <- duplicated(names(v))
+        dupes <- duplicated(v)
         if (any(dupes)) {
             dup.aliases <- unique(aliases(allvars[dupes]))
             halt(
@@ -100,7 +98,10 @@ variablesFilter <- function(dataset, include.hidden = FALSE) {
                 serialPaste(dup.aliases)
             )
         }
-        return(list(`function` = "select", args = list(list(map = v))))
+        return(list(
+            `function` = "frame_subset",
+            args = list(list(frame = "primary"), list(value = I(v)), list(value = NULL))
+        ))
     }
     ## Else, return NULL
     return(NULL)
