@@ -432,8 +432,9 @@ with_test_authentication({
     test_that("CrunchDataFrame lazily fetches columns", {
         expect_true("v2" %in% names(ds)) ## ds is stale
         expect_is(as.data.frame(ds), "CrunchDataFrame")
-        ## This should error because it will try to get values for v2
-        expect_error(as.data.frame(ds, force = TRUE))
+        ## This used to error, but now silently returns data without deleted variable
+        ds_no_v2_df <- as.data.frame(ds, force = TRUE)
+        expect_null(ds_no_v2_df$v2)
     })
 
     ds <- forceVariableCatalog(ds)
