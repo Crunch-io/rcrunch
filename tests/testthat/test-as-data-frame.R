@@ -430,11 +430,11 @@ with_test_authentication({
     ds <- forceVariableCatalog(ds)
     with_consent(delete(v2))
     test_that("CrunchDataFrame lazily fetches columns", {
+        skip("ZC-542 is changing this behavior, skip for now (used to error, now column is silently skipped)")
         expect_true("v2" %in% names(ds)) ## ds is stale
         expect_is(as.data.frame(ds), "CrunchDataFrame")
-        ## This used to error, but now silently returns data without deleted variable
-        ds_no_v2_df <- as.data.frame(ds, force = TRUE)
-        expect_null(ds_no_v2_df$v2)
+        ## This should error because it will try to get values for v2
+        expect_error(as.data.frame(ds, force = TRUE))
     })
 
     ds <- forceVariableCatalog(ds)
