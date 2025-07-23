@@ -55,8 +55,8 @@ exportDataset <- function(dataset, file, format = c("csv", "spss", "parquet"),
     export_url <- exporters[[format]]
 
     body <- list(filter = zcl(activeFilter(dataset)))
-    ## Add this after so that if it is NULL, the "where" key isn't present
-    body$where <- variablesFilter(dataset, include.hidden)
+    ## Add this after so that if it is NULL, the "variables" key isn't present
+    body$variables <- variablesList(dataset, include.hidden)
     ## Assemble options
     opts <- list(...)
     if (format == "csv") {
@@ -78,6 +78,37 @@ exportDataset <- function(dataset, file, format = c("csv", "spss", "parquet"),
     invisible(file)
 }
 
+
+variablesList <- function(dataset, include.hidden = FALSE) {
+    ## Check to see if we have a subset of variables in `dataset`.
+    ## If so, return a Crunch expression to filter them
+    allvars <- allVariables(dataset)
+    ## TODO: fix Variable catalog so that it doesn't pop off its "relative"
+    ## query from self. Adding it here so that we hit cache.
+    dsvars <- ShojiCatalog(crGET(self(allvars), query = list(relative = "on")))
+
+    if (include.hidden || (length(allvars) != length(dsvars))) {
+        var_ids <- ids(allvars)
+
+        ## Make sure that duplicate variables haven't been referenced (surely
+        ## by accident).
+        ## TODO: move this to a ShojiCatalog subset method?
+        dupes <- duplicated(var_ids)
+        if (any(dupes)) {
+            dup.aliases <- unique(aliases(allvars[dupes]))
+            halt(
+                pluralize("Duplicate variable reference", length(dup.aliases)), ": ",
+                serialPaste(dup.aliases)
+            )
+        }
+        return(I(urls(allvars)))
+    }
+
+}
+
+# This uses the ZCL function `select`, which has known performance issues
+# TODO: We should remove it from the other places where we use it
+# (appending, joining, crunchbox, & tabbooks)
 variablesFilter <- function(dataset, include.hidden = FALSE) {
     ## Check to see if we have a subset of variables in `dataset`.
     ## If so, return a Crunch expression to filter them
