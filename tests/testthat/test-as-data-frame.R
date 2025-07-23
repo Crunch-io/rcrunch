@@ -430,6 +430,7 @@ with_test_authentication({
     ds <- forceVariableCatalog(ds)
     with_consent(delete(v2))
     test_that("CrunchDataFrame lazily fetches columns", {
+        skip("ZC-542 is changing this behavior, skip for now (used to error, now column is silently skipped)")
         expect_true("v2" %in% names(ds)) ## ds is stale
         expect_is(as.data.frame(ds), "CrunchDataFrame")
         ## This should error because it will try to get values for v2
