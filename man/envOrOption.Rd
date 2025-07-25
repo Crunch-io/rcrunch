@@ -56,6 +56,7 @@ the option name is in all capital letters, with "." replaced with
    crunch.delimiter \tab R_CRUNCH_DELIMITER \tab "/" \tab What to use as a delimiter when printing folder paths \cr
    crunch.check.updates \tab R_CRUNCH_CHECK_UPDATES \tab TRUE \tab Whether to check for updates to the crunch package \cr
    crunch.debug \tab R_CRUNCH_DEBUG \tab FALSE \tab Whether to print verbose information for debugging \cr
+   crunch.skip.startup \tab R_CRUNCH_SKIP_STARTUP \tab FALSE \tab Whether to skip package startup (useful for webR) \cr
    test.verify.ssl \tab R_TEST_VERIFY_SSL \tab TRUE \tab Whether to verify ssl in curl during crunch tests \cr
    crunch.stabilize.query \tab R_CRUNCH_STABILIZE_QUERY \tab FALSE \tab Whether to stabilize JSON objects for saving as \code{httptest} objects \cr
    crunch.namekey.dataset \tab R_CRUNCH_NAMEKEY_DATASET \tab "alias" \tab What variable identifier (alias or name) to use for a dataset's variables \cr
