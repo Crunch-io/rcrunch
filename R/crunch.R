@@ -3,6 +3,8 @@
 
 #' @importFrom httr config add_headers
 .onLoad <- function(lib, pkgname = "crunch") {
+    if (envOrOption("crunch.skip.startup", FALSE, expect_lgl = TRUE)) return()
+
     setIfNotAlready(
         httpcache.on = TRUE,
         crunch.api = "https://app.crunch.io/api/",

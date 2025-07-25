@@ -306,14 +306,13 @@ set_crunch_config <- function(cfg = c(
 #' globally with [set_crunch_config()].
 #' @export
 #' @keywords internal
-#' @importFrom curl curl_version
 crunch_user_agent <- function(...) {
     ## Cf. httr:::default_ua
     ## Include versions of any of these packages, if attached
     pkgs <- ua_packages[ua_packages %in% loadedNamespaces()]
     ua <- c(
         # Also include the libcurl version
-        paste0("libcurl/", curl_version()$version),
+        paste0("libcurl/", curl::curl_version()$version),
         mapply(packageUA, pkgs, names(pkgs)),
         # And any extra bits provided
         ...
