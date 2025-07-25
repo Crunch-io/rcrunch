@@ -82,9 +82,7 @@ with_mock_crunch({
         expect_POST(
             write.csv(ds["gender"], file = ""),
             "https://app.crunch.io/api/datasets/1/export/csv/",
-            '{"filter":null,"where":{"function":"select",',
-            '"args":[{"map":{"66ae9881e3524f7db84970d556c34552":',
-            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}}}]},',
+            '{"filter":null,"variables":["https://app.crunch.io/api/datasets/1/variables/gender/"],',
             '"options":{"use_category_ids":false}}'
         )
     })
@@ -102,15 +100,9 @@ with_mock_crunch({
 
     url <- "https://app.crunch.io/api/datasets/3/export/csv/"
     post_request <- paste0(
-        '{"filter":null,',
-        '"where":{"function":"select",',
-        '"args":[{"map":{',
-        '"66ae9881e3524f7db84970d556c34552":',
-        '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
-        '"f78ca47313144b57adfb495893968e70":',
-        '{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},',
-        '"d7c21314ca9e453c93069168681a285c":',
-        '{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]'
+        '{"filter":null,"variables":["https://app.crunch.io/api/datasets/3/variables/gender/",',
+        '"https://app.crunch.io/api/datasets/3/variables/birthyr/",',
+        '"https://app.crunch.io/api/datasets/3/variables/starttime/"]'
     )
     test_that("exporting hidden variables", {
         ds <- cachedLoadDataset("ECON.sav")
@@ -129,13 +121,8 @@ with_mock_crunch({
         )
 
         subset_post <- paste0(
-            '{"filter":null,',
-            '"where":{"function":"select",',
-            '"args":[{"map":{',
-            '"66ae9881e3524f7db84970d556c34552":',
-            '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
-            '"f78ca47313144b57adfb495893968e70":',
-            '{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}'
+            '{"filter":null,"variables":["https://app.crunch.io/api/datasets/3/variables/gender/",',
+            '"https://app.crunch.io/api/datasets/3/variables/birthyr/"]'
         )
         # Hidden variables can be exported by name without include.hidden
         expect_POST(
