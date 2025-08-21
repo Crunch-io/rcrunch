@@ -105,6 +105,10 @@ setMethod("scriptSavepoint", "Script", function(x) {
 #' @param encoding Optional encoding to convert **from**, defaults to UTF-8.
 #' The API accepts only UTF-8, so all text will be converted to UTF-8 before
 #' being sent to the server.
+#' @param strict_subvariable_syntax Whether to require referring to axes using
+#' "bracket" notation (for example `satisfaction[discounts]`). Defaults to `TRUE`.
+#' If `FALSE`, refer to axis members by their codes only, which can cause problems
+#' when axes have the same codes across different arrays.
 #' @param ... Additional options, such as `dry_run = TRUE`, passed on
 #' to the API if x is a dataset (if x is a project folder, an error is thrown)
 #' @return For `runCrunchAutomation()`: an updated dataset/project folder (invisibly),
@@ -141,6 +145,7 @@ runCrunchAutomation <- function(
     script,
     is_file = string_is_file_like(script),
     encoding = "UTF-8",
+    strict_subvariable_syntax = TRUE,
     ...) {
     # a previous version of this function had `dataset` as its first argument
     # because the function is now broader, the argument is called `x`
@@ -172,7 +177,7 @@ runCrunchAutomation <- function(
     automation_error_env$file <- filename
     automation_error_env$last_attempted_script <- script
 
-    sendCrunchAutomationScript(x = x, script = script, ...)
+    sendCrunchAutomationScript(x = x, script = script, ..., strict_subvariable_syntax = strict_subvariable_syntax)
 
     # Provide feedback for dry_run success so that user is confident it was successful
     if (isTRUE(list(...)$dry_run)) {
@@ -219,6 +224,8 @@ setMethod(
         }
 
         dots <- list(...)
+        dots[["strict_subvariable_syntax"]] <- NULL # Remove this, waiting on
+        # https://crunchio.atlassian.net/browse/AT-526?atlOrigin=eyJpIjoiODQzODlhYzlhOGE1NDM4YWI3Zjk0MTMwMzJlOTczNjAiLCJwIjoiaiJ9
         if (length(dots) > 0) {
             # could have been a warning, but went with error in case a user
             # would try running a destructive operation with dry_run = TRUE

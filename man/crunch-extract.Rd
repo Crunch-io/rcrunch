@@ -10,9 +10,9 @@
 %   R/variable-update.R, R/variable.R
 \name{crunch-extract}
 \alias{crunch-extract}
-\alias{[,AbstractCategories,ANY,ANY-method}
-\alias{[,AbstractCategories,character,ANY-method}
-\alias{[,AbstractCategories,numeric,ANY-method}
+\alias{[,AbstractCategories,ANY,ANY,ANY-method}
+\alias{[,AbstractCategories,character,ANY,ANY-method}
+\alias{[,AbstractCategories,numeric,ANY,ANY-method}
 \alias{[<-,AbstractCategories,character,ANY,ANY-method}
 \alias{[[,AbstractCategories,character-method}
 \alias{[[<-,AbstractCategories,character,ANY,ANY-method}
@@ -26,19 +26,19 @@
 \alias{[[<-.CrunchDataFrame}
 \alias{$.CrunchDataFrame}
 \alias{$<-.CrunchDataFrame}
-\alias{[,CubeDims,ANY,ANY-method}
-\alias{[,CrunchCube,ANY,ANY-method}
+\alias{[,CubeDims,ANY,ANY,ANY-method}
+\alias{[,CrunchCube,ANY,ANY,ANY-method}
 \alias{[[<-,TransformsList,ANY,missing,NULL-method}
 \alias{[[,DatasetCatalog,numeric-method}
 \alias{[[<-,DatasetCatalog,character,missing,DatasetTuple-method}
-\alias{[,CrunchDataset,ANY,ANY-method}
-\alias{[,CrunchDataset,logical,missing-method}
-\alias{[,CrunchDataset,character,ANY-method}
-\alias{[,CrunchDataset,VariableGroup,ANY-method}
-\alias{[,CrunchDataset,VariableOrder,ANY-method}
-\alias{[,CrunchDataset,missing,ANY-method}
-\alias{[,CrunchDataset,CrunchLogicalExpr,missing-method}
-\alias{[,CrunchDataset,CrunchLogicalExpr,ANY-method}
+\alias{[,CrunchDataset,ANY,ANY,ANY-method}
+\alias{[,CrunchDataset,logical,missing,ANY-method}
+\alias{[,CrunchDataset,character,ANY,ANY-method}
+\alias{[,CrunchDataset,VariableGroup,ANY,ANY-method}
+\alias{[,CrunchDataset,VariableOrder,ANY,ANY-method}
+\alias{[,CrunchDataset,missing,ANY,ANY-method}
+\alias{[,CrunchDataset,CrunchLogicalExpr,missing,ANY-method}
+\alias{[,CrunchDataset,CrunchLogicalExpr,ANY,ANY-method}
 \alias{subset,CrunchDataset-method}
 \alias{[[,CrunchDataset,ANY-method}
 \alias{[[,CrunchDataset,character-method}
@@ -55,10 +55,10 @@
 \alias{[<-,CrunchDataset,ANY,missing,list-method}
 \alias{[<-,CrunchDataset,ANY,missing,CrunchDataset-method}
 \alias{[<-,CrunchDataset,CrunchExpr,ANY,ANY-method}
-\alias{[,ShojiCatalog,character,ANY-method}
-\alias{[,ShojiCatalog,numeric,ANY-method}
-\alias{[,ShojiCatalog,logical,ANY-method}
-\alias{[,ShojiCatalog,ANY,ANY-method}
+\alias{[,ShojiCatalog,character,ANY,ANY-method}
+\alias{[,ShojiCatalog,numeric,ANY,ANY-method}
+\alias{[,ShojiCatalog,logical,ANY,ANY-method}
+\alias{[,ShojiCatalog,ANY,ANY,ANY-method}
 \alias{[[,ShojiCatalog,ANY-method}
 \alias{[[,ShojiCatalog,character-method}
 \alias{$,ShojiCatalog-method}
@@ -72,9 +72,9 @@
 \alias{[[<-,AnalysisCatalog,ANY,missing,Analysis-method}
 \alias{[[,CrunchDeck,ANY-method}
 \alias{[[<-,CrunchDeck,ANY,ANY,ANY-method}
-\alias{[,CrunchExpr,CrunchLogicalExpr,ANY-method}
-\alias{[,CrunchExpr,logical,ANY-method}
-\alias{[,CrunchExpr,numeric,ANY-method}
+\alias{[,CrunchExpr,CrunchLogicalExpr,ANY,ANY-method}
+\alias{[,CrunchExpr,logical,ANY,ANY-method}
+\alias{[,CrunchExpr,numeric,ANY,ANY-method}
 \alias{[[,FilterCatalog,numeric-method}
 \alias{[[<-,FilterCatalog,character,missing,CrunchLogicalExpr-method}
 \alias{[[<-,FilterCatalog,numeric,missing,CrunchLogicalExpr-method}
@@ -93,8 +93,8 @@
 \alias{[[<-,ProjectFolder,character,missing,ProjectFolder-method}
 \alias{[[,ShojiFolder,numeric-method}
 \alias{[[,ShojiFolder,character-method}
-\alias{[,ShojiOrder,ANY,ANY-method}
-\alias{[,ShojiOrder,character,ANY-method}
+\alias{[,ShojiOrder,ANY,ANY,ANY-method}
+\alias{[,ShojiOrder,character,ANY,ANY-method}
 \alias{[[,ShojiOrder,ANY-method}
 \alias{[[,ShojiOrder,character-method}
 \alias{$,ShojiOrder-method}
@@ -109,8 +109,8 @@
 \alias{[[<-,ShojiOrder,character,missing,NULL-method}
 \alias{[[<-,ShojiOrder,character,missing,ShojiOrder-method}
 \alias{$<-,ShojiOrder-method}
-\alias{[,OrderGroup,ANY,ANY-method}
-\alias{[,OrderGroup,character,ANY-method}
+\alias{[,OrderGroup,ANY,ANY,ANY-method}
+\alias{[,OrderGroup,character,ANY,ANY-method}
 \alias{[[,OrderGroup,character-method}
 \alias{[[,OrderGroup,ANY-method}
 \alias{$,OrderGroup-method}
@@ -132,7 +132,7 @@
 \alias{[[<-,AnalysisCatalog,numeric,missing,list-method}
 \alias{[[,Subvariables,character-method}
 \alias{[[,Subvariables,numeric-method}
-\alias{[,Subvariables,character,ANY-method}
+\alias{[,Subvariables,character,ANY,ANY-method}
 \alias{[[<-,Subvariables,character,missing,CrunchVariable-method}
 \alias{[[<-,Subvariables,ANY,missing,CrunchVariable-method}
 \alias{[[<-,Subvariables,ANY,missing,NULL-method}
@@ -140,9 +140,9 @@
 \alias{[<-,Subvariables,character,missing,Subvariables-method}
 \alias{[<-,Subvariables,ANY,missing,Subvariables-method}
 \alias{[<-,Subvariables,ANY,missing,ANY-method}
-\alias{[,ArrayVariable,character,ANY-method}
-\alias{[,ArrayVariable,missing,ANY-method}
-\alias{[,ArrayVariable,missing,character-method}
+\alias{[,ArrayVariable,character,ANY,ANY-method}
+\alias{[,ArrayVariable,missing,ANY,ANY-method}
+\alias{[,ArrayVariable,missing,character,ANY-method}
 \alias{[[,ArrayVariable,ANY-method}
 \alias{[[,ArrayVariable,character-method}
 \alias{$,ArrayVariable-method}
@@ -155,13 +155,13 @@
 \alias{[[,TeamCatalog,numeric-method}
 \alias{[[<-,TeamCatalog,character,missing,list-method}
 \alias{[[<-,TeamCatalog,character,missing,CrunchTeam-method}
-\alias{[,UserCatalog,character,ANY-method}
+\alias{[,UserCatalog,character,ANY,ANY-method}
 \alias{[[,UserCatalog,character-method}
 \alias{[[,VariableCatalog,numeric-method}
 \alias{[[<-,VariableCatalog,character,missing,VariableTuple-method}
 \alias{[[<-,VariableCatalog,character,missing,CrunchVariable-method}
-\alias{[,VariableCatalog,VariableOrder,ANY-method}
-\alias{[,VariableCatalog,VariableGroup,ANY-method}
+\alias{[,VariableCatalog,VariableOrder,ANY,ANY-method}
+\alias{[,VariableCatalog,VariableGroup,ANY,ANY-method}
 \alias{[<-,VariableCatalog,VariableOrder,missing,VariableCatalog-method}
 \alias{[<-,VariableCatalog,VariableGroup,missing,VariableCatalog-method}
 \alias{[[<-,VariableOrder,character,missing,CrunchDataset-method}
@@ -183,16 +183,16 @@
 \alias{[<-,CategoricalArrayVariable,ANY,missing,factor-method}
 \alias{[<-,CrunchVariable,ANY,missing,logical-method}
 \alias{is.na<-,CrunchVariable,ANY-method}
-\alias{[,CrunchVariable,CrunchExpr,ANY-method}
-\alias{[,CrunchVariable,numeric,ANY-method}
-\alias{[,CrunchVariable,logical,ANY-method}
+\alias{[,CrunchVariable,CrunchExpr,ANY,ANY-method}
+\alias{[,CrunchVariable,numeric,ANY,ANY-method}
+\alias{[,CrunchVariable,logical,ANY,ANY-method}
 \title{Extract and modify Crunch objects}
 \usage{
-\S4method{[}{AbstractCategories,ANY,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{AbstractCategories,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{AbstractCategories,character,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{AbstractCategories,character,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{AbstractCategories,numeric,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{AbstractCategories,numeric,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{AbstractCategories,character,ANY,ANY}(x, i, j, ...) <- value
 
@@ -220,9 +220,9 @@
 
 \method{$}{CrunchDataFrame}(x, i) <- value
 
-\S4method{[}{CubeDims,ANY,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CubeDims,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchCube,ANY,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchCube,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{TransformsList,ANY,missing,NULL}(x, i, j) <- value
 
@@ -230,21 +230,21 @@
 
 \S4method{[[}{DatasetCatalog,character,missing,DatasetTuple}(x, i, j) <- value
 
-\S4method{[}{CrunchDataset,ANY,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchDataset,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchDataset,logical,missing}(x, i, j, ..., drop = FALSE)
+\S4method{[}{CrunchDataset,logical,missing,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{CrunchDataset,character,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchDataset,character,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchDataset,VariableGroup,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchDataset,VariableGroup,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchDataset,VariableOrder,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchDataset,VariableOrder,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchDataset,missing,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{CrunchDataset,missing,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{CrunchDataset,CrunchLogicalExpr,missing}(x, i, j, ..., drop = FALSE)
+\S4method{[}{CrunchDataset,CrunchLogicalExpr,missing,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{subset}{CrunchDataset}(x, ...)
 
@@ -278,13 +278,13 @@
 
 \S4method{[}{CrunchDataset,CrunchExpr,ANY,ANY}(x, i, j) <- value
 
-\S4method{[}{ShojiCatalog,character,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{ShojiCatalog,character,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{ShojiCatalog,numeric,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{ShojiCatalog,numeric,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{ShojiCatalog,logical,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{ShojiCatalog,logical,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{ShojiCatalog,ANY,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{ShojiCatalog,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{ShojiCatalog,ANY}(x, i, j, ...)
 
@@ -312,11 +312,11 @@
 
 \S4method{[[}{CrunchDeck,ANY,ANY,ANY}(x, i, j) <- value
 
-\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{CrunchExpr,logical,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchExpr,logical,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchExpr,numeric,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchExpr,numeric,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{FilterCatalog,numeric}(x, i, j, ...)
 
@@ -354,9 +354,9 @@
 
 \S4method{[[}{ShojiFolder,character}(x, i, ..., drop = FALSE)
 
-\S4method{[}{ShojiOrder,ANY,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{ShojiOrder,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{ShojiOrder,character,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{ShojiOrder,character,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{ShojiOrder,ANY}(x, i, j, ...)
 
@@ -386,9 +386,9 @@
 
 \S4method{$}{ShojiOrder}(x, name) <- value
 
-\S4method{[}{OrderGroup,ANY,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{OrderGroup,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{OrderGroup,character,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{OrderGroup,character,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{OrderGroup,character}(x, i, j, ...)
 
@@ -432,7 +432,7 @@
 
 \S4method{[[}{Subvariables,numeric}(x, i, j, ...)
 
-\S4method{[}{Subvariables,character,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{Subvariables,character,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{Subvariables,character,missing,CrunchVariable}(x, i) <- value
 
@@ -448,11 +448,11 @@
 
 \S4method{[}{Subvariables,ANY,missing,ANY}(x, i) <- value
 
-\S4method{[}{ArrayVariable,character,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{ArrayVariable,character,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{ArrayVariable,missing,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{ArrayVariable,missing,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{ArrayVariable,missing,character}(x, i, j, ..., drop = TRUE)
+\S4method{[}{ArrayVariable,missing,character,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{ArrayVariable,ANY}(x, i, j, ...)
 
@@ -478,7 +478,7 @@
 
 \S4method{[[}{TeamCatalog,character,missing,CrunchTeam}(x, i, j) <- value
 
-\S4method{[}{UserCatalog,character,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{UserCatalog,character,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{UserCatalog,character}(x, i, j, ...)
 
@@ -488,9 +488,9 @@
 
 \S4method{[[}{VariableCatalog,character,missing,CrunchVariable}(x, i, j) <- value
 
-\S4method{[}{VariableCatalog,VariableOrder,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{VariableCatalog,VariableOrder,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{VariableCatalog,VariableGroup,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{VariableCatalog,VariableGroup,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{VariableCatalog,VariableOrder,missing,VariableCatalog}(x, i, j) <- value
 
@@ -534,11 +534,11 @@
 
 \S4method{is.na}{CrunchVariable,ANY}(x) <- value
 
-\S4method{[}{CrunchVariable,CrunchExpr,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{CrunchVariable,CrunchExpr,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{CrunchVariable,numeric,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchVariable,numeric,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchVariable,logical,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchVariable,logical,ANY,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
 \item{x}{a Crunch object (Dataset, Variable, \code{CrunchExpr}, Catalog,

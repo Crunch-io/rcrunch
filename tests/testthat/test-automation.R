@@ -31,7 +31,7 @@ with_mock_crunch({
             runCrunchAutomation(ds, script_text),
             "https://app.crunch.io/api/datasets/1/scripts/",
             '{"element":"shoji:entity",',
-            '"body":{"body":"', script_text_from_request, '"}}'
+            '"body":{"body":"', script_text_from_request, '","strict_subvariable_syntax":true}}'
         )
 
         # Make sure this doesn't fail when there's no error
@@ -48,12 +48,12 @@ with_mock_crunch({
         expect_POST(
             fixed = TRUE,
             suppressWarnings(
-                runCrunchAutomation(dataset = ds, script_text, foo = 1, bar = 2)
+                runCrunchAutomation(dataset = ds, script_text, foo = 1, bar = 2, strict_subvariable_syntax = FALSE)
             ),
             "https://app.crunch.io/api/datasets/1/scripts/",
             '{"element":"shoji:entity",',
             '"body":{"body":"', script_text_from_request,
-            '","foo":1,"bar":2}}'
+            '","foo":1,"bar":2,"strict_subvariable_syntax":false}}'
         )
 
         # Make sure this doesn't fail when there's no error
@@ -68,7 +68,7 @@ with_mock_crunch({
             runCrunchAutomation(ds, temp),
             "https://app.crunch.io/api/datasets/1/scripts/",
             '{"element":"shoji:entity",',
-            '"body":{"body":"', script_text_from_request, '"}}'
+            '"body":{"body":"', script_text_from_request, '","strict_subvariable_syntax":true}}'
         )
     })
 
@@ -77,7 +77,7 @@ with_mock_crunch({
             runCrunchAutomation(ds, "file.txt", is_file = FALSE),
             "https://app.crunch.io/api/datasets/1/scripts/",
             '{"element":"shoji:entity",',
-            '"body":{"body":"file.txt"}}'
+            '"body":{"body":"file.txt","strict_subvariable_syntax":true}}'
         )
     })
 
@@ -87,7 +87,7 @@ with_mock_crunch({
             runCrunchAutomation(ds, script_text_vector),
             "https://app.crunch.io/api/datasets/1/scripts/",
             '{"element":"shoji:entity",',
-            '"body":{"body":"', script_text_from_request, '"}}'
+            '"body":{"body":"', script_text_from_request, '","strict_subvariable_syntax":true}}'
         )
     })
 

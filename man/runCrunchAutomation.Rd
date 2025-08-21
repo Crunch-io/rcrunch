@@ -10,6 +10,7 @@ runCrunchAutomation(
   script,
   is_file = string_is_file_like(script),
   encoding = "UTF-8",
+  strict_subvariable_syntax = TRUE,
   ...
 )
 
@@ -29,6 +30,11 @@ by specifying \code{TRUE} for a file, and \code{FALSE} for a string.}
 \item{encoding}{Optional encoding to convert \strong{from}, defaults to UTF-8.
 The API accepts only UTF-8, so all text will be converted to UTF-8 before
 being sent to the server.}
+
+\item{strict_subvariable_syntax}{Whether to require referring to axes using
+"bracket" notation (for example \code{satisfaction[discounts]}). Defaults to \code{TRUE}.
+If \code{FALSE}, refer to axis members by their codes only, which can cause problems
+when axes have the same codes across different arrays.}
 
 \item{...}{Additional options, such as \code{dry_run = TRUE}, passed on
 to the API if x is a dataset (if x is a project folder, an error is thrown)}
