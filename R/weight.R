@@ -22,7 +22,10 @@ NULL
 #' @export
 setMethod("weight", "CrunchDataset", function(x) {
     prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "preferences")))
-    w <- prefs$weight
+    # Get either the weight's alias (if backend is behaving the new way)
+    # or the id (if we have legacy behavior). Either work because
+    # you can subset a variables catalog by url or alias
+    w <- prefs[["weight_alias"]] %||% prefs[["weight"]]
     if (!is.null(w)) {
         # we need the full dataset here because we might have been given a
         # subset of the dataset, and we still need to be able to find the

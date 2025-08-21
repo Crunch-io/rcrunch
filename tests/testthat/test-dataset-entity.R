@@ -678,7 +678,12 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             })
             test_that("Setting default weight", {
                 settings(ds)$weight <- self(ds$name)
-                expect_identical(settings(ds)$weight, self(ds$name))
+                ## We're in weird limbo, where either the preferences can be stored
+                ## as a url in `weight` (legacy behavior) or as alias in `weight_alias`
+                expect_true(
+                    identical(settings(ds)$weight, self(ds$name)) ||
+                        identical(settings(ds)$weight_alias, "name")
+                )
                 ## And it should now be in the weight variables order too
                 expect_identical(urls(ShojiOrder(crGET(shojiURL(
                     variables(ds),
