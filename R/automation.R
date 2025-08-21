@@ -145,8 +145,8 @@ runCrunchAutomation <- function(
     script,
     is_file = string_is_file_like(script),
     encoding = "UTF-8",
-    strict_subvariable_syntax = TRUE,
-    ...) {
+    ...,
+    strict_subvariable_syntax = TRUE) {
     # a previous version of this function had `dataset` as its first argument
     # because the function is now broader, the argument is called `x`
     # the following block is for backwards compatibility
