@@ -3,7 +3,6 @@
     "self": "https://app.crunch.io/api/datasets/5/folders/",
     "catalogs": {
         "personal": "https://app.crunch.io/api/datasets/5/variables/personal/",
-        "hidden": "https://app.crunch.io/api/datasets/5/folders/hidden/",
         "trash": "https://app.crunch.io/api/datasets/5/folders/trash/",
         "parents": "https://app.crunch.io/api/datasets/5/folders/parents/",
         "secure": "https://app.crunch.io/api/datasets/5/folders/secure/",

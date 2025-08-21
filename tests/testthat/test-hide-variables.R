@@ -154,6 +154,25 @@ with_mock_crunch({
         )
         expect_no_request(unhide(ds$gender))
     })
+
+
+    # dataset 5 has private variables but no hidden folder
+    ds_no_hidden <- loadDataset("5", project = NULL)
+    test_that("can get variables when no hidden variabes", {
+        expect_equal(
+            aliases(variables(ds_no_hidden)),
+            setdiff(aliases(allVariables(ds_no_hidden)), privateVariables(ds_no_hidden))
+        )
+    })
+    test_that("hiddenVariables is NULL", {
+        expect_null(hiddenVariables(ds_no_hidden))
+    })
+    test_that("get informative error when trying to hide and no hidden", {
+        expect_error(hide(ds_no_hidden[["gender"]]), "Could not find a hidden directory")
+        expect_error(hiddenVariables(ds_no_hidden) <- "gender", "Could not find a hidden directory")
+    })
+
+
 })
 
 with_test_authentication({

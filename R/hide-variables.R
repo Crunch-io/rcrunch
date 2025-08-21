@@ -34,9 +34,10 @@ NULL
 
 .firstLevelFolder <- function(x, type) {
     api_type <- ifelse(type == "private", "secure", type)
-    # private variables not available to non-editors, but pubic and hidden
-    # are available to all
-    api_must_work <- type != "private"
+    # private variables not available to non-editors
+    # hidden is not always present for view
+    # but public should be available to all
+    api_must_work <- type == "public"
 
     # Get root variables folder (which contains the first levels inside of it
     # but isn't really used directly). NB can't use `rootFolder()` because
@@ -56,9 +57,8 @@ NULL
 .firstLevelFolderMover <- function(type) {
     mover <- function(x) {
         dir <- .firstLevelFolder(x, type)
-        # Only private variables can fail lookup
-        if (is.null(x) && type == "private") {
-            halt("Could not access private directory, are you an editor of this dataset?")
+        if (is.null(dir)) {
+            .folderNotFoundError(type)
         }
 
         .moveToFolder(dir, x)
@@ -68,6 +68,12 @@ NULL
     return(mover)
 }
 
+.folderNotFoundError <- function(type) {
+    halt(
+        "Could not find a ", type, " directory, this dataset may not support ",
+        type, " variables or you may not have access to them."
+    )
+}
 
 # ---- Public Variables
 #' @rdname hide
@@ -115,7 +121,9 @@ setMethod("unhide", "VariableCatalog", .firstLevelFolderMover("public"))
 #' @rdname hide
 #' @export
 hideVariables <- function(dataset, variables) {
-    dataset <- mv(dataset, variables, hiddenFolder(dataset))
+    dir <- hiddenFolder(dataset)
+    if (is.null(dir)) .folderNotFoundError("hidden")
+    dataset <- mv(dataset, variables, dir)
     return(invisible(refresh(dataset)))
 }
 

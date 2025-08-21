@@ -77,52 +77,42 @@ getDatasetVariables <- function(x) {
     }
 }
 
-getDatasetHiddenVariables <- function(x) {
+getDatasetSpecialVariables <- function(x, dir_func, type) {
     varcat_url <- variableCatalogURL(x)
+    extra_cache_key <- paste0(type, "VariableCatalog")
+
     if (useLazyVariableCatalog()) {
-        key <- httpcache::buildCacheKey(varcat_url, extras = "HiddenVariableCatalog")
+        key <- httpcache::buildCacheKey(varcat_url, extras = extra_cache_key)
         cache <- httpcache::getCache(key)
         if (!is.null(cache)) {
             return(cache)
-        } else {
-            hiddenvarcat <- variablesBelowFolder(hiddenFolder(x))
-            httpcache::setCache(key, hiddenvarcat)
-            return(hiddenvarcat)
         }
+
+        dir <- dir_func(x)
+        if (is.null(dir)) return(.emptySpecialVariablesCatalog())
+
+        varcat <- variablesBelowFolder(dir)
+        httpcache::setCache(key, varcat)
+        return(varcat)
     } else {
-        return(variablesBelowFolder(hiddenFolder(x)))
+        dir <- dir_func(x)
+        if (is.null(dir)) return(.emptySpecialVariablesCatalog())
+        return(variablesBelowFolder(dir))
     }
 }
 
+.emptySpecialVariablesCatalog <- function() {
+    hiddenvarcat <- VariableCatalog()
+    hiddenvarcat@self <- "<Not Lazy>"
+    hiddenvarcat
+}
+
+getDatasetHiddenVariables <- function(x) {
+    getDatasetSpecialVariables(x, hiddenFolder, "Hidden")
+}
+
 getDatasetPrivateVariables <- function(x) {
-    if (useLazyVariableCatalog()) {
-        varcat_url <- variableCatalogURL(x)
-        key <- httpcache::buildCacheKey(varcat_url, extras = "PrivateVariableCatalog")
-        cache <- httpcache::getCache(key)
-        if (!is.null(cache)) {
-            return(cache)
-        } else {
-            private_dir <- privateFolder(x)
-            if (is.null(private_dir)) {
-                privatevarcat <- VariableCatalog()
-                privatevarcat@self <- "<Not Lazy>"
-                return(privatevarcat)
-            } else {
-                privatevarcat <- variablesBelowFolder(private_dir)
-            }
-            httpcache::setCache(key, privatevarcat)
-            return(privatevarcat)
-        }
-    } else {
-        private_dir <- privateFolder(x)
-        if (is.null(private_dir)) {
-            out <- VariableCatalog()
-            out@self <- "<Not Lazy>"
-            return(out)
-        } else {
-            return(variablesBelowFolder(private_dir))
-        }
-    }
+    getDatasetSpecialVariables(x, privateFolder, "Private")
 }
 
 getNrow <- function(dataset) {

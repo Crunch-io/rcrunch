@@ -40,8 +40,10 @@ deprivatise <- function(x) {
 #' @rdname hide
 #' @export
 privatizeVariables <- function(dataset, variables) {
-  dataset <- mv(dataset, variables, privateFolder(dataset))
-  return(invisible(refresh(dataset)))
+    dir <- privateFolder(dataset)
+    if (is.null(dir)) .folderNotFoundError("hidden")
+    dataset <- mv(dataset, variables, dir)
+    return(invisible(refresh(dataset)))
 }
 
 #' @rdname hide

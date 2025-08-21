@@ -1,4 +1,5 @@
 # crunch (development version)
+* rcrunch now works with datasets/views with no hidden variable folder.
 
 # crunch 1.31.1
 * Improve the way that the csv export requests specific columns.
