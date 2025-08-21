@@ -1,6 +1,12 @@
 # crunch (development version)
 * rcrunch now works with datasets/views with no hidden variable folder.
 
+* `runCrunchAutomation()` now sends `strict_subvariable_syntax=TRUE` by default, 
+  which requires referring to axes using "bracket" notation (for example 
+  `satisfaction[discounts]`). To restore the old behavior, which refers to
+  axes via their code only (and thus is not guaranteed to be unique) use 
+  `strict_subvariable_syntax=FALSE`.
+
 # crunch 1.31.1
 * Improve the way that the csv export requests specific columns.
 
