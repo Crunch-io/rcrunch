@@ -304,8 +304,15 @@ crunchAutomationErrorHandler <- function(response) {
         msg <- http_status(response)$message
         response_content <- content(response)
     } else {
-        msg <- response$message$description
         response_content <- response$message
+        if (is.list(response_content)) {
+            msg <- response_content$description
+        } else {
+            # No automation details provided, just a message (happens in progress api?)
+            msg <- response_content
+            response_content <- NULL
+        }
+
     }
     automation_messages <- try(response_content$resolution, silent = TRUE)
 
@@ -348,11 +355,11 @@ crunchAutomationErrorHandler <- function(response) {
         # could also have information in message property
         # try to use it if it's a character string
         other_msg <- try(content(response)[["message"]], silent = TRUE) # nocov
-        if (is.character(other_msg)) { # nocov
+        if (!is.error(other_msg)) { # nocov
             msg <- paste0(msg, " - ", paste0(other_msg, collapse = "\n")) # nocov
         }
     }
-    halt(msg)
+    stop(errorCondition(msg, class = "prepared_task_error"))
 }
 
 automation_errors_text <- function(errors, display_num = Inf) {

@@ -230,7 +230,7 @@ with_mock_crunch({
         )
     })
 
-    test_that("Can interpret error from async script failures", {
+    test_that("Can interpret error from async script failures (with automation hints)", {
         # Override progress with a pre-generated JSON at the url
         with_mocked_bindings(
             crPOST = function(..., progress.handler = NULL) {
@@ -250,6 +250,27 @@ with_mock_crunch({
         expect_message(
             failures <- showScriptErrors(),
             "\\(line 1\\) Invalid command: NOT",
+        )
+    })
+
+    test_that("Can interpret error from async script failures (without automation hints)", {
+        # Override progress with a pre-generated JSON at the url
+        with_mocked_bindings(
+            crPOST = function(..., progress.handler = NULL) {
+                capture.output(crunch::pollProgress(
+                    "https://app.crunch.io/api/progress-failed-async-script-msg.json",
+                    wait = 0.01,
+                    error_handler = progress.handler
+                ))
+            }, {
+                expect_error(
+                    expect_message(
+                        ds <- runCrunchAutomation(ds, 'CREATE CATEGORICAL CONSTANT abc LABEL "a";'),
+                        "Task failed unexpectedly"
+                    ),
+                    "Variable with alias: abc already exists"
+                )
+            }
         )
     })
 

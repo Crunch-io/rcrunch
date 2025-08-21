@@ -7,6 +7,8 @@
   axes via their code only (and thus is not guaranteed to be unique) use 
   `strict_subvariable_syntax=FALSE`.
 
+* Improve error messages from automation scripts in certain situations.
+
 # crunch 1.31.1
 * Improve the way that the csv export requests specific columns.
 

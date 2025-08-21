@@ -151,14 +151,18 @@ handleAPIsuccess <- function(code, response, progress.handler) {
                         progress.handler
                     ),
                     error = function(e) {
-                        message(paste0(
-                            "Something went wrong during `pollProgress()` of url: ",
-                            progress_url
-                        ))
-                        ## Handle the error here so we can message the
-                        ## Location header, if present
-                        if (!is.null(loc)) {
-                            message("Result URL: ", loc)
+                        if (inherits(e, "prepared_task_error")) {
+                            message("Task failed unexpectedly: ", progress_url)
+                        } else {
+                            message(paste0(
+                                "Something went wrong during `pollProgress()` of url: ",
+                                progress_url
+                            ))
+                            ## Handle the error here so we can message the
+                            ## Location header, if present
+                            if (!is.null(loc)) {
+                                message("Result URL: ", loc)
+                            }
                         }
                         stop(e)
                     }
