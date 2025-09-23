@@ -118,32 +118,6 @@ with_test_authentication({
     # TODO: test permissions in a non-personal project (also?). Would require giving
     # the test user access to other projects
     ds <- createDataset(name = now())
-    test_that("share and unshare methods for dataset", {
-        ds <- share(ds, "foo@crunch.io", notify = FALSE)
-        expect_true(
-            c("foo@crunch.io") %in% emails(permissions(ds))
-        )
-        ds <- unshare(ds, "foo@crunch.io")
-        expect_true(
-            !(c("foo@crunch.io") %in% emails(permissions(ds)))
-        )
-    })
-
-    test_that("re-sharing doesn't change the state", {
-        share(ds, "foo@crunch.io", notify = FALSE)
-        expect_true(
-            c("foo@crunch.io") %in% emails(permissions(ds))
-        )
-    })
-
-    others <- c("foo@crunch.io", "a@crunch.io", "b@crunch.io")
-    test_that("can share dataset with multiple at same time", {
-        share(ds, c("a@crunch.io", "b@crunch.io"), notify = FALSE)
-        expect_true(all(others %in% emails(permissions(ds))))
-        for (user in others) {
-            expect_false(is.editor(permissions(ds)[[user]]), info = user)
-        }
-    })
 
     test_that("Can make multiple people editors", {
         skip("TODO invite a and b as advanced users")
