@@ -388,6 +388,101 @@ copyFolders <- function(source, target) {
 }
 
 
+# Recursively go through folders and create crunch automation commands
+organize_recurse <- function(base, base_type, path) {
+    items <- cd(base, path)
+
+    # Can't make empty folders in crunch automation
+    if (length(items) == 0) {
+        return()
+    }
+
+    if (length(items) == 1) {
+        split_items <- list(items)
+    } else {
+        # Make sequences where each folder is on its own, and the variables
+        # at the folder level are in sequence. This allows the organize folder
+        # to go in the right place so that the folder is organized among the vars
+        is_folder <- types(items) == "folder"
+        prev_was_folder <- c(FALSE, is_folder[-length(is_folder)])
+        groups <- cumsum(is_folder | prev_was_folder)
+
+        split_items <- lapply(unique(groups), function(grp) {
+            items[groups == grp]
+        })
+    }
+
+    lapply(
+        split_items,
+        organize_recurse_cmd,
+        path = path,
+        base = base,
+        base_type = base_type
+    )
+
+}
+
+# Generate commands for organizing, and recurse into folder if necessary
+organize_recurse_cmd <- function(items, path, base, base_type) {
+    if (length(items) == 1 && types(items) == "folder") {
+        below_path <- paste0(path, name(items[[1]]), "/")
+        organize_recurse(base, base_type, below_path)
+    } else {
+        aliases <- paste0(validate_automation_aliases(aliases(items)), collapse = ", ")
+        path <- path_to_automation_path(path, base_type)
+        paste0("ORGANIZE ", aliases, " INTO ", path, ";")
+    }
+}
+
+# Convert from a rcrunch path to a Crunch Automation path
+path_to_automation_path <- function(path, base_type) {
+    path <- gsub("^/?(.*?)/?$", "\\1", path)
+    path <- gsub("/", "|", path)
+    if (path == "" && base_type != "ROOT") {
+        return(base_type)
+    }
+
+    if (base_type == "ROOT") {
+        base_type <- ""
+    } else {
+        base_type <- paste0(base_type, " ")
+    }
+    paste0(base_type, '"', path, '"')
+}
+
+# decide whether to put backticks on variable aliases
+validate_automation_aliases <- function(x) {
+    # Can't start with a number or have non-alphanumeric characters
+    # (may be overly cautious, but doesn't do backticks on clearly good aliases
+    invalid <- grepl("^[0-9]|[^[:alnum:]_]", x)
+
+    x[invalid] <- paste0("`", x[invalid], "`")
+    x
+}
+
+#' Generate Crunch Automation commands to create a dataset's current folder struct
+#'
+#' Take a datset and generate the Crunch Automation commands needed to create the
+#' current folder structure of the dataset. Useful for saving a snapshot, or copying
+#' one dataset's folder structure to another (though see [`copyFolders()`] for another
+#' way of copying a dataset's folders).
+#'
+#' @param dataset A crunch Dataset
+#'
+#' @return A string of the commands that can be passed to [`runCrunchAutomation()`]
+#' @export
+generateOrganizeCommand <- function(dataset) {
+    if (!is.dataset(dataset) ) {
+        halt("dataset must be a Crunch dataset.")
+    }
+    root_cmds <- organize_recurse(dataset, "ROOT", "/")
+    hidden_cmds <- organize_recurse(hiddenFolder(dataset), "HIDDEN", "/")
+    secure_cmds <- organize_recurse(privateFolder(dataset), "SECURE", "/")
+
+    paste0(c(unlist(root_cmds), unlist(hidden_cmds), unlist(secure_cmds)), collapse = "\n")
+}
+
+
 # Recursively get all variables below a folder
 # TODO: Use trampoline? https://community.rstudio.com/t/tidiest-way-to-do-recursion-safely-in-r/1408
 # My initial tests say it's slower, but is safer if we ever expect a large number of folders
