@@ -72,6 +72,8 @@ stream_rows <- data.frame(
 )
 with_test_authentication({
     metadata <- fromJSON(datasetFixturePath("streaming.json"), simplifyVector = FALSE)
+    # Add project default to metadata because project is required
+    metadata$body$project <- crunch:::resolveProjectURL(envOrOption("crunch.default.project"))
     ds <- suppressMessages(uploadMetadata(metadata))
     test_that("streamRows streams rows", {
         expect_equal(pendingStream(ds), 0)
