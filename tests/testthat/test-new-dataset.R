@@ -296,6 +296,8 @@ with_test_authentication({
     m <- fromJSON(system.file("example-datasets", "pets.json", package = "crunch"),
         simplifyVector = FALSE
     )
+    # Add project default to metadata because project is required
+    m$body$project <- crunch:::resolveProjectURL(envOrOption("crunch.default.project"))
 
     whereas("Creating with metadata and csv", {
         test_that("createWithMetadataAndFile using docs example", {

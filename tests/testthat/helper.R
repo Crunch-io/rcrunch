@@ -68,6 +68,9 @@ newDatasetFromFixture <- function(filename) {
     m <- fromJSON(datasetFixturePath(paste0(filename, ".json")),
         simplifyVector = FALSE
     )
+    # Add project default to metadata because project is required
+    m$body$project <- crunch:::resolveProjectURL(envOrOption("crunch.default.project"))
+
     return(suppressMessages(createWithMetadataAndFile(
         m,
         datasetFixturePath(paste0(filename, ".csv"))
