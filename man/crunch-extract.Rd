@@ -558,7 +558,7 @@ columns either by \code{ds[, j]} or by the list-like \code{ds[i]} (with no comma
 
 \item{...}{additional arguments supported by some methods. For example, some
 catalogs support a \code{secondary} vector of elements to match
-against like \code{emails(x)} or \code{owners(x)}; by default this is \code{names(x)}. This
+against like \code{emails(x)}; by default this is \code{names(x)}. This
 lets (for example) you to look up variables by URL but fall back to name.}
 
 \item{drop}{Ignored and always assumed \code{FALSE}}

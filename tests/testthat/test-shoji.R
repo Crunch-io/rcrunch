@@ -62,16 +62,19 @@ with_mock_crunch({
     })
 
     test_that("ShojiCatalog can use any method it has to index", {
-        expect_equal(
-            full.urls["https://app.crunch.io/api/users/notme/",
-                secondary = owners(full.urls)
-            ],
-            full.urls[1]
+        var_cat <- VariableCatalog(
+            crGET("https://app.crunch.io/api/datasets/1/variables/")
         )
         expect_equal(
-            full.urls[["https://app.crunch.io/api/users/notme/",
-            secondary = owners(full.urls)]],
-            full.urls[[1]]
+            var_cat["Asked instead of age",
+                secondary = notes(var_cat)
+            ],
+            var_cat[1]
+        )
+        expect_equal(
+            var_cat[["Asked instead of age",
+            secondary = notes(var_cat)]],
+            var_cat[[1]]
         )
     })
 
