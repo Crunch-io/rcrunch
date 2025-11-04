@@ -325,11 +325,6 @@ setGeneric("revertScript", function(dataset, x) standardGeneric("revertScript"))
 #' @rdname automation-undo
 setGeneric("scriptSavepoint", function(x) standardGeneric("scriptSavepoint"))
 
-#' @rdname dataset-owner
-setGeneric("owner", function(x) standardGeneric("owner"))
-#' @rdname dataset-owner
-setGeneric("owner<-", function(x, value) standardGeneric("owner<-"))
-
 #' @rdname cube-missingness
 setGeneric("showMissing", function(cube) standardGeneric("showMissing"))
 #' @rdname cube-missingness
@@ -376,7 +371,7 @@ setGeneric("which", signature = "x")
 #' @param drop Ignored and always assumed `FALSE`
 #' @param ... additional arguments supported by some methods. For example, some
 #' catalogs support a `secondary` vector of elements to match
-#' against like `emails(x)` or `owners(x)`; by default this is `names(x)`. This
+#' against like `emails(x)`; by default this is `names(x)`. This
 #' lets (for example) you to look up variables by URL but fall back to name.
 #' @param value For updating, an object of the appropriate class and size to
 #' insert. This is generally the same class of object you would get from the

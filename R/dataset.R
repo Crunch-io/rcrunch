@@ -463,35 +463,6 @@ setMethod("as.environment", "CrunchDataset", function(x) {
     return(out)
 })
 
-#' Get and set the owner of a dataset
-#'
-#' @param x CrunchDataset
-#' @param value For the setter, either a URL (character) or a Crunch object
-#' with a `self` method. Users and Projects are valid objects to assign
-#' as dataset owners.
-#' @return The dataset.
-#' @name dataset-owner
-#' @aliases owner owner<-
-NULL
-
-#' @rdname dataset-owner
-#' @export
-setMethod("owner", "CrunchDataset", function(x) x@body$owner) ## Or can get from catalog
-
-#' @rdname dataset-owner
-#' @export
-setMethod("owner<-", "CrunchDataset", function(x, value) {
-    if (!is.character(value)) {
-        ## Assume we have a User or Project. Get self()
-        ## Will error if self isn't defined, and if a different entity type is
-        ## given, the PATCH below will 400.
-        value <- self(value)
-    }
-    ## TODO: .moveToFolder(value, x)
-    x <- setEntitySlot(x, "owner", value)
-    return(x)
-})
-
 #' View and modify dataset-level settings
 #'
 #' These methods allow access and control over dataset settings. Currently

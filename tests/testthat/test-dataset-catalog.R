@@ -77,24 +77,6 @@ with_mock_crunch({
             )
         )
     })
-    test_that("owners", {
-        expect_identical(
-            owners(datcat),
-            c(
-                "https://app.crunch.io/api/users/notme/",
-                "https://app.crunch.io/api/users/user1/",
-                "https://app.crunch.io/api/users/user1/",
-                "https://app.crunch.io/api/users/user1/",
-                "https://app.crunch.io/api/users/user1/"
-            )
-        )
-    })
-    test_that("ownerNames", {
-        expect_identical(
-            ownerNames(datcat),
-            c("George", "Fake User", "Fake User", "Fake User", "Fake User")
-        )
-    })
     test_that("is.archived", {
         expect_identical(is.archived(datcat), c(FALSE, TRUE, FALSE, FALSE, FALSE))
     })

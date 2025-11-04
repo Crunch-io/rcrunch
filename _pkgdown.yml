@@ -216,7 +216,6 @@ reference:
   - archive-and-publish
   - crunch-api-key
   - crunch_sitrep
-  - dataset-owner
   - getAccountUserCatalog
   - getTeams
   - is-public
@@ -225,7 +224,6 @@ reference:
   - users
   - email
   - newProject
-  - owners
   - permissions
   - projects
   - setupCrunchAuth
