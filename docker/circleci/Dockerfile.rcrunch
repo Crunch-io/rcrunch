@@ -7,7 +7,7 @@ ENV R_LIBS=${HOMEDIR}/rlibs
 USER root
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
-RUN apt-get update && apt-get install build-essential libtiff5-dev libfribidi-dev libfontconfig1-dev libgit2-dev libssl-dev libcurl4-gnutls-dev libxml2-dev libsodium-dev libharfbuzz-dev libfribidi-dev -y
+RUN apt-get update && apt-get install build-essential libtiff5-dev libfribidi-dev libfontconfig1-dev libgit2-dev libssl-dev libcurl4-gnutls-dev libxml2-dev libsodium-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libjpeg-dev pkg-config pandoc -y
 # Add the user/group crunchapp
 RUN groupadd --gid ${GROUP} crunchapp \
     && useradd --uid ${USER} --gid crunchapp --shell /bin/bash --create-home -d ${HOMEDIR} crunchapp
