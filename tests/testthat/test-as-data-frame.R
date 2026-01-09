@@ -406,11 +406,15 @@ with_test_authentication({
             ),
             name = "MR 2", numeric = FALSE
         )
-        expect_message(
+        testthat::expect_message(
             mrds_df <- as.data.frame(mrds, force = TRUE),
             paste0(
-                "Some column names are qualified because there were duplicate aliases ",
-                "in dataset:\nmr_1 -> MR[mr_1], mr_1 -> MR2[mr_1], v4 -> MR2[v4]"
+                "Some column names have been qualified with their array parent's alias to avoid ",
+                "duplicate aliases in the data.frame.\nSee the `array_strategy` argument in ",
+                "help('as.data.frame.CrunchDataset'). Example renames:\n",
+                "mr_1 -> MR[mr_1]\n",
+                "mr_1 -> MR2[mr_1]\n",
+                "v4 -> MR2[v4]"
             ),
             fixed = TRUE
         )

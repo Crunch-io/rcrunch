@@ -159,10 +159,13 @@ csvColInfo <- function(ds, verbose = TRUE) {
     if (verbose) {
         msg_rows <- out$cond_qualified_alias != out$orig_alias
         if (any(msg_rows)) {
-            alias_info <- paste0(out$orig_alias[msg_rows], " -> ", out$cond_qualified_alias[msg_rows])
+            alias_info <- paste0(out$orig_alias[msg_rows], " -> ", out$cond_qualified_alias[msg_rows], collapse = "\n")
+
+
             message(
-                "Some column names are qualified because there were duplicate aliases ",
-                "in dataset:\n", paste0(alias_info, collapse = ", ")
+                "Some column names have been qualified with their array parent's alias to avoid ",
+                "duplicate aliases in the data.frame.\nSee the `array_strategy` argument in ",
+                "help('as.data.frame.CrunchDataset'). Example renames:\n", truncateString(alias_info, 2)
             )
         }
     }
