@@ -1,4 +1,8 @@
 # crunch (development version)
+* Removed `share()`/`unshare()` a defunct way of sharing datasets directly.
+  Going forward, the only way to manage users and teams is on projects with `members()`
+  functions.
+
 * rcrunch now works with datasets/views with no hidden variable folder.
 
 * `runCrunchAutomation()` now sends `strict_subvariable_syntax=TRUE` by default, 

@@ -147,7 +147,6 @@ Collate:
     'rowwise.R'
     'search.R'
     'session.R'
-    'share.R'
     'shoji-entity.R'
     'shoji-folder.R'
     'shoji-order-slots.R'

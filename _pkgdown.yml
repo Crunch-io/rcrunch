@@ -229,9 +229,7 @@ reference:
   - permissions
   - projects
   - setupCrunchAuth
-  - share
   - 'members<-,CrunchTeam,MemberCatalog-method'
-  - unshare
   - reassignUser
   - team
 - title: Utility
