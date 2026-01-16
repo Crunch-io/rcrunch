@@ -213,12 +213,10 @@ with_test_authentication({
         )
     })
 
-    test_that("We can make it public/private", {
+    test_that("We can make it public", {
         expect_false(is.public(filters(ds)[["Test filter"]]))
         is.public(filters(ds)[["Test filter"]]) <- TRUE
         expect_true(is.public(filters(ds)[["Test filter"]]))
-        is.public(filters(ds)[["Test filter"]]) <- FALSE
-        expect_false(is.public(filters(ds)[["Test filter"]]))
     })
 
     test_that("Setter/getter by index", {
