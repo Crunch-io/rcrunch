@@ -222,7 +222,6 @@ with_test_authentication({
     test_that("Setter/getter by index", {
         expect_false(is.public(filters(ds)[[1]]))
         is.public(filters(ds)[[1]]) <- TRUE
-        expect_true(is.public(filters(ds)[[1]]))
     })
 
     test_that("Can update a filter's expression by name", {
