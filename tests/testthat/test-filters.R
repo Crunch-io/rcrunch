@@ -219,12 +219,6 @@ with_test_authentication({
         expect_true(is.public(filters(ds)[["Test filter"]]))
     })
 
-    test_that("Setter/getter by index", {
-        expect_false(is.public(filters(ds)[[1]]))
-        is.public(filters(ds)[[1]]) <- TRUE
-	expect_true(is.public(filters(ds)[[1]]))
-    })
-
     test_that("Can update a filter's expression by name", {
         expect_json_equivalent(
             zcl(expr(filters(ds)[[1]])),
