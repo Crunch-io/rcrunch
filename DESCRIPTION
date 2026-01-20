@@ -116,6 +116,7 @@ Collate:
     'expressions.R'
     'fill-variable.R'
     'filters.R'
+    'findVariables.R'
     'folders.R'
     'fork-and-merge.R'
     'formula.R'

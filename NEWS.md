@@ -25,6 +25,8 @@
   as the default project folder when creating and loading datasets. Forks will still be put
   next to parents.
 
+* New function `findVariables` accepts a Crunch dataset or variable folder and returns a data.frame whose rows correspond to variables and their location (#641).
+
 # crunch 1.30.3
 * Fix typo which relied on partial argument matching when using the variable catalog cache
   (#625, thanks @rossellhayes)
