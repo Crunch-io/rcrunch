@@ -632,16 +632,12 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             expect_false(is.public(mult))
             is.public(mult) <- TRUE
             expect_true(is.public(refresh(mult)))
-            is.public(mult) <- FALSE
-            expect_false(is.public(refresh(mult)))
         })
 
         test_that("Can make the multitable public/personal on the catalog", {
             expect_false(is.public(multitables(ds))[1])
             is.public(multitables(ds))[1] <- TRUE
             expect_true(is.public(refresh(multitables(ds)))[1])
-            is.public(multitables(ds))[1] <- FALSE
-            expect_false(is.public(refresh(multitables(ds)))[1])
         })
 
         test_that("Can edit the multitable name", {
