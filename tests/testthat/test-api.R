@@ -173,6 +173,7 @@ if (run.integration.tests) {
     })
 
     test_that("API calls throw an error if user is not authenticated", {
+        skip("API server returning 503 Service Unavailable")
         with(temp.option(crunch = list(crunch.api.key = "")), {
             expect_error(
                 getAPIRoot(),
