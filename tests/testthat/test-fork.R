@@ -55,6 +55,7 @@ with_test_authentication({
     })
 
     fork_project <- newProject("RCRUNCH TEST FORK")
+    pk(f1) <- f1$v3
     exclusion(f1) <- f1$v3 < 11
     f2 <- forkDataset(f1, "Fork yeah!", draft = TRUE, project = fork_project)
     test_that("Editing values of data in a new fork doesn't fail", {
