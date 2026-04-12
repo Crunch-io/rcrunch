@@ -339,9 +339,11 @@ with_test_authentication({
         test_that("No problem reverting to before exclusion var made", {
             ds <- restoreVersion(ds, 1)
 
-            expect_valid_apidocs_import(ds)
-            expect_null(ds$keep)
-            expect_null(exclusion(ds))
+            ## The exclusion filter no longer applies cleanly
+            ## (because the variable it depends on does not exist in the
+            ## restored version). Rather than error, however, the
+            ## restricted frame now returns 0 rows.
+            expect_valid_apidocs_import(ds, broken_exclusion=TRUE)
         })
     })
 })

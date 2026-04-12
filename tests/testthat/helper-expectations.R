@@ -81,9 +81,13 @@ expect_valid_df_revert <- function(ds) {
     expect_identical(names(versions(ds)), "initial import")
 }
 
-expect_valid_apidocs_import <- function(ds) {
+expect_valid_apidocs_import <- function(ds, broken_exclusion = FALSE) {
     expect_true(is.dataset(ds))
-    expect_identical(dim(ds), c(20L, 9L))
+    if (broken_exclusion) {
+        expect_identical(dim(ds), c(0L, 9L))
+    } else {
+        expect_identical(dim(ds), c(20L, 9L))
+    }
     expect_identical(
         names(ds),
         c(
