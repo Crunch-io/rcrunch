@@ -13,6 +13,11 @@ with_test_authentication({
             part0 <- appendDataset(part0, part2)
 
             test_that("Appending applies the exclusion filter of the incoming", {
+                # DEBUG: ensure that the exclusion filter successfully applies to the
+                # datasets that were appended
+                expect_identical(nrow(part1), 16L)
+                expect_identical(nrow(part2), 16L)
+
                 expect_identical(
                     dim(part0),
                     c(nrow(part1) * 2L, ncol(part1))
