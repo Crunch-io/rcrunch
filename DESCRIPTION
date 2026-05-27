@@ -1,0 +1,45 @@
+Package: crunch.lake
+Type: Package
+Title: Crunch Lake Utilites
+Version: 0.1.8
+Authors@R: c(
+    person(
+      "Greg", "Freedman Ellis",
+      email = "greg@crunch.io",
+      role = c("aut", "cre")
+    )
+  )
+Description: Exploration of Crunch Lake utiliteies
+License: LGPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
+Imports: 
+    arrow,
+    backports,
+    cli (>= 3.0.0),
+    crunch,
+    dplyr,
+    generics,
+    httpcache,
+    httr,
+    jsonlite,
+    methods,
+    purrr,
+    rlang (>= 1.1.0),
+    tibble,
+    tidyr,
+    vctrs
+Suggests:
+    clipr,
+    crayon,
+    ggplot2,
+    knitr,
+    pillar (>= 1.4.0),
+    rmarkdown,
+    testthat (>= 3.0.0),
+    utf8,
+    withr
+Config/testthat/edition: 3
+VignetteBuilder: knitr

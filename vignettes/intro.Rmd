@@ -1,0 +1,269 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(crunch.lake)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(generics)   # I have a bug in my NAMESPACE I'm still figuring out so this is required for as.factor.crunch_array_variable
+
+crunch::setupCrunchAuth("yougov")
+ds <- crunch::loadDataset("https://yougov.crunch.io/api/datasets/58c9c65c01f54b51985abe5fbad6e3d5/")
+
+project_dir <- "~/crunch_lake_vignette"
+
+if (!dir.exists(project_dir)) {
+    cr_export(ds, path = project_dir)
+}
+
+# You don't have to specify a folder, but this puts data in a temp folder, which is deleted 
+# at end of R session.
+# data <- cr_read_data(ds)
+```
+
+## Metadata
+
+The Crunch Lake metadata is read in a sensible form (though still needs some work)
+
+```{r metadata}
+md <- cr_read_meta(project_dir)
+
+md
+```
+
+## Data
+
+### With crunch metadata
+Can read the data into a wide format with columns that are R representations of the crunch metadata.
+```{r data}
+data <- cr_read_data(project_dir)
+
+data
+```
+
+
+The `crunch_categorical_variable` is an improvement on `haven::labelled()` because it prevents combining
+incompatible category types:
+
+```{r categorical}
+# Lets you combine categories that exactly align
+bind_rows(
+    tibble(x = data$enjoy_mr$enjoy_mr_savory),
+    tibble(x = data$enjoy_mr$enjoy_mr_spicy)
+)
+
+data |>
+    mutate(wave = if_else(wave == 1, 2, wave)) |>
+    count(wave)
+
+
+```
+
+```{r, error=TRUE}
+# But prevents you from combining incompatible categories (currently any difference is fatal)
+bind_rows(
+    tibble(x = data$enjoy_mr$enjoy_mr_savory),
+    tibble(x = data$wave)
+)
+```
+```{r, error=TRUE}
+data |>
+    mutate(wave = if_else(wave == 1, 1000, wave)) |>
+    count(wave)
+```
+
+
+In many situations, you'll want to convert to base R data types:
+```{r convert}
+data |>
+    transmute(
+        wave_date = as.Date(wave),
+        wave = as.factor(wave),
+        enjoy_mr = as.logical(enjoy_mr),
+        veg_enjoy_ca = as.factor(veg_enjoy_ca),
+        ratings_numa = as.numeric(ratings_numa)
+    )
+```
+
+
+The metadata can be useful though. Here are some things you may want to do:
+
+
+Add a categorical variable with their favorite vegetable + numeric with the rating
+(Keeping metadata would allow you to send the data back, though this hasn't been worked on yet)
+
+```{r new_var}
+data <- data |>
+    mutate(
+        highest_rated = crunch_categorical_variable(
+            apply(ratings_numa, MARGIN = 1, which.max),
+            label = "Highest Rated Vegetable",
+            path = "/public/Additions/",
+            values = tibble::tibble(
+                value = seq_len(ncol(ratings_numa)),
+                label = purrr::map_chr(ratings_numa, label),
+                missing = FALSE, 
+                scale = NA,
+                selected = NA,
+                date = NA
+            )
+        ),
+        highest_rating = crunch_numeric_variable(
+            apply(ratings_numa, MARGIN = 1, max, na.rm = TRUE),
+            label = "Highest Vegetable Rating",
+            path = "/public/Additions/"
+        )
+    )
+
+```
+
+
+Use folder structure for dplyr selections
+```{r path_manip}
+data |> 
+    select(
+        ratings_numa,
+        where(~startsWith(path(.), "/public/Additions") & !is.na(path(.)))
+    )
+```
+
+
+Make a graph with axis that has dates and wave labels
+
+```{r time_graph}
+time_series <- data |>
+    mutate(ratings_numa = rename_with(ratings_numa, ~purrr::map_chr(., ~label(data$ratings_numa[[.]])))) |>
+    group_by(wave) |> 
+    summarize(mean(ratings_numa, na.rm = TRUE)) |>
+    pivot_longer(-wave, names_to = "Vegetable")
+
+ggplot(time_series, aes(x = as.Date(wave), y = value, color = Vegetable)) +
+    geom_point() +
+    scale_x_date(
+        label(data$wave),
+        breaks = as.Date(unique(time_series$wave)), 
+        labels = as.character(unique(time_series$wave)),
+        sec.axis = sec_axis(identity)
+    ) + scale_y_continuous(
+        label(data$ratings_numa)
+    )
+```
+
+
+2 Dimensional arrays (experimental support)
+```{r two_dim}
+data$funnel_mr_2d <- crunch_categorical_array_variable(
+    tibble::tibble(
+        aware = data$funnel_aware_mr |> setNames(c("jicama", "kohlrabi")),
+        consider = data$funnel_consider_mr |> setNames(c("jicama", "kohlrabi")),
+        buy = data$funnel_buy_mr |> setNames(c("jicama", "kohlrabi"))
+    ),
+    axes = list(
+        tibble::tibble(
+            value = c("aware", "consider", "buy"),
+            label = c("Aware", "Consider", "Buy"),
+            description = NA
+        ),
+        tibble::tibble(
+            value = c( "jicama", "kohlrabi"),
+            label = c("Jicama", "Kohlrabi"),
+            description = NA
+        )
+    ),
+    label = "Funnel 2D MR"
+)
+
+# Can select over either axes
+data$funnel_mr_2d[["aware"]]
+
+data$funnel_mr_2d[[list(NULL, "jicama")]]
+
+
+# Can apply functions to every column
+data |>
+    group_by(healthy_eater) |>
+    summarize(mean(funnel_mr_2d, from = "selected", na.rm = TRUE))
+```
+
+
+### Ability to simplify crunch metadata
+By default, `cr_read_data()` reads array columns as packed data.frames, but you can read them as flat columns.
+Option `array_strategy="qualified"` reads the data with as regular columns, and with their names the array name separated
+by the subvariable name with a `_`.
+
+```{r array_strategy_qualified}
+cr_read_data(project_dir, array_strategy = "qualified") |> 
+    dplyr::select(starts_with("enjoy_mr"))
+
+# `enjoy_mr$enjoy_mr_savory` -> `enjoy_mr_enjoy_mr_savory`
+```
+
+
+`array_strategy="unqualified"` reads the columns with just the subvariable names (and will error if there are duplicate
+names in across array columns, which you can fix with `name_repair="unique"` if you really want).
+```{r array_strategy_unqualified}
+cr_read_data(project_dir, array_strategy = "unqualified") |> 
+    dplyr::select(starts_with("enjoy_mr"))
+
+# `enjoy_mr$enjoy_mr_savory` -> `enjoy_mr_savory`
+```
+
+
+Also with option `as_crunch_variables=FALSE` it loads the data without the crunch metadata.
+Currently it does so by reading it in the same format as the data lake (so string of category code
+for categoricals). It probably should convert MRs to logical, and other categoricals to factor.
+
+```{r as_crunch_vars}
+cr_read_data(project_dir, as_crunch_variables = FALSE)
+```
+
+
+
+## Using s3 buckets
+
+The APIs used above to download a dataset to your local computer directly have a relatively
+low limit on the size of the data. For larger exports, users can export to an s3 bucket that 
+they control.
+
+The S3 bucket must be registered to crunch as a "data destination", like so:
+```{r create_destination, eval=FALSE}
+destination <- cr_create_destination(
+    "gfe-crunch-lake-pkg",
+    data = list(type = "s3folder", bucket = "crunch-rteam-prod", base = "lake")
+)
+```
+
+Each destination must have a unique name (I believe this is per account, not user). Also,
+the crunch server must be given access to the s3 bucket if it is not public (unclear
+what this process is).
+
+After creating, you can refer to a data destination with `cr_destination()` and provide
+it to `cr_export()`.
+```{r get_destination, eval=FALSE}
+destination <- cr_destination("gfe-crunch-lake-pkg")
+
+s3files <- cr_export(ds, path = "vignette_test", destination = destination)
+```
+
+The `arrow` package allows connecting to s3 buckets directly, so it is possible
+to read the data directly from the s3 bucket as you would with a local file.
+See [`arrow::s3_bucket()`] for details about the ways to connect, and 
+`cr_clip_to_env()`, which helps getting credentials from your clipboard.
+
+```{r read_from_destination, eval=FALSE}
+cr_read_data(s3files, region = "eu-west-1")
+```
