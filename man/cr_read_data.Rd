@@ -6,7 +6,7 @@
 \usage{
 cr_read_data(
   x,
-  as_crunch_variables = TRUE,
+  variable_format = c("base", "vctrs", "lake"),
   array_strategy = c("packed", "qualified", "unqualified"),
   name_repair = "check_unique",
   ...
@@ -15,8 +15,11 @@ cr_read_data(
 \arguments{
 \item{x}{A folder path or destination from \code{\link[=cr_export]{cr_export()}}}
 
-\item{as_crunch_variables}{Whether to load the data as special data structures with
-crunch metadata (defaults to \code{TRUE})}
+\item{variable_format}{What format to use for variables. "base", the default
+converts to base R types at the expense of fidelity, "vctrs" uses custom
+classes to retain all metadata attached to the variables, and "lake" uses the
+native lake format (so categoricals are a string of the category id). See
+\code{vignette("intro")} for more details.}
 
 \item{array_strategy}{One of "packed" for packed data.frame columns to represent
 array variables, "qualified" to have flattened representations of the array variables

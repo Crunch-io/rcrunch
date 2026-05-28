@@ -47,10 +47,26 @@ md
 
 ## Data
 
-### With crunch metadata
-Can read the data into a wide format with columns that are R representations of the crunch metadata.
+### Converted to base types (`variable_format = "base"`)
+The default behavior is to load variables into base R types. Multiple Response
+variables become logical, all other categoricals become factors, and 
+numeric/text/datetime become their native R equivalents. While, data in this 
+structure can be easier to work with, it does mean that the
+only way to refer to the metadata is from the metadata (from `cr_read_meta()`)
+and some fidelity is lost (for example you can't distinguish missing categories from
+each other).
 ```{r data}
 data <- cr_read_data(project_dir)
+
+data
+```
+
+
+### With crunch metadata (`variable_format = "vctrs"`)
+By specifying `variable_format = "vctrs"`, you can read the data with columns
+that are R objects with full fidelity of the crunch metadata.
+```{r data_vctrs}
+data <- cr_read_data(project_dir, variable_format = "vctrs")
 
 data
 ```
@@ -87,7 +103,7 @@ data |>
 ```
 
 
-In many situations, you'll want to convert to base R data types:
+In many situations, you'll want to convert to base R data types. You can do this manually:
 ```{r convert}
 data |>
     transmute(
@@ -200,8 +216,45 @@ data |>
 ```
 
 
-### Ability to simplify crunch metadata
-By default, `cr_read_data()` reads array columns as packed data.frames, but you can read them as flat columns.
+### In "lake" format (`variable_format = "lake"`)
+
+The data lake stores categorical data as strings of the category id. To load the data
+in this format, use option `variable_format="lake"`.
+
+```{r as_crunch_vars}
+cr_read_data(project_dir, as_crunch_variables = FALSE)
+```
+
+
+### Array options
+By default, `cr_read_data()` reads array columns as 
+["packed" `data.frame` columns](https://tidyr.tidyverse.org/reference/pack.html).
+This format is nice because it will never lead to duplicated column names and 
+because it allows naturally referring to the array variable columns as a group.
+
+```{r packed_examples}
+# The column is itself a `data.frame`
+data$enjoy_mr
+
+# So you can refer to parts of it as you would a data.frame
+# A single axis item with `$`
+data$enjoy_mr$enjoy_mr_savory
+
+# A few items with `[`
+data$enjoy_mr[2:3]
+
+# tidyselect syntax
+data$enjoy_mr |> select(ends_with("y"))
+
+# The `array_apply` function makes applying a function to all
+# axis items easier
+standardize <- function(x) (x - mean(x, na.rm = TRUE)) / sd(x)
+data |>
+    mutate(ratings_std = array_apply(ratings_numa, standardize)) |>
+    pull(ratings_std)
+```
+
+
 Option `array_strategy="qualified"` reads the data with as regular columns, and with their names the array name separated
 by the subvariable name with a `_`.
 
@@ -221,16 +274,6 @@ cr_read_data(project_dir, array_strategy = "unqualified") |>
 
 # `enjoy_mr$enjoy_mr_savory` -> `enjoy_mr_savory`
 ```
-
-
-Also with option `as_crunch_variables=FALSE` it loads the data without the crunch metadata.
-Currently it does so by reading it in the same format as the data lake (so string of category code
-for categoricals). It probably should convert MRs to logical, and other categoricals to factor.
-
-```{r as_crunch_vars}
-cr_read_data(project_dir, as_crunch_variables = FALSE)
-```
-
 
 
 ## Using s3 buckets

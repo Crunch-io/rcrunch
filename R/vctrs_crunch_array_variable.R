@@ -506,7 +506,16 @@ as_tibble.crunch_array_variable <- function(x, ...) {
     x
 }
 
+
+#' Apply function to each column of a packed data.frame array column
+#'
+#' @param x A data.frame
+#' @param func A function to apply to each column
+#' @param ... Arguments passed to `func`
+#'
+#' @export
 array_apply <- function(x, func, ...) {
+    func <- purrr::as_mapper(func)
     tibble::as_tibble(lapply(x, function(sub) func(sub, ...)))
 }
 

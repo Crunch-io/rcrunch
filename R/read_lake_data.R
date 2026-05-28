@@ -4,8 +4,11 @@
 #' read the data in the format it is sent.
 #'
 #' @param x A folder path or destination from [`cr_export()`]
-#' @param as_crunch_variables Whether to load the data as special data structures with
-#' crunch metadata (defaults to `TRUE`)
+#' @param variable_format What format to use for variables. "base", the default
+#' converts to base R types at the expense of fidelity, "vctrs" uses custom
+#' classes to retain all metadata attached to the variables, and "lake" uses the
+#' native lake format (so categoricals are a string of the category id). See
+#' `vignette("intro")` for more details.
 #' @param array_strategy One of "packed" for packed data.frame columns to represent
 #' array variables, "qualified" to have flattened representations of the array variables
 #' with the parent array's alias before the axis item names to distinguish items with the
@@ -19,11 +22,12 @@
 #' @export
 cr_read_data <- function(
         x,
-        as_crunch_variables = TRUE,
+        variable_format = c("base", "vctrs", "lake"),
         array_strategy = c("packed", "qualified", "unqualified"),
         name_repair = "check_unique",
         ...
 ) {
+    variable_format <- rlang::arg_match(variable_format)
     array_strategy <- rlang::arg_match(array_strategy)
     if (crunch::is.dataset(x)) x <- download_lake_data_to_temp(x)
     data <- cr_read_data_long(x, ...)
@@ -76,8 +80,21 @@ cr_read_data <- function(
         out <- pack_variables(out, combined_metadata, pivot_spec)
     }
 
-    if (as_crunch_variables) out <- build_crunch_variables(out, combined_metadata)
-    out
+    if (variable_format == "lake") return(out)
+
+    out <- build_crunch_variables(out, combined_metadata)
+    if (variable_format == "vctrs") return(out)
+
+    out |>
+        dplyr::mutate(
+            dplyr::across(dplyr::where(has_selections), as.logical),
+            dplyr::across(dplyr::where(is.crunch_categorical_variable), as.factor),
+            dplyr::across(dplyr::where(is.crunch_categorical_array_variable), as.factor),
+            dplyr::across(dplyr::where(is.crunch_numeric_variable), as.numeric),
+            dplyr::across(dplyr::where(is.crunch_numeric_array_variable), as.numeric),
+            dplyr::across(dplyr::where(is.crunch_text_variable), as.character),
+            dplyr::across(dplyr::where(is.crunch_datetime_variable), as.POSIXct)
+        )
 }
 
 #' Read downloaded Crunch Lake data files
@@ -224,4 +241,11 @@ pack_variables <- function(data, combined_metadata, pivot_spec) {
         }
         return(out)
     })
+}
+
+
+has_selections <- function(x) {
+    is_categorical <- is.crunch_categorical_variable(x) | is.crunch_categorical_array_variable(x)
+    if (!is_categorical) return(FALSE)
+    any(c(FALSE, values(x)[["selected"]]), na.rm = TRUE)
 }
