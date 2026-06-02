@@ -66,6 +66,29 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             expect_prints(e1, "Crunch logical expression: birthyr < 0")
         })
 
+        test_that("Logic expressions with alias refs format with prepared metadata", {
+            expr <- CrunchLogicalExpr(
+                expression = list(
+                    `function` = "==",
+                    args = list(list(var = "gender"), list(value = 1))
+                ),
+                dataset_url = self(ds)
+            )
+            vm <- variableMetadata(ds)
+
+            expect_identical(formatExpression(expr), "gender == 1")
+            expect_output(
+                cat(
+                    "Crunch logical expression: ",
+                    formatExpression(expr, var_catalog = vm),
+                    "\n",
+                    sep = ""
+                ),
+                'Crunch logical expression: gender == "Male"',
+                fixed = TRUE
+            )
+        })
+
         test_that("R logical & CrunchLogicalExpr", {
             expect_is(
                 c(TRUE, FALSE, TRUE) & ds$gender == "Female",

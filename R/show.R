@@ -263,13 +263,13 @@ formatScriptCatalog <- function(x, from = Sys.time(), body_width = 20) {
     ornm = "%ornm%"
 )
 
-formatExpression <- function(expr) {
+formatExpression <- function(expr, var_catalog = NULL) {
     if (is.CrunchExpr(expr)) {
-        return(formatExpression(expr@expression))
+        return(formatExpression(expr@expression, var_catalog = var_catalog))
     } else if ("function" %in% names(expr)) {
         func <- expr[["function"]]
         func <- .funcs.z2r[[func]] %||% func ## Translate func name, if needed
-        args <- formatExpressionArgs(expr[["args"]])
+        args <- formatExpressionArgs(expr[["args"]], var_catalog = var_catalog)
         if (func == "not") {
             return(paste0("!", args[1]))
         } else if (func %in% .operators) {
@@ -311,12 +311,15 @@ deparseAndFlatten <- function(x, max_length = NULL, control = NULL, ...) {
     return(out)
 }
 
-formatExpressionArgs <- function(args) {
+formatExpressionArgs <- function(args, var_catalog = NULL) {
     ## This is just to pretty-print category values as "names"
     ## Look for "variables"
     vars <- vapply(
         args,
-        function(x) identical(names(x), "variable"), logical(1)
+        function(x) {
+            identical(names(x), "variable") || identical(names(x), "var")
+        },
+        logical(1)
     )
     if (sum(vars) == 1) {
         ## Great, let's see if we have any values to format
@@ -325,17 +328,49 @@ formatExpressionArgs <- function(args) {
         }, logical(1))
         if (any(vals)) {
             ## Get the var, see if it is categorical
-            var <- VariableEntity(crGET(args[[which(vars)]]$variable))
+            var_ref <- args[[which(vars)]]
+            var <- try(expressionVariable(var_ref, var_catalog), silent = TRUE)
+            if (inherits(var, "try-error")) {
+                return(vapply(args, formatExpression, character(1),
+                    var_catalog = var_catalog, USE.NAMES = FALSE
+                ))
+            }
             ## Well, we'll identify "categorical" by presence of cats
             args[vals] <- lapply(args[vals], formatExpressionValue,
                 cats = categories(var)
             )
-            args[!vals] <- lapply(args[!vals], formatExpression)
+            args[vars] <- lapply(args[vars], function(x) var$alias)
+            args[!vals & !vars] <- lapply(args[!vals & !vars], formatExpression,
+                var_catalog = var_catalog
+            )
             return(unlist(args))
         }
     }
     ## Else:
-    return(vapply(args, formatExpression, character(1), USE.NAMES = FALSE))
+    return(vapply(args, formatExpression, character(1),
+        var_catalog = var_catalog, USE.NAMES = FALSE
+    ))
+}
+
+expressionVariable <- function(var_ref, var_catalog = NULL) {
+    if (!is.null(var_catalog)) {
+        var_pos <- if ("variable" %in% names(var_ref)) {
+            match(var_ref$variable, urls(var_catalog))
+        } else if ("var" %in% names(var_ref)) {
+            match(var_ref$var, aliases(var_catalog))
+        } else {
+            NA
+        }
+        if (!is.na(var_pos)) {
+            var <- var_catalog[[var_pos]]
+            if (!length(categories(var))) var <- entity(var)
+            return(var)
+        }
+    }
+    if ("variable" %in% names(var_ref)) {
+        return(VariableEntity(crGET(var_ref$variable)))
+    }
+    stop("Could not find expression variable")
 }
 
 formatExpressionValue <- function(val, cats = NULL) {
@@ -374,7 +409,11 @@ fixAdhocFilterExpression <- function(expr) {
 #' @rdname show
 #' @export
 setMethod("show", "CrunchExpr", function(object) {
-    cat("Crunch expression: ", formatExpression(object), "\n",
+    catalog <- NULL
+    if (nzchar(object@dataset_url)) {
+        catalog <- allVariables(loadDataset(object@dataset_url))
+    }
+    cat("Crunch expression: ", formatExpression(object, var_catalog = catalog), "\n",
         sep = ""
     )
     invisible(object)
@@ -383,7 +422,11 @@ setMethod("show", "CrunchExpr", function(object) {
 #' @rdname show
 #' @export
 setMethod("show", "CrunchLogicalExpr", function(object) {
-    cat("Crunch logical expression: ", formatExpression(object), "\n",
+    catalog <- NULL
+    if (nzchar(object@dataset_url)) {
+        catalog <- allVariables(loadDataset(object@dataset_url))
+    }
+    cat("Crunch logical expression: ", formatExpression(object, var_catalog = catalog), "\n",
         sep = ""
     )
     invisible(object)
