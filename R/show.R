@@ -316,8 +316,6 @@ formatExpressionArgs <- function(args, dataset_url = "") {
     vars <- vapply(args, isZCLVar, logical(1))
 
     ## If only 1 variable, we know what values refer to
-    ## but our way of getting them, depends on whether
-    ## we have URL or alias
     if (sum(vars) == 1) {
         vals <- vapply(args, function(x) {
             any(names(x) %in% c("column", "value"))
