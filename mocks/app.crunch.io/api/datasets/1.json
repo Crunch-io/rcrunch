@@ -33,7 +33,8 @@
     "views": {
         "summary": "https://app.crunch.io/api/datasets/1/summary/",
         "cube": "https://app.crunch.io/api/datasets/1/cube/",
-        "export": "https://app.crunch.io/api/datasets/1/export/"
+        "export": "https://app.crunch.io/api/datasets/1/export/",
+        "var_by_alias": "https://app.crunch.io/api/datasets/1/var_by_alias/"
     },
     "fragments": {
         "table": "https://app.crunch.io/api/datasets/1/table/",
