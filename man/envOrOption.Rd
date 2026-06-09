@@ -49,6 +49,7 @@ the option name is in all capital letters, with "." replaced with
    crunch.require.confirmation \tab R_CRUNCH_REQUIRE_CONFIRMATION \tab TRUE \tab Whether to require confirmation for destructive actions (like \code{\link[=delete]{delete()}}) \cr
    crunch.warn.hidden \tab R_CRUNCH_WARN_HIDDEN \tab TRUE \tab Whether to warn when using a hidden variable \cr
    crunch.warn.private \tab R_CRUNCH_WARN_PRIVATE \tab TRUE \tab Whether to warn when using a private variable \cr
+   crunch.alias.zcl \tab R_CRUNCH_ALIAS_ZCL \tab FALSE \tab Whether to use aliases in ZCL rather than crunch URLs \cr
    crunch.names.includes.hidden.private.variables \tab R_NAMES_INCLUDES_HIDDEN_PRIVATE_VARIABLES \tab TRUE \tab Whether to include hidden/private variables from names(ds) \cr
    crunch.order.var.catalog \tab R_CRUNCH_ORDER_VAR_CATALOG \tab TRUE \tab Whether to set the variable catalog in the order of the hierarchical order \cr
    crunch.default.derived \tab R_CRUNCH_DEFAULT_DERIVED. \tab TRUE \tab Whether to create variables from expressions that are derived (TRUE) or materialized (FALSE) \cr

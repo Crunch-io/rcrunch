@@ -19,10 +19,19 @@ r2zcl <- function(x) {
 
 as.zcl <- function(...) structure(list(...), class = "zcl")
 
+crunch_var_to_zcl <- function(x) {
+    use_alias <- crunch::envOrOption("crunch.alias.zcl", FALSE, expect_lgl = TRUE)
+    if (!use_alias) {
+        list(variable = self(x))
+    } else {
+        list(var = alias(x))
+    }
+}
+
 ## Methods to convert various objects to ZCL
 setMethod("zcl", "CrunchExpr", function(x) x@expression)
-setMethod("zcl", "CrunchVariable", function(x) list(variable = self(x)))
-setMethod("zcl", "VariableTuple", function(x) list(variable = self(x)))
+setMethod("zcl", "CrunchVariable", crunch_var_to_zcl)
+setMethod("zcl", "VariableTuple", crunch_var_to_zcl)
 setMethod("zcl", "numeric", r2zcl)
 setMethod("zcl", "character", r2zcl)
 setMethod("zcl", "Date", r2zcl)
