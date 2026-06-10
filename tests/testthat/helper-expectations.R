@@ -129,18 +129,21 @@ expect_equal_temp_nodata <- function(actual, expected) {
 ## Moving from using variable URL to var alias in ZCL
 ## Can't use `expect_json_equivalent` because we have 2 conditions
 ## so make a simple verison here:
-expect_zcl_equivalent <- function(actual, expected) {
+expect_zcl_equivalent <- function(actual, expected, env = parent.frame()) {
+    call <- sys.call()
+    actual_expr <- call[[2]]
+    expected_expr <- call[[3]]
     with(temp.options(crunch = list(crunch.alias.zcl = FALSE)), {
-        actual_url_zcl <- object_sort(c(zcl(actual)))
-        expected_url_zcl <- object_sort(zcl(expected))
+        actual_url_zcl <- object_sort(zcl(eval(actual_expr, env)))
+        expected_url_zcl <- object_sort(zcl(eval(expected_expr, env)))
     })
     if (isTRUE(all.equal(actual_url_zcl, expected_url_zcl))) {
         return(expect_true(TRUE))
     }
 
     with(temp.options(crunch = list(crunch.alias.zcl = TRUE)), {
-        actual_var_zcl <- object_sort(zcl(actual))
-        expected_var_zcl <- object_sort(zcl(expected))
+        actual_var_zcl <- object_sort(zcl(eval(actual_expr, env)))
+        expected_var_zcl <- object_sort(zcl(eval(expected_expr, env)))
     })
     if (isTRUE(all.equal(actual_var_zcl, expected_var_zcl))) {
         return(expect_true(TRUE))
