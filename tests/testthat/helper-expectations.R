@@ -129,7 +129,8 @@ expect_equal_temp_nodata <- function(actual, expected) {
 ## Moving from using variable URL to var alias in ZCL
 ## Can't use `expect_json_equivalent` because we have 2 conditions
 ## so make a simple verison here:
-expect_zcl_equivalent <- function(actual, expected, env = parent.frame()) {
+expect_zcl_equivalent <- function(actual, expected) {
+    env <- parent.frame()
     call <- sys.call()
     actual_expr <- call[[2]]
     expected_expr <- call[[3]]
