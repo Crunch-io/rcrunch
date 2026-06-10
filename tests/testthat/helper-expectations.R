@@ -131,7 +131,7 @@ expect_equal_temp_nodata <- function(actual, expected) {
 ## so make a simple verison here:
 expect_zcl_equivalent <- function(actual, expected) {
     with(temp.options(crunch = list(crunch.alias.zcl = FALSE)), {
-        actual_url_zcl <- object_sort(c(zcl(actual), list(a = 100)))
+        actual_url_zcl <- object_sort(c(zcl(actual)))
         expected_url_zcl <- object_sort(zcl(expected))
     })
     if (isTRUE(all.equal(actual_url_zcl, expected_url_zcl))) {
@@ -149,11 +149,13 @@ expect_zcl_equivalent <- function(actual, expected) {
     # No match, but don't use httptest::expect_json_equivlent
     # because the output is terrible
 
-    warning(paste0(
-        "Actual\n", toJSON(actual_url_zcl), "\n---\n",
-        "Expected\n", toJSON(expected_url_zcl)
+    stop(paste0(
+        "ZCLs not equivalent:\n",
+        "---Actual (url)\n", toJSON(actual_url_zcl), "\n",
+        "---Expected (url)\n", toJSON(expected_url_zcl), "\n",
+        "---Actual (alias)\n", toJSON(actual_var_zcl), "\n",
+        "---Expected (alias)\n", toJSON(expected_var_zcl)
     ))
-    expect_equal(actual_url_zcl, expected_url_zcl)
 }
 
 object_sort <- function (x) {
