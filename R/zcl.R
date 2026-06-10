@@ -20,7 +20,7 @@ r2zcl <- function(x) {
 as.zcl <- function(...) structure(list(...), class = "zcl")
 
 crunch_var_to_zcl <- function(x) {
-    use_alias <- crunch::envOrOption("crunch.alias.zcl", FALSE, expect_lgl = TRUE)
+    use_alias <- crunch::envOrOption("crunch.alias.zcl", TRUE, expect_lgl = TRUE)
     if (!use_alias) {
         list(variable = self(x))
     } else if (is.null(tuple(x)@parent)) {
