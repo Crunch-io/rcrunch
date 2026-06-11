@@ -282,6 +282,9 @@ formatExpression <- function(expr, dataset_url = "") {
         }
     } else if ("variable" %in% names(expr)) {
         return(crGET(expr[["variable"]])$body$alias)
+    } else if ("var" %in% names(expr) && "axes" %in% names(expr)) {
+        # This is the notation for subvariables (2D array support untested)
+        return(paste0(expr[["var"]], paste0("$", expr[["axes"]], collapse = "")))
     } else if ("var" %in% names(expr)) {
         return(expr[["var"]])
     } else if (length(intersect(c("column", "value"), names(expr)))) {
@@ -374,7 +377,9 @@ fixAdhocFilterExpression <- function(expr) {
 ## And also for "var"s (this is the new style of ZCL,
 ## where we have references of the form "var": "<ALIAS>")
 isZCLVar <- function(x) {
-    length(names(x)) == 1 && names(x) %in% c("variable", "var")
+    identical(names(x), "variable") ||
+        setequal(names(x), c("var")) ||
+        setequal(names(x), c("var", "axes"))
 }
 
 CategoriesFromZCLVar <- function(x, dataset_url) {
@@ -390,6 +395,7 @@ CategoriesFromZCLVar <- function(x, dataset_url) {
         var <- VariableEntity(crGET(x[["variable"]]))
         return(categories(var))
     }
+
     if (dataset_url != "") {
         var_by_alias <- shojiURL(loadDataset(dataset_url), "views", "var_by_alias", mustWork = FALSE)
         if (is.null(var_by_alias)) return(NULL)

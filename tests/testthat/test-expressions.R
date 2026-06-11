@@ -223,6 +223,19 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                 )
             )
             expect_prints(expr, 'Crunch expression: gender == 1')
+
+            # subvariable notation works
+            expr <- CrunchExpr(
+                expression = list(
+                    `function` = "==",
+                    args = list(
+                        list(var = "mymrset", axes = list("subvar1")),
+                        list(value = 1)
+                    )
+                ),
+                dataset_url = self(ds)
+            )
+            expect_prints(expr, 'Crunch expression: mymrset$subvar1 == "0.0"')
         })
 
         test_that("Can subset a CrunchExpr with R values", {
