@@ -68,35 +68,21 @@ with_mock_crunch({
         )
     })
 
-    test_that("Can control whether we use var or variable syntax", {
-        with(temp.options(crunch = list(crunch.alias.zcl = FALSE)), {
-            variable_zcl <- zcl(ds$gender == 1)
-        })
-        expect_json_equivalent(
-            variable_zcl,
-            list(
-                `function` = "==",
-                args = list(
-                    list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/"),
-                    list(value = 1)
-                )
-            )
-        )
+    test_that("Can use subvariables in new var ZCL syntax", {
 
         with(temp.options(crunch = list(crunch.alias.zcl = TRUE)), {
-            var_zcl <- zcl(ds$gender == 1)
+            var_zcl <- zcl(ds$mymrset$subvar1 == 1)
         })
         expect_json_equivalent(
             var_zcl,
             list(
                 `function` = "==",
                 args = list(
-                    list(var = "gender"),
+                    list(var = "mymrset", axes = I("subvar1")),
                     list(value = 1)
                 )
             )
         )
-
     })
 
 })

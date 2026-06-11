@@ -47,6 +47,7 @@ setMethod("subvariables", "ArrayVariable", function(x) {
     } else {
         vars <- VariableCatalog(crGET(catalog_url))
         out <- Subvariables(vars[subvariableURLs(tup)])
+        out@array <- tup
     }
     activeFilter(out) <- activeFilter(x)
     return(out)
@@ -68,8 +69,9 @@ setMethod("subvariables", "VariableTuple", function(x) {
 
     # if there is a subvariable element, we need to use that for ordering
     names(subvars) <- paste0(absoluteURL(names(subvars), base = catalog_url), "/")
-
-    return(Subvariables(index = subvars[x$subvariables], self = catalog_url))
+    out <- Subvariables(index = subvars[x$subvariables], self = catalog_url)
+    out@array <- x
+    return(out)
 })
 
 #' @rdname Subvariables
@@ -117,6 +119,7 @@ setMethod("[[", c("Subvariables", "character"), function(x, i, ...) {
 setMethod("[[", c("Subvariables", "numeric"), function(x, i, ...) {
     out <- callNextMethod(x, i, ...)
     if (!is.null(out)) {
+        out@parent <- x@array
         out <- CrunchVariable(out, filter = activeFilter(x))
     }
     return(out)

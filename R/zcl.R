@@ -23,8 +23,12 @@ crunch_var_to_zcl <- function(x) {
     use_alias <- crunch::envOrOption("crunch.alias.zcl", FALSE, expect_lgl = TRUE)
     if (!use_alias) {
         list(variable = self(x))
-    } else {
+    } else if (is.null(tuple(x)@parent)) {
         list(var = alias(x))
+    } else {
+        ## Note that this won't work for 2D arrays, will require thinking
+        ## about them when we add them.
+        list(var = alias(tuple(x)@parent), axes = I(alias(x)))
     }
 }
 
