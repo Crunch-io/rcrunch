@@ -2,7 +2,8 @@
     "element": "shoji:entity",
     "self": "https://app.crunch.io/api/datasets/4/decks/8ad8/",
     "catalogs": {
-        "slides": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/"
+        "slides": "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
+        "promote": "https://app.crunch.io/api/datasets/4/decks/8ad8/promote/"
     },
     "views": {
         "export": "https://app.crunch.io/api/datasets/4/decks/8ad8/export/"

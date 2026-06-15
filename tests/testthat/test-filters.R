@@ -64,10 +64,9 @@ with_mock_crunch({
 
     test_that("Filter entity is.public", {
         expect_false(is.public(filters(ds)[["Occasional Political Interest"]]))
-        expect_PATCH(
+        expect_POST(
             is.public(filters(ds)[["Occasional Political Interest"]]) <- TRUE,
-            "https://app.crunch.io/api/datasets/1/filters/filter1/",
-            '{"is_public":true}'
+            "https://app.crunch.io/api/datasets/1/filters/filter1/promote/"
         )
         expect_no_request(is.public(filters(ds)[["Occasional Political Interest"]]) <- FALSE)
     })

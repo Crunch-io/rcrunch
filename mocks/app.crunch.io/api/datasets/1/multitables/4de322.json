@@ -1,6 +1,9 @@
 {
 	"element": "shoji:entity",
 	"self": "https://app.crunch.io/api/datasets/1/multitables/4de322/",
+	"catalogs": {
+	    "promote": "https://app.crunch.io/api/datasets/1/multitables/4de322/promote/"
+	},
 	"views": {
 		"tabbook": "https://app.crunch.io/api/datasets/1/multitables/4de322/tabbook/",
 		"export": "https://app.crunch.io/api/datasets/1/multitables/4de322/export/"

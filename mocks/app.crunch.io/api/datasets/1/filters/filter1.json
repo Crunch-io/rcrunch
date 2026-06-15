@@ -2,6 +2,9 @@
 	"element": "shoji:entity",
 	"self": "https://app.crunch.io/api/datasets/1/filters/filter1/",
 	"description": "Detail information for one filter",
+	"catalogs": {
+	    "promote": "https://app.crunch.io/api/datasets/1/filters/filter1/promote/"
+	},
 	"body": {
         "is_public": false,
         "owner_id": "https://app.crunch.io/api/users/user1/",
