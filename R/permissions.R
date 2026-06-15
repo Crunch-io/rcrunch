@@ -75,6 +75,19 @@ setMethod("members<-", c("CrunchTeam", "character"), function(x, value) {
     return(refresh(x))
 })
 
+promoteArtifact <- function(x, value) {
+    stopifnot(is.TRUEorFALSE(value))
+    if (is.public(x) == value) return(x)
+    if (!value) {
+        halt(
+            "It is no longer possible to demote a artifact to ",
+            "be private after it has been public."
+        )
+    }
+    crPOST(shojiURL(x, "catalogs", "promote"))
+    refresh(x)
+}
+
 
 #' View and modify the "public" attribute of artifacts
 #'
@@ -99,20 +112,14 @@ setMethod("is.public", "CrunchFilter", function(x) x@body$is_public)
 
 #' @rdname is-public
 #' @export
-setMethod("is.public<-", "CrunchFilter", function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_public", value)
-})
+setMethod("is.public<-", "CrunchFilter", promoteArtifact)
 
 #' @rdname is-public
 #' @export
 setMethod("is.public", "CrunchDeck", function(x) x@body$is_public)
 #' @rdname is-public
 #' @export
-setMethod("is.public<-", "CrunchDeck", function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_public", value)
-})
+setMethod("is.public<-", "CrunchDeck", promoteArtifact)
 #' @rdname is-public
 #' @export
 setMethod("is.public", "MultitableCatalog", function(x) {
@@ -122,7 +129,11 @@ setMethod("is.public", "MultitableCatalog", function(x) {
 #' @rdname is-public
 #' @export
 setMethod("is.public<-", "MultitableCatalog", function(x, value) {
-    setIndexSlotOnEntity(x, "is_public", value, what = logical(1))
+    mapply(
+        function(idx, val) promoteArtifact(x[[idx]], val),
+        idx = seq_along(x), val = value
+    )
+    refresh(x)
 })
 
 #' @rdname is-public
@@ -131,10 +142,8 @@ setMethod("is.public", "Multitable", function(x) x@body$is_public)
 
 #' @rdname is-public
 #' @export
-setMethod("is.public<-", "Multitable", function(x, value) {
-    stopifnot(is.TRUEorFALSE(value))
-    setEntitySlot(x, "is_public", value)
-})
+setMethod("is.public<-", "Multitable", promoteArtifact)
+
 
 #' Read and set edit privileges
 #'

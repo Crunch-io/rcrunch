@@ -105,10 +105,9 @@ with_mock_crunch({
 
     test_that("is.public method for decks", {
         expect_false(is.public(main_deck))
-        expect_PATCH(
+        expect_POST(
             is.public(main_deck) <- TRUE,
-            "https://app.crunch.io/api/datasets/4/decks/8ad8/",
-            '{"is_public":true}'
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/promote/"
         )
         expect_no_request(is.public(deck_cat[[2]]) <- FALSE)
     })
