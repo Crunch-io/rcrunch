@@ -125,3 +125,51 @@ expect_equal_temp_nodata <- function(actual, expected) {
             isTRUE(all.equal(actual, expected[expected != -1]))
     )
 }
+
+## Moving from using variable URL to var alias in ZCL
+## Can't use `expect_json_equivalent` because we have 2 conditions
+## so make a simple verison here:
+expect_zcl_equivalent <- function(actual, expected) {
+    env <- parent.frame()
+    call <- sys.call()
+    actual_expr <- call[[2]]
+    expected_expr <- call[[3]]
+    with(temp.options(crunch = list(crunch.alias.zcl = FALSE)), {
+        actual_url_zcl <- object_sort(zcl(eval(actual_expr, env)))
+        expected_url_zcl <- object_sort(zcl(eval(expected_expr, env)))
+    })
+    if (isTRUE(all.equal(actual_url_zcl, expected_url_zcl))) {
+        return(expect_true(TRUE))
+    }
+
+    with(temp.options(crunch = list(crunch.alias.zcl = TRUE)), {
+        actual_var_zcl <- object_sort(zcl(eval(actual_expr, env)))
+        expected_var_zcl <- object_sort(zcl(eval(expected_expr, env)))
+    })
+    if (isTRUE(all.equal(actual_var_zcl, expected_var_zcl))) {
+        return(expect_true(TRUE))
+    }
+
+    # No match, but don't use httptest::expect_json_equivlent
+    # because the output is terrible
+
+    stop(paste0(
+        "ZCLs not equivalent:\n",
+        "---Actual (url)\n", toJSON(actual_url_zcl), "\n",
+        "---Expected (url)\n", toJSON(expected_url_zcl), "\n",
+        "---Actual (alias)\n", toJSON(actual_var_zcl), "\n",
+        "---Expected (alias)\n", toJSON(expected_var_zcl)
+    ))
+}
+
+object_sort <- function (x) {
+    if (is.list(x)) {
+        x <- as.list(x)
+        if (!is.null(names(x))) {
+            x <- x[sort(names(x))]
+        }
+        return(lapply(x, object_sort))
+    }
+    return(x)
+}
+

@@ -263,13 +263,13 @@ formatScriptCatalog <- function(x, from = Sys.time(), body_width = 20) {
     ornm = "%ornm%"
 )
 
-formatExpression <- function(expr) {
+formatExpression <- function(expr, dataset_url = "") {
     if (is.CrunchExpr(expr)) {
-        return(formatExpression(expr@expression))
+        return(formatExpression(expr@expression, dataset_url = expr@dataset_url))
     } else if ("function" %in% names(expr)) {
         func <- expr[["function"]]
         func <- .funcs.z2r[[func]] %||% func ## Translate func name, if needed
-        args <- formatExpressionArgs(expr[["args"]])
+        args <- formatExpressionArgs(expr[["args"]], dataset_url = dataset_url)
         if (func == "not") {
             return(paste0("!", args[1]))
         } else if (func %in% .operators) {
@@ -282,6 +282,9 @@ formatExpression <- function(expr) {
         }
     } else if ("variable" %in% names(expr)) {
         return(crGET(expr[["variable"]])$body$alias)
+    } else if ("var" %in% names(expr) && "axes" %in% names(expr)) {
+        # This is the notation for subvariables (2D array support untested)
+        return(paste0(expr[["var"]], paste0("$", expr[["axes"]], collapse = "")))
     } else if ("var" %in% names(expr)) {
         return(expr[["var"]])
     } else if (length(intersect(c("column", "value"), names(expr)))) {
@@ -311,30 +314,27 @@ deparseAndFlatten <- function(x, max_length = NULL, control = NULL, ...) {
     return(out)
 }
 
-formatExpressionArgs <- function(args) {
+formatExpressionArgs <- function(args, dataset_url = "") {
     ## This is just to pretty-print category values as "names"
-    ## Look for "variables"
-    vars <- vapply(
-        args,
-        function(x) identical(names(x), "variable"), logical(1)
-    )
+    vars <- vapply(args, isZCLVar, logical(1))
+
+    ## If only 1 variable, we know what values refer to
     if (sum(vars) == 1) {
-        ## Great, let's see if we have any values to format
         vals <- vapply(args, function(x) {
             any(names(x) %in% c("column", "value"))
         }, logical(1))
         if (any(vals)) {
-            ## Get the var, see if it is categorical
-            var <- VariableEntity(crGET(args[[which(vars)]]$variable))
-            ## Well, we'll identify "categorical" by presence of cats
-            args[vals] <- lapply(args[vals], formatExpressionValue,
-                cats = categories(var)
-            )
+            cats <- CategoriesFromZCLVar(args[[which(vars)]], dataset_url = dataset_url)
+            ## identify "categorical" by presence of cats
+            ## This is also the fallback when we couldn't get to variables
+            ## but since htis only affects printing, it seems okay
+            args[vals] <- lapply(args[vals], formatExpressionValue, cats = cats)
             args[!vals] <- lapply(args[!vals], formatExpression)
             return(unlist(args))
         }
     }
-    ## Else:
+
+    # Otherwise
     return(vapply(args, formatExpression, character(1), USE.NAMES = FALSE))
 }
 
@@ -369,6 +369,40 @@ fixAdhocFilterExpression <- function(expr) {
         return(expr)
     }
     return(lapply(expr, fixAdhocFilterExpression))
+}
+
+
+## Look for "variable"s (this is the old style of ZCL,
+## where we have of the form "variable": "<URL>")
+## And also for "var"s (this is the new style of ZCL,
+## where we have references of the form "var": "<ALIAS>")
+isZCLVar <- function(x) {
+    identical(names(x), "variable") ||
+        setequal(names(x), c("var")) ||
+        setequal(names(x), c("var", "axes"))
+}
+
+CategoriesFromZCLVar <- function(x, dataset_url) {
+    # We may not have the ability to identify categories, later code
+    # will have to recover from not having them
+    # In production, a return value of NULL can mean:
+    #   - Variable doesn't have categories (eg is numeric)
+    #   - Something that wasn't expecting to encounter the new var "ZCL"
+    #     syntax has. (eg if we change a deck to use this syntax)
+    # While testing, it can also mean that the fixture hasn't been
+    # updated to have the vars_by_alias view
+    if (identical(names(x), "variable")) {
+        var <- VariableEntity(crGET(x[["variable"]]))
+        return(categories(var))
+    }
+
+    if (dataset_url != "") {
+        var_by_alias <- shojiURL(loadDataset(dataset_url), "views", "var_by_alias", mustWork = FALSE)
+        if (is.null(var_by_alias)) return(NULL)
+        var <- VariableEntity(crGET(paste0(var_by_alias, x[["var"]])))
+        return(categories(var))
+    }
+    return(NULL)
 }
 
 #' @rdname show

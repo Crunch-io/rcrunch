@@ -198,6 +198,46 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             )
         })
 
+        test_that("Show method for expressions with new 'var' ZCL syntax", {
+            # With dataset_url correctly set
+            expr <- CrunchExpr(
+                expression = list(
+                    `function` = "==",
+                    args = list(
+                        list(var = "gender"),
+                        list(value = 1)
+                    )
+                ),
+                dataset_url = self(ds)
+            )
+            expect_prints(expr, 'Crunch expression: gender == "Male"')
+
+            # And without dataset_url (should fallback to category id)
+            expr <- CrunchExpr(
+                expression = list(
+                    `function` = "==",
+                    args = list(
+                        list(var = "gender"),
+                        list(value = 1)
+                    )
+                )
+            )
+            expect_prints(expr, 'Crunch expression: gender == 1')
+
+            # subvariable notation works
+            expr <- CrunchExpr(
+                expression = list(
+                    `function` = "==",
+                    args = list(
+                        list(var = "mymrset", axes = list("subvar1")),
+                        list(value = 1)
+                    )
+                ),
+                dataset_url = self(ds)
+            )
+            expect_prints(expr, 'Crunch expression: mymrset$subvar1 == "0.0"')
+        })
+
         test_that("Can subset a CrunchExpr with R values", {
             age <- 2016 - ds$birthyr
             ## Note: no check for correct number of rows

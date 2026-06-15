@@ -54,7 +54,17 @@ ShojiTuple <- setClass("ShojiTuple",
         body = "list"
     )
 )
-VariableTuple <- setClass("VariableTuple", contains = "ShojiTuple")
+VariableTuple <- setClass(
+    "VariableTuple",
+    contains = "ShojiTuple",
+    slots = c(
+        # In practice it's an OptionalVariableTuple not ANY, but hard to self-reference in S4
+        parent = "ANY"
+    ),
+    prototype = prototype(
+        parent = NULL
+    )
+)
 DatasetTuple <- setClass("DatasetTuple", contains = "ShojiTuple")
 PermissionTuple <- setClass("PermissionTuple", contains = "ShojiTuple")
 
@@ -501,10 +511,12 @@ TransformsList <- GenericConstructor("TransformsList")
 Subvariables <- setClass("Subvariables",
     contains = "VariableCatalog",
     slots = c(
-        filter = "CrunchLogicalExpr"
+        filter = "CrunchLogicalExpr",
+        array = "VariableTuple"
     ),
     prototype = prototype(
-        filter = CrunchLogicalExpr()
+        filter = CrunchLogicalExpr(),
+        array = VariableTuple()
     )
 )
 

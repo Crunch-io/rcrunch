@@ -209,6 +209,7 @@ vectorOrList <- function(obj, type) {
 #' | crunch.require.confirmation  | R_CRUNCH_REQUIRE_CONFIRMATION  | TRUE          | Whether to require confirmation for destructive actions (like [`delete()`]) |
 #' | crunch.warn.hidden           | R_CRUNCH_WARN_HIDDEN           | TRUE          | Whether to warn when using a hidden variable                                |
 #' | crunch.warn.private          | R_CRUNCH_WARN_PRIVATE          | TRUE          | Whether to warn when using a private variable                               |
+#' | crunch.alias.zcl             | R_CRUNCH_ALIAS_ZCL             | FALSE         | Whether to use aliases in ZCL rather than crunch URLs                       |
 #' | crunch.names.includes.hidden.private.variables | R_NAMES_INCLUDES_HIDDEN_PRIVATE_VARIABLES| TRUE | Whether to include hidden/private variables from names(ds) |
 #' | crunch.order.var.catalog     | R_CRUNCH_ORDER_VAR_CATALOG     | TRUE          | Whether to set the variable catalog in the order of the hierarchical order  |
 #' | crunch.default.derived       | R_CRUNCH_DEFAULT_DERIVED.      | TRUE          | Whether to create variables from expressions that are derived (TRUE) or materialized (FALSE) |
