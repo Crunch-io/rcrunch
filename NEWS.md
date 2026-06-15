@@ -1,5 +1,10 @@
 # crunch (development version)
 
+# crunch 1.31.2
+* Allow for backend changes to expressions in exclusion filters (#682)
+
+* Use /promote/ endpoint to set public setting of artifacts (#683)
+
 # crunch 1.31.1
 * Improve the way that the csv export requests specific columns.
 
