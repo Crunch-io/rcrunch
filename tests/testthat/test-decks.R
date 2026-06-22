@@ -427,8 +427,8 @@ with_test_authentication({
         expect_identical(cube(deck[[3]]), crtabs(~v2, ds))
 
         # make a named filter
-        filters(ds)[["v4 is B"]] <- ds$v4 == "B"
-        filters(ds)[["v1 over 0"]] <- ds$v1 > 0
+        newFilter("v4 is B", ds$v4 == "B", is_public = TRUE)
+        newFilter("v1 over 0", ds$v1 > 0, is_public = TRUE)
 
         # add filters
         filters(deck[[1]]) <- filters(ds)[["v4 is B"]]
