@@ -99,7 +99,14 @@ getDatasetHiddenVariables <- function(x) {
             return(hiddenvarcat)
         }
     } else {
-        return(variablesBelowFolder(hiddenFolder(x)))
+        hidden_dir <- hiddenFolder(x)
+        if (is.null(hidden_dir)) {
+            hiddenvarcat <- VariableCatalog()
+            hiddenvarcat@self <- "<Not Lazy>"
+            return(hiddenvarcat)
+        } else {
+            hiddenvarcat <- variablesBelowFolder(hidden_dir)
+        }
     }
 }
 
