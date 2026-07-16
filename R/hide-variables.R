@@ -36,7 +36,8 @@ NULL
     api_type <- ifelse(type == "private", "secure", type)
     # private variables not available to non-editors, but pubic and hidden
     # are available to all
-    api_must_work <- type != "private"
+    # hidden variables not on views (TODO: confirm if this is intentional)
+    api_must_work <- !(type %in% c("private", "hidden"))
 
     # Get root variables folder (which contains the first levels inside of it
     # but isn't really used directly). NB can't use `rootFolder()` because

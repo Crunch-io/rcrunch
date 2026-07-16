@@ -85,7 +85,16 @@ getDatasetHiddenVariables <- function(x) {
         if (!is.null(cache)) {
             return(cache)
         } else {
-            hiddenvarcat <- variablesBelowFolder(hiddenFolder(x))
+            hidden_dir <- hiddenFolder(x)
+            if (is.null(hidden_dir)) {
+                hiddenvarcat <- VariableCatalog()
+                hiddenvarcat@self <- "<Not Lazy>"
+                return(hiddenvarcat)
+            } else {
+                hiddenvarcat <- variablesBelowFolder(hidden_dir)
+            }
+
+            hiddenvarcat <- variablesBelowFolder()
             httpcache::setCache(key, hiddenvarcat)
             return(hiddenvarcat)
         }
