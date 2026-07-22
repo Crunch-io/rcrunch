@@ -144,6 +144,7 @@ with_DELETE <- function(resp, expr) {
 }
 
 assign("entities.created", c(), envir = globalenv())
+assign("all.entities.created", c(), envir = globalenv())
 
 test_options <- temp.options(
     # grab env or options
@@ -227,6 +228,9 @@ purgeEntitiesCreated <- function() {
             try(crDELETE(u), silent = TRUE)
         }
         assign("entities.created", c(), envir = globalenv())
+        # --- Track all entities created
+        all_seen <- get("all.entities.created", envir = globalenv())
+        assign("all.entities.created", unique(c(all_seen, seen)), envir = globalenv())
         invisible()
     })
 }
@@ -276,6 +280,11 @@ crunch_test_teardown_check <- function() {
                     crunch:::serialPaste(dQuote(names(projects()[leftovers])))
                 )
             }
+            all_seen <- get("all.entities.created", envir = globalenv())
+            message(
+                "JSON of entities created:\n",
+                crunch::toJSON(all_seen)
+            )
         })
     })
     cat("Total teardown: ")
