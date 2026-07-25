@@ -92,8 +92,8 @@ with_test_authentication({
         expect_equivalent(
             table(ds$derivedarray$dsub2),
             structure(c(5, 3, 3),
-                .Dim = 3L,
-                .Dimnames = list(dsub2 = c("one", "two", "Bird")),
+                dim = 3L,
+                dimnames = list(dsub2 = c("one", "two", "Bird")),
                 class = "table"
             )
         )
@@ -271,8 +271,8 @@ with_test_authentication({
         expect_equivalent(
             table(ds$derivedarray$dsub2),
             structure(c(10, 6, 6),
-                .Dim = 3L,
-                .Dimnames = list(dsub2 = c("one", "two", "Bird")),
+                dim = 3L,
+                dimnames = list(dsub2 = c("one", "two", "Bird")),
                 class = "table"
             )
         )
@@ -314,8 +314,8 @@ with_test_authentication({
     #         c("one", "two", "Bird", "Skipped", "Not Asked", "Beaver", "No Data"))
     #     # print(table(ds$derivedarray))
     #     # expect_equivalent(table(ds$derivedarray),
-    #     #     structure(c(10, 6, 6), .Dim=3L,
-    #     #     .Dimnames=list(dsub2=c("one", "two", "Bird")),
+    #     #     structure(c(10, 6, 6), dim=3L,
+    #     #     dimnames=list(dsub2=c("one", "two", "Bird")),
     #     #     class="table"))
     # })
     # test_that("petloc_a gets updated appropriately", {

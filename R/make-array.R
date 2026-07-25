@@ -360,7 +360,7 @@ makeFrame <- function(x, numeric = NULL) {
     subvarids <- sprintf("%04d", seq_along(x))
     expression <- zfunc("array", zfunc(
         "make_frame",
-        list(map = structure(x, .Names = subvarids)),
+        list(map = structure(x, names = subvarids)),
         list(value = I(subvarids))
     ), numeric = list(value = numeric))
     # TODO: filters are not preserved in makeFrame expressions because

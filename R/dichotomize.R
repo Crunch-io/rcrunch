@@ -115,7 +115,7 @@ setMethod("undichotomize", "CategoricalArrayVariable", .undichotomize.var)
 #' @rdname dichotomize
 #' @export
 setMethod("is.selected", "Categories", function(x) {
-    structure(vapply(x, is.selected, logical(1), USE.NAMES = FALSE), .Names = names(x))
+    structure(vapply(x, is.selected, logical(1), USE.NAMES = FALSE), names = names(x))
 })
 
 #' @rdname dichotomize

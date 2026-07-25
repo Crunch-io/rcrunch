@@ -187,7 +187,7 @@ csvToDataFrame <- function(csv_df,
         v <- if (!is.na(meta_idx)) meta[[meta_idx[1]]] else NULL
         if (is.null(v)) {
             ## Not in the dataset, so it exists only in the CRDF. Get it there.
-            return(structure(list(cr_data[[a]]), .Names = a))
+            return(structure(list(cr_data[[a]]), names = a))
         } else if (type(v) %in% ARRAY_TYPES) {
             ## Find the subvar columns in the csv_df and parse them as categorical
             if (type(v) == "numeric_array") {
@@ -198,9 +198,9 @@ csvToDataFrame <- function(csv_df,
             subvar_info <- parsing_info[!is.na(parsing_info$parent_alias) & parsing_info$parent_alias == alias(v), ]
             cols <- csv_df[, subvar_info$qualified_alias, drop = FALSE]
             if (array_strategy == "alias"){
-                return(structure(lapply(cols, cp, v, categorical.mode), .Names = subvar_info$cond_qualified_alias))
+                return(structure(lapply(cols, cp, v, categorical.mode), names = subvar_info$cond_qualified_alias))
             } else if (array_strategy == "qualified_alias") {
-                return(structure(lapply(cols, cp, v, categorical.mode), .Names = subvar_info$qualified_alias))
+                return(structure(lapply(cols, cp, v, categorical.mode), names = subvar_info$qualified_alias))
             } else { # array_strategy==packed
                 # Extra list layer to hold the array variable's alias
                 return(structure(
@@ -208,17 +208,17 @@ csvToDataFrame <- function(csv_df,
                         structure(
                             lapply(cols, cp, v, categorical.mode),
                             class = "data.frame",
-                            .Names = subvar_info$orig_alias,
+                            names = subvar_info$orig_alias,
                             row.names = c(NA, -nrow(csv_df))
                         )
                     ),
-                    .Names = alias(v)
+                    names = alias(v)
                 ))
             }
         } else {
             type <- type(v)
             cp <- switch(type, "numeric" = numericCsvParser, "text" = textCsvParser, columnParser(type))
-            return(structure(list(cp(csv_df[[a]], v, categorical.mode)), .Names = a))
+            return(structure(list(cp(csv_df[[a]], v, categorical.mode)), names = a))
         }
     }), recursive = FALSE)
 

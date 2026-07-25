@@ -40,10 +40,10 @@ with_mock_crunch({
         # if veg_filling doesn't have correct factor levels there may have been a mistake
         lvls <- c("Strongly Disagree", "Disagree", "Neither", "Agree", "Strongly Agree")
         expected <- data.frame(
-            veg_enjoy_ca_healthy = structure(c(3, 1, 1, 1, 5), .Label = lvls, class = "factor"),
-            veg_enjoy_ca_tasty = structure(c(5, 1, 1, 1, 1), .Label = lvls, class = "factor"),
-            veg_enjoy_ca_filling = structure(c(1, 1, 1, 3, 4), .Label = lvls, class = "factor"),
-            veg_enjoy_ca_env = structure(c(3, 2, NA, 3, 4), .Label = lvls, class = "factor")
+            veg_enjoy_ca_healthy = structure(c(3, 1, 1, 1, 5), levels = lvls, class = "factor"),
+            veg_enjoy_ca_tasty = structure(c(5, 1, 1, 1, 1), levels = lvls, class = "factor"),
+            veg_enjoy_ca_filling = structure(c(1, 1, 1, 3, 4), levels = lvls, class = "factor"),
+            veg_enjoy_ca_env = structure(c(3, 2, NA, 3, 4), levels = lvls, class = "factor")
         )
         expect_identical(vec[1:5, ], expected)
     })
@@ -61,9 +61,9 @@ with_mock_crunch({
 
         lvls <- c("Yes", "No")
         expected <- data.frame(
-            enjoy_mr_savory = structure(c(1, 2, 1, 2, 1), .Label = lvls, class = "factor"),
-            enjoy_mr_spicy = structure(c(2, 1, 2, 1, 2), .Label = lvls, class = "factor"),
-            enjoy_mr_sweet = structure(c(2, 1, 1, 1, 1), .Label = lvls, class = "factor")
+            enjoy_mr_savory = structure(c(1, 2, 1, 2, 1), levels = lvls, class = "factor"),
+            enjoy_mr_spicy = structure(c(2, 1, 2, 1, 2), levels = lvls, class = "factor"),
+            enjoy_mr_sweet = structure(c(2, 1, 1, 1, 1), levels = lvls, class = "factor")
         )
         expect_identical(vec[1:5, ], expected)
     })

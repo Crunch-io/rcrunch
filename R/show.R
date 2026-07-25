@@ -536,7 +536,7 @@ setMethod("show", "CrunchCube", function(object) showTransforms(object))
 #' @export
 setMethod("show", "OrderGroup", function(object) {
     ind <- structure(lapply(urls(object), function(x) list(name = x)),
-        .Names = urls(object)
+        names = urls(object)
     )
     cat(showOrderGroup(object, index = ind, key = "name"), sep = "\n")
 })

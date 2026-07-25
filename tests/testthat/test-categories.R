@@ -277,7 +277,7 @@ with_mock_crunch({
     test_that("is.selected works on Categories", {
         expect_identical(
             is.selected(categories(ds$mymrset)),
-            structure(c(FALSE, TRUE, FALSE), .Names = c("0.0", "1.0", "No Data"))
+            structure(c(FALSE, TRUE, FALSE), names = c("0.0", "1.0", "No Data"))
         )
     })
     test_that("is.selected assignment methods", {
@@ -323,7 +323,7 @@ with_mock_crunch({
 
     test_that("is.na", {
         expect_identical(is.na(cats), structure(c(FALSE, FALSE, TRUE),
-            .Names = c("Male", "Female", "No Data")
+            names = c("Male", "Female", "No Data")
         ))
         expect_true(is.na(cats[[3]]))
         expect_false(is.na(cats[[1]]))
@@ -334,14 +334,14 @@ with_mock_crunch({
         try(is.na(cats) <- "Female")
         expect_true(is.categories(cats))
         expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE),
-            .Names = c("Male", "Female", "No Data")
+            names = c("Male", "Female", "No Data")
         ))
         expect_error(
             is.na(cats) <- c("Male", "Prefer not to say"),
             paste0("Category not found: ", dQuote("Prefer not to say"))
         )
         expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE),
-            .Names = c("Male", "Female", "No Data")
+            names = c("Male", "Female", "No Data")
         ))
     })
     test_that("is.na<- by logical", {
@@ -349,7 +349,7 @@ with_mock_crunch({
         try(is.na(cats) <- c(TRUE, FALSE, FALSE))
         expect_true(is.categories(cats))
         expect_identical(is.na(cats), structure(c(TRUE, FALSE, FALSE),
-            .Names = c("Male", "Female", "No Data")
+            names = c("Male", "Female", "No Data")
         ))
     })
 
@@ -606,7 +606,7 @@ with_test_authentication({
             is.selected(categories(ds$mr)[2]) <- FALSE
             expect_identical(
                 is.selected(categories(ds$mr)),
-                structure(c(TRUE, FALSE, TRUE), .Names = c("1", "2", "No Data"))
+                structure(c(TRUE, FALSE, TRUE), names = c("1", "2", "No Data"))
             )
         })
     })

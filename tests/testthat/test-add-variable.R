@@ -198,7 +198,7 @@ test_that("toVariable handles duplicate factor levels", {
     ## constructor function starting in R 3.4.0, but create one anyway in case
     ## older versions are encountered, and because it apparently is still
     ## technically possible to create one like this:
-    v <- structure(1:4, .Label = c("a", "b", "b", "c"), class = "factor")
+    v <- structure(1:4, levels = c("a", "b", "b", "c"), class = "factor")
     expect_warning(
         expect_equivalent(
             toVariable(v),

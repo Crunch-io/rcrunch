@@ -25,7 +25,7 @@ setMethod("jsonprep", "ANY", function(x, ...) {
         )
         ents[nested.groups] <- lapply(ents[nested.groups], .jsonprep.ordergroup)
     }
-    return(structure(list(I(ents)), .Names = x@group))
+    return(structure(list(I(ents)), names = x@group))
 }
 
 #' @rdname tojson-crunch

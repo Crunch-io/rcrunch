@@ -38,14 +38,14 @@ compareDatasets <- function(A, B) {
     varsB <- variableMetadata(B)
 
     ## Create alias to url maps for lookup below
-    a2uA <- structure(urls(varsA), .Names = aliases(varsA))
-    a2uB <- structure(urls(varsB), .Names = aliases(varsB))
+    a2uA <- structure(urls(varsA), names = aliases(varsA))
+    a2uB <- structure(urls(varsB), names = aliases(varsB))
 
     ## Do the same but for the flattened metadata, for the subariables
     fvarsA <- flattenVariableMetadata(varsA)
     fvarsB <- flattenVariableMetadata(varsB)
-    a2uFA <- structure(urls(fvarsA), .Names = aliases(fvarsA))
-    a2uFB <- structure(urls(fvarsB), .Names = aliases(fvarsB))
+    a2uFA <- structure(urls(fvarsA), names = aliases(fvarsA))
+    a2uFB <- structure(urls(fvarsB), names = aliases(fvarsB))
 
     ## Compare.
     comp.vars <- compareVariables(varsA, varsB)

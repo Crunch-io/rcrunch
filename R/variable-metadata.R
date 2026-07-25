@@ -51,7 +51,7 @@ flattenVariableMetadata <- function(vm) {
         this <- ind[[u]]
         these.subs <- this$subvariables
         if (!is.null(these.subs)) {
-            out <- structure(this$subreferences, .Names = these.subs)
+            out <- structure(this$subreferences, names = these.subs)
             out <- lapply(out, function(x) {
                 ## Add the parent ref
                 x$parent <- u

@@ -176,7 +176,7 @@ setMethod("is.editor<-", c("MemberCatalog", "logical"), function(x, value) {
     if (any(changed)) {
         payload <- structure(lapply(value[changed], {
             function(v) list(permissions = list(edit = v))
-        }), .Names = urls(x)[changed])
+        }), names = urls(x)[changed])
         crPATCH(self(x), body = toJSON(payload))
         x <- refresh(x)
     }
