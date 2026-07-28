@@ -1,5 +1,8 @@
 # crunch (development version)
 
+# crunch 1.31.3
+* Fix arguments in `structure()` for R-devel deprecations (#688)
+
 # crunch 1.31.2
 * Allow for backend changes to expressions in exclusion filters (#682)
 
