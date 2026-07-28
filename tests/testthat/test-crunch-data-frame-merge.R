@@ -7,11 +7,17 @@ with_mock_crunch({
     test_that("the most basic case of merging a CrunchDataFarme with a data.frame", {
         ds_df <- as.data.frame(ds)
         local_df <- data.frame(gender = factor(c("Male", "Female")), new = factor("new"))
-        expect_silent(merged_df <- merge(ds_df,
+        # Because of R-devel changes in 2026-07-28 (and httptest not being updated) this isn't silent
+        # expect_silent(merged_df <- merge(ds_df,
+        #     local_df,
+        #     by.x = "gender",
+        #     by.y = "gender"
+        # ))
+        merged_df <- merge(ds_df,
             local_df,
             by.x = "gender",
             by.y = "gender"
-        ))
+        )
         expect_is(merged_df, "CrunchDataFrame")
         expect_identical(nrow(merged_df), nrow(ds))
         expect_identical(ncol(merged_df), ncol(ds) + 1L)
