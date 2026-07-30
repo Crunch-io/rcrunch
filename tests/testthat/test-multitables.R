@@ -465,8 +465,8 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                           14, 30, 15, 0, 58, 8, 4, 4, 0, 62, 8, 38, 20, 17, 45, 101, 15,
                           8, 4, 18, 43, 7, 14, 14, 20, 67, 7, 16, 16, 36, 83, 10, 10, 9,
                           16, 41, 5, 10, 8, 28, 56, 10),
-                        .Dim = c(5L, 6L, 4L),
-                        .Dimnames = list(
+                        dim = c(5L, 6L, 4L),
+                        dimnames = list(
                             c("Strongly Disagree", "Disagree", "Neither", "Agree", "Strongly Agree"), # nolint
                             c("", "Savory", "Spicy", "Sweet", "No", "Yes"),
                             c("Healthy", "Tasty", "Filling", "Environmental")
@@ -511,8 +511,8 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                           71.6235294118, 62.6666666667, 78.6172839506, 69.3780487805, 67.4268292683,
                           86.95, 72.7913043478, 62.1271186441, 74.2905982906, 74.4513274336,
                           68.5178571429, 86.4910714286),
-                        .Dim = c(6L, 6L),
-                        .Dimnames = list(
+                        dim = c(6L, 6L),
+                        dimnames = list(
                             c("Avocado", "Brussel Sprout", "Carrot", "Daikon", "Eggplant", "Fennel"), # nolint
                             c("", "Savory", "Spicy", "Sweet", "No", "Yes")
                         )

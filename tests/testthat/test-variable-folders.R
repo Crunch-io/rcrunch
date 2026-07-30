@@ -185,7 +185,9 @@ with_mock_crunch({
 
     test_that("copyFolders returns the target dataset with the order applied", {
         ds_again <- cachedLoadDataset("test ds")
-        expect_silent(new_order <- copyFolders(ds, ds_again))
+        # Because of R-devel changes in 2026-07-28 (and httptest not being updated) this isn't silent
+        # expect_silent(new_order <- copyFolders(ds, ds_again))
+        new_order <- copyFolders(ds, ds_again)
         expect_is(new_order, "CrunchDataset")
         expect_identical(entities(ordering(ds)), entities(ordering(new_order)))
     })

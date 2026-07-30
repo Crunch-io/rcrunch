@@ -40,7 +40,7 @@
         }, simplify = FALSE)
     } else {
         out <- structure(list(zcl(value)),
-            .Names = self(variable)
+            names = self(variable)
         )
     }
 

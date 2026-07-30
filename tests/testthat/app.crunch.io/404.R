@@ -2,7 +2,7 @@ structure(list(
     url = "https://app.crunch.io/404/",
     status_code = 404,
     times = structure(c(0, 0, 0, 0, 0, 26),
-        .Names = c(
+        names = c(
             "redirect", "namelookup", "connect", "pretransfer",
             "starttransfer", "total"
         )

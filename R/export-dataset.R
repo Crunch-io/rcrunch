@@ -118,7 +118,7 @@ variablesFilter <- function(dataset, include.hidden = FALSE) {
     dsvars <- ShojiCatalog(crGET(self(allvars), query = list(relative = "on")))
     if (include.hidden || (length(allvars) != length(dsvars))) {
         v <- structure(lapply(urls(allvars), function(x) list(variable = x)),
-            .Names = ids(allvars)
+            names = ids(allvars)
         )
         ## Make sure that duplicate variables haven't been referenced (surely
         ## by accident).

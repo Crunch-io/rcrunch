@@ -71,7 +71,7 @@ setEntitySlot <- function(x, i, value) {
     ## in case "value" is already wrapped
     if (!identical(I(slot(x, "body")[[i]]), I(value))) {
         slot(x, "body")[[i]] <- value
-        body <- structure(list(value), .Names = i)
+        body <- structure(list(value), names = i)
         payload <- toJSON(body)
         crPATCH(self(x), body = payload)
         if (is.dataset(x)) {
@@ -146,7 +146,7 @@ setEntitySlotWrapBody <- function(x, i, value) {
     ## in case "value" is already wrapped
     if (!identical(I(slot(x, "body")[[i]]), I(value))) {
         slot(x, "body")[[i]] <- value
-        body <- wrapCatalog(body = structure(list(value), .Names = i))
+        body <- wrapCatalog(body = structure(list(value), names = i))
         payload <- toJSON(body)
         crPATCH(self(x), body = payload)
         if (is.dataset(x)) {

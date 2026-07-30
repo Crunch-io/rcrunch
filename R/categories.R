@@ -136,7 +136,7 @@ setMethod("values<-", "Categories", setValues)
 #' @rdname describe-catalog
 #' @export
 setMethod("dates", "Categories", function(x) {
-    structure(vapply(x, dates, character(1), USE.NAMES = FALSE), .Names = names(x))
+    structure(vapply(x, dates, character(1), USE.NAMES = FALSE), names = names(x))
 })
 
 #' @rdname describe-catalog
@@ -147,7 +147,7 @@ setMethod("dates<-", "Categories", setDates)
 #' @aliases is-na-categories
 #' @export
 setMethod("is.na", "Categories", function(x) {
-    structure(vapply(x, is.na, logical(1), USE.NAMES = FALSE), .Names = names(x))
+    structure(vapply(x, is.na, logical(1), USE.NAMES = FALSE), names = names(x))
 })
 
 #' @rdname is-na-categories

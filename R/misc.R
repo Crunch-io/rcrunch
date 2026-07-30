@@ -107,7 +107,7 @@ emptyObject <- function(...) {
     ##
     ## Make the function take ... so you can *apply over something and just
     ## call the function
-    structure(list(), .Names = character(0))
+    structure(list(), names = character(0))
 }
 
 I <- function(x) {
