@@ -1,4 +1,4 @@
-FROM docker-proxy.nexus.crint.net/rstudio/r-base:4.3-jammy
+FROM nexus.dev.crint.net/dockerhub-proxy/rstudio/r-base:4.3-jammy
 ARG HOMEDIR=/var/lib/crunchapp
 ARG USER=1001
 ARG GROUP=1002
