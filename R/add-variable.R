@@ -81,6 +81,7 @@ validateVarDefRows <- function(vardef, numrows) {
 POSTNewVariable <- function(catalog_url, variable) {
     do.POST <- function(x) crPOST(catalog_url, body = toJSON(x, digits = 15))
 
+    is_binddef <- FALSE
     if (!any(c("expr", "derivation") %in% names(variable))) {
         ## If deriving a variable, skip this and go straight to POSTing
         if (variable$type %in% c("multiple_response", "categorical_array")) {
@@ -102,6 +103,12 @@ POSTNewVariable <- function(catalog_url, variable) {
             }
             is_binddef <- is.character(variable$subvariables) &&
                 !("categories" %in% names(variable))
+            if (is_binddef) {
+                # Pop the magic flag off
+                # TODO: allow setting this magic flag in makeArray()
+                do_post_bind_magic <- variable$autonames %||% FALSE
+                variable$autonames <- NULL
+            }
             is_arraydef <- is_catvardef(variable) &&
                 !any(vapply(variable$subvariables, is_catvardef, logical(1)))
             case3 <- !(is_binddef | is_arraydef)
@@ -131,6 +138,11 @@ POSTNewVariable <- function(catalog_url, variable) {
         }
     }
     out <- do.POST(variable)
+    if (is_binddef && do_post_bind_magic) {
+        # Look for common variable name stems and clean that
+        var <- VariableEntity(crGET(out))
+        cleanImportedArray(var)
+    }
     invisible(out)
 }
 

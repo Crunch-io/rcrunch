@@ -120,6 +120,7 @@ JSONing
 Jupyter
 keyring
 libcurl
+lossy
 magrittr
 makeWeight
 MemberCatalog
