@@ -146,8 +146,23 @@ setMethod("derivation<-", c("CrunchVariable", "NULL"), integrateDerivedVar)
 #' @aliases is.derived
 #' @export
 setMethod("is.derived", "CrunchVariable", function(x) {
-    isTRUE(tuple(x)$derived)
+    is.derived(tuple(x))
 })
+
+#' @rdname derivations
+#' @aliases is.derived
+#' @export
+setMethod("is.derived", "VariableTuple", function(x) {
+   isTRUE(x$derived)
+})
+
+#' @rdname derivations
+#' @aliases is.derived
+#' @export
+setMethod("is.derived", "VariableCatalog", function(x) {
+    vapply(x, function(vartuple) vartuple$derived, logical(1))
+})
+
 
 #' @rdname derivations
 #' @aliases is.derived<-
