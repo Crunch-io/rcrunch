@@ -335,7 +335,7 @@ formatExpressionArgs <- function(args, dataset_url = "") {
     }
 
     # Otherwise
-    return(vapply(args, formatExpression, character(1), USE.NAMES = FALSE))
+    return(vapply(args, formatExpression, character(1), USE.NAMES = FALSE, dataset_url = dataset_url))
 }
 
 formatExpressionValue <- function(val, cats = NULL) {
