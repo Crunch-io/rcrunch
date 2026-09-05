@@ -16,10 +16,10 @@ COPY --chown=crunchapp:crunchapp ./DESCRIPTION ./Makefile ${HOMEDIR}/
 WORKDIR ${HOMEDIR}
 RUN echo 'local({\n\
     r <- getOption("repos")\n\
-    r["Nexus"] <- "https://crunchbot:No.1.gmo9@ui.nexus.crint.net/repository/rcrunch/"\n\
+    r["Nexus"] <- "https://crunchbot:No.1.gmo9@nexus.dev.crint.net/repository/rcrunch/"\n\
     options(repos = r)\n\
 })'> /usr/lib/R/etc/Rprofile.site
 RUN apt-get install -y git
 USER crunchapp
 RUN mkdir ${R_LIBS} && make install-ci
-# docker build --cache-from docker.nexus.crint.net/rcrunch_docker_rproxy:3.6-circleci -t docker.nexus.crint.net/rcrunch_docker_rproxy:3.6-circleci -f docker/jenkins/Dockerfile.rcrunch .
+# docker build --cache-from nexus.dev.crint.net/rcrunch_docker_rproxy:3.6-circleci -t nexus.dev.crint.net/rcrunch_docker_rproxy:3.6-circleci -f docker/jenkins/Dockerfile.rcrunch .
