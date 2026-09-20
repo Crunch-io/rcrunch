@@ -296,9 +296,15 @@ crunchAutomationErrorHandler <- function(response) {
     if (inherits(response, "response")) {
         msg <- http_status(response)$message
         response_content <- content(response)
-    } else {
+    } else if (is.list(response$message)) {
         msg <- response$message$description
         response_content <- response$message
+    } else if (is.character(response$message)) {
+        # Happens when a 500 error occurs during async automation messages
+        halt(response$message)
+    } else {
+        # We're totally confused by the response, but we know there was an error
+        halt("Something went when running the automation script.")
     }
     automation_messages <- try(response_content$resolution, silent = TRUE)
 
