@@ -42,7 +42,9 @@ cr_read_data <- function(
         ~array_lookup_info(combined_metadata[., ], array_strategy)
     )
 
-    combined_metadata$name <- vctrs::vec_as_names(combined_metadata$name, repair = name_repair)
+    combined_metadata$name <- vctrs::vec_as_names(
+        combined_metadata$name, repair = name_repair, repair_arg = "name_repair"
+    )
 
     has_col_selection <- !rlang::quo_is_null(col_select)
     if (has_col_selection) {
@@ -55,23 +57,25 @@ cr_read_data <- function(
     if (array_strategy == "packed") {
         if (all(lengths(combined_metadata$axis_values) == 0)) {
             # TODO: Clean up, but need to handle datasets with no arrays
-            pivot_spec <- combined_metadata |>
+            pack_info <- combined_metadata |>
                 dplyr::mutate(
                     axis_name = NA_character_,
                     axis_values = vector("list", nrow(combined_metadata))
                 )
         } else {
-            pivot_spec <- combined_metadata |>
+            pack_info <- combined_metadata |>
                 tidyr::unnest(.data$axis_values, keep_empty = TRUE)
         }
-        pivot_spec <- pivot_spec |>
-            dplyr::transmute(
+        pack_info <- pack_info |>
+            dplyr::mutate(
                 .value = paste0(.data$type, "_value"),
                 .name = ifelse(is.na(.data$axis_name), .data$name, .data$axis_name),
                 var_name = .data$unexpanded_name,
                 axis = .data$axis_values
             ) |>
             dplyr::mutate(.name = vctrs::vec_as_names(.data$.name, repair = "unique", quiet = TRUE))
+
+        pivot_spec <- dplyr::select(pack_info, c(".value", ".name", "var_name", "axis"))
     } else {
         pivot_spec <- combined_metadata |>
             dplyr::mutate(.value = paste0(.data$type, "_value")) |>
@@ -130,7 +134,7 @@ cr_read_data <- function(
     out <- split_pivot_join(data, pivot_spec)
 
     if (array_strategy == "packed") {
-        out <- pack_variables(out, combined_metadata, pivot_spec)
+        out <- pack_variables(out, pack_info)
     }
 
     if (variable_format == "lake") return(out)
@@ -275,21 +279,22 @@ array_lookup_info <- function(data, array_strategy) {
 }
 
 
-pack_variables <- function(data, combined_metadata, pivot_spec) {
-    purrr::pmap_dfc(combined_metadata, function(name, axes, ...) {
-        if (is.null(axes)) return(data[name])
+pack_variables <- function(data, pack_info) {
+    # --- TODO: refactor this
+    purrr::map_dfc(unique(pack_info$name), function(name) {
+        info <- pack_info |> dplyr::filter(name == !!name)
+        if (nrow(info) == 1) return(setNames(data[info$.name], name))
 
-        subvars <- pivot_spec |> dplyr::filter(.data$var_name == name)
-        if (all(lengths(subvars$axis)) == 1) {
-            out <- tibble::tibble(!!name := data[subvars$.name] |> setNames(unlist(subvars$axis)))
+        if (all(lengths(info$axis)) == 1) {
+            out <- tibble::tibble(!!name := data[info$.name] |> setNames(unlist(info$axis)))
         } else {
-            subvars$outer <- purrr::map_chr(subvars$axis, 1)
-            subvars$inner <- purrr::map_chr(subvars$axis, 2)
-            inner_names <- unique(subvars$inner)
-            out <- lapply(unique(subvars$outer), function(o_name) {
-                this_inner <- subvars |> dplyr::filter(.data$outer == o_name)
+            info$outer <- purrr::map_chr(info$axis, 1)
+            info$inner <- purrr::map_chr(info$axis, 2)
+            inner_names <- unique(info$inner)
+            out <- lapply(unique(info$outer), function(o_name) {
+                this_inner <- info |> dplyr::filter(.data$outer == o_name)
                 tibble::tibble(o_name := data[this_inner[[".name"]]] |> setNames(this_inner[["inner"]]))
-            }) |> setNames(unique(subvars$outer)) |>
+            }) |> setNames(unique(info$outer)) |>
                 tibble::as_tibble()
         }
         return(out)
