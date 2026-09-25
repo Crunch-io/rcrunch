@@ -88,7 +88,7 @@ cr_read_data <- function(
 
             # Always are going to filter on var_name
             sub_exprs <- list(
-                Expression$create("equal", Expression$field_ref("var_name"), var_name)
+                arrow::Expression$create("equal", arrow::Expression$field_ref("var_name"), var_name)
             )
 
             if (!is.null(axis)) {
@@ -96,16 +96,16 @@ cr_read_data <- function(
                 sub_exprs <- c(
                     sub_exprs,
                     rlang::list2(
-                        Expression$create(
+                        arrow::Expression$create(
                             "equal",
-                            Expression$create("list_value_length", Expression$field_ref("axis")),
+                            arrow::Expression$create("list_value_length", arrow::Expression$field_ref("axis")),
                             length(axis)
                         ),
                         !!!purrr::imap(
                             axis,
-                            ~Expression$create(
+                            ~arrow::Expression$create(
                                 "equal",
-                                Expression$create("list_element", Expression$field_ref("axis"), as.integer(.y - 1)),
+                                arrow::Expression$create("list_element", arrow::Expression$field_ref("axis"), as.integer(.y - 1)),
                                 .x
                             )
                         )
@@ -113,10 +113,10 @@ cr_read_data <- function(
                 )
             }
 
-            purrr::reduce(sub_exprs, ~Expression$create("and", .x, .y))
+            purrr::reduce(sub_exprs, ~arrow::Expression$create("and", .x, .y))
         })
-        filter_exprs <- purrr::reduce(filter_exprs, ~Expression$create("or_kleene", .x, .y))
-        data <- Scanner$create(data, filter = filter_exprs)$ToTable()
+        filter_exprs <- purrr::reduce(filter_exprs, ~arrow::Expression$create("or_kleene", .x, .y))
+        data <- arrow::Scanner$create(data, filter = filter_exprs)$ToTable()
     }
 
     # prepare data for reshaping
