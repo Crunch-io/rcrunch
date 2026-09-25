@@ -6,6 +6,7 @@
 \usage{
 cr_read_data(
   x,
+  col_select = NULL,
   variable_format = c("base", "vctrs", "lake"),
   array_strategy = c("packed", "qualified", "unqualified"),
   name_repair = "check_unique",
@@ -14,6 +15,10 @@ cr_read_data(
 }
 \arguments{
 \item{x}{A folder path or destination from \code{\link[=cr_export]{cr_export()}}}
+
+\item{col_select}{An optional set of selections, using \code{\link[dplyr:select]{dplyr::select()}} semantics.
+The selections are done on the final names of the variables in the data you load
+(eg after arrays are renamed or packed).}
 
 \item{variable_format}{What format to use for variables. "base", the default
 converts to base R types at the expense of fidelity, "vctrs" uses custom

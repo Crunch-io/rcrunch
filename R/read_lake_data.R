@@ -4,6 +4,9 @@
 #' read the data in the format it is sent.
 #'
 #' @param x A folder path or destination from [`cr_export()`]
+#' @param col_select An optional set of selections, using [`dplyr::select()`] semantics.
+#' The selections are done on the final names of the variables in the data you load
+#' (eg after arrays are renamed or packed).
 #' @param variable_format What format to use for variables. "base", the default
 #' converts to base R types at the expense of fidelity, "vctrs" uses custom
 #' classes to retain all metadata attached to the variables, and "lake" uses the
@@ -22,16 +25,17 @@
 #' @export
 cr_read_data <- function(
         x,
+        col_select = NULL,
         variable_format = c("base", "vctrs", "lake"),
         array_strategy = c("packed", "qualified", "unqualified"),
         name_repair = "check_unique",
         ...
 ) {
+    col_select <- rlang::enquo(col_select)
     variable_format <- rlang::arg_match(variable_format)
     array_strategy <- rlang::arg_match(array_strategy)
     if (crunch::is.dataset(x)) x <- download_lake_data_to_temp(x)
-    data <- cr_read_data_long(x, ...)
-    combined_metadata <- cr_read_meta(x, ...)
+    combined_metadata <- cr_read_meta(x)
 
     combined_metadata <- purrr::map_dfr(
         seq_len(nrow(combined_metadata)),
@@ -39,6 +43,14 @@ cr_read_data <- function(
     )
 
     combined_metadata$name <- vctrs::vec_as_names(combined_metadata$name, repair = name_repair)
+
+    has_col_selection <- !rlang::quo_is_null(col_select)
+    if (has_col_selection) {
+        all_cols <- setNames(combined_metadata$name, combined_metadata$name)
+        selected_cols <- tidyselect::eval_select(col_select, all_cols)
+        combined_metadata <- combined_metadata[unname(selected_cols), ]
+        combined_metadata$name <- names(selected_cols)
+    }
 
     if (array_strategy == "packed") {
         if (all(lengths(combined_metadata$axis_values) == 0)) {
@@ -66,9 +78,50 @@ cr_read_data <- function(
             dplyr::select(var_name = "unexpanded_name", "axis" = "axis_values", ".name" = "name", ".value")
     }
 
+    data <- cr_read_data_long(x) # --- Lazily loaded data
+    # --- If we have a column selection, we can subset the lazily loaded data
+    # --- to only the columns of interest using arrow
+    if (has_col_selection) {
+        filter_exprs <- purrr::pmap(pivot_spec, function(var_name, axis, ...) {
+            # NB: Tried to use more direct syntax, but need to use arrow's `expression`s because
+            # arrow doesn't implement comparisons on list elements for base R's `==`
+
+            # Always are going to filter on var_name
+            sub_exprs <- list(
+                Expression$create("equal", Expression$field_ref("var_name"), var_name)
+            )
+
+            if (!is.null(axis)) {
+                # If there are axis values, make sure same length and each item is correct
+                sub_exprs <- c(
+                    sub_exprs,
+                    rlang::list2(
+                        Expression$create(
+                            "equal",
+                            Expression$create("list_value_length", Expression$field_ref("axis")),
+                            length(axis)
+                        ),
+                        !!!purrr::imap(
+                            axis,
+                            ~Expression$create(
+                                "equal",
+                                Expression$create("list_element", Expression$field_ref("axis"), as.integer(.y - 1)),
+                                .x
+                            )
+                        )
+                    )
+                )
+            }
+
+            purrr::reduce(sub_exprs, ~Expression$create("and", .x, .y))
+        })
+        filter_exprs <- purrr::reduce(filter_exprs, ~Expression$create("or_kleene", .x, .y))
+        data <- Scanner$create(data, filter = filter_exprs)$ToTable()
+    }
+
     # prepare data for reshaping
     data <- data |>
-        dplyr::collect() |> # TODO: This makes us load the entire dataset from S3. Figure out a better way
+        dplyr::collect() |> # --- At this point, data is no longer lazy
         dplyr::mutate(
             axis = as.list(.data$axis) # vctrs gets in the way if we don't do this
         ) |>
@@ -113,7 +166,7 @@ cr_read_data_long <- function(x, ...) {
         fs <- cr_arrow_fs(x$destination, ...)
         arrow::open_dataset(fs$cd(paste0(x$path, "/data")))
     } else {
-        arrow::read_parquet(verify_file_path(x, "data.parquet"))
+        arrow::read_parquet(verify_file_path(x, "data.parquet"), as_data_frame = FALSE)
     }
 }
 
