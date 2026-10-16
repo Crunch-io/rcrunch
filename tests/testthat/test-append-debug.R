@@ -4,9 +4,9 @@ with_test_authentication({
     with(temp.option(crunch = list(crunch.timeout = 60, crunch.default.derived = TRUE)), {
         whereas("Appending with an exclusion on the incoming dataset", {
             part0 <- createDataset(name = now())
-            part1 <- newDatasetFromFixture("apidocs")
+            part1 <- useFixtureDataset("append_debug_exclusion_part1", newDatasetFromFixture("apidocs"))
             exclusion(part1) <- part1$q1 == "Dog"
-            part2 <- newDatasetFromFixture("apidocs")
+            part2 <- useFixtureDataset("append_debug_exclusion_part2", newDatasetFromFixture("apidocs"))
             exclusion(part2) <- part2$q1 == "Dog"
 
             part0 <- appendDataset(part0, part1)
@@ -27,8 +27,10 @@ with_test_authentication({
         })
 
         whereas("When appending different arrays containing the same subvars", {
-            part1 <- mrdf.setup(newDataset(mrdf), name = "CA1")
-            part2 <- mrdf.setup(newDataset(mrdf), name = "CA2")
+            part1_ds <- useFixtureDataset("append_debug_arrays_same_part1", newDataset(mrdf))
+            part1 <- mrdf.setup(part1_ds, name = "CA1")
+            part2_ds <- useFixtureDataset("append_debug_arrays_same_part2", newDataset(mrdf))
+            part2 <- mrdf.setup(part2_ds, name = "CA2")
 
             test_that("The arrays with different aliases have the same subvar aliases", {
                 expect_identical(
@@ -74,8 +76,8 @@ with_test_authentication({
         })
 
         whereas("Appending arrays with different subvars and derived vars", {
-            ds1 <- newDatasetFromFixture("apidocs")
-            ds2 <- newDatasetFromFixture("apidocs")
+            ds1 <- useFixtureDataset("append_debug_arrays_diff_part1", newDatasetFromFixture("apidocs"))
+            ds2 <- useFixtureDataset("append_debug_arrays_diff_part2", newDatasetFromFixture("apidocs"))
             with_consent(deleteSubvariable(ds1$petloc, "petloc_work"))
             ds1 <- refresh(ds1)
             ds1$comb <- combine(ds1$petloc,
@@ -120,11 +122,11 @@ with_test_authentication({
         })
 
         test_that("Derivations with comparison operators can be appended", {
-            df1 <- data.frame(foo = rnorm(100), bar = c(1:100))
-            ds1 <- newDataset(df1)
+            df1 <- data.frame(foo = rep(1:10, 2) / 5, bar = c(1:20))
+            ds1 <- useFixtureDataset("append_debug_derived_part1", newDataset(df1))
 
-            df2 <- data.frame(bar = c(100:1))
-            ds2 <- newDataset(df2)
+            df2 <- data.frame(bar = c(20:1))
+            ds2 <- useFixtureDataset("append_debug_derived_part2", newDataset(df2))
 
             ds1$new1 <- makeCaseVariable(
                 `less than one` = ds1$foo < 1,
@@ -132,14 +134,14 @@ with_test_authentication({
             )
             ds <- appendDataset(ds1, ds2)
 
-            expect_equal(nrow(ds), 200)
-            expect_equal(as.vector(ds$foo), c(df1$foo, rep(NA, 100)))
+            expect_equal(nrow(ds), 40)
+            expect_equal(as.vector(ds$foo), c(df1$foo, rep(NA, 20)))
             expect_equal(as.vector(ds$bar), c(df1$bar, df2$bar))
             expect_equal(
                 as.character(as.vector(ds$new1)),
                 c(
                     ifelse(df1$foo < 1, "less than one", "other"),
-                    rep("other", 100)
+                    rep("other", 20)
                 )
             )
         })

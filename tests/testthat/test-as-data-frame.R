@@ -292,7 +292,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- useFixtureDataset("as_data_frame", newDataset(df))
 
     # change the alias of v6 to be something that includes spaces/punctuation
     alias(ds$v6) <- "vee six !"

@@ -308,6 +308,18 @@ cachedLoadDataset <- function(dataset, ...) {
     ds_cache_env[[dataset]]
 }
 
+fixture_ds_cw <- c(
+    active_filter = "efbd99ff683c4dd09066d3f111a3c715"
+)
+useFixtureDataset <- function(name, cmd) {
+    ds_id <- fixture_ds_cw[name]
+    if (!is.na(ds_id)) {
+        message("USING FNTEST FIXTURE!!!")
+        return(loadDataset(ds_id, project = NULL))
+    }
+    force(cmd)
+}
+
 
 # Make compressed fixtures available to downstream packages
 decompress_fixtures()
