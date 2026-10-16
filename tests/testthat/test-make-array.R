@@ -281,7 +281,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("We bind with makeArray", {
-        ds <- mrdf.setup(useFixtureDataset("make-array-bind", newDataset(mrdf), name = "arrayVar"))
+        ds <- mrdf.setup(useFixtureDataset("make-array-bind", newDataset(mrdf)), name = "arrayVar")
 
         test_that("can make Categorical Array with Dataset subset", {
             expect_equal(c("arrayVar", "v4"), names(ds))

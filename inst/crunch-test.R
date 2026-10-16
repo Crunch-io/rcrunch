@@ -314,7 +314,7 @@ fixture_ds_cw <- c(
 useFixtureDataset <- function(name, cmd) {
     ds_id <- fixture_ds_cw[name]
     if (!is.na(ds_id)) {
-        message("USING FNTEST FIXTURE!!!")
+        warning("USING FNTEST FIXTURE!!!")
         return(loadDataset(ds_id, project = NULL))
     }
     force(cmd)
