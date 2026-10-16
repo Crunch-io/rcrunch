@@ -309,7 +309,7 @@ cachedLoadDataset <- function(dataset, ...) {
 }
 
 fixture_ds_cw <- c(
-    active_filter = "efbd99ff683c4dd09066d3f111a3c715"
+    active_filter = "04cd7751c8df4a178ff5cfa45a710943"
 )
 useFixtureDataset <- function(name, cmd) {
     ds_id <- fixture_ds_cw[name]
