@@ -48,7 +48,7 @@ with_mock_crunch({
 
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("interact", newDatasetFromFixture("apidocs"))
     test_that("makeInteractions", {
         ds$interaction <- interactVariables(ds$q1, ds$country, name = "Pet.Country")
 

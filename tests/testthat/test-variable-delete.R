@@ -92,7 +92,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("Attempting to delete variables by various means", {
-        ds <- newDataset(df)
+        ds <- useFixtureDataset("variable-delete", newDataset(df))
         v1 <- ds$v1
         test_that("Setup", {
             expect_valid_df_import(ds)
@@ -122,7 +122,7 @@ with_test_authentication({
     })
 
     whereas("Attepmting to delete arrays and subvariables", {
-        ds <- newDatasetFromFixture("apidocs")
+        ds <- useFixtureDataset("variable-delete-array", newDatasetFromFixture("apidocs"))
 
         test_that("Array variables are fully deleted", {
             expect_true("petloc" %in% names(ds))

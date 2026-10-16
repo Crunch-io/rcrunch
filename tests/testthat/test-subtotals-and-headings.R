@@ -454,7 +454,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
 
 
     with_test_authentication({
-        ds <- newDataset(df)
+        ds <- useFixtureDataset("subtotals-and-headings", newDataset(df))
 
         trans <- Transforms(insertions = list(
             Subtotal(

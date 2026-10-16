@@ -265,7 +265,7 @@ test_that("filter gets pass through method on non-crunch objects", {
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- useFixtureDataset("decks", newDataset(df))
     test_that("decks can be created", {
         expect_is(decks(ds), "DeckCatalog")
         expect_equal(length(decks(ds)), 0)

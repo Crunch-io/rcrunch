@@ -447,7 +447,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("case-variables", newDatasetFromFixture("apidocs"))
     test_that("makeCaseVariables", {
         ds$catdog <- makeCaseVariable(
             `Cats` = ds$q1 == "Cat",

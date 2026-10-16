@@ -269,7 +269,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("combine-categories", newDatasetFromFixture("apidocs"))
     ds$combined_pets <- combine(ds$q1,
         name = "Pets (combined)",
         derived = TRUE,
