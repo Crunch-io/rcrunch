@@ -295,7 +295,7 @@ with_test_authentication({
     })
 
     whereas("Testing dichotomizing and undichotomizing", {
-        ds <- mrdf.setup(useFixtureDataset("make-array-dich", newDataset(mrdf), name = "arrayVar"))
+        ds <- mrdf.setup(useFixtureDataset("make-array-dich", newDataset(mrdf)), name = "arrayVar")
         var <- ds$arrayVar
         test_that("setup to make MultipleResponse from CategoricalArray", {
             expect_true(is.CA(var))
