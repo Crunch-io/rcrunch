@@ -343,6 +343,9 @@ useFixtureDataset <- function(name, cmd) {
     if (!is.na(ds_id)) {
         warning("USING FNTEST FIXTURE!!!")
         return(loadDataset(ds_id, project = NULL))
+        ds <- loadDataset(ds_id, project = NULL)
+        unlock(ds) # --- Make sure that captain@crunch.io doesn't retain editorship
+        return(ds)
     }
     force(cmd)
 }
