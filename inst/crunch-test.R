@@ -309,7 +309,34 @@ cachedLoadDataset <- function(dataset, ...) {
 }
 
 fixture_ds_cw <- c(
-    active_filter = "04cd7751c8df4a178ff5cfa45a710943"
+    active_filter = "0c6ceeefe14e462b8cfae8ab0cebf813",
+    add_subvariable = "2c41f6d5f1af4274830aaf5d4a03a83a",
+    add_variable = "6d64a875792045ab92261ff1b6275ee1",
+    add_variable_definition = "e638816c26ce40c8b12abf8904f5f86b",
+    append_conflicts_array_numeric_part1 = "67e02b2cae1743c9a4d217ca212826bd",
+    append_conflicts_array_numeric_part2 = "844d6b50b0f745da917ec1592e35ad75",
+    append_conflicts_text_numeric_part1 = "8dfb2e17c9ee47548f317858fba3ea33",
+    append_conflicts_text_numeric_part2 = "aa02e38ce1fc492c9988cc87e506b40a",
+    append_debug_arrays_diff_part1 = "c8d5ec77ad204d1688d2773c3c5ea76b",
+    append_debug_arrays_diff_part2 = "d75ba31860314e1fbcbf8e6815add488",
+    append_debug_arrays_same_part1 = "47d8ab5b69574360912ef503bd50f989",
+    append_debug_arrays_same_part2 = "752ce0b17f8f4ca2a9a5d00490d3ef05",
+    append_debug_derived_part1 = "2f561a7f043244dcbf833c7306a3ba93",
+    append_debug_derived_part2 = "2275a826510a4a71bc1b56b9d34c8d7a",
+    append_debug_exclusion_part1 = "15a3a5355adf4f1ea20545d7c2dcaa6e",
+    append_debug_exclusion_part2 = "69c5d06ecf074d89b57eb249ea85f1ef",
+    append_sparse_part1 = "e7dd02fd6de3425a8db40fa0c0d37a01",
+    append_sparse_part2 = "d6148e7fad324f5ab5b9c2e1454dbec5",
+    append_subset_part1 = "635a4702312246bda874fec1b96b9946",
+    append_subset_part2 = "ace8960d3d6f4ad6982002834a12c226",
+    append_subvariables_diff_part1 = "f84c055c1682406b84d385b02046b517",
+    append_subvariables_diff_part2 = "820717c205c1474686837075b25d9e73",
+    appending_arrays_mismatch_p1 = "3d687047a8ca43258343306e704a0685",
+    appending_arrays_mismatch_p2 = "e47ec44ae32f4e32ba77bec8b1bd4114",
+    appending_arrays_revert_p1 = "e43c3343c96b4f529ba6e60a6d3cc0d1",
+    appending_arrays_revert_p2 = "c662d041ba8b4b8c93f32cf87c9e3e9d",
+    appending_part1 = "6fbf82172a5645a09b74856778166ac1",
+    appending_part2 = "eb12789e959347759aaf35e28f0329f1"
 )
 useFixtureDataset <- function(name, cmd) {
     ds_id <- fixture_ds_cw[name]
