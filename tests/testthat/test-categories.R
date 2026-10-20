@@ -410,7 +410,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("When editing categories", {
-        ds <- newDataset(df[, 4, drop = FALSE])
+        ds <- useFixtureDataset("categories-edit", newDataset(df[, 4, drop = FALSE]))
         test_that("categories setters persist to the server", {
             expect_equal(names(categories(ds$v4)), c("B", "C", "No Data"))
             expect_equivalent(
@@ -544,7 +544,7 @@ with_test_authentication({
     })
 
     whereas("When manipulating categories of array variables", {
-        ds <- newDatasetFromFixture("apidocs")
+        ds <- useFixtureDataset("categories-array", newDatasetFromFixture("apidocs"))
         test_that("dichotomizing dichotomizes the subvariables", {
             expect_true(is.MR(ds$allpets))
             expect_true(is.dichotomized(categories(ds$allpets)))

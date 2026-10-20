@@ -3,7 +3,7 @@ context("Derived array variables maintain subvar links")
 # nolint start
 # derived ds instantaitor
 new_ds_with_derived_array <- function() {
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("derive-debug", newDatasetFromFixture("apidocs"))
     ds$derivedarray <- deriveArray(
         subvariables = subvariables(ds$petloc),
         name = "Derived pets"

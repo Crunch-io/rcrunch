@@ -234,7 +234,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- mrdf.setup(newDataset(mrdf), selections = "1.0")
+    ds <- mrdf.setup(useFixtureDataset("subvariables", newDataset(mrdf)), selections = "1.0")
     var <- ds$MR
     test_that("setup test case 2", {
         expect_true(is.Multiple(var))

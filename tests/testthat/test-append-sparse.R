@@ -1,15 +1,17 @@
 context("Appends with sparse data")
 
 with_test_authentication({
-    part1 <- newDataset(data.frame(
+    df1 <- data.frame(
         v4 = factor(rep(c("a", "b"), 500)),
         v5 = factor(rep(c("a", "b"), 500))
-    ))
-    part2 <- mrdf.setup(newDataset(data.frame(
+    )
+    df2 <- data.frame(
         mr_1 = c(1, 0, 1, 1, 0, rep(NA, 995)),
         mr_2 = c(rep(NA, 995), 0, 1, 1, 1, 0),
         v4 = as.factor(LETTERS[2:3])
-    )))
+    )
+    part1 <- useFixtureDataset("append_sparse_part1", newDataset(df1))
+    part2 <- mrdf.setup(useFixtureDataset("append_sparse_part2", newDataset(df2)))
     test_that("compareDatasets identifies the category id mismatch", {
         expect_prints(
             summary(compareDatasets(part1, part2)),

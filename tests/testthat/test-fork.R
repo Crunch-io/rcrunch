@@ -38,7 +38,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- useFixtureDataset("fork1", newDataset(df))
     test_that("Fork catalog exists", {
         expect_is(forks(ds), "ForkCatalog")
         expect_length(forks(ds), 0)
@@ -172,7 +172,7 @@ with_test_authentication({
     })
 
     whereas("Merging from parent to fork", {
-        parent <- newDataset(df)
+        parent <- useFixtureDataset("fork2", newDataset(df))
         child <- forkDataset(parent)
 
         names(categories(parent$v4))[1:2] <- c("d", "e")

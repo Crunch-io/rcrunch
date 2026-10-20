@@ -403,7 +403,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- useFixtureDataset("variable-transforms", newDataset(df))
 
     test_that("Can get and set transforms", {
         trans <- Transforms(insertions = list(

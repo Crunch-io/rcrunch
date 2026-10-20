@@ -36,7 +36,7 @@ without_internet({
 
 with_test_authentication({
     test_that("variableMetadata on apidocs dataset", {
-        ds <- newDatasetFromFixture("apidocs")
+        ds <- useFixtureDataset("variable-metadata", newDatasetFromFixture("apidocs"))
         vm <- variableMetadata(ds)
         expect_is(vm, "VariableCatalog")
         i <- which(aliases(vm) == "allpets")

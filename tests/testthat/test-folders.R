@@ -372,7 +372,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
     })
 
     with_test_authentication({
-        ds <- newDataset(mtcars)
+        ds <- useFixtureDataset("folders", newDataset(mtcars))
         test_that("Basic folder integration test", {
             ds <- mkdir(ds, "test")
             expect_true("test" %in% names(cd(ds, "/")))
