@@ -147,6 +147,7 @@ reference:
   - runCrunchAutomation
   - automation-undo
   - script-catalog
+  - generateOrganizeCommand
 - title: Analysis
   contents:
   - crtabs
