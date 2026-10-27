@@ -261,9 +261,9 @@ printed_order_apidocs2_merge_by_caseid <- c( # nolint
 )
 
 with_test_authentication({
-    ds1 <- useFixtureDataset("merge-datasets1", newDatasetFromFixture("join-apidocs2-to-me"))
+    ds1 <- useFixtureDataset("merge-datasets0", newDatasetFromFixture("join-apidocs2-to-me"))
     with_consent(ds1$allpets_1 <- NULL)
-    ds2 <- useFixtureDataset("merge-datasets2", newDatasetFromFixture("apidocs2"))
+    ds2 <- useFixtureDataset("merge-datasets1", newDatasetFromFixture("apidocs2"))
     test_that("Shape of apidocs2", {
         expect_prints(ordering(ds2),
             paste(printed_order_apidocs2, collapse = "\n"),
