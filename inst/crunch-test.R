@@ -408,11 +408,8 @@ useFixtureDataset <- function(name, cmd) {
     ds_id <- fixture_ds_cw[name]
     if (!is.na(ds_id)) {
         ds <- loadDataset(ds_id, project = NULL)
-        warning(paste0("MY USER EMAIL: ", email(me())))
-        warning(paste0("BEFORE UNLOCKING: editor_name -", ds@body$current_editor_name))
         ds <- unlock(ds) # --- Make sure that captain@crunch.io doesn't retain editorship
         ds <- refresh(ds)
-        warning(paste0("AFTER LOCKING: editor_name -", ds@body$current_editor_name))
         return(ds)
     }
     force(cmd)
