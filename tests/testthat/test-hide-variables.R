@@ -216,7 +216,7 @@ with_test_authentication({
     })
 
     test_that("Can hide array variables even if they only have one subvar", {
-        ds <- useFixtureDataset("hide-variables-single", mrdf.setup(newDataset(mrdf[c(1, 4)])))
+        ds <- mrdf.setup(useFixtureDataset("hide-variables-single", newDataset(mrdf[c(1, 4)])))
         expect_identical(names(ds), c("CA", "v4"))
         expect_length(subvariables(ds$CA), 1)
         hiddenVariables(ds) <- "CA"

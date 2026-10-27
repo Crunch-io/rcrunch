@@ -44,7 +44,7 @@ with_test_authentication({
         expect_length(forks(ds), 0)
     })
 
-    f1 <- forkDataset(ds)
+    f1 <- forkDataset(ds, project = folder(ds))
     f1.name <- paste("Fork of", name(ds))
     test_that("Can create a new fork", {
         expect_true(is.dataset(f1))

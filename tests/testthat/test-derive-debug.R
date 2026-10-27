@@ -2,8 +2,8 @@ context("Derived array variables maintain subvar links")
 
 # nolint start
 # derived ds instantaitor
-new_ds_with_derived_array <- function() {
-    ds <- useFixtureDataset("derive-debug", newDatasetFromFixture("apidocs"))
+new_ds_with_derived_array <- function(ds_id) {
+    ds <- useFixtureDataset(paste0("derive-debug", ds_id) , newDatasetFromFixture("apidocs"))
     ds$derivedarray <- deriveArray(
         subvariables = subvariables(ds$petloc),
         name = "Derived pets"
@@ -14,7 +14,7 @@ new_ds_with_derived_array <- function() {
 
 with_test_authentication({
     with(temp.option(crunch = list("crunch.default.derived" = TRUE)), {
-        ds <- new_ds_with_derived_array()
+        ds <- new_ds_with_derived_array("")
 
         test_that("Sending a derived array vardef creates a derived array", {
             expect_true(is.derived(ds$derivedarray))
@@ -48,7 +48,7 @@ with_test_authentication({
         })
 
         # reinstantiate the dataset so prior failures don't cloud current tests
-        ds <- new_ds_with_derived_array()
+        ds <- new_ds_with_derived_array(2)
 
         test_that("NAing a value carries", {
             ds$petloc$petloc_home[ds$petloc$petloc_home == "Bird"] <- NA
@@ -64,7 +64,7 @@ with_test_authentication({
         # Revisit after https://www.pivotaltracker.com/n/projects/2172644/stories/186660623
         # (reusable subvar codes) ships
         # # reinstantiate the dataset so prior failures don't cloud current tests
-        # ds <- new_ds_with_derived_array()
+        # ds <- new_ds_with_derived_array(3)
         #
         # test_that("changing category names in metadata carries", {
         #     existing <- names(categories(ds$petloc))
