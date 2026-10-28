@@ -412,6 +412,7 @@ useFixtureDataset <- function(name, cmd) {
         ds <- refresh(ds)
         return(ds)
     }
+    warning(paste0("NOT USING FN TEST FIXTURE ", name))
     force(cmd)
 }
 
