@@ -164,7 +164,7 @@ test_that("margin.table with missing", {
 })
 
 with_test_authentication({
-    ds <- newDataset(cubedf)
+    ds <- useFixtureDataset("cubes-main", newDataset(cubedf))
     test_that("cubedf setup", {
         expect_identical(
             names(categories(ds$v7)),
@@ -493,13 +493,13 @@ with_test_authentication({
 
     test_that("scorecard query works", {
         # Setup a dataset for scorecards
-        ds_scorecard <- newDataset(
+        ds_scorecard <- useFixtureDataset("cubes-scorecard", newDataset(
             data.frame(
                 x1 = factor(c("a", "b", "c", "a", "c"), letters[1:3]),
                 x2 = factor(c("c", "c", "b", "c", "b"), letters[1:3])
             ),
             "scorecard test"
-        )
+        ))
         ds_scorecard$x_sel_a <- deriveArray(
             ds_scorecard[c("x1", "x2")], "x mr - a", selections = "a"
         )

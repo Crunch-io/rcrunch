@@ -348,7 +348,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- useFixtureDataset("add_variable", newDataset(df))
     test_that("addVariable creates a new remote numeric variable", {
         ds <- addVariables(
             ds,

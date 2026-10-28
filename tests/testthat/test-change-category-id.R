@@ -51,12 +51,12 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(data.frame(
+    ds <- useFixtureDataset("change-categories", newDataset(data.frame(
         samevalue = df$v4[1:4],
         diffvalue = df$v4[1:4],
         excluded = df$v4[1:4],
         nothree = 1:4
-    ))
+    )))
     values(categories(ds$diffvalue)) <- c(NA, 20, NA)
     orig_vector <- as.vector(ds$samevalue)
 
@@ -164,7 +164,7 @@ with_test_authentication({
     })
 
     test_that("Can changeCategoryID for array variables", {
-        ds_apidocs <- newDatasetFromFixture("apidocs")
+        ds_apidocs <- useFixtureDataset("change-categories-array", newDatasetFromFixture("apidocs"))
         # categorical array variables
         expect_identical_temp_nodata(
             names(categories(ds_apidocs$petloc)),

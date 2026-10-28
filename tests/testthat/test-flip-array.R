@@ -1,7 +1,7 @@
 context("Flipping array subvariables")
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("flip-array", newDatasetFromFixture("apidocs"))
 
     ## Deep copy array, rename it, etc.
     ## Hey, let's add another subvar to it too!

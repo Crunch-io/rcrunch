@@ -429,7 +429,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("conditional-transform", newDatasetFromFixture("apidocs"))
     test_that("conditionalTransform", {
         ds$new0 <- conditionalTransform(ndogs < 1 ~ country,
             ndogs == 1 ~ q3,

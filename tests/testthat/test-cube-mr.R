@@ -486,7 +486,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("cube-mr", newDatasetFromFixture("apidocs"))
     test_that("as_selected in cube query", {
         cub <- as.array(crtabs(~ as_selected(allpets), data = ds))
         expect_identical(

@@ -207,7 +207,7 @@ with_test_authentication({
         expect_true(settings(ds)$variable_folders)
     })
 
-    ds <- newDataset(df)
+    ds <- useFixtureDataset("variable-folders", newDataset(df))
     test_that("copyFolders copies across datasets with simple order", {
         ds_fork <- forkDataset(ds)
         old_order <- capture_output_lines(publicFolder(ds_fork) %>% print(depth = 10))
@@ -298,7 +298,7 @@ with_test_authentication({
         df_alt$v2 <- NULL
         df_alt$new_var <- 1
         df_alt$new_var2 <- letters[20:1]
-        ds_alt <- newDataset(df_alt)
+        ds_alt <- useFixtureDataset("variable-folders-alt", newDataset(df_alt))
 
         old_order <- capture_output_lines(publicFolder(ds_alt) %>% print(depth = 10))
 

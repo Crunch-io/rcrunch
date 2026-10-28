@@ -213,7 +213,7 @@ test_that("only_cube_count() prevents use with non-count cubes", {
 })
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("cube-collapse-dimensions", newDatasetFromFixture("apidocs"))
 
     test_that("dimSums(~x+y, 1) == dimSums(~x)", {
         bivariate_cube <- crtabs(~ allpets + q1, data = ds)

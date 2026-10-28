@@ -121,7 +121,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("cube-with-expression", newDatasetFromFixture("apidocs"))
     test_that("<, <= on numeric", {
         # ndogs
         # 0 1 2 3 6
