@@ -325,8 +325,8 @@ fixture_ds_cw <- c(
     `make-array-mr` = "2c8d9dc7631840d686a8be97fb7180ed",
     `make-array-dich` = "a88654666daa4264a7556796557c87bd",
     `make-array-bind` = "5f7a313e701d427493a17193956254f4",
-    geo = "0fb26f9517394c6b83e3a88d6e226b71", `
-    derive-debug2` = "07272092a26f447a9a190281f75822b8",
+    geo = "0fb26f9517394c6b83e3a88d6e226b71",
+    `derive-debug2` = "07272092a26f447a9a190281f75822b8",
     decks = "60e035d1d6414e2892a218e4835bab20",
     `cubes-scorecard` = "742db43edd014158b45ce2a52ac9b183",
     crunchbox = "d5a1dbbd28fd48f4bbeb9afea1e3d48c",
@@ -378,8 +378,8 @@ fixture_ds_cw <- c(
     derive = "55e44d35d15f417b88ff3d363f6032ca",
     `deep-copy2` = "f0bd7149b3324c358aedc2bd3495a903",
     `deep-copy1` = "1f392426935a4908a49f851ffb7c6cf8",
-    cut = "d4e3ad00ef8041aaab7aef71131d407e", `
-    cubes-main` = "6451e5e2de0b4755bd221212a678b32c",
+    cut = "d4e3ad00ef8041aaab7aef71131d407e",
+    `cubes-main` = "6451e5e2de0b4755bd221212a678b32c",
     `cube-with-expression` = "0c197fcfaf284dcb919a73f2ce08d609",
     `cube-with-array` = "0d4b074ddfe5496eae8a86d0f4eda81a",
     `cube-transforms` = "274916c38c6d48bda9c14d2a30113946",
