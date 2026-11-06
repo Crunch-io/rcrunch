@@ -95,7 +95,6 @@ expect_valid_apidocs_import <- function(ds, broken_exclusion = FALSE) {
             "country", "wave"
         )
     )
-    expect_identical(name(ds), "Example dataset")
     expect_identical_temp_nodata(
         names(categories(ds$q1)),
         c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")

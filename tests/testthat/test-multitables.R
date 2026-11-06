@@ -556,8 +556,8 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
     })
 
     with_test_authentication({
-        ds <- newDatasetFromFixture("apidocs")
-        ds2 <- newDatasetFromFixture("apidocs")
+        ds <- useFixtureDataset("merge-multitables1", newDatasetFromFixture("apidocs"))
+        ds2 <- useFixtureDataset("merge-multitables2", newDatasetFromFixture("apidocs"))
         test_that("Multitable catalog", {
             expect_is(multitables(ds), "MultitableCatalog")
             expect_length(multitables(ds), 0)

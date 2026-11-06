@@ -1,7 +1,7 @@
 context("Update array variables")
 
 with_test_authentication({
-    ds <- mrdf.setup(newDataset(mrdf))
+    ds <- mrdf.setup(useFixtureDataset("update-array1", newDataset(mrdf)))
     test_that("Subvariable values before trying to update", {
         expect_equivalent(
             as.vector(ds$CA$mr_1),
@@ -32,7 +32,7 @@ with_test_authentication({
         )
     })
 
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("update-array2", newDatasetFromFixture("apidocs"))
     test_that("Can update an individual subvariable conditionally", {
         expect_equivalent(
             as.vector(ds$allpets$allpets_1, mode = "id")[1:5],
