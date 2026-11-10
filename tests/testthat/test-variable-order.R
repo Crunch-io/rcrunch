@@ -633,7 +633,7 @@ with_mock_crunch({
 
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- useFixtureDataset("variable-order", newDataset(df))
     test_that("Can get VariableOrder from dataset", {
         expect_true(setequal(
             unlist(entities(ordering(ds))),

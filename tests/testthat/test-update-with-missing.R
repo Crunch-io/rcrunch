@@ -36,7 +36,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("update-with-missing", newDatasetFromFixture("apidocs"))
     test_that("Insert NA into numeric", {
         expect_equivalent(
             as.vector(ds$ndogs[1:5]),

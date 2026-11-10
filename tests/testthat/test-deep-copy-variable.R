@@ -1,7 +1,7 @@
 context("Deep copies of variables")
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("deep-copy1", newDatasetFromFixture("apidocs"))
     test_that("Can deep copy categorical", {
         ds$q1a <- copy(ds$q1, deep = TRUE)
         expect_identical(as.vector(ds$q1), as.vector(ds$q1a))
@@ -43,7 +43,7 @@ with_test_authentication({
         )
     })
 
-    part2 <- newDatasetFromFixture("apidocs")
+    part2 <- useFixtureDataset("deep-copy2", newDatasetFromFixture("apidocs"))
     test_that("Deep copies don't get data when appending", {
         out <- appendDataset(ds, part2)
         ## Counts should be double in the original than in the copy

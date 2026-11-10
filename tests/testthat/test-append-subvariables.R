@@ -93,9 +93,11 @@ with_test_authentication({
     # })
 
     whereas("When appending arrays with different subsets of subvariables", {
-        part1 <- mrdf.setup(newDataset(mrdf[-3]), selections = "1.0")
+        ds1 <- useFixtureDataset("append_subvariables_diff_part1", newDataset(mrdf[-3]))
+        part1 <- mrdf.setup(ds1, selections = "1.0")
         part1 <- saveVersion(part1, "Before appending")
-        part2 <- mrdf.setup(newDataset(mrdf[-1]), selections = "1.0")
+        ds2 <- useFixtureDataset("append_subvariables_diff_part2", newDataset(mrdf[-1]))
+        part2 <- mrdf.setup(ds2, selections = "1.0")
         test_that("set up MR for appending", {
             expect_true(is.Multiple(part1$MR))
             expect_identical(

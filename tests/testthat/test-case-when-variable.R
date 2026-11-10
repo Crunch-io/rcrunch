@@ -195,7 +195,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(
+    ds <- useFixtureDataset("case-when", newDataset(
         data.frame(
             fav_brand1 = factor(
                 c("Coke", "Diet Coke", "Diet Pepsi", "Coke", "Pepsi", "Water"),
@@ -209,7 +209,7 @@ with_test_authentication({
             rating2 = c(7, 2, 7, 8, 6, 3),
             stringsAsFactors = FALSE
         )
-    )
+    ))
 
     test_that("casewhen works for categorical variable", {
         ds$coke_rival <- makeCaseWhenVariable(

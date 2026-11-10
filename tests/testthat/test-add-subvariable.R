@@ -24,7 +24,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("add_subvariable", newDatasetFromFixture("apidocs"))
     test_that("Adding a subvariable to an array", {
         ds$petloc_daycare <- VariableDefinition(factor(rep(c(
             "Cat",

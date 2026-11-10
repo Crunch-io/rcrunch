@@ -181,7 +181,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("Privatize and deprivatize variables and checking that the remote dataset updates", {
-        ds <- newDataset(df)
+        ds <- useFixtureDataset("private-variables1", newDataset(df))
 
         test_that("There are no private variables to start", {
             expect_equivalent(index(privateFolder(ds)), list())
@@ -238,7 +238,7 @@ with_test_authentication({
 
     })
     whereas("Checking that array variables can be private", {
-        ds <- newDatasetFromFixture("apidocs")
+        ds <- useFixtureDataset("private-variables2", newDatasetFromFixture("apidocs"))
 
         test_that("Can privatize categorical array variables", {
             expect_true("petloc" %in% names(ds))
@@ -254,7 +254,7 @@ with_test_authentication({
     })
 
     test_that("Can privatize array variables even if they only have one subvar", {
-        ds <- mrdf.setup(newDataset(mrdf[c(1, 4)]))
+        ds <- mrdf.setup(useFixtureDataset("private-variables3", newDataset(mrdf[c(1, 4)])))
         expect_identical(names(ds), c("CA", "v4"))
         expect_length(subvariables(ds$CA), 1)
         privateVariables(ds) <- "CA"

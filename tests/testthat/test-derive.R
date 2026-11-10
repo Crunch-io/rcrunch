@@ -104,7 +104,7 @@ with_mock_crunch({
 
 with_test_authentication({
     with(temp.option(crunch = list("crunch.default.derived" = TRUE)), {
-        ds <- newDataset(df)
+        ds <- useFixtureDataset("derive", newDataset(df))
         ds$v3a <- ds$v3 + 5
         test_that("A derived variable is created on the server", {
             expect_true("v3a" %in% names(allVariables(refresh(ds))))

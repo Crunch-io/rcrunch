@@ -134,7 +134,7 @@ test_that("index.table validation", {
 })
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("cube-index-table", newDatasetFromFixture("apidocs"))
 
     test_that("proof: index.table(~x+y, 2) == prop.table(~x+y, 2)/prop.table(~x)*100", {
         bivariate_cube <- crtabs(~ allpets + country, data = ds)

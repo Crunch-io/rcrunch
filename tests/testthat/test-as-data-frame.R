@@ -292,7 +292,7 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- useFixtureDataset("as_data_frame", newDataset(df))
 
     # change the alias of v6 to be something that includes spaces/punctuation
     alias(ds$v6) <- "vee six !"
@@ -398,7 +398,8 @@ with_test_authentication({
 
     test_that("Multiple response variables in as.data.frame(force=TRUE)", {
         skip_on_local_backend("Vagrant host doesn't serve files correctly")
-        mrds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
+        mrds <- useFixtureDataset("as_data_frame_mr", newDataset(mrdf, name = "test-mrdfmr"))
+        mrds <- mrdf.setup(mrds, selections = "1.0")
         mrds$MR2 <- deriveArray(
             list(
                 VarDef(mrds$MR$mr_1, name = "dup mr_1", alias = "mr_1"),

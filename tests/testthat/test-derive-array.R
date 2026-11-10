@@ -21,7 +21,7 @@ with_mock_crunch({
 
 
 with_test_authentication({
-    ds <- newDatasetFromFixture("apidocs")
+    ds <- useFixtureDataset("derive-array1", newDatasetFromFixture("apidocs"))
 
     ## Reference values:
     plh.values <- as.vector(ds$petloc$petloc_home)
@@ -190,7 +190,7 @@ with_test_authentication({
         expect_identical(as.numeric(table(ds$metapet_combined[[4]])), c(5, 3, 3))
     })
     ## Append to that dataset, make sure all arrays update appropriately
-    part2 <- newDatasetFromFixture("apidocs")
+    part2 <- useFixtureDataset("derive-array2", newDatasetFromFixture("apidocs"))
     ds <- appendDataset(ds, part2)
     test_that("When appending, derived arrays get data (or missing, as appropriate)", {
         ## No Data is added to the categories here
@@ -279,7 +279,7 @@ with_test_authentication({
     })
 
     ## Append a dataset where the categories in one of the base variables don't quite match
-    part3 <- newDatasetFromFixture("apidocs")
+    part3 <- useFixtureDataset("derive-array3", newDatasetFromFixture("apidocs"))
     names(categories(part3$petloc))[2] <- "Beaver"
     aliases(subvariables(part3$petloc))[2] <- "petloc_school"
     names(subvariables(part3$petloc))[2] <- "School"

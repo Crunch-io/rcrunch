@@ -2,10 +2,12 @@ context("Appending datasets with arrays")
 
 with_test_authentication({
     whereas("Appending arrays with mismatching names and aliases", {
-        part1 <- mrdf.setup(newDataset(mrdf), selections = "1.0")
+        part1_ds <- useFixtureDataset("appending_arrays_mismatch_p1", newDataset(mrdf))
+        part1 <- mrdf.setup(part1_ds, selections = "1.0")
         names(subvariables(part1$MR)) <- c("One", "Two", "Three")
         ## Aliases are c("mr_1", "mr_2", "mr_3")
-        part2 <- mrdf.setup(newDataset(mrdf), selections = "1.0")
+        part2_ds <- useFixtureDataset("appending_arrays_mismatch_p2", newDataset(mrdf))
+        part2 <- mrdf.setup(part2_ds, selections = "1.0")
         names(subvariables(part2$MR)) <- c("Loneliest", "Two", "Three")
         aliases(subvariables(part2$MR))[3] <- "alt"
         ## Aliases are c("mr_1", "mr_2", "alt")
@@ -42,14 +44,14 @@ with_test_authentication({
     })
 
     whereas("When appending and reverting and reloading", {
-        part1 <- newDatasetFromFixture("apidocs")
+        part1 <- useFixtureDataset("appending_arrays_revert_p1", newDatasetFromFixture("apidocs"))
         test_that("Setup for testing references post append", {
             expect_true(name(part1$allpets) == "All pets owned")
             name(part1$allpets) <- "Some of my pets"
             expect_true(name(part1$allpets) == "Some of my pets")
         })
 
-        part2 <- newDatasetFromFixture("apidocs")
+        part2 <- useFixtureDataset("appending_arrays_revert_p2", newDatasetFromFixture("apidocs"))
         out <- suppressMessages(try(appendDataset(part1, part2)))
         test_that("Append doesn't revert metadata changes", {
             expect_false(name(out$allpets) == "All pets owned")
