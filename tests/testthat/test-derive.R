@@ -17,6 +17,13 @@ with_mock_crunch({
         expect_prints(derivation(birthyrPlus), "Crunch expression: birthyr + 100")
     })
 
+    test_that("is.derived works on variable caatalog", {
+        expect_equal(
+            is.derived(variables(ds)),
+            rep(FALSE, length(variables(ds)))
+        )
+    })
+
     test_that("derivation returns NULL if the variable is not derived", {
         expect_null(derivation(ds$birthyr))
     })
