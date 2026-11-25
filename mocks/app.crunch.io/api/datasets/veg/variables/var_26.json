@@ -30,53 +30,25 @@
         ],
         "dataset_id": "veg",
         "derivation": {
+            "function": "select_categories",
             "args": [
                 {
-                    "args": [
-                        {
-                            "args": [
-                                {
-                                    "map": {
-                                        "0001": {
-                                            "references": {
-                                                "alias": "funnel_aware_mr_1",
-                                                "name": "Jicama"
-                                            },
-                                            "variable": "var_24"
-                                        },
-                                        "0002": {
-                                            "references": {
-                                                "alias": "funnel_aware_mr_2",
-                                                "name": "Kohlrabi"
-                                            },
-                                            "variable": "var_25"
-                                        }
-                                    }
-                                },
-                                {
-                                    "value": [
-                                        "0001",
-                                        "0002"
-                                    ]
-                                }
-                            ],
-                            "function": "make_frame"
-                        }
-                    ],
                     "function": "array",
-                    "kwargs": {
-                        "numeric": {
-                            "value": false
-                        }
-                    }
-                },
-                {
-                    "value": [
-                        "Yes"
+                    "args": [
+                        [
+                            {
+                                "references": {"alias": "funnel_aware_mr_1", "name": "Jicama"},
+                                "variable": "var_24"
+                            },
+                            {
+                                "references": {"alias": "funnel_aware_mr_2", "name": "Kohlrabi"},
+                                "variable": "var_25"
+                            }
+                        ]
                     ]
-                }
+                },
+                {"value": ["Yes"]}
             ],
-            "function": "select_categories",
             "references": {
                 "alias": "funnel_aware_mr",
                 "description": "Awareness of Vegetables: Funnel",
@@ -127,13 +99,13 @@
         "private": false,
         "secure": false,
         "subreferences": {
-            "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0001/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/000001/": {
                 "alias": "funnel_aware_mr_1",
                 "description": "Awareness MR - Jicama",
                 "name": "Jicama",
                 "notes": "Have you ever heard of the vegetable Jicama?"
             },
-            "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0002/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/000002/": {
                 "alias": "funnel_aware_mr_2",
                 "description": "Awareness MR - Kohlrabi",
                 "name": "Kohlrabi",
@@ -141,8 +113,8 @@
             }
         },
         "subvariables": [
-            "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0001/",
-            "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/0002/"
+            "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/000001/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_26/subvariables/000002/"
         ],
         "type": "multiple_response",
         "uniform_basis": false,

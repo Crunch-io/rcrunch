@@ -24,61 +24,29 @@
         ],
         "dataset_id": "veg",
         "derivation": {
+            "function": "select_categories",
             "args": [
                 {
-                    "args": [
-                        {
-                            "args": [
-                                {
-                                    "map": {
-                                        "0001": {
-                                            "references": {
-                                                "alias": "enjoy_mr_savory",
-                                                "name": "Savory"
-                                            },
-                                            "variable": "var_03"
-                                        },
-                                        "0002": {
-                                            "references": {
-                                                "alias": "enjoy_mr_spicy",
-                                                "name": "Spicy"
-                                            },
-                                            "variable": "var_04"
-                                        },
-                                        "0003": {
-                                            "references": {
-                                                "alias": "enjoy_mr_sweet",
-                                                "name": "Sweet"
-                                            },
-                                            "variable": "var_05"
-                                        }
-                                    }
-                                },
-                                {
-                                    "value": [
-                                        "0001",
-                                        "0002",
-                                        "0003"
-                                    ]
-                                }
-                            ],
-                            "function": "make_frame"
-                        }
-                    ],
                     "function": "array",
-                    "kwargs": {
-                        "numeric": {
-                            "value": false
-                        }
-                    }
+                    "args": [
+                        [
+                            {
+                                "references": {"alias": "enjoy_mr_savory", "name": "Savory"},
+                                "var": "enjoy_savory_food"
+                            },
+                            {
+                                "references": {"alias": "enjoy_mr_spicy", "name": "Spicy"},
+                                "var": "enjoy_spicy_food"
+                            },
+                            {
+                                "references": {"alias": "enjoy_mr_sweet", "name": "Sweet"},
+                                "var": "enjoy_sweet_food"
+                            }
+                        ]
+                    ],
                 },
-                {
-                    "value": [
-                        "Yes"
-                    ]
-                }
+                {"value": ["Yes"]}
             ],
-            "function": "select_categories",
             "references": {
                 "alias": "enjoy_mr",
                 "description": "Typically enjoy foods with flavors",

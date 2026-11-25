@@ -106,7 +106,7 @@ variablesList <- function(dataset, include.hidden = FALSE) {
 
 }
 
-# This uses the ZCL function `select`, which has known performance issues
+# This uses the ZCL function `make_frame`, which has known performance issues
 # TODO: We should remove it from the other places where we use it
 # (appending, joining, crunchbox, & tabbooks)
 variablesFilter <- function(dataset, include.hidden = FALSE) {
@@ -131,7 +131,7 @@ variablesFilter <- function(dataset, include.hidden = FALSE) {
                 serialPaste(dup.aliases)
             )
         }
-        return(list(`function` = "select", args = list(list(map = v))))
+        return(list(`function` = "make_frame", args = list(list(map = v))))
     }
     ## Else, return NULL
     return(NULL)

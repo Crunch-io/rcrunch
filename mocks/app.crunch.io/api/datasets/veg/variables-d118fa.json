@@ -30,9 +30,9 @@
             "notes": "Do you typically enjoy foods that taste..?",
             "secure": false,
             "subvariables": [
-                "var_02/subvariables/0001/",
-                "var_02/subvariables/0002/",
-                "var_02/subvariables/0003/"
+                "var_02/subvariables/000001/",
+                "var_02/subvariables/000002/",
+                "var_02/subvariables/000003/"
             ],
             "subvariables_catalog": "var_02/subvariables/",
             "type": "multiple_response",
@@ -199,12 +199,12 @@
             "notes": "On a scale of 0-100, how would you rate...?",
             "secure": false,
             "subvariables": [
-                "var_15/subvariables/0001/",
-                "var_15/subvariables/0002/",
-                "var_15/subvariables/0003/",
-                "var_15/subvariables/0004/",
-                "var_15/subvariables/0005/",
-                "var_15/subvariables/0006/"
+                "var_15/subvariables/000001/",
+                "var_15/subvariables/000002/",
+                "var_15/subvariables/000003/",
+                "var_15/subvariables/000004/",
+                "var_15/subvariables/000005/",
+                "var_15/subvariables/000006/"
             ],
             "subvariables_catalog": "var_15/subvariables/",
             "type": "numeric_array"
@@ -233,10 +233,10 @@
             "scale": "interval",
             "secure": false,
             "subvariables": [
-                "var_17/subvariables/0001/",
-                "var_17/subvariables/0002/",
-                "var_17/subvariables/0003/",
-                "var_17/subvariables/0004/"
+                "var_17/subvariables/000001/",
+                "var_17/subvariables/000002/",
+                "var_17/subvariables/000003/",
+                "var_17/subvariables/000004/"
             ],
             "subvariables_catalog": "var_17/subvariables/",
             "type": "categorical_array"
@@ -354,8 +354,8 @@
             "notes": "Have you ever heard of the vegetable...?",
             "secure": false,
             "subvariables": [
-                "var_26/subvariables/0001/",
-                "var_26/subvariables/0002/"
+                "var_26/subvariables/000001/",
+                "var_26/subvariables/000002/"
             ],
             "subvariables_catalog": "var_26/subvariables/",
             "type": "multiple_response",
@@ -398,8 +398,8 @@
             "notes": "Have you ever bought...?",
             "secure": false,
             "subvariables": [
-                "var_29/subvariables/0001/",
-                "var_29/subvariables/0002/"
+                "var_29/subvariables/000001/",
+                "var_29/subvariables/000002/"
             ],
             "subvariables_catalog": "var_29/subvariables/",
             "type": "multiple_response",
@@ -442,8 +442,8 @@
             "notes": "Have you ever considered buying...?",
             "secure": false,
             "subvariables": [
-                "var_32/subvariables/0001/",
-                "var_32/subvariables/0002/"
+                "var_32/subvariables/000001/",
+                "var_32/subvariables/000002/"
             ],
             "subvariables_catalog": "var_32/subvariables/",
             "type": "multiple_response",

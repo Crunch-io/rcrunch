@@ -77,8 +77,8 @@
 #' )
 #' }
 #' @export
-deriveArray <- function(subvariables, name, selections, numeric = NULL, ...) {
-    expression <- makeFrame(subvariables, numeric)
+deriveArray <- function(subvariables, name, selections, ...) {
+    expression <- makeFrame(subvariables)
     if (!missing(selections)) {
         expression <- selectCategories(expression, selections, collapse = FALSE)
     }
@@ -229,13 +229,7 @@ makeMRFromText <- function(var,
     # then do selection magic to make an MR
     derivation <- zfunc(
         "select_categories",
-        zfunc(
-            "array",
-            zfunc(
-                "select", list(map = subvarderivs),
-                list(value = I(c(1, 2, 3, 4, 5)))
-            )
-        ),
+        zfunc("array", subvarderivs),
         list(value = I("selected"))
     )
 
@@ -331,7 +325,7 @@ buildDelimRegex <- function(str, delim) {
 
 #' @rdname expressions-internal
 #' @export
-makeFrame <- function(x, numeric = NULL) {
+makeFrame <- function(x) {
     ## Get subvariable URLs
     if (is.dataset(x)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
@@ -341,49 +335,19 @@ makeFrame <- function(x, numeric = NULL) {
     # if it's a list, it could contain variable definitions:
     if (is.list(x) & !is.VarDef(x)) {
         x <- x[lengths(x) > 0] # remove NULLs (from eg slider)
-        subvar_types <- vapply(x, function(sv) {
-            if (is.VarDef(sv)) return("vardef")
-            else if (is.variable(sv)) return(type(sv))
-            else return("unknown")
-        }, character(1))
         x <- lapply(x, zcl)
     } else if (inherits(x, "VariableCatalog")) {
         # but ShojiCatalogs don't give their urls when lapplying, so treat differently
-        subvar_types <- types(x)
-        x <- lapply(urls(x), function(sv) list(variable = sv))
+        x <- lapply(aliases(x), function(sv) list(var = sv))
     } else {
         halt("Expected a Variable Catalog or a list of Variables/Expressions/VarDefs")
     }
 
-    numeric <- check_make_frame_type_arg(numeric, subvar_types)
-
-    subvarids <- sprintf("%04d", seq_along(x))
-    expression <- zfunc("array", zfunc(
-        "make_frame",
-        list(map = structure(x, names = subvarids)),
-        list(value = I(subvarids))
-    ), numeric = list(value = numeric))
-    # TODO: filters are not preserved in makeFrame expressions because
+    # TODO: filters are not preserved in array() expressions because
     # they aren't preserved in `VarDefs` which expressions are wrapped in
     # when forming variables... I believe this will only affect someone trying to
     # `as.vector()` an array, which also doesn't currently work so leave it for now.
-    CrunchExpr(expression = expression)
-}
-
-check_make_frame_type_arg <- function(numeric, subvar_types) {
-    if (is.null(numeric)) {
-        if (all(subvar_types == "categorical")) {
-            numeric <- FALSE
-        } else if (all(subvar_types == "numeric")) {
-            numeric <- TRUE
-        } else {
-            halt("Could not guess array type, specify `numeric` argument in `makeFrame()`")
-        }
-    } else if (!is.logical(numeric) || length(numeric) != 1) {
-        halt("Expected `numeric` argument of `makeFrame()` to be TRUE or FALSE")
-    }
-
-    numeric
+    CrunchExpr(expression = zfunc("array", x))
 }
 
 

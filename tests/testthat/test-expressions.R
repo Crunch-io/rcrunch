@@ -337,10 +337,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             expect_equal(
                 unclass(toJSON(expr@expression)),
                 paste0(
-                    '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"0001":{"variable":', # nolint
-                    '"https://app.crunch.io/api/datasets/1/variables/gender/"},"0002":{"variable":',
-                    '"https://app.crunch.io/api/datasets/1/variables/location/"}}},{"value":',
-                    '["0001","0002"]}]}],"kwargs":{"numeric":{"value":false}}}'
+                    '{"function":"array","args":[[{"var":"gender"},{"var":"location"}]]}'
                 )
             )
         })
@@ -351,9 +348,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             expect_equal(
                 unclass(toJSON(expr@expression)),
                 paste0(
-                    '{"function":"array","args":[{"function":"make_frame","args":[{"map":{"0001":{"variable":', # nolint
-                    '"https://app.crunch.io/api/datasets/1/variables/birthyr/"}}},{"value":',
-                    '["0001"]}]}],"kwargs":{"numeric":{"value":true}}}'
+                    '{"function":"array","args":[[{"var":"birthyr"}]]}'
                 )
             )
         })
@@ -362,19 +357,14 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             expect_json_equivalent(
                 makeFrame(
                     list(VariableDefinition(ds$gender == "Male", name = "male")),
-                    numeric = FALSE
                 )@expression,
                 list(
                     `function` = "array",
-                    args = list(list(
-                        `function` = "make_frame",
-                        args = list(list(
-                            map = list(
-                                c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
-                            )
-                        ), list(value = I("0001")))
-                    )),
-                    kwargs = list(numeric = list(value = FALSE))
+                    args = list(
+                        list(
+                            c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
+                        )
+                    )
                 )
             )
         })
