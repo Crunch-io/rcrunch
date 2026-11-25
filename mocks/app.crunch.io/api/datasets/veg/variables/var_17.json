@@ -42,51 +42,24 @@
         "dataset_id": "veg",
         "derivation": {
             "args": [
-                {
-                    "args": [
-                        {
-                            "map": {
-                                "0001": {
-                                    "references": {
-                                        "alias": "veg_enjoy_ca_healthy",
-                                        "name": "Healthy"
-                                    },
-                                    "variable": "var_20"
-                                },
-                                "0002": {
-                                    "references": {
-                                        "alias": "veg_enjoy_ca_tasty",
-                                        "name": "Tasty"
-                                    },
-                                    "variable": "var_21"
-                                },
-                                "0003": {
-                                    "references": {
-                                        "alias": "veg_enjoy_ca_filling",
-                                        "name": "Filling"
-                                    },
-                                    "variable": "var_19"
-                                },
-                                "0004": {
-                                    "references": {
-                                        "alias": "veg_enjoy_ca_env",
-                                        "name": "Environmental"
-                                    },
-                                    "variable": "var_18"
-                                }
-                            }
-                        },
-                        {
-                            "value": [
-                                "0001",
-                                "0002",
-                                "0003",
-                                "0004"
-                            ]
-                        }
-                    ],
-                    "function": "make_frame"
-                }
+                [
+                    {
+                        "references": {"alias": "veg_enjoy_ca_healthy", "name": "Healthy"},
+                        "variable": "var_20"
+                    },
+                    {
+                        "references": {"alias": "veg_enjoy_ca_tasty", "name": "Tasty"},
+                        "variable": "var_21"
+                    },
+                    {
+                        "references": {"alias": "veg_enjoy_ca_filling", "name": "Filling"},
+                        "variable": "var_19"
+                    },
+                    {
+                        "references": {"alias": "veg_enjoy_ca_env", "name": "Environmental"},
+                        "variable": "var_18"
+                    }
+                ]
             ],
             "function": "array",
             "kwargs": {
@@ -120,25 +93,25 @@
         "private": false,
         "secure": false,
         "subreferences": {
-            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0001/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/000001/": {
                 "alias": "veg_enjoy_ca_healthy",
                 "description": "Vegetables are healthy (5 point scale)",
                 "name": "Healthy",
                 "notes": "Do you eat vegetables because: they are healthy"
             },
-            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0002/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/000002/": {
                 "alias": "veg_enjoy_ca_tasty",
                 "description": "Vegetables are Tasty (5 point scale)",
                 "name": "Tasty",
                 "notes": "Do you eat vegetables because: they taste good"
             },
-            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0003/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/000003/": {
                 "alias": "veg_enjoy_ca_filling",
                 "description": "Vegetables are filling (5 point scale)",
                 "name": "Filling",
                 "notes": "Do you eat vegetables because: they are filling"
             },
-            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0004/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/000004/": {
                 "alias": "veg_enjoy_ca_env",
                 "description": "Vegetables are environmental (5 point scale)",
                 "name": "Environmental",
@@ -146,10 +119,10 @@
             }
         },
         "subvariables": [
-            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0001/",
-            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0002/",
-            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0003/",
-            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/0004/"
+            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/000001/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/000002/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/000003/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_17/subvariables/000004/"
         ],
         "type": "categorical_array",
         "view": {

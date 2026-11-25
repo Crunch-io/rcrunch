@@ -197,9 +197,8 @@ with_mock_crunch({
         expected <- VariableDefinition(
             derivation = zfunc(
                 "select_categories", zfunc(
-                    "array", zfunc(
-                        "select",
-                        list(map = lapply(trees, function(tree) {
+                    "array", list(
+                        list(lapply(trees, function(tree) {
                             return(createSubvarDeriv(ds2$delimed_text,
                                 str = tree,
                                 delim = "; ",
@@ -208,7 +207,6 @@ with_mock_crunch({
                                 unanswered = NA
                             ))
                         })),
-                        list(value = I(c(1, 2, 3, 4, 5)))
                     )
                 ),
                 list(value = I("selected"))
@@ -237,15 +235,9 @@ with_mock_crunch({
                 name = "Gender MR",
                 derivation = list(
                     `function` = "array",
-                    args = list(list(
-                        `function` = "make_frame",
-                        args = list(list(
-                            map = list(
-                                c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
-                            )
-                        ), list(value = I("0001")))
-                    )),
-                    kwargs = list(numeric = list(value = FALSE))
+                    args = list(
+                        c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
+                    )
                 ),
                 derived = FALSE
             )
@@ -264,15 +256,11 @@ with_mock_crunch({
                 name = "birthyr addition",
                 derivation = list(
                     `function` = "array",
-                    args = list(list(
-                        `function` = "make_frame",
-                        args = list(list(
-                            map = list(
-                                c(zcl(ds$birthyr + 10), list(references = list(name = "birthyr + 10"))) #nolint
-                            )
-                        ), list(value = I("0001")))
-                    )),
-                    kwargs = list(numeric = list(value = TRUE))
+                    args = list(
+                        list(
+                            c(zcl(ds$birthyr + 10), list(references = list(name = "birthyr + 10"))) #nolint
+                        )
+                    )
                 )
             )
         )

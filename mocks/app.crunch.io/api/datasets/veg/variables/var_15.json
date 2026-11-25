@@ -6,75 +6,35 @@
         ],
         "dataset_id": "veg",
         "derivation": {
-            "args": [
-                {
-                    "args": [
-                        {
-                            "map": {
-                                "0001": {
-                                    "references": {
-                                        "alias": "ratings_numa_avocado",
-                                        "name": "Avocado"
-                                    },
-                                    "variable": "var_09"
-                                },
-                                "0002": {
-                                    "references": {
-                                        "alias": "ratings_numa_brussel_sprout",
-                                        "name": "Brussel Sprout"
-                                    },
-                                    "variable": "var_10"
-                                },
-                                "0003": {
-                                    "references": {
-                                        "alias": "ratings_numa_carrot",
-                                        "name": "Carrot"
-                                    },
-                                    "variable": "var_11"
-                                },
-                                "0004": {
-                                    "references": {
-                                        "alias": "ratings_numa_daikon",
-                                        "name": "Daikon"
-                                    },
-                                    "variable": "var_12"
-                                },
-                                "0005": {
-                                    "references": {
-                                        "alias": "ratings_numa_eggplant",
-                                        "name": "Eggplant"
-                                    },
-                                    "variable": "var_13"
-                                },
-                                "0006": {
-                                    "references": {
-                                        "alias": "ratings_numa_fennel",
-                                        "name": "Fennel"
-                                    },
-                                    "variable": "var_14"
-                                }
-                            }
-                        },
-                        {
-                            "value": [
-                                "0001",
-                                "0002",
-                                "0003",
-                                "0004",
-                                "0005",
-                                "0006"
-                            ]
-                        }
-                    ],
-                    "function": "make_frame"
-                }
-            ],
             "function": "array",
-            "kwargs": {
-                "numeric": {
-                    "value": true
-                }
-            },
+            "args": [
+                [
+                    {
+                        "references": {"alias": "ratings_numa_avocado", "name": "Avocado"},
+                        "variable": "var_09"
+                    },
+                    {
+                        "references": {"alias": "ratings_numa_brussel_sprout", "name": "Brussel Sprout"},
+                        "variable": "var_10"
+                    },
+                    {
+                        "references": {"alias": "ratings_numa_carrot", "name": "Carrot"},
+                        "variable": "var_11"
+                    },
+                    {
+                        "references": {"alias": "ratings_numa_daikon", "name": "Daikon"},
+                        "variable": "var_12"
+                    },
+                    {
+                        "references": {"alias": "ratings_numa_eggplant", "name": "Eggplant"},
+                        "variable": "var_13"
+                    },
+                    {
+                        "references": {"alias": "ratings_numa_fennel", "name": "Fennel"},
+                        "variable": "var_14"
+                    }
+                ],
+            ],
             "references": {
                 "alias": "ratings_numa",
                 "description": "Rating of Vegetables: Scale of 0-100",
@@ -99,7 +59,7 @@
         "private": false,
         "secure": false,
         "subreferences": {
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0001/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000001/": {
                 "alias": "ratings_numa_avocado",
                 "description": "Avocado Rating (100 point scale)",
                 "format": {
@@ -116,7 +76,7 @@
                     "column_width": null
                 }
             },
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0002/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000002/": {
                 "alias": "ratings_numa_brussel_sprout",
                 "description": "Brussel Sprout Rating (100 point scale)",
                 "format": {
@@ -133,7 +93,7 @@
                     "column_width": null
                 }
             },
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0003/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000003/": {
                 "alias": "ratings_numa_carrot",
                 "description": "Carrot Rating (100 point scale)",
                 "format": {
@@ -150,7 +110,7 @@
                     "column_width": null
                 }
             },
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0004/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000004/": {
                 "alias": "ratings_numa_daikon",
                 "description": "Daikon Rating (100 point scale)",
                 "format": {
@@ -167,7 +127,7 @@
                     "column_width": null
                 }
             },
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0005/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000005/": {
                 "alias": "ratings_numa_eggplant",
                 "description": "Eggplant Rating (100 point scale)",
                 "format": {
@@ -184,7 +144,7 @@
                     "column_width": null
                 }
             },
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0006/": {
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000006/": {
                 "alias": "ratings_numa_fennel",
                 "description": "Fennel Rating (100 point scale)",
                 "format": {
@@ -203,12 +163,12 @@
             }
         },
         "subvariables": [
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0001/",
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0002/",
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0003/",
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0004/",
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0005/",
-            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/0006/"
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000001/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000002/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000003/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000004/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000005/",
+            "https://app.crunch.io/api/datasets/veg/variables/var_15/subvariables/000006/"
         ],
         "type": "numeric_array",
         "view": {
